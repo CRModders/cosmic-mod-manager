@@ -1,0 +1,1 @@
+# cosmic-mod-manager
