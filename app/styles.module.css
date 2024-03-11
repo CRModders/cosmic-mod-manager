@@ -1,0 +1,61 @@
+/* Hero Styling */
+.hero_section {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+
+.hero_section .wrapper {
+    margin-top: 4rem;
+    align-items: center;
+}
+
+.heroTitle {
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: var(--primary-accent);
+}
+
+.heroDesc {
+    font-size: 1.2rem;
+    color: var(--regular-text);
+}
+
+.brand_logo_wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+}
+
+.accentColor {
+    color: var(--primary-accent);
+}
+
+.callToActionButton {
+    background-color: var(--primary-accent);
+    color: var(--regular-text);
+}
+
+.callToActionButtonText {
+    font-size: 1.1rem;
+}
+
+/* Featured section styles */
+
+.featured_section {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    /* Temporary Outline */
+    outline: 1px solid var(--primary-accent-dark);
+    outline-offset: -5px;
+}
