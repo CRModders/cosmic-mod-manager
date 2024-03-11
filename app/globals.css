@@ -2,14 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    /* Dark Mode */
+    --background-dark: #101113;
+    --background-hover-dark: #252628;
+    --regular-text-dark: white;
+    --primary-accent-dark: #f43f5e;
+
+    /* Light Mode */
+    --background-light: #FCFDFF;
+    --background-hover-light: #E5E7EB;
+    --background-hover-deep-light: #C5C7CB;
+    --regular-text-light: #020305;
+    --primary-accent-light: #f43f5e;
+}
+
+::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 0.4rem;
+    border-radius: 1rem;
+    background-color: var(--background-hover-deep-light);
+}
+
+::-webkit-scrollbar-track {
+    width: 0.4rem;
+    background-color: var(--background-light);
+}
+
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: var(--background-hover-dark);
+}
+
+.dark ::-webkit-scrollbar-track {
+    background-color: var(--background-dark);
+}
+
+
 html.dark {
-    background-color: #101113;
-    color: white;
+    background-color: var(--background-dark);
+    color: var(--regular-text-dark);
 }
 
 html.light {
-    background-color: #FCFDFF;
-    color: #020305;
+    background-color: var(--background-light);
+    color: var(--regular-text-light);
 }
 
 .dark [data-hide-on-theme='dark'],

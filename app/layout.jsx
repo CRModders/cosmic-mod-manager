@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import { Providers } from "./providers";
-import Navbar from "@/components/Navbar/navbar";
+import { NavbarContainer as Navbar } from "@/components/Navbar/Navbar";
 
 const space_grotesk = Space_Grotesk({ subsets: ["latin"] });
 
