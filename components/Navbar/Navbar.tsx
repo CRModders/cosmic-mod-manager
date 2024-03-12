@@ -20,26 +20,37 @@ const Navbar = async () => {
 		<NextUINavbar
 			maxWidth="full"
 			isBlurred={true}
-			className="fixed top-0 left-0 right-0 bg-[var(--background-light)] dark:bg-[var(--background-dark)]"
+			className="fixed top-0 left-0 right-0 bg-[var(--background)]"
 			position="sticky"
 			isBordered={true}
 			shouldHideOnScroll
 		>
-			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-				<NavbarBrand as="li" className="gap-3 max-w-fit mr-4">
-					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<p className="text-[var(--regular-text-dark)] text-lg bg-[var(--primary-accent-light)] dark:bg-[var(--primary-accent-dark)] px-3 py-1 rounded-lg">
+			<NavbarContent
+				className="gap-8 w-fit basis-1/5 sm:basis-full"
+				justify="start"
+			>
+				<NavbarBrand
+					as="li"
+					className="flex items-center justify-center max-w-fit"
+				>
+					<NextLink
+						className="flex justify-start items-center gap-1 rounded-lg"
+						href="/"
+					>
+						<p className="text-2xl font-semibold text-[var(--primary-accent-text)] px-3 h-10 flex items-center justify-center rounded-lg">
 							Cosmic Reach
 						</p>
 					</NextLink>
 				</NavbarBrand>
 
-				<div className="hidden md:flex gap-4 justify-start ml-2">
+				<div className="hidden md:flex gap-2 justify-start">
 					{NavLinks.map((link) => {
 						return (
 							<React.Fragment key={link.name}>
-								<NavLink href={link.href}>
-									<p className="text-medium">{link.name}</p>
+								<NavLink href={link.href} className="rounded-lg">
+									<p className="text-lg px-2 py-1 h-10 flex items-center justify-center">
+										{link.name}
+									</p>
 								</NavLink>
 							</React.Fragment>
 						);
@@ -49,10 +60,10 @@ const Navbar = async () => {
 
 			<NavbarContent className="basis-1 pl-4" justify="end">
 				<ThemeSwitch />
-				<NavbarMenuToggle className="md:hidden text-[var(--regular-text-light)] dark:text-[var(--regular-text-dark)]" />
+				<NavbarMenuToggle className="md:hidden text-[var(--regular-text)] hover:bg-[var(--background-hover)] h-10 w-10 rounded-lg" />
 			</NavbarContent>
 
-			<NavbarMenu className="bg-[var(--background-light)] dark:bg-[var(--background-dark)]">
+			<NavbarMenu className="bg-[var(--background)]">
 				<div className="mx-4 mt-2 flex flex-col gap-2">
 					{NavMenuLinks.map((link) => {
 						return (

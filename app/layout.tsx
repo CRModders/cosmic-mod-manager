@@ -10,7 +10,9 @@ export const metadata = {
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+	children,
+}: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
 			<body className={space_grotesk.className}>

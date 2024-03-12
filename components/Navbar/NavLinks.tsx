@@ -9,7 +9,13 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import "@/app/globals.css";
 
-const NavLink = ({ href, children, className }) => {
+type NavLinkProps = {
+	href: string;
+	children: React.ReactNode;
+	className?: string;
+};
+
+const NavLink = ({ href, children, className }: NavLinkProps) => {
 	const pathname = usePathname();
 	let isActive = pathname === href;
 	if (href === "/") {
@@ -22,7 +28,7 @@ const NavLink = ({ href, children, className }) => {
 			<NextLink
 				className={clsx(
 					linkStyles({ color: "foreground" }),
-					"data-[active=true]:text-[var(--primary-accent-light)] data-[active=true]:dark:text-[var(--primary-accent-dark)] data-[active=true]:font-semibold rounded-sm focus-visible:outline-2 outline-0 dark:outline-white outline-black",
+					"data-[active=true]:text-[var(--primary-accent-text)] data-[active=true]:font-semibold rounded-sm focus-visible:outline-2 outline-0 outline-[var(--regular-text)] no-underline",
 				)}
 				color="foreground"
 				href={href}
@@ -34,7 +40,7 @@ const NavLink = ({ href, children, className }) => {
 	);
 };
 
-export function NavMenuLink({ href, children, className }) {
+export function NavMenuLink({ href, children, className }: NavLinkProps) {
 	const pathname = usePathname();
 	let isActive = pathname === href;
 	if (href === "/") {
@@ -45,12 +51,12 @@ export function NavMenuLink({ href, children, className }) {
 	return (
 		<NavbarMenuItem
 			key={`${href}`}
-			className={`w-full flex items-center justify-center ${className}`}
+			className={`w-full flex items-center justify-center hover:bg-[var(--background-hover)] rounded-lg ${className}`}
 		>
 			<Link
 				className={clsx(
 					linkStyles({ color: "foreground" }),
-					"data-[active=true]:text-[var(--primary-accent-light)] data-[active=true]:dark:text-[var(--primary-accent-dark)] data-[active=true]:font-semibold w-full h-full flex items-center justify-center py-2 hover:bg-[#CDD1D445] dark:hover:bg-[#2D313445]",
+					"data-[active=true]:text-[var(--primary-accent)] data-[active=true]:font-semibold w-full h-full flex items-center justify-center py-2 ",
 				)}
 				color={"foreground"}
 				href={href}

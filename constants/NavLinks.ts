@@ -1,19 +1,3 @@
-/**
- * @constant {
- *    {
- *      name: string;
- *      href: string;
- *    }[]
- * } NavLinks
- *
- * @constant {
- *    {
- *      name: string;
- *      href: string;
- *    }[]
- * } NavMenuLinks
- */
-
 const NavLinks = [
 	{
 		name: "Mods",
