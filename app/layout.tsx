@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import { Providers } from "./providers";
-import Navbar from "@/components/Navbar/navbar";
+import { NavbarContainer as Navbar } from "@/components/Navbar/Navbar";
 
 const space_grotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -10,7 +10,9 @@ export const metadata = {
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+	children,
+}: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
 			<body className={space_grotesk.className}>
