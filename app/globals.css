@@ -2,84 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    /* Dark Mode */
-    --background-dark: #101113;
-    --background-hover-dark: #252628;
-    --regular-text-dark: white;
-    --regular-secondary-text-dark: #C0C1C4;
-    --primary-accent-dark: #e11d48;
-    --primary-accent-text-dark: #f43f5e;
-
-    /* Light Mode */
-    --background-light: #FCFDFF;
-    --background-hover-light: #E5E7EB;
-    --background-hover-deep-light: #C5C7CB;
-    --regular-text-light: #020305;
-    --regular-secondary-text-light: #505154;
-    --primary-accent-light: #f43f5e;
-    --primary-accent-text-light: #e11d48;
-
-
-    /* Display size breakpoints */
-    --width-sm: 640px;
-    --width-md: 768px;
-    --width-lg: 1024px;
-    --width-xl: 1280px;
-    --width-2xl: 1536px;
-}
-
-
-html {
-    --background: var(--background-light);
-    --background-hover: var(--background-hover-light);
-    --background-hover-deep: var(--background-hover-deep-light);
-    --regular-text: var(--regular-text-light);
-    --regular-secondary-text: var(--regular-secondary-text-light);
-    --primary-accent: var(--primary-accent-light);
-    --primary-accent-text: var(--primary-accent-text-light);
-}
-
-
-html.dark {
-    --background: var(--background-dark);
-    --background-hover: var(--background-hover-dark);
-    --background-hover-deep: var(--background-hover-dark);
-    --regular-text: var(--regular-tex-dark);
-    --regular-secondary-text: var(--regular-secondary-text-dark);
-    --primary-accent: var(--primary-accent-dark);
-    --primary-accent-text: var(--primary-accent-text-dark);
-}
 
 
 ::-webkit-scrollbar {
-    width: 0.4rem;
+    width: 0.6rem;
 }
 
 ::-webkit-scrollbar-thumb {
-    width: 0.4rem;
+    width: 0.6rem;
     border-radius: 1rem;
-    background-color: var(--background-hover-deep-light);
+    background-color: #d4d4d8;
 }
 
 ::-webkit-scrollbar-track {
-    width: 0.4rem;
-    background-color: var(--background-light);
+    width: 0.6rem;
+    background-color: white;
 }
 
 
 .dark ::-webkit-scrollbar-thumb {
-    background-color: var(--background-hover-dark);
+    background-color: #27272a;
 }
 
 .dark ::-webkit-scrollbar-track {
-    background-color: var(--background-dark);
+    background-color: #09090b;
 }
 
-html,
-body {
-    background-color: var(--background);
-    color: var(--regular-text);
+
+.navmenu_checkbox:checked~.main_wrapper {
+    background-color: rebeccapurple;
 }
 
 .dark [data-hide-on-theme='dark'],

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { SunIcon, MoonIcon } from "../Icons";
+import { SunIcon, MoonIcon } from "@/components/icons";
 
 export default function ThemeSwitch() {
 	const { theme, setTheme } = useTheme();
@@ -18,7 +18,7 @@ export default function ThemeSwitch() {
 		<div className="theme_switcher flex items-center justify-center">
 			<button
 				type="button"
-				className="hover:bg-[var(--background-hover)] text-[var(--regular-text)] flex items-center justify-center h-10 w-10 rounded-full"
+				className="hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark flex items-center justify-center h-12 w-12 rounded-full"
 				onClick={switchTheme}
 			>
 				<div className="sun_icon_wrapper" data-hide-on-theme="light">

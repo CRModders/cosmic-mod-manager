@@ -12,3 +12,23 @@ export type Mod_Item = {
 	downloads: number;
 	lastUpdated: Date;
 };
+
+export enum ContentCategories {
+	mod = "mod",
+	resourcePack = "resourcepack",
+	shader = "shader",
+	modpack = "modpack",
+}
+
+export type FeaturedSectionItem = {
+	name: string;
+	description: string;
+	logo: string;
+	url: string;
+};
+
+export type FeaturedSectionContentData = {
+	categoryName: ContentCategories;
+	title: string;
+	items: FeaturedSectionItem[];
+}[];
