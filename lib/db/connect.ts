@@ -1,6 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.MONGODB_CONNECTION_URI as string;
+const uri = process.env.DATABASE_URL as string;
 let client: MongoClient;
 let cachedClient: MongoClient | null = null;
 

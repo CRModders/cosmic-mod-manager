@@ -46,8 +46,8 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
 			}`}
 		>
 			<div className="w-full flex flex-col items-center justify-center row-span-2 relative">
-				<div className="absolute w-full h-full bg-background dark:bg-background_dark z-0 opacity-80" />
-				<ul className="w-full pt-28 px-6 py-8 flex flex-col items-center justify-start h-[100vh] z-[5] backdrop-blur-md gap-2">
+				<div className="absolute top-0 left-0 w-full h-full bg-background dark:bg-background_dark z-0 opacity-80" />
+				<ul className="w-full pt-28 px-6 py-8 flex flex-col items-center justify-start h-[100vh] z-[5] backdrop-blur-md gap-2 overflow-y-scroll">
 					{NavMenuLinks.map((link) => {
 						return (
 							<React.Fragment key={link.href}>
@@ -59,10 +59,9 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
 							</React.Fragment>
 						);
 					})}
-					<NavMenuLink href={"/profile"}>
-						{/* <li className="w-full flex items-center justify-center"> */}
-						<Suspense fallback={<Spinner />}>{children}</Suspense>
-					</NavMenuLink>
+					<Suspense fallback={<Spinner />}>
+						<NavMenuLink href={"/profile"}>{children}</NavMenuLink>
+					</Suspense>
 				</ul>
 			</div>
 		</div>

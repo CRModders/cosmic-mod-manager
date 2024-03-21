@@ -8,7 +8,8 @@ const AuthButton = async () => {
 		console.log(e);
 	});
 
-	if (session?.user?.email) {
+	// biome-ignore lint/complexity/useOptionalChain: <explanation>
+	if (session && session?.user?.email) {
 		return (
 			<Link href="/dashboard">
 				<Button className="" size="lg" variant="outline">

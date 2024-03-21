@@ -7,18 +7,23 @@ import HamMenu, { MobileNav } from "./Menu";
 import "@/app/globals.css";
 import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
 import { Spinner } from "@/app/loading";
+import { BrandIcon } from "../icons";
 
 const Navbar = async () => {
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<nav className="w-full flex flex-wrap items-start justify-start relative bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
 				{/* Desktop navbar */}
-				<div className="w-full flex items-center justify-center shadow shadow-shadow dark:shadow-shadow_dark bg-background dark:bg-background_dark z-10">
+				<div className="w-full flex items-center justify-center border-b border-shadow dark:border-shadow_dark bg-background dark:bg-background_dark z-10">
 					<div className="w-full mx-6 flex flex-wrap items-center justify-between py-2 z-10">
-						<div className="flex items-center justify-center gap-8">
-							<Link href="/">
-								<p className="text-xl font-semibold text-primary_accent dark:text-primary_accent_dark h-12 px-2 flex items-center justify-center rounded-lg">
-									Cosmic Reach
+						<div className="flex items-center justify-center gap-6">
+							<Link href="/" className="flex items-center justify-between">
+								<BrandIcon
+									size="2.6rem"
+									className=" text-primary_accent dark:text-primary_accent"
+								/>
+								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">
+									CRMM
 								</p>
 							</Link>
 

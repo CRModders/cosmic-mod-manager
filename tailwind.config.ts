@@ -36,15 +36,15 @@ const config = {
 			colors: {
 				background: colors.white,
 				background_hover: colors.zinc[200],
-				foreground: colors.zinc[950],
+				foreground: colors.zinc[900],
 				foreground_muted: colors.zinc[600],
 				shadow: colors.zinc[300],
 
-				background_dark: colors.zinc[950],
-				background_hover_dark: colors.zinc[900],
+				background_dark: colors.zinc[900],
+				background_hover_dark: colors.zinc[800],
 				foreground_dark: colors.zinc[50],
 				foreground_muted_dark: colors.zinc[300],
-				shadow_dark: colors.zinc[800],
+				shadow_dark: colors.zinc[700],
 
 				primary_accent: colors.rose[500],
 				primary_accent_foreground: colors.zinc[50],

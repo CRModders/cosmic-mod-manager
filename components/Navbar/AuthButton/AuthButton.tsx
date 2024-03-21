@@ -14,7 +14,8 @@ import SignOutBtn from "./SignOutBtn";
 const AuthButton = async () => {
 	const session = await auth().catch((e) => console.log(e));
 
-	if (session?.user?.email) {
+	// biome-ignore lint/complexity/useOptionalChain: <explanation>
+	if (session && session?.user?.email) {
 		return (
 			<Popover>
 				<PopoverTrigger asChild>
@@ -65,7 +66,8 @@ const AuthButton = async () => {
 export const MenuAuthButton = async () => {
 	const session = await auth().catch((e) => console.log(e));
 
-	if (session?.user?.email) {
+	// biome-ignore lint/complexity/useOptionalChain: <explanation>
+	if (session && session?.user?.email) {
 		return (
 			<Link
 				href="/profile"

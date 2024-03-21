@@ -1,12 +1,16 @@
 import "./globals.css";
 import { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Varela_Round } from "next/font/google";
 import { Providers } from "./providers";
 import { Suspense } from "react";
 import NavbarWrapper from "@/components/Navbar/Navbar";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
 
-const space_grotesk = Space_Grotesk({ subsets: ["latin"] });
+const space_grotesk = Varela_Round({
+	weight: ["400"],
+	subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
 	title: {
@@ -31,6 +35,11 @@ export default function RootLayout({
 					<Providers>
 						<NavbarWrapper />
 						<Suspense fallback={<p>Loading...</p>}>{children}</Suspense>
+
+						{/* Extra modules */}
+						<Suspense>
+							<Toaster />
+						</Suspense>
 					</Providers>
 				</Suspense>
 			</body>

@@ -53,7 +53,7 @@ export function NavMenuLink({ href, children, className }: NavLinkProps) {
 	return (
 		<li
 			key={`${href}`}
-			className={`w-full flex items-center justify-center rounded-lg hover:bg-background_hover dark:hover:bg-background_hover_dark ${className}`}
+			className={`w-full flex items-center justify-center rounded-lg hover:bg-foreground/10 dark:hover:bg-foreground_dark/10 transition-all duration-150 ${className}`}
 		>
 			<Link
 				className="w-full h-full flex items-center justify-center text-foreground dark:text-foreground_dark dark:data-[active=true]:text-primary_accent data-[active=true]:text-primary_accent data-[active=true]:font-bold"
