@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/app/loading";
+import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import authProvidersList from "../authproviders";
 
@@ -37,6 +37,7 @@ const AuthProviders = () => {
 							<Button
 								type="submit"
 								size="md"
+								aria-label={`Sign up using ${provider.name}`}
 								className="w-full py-4 bg-background_hover dark:bg-background_hover_dark hover:bg-background_hover dark:hover:bg-background_hover_dark flex items-center justify-center gap-4"
 							>
 								{provider.icon}

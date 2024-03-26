@@ -18,6 +18,7 @@ export default function ThemeSwitch() {
 		<div className="theme_switcher flex items-center justify-center">
 			<button
 				type="button"
+				aria-label="Toggle theme"
 				className="hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark flex items-center justify-center h-12 w-12 rounded-full"
 				onClick={switchTheme}
 			>

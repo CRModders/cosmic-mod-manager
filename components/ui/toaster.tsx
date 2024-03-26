@@ -8,13 +8,13 @@ import {
 	ToastTitle,
 	ToastViewport,
 } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
+import { TOAST_REMOVE_DELAY, useToast } from "@/components/ui/use-toast";
 
 export function Toaster() {
 	const { toasts } = useToast();
 
 	return (
-		<ToastProvider>
+		<ToastProvider duration={TOAST_REMOVE_DELAY - 500}>
 			{toasts.map(({ id, title, description, action, ...props }) => {
 				return (
 					<Toast key={id} {...props}>

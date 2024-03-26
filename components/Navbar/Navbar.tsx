@@ -6,18 +6,21 @@ import Link from "next/link";
 import HamMenu, { MobileNav } from "./Menu";
 import "@/app/globals.css";
 import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
-import { Spinner } from "@/app/loading";
-import { BrandIcon } from "../icons";
+import { BrandIcon } from "@/components/icons";
+import { Spinner } from "@/components/ui/spinner";
 
 const Navbar = async () => {
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<nav className="w-full flex flex-wrap items-start justify-start relative bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
 				{/* Desktop navbar */}
-				<div className="w-full flex items-center justify-center border-b border-shadow dark:border-shadow_dark bg-background dark:bg-background_dark z-10">
-					<div className="w-full mx-6 flex flex-wrap items-center justify-between py-2 z-10">
+				<div className="w-full z-50 flex items-center justify-center border-b border-shadow dark:border-shadow_dark bg-background dark:bg-background_dark">
+					<div className="container flex flex-wrap items-center justify-between py-2 px-4 sm:px-8">
 						<div className="flex items-center justify-center gap-6">
-							<Link href="/" className="flex items-center justify-between">
+							<Link
+								href="/"
+								className="flex items-center justify-between rounded-lg"
+							>
 								<BrandIcon
 									size="2.6rem"
 									className=" text-primary_accent dark:text-primary_accent"
@@ -30,16 +33,20 @@ const Navbar = async () => {
 							<ul className="hidden lg:flex items-center justify-center gap-2">
 								{NavLinks.map((link) => {
 									return (
-										<React.Fragment key={link.href}>
+										<li
+											key={link.href}
+											className=" list-none m-0 p-0 flex items-center justify-center"
+											aria-label={link.name}
+										>
 											<Navlink
 												href={link.href}
-												className=" hover:text-foreground_muted dark:hover:text-foreground_muted_dark"
+												className=" hover:text-foreground dark:hover:text-foreground_dark"
 											>
 												<p className="px-2 h-12 flex items-center justify-center text-center">
 													{link.name}
 												</p>
 											</Navlink>
-										</React.Fragment>
+										</li>
 									);
 								})}
 							</ul>

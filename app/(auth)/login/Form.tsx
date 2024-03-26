@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { Spinner } from "@/app/loading";
+import { Spinner } from "@/components/ui/spinner";
 import { sleep } from "@/lib/utils";
 
 const formSchema = z.object({
@@ -54,20 +54,21 @@ const LoginForm = () => {
 
 		// TODO: Handle login errors and display appropriate messages
 
-		const result = await signIn("credentials", {
-			redirect: true,
-			email: values.email,
-			password: values.password,
-			callbackUrl: callbackUrl,
-		});
+		// const result = await signIn("credentials", {
+		// 	redirect: true,
+		// 	email: values.email,
+		// 	password: values.password,
+		// 	callbackUrl: callbackUrl,
+		// });
 
 		// console.log(result);
 
-		// toast({
-		// 	title: "Invalid credentials",
-		// 	description:
-		// 		"Either of the email or password you entered was incorrect. Please try again",
-		// });
+		toast({
+			title: "Credentials signIn not available",
+			description:
+				"Credentials singIn has not been implemented yet. Please don't try again!",
+			// description: "Either of the email or password you entered was incorrect. Please try again",
+		});
 
 		setLoading(false);
 	};
@@ -91,6 +92,8 @@ const LoginForm = () => {
 									</FormLabel>
 									<FormControl>
 										<Input
+											type="email"
+											required
 											placeholder="example@abc.com"
 											{...field}
 											className="w-full flex items-center justify-center"
@@ -129,6 +132,7 @@ const LoginForm = () => {
 
 				<Button
 					type="submit"
+					aria-label="Log in"
 					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark text-[1.05rem]"
 				>
 					Log In

@@ -12,7 +12,12 @@ const AuthButton = async () => {
 	if (session && session?.user?.email) {
 		return (
 			<Link href="/dashboard">
-				<Button className="" size="lg" variant="outline">
+				<Button
+					className=""
+					size="lg"
+					variant="outline"
+					aria-label="Go to Dashboard"
+				>
 					<p className="text-foreground dark:text-foreground_dark text-lg">
 						Dashboard
 					</p>
@@ -23,7 +28,7 @@ const AuthButton = async () => {
 
 	return (
 		<Link href="/register">
-			<Button className="" size="lg" variant="outline">
+			<Button className="" size="lg" variant="outline" aria-label="Sign up">
 				<p className="text-foreground dark:text-foreground_dark text-lg">
 					Sign Up
 				</p>

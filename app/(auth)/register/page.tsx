@@ -2,14 +2,8 @@ import React from "react";
 import Link from "next/link";
 import AuthProviders from "./AuthProviders";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { auth } from "@/auth";
-import Redirect from "../redirect";
 
 const RegisterPage = async () => {
-	const session = await auth();
-	if (session) {
-		return <Redirect timeoutMs={1_00} />;
-	}
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<div className="flex w-full max-w-sm flex-col gap-4 rounded-large">
@@ -31,7 +25,9 @@ const RegisterPage = async () => {
 						</div>
 
 						<p className="text-center text-medium font-sans text-[var(--regular-secondary-text)]">
-							Already have an account?&nbsp;
+							<span className="text-foreground_muted dark:text-foreground_muted_dark">
+								Already have an account?&nbsp;
+							</span>
 							<Link
 								href="/login"
 								className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 text-sm font-bold"

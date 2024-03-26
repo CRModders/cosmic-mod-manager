@@ -1,9 +1,10 @@
 import React from "react";
 import { FeaturedSectionContentData } from "@/types";
-import { getFeaturedSectionContent } from "@/app/api/functions/featuredSection";
+import { getFeaturedSectionContent } from "@/app/api/actions/featuredSection";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import styles from "./styles.module.css";
+import { Button } from "@/components/ui/button";
 
 const FeaturedSection = async () => {
 	const FeaturedSectionContent: FeaturedSectionContentData = (
@@ -20,7 +21,9 @@ const FeaturedSection = async () => {
 						revalidatePath("/");
 					}}
 				>
-					<button type="submit">Retry</button>
+					<Button type="submit" aria-label="Retry">
+						Retry
+					</Button>
 				</form>
 			</div>
 		);

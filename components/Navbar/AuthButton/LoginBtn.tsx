@@ -8,7 +8,12 @@ const LoginBtn = () => {
 			href="/login"
 			className="w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark"
 		>
-			<Button variant="outline" size="md" className="w-full">
+			<Button
+				variant="outline"
+				size="md"
+				className="w-full"
+				aria-label="Log In"
+			>
 				<p className="text-lg">Log In</p>
 			</Button>
 		</Link>

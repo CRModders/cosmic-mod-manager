@@ -23,11 +23,15 @@ export default function NotFoundPage() {
 				Sorry, we couldn't find the page you're looking for.
 			</p>
 
-			<Link href="/">
-				<Button className="mt-4 rounded-lg py-4" size="lg">
-					<p className="px-8 text-xl">Home</p>
+			<a href="/">
+				<Button
+					className="mt-4 rounded-lg py-4"
+					size="lg"
+					aria-label="Go to home page"
+				>
+					<span className="px-8 text-xl">Home</span>
 				</Button>
-			</Link>
+			</a>
 		</div>
 	);
 }
