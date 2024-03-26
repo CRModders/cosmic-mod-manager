@@ -1,17 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import AuthProviders from "./AuthProviders";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import LoginForm from "./Form";
-import { auth } from "@/auth";
-import Redirect from "../redirect";
+import LoadingUI from "@/components/ui/spinner";
 
 const LoginPage = async () => {
-	const session = await auth();
-	if (session) {
-		return <Redirect timeoutMs={1_00} />;
-	}
-
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<div className="flex w-full max-w-sm flex-col gap-4 rounded-large">
@@ -21,7 +15,9 @@ const LoginPage = async () => {
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
-							<LoginForm />
+							<Suspense fallback={<LoadingUI />}>
+								<LoginForm />
+							</Suspense>
 						</div>
 
 						<div className="flex items-center gap-4 py-2">
@@ -37,7 +33,9 @@ const LoginPage = async () => {
 
 						<div className="w-full flex flex-col items-center justify-center gap-6 mt-4">
 							<p className="text-center text-medium font-sans text-foreground dark:text-foreground_dark">
-								Need to create an account?&nbsp;
+								<span className="text-foreground_muted dark:text-foreground_muted_dark">
+									Need to create an account?&nbsp;
+								</span>
 								<Link
 									href="/register"
 									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 text-sm font-bold"

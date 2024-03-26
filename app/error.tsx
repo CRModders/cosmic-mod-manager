@@ -26,7 +26,7 @@ export default function ErrorPage({
 				Sorry about that. We'll work to get it fixed. In the meantime,
 				<br /> you can try refreshing the page.
 			</p>
-			<Button size="lg" className="mt-4" onClick={reset}>
+			<Button size="lg" className="mt-4" onClick={reset} aria-label="Retry">
 				<p className="px-8 text-xl">Retry</p>
 			</Button>
 		</div>

@@ -34,7 +34,7 @@ const config = {
 				"accordion-up": "accordion-up 0.2s ease-out",
 			},
 			colors: {
-				background: colors.white,
+				background: colors.zinc[50],
 				background_hover: colors.zinc[200],
 				foreground: colors.zinc[900],
 				foreground_muted: colors.zinc[600],

@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/app/loading";
 import { useToast } from "@/components/ui/use-toast";
 import authProvidersList from "../authproviders";
+import { Spinner } from "@/components/ui/spinner";
 
 const AuthProviders = () => {
 	const [loading, setLoading] = useState(false);
@@ -36,11 +36,12 @@ const AuthProviders = () => {
 							<Button
 								type="submit"
 								size="md"
+								aria-label={`Login using ${provider.name}`}
 								className="w-full py-4 bg-background_hover dark:bg-background_hover_dark hover:bg-background_hover dark:hover:bg-background_hover_dark flex items-center justify-center gap-4"
 							>
 								{provider.icon}
 								<p className="text-foreground dark:text-foreground_dark">
-									Log In with{" "}
+									Log In using{" "}
 									<span className="font-semibold">{provider.name}</span>
 								</p>
 							</Button>

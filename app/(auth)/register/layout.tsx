@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
-import LoadingUI from "@/app/loading";
 
 export const metadata: Metadata = {
 	title: "Register",
@@ -14,10 +12,8 @@ export default function RegisterPageLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<Suspense fallback={<LoadingUI />}>
-			<section className="flex w-full flex-col items-center justify-center">
-				<div className="inline-block w-full">{children}</div>
-			</section>
-		</Suspense>
+		<section className="flex w-full flex-col items-center justify-center">
+			<div className="inline-block w-full">{children}</div>
+		</section>
 	);
 }

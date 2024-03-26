@@ -6,8 +6,9 @@ import { Suspense } from "react";
 import NavbarWrapper from "@/components/Navbar/Navbar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
+import ValidateSession from "@/components/validateLocalSession/validateSession";
 
-const space_grotesk = Varela_Round({
+const varela_round = Varela_Round({
 	weight: ["400"],
 	subsets: ["latin"],
 });
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: { children: React.ReactNode }) {
 	return (
@@ -28,20 +29,24 @@ export default function RootLayout({
 			<body
 				className={cn(
 					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark",
-					space_grotesk.className,
+					varela_round.className,
 				)}
 			>
-				<Suspense fallback={<p>Loading...</p>}>
-					<Providers>
-						<NavbarWrapper />
-						<Suspense fallback={<p>Loading...</p>}>{children}</Suspense>
-
-						{/* Extra modules */}
-						<Suspense>
-							<Toaster />
-						</Suspense>
-					</Providers>
+				<Suspense>
+					<ValidateSession />
 				</Suspense>
+
+				<Providers>
+					<NavbarWrapper />
+
+					<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
+						{children}
+					</main>
+
+					<Suspense>
+						<Toaster />
+					</Suspense>
+				</Providers>
 			</body>
 		</html>
 	);

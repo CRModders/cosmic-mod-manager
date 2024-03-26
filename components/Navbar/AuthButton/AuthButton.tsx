@@ -2,14 +2,26 @@ import React from "react";
 import LoginBtn from "./LoginBtn";
 import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import SignOutBtn from "./SignOutBtn";
+import ProfileDropdown from "./ProfileDropdown";
+import { DashboardIcon, GearIcon, PersonIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { findUserById } from "@/app/api/actions/user";
+import { NavMenuLink } from "../Navlink";
 
 const AuthButton = async () => {
 	const session = await auth().catch((e) => console.log(e));
@@ -22,10 +34,11 @@ const AuthButton = async () => {
 					<Button
 						size="icon"
 						variant="ghost"
+						aria-label="Profile icon"
 						className="hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-[50%]"
 					>
 						<div className="flex items-center justify-center p-1">
-							<Avatar>
+							<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
 								{session?.user?.image && (
 									<AvatarImage
 										src={session?.user?.image}
@@ -40,16 +53,7 @@ const AuthButton = async () => {
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-80">
-					<div className="w-full flex flex-col items-center justify-center gap-4">
-						<div className="w-full flex flex-col items-start justify-center">
-							<p className="text-lg font-semibold">{session?.user?.name}</p>
-							<p>{session?.user?.email}</p>
-						</div>
-						<div className="w-full h-[0.1rem] bg-background_hover dark:bg-background_hover_dark" />
-						<div className="w-full">
-							<SignOutBtn />
-						</div>
-					</div>
+					<ProfileDropdown />
 				</PopoverContent>
 			</Popover>
 		);
@@ -66,34 +70,90 @@ const AuthButton = async () => {
 export const MenuAuthButton = async () => {
 	const session = await auth().catch((e) => console.log(e));
 
-	// biome-ignore lint/complexity/useOptionalChain: <explanation>
-	if (session && session?.user?.email) {
+	if (!session || !session?.user?.email) {
 		return (
-			<Link
-				href="/profile"
-				className="w-full flex gap-4 py-2 items-center justify-center p-1"
-			>
-				<Avatar>
-					{session?.user?.image && (
-						<AvatarImage
-							src={session?.user?.image}
-							alt={`${session?.user?.name} `}
-						/>
-					)}
-
-					<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-						{session?.user?.name?.charAt(0).toUpperCase()}
-					</AvatarFallback>
-				</Avatar>
-
-				<p className="text-lg">{session?.user?.name}</p>
-			</Link>
+			<div className="w-full flex items-center justify-center">
+				<LoginBtn />
+			</div>
 		);
 	}
 
+	const userData = await findUserById(session.user.id);
+
+	const dropdownLinks = [
+		{
+			name: "Your profile",
+			href: `/user/${
+				// biome-ignore lint/complexity/useOptionalChain: <explanation>
+				userData && userData?.userName ? userData.userName : "notSignedIn"
+			}`,
+			icon: <PersonIcon className="h-5 w-5" />,
+		},
+		{
+			name: "Dashboard",
+			href: "/dashboard",
+			icon: <DashboardIcon className="h-5 w-5" />,
+		},
+		{
+			name: "Settings",
+			href: "/settings/account",
+			icon: <GearIcon className="h-5 w-5" />,
+		},
+	];
+
 	return (
-		<div className="w-full flex items-center justify-center">
-			<LoginBtn />
+		<div className="w-full flex flex-col items-center justify-center gap-4">
+			<Accordion type="single" collapsible className="w-full">
+				<AccordionItem value="item-1" className="border-none outline-none">
+					<AccordionTrigger className="w-full border-none outline-none">
+						<div className="w-full flex items-center justify-center gap-4 pr-8">
+							<Avatar>
+								{session?.user?.image && (
+									<AvatarImage
+										src={session?.user?.image}
+										alt={`${session?.user?.name} `}
+									/>
+								)}
+
+								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
+									{session?.user?.name?.charAt(0).toUpperCase()}
+								</AvatarFallback>
+							</Avatar>
+
+							<p className="text-lg text-foreground dark:text-foreground_dark font-normal">
+								{session?.user?.name}
+							</p>
+						</div>
+					</AccordionTrigger>
+					<AccordionContent className="w-full flex flex-col gap-2">
+						{dropdownLinks?.map((link) => {
+							return (
+								<NavMenuLink
+									key={link.name}
+									href={link.href}
+									className="w-full flex items-center justify-center rounded-lg"
+									tabIndex={0}
+								>
+									<Button
+										variant="ghost"
+										className={
+											"w-full text-lg flex items-center justify-center gap-2 text-foreground_muted dark:text-foreground_muted_dark"
+										}
+										size="lg"
+										tabIndex={-1}
+									>
+										<span className="w-6 flex items-center justify-center">
+											{link.icon}
+										</span>
+										<p>{link.name}</p>
+									</Button>
+								</NavMenuLink>
+							);
+						})}
+						<SignOutBtn className="items-center justify-center" />
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
 		</div>
 	);
 };

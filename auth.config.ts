@@ -32,24 +32,8 @@ export default {
 			id: "credentials",
 			name: "Credentials",
 			async authorize(credentials) {
-				// TODO: Add login logic
-				console.log(credentials);
-
-				return {
-					email: `${credentials.email || "-_-"}`,
-					id: "USER_ID",
-					name: "Name",
-				};
+				return null;
 			},
 		}),
 	],
-	callbacks: {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		async signIn({ user, account, profile, email, credentials }): Promise<any> {
-			return user;
-		},
-	},
-	pages: {
-		error: "auth-error",
-	},
 } satisfies NextAuthConfig;

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { BrandIcon, HeroSectionBrandLogo } from "@/components/icons";
+import { BrandIcon } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import FeaturedSection from "@/components/Featured/Featured";
 import { Suspense } from "react";
 import AuthButton from "./AuthButton";
-import { Spinner } from "./loading";
+import { Spinner } from "@/components/ui/spinner";
 
 export default async function Home() {
 	return (
@@ -41,6 +41,7 @@ export default async function Home() {
 					<Button
 						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80"
 						size="lg"
+						aria-label="Explore mods"
 					>
 						<p className="text-foreground_dark dark:text-foreground_dark text-lg">
 							Explore Mods
