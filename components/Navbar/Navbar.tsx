@@ -6,7 +6,7 @@ import Link from "next/link";
 import HamMenu, { MobileNav } from "./Menu";
 import "@/app/globals.css";
 import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
-import { BrandIcon } from "@/components/icons";
+import { BrandIcon } from "@/components/Icons";
 import { Spinner } from "@/components/ui/spinner";
 
 const Navbar = async () => {

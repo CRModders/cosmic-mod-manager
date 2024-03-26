@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BrandIcon } from "@/components/icons";
+import { BrandIcon } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import FeaturedSection from "@/components/Featured/Featured";
 import { Suspense } from "react";

@@ -2,7 +2,7 @@ import PanelLayout, {
 	PanelContent,
 	SidePanel,
 } from "@/components/PanelLayout/Panel";
-import { ShieldIcon } from "@/components/icons";
+import { ShieldIcon } from "@/components/Icons";
 import { PersonIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";

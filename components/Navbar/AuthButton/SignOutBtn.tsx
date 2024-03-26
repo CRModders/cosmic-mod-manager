@@ -1,6 +1,6 @@
 "use client";
 
-import { LogoutIcon } from "@/components/icons";
+import { LogoutIcon } from "@/components/Icons";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";

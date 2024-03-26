@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { SunIcon, MoonIcon } from "@/components/icons";
+import { SunIcon, MoonIcon } from "@/components/Icons";
 
 export default function ThemeSwitch() {
 	const { theme, setTheme } = useTheme();

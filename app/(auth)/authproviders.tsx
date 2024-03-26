@@ -1,4 +1,4 @@
-import { DiscordIcon, GithubIcon, GoogleIcon } from "@/components/icons";
+import { DiscordIcon, GithubIcon, GoogleIcon } from "@/components/Icons";
 
 const authProvidersList = [
 	{
