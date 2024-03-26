@@ -7,6 +7,7 @@ import NavbarWrapper from "@/components/Navbar/Navbar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const varela_round = Varela_Round({
 	weight: ["400"],
@@ -45,6 +46,9 @@ export default async function RootLayout({
 
 					<Suspense>
 						<Toaster />
+					</Suspense>
+					<Suspense>
+						<SpeedInsights />
 					</Suspense>
 				</Providers>
 			</body>
