@@ -52,6 +52,7 @@ model User {
     userName      String    @unique
     email         String    @unique
     password      String?
+    newPassword   String? // When a user adds new password, the new password will be stored in this field until the user verifies that action through the link send to his email
     role          UserRoles @default(USER)
     emailVerified DateTime?
     image         String?
