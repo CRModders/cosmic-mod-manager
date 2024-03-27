@@ -15,7 +15,7 @@ const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 		<Button
 			variant="ghost"
 			className={cn(
-				"w-full text-lg flex items-center justify-start gap-2 text-foreground_muted dark:text-foreground_muted_dark",
+				"w-full text-lg flex items-center justify-start gap-2 text-foreground_muted dark:text-foreground_muted_dark duration-default",
 				className,
 			)}
 			size="md"

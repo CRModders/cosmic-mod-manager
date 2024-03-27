@@ -66,7 +66,7 @@ export function NavMenuLink({
 		<li
 			key={`${href}`}
 			className={cn(
-				"w-full flex items-center justify-center rounded-lg hover:bg-foreground/10 dark:hover:bg-foreground_dark/10 transition-all duration-150",
+				"w-full flex items-center justify-center rounded-lg hover:bg-foreground/10 dark:hover:bg-foreground_dark/10 hover:transition-all hover:duration-default",
 				className,
 			)}
 		>

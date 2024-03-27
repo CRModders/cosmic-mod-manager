@@ -31,7 +31,7 @@ type Props = {
 
 const PanelLayout = ({ children }: Props) => {
 	return (
-		<div className="w-full flex flex-wrap items-start justify-start gap-4 mt-4">
+		<div className="w-full flex flex-wrap items-start justify-start gap-8 mt-4">
 			{children}
 		</div>
 	);
