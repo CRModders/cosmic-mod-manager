@@ -9,9 +9,9 @@ export const parseName = (name: string) => {
 
 export const parseUserName = (username: string) => {
 	if (username.length > maxUsernameLength) {
-		return username.slice(0, maxUsernameLength - 1);
+		return username.slice(0, maxUsernameLength - 1).toLowerCase();
 	}
-	return username;
+	return username.toLowerCase();
 };
 
 export const isValidUsername = (username: string): string | boolean => {

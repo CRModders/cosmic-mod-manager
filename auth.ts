@@ -16,8 +16,18 @@ declare module "next-auth" {
 export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		async signIn({ user }): Promise<any> {
+		async signIn({ user, account }): Promise<any> {
 			user.userName = user.id;
+
+			// Delete any existing provider with the same id
+			// Ideally it shouldn't happen, but it may happen if a user was deleted from the database but his provider accounts were not deleted
+			await db.account.deleteMany({
+				where: {
+					provider: account.provider,
+					providerAccountId: account.providerAccountId,
+				},
+			});
+
 			return user;
 		},
 

@@ -155,3 +155,38 @@
         scale: 0;
     }
 }
+
+
+
+.hero_section_showcase {
+    animation: animateShowcaseItems 7.5s ease infinite;
+}
+
+/* Made for 5 showcase items */
+@keyframes animateShowcaseItems {
+
+    0%,
+    20% {
+        transform: translateY(0);
+    }
+
+    25%,
+    45% {
+        transform: translateY(-20%);
+    }
+
+    50%,
+    70% {
+        transform: translateY(-40%);
+    }
+
+    75%,
+    95% {
+        transform: translateY(-60%);
+    }
+
+    100%,
+    100% {
+        transform: translateY(-80%);
+    }
+}

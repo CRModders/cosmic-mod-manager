@@ -5,6 +5,7 @@ import { DashboardIcon, PersonIcon, GearIcon } from "@radix-ui/react-icons";
 import SignOutBtn from "./SignOutBtn";
 import ProfileDropdownLink from "./ProfileDropdownLink";
 import { findUserById } from "@/app/api/actions/user";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const ProfileDropdown = async () => {
 	const session = await auth().catch((e) => console.log(e));
@@ -45,15 +46,18 @@ const ProfileDropdown = async () => {
 			{userData.email && (
 				<div className="w-full flex flex-col items-center justify-center gap-4">
 					<div className="w-full flex flex-col items-start justify-start">
-						<p className="w-full px-4 text-lg text-left font-semibold text-foreground_muted dark:text-foreground_muted_dark">
-							{userData.name}
-						</p>
-						<p className="w-full px-4 text-left text-foreground_muted dark:text-foreground_muted_dark">
-							<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">
-								@
-							</span>
-							{userData.userName}
-						</p>
+						<ScrollArea className="w-full whitespace-nowrap">
+							<p className="w-full px-4 text-lg text-left font-semibold text-foreground_muted dark:text-foreground_muted_dark">
+								{userData.name}
+							</p>
+							<p className="w-full px-4 text-left text-foreground_muted dark:text-foreground_muted_dark">
+								<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">
+									@
+								</span>
+								{userData.userName}
+							</p>
+							<ScrollBar orientation="horizontal" />
+						</ScrollArea>
 					</div>
 					<div className="w-full h-[0.1rem] bg-background_hover dark:bg-background_hover_dark" />
 
