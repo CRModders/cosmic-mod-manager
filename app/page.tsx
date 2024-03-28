@@ -29,13 +29,16 @@ export default async function Home() {
 						Cosmic Reach Mod Manager
 					</h1>
 
-					<h2 className="h-14 lg:h-20 overflow-hidden mb-2">
-						<span className="hero_section_showcase flex flex-col items-center justify-center gap-4 lg:gap-2 py-1 lg:py-1">
-							{showcaseItems?.map((item) => {
+					<h2 className="h-10 lg:h-14 mb-2 overflow-hidden">
+						<span className="hero_section_showcase flex flex-col items-center justify-center">
+							{showcaseItems?.map((item, index) => {
 								return (
 									<strong
-										key={item}
-										className="flex items-center justify-center text-4xl h-10 lg:h-16 lg:text-5xl font-bold bg-clip-text bg-primary_accent_text dark:bg-primary_accent_dark text-transparent bg-cover bg-gradient-to-b from-rose-200 to-primary_accent_text via-primary_accent dark:via-primary_accent_dark dark:to-primary_accent_dark leading-loose"
+										key={`${item}${
+											// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+											index
+										}`}
+										className="flex items-center justify-center text-3xl h-10 lg:h-14 lg:text-5xl font-bold bg-clip-text bg-primary_accent_text dark:bg-primary_accent_dark text-transparent bg-cover bg-gradient-to-b from-rose-200 to-primary_accent_text via-primary_accent dark:via-primary_accent_dark dark:to-primary_accent_dark leading-loose"
 									>
 										{item}
 									</strong>

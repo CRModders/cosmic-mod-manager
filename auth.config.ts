@@ -1,7 +1,6 @@
 import GitHub from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "@auth/core/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 
 export default {
@@ -26,13 +25,6 @@ export default {
 					access_type: "offline",
 					response_type: "code",
 				},
-			},
-		}),
-		CredentialsProvider({
-			id: "credentials",
-			name: "Credentials",
-			async authorize(credentials) {
-				return null;
 			},
 		}),
 	],

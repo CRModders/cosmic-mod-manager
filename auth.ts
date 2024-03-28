@@ -1,9 +1,14 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRoles } from "@prisma/client";
+import {
+	findUserByEmail,
+	findUserById,
+	matchPassword,
+} from "./app/api/actions/user";
 import db from "@/lib/db";
-import { findUserById } from "./app/api/actions/user";
 
 declare module "next-auth" {
 	interface User {
@@ -49,6 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	},
 
 	events: {
+		...authConfig,
 		async linkAccount({ user }) {
 			// Set the email verified for oauth users
 			const userData = await findUserById(user.id);
@@ -66,5 +72,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	adapter: PrismaAdapter(db),
 	session: { strategy: "jwt" },
 	secret: process.env.AUTH_SECRET,
-	...authConfig,
+	providers: [
+		...authConfig.providers,
+		CredentialsProvider({
+			id: "credentials",
+			name: "Credentials",
+			async authorize(credentials) {
+				if (!credentials?.email || !credentials?.password) {
+					return null;
+				}
+
+				const userData = await db.user.findUnique({
+					where: { email: credentials.email as string },
+				});
+
+				const isCorrectPassword = await matchPassword(
+					credentials?.password as string,
+					userData.password,
+				);
+
+				if (isCorrectPassword) {
+					const user = await findUserByEmail(credentials?.email as string);
+					return user;
+				}
+
+				return null;
+			},
+		}),
+	],
 });

@@ -30,7 +30,7 @@ export const formSchema = z.object({
 			message: "Enter your username",
 		})
 		.max(maxUsernameLength, {
-			message: `You username can only have maximum of ${maxUsernameLength} character`,
+			message: `Your username can only have a maximum of ${maxUsernameLength} character`,
 		}),
 	name: z
 		.string()
@@ -38,7 +38,7 @@ export const formSchema = z.object({
 			message: "Enter your name",
 		})
 		.max(maxNameLength, {
-			message: `You name can only have maximum of ${maxNameLength} character`,
+			message: `Your name can only have a maximum of ${maxNameLength} character`,
 		}),
 });
 

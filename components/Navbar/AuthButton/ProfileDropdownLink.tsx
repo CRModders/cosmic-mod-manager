@@ -8,6 +8,7 @@ type Props = {
 	className?: string;
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 	tabIndex?: number;
+	disabled?: boolean;
 };
 
 const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {

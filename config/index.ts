@@ -47,3 +47,8 @@ export const defaultLoginRedirect = "/dashboard";
 
 export const maxNameLength = 32;
 export const maxUsernameLength = 32;
+
+export const minPasswordLength = 8;
+export const maxPasswordLength = 64;
+
+export const passwordHashingSaltRounds = 8;

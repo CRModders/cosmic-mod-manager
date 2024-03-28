@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,11 +14,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { sleep } from "@/lib/utils";
+import { loginUser } from "@/app/api/actions/user";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { defaultLoginRedirect } from "@/config";
+import { isValidEmail } from "@/lib/user";
 
 const formSchema = z.object({
 	email: z
@@ -33,10 +34,13 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-	const { toast } = useToast();
+	// const router = useRouter();
 	const [loading, setLoading] = useState(false);
+	const [formError, setFormError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
-	const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+	const [callbackUrl, setCallbackUrl] = useState(
+		searchParams.get("callbackUrl") || "",
+	);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -46,32 +50,52 @@ const LoginForm = () => {
 		},
 	});
 
+	const checkFormError = () => {
+		const email = form.getValues("email");
+		const validEmail = email ? isValidEmail(email) : false;
+		let error = null;
+
+		if (!validEmail) {
+			error = "Enter a valid email address";
+			setFormError(error);
+		} else {
+			error = null;
+			setFormError(error);
+		}
+
+		return error;
+	};
+
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-		// TODO: Check form data validity
+		const error = checkFormError();
+		if (error) return;
+
+		if (loading) return;
 		setLoading(true);
 
-		await sleep(2_000);
-
-		// TODO: Handle login errors and display appropriate messages
-
-		// const result = await signIn("credentials", {
-		// 	redirect: true,
-		// 	email: values.email,
-		// 	password: values.password,
-		// 	callbackUrl: callbackUrl,
-		// });
-
-		// console.log(result);
-
-		toast({
-			title: "Credentials signIn not available",
-			description:
-				"Credentials singIn has not been implemented yet. Please don't try again!",
-			// description: "Either of the email or password you entered was incorrect. Please try again",
+		const result = await loginUser({
+			email: values.email,
+			password: values.password,
 		});
 
 		setLoading(false);
+
+		if (result?.success === false) {
+			return setFormError(result?.message || "Something went wrong");
+		}
+		// For some reason Next app router does not reload the page so had to use window reload
+		// router.push(callbackUrl);
+		// router.refresh();
+		window.location.href = callbackUrl;
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		setCallbackUrl(
+			searchParams.get("callbackUrl") ||
+				`${window.location.origin}${defaultLoginRedirect}`,
+		);
+	}, []);
 
 	return (
 		<Form {...form}>
@@ -95,8 +119,11 @@ const LoginForm = () => {
 											type="email"
 											required
 											placeholder="example@abc.com"
-											{...field}
 											className="w-full flex items-center justify-center"
+											onKeyUp={() => {
+												setFormError("");
+											}}
+											{...field}
 										/>
 									</FormControl>
 								</FormItem>
@@ -120,8 +147,11 @@ const LoginForm = () => {
 										<Input
 											placeholder="********"
 											type="password"
-											{...field}
 											className="w-full flex items-center justify-center"
+											onKeyUp={() => {
+												setFormError("");
+											}}
+											{...field}
 										/>
 									</FormControl>
 								</FormItem>
@@ -129,6 +159,15 @@ const LoginForm = () => {
 						)}
 					/>
 				</div>
+
+				{formError && (
+					<div className="w-full flex items-start min-h-6 justify-center gap-2 text-rose-600 dark:text-rose-400">
+						<>
+							<ExclamationTriangleIcon className="w-5 h-5" />
+							<p className="leading-tight">{formError}</p>
+						</>
+					</div>
+				)}
 
 				<Button
 					type="submit"
