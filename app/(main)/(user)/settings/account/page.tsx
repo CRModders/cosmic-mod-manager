@@ -13,6 +13,7 @@ import EditProfileDialog from "./profile/editProfileDialog";
 import { findUserById } from "@/app/api/actions/user";
 import { Card } from "@/components/ui/card";
 import EmailField from "./account_security/email";
+import PasswordField from "./account_security/password";
 
 const UnauthenticatedUserMsg = () => {
 	return (
@@ -33,7 +34,6 @@ const AccountSettingsPage = async () => {
 	if (!user?.email) {
 		return <UnauthenticatedUserMsg />;
 	}
-
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
@@ -76,11 +76,22 @@ const AccountSettingsPage = async () => {
 					</h2>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2 gap-4">
-					<div className="w-full flex flex-col items-start justify-center gap-2">
+					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
 							Email
 						</p>
 						<EmailField email={user.email} />
+					</div>
+
+					<div className="w-full flex flex-col items-start justify-center gap-1">
+						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
+							Password
+						</p>
+						<PasswordField
+							id={user.id}
+							email={user.email}
+							hasAPassword={user.hasAPassword}
+						/>
 					</div>
 				</div>
 			</Card>

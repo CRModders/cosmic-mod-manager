@@ -48,7 +48,7 @@ const Navbar = async () => {
 										>
 											<Navlink
 												href={link.href}
-												className=" hover:text-foreground dark:hover:text-foreground_dark"
+												className=" hover:text-foreground dark:hover:text-foreground_dark hover:transition-colors hover:duration-default"
 											>
 												<p className="px-2 h-12 flex items-center justify-center text-center">
 													{link.name}

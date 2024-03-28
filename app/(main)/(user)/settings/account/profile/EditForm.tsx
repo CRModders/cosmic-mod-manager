@@ -38,7 +38,7 @@ export const formSchema = z.object({
 			message: "Enter your username",
 		})
 		.max(maxUsernameLength, {
-			message: `You username can only have maximum of ${maxUsernameLength} character`,
+			message: `Your username can only have a maximum of ${maxUsernameLength} character`,
 		}),
 	name: z
 		.string()
@@ -46,7 +46,7 @@ export const formSchema = z.object({
 			message: "Enter your name",
 		})
 		.max(maxNameLength, {
-			message: `You name can only have maximum of ${maxNameLength} character`,
+			message: `Your name can only have a maximum of ${maxNameLength} character`,
 		}),
 });
 
@@ -82,6 +82,9 @@ const EditProfileInfoForm = ({
 	) => {
 		let name = form.getValues("name");
 		let username = form.getValues("username");
+		// Make the username lower case
+		form.setValue("username", username.toLowerCase());
+		username = form.getValues("username");
 
 		console.log({
 			name,
@@ -97,23 +100,26 @@ const EditProfileInfoForm = ({
 			username = event.target.value;
 		}
 
+		if (!username && !name) return setFormError("");
+
 		if (isValidUsername(username) !== true) {
 			const error = isValidUsername(username);
-			setFormError(error.toString());
-			return;
+			if (username) {
+				return setFormError(error.toString());
+			}
 		}
 
 		if (isValidName(name) !== true) {
 			const error = isValidName(name);
-			setFormError(error.toString());
-			return;
+			if (name) {
+				return setFormError(error.toString());
+			}
 		}
 
 		setFormError(null);
 	};
 
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-		// TODO: Check form data validity
 		if (loading) return;
 
 		checkFormError();
@@ -150,68 +156,76 @@ const EditProfileInfoForm = ({
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(handleSubmit)}
-				className="w-full flex flex-col items-center justify-center gap-5"
+				className="w-full flex flex-col items-center justify-center gap-3"
 			>
-				<div className="w-full flex flex-col items-center justify-center">
-					<FormField
-						control={form.control}
-						name="username"
-						render={({ field }) => (
-							<>
-								<FormItem className="w-full flex flex-col items-center justify-center">
-									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Username</span>
-										<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
-									</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="john_doe"
-											className="w-full flex items-center justify-center"
-											onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-												checkFormError(e, "username");
-											}}
-											{...field}
-										/>
-									</FormControl>
-								</FormItem>
-							</>
-						)}
-					/>
-				</div>
-
-				<div className="w-full flex flex-col items-center justify-center">
-					<FormField
-						control={form.control}
-						name="name"
-						render={({ field }) => (
-							<>
-								<FormItem className="w-full flex flex-col items-center justify-center">
-									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Full name</span>
-										<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
-									</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="John Doe"
-											className="w-full flex items-center justify-center"
-											onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-												checkFormError(e, "name");
-											}}
-											{...field}
-										/>
-									</FormControl>
-								</FormItem>
-							</>
-						)}
-					/>
-				</div>
-
-				{formError && (
-					<div className="w-full flex items-center justify-start gap-4 text-rose-600 dark:text-rose-">
-						<ExclamationTriangleIcon className="w-6 h-500" />
-						<p>{formError}</p>
+				<div className="w-full flex flex-col items-center justify-center gap-4">
+					<div className="w-full flex flex-col items-center justify-center">
+						<FormField
+							control={form.control}
+							name="username"
+							render={({ field }) => (
+								<>
+									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
+										<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">
+												Username
+											</span>
+											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+										</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="john_doe"
+												className="w-full flex items-center justify-centerp"
+												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+													checkFormError(e, "username");
+												}}
+												{...field}
+											/>
+										</FormControl>
+									</FormItem>
+								</>
+							)}
+						/>
 					</div>
-				)}
+
+					<div className="w-full flex flex-col items-center justify-center">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<>
+									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
+										<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">
+												Full name
+											</span>
+											<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+										</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="John Doe"
+												className="w-full flex items-center justify-center"
+												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+													checkFormError(e, "name");
+												}}
+												{...field}
+											/>
+										</FormControl>
+									</FormItem>
+								</>
+							)}
+						/>
+					</div>
+				</div>
+
+				<div className="w-full flex items-center min-h-6 justify-start gap-4 text-rose-600 dark:text-rose-">
+					{formError && (
+						<>
+							<ExclamationTriangleIcon className="w-6 h-500" />
+							<p>{formError}</p>
+						</>
+					)}
+				</div>
 
 				<div className="w-full flex items-center justify-end gap-2">
 					<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
@@ -227,7 +241,7 @@ const EditProfileInfoForm = ({
 							form.getValues().username === username
 						}
 					>
-						<p className="px-4">Save</p>
+						<p className="px-4 font-semibold">Save</p>
 					</Button>
 				</div>
 			</form>
