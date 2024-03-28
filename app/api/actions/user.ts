@@ -21,7 +21,7 @@ const hashPassword = async (password: string) => {
 };
 
 const ReturnPublicUserData = async (user: User) => {
-	const hasAPassword = !!user?.password || !!user?.newPassword;
+	const hasAPassword = !!user?.password;
 	return {
 		id: user?.id,
 		name: user?.name,

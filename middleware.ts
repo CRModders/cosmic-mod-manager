@@ -41,8 +41,10 @@ const isProtectedRoute = (pathname: string): boolean => {
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (request) => {
-	// console.log(`IP_ADDRESS :  ${request.ip}`);
-	// console.log({ request_geo: request.geo });
+	console.log({
+		IP: request.ip,
+		GEO: request.geo,
+	});
 
 	const user = request?.auth?.user;
 	const isAuthenticated = user?.email;
