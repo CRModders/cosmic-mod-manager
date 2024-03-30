@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { siteTitle } from "@/config";
 
 const varela_round = Varela_Round({
 	weight: ["400"],
@@ -16,8 +17,8 @@ const varela_round = Varela_Round({
 
 export const metadata: Metadata = {
 	title: {
-		default: "Cosmic reach mod manager",
-		template: "%s - Cosmic reach mod manager",
+		default: siteTitle,
+		template: `%s - ${siteTitle}`,
 	},
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };

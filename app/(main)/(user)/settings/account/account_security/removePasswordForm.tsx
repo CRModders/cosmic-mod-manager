@@ -25,82 +25,56 @@ import { Spinner } from "@/components/ui/spinner";
 import { DialogClose } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { KeyIcon } from "@/components/Icons";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { setNewPassword } from "@/app/api/actions/user";
-import { sleep } from "@/lib/utils";
-import { isValidPassword } from "@/lib/user";
+import { ExclamationTriangleIcon, TrashIcon } from "@radix-ui/react-icons";
+import { removePassword } from "@/app/api/actions/user";
 
 export const formSchema = z.object({
 	email: z.string(),
-	newPassword: z
+	password: z
 		.string()
 		.min(minPasswordLength, {
-			message: "Enter your new password",
+			message: "Enter your password",
 		})
 		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} character`,
-		}),
-	confirmNewPassword: z
-		.string()
-		.min(1, {
-			message: "Re-enter your password",
-		})
-		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} character`,
+			message: `Invalid password. Password can only have a maximum of ${maxPasswordLength} character`,
 		}),
 });
 
 type Props = {
 	id: string;
 	email: string;
-	hasAPassword: boolean;
+	children: React.ReactNode;
 };
 
-const AddPasswordForm = ({ id, email }: Props) => {
+const RemovePasswordForm = ({ id, email, children }: Props) => {
 	const { toast } = useToast();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [formError, setFormError] = useState<string | null>(null);
+	const [formError, setFormError] = useState(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			email: email,
-			newPassword: "",
-			confirmNewPassword: "",
+			password: "",
 		},
 	});
 
-	const checkFormError = () => {
-		const newPassword = form.getValues("newPassword");
-
-		if (isValidPassword(newPassword) !== true) {
-			const error = isValidPassword(newPassword);
-			return setFormError(typeof error === "string" ? error : null);
-		}
-
-		return setFormError("");
-	};
-
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 		if (loading) return;
-
-		checkFormError();
-		if (formError) {
-			return;
+		if (
+			!values?.password ||
+			(values?.password?.length || 0) < minPasswordLength ||
+			(values?.password?.length || 0) > maxPasswordLength
+		) {
+			return setFormError("Enter a valid password.");
 		}
-
-		if (values.newPassword !== values.confirmNewPassword) {
-			return setFormError("Passwords do not match");
-		}
-
 		setLoading(true);
-		const result = await setNewPassword({
+
+		const result = await removePassword({
 			id: id,
-			email: email,
-			newPassword: values.newPassword,
+			password: values.password,
 		});
 		setLoading(false);
 
@@ -116,22 +90,14 @@ const AddPasswordForm = ({ id, email }: Props) => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger asChild>
-				<Button
-					className="flex items-center justify-center gap-2"
-					variant="outline"
-				>
-					<KeyIcon size="1.1rem" />
-					<p>Add password</p>
-				</Button>
-			</DialogTrigger>
+			<DialogTrigger asChild>{children}</DialogTrigger>
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Add a password</DialogTitle>
+					<DialogTitle>Remove your account password</DialogTitle>
 				</DialogHeader>
 
-				<div className="w-full flex flex-col items-center justify-center py-4">
+				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(handleSubmit)}
@@ -165,13 +131,13 @@ const AddPasswordForm = ({ id, email }: Props) => {
 								<div className="w-full flex flex-col items-center justify-center">
 									<FormField
 										control={form.control}
-										name="newPassword"
+										name="password"
 										render={({ field }) => (
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">
-															New password
+														<span className="text-foreground_muted dark:text-foreground_muted_dark my-1">
+															Confirm your password
 														</span>
 														<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
 													</FormLabel>
@@ -185,41 +151,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 															onKeyUp={(
 																e: React.KeyboardEvent<HTMLInputElement>,
 															) => {
-																checkFormError();
-															}}
-															{...field}
-														/>
-													</FormControl>
-												</FormItem>
-											</>
-										)}
-									/>
-								</div>
-
-								<div className="w-full flex flex-col items-center justify-center">
-									<FormField
-										control={form.control}
-										name="confirmNewPassword"
-										render={({ field }) => (
-											<>
-												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">
-															Confirm new password
-														</span>
-														<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
-													</FormLabel>
-													<FormControl>
-														<Input
-															placeholder="********"
-															type="password"
-															name="confirm_password"
-															autoComplete="confirm_password"
-															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
-															) => {
-																checkFormError();
+																setFormError(null);
 															}}
 															{...field}
 														/>
@@ -242,7 +174,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-									<p className="px-4 h-9 flex items-center justify-center">
+									<p className="px-4 h-9 flex items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
 										Cancel
 									</p>
 								</DialogClose>
@@ -250,13 +182,11 @@ const AddPasswordForm = ({ id, email }: Props) => {
 								<Button
 									type="submit"
 									aria-label="Log in"
-									className=""
-									disabled={
-										!form.getValues().newPassword &&
-										!form.getValues().confirmNewPassword
-									}
+									className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80"
+									disabled={!form.getValues().password}
 								>
-									<p className="px-4 font-semibold">Set password</p>
+									<TrashIcon className="h-4 w-4 text-foreground_dark" />
+									<p className="px-2 text-foreground_dark">Remove password</p>
 								</Button>
 							</div>
 						</form>
@@ -275,4 +205,4 @@ const AddPasswordForm = ({ id, email }: Props) => {
 	);
 };
 
-export default AddPasswordForm;
+export default RemovePasswordForm;

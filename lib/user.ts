@@ -14,15 +14,24 @@ export const parseUserName = (username: string) => {
 	return username.toLowerCase();
 };
 
+export const parseUsername = (username: string): string => {
+	return encodeURIComponent(username).replaceAll("-", "_").toLowerCase();
+};
+
 export const isValidUsername = (username: string): string | boolean => {
-	const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+	const usernameRegex = /^[a-zA-Z0-9_]+$/;
+	const containsAlphabets = /^[a-zA-Z]+$/.test(username);
 
 	if (username.includes(" ")) {
 		return "Username cannot contain spaces";
 	}
 
 	if (!usernameRegex.test(username)) {
-		return "Username cannot contain special characters";
+		return "No special character other than underscores( _ ) are allowed";
+	}
+
+	if (!containsAlphabets) {
+		return "Your username must contain alphabetical characters";
 	}
 
 	return true;

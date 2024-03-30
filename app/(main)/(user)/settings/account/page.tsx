@@ -5,7 +5,8 @@ import EditProfileDialog from "./profile/editProfileDialog";
 import { findUserById } from "@/app/api/actions/user";
 import { Card } from "@/components/ui/card";
 import EmailField from "./account_security/email";
-import PasswordField from "./account_security/password";
+import PasswordSection from "./account_security/password";
+import ManageProviders from "./account_security/ManageProviders";
 
 const UnauthenticatedUserMsg = () => {
 	return (
@@ -38,19 +39,23 @@ const AccountSettingsPage = async () => {
 					</div>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2">
-					<div className="w-full flex flex-col sm:flex-row items-center justify-start gap-6">
-						<Avatar className="flex items-center justify-center w-24 h-24">
-							{user?.image && (
-								<AvatarImage src={user?.image} alt={`${user?.name} `} />
-							)}
+					<div className="w-full flex flex-wrap items-center justify-start gap-6">
+						<div className="flex grow sm:grow-0 items-center justify-center">
+							<Avatar className="flex items-center justify-center w-24 h-24">
+								{user?.image && (
+									<AvatarImage src={user?.image} alt={`${user?.name} `} />
+								)}
 
-							<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-								{user?.name?.charAt(0).toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<h1 className="text-3xl font-semibold">{user.name}</h1>
-							<p>
+								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
+									{user?.name?.charAt(0).toUpperCase()}
+								</AvatarFallback>
+							</Avatar>
+						</div>
+						<div className="grow flex flex-col items-start justify-center">
+							<h1 className="flex w-full items-center sm:justify-start justify-center text-3xl font-semibold">
+								{user.name}
+							</h1>
+							<p className="w-full flex items-center sm:justify-start justify-center">
 								<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">
 									@
 								</span>
@@ -67,7 +72,7 @@ const AccountSettingsPage = async () => {
 						Account security
 					</h2>
 				</div>
-				<div className="w-full flex flex-col items-center justify-center my-2 gap-4">
+				<div className="w-full flex flex-col items-center justify-center my-2 gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
 							Email
@@ -75,16 +80,13 @@ const AccountSettingsPage = async () => {
 						<EmailField email={user.email} />
 					</div>
 
-					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
-							Password
-						</p>
-						<PasswordField
-							id={user.id}
-							email={user.email}
-							hasAPassword={user.hasAPassword}
-						/>
-					</div>
+					<PasswordSection
+						id={user.id}
+						email={user.email}
+						hasAPassword={user.hasAPassword}
+					/>
+
+					<ManageProviders id={user.id} />
 				</div>
 			</Card>
 		</div>

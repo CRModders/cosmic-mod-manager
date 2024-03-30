@@ -30,7 +30,7 @@ export const formSchema = z.object({
 			message: "Enter your username",
 		})
 		.max(maxUsernameLength, {
-			message: `Your username can only have a maximum of ${maxUsernameLength} character`,
+			message: `Your username can only have a maximum of ${maxUsernameLength} characters`,
 		}),
 	name: z
 		.string()
@@ -38,7 +38,7 @@ export const formSchema = z.object({
 			message: "Enter your name",
 		})
 		.max(maxNameLength, {
-			message: `Your name can only have a maximum of ${maxNameLength} character`,
+			message: `Your name can only have a maximum of ${maxNameLength} characters`,
 		}),
 });
 
@@ -74,14 +74,10 @@ const EditProfileInfoForm = ({
 	) => {
 		let name = form.getValues("name");
 		let username = form.getValues("username");
+
 		// Make the username lower case
 		form.setValue("username", username.toLowerCase());
 		username = form.getValues("username");
-
-		console.log({
-			name,
-			username,
-		});
 
 		if (event && inputName && inputName === "name") {
 			// @ts-expect-error
@@ -210,7 +206,7 @@ const EditProfileInfoForm = ({
 					</div>
 				</div>
 
-				<div className="w-full flex items-center min-h-6 justify-start gap-4 text-rose-600 dark:text-rose-">
+				<div className="w-full flex items-center min-h-6 justify-start gap-4 text-rose-600 dark:text-rose-400">
 					{formError && (
 						<>
 							<ExclamationTriangleIcon className="w-6 h-500" />

@@ -1,12 +1,17 @@
 import React from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { NavMenuLink } from "../Navlink";
 
-const LoginBtn = () => {
+const LoginBtn = ({
+	closeNavMenuOnLinkClick = true,
+}: {
+	closeNavMenuOnLinkClick?: boolean;
+}) => {
 	return (
-		<Link
-			href="/login"
+		<NavMenuLink
 			className="w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark"
+			href="/login"
+			closeNavMenuOnLinkClick={closeNavMenuOnLinkClick}
 		>
 			<Button
 				variant="outline"
@@ -14,9 +19,11 @@ const LoginBtn = () => {
 				className="w-full"
 				aria-label="Log In"
 			>
-				<p className="text-lg">Log In</p>
+				<p className="text-lg text-foreground dark:text-foreground_dark">
+					Log In
+				</p>
 			</Button>
-		</Link>
+		</NavMenuLink>
 	);
 };
 

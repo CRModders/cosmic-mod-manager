@@ -77,14 +77,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const userName = params.userName;
 	const user = await findUserByUsername(userName);
 
-	if (!user) {
+	if (!user?.email) {
 		return {
-			title: "Invalid username - Cosmic Reach Mod Manager",
+			title: " ",
 			description: "",
 		};
 	}
 
 	return {
 		title: user.userName,
+		description: `${user.userName}'s profile on CRMM`,
 	};
 }

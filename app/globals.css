@@ -159,6 +159,7 @@
 
 
 .hero_section_showcase {
+    --unit-height: 2.5rem;
     animation: animateShowcaseItems 7.5s ease infinite;
 }
 
@@ -167,26 +168,33 @@
 
     0%,
     20% {
-        transform: translateY(0);
+        transform: translateY(calc(var(--unit-height) * 0));
     }
 
     25%,
     45% {
-        transform: translateY(-20%);
+        transform: translateY(calc(var(--unit-height) * -1));
     }
 
     50%,
     70% {
-        transform: translateY(-40%);
+        transform: translateY(calc(var(--unit-height) * -2));
     }
 
     75%,
     95% {
-        transform: translateY(-60%);
+        transform: translateY(calc(var(--unit-height) * -3));
     }
 
     100%,
     100% {
-        transform: translateY(-80%);
+        transform: translateY(calc(var(--unit-height) * -4));
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .hero_section_showcase {
+        --unit-height: 3.5rem;
     }
 }

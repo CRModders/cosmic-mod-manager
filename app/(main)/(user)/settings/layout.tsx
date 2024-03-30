@@ -6,6 +6,16 @@ import { ShieldIcon } from "@/components/Icons";
 import { PersonIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
+import { siteTitle } from "@/config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: {
+		default: "Settings",
+		template: `%s - ${siteTitle}`,
+	},
+	description: "CRMM settings page",
+};
 
 const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 	const baseUrlPrefix = "/settings";

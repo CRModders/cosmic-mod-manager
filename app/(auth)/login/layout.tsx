@@ -11,9 +11,5 @@ export default function LoginPageLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return (
-		<section className="flex w-full flex-col items-center justify-center">
-			<div className="inline-block w-full">{children}</div>
-		</section>
-	);
+	return children;
 }

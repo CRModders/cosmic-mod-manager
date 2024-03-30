@@ -61,7 +61,7 @@ const AuthButton = async () => {
 
 	return (
 		<div className="flex items-center justify-center">
-			<LoginBtn />
+			<LoginBtn closeNavMenuOnLinkClick={false} />
 		</div>
 	);
 };

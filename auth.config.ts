@@ -1,11 +1,12 @@
-import GitHub from "next-auth/providers/github";
+import GitHubProvider from "next-auth/providers/github";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "@auth/core/providers/google";
+import GitlabProvider from "@auth/core/providers/gitlab";
 import type { NextAuthConfig } from "next-auth";
 
 export default {
 	providers: [
-		GitHub({
+		GitHubProvider({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
 			allowDangerousEmailAccountLinking: true,
@@ -15,6 +16,7 @@ export default {
 			clientSecret: process.env.DISCORD_SECRET,
 			allowDangerousEmailAccountLinking: true,
 		}),
+
 		GoogleProvider({
 			clientId: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
@@ -26,6 +28,11 @@ export default {
 					response_type: "code",
 				},
 			},
+		}),
+		GitlabProvider({
+			clientId: process.env.GITLAB_ID,
+			clientSecret: process.env.GITLAB_SECRET,
+			allowDangerousEmailAccountLinking: true,
 		}),
 	],
 } satisfies NextAuthConfig;

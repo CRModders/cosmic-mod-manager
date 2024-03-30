@@ -53,7 +53,7 @@ export default async function Home() {
 							<Link
 								href="https://finalforeach.itch.io/cosmic-reach"
 								target="_blank"
-								className="text-primary_accent_text dark:text-primary_accent_text_dark"
+								className="text-primary_accent_text dark:text-primary_accent_dark"
 							>
 								&nbsp;Cosmic&nbsp;Reach&nbsp;
 							</Link>{" "}
@@ -67,7 +67,7 @@ export default async function Home() {
 
 				<div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
 					<Button
-						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80"
+						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 h-10 lg:h-12 px-6 lg:px-8"
 						size="lg"
 						aria-label="Explore mods"
 					>

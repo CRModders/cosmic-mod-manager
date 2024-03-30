@@ -3,10 +3,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
 	title: {
-		default: " ",
+		default: "Dashboard",
 		template: `%s - ${siteTitle}`,
 	},
-	description: "Cosmic reach mod manager",
+	description: "Your dashboard. Manage and upload your content on CRMM.",
 };
 
 export default function LoginPageLayout({
@@ -15,7 +15,7 @@ export default function LoginPageLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="flex w-full flex-col items-center justify-center text-center min-h-[100dvh] py-12">
+		<section className="flex w-full flex-col items-center justify-center text-center min-h-[100dvh]">
 			{children}
 		</section>
 	);

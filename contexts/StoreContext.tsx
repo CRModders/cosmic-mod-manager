@@ -17,7 +17,9 @@ export default function StoreContextProvider({
 	const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
 
 	const toggleNavMenu = (newState?: boolean) => {
-		setIsNavMenuOpen((current) => !current);
+		setIsNavMenuOpen((current) =>
+			newState === true || newState === false ? newState : !current,
+		);
 	};
 
 	return (

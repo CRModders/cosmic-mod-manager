@@ -38,6 +38,8 @@ const NavMenuLinks = [
 
 export { NavLinks, NavMenuLinks };
 
+export const siteTitle = "Cosmic Reach Mod Manager";
+
 // Route types
 export const authRouteApiPrefix = "/api/auth";
 export const authRoutes = ["/login", "/register"];

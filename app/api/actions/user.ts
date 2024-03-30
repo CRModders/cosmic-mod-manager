@@ -233,3 +233,155 @@ export const loginUser = async ({
 		return { success: false, message: "Internal server error" };
 	}
 };
+
+export const removePassword = async ({
+	id,
+	password,
+}: {
+	id: string;
+	password: string;
+}) => {
+	if (!id || !password) {
+		return {
+			success: false,
+			message: "Invalid request!",
+		};
+	}
+
+	const session = await auth();
+
+	if (session?.user?.id !== id) {
+		return {
+			success: false,
+			message: "Invalid request!",
+		};
+	}
+
+	const userData = await db.user.findUnique({
+		where: { id: id },
+	});
+	try {
+		const isCorrectPassword = await matchPassword(password, userData.password);
+		if (!isCorrectPassword) {
+			return {
+				success: false,
+				message: "Incorrect password!",
+			};
+		}
+
+		await db.user.update({
+			where: { id: userData.id },
+			data: { password: null },
+		});
+
+		revalidatePath("/settings/account");
+
+		return {
+			success: true,
+			message: "Successfully removed password",
+		};
+	} catch (error) {
+		console.log({ error });
+		return {
+			success: false,
+			message: "Internal server error!",
+		};
+	}
+};
+
+export const getLinkedProvidersList = async (): Promise<string[]> => {
+	const session = await auth();
+	if (!session?.user?.id) return [];
+
+	try {
+		const linkedProviders = await db.account.findMany({
+			where: { userId: session?.user?.id },
+		});
+
+		const list = [];
+		for (const provider of linkedProviders) {
+			list.push(provider.provider);
+		}
+
+		return list;
+	} catch (error) {
+		console.log({ error });
+		return [];
+	}
+};
+
+export const unlinkAuthProvider = async (name: string) => {
+	const user = (await auth())?.user;
+	if (!user?.id) {
+		return {
+			success: false,
+			message: "Invalid request",
+		};
+	}
+
+	const existingProviders = await db.account.findMany({
+		where: { userId: user?.id },
+	});
+
+	if (!existingProviders?.length) {
+		return {
+			success: false,
+			message: "Invalid request",
+		};
+	}
+
+	if (existingProviders.length === 1) {
+		return {
+			success: false,
+			message: "You can't unlink the only remaining auth provider",
+		};
+	}
+
+	const targetProvider = existingProviders
+		.filter((provider) => {
+			if (provider.provider === name) {
+				return provider;
+			}
+		})
+		?.at(0);
+
+	if (!targetProvider) {
+		return {
+			success: false,
+			message: "Invalid request",
+		};
+	}
+	try {
+		await db.account.delete({
+			where: {
+				id: targetProvider.id,
+			},
+		});
+
+		revalidatePath("/settings/account");
+
+		return {
+			success: true,
+			message: `Successfully removed ${name} provider`,
+		};
+	} catch (error) {
+		return {
+			success: false,
+			message: "Internal server error",
+		};
+	}
+};
+
+export const getCurrentAuthUser = async () => {
+	const user = (await auth())?.user;
+	if (!user?.id) {
+		return null;
+	}
+
+	const userData = await db.user.findUnique({
+		where: { id: user?.id },
+	});
+
+	if (!userData?.id) return null;
+	return userData;
+};

@@ -15,6 +15,7 @@ interface NavLinkProps {
 	};
 	isDisabled?: boolean;
 	tabIndex?: number;
+	closeNavMenuOnLinkClick?: boolean;
 }
 
 const Navlink = ({ children, href, className }: NavLinkProps) => {
@@ -48,6 +49,7 @@ export function NavMenuLink({
 	classNames,
 	isDisabled = false,
 	tabIndex,
+	closeNavMenuOnLinkClick = true,
 }: NavLinkProps) {
 	const { toggleNavMenu } = useContext(StoreContext);
 
@@ -78,7 +80,11 @@ export function NavMenuLink({
 				color={"foreground"}
 				href={href}
 				data-active={isActive}
-				onClick={CloseNavMenu}
+				onClick={() => {
+					if (closeNavMenuOnLinkClick === true) {
+						CloseNavMenu();
+					}
+				}}
 				aria-disabled={isDisabled}
 				tabIndex={tabIndex || isDisabled ? -1 : 0}
 			>
