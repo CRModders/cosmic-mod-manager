@@ -19,6 +19,7 @@
 		"@radix-ui/react-label": "^2.0.2",
 		"@radix-ui/react-popover": "^1.0.7",
 		"@radix-ui/react-scroll-area": "^1.0.5",
+		"@radix-ui/react-select": "^2.0.0",
 		"@radix-ui/react-slot": "^1.0.2",
 		"@radix-ui/react-toast": "^1.1.5",
 		"@vercel/speed-insights": "^1.0.10",
@@ -30,6 +31,7 @@
 		"next-auth": "^5.0.0-beta.15",
 		"next-themes": "^0.3.0",
 		"nextjs-toploader": "^1.6.11",
+		"nodemailer": "^6.9.13",
 		"react": "^18",
 		"react-dom": "^18",
 		"react-hook-form": "^7.51.1",
@@ -42,6 +44,7 @@
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.2",
 		"@types/node": "^20.11.30",
+		"@types/nodemailer": "^6.4.14",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"autoprefixer": "^10.0.1",

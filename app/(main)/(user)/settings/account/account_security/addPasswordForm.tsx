@@ -1,5 +1,13 @@
 "use client";
 
+//     This file is part of Cosmic Reach Mod Manager.
+//
+//    Cosmic Reach Mod Manager is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+//    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
+
 import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,8 +36,7 @@ import { Button } from "@/components/ui/button";
 import { KeyIcon } from "@/components/Icons";
 import { maxPasswordLength, minPasswordLength } from "@/config";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { setNewPassword } from "@/app/api/actions/user";
-import { sleep } from "@/lib/utils";
+import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
 
 export const formSchema = z.object({
@@ -44,7 +51,7 @@ export const formSchema = z.object({
 		}),
 	confirmNewPassword: z
 		.string()
-		.min(minPasswordLength, {
+		.min(1, {
 			message: "Re-enter your password",
 		})
 		.max(maxPasswordLength, {
@@ -58,11 +65,11 @@ type Props = {
 	hasAPassword: boolean;
 };
 
-const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
+const AddPasswordForm = ({ id, email }: Props) => {
 	const { toast } = useToast();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [formError, setFormError] = useState(null);
+	const [formError, setFormError] = useState<string | null>(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -75,18 +82,16 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 
 	const checkFormError = () => {
 		const newPassword = form.getValues("newPassword");
-		const confirmNewPassword = form.getValues("confirmNewPassword");
 
 		if (isValidPassword(newPassword) !== true) {
 			const error = isValidPassword(newPassword);
-			return setFormError(error);
+			return setFormError(typeof error === "string" ? error : null);
 		}
 
 		return setFormError("");
 	};
 
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-		console.log("SUBMITTING");
 		if (loading) return;
 
 		checkFormError();
@@ -99,10 +104,7 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 		}
 
 		setLoading(true);
-		await sleep(2_000);
-		const result = await setNewPassword({
-			id: id,
-			email: email,
+		const result = await initiateAddNewPasswordAction({
 			newPassword: values.newPassword,
 		});
 		setLoading(false);
@@ -111,6 +113,9 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 			toast({
 				title: result.message,
 			});
+
+			form.reset();
+
 			setDialogOpen(false);
 		} else {
 			setFormError(result.message);
@@ -125,7 +130,7 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 					variant="outline"
 				>
 					<KeyIcon size="1.1rem" />
-					<p>Add a password</p>
+					<p>Add password</p>
 				</Button>
 			</DialogTrigger>
 
@@ -134,11 +139,11 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 					<DialogTitle>Add a password</DialogTitle>
 				</DialogHeader>
 
-				<div className="w-full flex flex-col items-center justify-center py-4">
+				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(handleSubmit)}
-							className="w-full flex flex-col items-center justify-center gap-3"
+							className="w-full flex flex-col items-center justify-center gap-6"
 						>
 							<div className="w-full flex flex-col items-center justify-center gap-4">
 								<div className="w-full flex flex-col items-center justify-center">
@@ -234,14 +239,12 @@ const AddPasswordForm = ({ id, email, hasAPassword }: Props) => {
 								</div>
 							</div>
 
-							<div className="w-full flex items-center min-h-6 justify-start gap-4 text-rose-600 dark:text-rose-">
-								{formError && (
-									<>
-										<ExclamationTriangleIcon className="w-6 h-500" />
-										<p>{formError}</p>
-									</>
-								)}
-							</div>
+							{formError && (
+								<div className="w-full flex items-center justify-start px-1 py-1 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
+									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
+									<p>{formError}</p>
+								</div>
+							)}
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">

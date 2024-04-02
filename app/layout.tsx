@@ -4,7 +4,7 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import "./globals.css";
 import { Metadata } from "next";
@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { siteTitle } from "@/config";
+import LoadingUI from "@/components/ui/spinner";
 
 const varela_round = Varela_Round({
 	weight: ["400"],
@@ -24,8 +26,8 @@ const varela_round = Varela_Round({
 
 export const metadata: Metadata = {
 	title: {
-		default: "Cosmic reach mod manager",
-		template: "%s - Cosmic reach mod manager",
+		default: siteTitle,
+		template: `%s - ${siteTitle}`,
 	},
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };
@@ -41,23 +43,19 @@ export default async function RootLayout({
 					varela_round.className,
 				)}
 			>
-				<Suspense>
-					<ValidateSession />
-				</Suspense>
+				<ValidateSession />
 
 				<Providers>
 					<NavbarWrapper />
 
-					<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
-						{children}
-					</main>
+					<Suspense fallback={<LoadingUI />}>
+						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
+							{children}
+						</main>
+					</Suspense>
 
-					<Suspense>
-						<Toaster />
-					</Suspense>
-					<Suspense>
-						<SpeedInsights />
-					</Suspense>
+					<Toaster />
+					<SpeedInsights />
 				</Providers>
 			</body>
 		</html>

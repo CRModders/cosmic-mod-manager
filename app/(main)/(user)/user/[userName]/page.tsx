@@ -4,7 +4,7 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
 import type { Metadata } from "next";
@@ -85,14 +85,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const userName = params.userName;
 	const user = await findUserByUsername(userName);
 
-	if (!user) {
+	if (!user?.email) {
 		return {
-			title: "Invalid username - Cosmic Reach Mod Manager",
+			title: " ",
 			description: "",
 		};
 	}
 
 	return {
 		title: user.userName,
+		description: `${user.userName}'s profile on CRMM`,
 	};
 }

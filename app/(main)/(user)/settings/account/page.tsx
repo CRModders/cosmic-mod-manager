@@ -4,16 +4,19 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import EditProfileDialog from "./profile/editProfileDialog";
-import { findUserById } from "@/app/api/actions/user";
+import { findUserById, getLinkedProvidersList } from "@/app/api/actions/user";
 import { Card } from "@/components/ui/card";
 import EmailField from "./account_security/email";
-import PasswordField from "./account_security/password";
+import PasswordSection from "./account_security/password";
+import ManageProviders from "./account_security/ManageProviders";
+import DeleteAccountSection from "./account_security/DeleteAccount";
+import { parseProfileProvider } from "@/lib/user";
 
 const UnauthenticatedUserMsg = () => {
 	return (
@@ -34,6 +37,11 @@ const AccountSettingsPage = async () => {
 	if (!user?.email) {
 		return <UnauthenticatedUserMsg />;
 	}
+
+	const linkedProviders = (await getLinkedProvidersList()).map((provider) =>
+		parseProfileProvider(provider),
+	);
+
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
@@ -42,23 +50,32 @@ const AccountSettingsPage = async () => {
 						User profile
 					</h2>
 					<div>
-						<EditProfileDialog name={user.name} username={user.userName} />
+						<EditProfileDialog
+							name={user.name}
+							username={user.userName}
+							currProfileProvider={user?.profileImageProvider}
+							linkedProviders={linkedProviders}
+						/>
 					</div>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2">
-					<div className="w-full flex flex-col sm:flex-row items-center justify-start gap-6">
-						<Avatar className="flex items-center justify-center w-24 h-24">
-							{user?.image && (
-								<AvatarImage src={user?.image} alt={`${user?.name} `} />
-							)}
+					<div className="w-full flex flex-wrap items-center justify-start gap-6">
+						<div className="flex grow sm:grow-0 items-center justify-center">
+							<Avatar className="flex items-center justify-center w-24 h-24">
+								{user?.image && (
+									<AvatarImage src={user?.image} alt={`${user?.name} `} />
+								)}
 
-							<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-								{user?.name?.charAt(0).toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<h1 className="text-3xl font-semibold">{user.name}</h1>
-							<p>
+								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
+									{user?.name?.charAt(0).toUpperCase()}
+								</AvatarFallback>
+							</Avatar>
+						</div>
+						<div className="grow flex flex-col items-start justify-center">
+							<h1 className="flex w-full items-center sm:justify-start justify-center text-3xl font-semibold">
+								{user.name}
+							</h1>
+							<p className="w-full flex items-center sm:justify-start justify-center">
 								<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">
 									@
 								</span>
@@ -75,7 +92,7 @@ const AccountSettingsPage = async () => {
 						Account security
 					</h2>
 				</div>
-				<div className="w-full flex flex-col items-center justify-center my-2 gap-4">
+				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
 							Email
@@ -83,17 +100,23 @@ const AccountSettingsPage = async () => {
 						<EmailField email={user.email} />
 					</div>
 
-					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
-							Password
-						</p>
-						<PasswordField
-							id={user.id}
-							email={user.email}
-							hasAPassword={user.hasAPassword}
-						/>
-					</div>
+					<PasswordSection
+						id={user.id}
+						email={user.email}
+						hasAPassword={user.hasAPassword}
+					/>
+
+					<ManageProviders id={user.id} />
 				</div>
+			</Card>
+
+			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
+				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
+					<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+						Delete account
+					</h2>
+				</div>
+				<DeleteAccountSection />
 			</Card>
 		</div>
 	);

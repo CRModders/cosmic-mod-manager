@@ -4,7 +4,7 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import PanelLayout, {
 	PanelContent,
@@ -14,6 +14,16 @@ import { ShieldIcon } from "@/components/Icons";
 import { PersonIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
+import { siteTitle } from "@/config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: {
+		default: "Settings",
+		template: `%s - ${siteTitle}`,
+	},
+	description: "CRMM settings page",
+};
 
 const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 	const baseUrlPrefix = "/settings";
@@ -32,7 +42,7 @@ const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 	];
 
 	return (
-		<div className="w-full">
+		<div className="w-full pb-32">
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">

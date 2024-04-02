@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
+import { siteTitle } from "./config";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "Cosmic Reach Mod Manager",
+		name: siteTitle,
 		short_name: "CRMM",
 		description: "One stop for all cosmic reach mods.",
 		start_url: "/",

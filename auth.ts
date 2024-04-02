@@ -4,24 +4,27 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import NextAuth from "next-auth";
-import authConfig from "./auth.config";
+import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRoles } from "@prisma/client";
+import { Providers, UserRoles } from "@prisma/client";
 import {
 	findUserByEmail,
 	findUserById,
+	getCurrentAuthUser,
 	matchPassword,
-} from "./app/api/actions/user";
+} from "@/app/api/actions/user";
 import db from "@/lib/db";
+import { parseProfileProvider, parseUsername } from "@/lib/user";
 
 declare module "next-auth" {
 	interface User {
 		role?: UserRoles;
 		userName?: string;
+		profileImageProvider?: string;
 		emailVerified: Date;
 	}
 }
@@ -29,17 +32,47 @@ declare module "next-auth" {
 export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		async signIn({ user, account }): Promise<any> {
-			user.userName = user.id;
+		async signIn({ user, account, profile }): Promise<any> {
+			user.userName = parseUsername(user.id);
+			user.profileImageProvider = account.provider;
 
-			// Delete any existing provider with the same id
-			// Ideally it shouldn't happen, but it may happen if a user was deleted from the database but his provider accounts were not deleted
-			await db.account.deleteMany({
-				where: {
-					provider: account.provider,
-					providerAccountId: account.providerAccountId,
-				},
-			});
+			const alreadyLoggedInUser = await getCurrentAuthUser();
+
+			if (alreadyLoggedInUser?.id) {
+				const linkedProviders = await db.account.findMany({
+					where: {
+						userId: alreadyLoggedInUser?.id,
+						provider: account.provider,
+					},
+				});
+
+				if (linkedProviders?.length > 0) {
+					try {
+						await db.account.deleteMany({
+							where: {
+								userId: alreadyLoggedInUser?.id,
+								provider: account.provider,
+							},
+						});
+					} catch (error) {}
+				} else if (
+					linkedProviders?.at(0)?.userId &&
+					alreadyLoggedInUser?.id !== linkedProviders?.at(0)?.userId
+				) {
+					return null;
+				}
+
+				return alreadyLoggedInUser;
+			}
+
+			try {
+				await db.account.deleteMany({
+					where: {
+						userId: user?.id,
+						provider: account?.provider,
+					},
+				});
+			} catch (error) {}
 
 			return user;
 		},
@@ -56,6 +89,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 			return session;
 		},
+
 		async jwt({ token }) {
 			return token;
 		},
@@ -63,18 +97,45 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 	events: {
 		...authConfig,
-		async linkAccount({ user }) {
+		async linkAccount({ user, account }) {
 			// Set the email verified for oauth users
 			const userData = await findUserById(user.id);
 
-			if (!userData.emailVerified) {
+			const data: {
+				emailVerified?: Date;
+				profileImageProvider?: Providers;
+			} = {};
+
+			if (!userData?.emailVerified || !userData?.profileImageProvider) {
+				if (!userData?.emailVerified) {
+					data.emailVerified = new Date();
+				}
+
+				if (!userData?.profileImageProvider) {
+					data.profileImageProvider = parseProfileProvider(account.provider);
+				}
+
 				await db.user.update({
-					where: { id: user.id },
-					data: {
-						emailVerified: new Date(),
+					where: {
+						id: user?.id,
 					},
+					data,
 				});
 			}
+		},
+		async signIn({ user, account, profile }) {
+			// profile?.image_url   ==>   Discord
+			// profile?.picture     ==>   Google
+			// profile?.avatar_url  ==>   Github and Gitlab
+			const profileImageLink =
+				profile?.image_url || profile?.picture || profile?.avatar_url;
+
+			await db.account.updateMany({
+				where: { userId: user?.id, provider: account?.provider },
+				data: {
+					profileImage: profileImageLink,
+				},
+			});
 		},
 	},
 	adapter: PrismaAdapter(db),

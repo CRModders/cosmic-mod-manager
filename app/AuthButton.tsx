@@ -4,7 +4,7 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,8 @@ import Link from "next/link";
 import React from "react";
 
 const AuthButton = async () => {
-	const session = await auth().catch((e) => {
-		console.log(e);
+	const session = await auth().catch((error) => {
+		console.log({ error });
 	});
 
 	// biome-ignore lint/complexity/useOptionalChain: <explanation>
@@ -26,7 +26,7 @@ const AuthButton = async () => {
 					variant="outline"
 					aria-label="Go to Dashboard"
 				>
-					<p className="text-foreground dark:text-foreground_dark text-lg">
+					<p className="text-foreground dark:text-foreground_dark sm:text-lg">
 						Dashboard
 					</p>
 				</Button>
@@ -36,8 +36,13 @@ const AuthButton = async () => {
 
 	return (
 		<Link href="/register">
-			<Button className="" size="lg" variant="outline" aria-label="Sign up">
-				<p className="text-foreground dark:text-foreground_dark text-lg">
+			<Button
+				className="h-10 sm:h-12 px-6 sm:px-8"
+				size="lg"
+				variant="outline"
+				aria-label="Sign up"
+			>
+				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">
 					Sign Up
 				</p>
 			</Button>

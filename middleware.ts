@@ -4,7 +4,7 @@
 //
 //    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 //
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>. 
+//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
@@ -49,10 +49,10 @@ const isProtectedRoute = (pathname: string): boolean => {
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (request) => {
-	// console.log({
-	// 	IP: request.ip,
-	// 	GEO: request.geo,
-	// });
+	console.log({
+		IP: request.ip,
+		GEO: request.geo,
+	});
 
 	const user = request?.auth?.user;
 	const isAuthenticated = user?.email;
