@@ -28,6 +28,7 @@ import { loginUser } from "@/app/api/actions/user";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { defaultLoginRedirect } from "@/config";
 import { isValidEmail } from "@/lib/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 const formSchema = z.object({
 	email: z
@@ -168,14 +169,7 @@ const LoginForm = () => {
 					/>
 				</div>
 
-				{formError && (
-					<div className="w-full flex items-start min-h-6 justify-center gap-2 text-rose-600 dark:text-rose-400">
-						<>
-							<ExclamationTriangleIcon className="w-5 h-5" />
-							<p className="leading-tight">{formError}</p>
-						</>
-					</div>
-				)}
+				{formError && <FormErrorMsg msg={formError} />}
 
 				<Button
 					type="submit"

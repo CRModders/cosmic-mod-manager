@@ -38,6 +38,7 @@ import { maxPasswordLength, minPasswordLength } from "@/config";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -239,12 +240,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 								</div>
 							</div>
 
-							{formError && (
-								<div className="w-full flex items-center justify-start px-1 py-1 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
-									<p>{formError}</p>
-								</div>
-							)}
+							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">

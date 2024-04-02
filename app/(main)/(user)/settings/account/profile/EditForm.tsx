@@ -40,6 +40,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import FormErrorMsg from "@/components/formErrorMsg";
+import FormSuccessMsg from "@/components/formSuccessMsg";
 
 export const formSchema = z.object({
 	currProfileProvider: z.string(),
@@ -269,17 +271,9 @@ const EditProfileInfoForm = ({
 				</div>
 
 				{formError ? (
-					<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-						<ExclamationTriangleIcon className="pl-2 w-6 h-6" />
-						<p>{formError}</p>
-					</div>
+					<FormErrorMsg msg={formError} />
 				) : (
-					successMessage && (
-						<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-emerald-700 dark:text-emerald-500 bg-emerald-500 bg-opacity-15 dark:bg-opacity-10 rounded-lg">
-							<CheckCircledIcon className="pl-2 w-6 h-6" />
-							<p>{successMessage}</p>
-						</div>
-					)
+					successMessage && <FormSuccessMsg msg={successMessage} />
 				)}
 
 				<div className="w-full flex items-center justify-end gap-2">

@@ -37,6 +37,7 @@ import { isValidPassword } from "@/lib/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -273,12 +274,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 								</div>
 							</div>
 
-							{formError && (
-								<div className="w-full flex items-center justify-start px-1 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
-									<p>{formError}</p>
-								</div>
-							)}
+							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<Button
