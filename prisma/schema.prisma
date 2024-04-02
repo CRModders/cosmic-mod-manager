@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -19,12 +13,26 @@ enum UserRoles {
     USER
 }
 
+enum UserVerificationActionTypes {
+    ADD_PASSWORD
+    CHANGE_PASSWORD
+    DELETE_USER_ACCOUNT
+}
+
+enum Providers {
+    google
+    discord
+    github
+    gitlab
+}
+
 model Account {
     id                String  @id @default(auto()) @map("_id") @db.ObjectId
     userId            String  @db.ObjectId
     type              String
     provider          String
     providerAccountId String
+    profileImage      String?
     refresh_token     String? @db.String
     access_token      String? @db.String
     expires_at        Int?
@@ -47,15 +55,27 @@ model Session {
 }
 
 model User {
-    id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+    id                    String              @id @default(auto()) @map("_id") @db.ObjectId
     name                  String?
-    userName              String    @unique
-    email                 String    @unique
+    userName              String              @unique
+    email                 String              @unique
     password              String?
     unverifiedNewPassword String? // When a user adds new password, the new password will be stored in this field until the user verifies that action through the link send to his email
-    role                  UserRoles @default(USER)
+    role                  UserRoles           @default(USER)
     emailVerified         DateTime?
     image                 String?
+    profileImageProvider  Providers?
     accounts              Account[]
     sessions              Session[]
+    verificationEmail     VerificationEmail[]
+}
+
+model VerificationEmail {
+    id          String                      @id @default(auto()) @map("_id") @db.ObjectId
+    userId      String                      @db.ObjectId
+    action      UserVerificationActionTypes
+    token       String                      @unique @default(uuid())
+    dateCreated DateTime                    @default(now())
+
+    user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

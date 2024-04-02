@@ -18,7 +18,7 @@ const AuthButton = async () => {
 					variant="outline"
 					aria-label="Go to Dashboard"
 				>
-					<p className="text-foreground dark:text-foreground_dark text-lg">
+					<p className="text-foreground dark:text-foreground_dark sm:text-lg">
 						Dashboard
 					</p>
 				</Button>
@@ -29,12 +29,12 @@ const AuthButton = async () => {
 	return (
 		<Link href="/register">
 			<Button
-				className="h-10 lg:h-12 px-6 lg:px-8"
+				className="h-10 sm:h-12 px-6 sm:px-8"
 				size="lg"
 				variant="outline"
 				aria-label="Sign up"
 			>
-				<p className="text-foreground dark:text-foreground_dark lg:text-lg ">
+				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">
 					Sign Up
 				</p>
 			</Button>

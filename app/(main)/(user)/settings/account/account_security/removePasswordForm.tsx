@@ -73,7 +73,6 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 		setLoading(true);
 
 		const result = await removePassword({
-			id: id,
 			password: values.password,
 		});
 		setLoading(false);

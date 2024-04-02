@@ -17,7 +17,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 
 	if (!hasAPassword) {
 		return (
-			<div className="w-full flex flex-wrap items-end justify-between">
+			<div className="w-full flex flex-wrap items-end justify-between gap-2">
 				<div className="flex flex-col items-start justify-center">
 					<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
 						Password
@@ -42,13 +42,13 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 				</p>
 			</div>
 
-			<div className="flex flex-wrap gap-2 items-center justify-center">
+			<div className="flex flex-wrap gap-2">
 				<Link
-					href={"/reset-password"}
-					className="w-full sm:w-fit flex items-center justify-center"
+					href={"/change-password"}
+					className="flex items-center justify-center"
 				>
 					<Button
-						className="w-full flex items-center justify-center gap-2"
+						className="flex items-center justify-center gap-2"
 						variant="outline"
 					>
 						<KeyIcon size="1.1rem" />
@@ -57,7 +57,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 				</Link>
 				<RemovePasswordForm id={id} email={email}>
 					<Button
-						className="w-full sm:w-fit flex items-center justify-center gap-2 text-primary_accent_text dark:text-primary_accent_text_dark hover:text-primary_accent_text hover:dark:text-primary_accent_text_dark"
+						className="flex items-center justify-center gap-2 text-primary_accent_text dark:text-primary_accent_text_dark hover:text-primary_accent_text hover:dark:text-primary_accent_text_dark"
 						variant="outline"
 					>
 						<TrashIcon className="h-4 w-4" />

@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteTitle } from "@/config";
+import LoadingUI from "@/components/ui/spinner";
 
 const varela_round = Varela_Round({
 	weight: ["400"],
@@ -34,23 +35,19 @@ export default async function RootLayout({
 					varela_round.className,
 				)}
 			>
-				<Suspense>
-					<ValidateSession />
-				</Suspense>
+				<ValidateSession />
 
 				<Providers>
 					<NavbarWrapper />
 
-					<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
-						{children}
-					</main>
+					<Suspense fallback={<LoadingUI />}>
+						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
+							{children}
+						</main>
+					</Suspense>
 
-					<Suspense>
-						<Toaster />
-					</Suspense>
-					<Suspense>
-						<SpeedInsights />
-					</Suspense>
+					<Toaster />
+					<SpeedInsights />
 				</Providers>
 			</body>
 		</html>

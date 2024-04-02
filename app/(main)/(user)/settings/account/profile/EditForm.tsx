@@ -14,16 +14,27 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { DialogClose } from "@/components/ui/dialog";
 import { updateUserProfile } from "@/app/api/actions/user";
-import { useSession } from "next-auth/react";
 import { maxNameLength, maxUsernameLength } from "@/config";
-import { isValidName, isValidUsername } from "@/lib/user";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { isValidName, isValidUsername, parseProfileProvider } from "@/lib/user";
+import {
+	CheckCircledIcon,
+	ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
+import { sleep } from "@/lib/utils";
+import { Providers } from "@prisma/client";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 export const formSchema = z.object({
+	currProfileProvider: z.string(),
 	username: z
 		.string()
 		.min(1, {
@@ -45,24 +56,26 @@ export const formSchema = z.object({
 type Props = {
 	name: string;
 	username: string;
-	dialogOpen: boolean;
+	linkedProviders: Providers[];
+	currProfileProvider: Providers;
 	setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EditProfileInfoForm = ({
 	name,
 	username,
-	dialogOpen,
+	linkedProviders,
+	currProfileProvider,
 	setDialogOpen,
 }: Props) => {
-	const { toast } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState(null);
-	const session = useSession();
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
+			currProfileProvider: currProfileProvider,
 			username: username || "",
 			name: name || "",
 		},
@@ -115,29 +128,28 @@ const EditProfileInfoForm = ({
 			return;
 		}
 
+		const providerName = parseProfileProvider(values.currProfileProvider);
+		if (!providerName) return setFormError("Invalid profile provider");
+
 		setLoading(true);
 
 		const result = await updateUserProfile({
-			id: session.data.user.id,
 			data: {
 				username: values.username,
 				name: values.name,
+				profileImageProvider: providerName,
 			},
 		});
 
-		if (result?.success === true) {
-			toast({
-				title: "Profile successfully updated",
-			});
+		setLoading(false);
 
+		if (result?.success === true) {
+			setSuccessMessage(result?.message || "Profile successfully updated");
+			await sleep(1_000);
 			setDialogOpen(false);
 		} else if (result?.success === false) {
-			toast({
-				title: result.error || "Couldn't update your profile info!",
-			});
+			setFormError(result?.message || "Couldn't update your profile info!");
 		}
-
-		setLoading(false);
 	};
 
 	return (
@@ -147,6 +159,48 @@ const EditProfileInfoForm = ({
 				className="w-full flex flex-col items-center justify-center gap-3"
 			>
 				<div className="w-full flex flex-col items-center justify-center gap-4">
+					<div className="w-full flex flex-col items-center justify-center">
+						<FormField
+							control={form.control}
+							name="currProfileProvider"
+							render={({ field }) => (
+								<>
+									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
+										<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">
+												Profile image provider
+											</span>
+											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+										</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl className="capitalize">
+												<SelectTrigger>
+													<SelectValue placeholder="Select a verified email to display" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{linkedProviders?.map((provider) => {
+													return (
+														<SelectItem
+															key={provider}
+															value={provider}
+															className="capitalize"
+														>
+															{provider}
+														</SelectItem>
+													);
+												})}
+											</SelectContent>
+										</Select>
+									</FormItem>
+								</>
+							)}
+						/>
+					</div>
+
 					<div className="w-full flex flex-col items-center justify-center">
 						<FormField
 							control={form.control}
@@ -206,18 +260,23 @@ const EditProfileInfoForm = ({
 					</div>
 				</div>
 
-				<div className="w-full flex items-center min-h-6 justify-start gap-4 text-rose-600 dark:text-rose-400">
-					{formError && (
-						<>
-							<ExclamationTriangleIcon className="w-6 h-500" />
-							<p>{formError}</p>
-						</>
-					)}
-				</div>
+				{formError ? (
+					<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
+						<ExclamationTriangleIcon className="pl-2 w-6 h-6" />
+						<p>{formError}</p>
+					</div>
+				) : (
+					successMessage && (
+						<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-emerald-700 dark:text-emerald-500 bg-emerald-500 bg-opacity-15 dark:bg-opacity-10 rounded-lg">
+							<CheckCircledIcon className="pl-2 w-6 h-6" />
+							<p>{successMessage}</p>
+						</div>
+					)
+				)}
 
 				<div className="w-full flex items-center justify-end gap-2">
 					<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-						<p className="px-4 h-9 flex items-center justify-center">Discard</p>
+						<p className="px-4 h-9 flex items-center justify-center">Close</p>
 					</DialogClose>
 
 					<Button
@@ -226,7 +285,8 @@ const EditProfileInfoForm = ({
 						className=""
 						disabled={
 							form.getValues().name === name &&
-							form.getValues().username === username
+							form.getValues().username === username &&
+							form.getValues().currProfileProvider === currProfileProvider
 						}
 					>
 						<p className="px-4 font-semibold">Save</p>

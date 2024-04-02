@@ -34,7 +34,7 @@ const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 	];
 
 	return (
-		<div className="w-full">
+		<div className="w-full pb-32">
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">

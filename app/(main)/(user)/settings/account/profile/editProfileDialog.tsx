@@ -12,13 +12,21 @@ import React, { useState } from "react";
 
 import EditProfileInfoForm from "./EditForm";
 import { Button } from "@/components/ui/button";
+import { Providers } from "@prisma/client";
 
 type Props = {
 	name: string;
 	username: string;
+	linkedProviders: Providers[];
+	currProfileProvider: Providers;
 };
 
-const EditProfileDialog = ({ name, username }: Props) => {
+const EditProfileDialog = ({
+	name,
+	username,
+	linkedProviders,
+	currProfileProvider,
+}: Props) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	return (
@@ -42,7 +50,8 @@ const EditProfileDialog = ({ name, username }: Props) => {
 					<EditProfileInfoForm
 						name={name}
 						username={username}
-						dialogOpen={dialogOpen}
+						linkedProviders={linkedProviders}
+						currProfileProvider={currProfileProvider}
 						setDialogOpen={setDialogOpen}
 					/>
 				</div>

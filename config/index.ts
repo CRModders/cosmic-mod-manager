@@ -47,6 +47,7 @@ export const protectedRoutes = ["/dashboard", "/settings"];
 
 export const defaultLoginRedirect = "/dashboard";
 
+//
 export const maxNameLength = 32;
 export const maxUsernameLength = 32;
 
@@ -54,3 +55,4 @@ export const minPasswordLength = 8;
 export const maxPasswordLength = 64;
 
 export const passwordHashingSaltRounds = 8;
+export const ConfirmAddPasswordTokenExpiry = 60 * 60 * 1000; // 60 mins

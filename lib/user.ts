@@ -1,4 +1,5 @@
 import { maxNameLength, maxUsernameLength, minPasswordLength } from "@/config";
+import { Providers } from "@prisma/client";
 
 export const parseName = (name: string) => {
 	if (name.length > maxNameLength) {
@@ -20,18 +21,13 @@ export const parseUsername = (username: string): string => {
 
 export const isValidUsername = (username: string): string | boolean => {
 	const usernameRegex = /^[a-zA-Z0-9_]+$/;
-	const containsAlphabets = /^[a-zA-Z]+$/.test(username);
 
 	if (username.includes(" ")) {
 		return "Username cannot contain spaces";
 	}
 
 	if (!usernameRegex.test(username)) {
-		return "No special character other than underscores( _ ) are allowed";
-	}
-
-	if (!containsAlphabets) {
-		return "Your username must contain alphabetical characters";
+		return "No special character other than underscore( _ ) is allowed";
 	}
 
 	return true;
@@ -76,4 +72,12 @@ export const isValidEmail = (email: string): boolean => {
 	const emailRegex =
 		/^(?=.{1,256}$)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:(?=[a-zA-Z0-9-]{1,63}\.)(?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$/;
 	return emailRegex.test(email);
+};
+
+export const parseProfileProvider = (provider: string): Providers | null => {
+	if (provider === "google") return Providers.google;
+	if (provider === "discord") return Providers.discord;
+	if (provider === "github") return Providers.github;
+	if (provider === "gitlab") return Providers.gitlab;
+	return null;
 };

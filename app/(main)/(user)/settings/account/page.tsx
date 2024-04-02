@@ -2,11 +2,13 @@ import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import EditProfileDialog from "./profile/editProfileDialog";
-import { findUserById } from "@/app/api/actions/user";
+import { findUserById, getLinkedProvidersList } from "@/app/api/actions/user";
 import { Card } from "@/components/ui/card";
 import EmailField from "./account_security/email";
 import PasswordSection from "./account_security/password";
 import ManageProviders from "./account_security/ManageProviders";
+import DeleteAccountSection from "./account_security/DeleteAccount";
+import { parseProfileProvider } from "@/lib/user";
 
 const UnauthenticatedUserMsg = () => {
 	return (
@@ -27,6 +29,11 @@ const AccountSettingsPage = async () => {
 	if (!user?.email) {
 		return <UnauthenticatedUserMsg />;
 	}
+
+	const linkedProviders = (await getLinkedProvidersList()).map((provider) =>
+		parseProfileProvider(provider),
+	);
+
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
@@ -35,7 +42,12 @@ const AccountSettingsPage = async () => {
 						User profile
 					</h2>
 					<div>
-						<EditProfileDialog name={user.name} username={user.userName} />
+						<EditProfileDialog
+							name={user.name}
+							username={user.userName}
+							currProfileProvider={user?.profileImageProvider}
+							linkedProviders={linkedProviders}
+						/>
 					</div>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2">
@@ -72,7 +84,7 @@ const AccountSettingsPage = async () => {
 						Account security
 					</h2>
 				</div>
-				<div className="w-full flex flex-col items-center justify-center my-2 gap-6">
+				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
 							Email
@@ -88,6 +100,15 @@ const AccountSettingsPage = async () => {
 
 					<ManageProviders id={user.id} />
 				</div>
+			</Card>
+
+			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
+				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
+					<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+						Delete account
+					</h2>
+				</div>
+				<DeleteAccountSection />
 			</Card>
 		</div>
 	);

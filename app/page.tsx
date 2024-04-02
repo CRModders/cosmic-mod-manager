@@ -8,7 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import "@/app/globals.css";
 
 export default async function Home() {
-	// The animation keyframes need to be updated according to the number of items in the list
+	// The animation keyframes in "@/app/globals.css" need to be updated according to the number of items in the list
 	const showcaseItems = [
 		"mods",
 		"resource packs",
@@ -67,11 +67,11 @@ export default async function Home() {
 
 				<div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
 					<Button
-						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 h-10 lg:h-12 px-6 lg:px-8"
+						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 h-10 sm:h-12 px-6 sm:px-8"
 						size="lg"
 						aria-label="Explore mods"
 					>
-						<p className="text-foreground_dark dark:text-foreground_dark lg:text-lg">
+						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">
 							Explore Mods
 						</p>
 					</Button>

@@ -5,13 +5,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import {
 	Form,
 	FormControl,
 	FormField,
@@ -20,16 +13,22 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { DialogClose } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { KeyIcon } from "@/components/Icons";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
+import {
+	CheckCircledIcon,
+	ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
+import {
+	cancelPasswordChangeAction,
+	confirmPasswordChange,
+} from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { sleep } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -52,21 +51,27 @@ export const formSchema = z.object({
 });
 
 type Props = {
-	id: string;
+	token: string;
 	email: string;
-	hasAPassword: boolean;
 };
 
-const AddPasswordForm = ({ id, email }: Props) => {
-	const { toast } = useToast();
-	const [dialogOpen, setDialogOpen] = useState(false);
+enum SuccessPage {
+	CANCELLATION_SUCCESS = "CANCELLATION_SUCCESS",
+	CHANGE_SUCCESS = "CHANGE_SUCCESS",
+}
+
+const AddPasswordForm = ({ token, email }: Props) => {
+	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
+	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(
+		null,
+	);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			email: email,
+			email: email || "",
 			newPassword: "",
 			confirmNewPassword: "",
 		},
@@ -83,6 +88,24 @@ const AddPasswordForm = ({ id, email }: Props) => {
 		return setFormError("");
 	};
 
+	const cancelAction = async () => {
+		if (loading) return;
+
+		setLoading(true);
+
+		const res = await cancelPasswordChangeAction(token);
+		setLoading(false);
+
+		if (res?.success !== true) {
+			return setFormError(res?.message || "Something went wrong");
+		}
+
+		setShowSuccessPage(SuccessPage.CANCELLATION_SUCCESS);
+
+		await sleep(3_000);
+		router.replace("/login");
+	};
+
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 		if (loading) return;
 
@@ -96,41 +119,47 @@ const AddPasswordForm = ({ id, email }: Props) => {
 		}
 
 		setLoading(true);
-		const result = await initiateAddNewPasswordAction({
+		const res = await confirmPasswordChange({
+			token: token,
 			newPassword: values.newPassword,
 		});
 		setLoading(false);
 
-		if (result.success === true) {
-			toast({
-				title: result.message,
-			});
-
+		if (res.success === true) {
 			form.reset();
+			setShowSuccessPage(SuccessPage.CHANGE_SUCCESS);
 
-			setDialogOpen(false);
+			await sleep(3_000);
+			router.replace("/login");
 		} else {
-			setFormError(result.message);
+			setFormError(res?.message);
 		}
 	};
 
+	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
+		return (
+			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
+				<CheckCircledIcon className="w-6 h-6" />
+				<h1>Cancelled successfully</h1>
+			</div>
+		);
+	}
+
+	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
+		return (
+			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
+				<CheckCircledIcon className="w-6 h-6" />
+				<h1>Successfully changed password</h1>
+			</div>
+		);
+	}
+
 	return (
-		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger asChild>
-				<Button
-					className="flex items-center justify-center gap-2"
-					variant="outline"
-				>
-					<KeyIcon size="1.1rem" />
-					<p>Add password</p>
-				</Button>
-			</DialogTrigger>
-
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Add a password</DialogTitle>
-				</DialogHeader>
-
+		<Card className="max-w-md w-full relative">
+			<CardContent>
+				<CardHeader className="px-0">
+					<CardTitle className="w-full text-left">Change password</CardTitle>
+				</CardHeader>
 				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
 						<form
@@ -138,13 +167,13 @@ const AddPasswordForm = ({ id, email }: Props) => {
 							className="w-full flex flex-col items-center justify-center gap-6"
 						>
 							<div className="w-full flex flex-col items-center justify-center gap-4">
-								<div className="w-full flex flex-col items-center justify-center">
+								<div className="hidden">
 									<FormField
 										control={form.control}
 										name="email"
 										render={({ field }) => (
 											<>
-												<FormItem aria-hidden={true} className="hidden">
+												<FormItem className="hidden">
 													<FormControl>
 														<Input
 															placeholder="********"
@@ -152,7 +181,12 @@ const AddPasswordForm = ({ id, email }: Props) => {
 															name="username"
 															autoComplete="username"
 															className="hidden"
-															aria-hidden={true}
+															readOnly={true}
+															onKeyUp={(
+																e: React.KeyboardEvent<HTMLInputElement>,
+															) => {
+																checkFormError();
+															}}
 															{...field}
 														/>
 													</FormControl>
@@ -170,7 +204,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">
+														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
 															New password
 														</span>
 														<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
@@ -204,7 +238,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">
+														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
 															Confirm new password
 														</span>
 														<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
@@ -232,18 +266,22 @@ const AddPasswordForm = ({ id, email }: Props) => {
 							</div>
 
 							{formError && (
-								<div className="w-full flex items-center justify-start px-1 py-1 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
+								<div className="w-full flex items-center justify-start px-1 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
 									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
 									<p>{formError}</p>
 								</div>
 							)}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
+								<Button
+									variant="secondary"
+									type="button"
+									onClick={cancelAction}
+								>
 									<p className="px-4 h-9 flex items-center justify-center">
 										Cancel
 									</p>
-								</DialogClose>
+								</Button>
 
 								<Button
 									type="submit"
@@ -254,7 +292,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 										!form.getValues().confirmNewPassword
 									}
 								>
-									<p className="px-4 font-semibold">Set password</p>
+									<p className="px-4">Change password</p>
 								</Button>
 							</div>
 						</form>
@@ -268,8 +306,8 @@ const AddPasswordForm = ({ id, email }: Props) => {
 						)}
 					</Form>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</CardContent>
+		</Card>
 	);
 };
 
