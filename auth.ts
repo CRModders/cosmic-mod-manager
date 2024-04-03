@@ -32,17 +32,32 @@ declare module "next-auth" {
 export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		async signIn({ user, account, profile }): Promise<any> {
+		async signIn({ user, account }): Promise<any> {
 			user.userName = parseUsername(user.id);
 			user.profileImageProvider = account.provider;
 
+			// Delete the previous auth provider if the same provider is registered with different email to the same account
+			try {
+				await db.account.deleteMany({
+					where: {
+						userId: user?.id,
+						provider: account?.provider,
+					},
+				});
+			} catch (error) {}
+
+			// To prevent the user from being logged into other account when linking a provider account with different email
 			const alreadyLoggedInUser = await getCurrentAuthUser();
 
 			if (alreadyLoggedInUser?.id) {
+				// Check if there is already the same provider linked to this account with different email
 				const linkedProviders = await db.account.findMany({
 					where: {
 						userId: alreadyLoggedInUser?.id,
 						provider: account.provider,
+					},
+					select: {
+						userId: true,
 					},
 				});
 
@@ -55,24 +70,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 							},
 						});
 					} catch (error) {}
-				} else if (
-					linkedProviders?.at(0)?.userId &&
-					alreadyLoggedInUser?.id !== linkedProviders?.at(0)?.userId
-				) {
-					return null;
 				}
 
 				return alreadyLoggedInUser;
 			}
 
-			try {
-				await db.account.deleteMany({
-					where: {
-						userId: user?.id,
-						provider: account?.provider,
-					},
-				});
-			} catch (error) {}
+			const existingAccount = await db.account.findFirst({
+				where: { providerAccountId: account?.providerAccountId },
+			});
+
+			if (existingAccount?.userId) {
+				const userData = await findUserById(existingAccount?.userId);
+
+				if (userData?.id) return userData;
+			}
 
 			return user;
 		},
@@ -80,11 +91,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		async session({ session, token }) {
 			if (token?.sub) {
 				session.user.id = token.sub;
-
-				const userData = await findUserById(token.sub);
-				if (userData?.role) {
-					session.user.role = userData.role;
-				}
 			}
 
 			return session;
@@ -134,6 +140,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				where: { userId: user?.id, provider: account?.provider },
 				data: {
 					profileImage: profileImageLink,
+					providerAccountEmail: profile?.email,
 				},
 			});
 		},

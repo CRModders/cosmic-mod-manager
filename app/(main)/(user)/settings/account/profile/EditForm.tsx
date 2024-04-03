@@ -141,7 +141,7 @@ const EditProfileInfoForm = ({
 
 		const result = await updateUserProfile({
 			data: {
-				username: values.username,
+				userName: values.username,
 				name: values.name,
 				profileImageProvider: providerName,
 			},

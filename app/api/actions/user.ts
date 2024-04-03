@@ -56,13 +56,14 @@ const ReturnPublicUserData = async (user: User) => {
 // Find user from database using userId
 export const findUserById = async (id: string) => {
 	try {
+		if (!id) throw new Error("id is required");
 		const user = await db.user.findUnique({
 			where: { id: id },
 		});
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ error });
+		console.log({ function: "findUserById", error });
 		return null;
 	}
 };
@@ -76,7 +77,7 @@ export const findUserByUsername = async (username: string) => {
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ error });
+		console.log({ function: "findUserByUsername", error });
 		return null;
 	}
 };
@@ -90,7 +91,7 @@ export const findUserByEmail = async (email: string) => {
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ error });
+		console.log({ function: "findUserByEmail", error });
 		return null;
 	}
 };
@@ -98,51 +99,48 @@ export const findUserByEmail = async (email: string) => {
 // Check if a username is available to be used
 const isUsernameAvailable = async (username: string, currId) => {
 	const existingUser = await findUserByUsername(username);
-	console.log({ existingUser });
 	if (existingUser?.id && existingUser.id !== currId) {
 		return false;
 	}
 	return true;
 };
 
+type ProfileUpdateData = {
+	name?: string;
+	userName?: string;
+	profileImageProvider?: Providers;
+};
+
 // Update user's profile data
 export const updateUserProfile = async ({
 	data,
 }: {
-	data: {
-		username: string;
-		name: string;
-		profileImageProvider: Providers;
-	};
+	data: ProfileUpdateData;
 }) => {
 	try {
-		const parsedData = {
-			name: parseName(data?.name),
-			username: parseUserName(data?.username),
-			profileImageProvider: parseProfileProvider(data?.profileImageProvider),
-		};
+		const parsedName = data?.name ? parseName(data.name) : null;
+		const parsedUsername = data?.userName ? parseUserName(data.userName) : null;
+		const parsedProfileImageProvider = data?.profileImageProvider
+			? parseProfileProvider(data.profileImageProvider)
+			: null;
 
-		if (
-			!parsedData?.username ||
-			!parsedData?.name ||
-			!parsedData?.profileImageProvider
-		) {
+		if (!parsedName && !parsedUsername && !parsedProfileImageProvider) {
 			return {
 				success: false,
 				message: "Invalid form data",
 			};
 		}
 
-		if (isValidUsername(parsedData.username) !== true) {
-			const error = isValidUsername(parsedData.username);
+		if (isValidUsername(parsedUsername) !== true) {
+			const error = isValidUsername(parsedUsername);
 			return {
 				success: false,
 				message: error.toString(),
 			};
 		}
 
-		if (isValidName(parsedData.name) !== true) {
-			const error = isValidName(parsedData.name);
+		if (isValidName(parsedName) !== true) {
+			const error = isValidName(parsedName);
 			return {
 				success: false,
 				message: error.toString(),
@@ -158,27 +156,40 @@ export const updateUserProfile = async ({
 			};
 		}
 
-		const userNameAvailable = await isUsernameAvailable(
-			parsedData?.username,
-			user?.id,
-		);
-
-		if (userNameAvailable !== true) {
-			return {
-				success: false,
-				message: "Username already taken",
-			};
-		}
-
 		const userData = await findUserById(user?.id);
 
-		if (userData?.profileImageProvider !== parsedData?.profileImageProvider) {
+		const updateData: ProfileUpdateData = {};
+		if (parsedName && parsedName !== userData?.name)
+			updateData.name = parsedName;
+		if (parsedUsername && parsedUsername !== userData?.userName)
+			updateData.userName = parsedUsername;
+		if (
+			parsedProfileImageProvider &&
+			parsedProfileImageProvider !== userData?.profileImageProvider
+		)
+			updateData.profileImageProvider = parsedProfileImageProvider;
+
+		if (updateData?.userName) {
+			const userNameAvailable = await isUsernameAvailable(
+				updateData?.userName,
+				user?.id,
+			);
+
+			if (userNameAvailable !== true) {
+				return {
+					success: false,
+					message: "Username already taken",
+				};
+			}
+		}
+
+		if (updateData?.profileImageProvider) {
 			const newProfileImage = (
 				await db.user.findUnique({
 					where: { id: user?.id },
 					select: {
 						accounts: {
-							where: { provider: parsedData.profileImageProvider },
+							where: { provider: updateData?.profileImageProvider },
 							select: {
 								profileImage: true,
 							},
@@ -190,9 +201,7 @@ export const updateUserProfile = async ({
 			await db.user.update({
 				where: { id: user.id },
 				data: {
-					userName: parsedData.username,
-					name: parsedData.name,
-					profileImageProvider: parsedData?.profileImageProvider,
+					...updateData,
 					image: newProfileImage,
 				},
 			});
@@ -200,9 +209,7 @@ export const updateUserProfile = async ({
 			await db.user.update({
 				where: { id: user.id },
 				data: {
-					userName: parsedData.username,
-					name: parsedData.name,
-					profileImageProvider: parsedData?.profileImageProvider,
+					...updateData,
 				},
 			});
 		}

@@ -28,19 +28,20 @@ enum Providers {
 }
 
 model Account {
-    id                String  @id @default(auto()) @map("_id") @db.ObjectId
-    userId            String  @db.ObjectId
-    type              String
-    provider          String
-    providerAccountId String
-    profileImage      String?
-    refresh_token     String? @db.String
-    access_token      String? @db.String
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.String
-    session_state     String?
+    id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId               String  @db.ObjectId
+    type                 String
+    provider             String
+    providerAccountId    String
+    providerAccountEmail String?
+    profileImage         String?
+    refresh_token        String? @db.String
+    access_token         String? @db.String
+    expires_at           Int?
+    token_type           String?
+    scope                String?
+    id_token             String? @db.String
+    session_state        String?
 
     user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -61,7 +62,7 @@ model User {
     userName              String              @unique
     email                 String              @unique
     password              String?
-    unverifiedNewPassword String? // When a user adds new password, the new password will be stored in this field until the user verifies that action through the link send to his email
+    unverifiedNewPassword String?
     role                  UserRoles           @default(USER)
     emailVerified         DateTime?
     image                 String?

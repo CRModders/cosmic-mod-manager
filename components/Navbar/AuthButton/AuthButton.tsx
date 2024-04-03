@@ -30,47 +30,51 @@ import { DashboardIcon, GearIcon, PersonIcon } from "@radix-ui/react-icons";
 import { findUserById } from "@/app/api/actions/user";
 import { NavMenuLink } from "../Navlink";
 
-const AuthButton = async () => {
-	const session = await auth();
-	const userData = await findUserById(session?.user?.id);
-
-	// biome-ignore lint/complexity/useOptionalChain: <explanation>
-	if (userData && userData?.email) {
-		return (
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button
-						size="icon"
-						variant="ghost"
-						aria-label="Profile icon"
-						className="hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-[50%]"
-					>
-						<div className="flex items-center justify-center p-1">
-							<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
-								{userData?.image && (
-									<AvatarImage
-										src={userData?.image}
-										alt={`${userData?.name} `}
-									/>
-								)}
-								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-									{userData?.name?.charAt(0).toUpperCase()}
-								</AvatarFallback>
-							</Avatar>
-						</div>
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-80">
-					<ProfileDropdown />
-				</PopoverContent>
-			</Popover>
-		);
-	}
-
+const LoginButton = () => {
 	return (
 		<div className="flex items-center justify-center">
 			<LoginBtn closeNavMenuOnLinkClick={false} />
 		</div>
+	);
+};
+
+const AuthButton = async () => {
+	const session = await auth();
+
+	if (!session?.user?.id) {
+		return <LoginButton />;
+	}
+	const userData = await findUserById(session?.user?.id);
+
+	if (!userData?.id) {
+		return <LoginButton />;
+	}
+
+	return (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button
+					size="icon"
+					variant="ghost"
+					aria-label="Profile icon"
+					className="hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-[50%]"
+				>
+					<div className="flex items-center justify-center p-1">
+						<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
+							{userData?.image && (
+								<AvatarImage src={userData?.image} alt={`${userData?.name} `} />
+							)}
+							<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
+								{userData?.name?.charAt(0).toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
+					</div>
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-80">
+				<ProfileDropdown />
+			</PopoverContent>
+		</Popover>
 	);
 };
 
