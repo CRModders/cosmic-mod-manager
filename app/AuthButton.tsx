@@ -21,7 +21,7 @@ const AuthButton = async () => {
 		return (
 			<Link href="/dashboard">
 				<Button
-					className=""
+					className="h-10 sm:h-12 px-6 sm:px-8"
 					size="lg"
 					variant="outline"
 					aria-label="Go to Dashboard"

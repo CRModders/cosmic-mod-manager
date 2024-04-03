@@ -34,7 +34,7 @@ const ValidateSession = async () => {
 						Invalid local session!
 					</h1>
 				</div>
-				<p className="text-center text-rose-600 dark:text-rose-400 text-2xl font-mono font-bold">
+				<p className="text-center text-rose-600 dark:text-rose-500 text-2xl font-mono font-bold">
 					Signing out...
 				</p>
 			</div>

@@ -1,8 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import React, { useEffect } from "react";
-import { Button } from "../ui/button";
+import { useEffect } from "react";
 import { sleep } from "@/lib/utils";
 
 const SignOutBtn = () => {

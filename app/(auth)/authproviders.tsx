@@ -55,15 +55,12 @@ export const authProvidersList = [
 ];
 
 import React, { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
 
 const AuthProviders = () => {
 	const [loading, setLoading] = useState(false);
-	const session = useSession();
-	const { toast } = useToast();
 	return (
 		<>
 			{authProvidersList?.map((provider) => {
@@ -72,13 +69,6 @@ const AuthProviders = () => {
 						<form
 							onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
 								e.preventDefault();
-								if (session?.data?.user?.email) {
-									toast({
-										title: "You are already logged in.",
-									});
-
-									return;
-								}
 								setLoading(true);
 								signIn(provider.name.toLowerCase());
 							}}

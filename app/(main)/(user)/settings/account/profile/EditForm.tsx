@@ -27,10 +27,6 @@ import { DialogClose } from "@/components/ui/dialog";
 import { updateUserProfile } from "@/app/api/actions/user";
 import { maxNameLength, maxUsernameLength } from "@/config";
 import { isValidName, isValidUsername, parseProfileProvider } from "@/lib/user";
-import {
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
 import { sleep } from "@/lib/utils";
 import { Providers } from "@prisma/client";
 import {

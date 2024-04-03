@@ -27,15 +27,15 @@ import {
 import SignOutBtn from "./SignOutBtn";
 import ProfileDropdown from "./ProfileDropdown";
 import { DashboardIcon, GearIcon, PersonIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { findUserById } from "@/app/api/actions/user";
 import { NavMenuLink } from "../Navlink";
 
 const AuthButton = async () => {
-	const session = await auth().catch((e) => console.log(e));
+	const session = await auth();
+	const userData = await findUserById(session?.user?.id);
 
 	// biome-ignore lint/complexity/useOptionalChain: <explanation>
-	if (session && session?.user?.email) {
+	if (userData && userData?.email) {
 		return (
 			<Popover>
 				<PopoverTrigger asChild>
@@ -47,14 +47,14 @@ const AuthButton = async () => {
 					>
 						<div className="flex items-center justify-center p-1">
 							<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
-								{session?.user?.image && (
+								{userData?.image && (
 									<AvatarImage
-										src={session?.user?.image}
-										alt={`${session?.user?.name} `}
+										src={userData?.image}
+										alt={`${userData?.name} `}
 									/>
 								)}
 								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-									{session?.user?.name?.charAt(0).toUpperCase()}
+									{userData?.name?.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 						</div>
@@ -116,20 +116,20 @@ export const MenuAuthButton = async () => {
 					<AccordionTrigger className="w-full border-none outline-none">
 						<div className="w-full flex items-center justify-center gap-4 pr-8">
 							<Avatar>
-								{session?.user?.image && (
+								{userData?.image && (
 									<AvatarImage
-										src={session?.user?.image}
-										alt={`${session?.user?.name} `}
+										src={userData?.image}
+										alt={`${userData?.name} `}
 									/>
 								)}
 
 								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-									{session?.user?.name?.charAt(0).toUpperCase()}
+									{userData?.name?.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 
 							<p className="text-lg text-foreground dark:text-foreground_dark font-normal">
-								{session?.user?.name}
+								{userData?.name}
 							</p>
 						</div>
 					</AccordionTrigger>

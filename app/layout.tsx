@@ -44,7 +44,6 @@ export default async function RootLayout({
 				)}
 			>
 				<ValidateSession />
-
 				<Providers>
 					<NavbarWrapper />
 
