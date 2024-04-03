@@ -15,15 +15,7 @@ import {
 	defaultLoginRedirect,
 	protectedRoutes,
 } from "./config";
-
-enum RouteTypes {
-	public = "PUBLIC",
-	authPage = "AUTH_PAGE",
-	authApi = "AUTH_API",
-	protected = "PROTECTED",
-	modOnly = "MODERATOR_ONLY",
-	adminOnly = "ADMIN_ONLY",
-}
+import { RouteTypes } from "./types";
 
 const isAuthApiRoute = (pathname: string): boolean => {
 	return pathname.startsWith(authRouteApiPrefix);

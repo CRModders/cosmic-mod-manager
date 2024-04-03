@@ -40,3 +40,12 @@ export type FeaturedSectionContentData = {
 	title: string;
 	items: FeaturedSectionItem[];
 }[];
+
+export enum RouteTypes {
+	public = "PUBLIC",
+	authPage = "AUTH_PAGE",
+	authApi = "AUTH_API",
+	protected = "PROTECTED",
+	modOnly = "MODERATOR_ONLY",
+	adminOnly = "ADMIN_ONLY",
+}

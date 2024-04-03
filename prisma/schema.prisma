@@ -10,6 +10,7 @@ datasource db {
 enum UserRoles {
     ADMIN
     MODERATOR
+    CREATOR
     USER
 }
 

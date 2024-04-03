@@ -11,12 +11,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
 import EditProfileDialog from "./profile/editProfileDialog";
 import { findUserById, getLinkedProvidersList } from "@/app/api/actions/user";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import EmailField from "./account_security/email";
 import PasswordSection from "./account_security/password";
 import ManageProviders from "./account_security/ManageProviders";
 import DeleteAccountSection from "./account_security/DeleteAccount";
 import { parseProfileProvider } from "@/lib/user";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const UnauthenticatedUserMsg = () => {
 	return (
@@ -44,46 +45,51 @@ const AccountSettingsPage = async () => {
 
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
-			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
-				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
-						User profile
-					</h2>
-					<div>
-						<EditProfileDialog
-							name={user.name}
-							username={user.userName}
-							currProfileProvider={user?.profileImageProvider}
-							linkedProviders={linkedProviders}
-						/>
+			<Card className="w-full px-5 py-4 rounded-lg">
+				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
+					<div className="w-full flex flex-wrap gap-4 items-center justify-between">
+						<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+							User profile
+						</h2>
+						<div>
+							<EditProfileDialog
+								name={user.name}
+								username={user.userName}
+								currProfileProvider={user?.profileImageProvider}
+								linkedProviders={linkedProviders}
+							/>
+						</div>
 					</div>
-				</div>
-				<div className="w-full flex flex-col items-center justify-center my-2">
-					<div className="w-full flex flex-wrap items-center justify-start gap-6">
-						<div className="flex grow sm:grow-0 items-center justify-center">
-							<Avatar className="flex items-center justify-center w-24 h-24">
-								{user?.image && (
-									<AvatarImage src={user?.image} alt={`${user?.name} `} />
-								)}
+					<div className="w-full flex flex-col items-center justify-center my-2">
+						<div className="w-full flex flex-wrap items-center justify-start gap-6">
+							<div className="flex grow sm:grow-0 items-center justify-center">
+								<Avatar className="flex items-center justify-center w-24 h-24">
+									{user?.image && (
+										<AvatarImage src={user?.image} alt={`${user?.name} `} />
+									)}
 
-								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-									{user?.name?.charAt(0).toUpperCase()}
-								</AvatarFallback>
-							</Avatar>
-						</div>
-						<div className="grow flex flex-col items-start justify-center">
-							<h1 className="flex w-full items-center sm:justify-start justify-center text-3xl font-semibold">
-								{user.name}
-							</h1>
-							<p className="w-full flex items-center sm:justify-start justify-center">
-								<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">
-									@
-								</span>
-								{user.userName}
-							</p>
+									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
+										{user?.name?.charAt(0).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+							</div>
+							<div className="grow max-w-full flex flex-col items-start justify-center">
+								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">
+									{user.name}
+								</h1>
+								<ScrollArea className="w-full">
+									<div className="w-full flex text-sm sm:text-base items-center sm:justify-start justify-center">
+										<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">
+											@
+										</span>
+										{user.userName}
+									</div>
+									<ScrollBar orientation="horizontal" />
+								</ScrollArea>
+							</div>
 						</div>
 					</div>
-				</div>
+				</CardContent>
 			</Card>
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">

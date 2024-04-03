@@ -10,7 +10,7 @@ import { findUserById } from "@/app/api/actions/user";
 import { auth } from "@/auth";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import React from "react";
-import SignOutLocalSession from "./signOut";
+import SignOutBtn from "./signOutBtn";
 
 const ValidateSession = async () => {
 	const session = await auth();
@@ -34,11 +34,11 @@ const ValidateSession = async () => {
 						Invalid local session!
 					</h1>
 				</div>
-				<p className="text-3xl font-mono text-rose-600 dark:text-rose-500">
+				<p className="text-center text-rose-600 dark:text-rose-400 text-2xl font-mono font-bold">
 					Signing out...
 				</p>
 			</div>
-			<SignOutLocalSession />
+			<SignOutBtn />
 		</section>
 	);
 };

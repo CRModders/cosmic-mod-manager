@@ -31,7 +31,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 						Password
 					</p>
 					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
-						Add a password to be able to use email login
+						Add a password to use email login
 					</p>
 				</div>
 				<AddPasswordForm id={id} email={email} hasAPassword={hasAPassword} />

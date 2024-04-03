@@ -26,8 +26,7 @@ const ManageProviders = async ({ id }: Props) => {
 					Manage authentication providers
 				</p>
 				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
-					Add or remove login methods from your account, including GitHub,
-					GitLab, Discord, and Google.
+					Add or remove login methods from your account.
 				</p>
 			</div>
 
