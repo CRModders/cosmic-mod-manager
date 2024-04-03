@@ -98,7 +98,8 @@ export const findUserByEmail = async (email: string) => {
 // Check if a username is available to be used
 const isUsernameAvailable = async (username: string) => {
 	const existingUser = await findUserByUsername(username);
-	if (existingUser) {
+	console.log({ existingUser });
+	if (existingUser?.id) {
 		return false;
 	}
 	return true;
@@ -148,19 +149,21 @@ export const updateUserProfile = async ({
 			};
 		}
 
-		if (!isUsernameAvailable(parsedData.username)) {
-			return {
-				success: false,
-				message: "Username already taken",
-			};
-		}
-
 		const user = (await auth())?.user;
 
 		if (!user?.id) {
 			return {
 				success: false,
 				message: "Unauthorized request",
+			};
+		}
+
+		const userNameAvailable = await isUsernameAvailable(parsedData?.username);
+
+		if (userNameAvailable !== true) {
+			return {
+				success: false,
+				message: "Username already taken",
 			};
 		}
 
