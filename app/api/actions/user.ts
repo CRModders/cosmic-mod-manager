@@ -96,10 +96,10 @@ export const findUserByEmail = async (email: string) => {
 };
 
 // Check if a username is available to be used
-const isUsernameAvailable = async (username: string) => {
+const isUsernameAvailable = async (username: string, currId) => {
 	const existingUser = await findUserByUsername(username);
 	console.log({ existingUser });
-	if (existingUser?.id) {
+	if (existingUser?.id && existingUser.id !== currId) {
 		return false;
 	}
 	return true;
@@ -158,7 +158,10 @@ export const updateUserProfile = async ({
 			};
 		}
 
-		const userNameAvailable = await isUsernameAvailable(parsedData?.username);
+		const userNameAvailable = await isUsernameAvailable(
+			parsedData?.username,
+			user?.id,
+		);
 
 		if (userNameAvailable !== true) {
 			return {
