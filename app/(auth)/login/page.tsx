@@ -52,7 +52,7 @@ const LoginPage = async () => {
 								</span>
 								<Link
 									href="/register"
-									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-bold"
+									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-semibold"
 								>
 									Sign Up
 								</Link>
@@ -63,7 +63,7 @@ const LoginPage = async () => {
 								</span>
 								<Link
 									href="/change-password"
-									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-bold"
+									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-semibold"
 								>
 									Change password
 								</Link>

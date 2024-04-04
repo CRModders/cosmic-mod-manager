@@ -35,7 +35,6 @@ import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { KeyIcon } from "@/components/Icons";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
 import FormErrorMsg from "@/components/formErrorMsg";
@@ -258,7 +257,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 										!form.getValues().confirmNewPassword
 									}
 								>
-									<p className="px-4 font-semibold">Set password</p>
+									<p className="px-4">Set password</p>
 								</Button>
 							</div>
 						</form>

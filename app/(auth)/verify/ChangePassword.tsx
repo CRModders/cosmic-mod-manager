@@ -38,6 +38,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import FormErrorMsg from "@/components/formErrorMsg";
+import FormSuccessMsg from "@/components/formSuccessMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -147,18 +148,24 @@ const AddPasswordForm = ({ token, email }: Props) => {
 
 	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
 		return (
-			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
-				<CheckCircledIcon className="w-6 h-6" />
-				<h1>Cancelled successfully</h1>
+			<div className=" w-full max-w-md">
+				<FormSuccessMsg
+					msg="Cancelled successfully"
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
 
 	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
 		return (
-			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
-				<CheckCircledIcon className="w-6 h-6" />
-				<h1>Successfully changed password</h1>
+			<div className=" w-full max-w-md">
+				<FormSuccessMsg
+					msg="Successfully changed password"
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}

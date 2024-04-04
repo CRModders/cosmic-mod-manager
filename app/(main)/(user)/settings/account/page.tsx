@@ -100,7 +100,7 @@ const AccountSettingsPage = async () => {
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
+						<p className="text-xl font-semibold text-foreground/90 dark:text-foreground_dark/90">
 							Email
 						</p>
 						<EmailField email={user.email} />

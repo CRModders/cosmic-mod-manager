@@ -42,7 +42,7 @@ const RegisterPage = async () => {
 							</span>
 							<Link
 								href="/login"
-								className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2 font-bold"
+								className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2 font-semibold"
 							>
 								Log In
 							</Link>

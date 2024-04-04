@@ -9,8 +9,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { Button } from "@/components/ui/button";
+import { TrashIcon } from "@/components/Icons";
 import { useToast } from "@/components/ui/use-toast";
-import { TrashIcon } from "@radix-ui/react-icons";
 import React from "react";
 
 const DeleteAccountSection = () => {
@@ -33,7 +33,7 @@ const DeleteAccountSection = () => {
 					toast({ title: "// Not implemented yet" });
 				}}
 			>
-				<TrashIcon className="w-4 h-4" />
+				<TrashIcon size="1rem" />
 				Delete account
 			</Button>
 		</div>

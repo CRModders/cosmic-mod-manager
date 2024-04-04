@@ -22,6 +22,7 @@ import SecurityLink from "./SecurityLink";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
+import FormSuccessMsg from "@/components/formSuccessMsg";
 
 const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	const [loading, setLoading] = useState(false);
@@ -56,11 +57,12 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 
 	if (actionResult?.success === true) {
 		return (
-			<div className="max-w-md flex flex-col items-center justify-center gap-4">
-				<div className="w-full flex items-center justify-center gap-2 text-emerald-500 dark:text-emerald-400 bg-emerald-500/10 py-2 px-4 rounded-lg">
-					<CheckIcon className="w-10 h-10" />
-					<p className="text-2xl">{actionResult?.message}</p>
-				</div>
+			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
+				<FormSuccessMsg
+					msg={actionResult?.message}
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 
 				<div>
 					<p className="text-lg">

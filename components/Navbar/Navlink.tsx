@@ -82,7 +82,7 @@ export function NavMenuLink({
 		>
 			<Link
 				className={cn(
-					"w-full h-full flex items-center justify-center text-foreground dark:text-foreground_dark dark:data-[active=true]:text-primary_accent data-[active=true]:text-primary_accent data-[active=true]:font-bold",
+					"w-full h-full flex items-center justify-center text-foreground dark:text-foreground_dark dark:data-[active=true]:text-primary_accent data-[active=true]:text-primary_accent data-[active=true]:font-semibold",
 					classNames?.link,
 				)}
 				color={"foreground"}

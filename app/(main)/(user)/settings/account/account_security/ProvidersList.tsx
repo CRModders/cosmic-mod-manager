@@ -18,17 +18,13 @@ import {
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import {
-	ArrowTopRightIcon,
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-	TrashIcon,
-} from "@radix-ui/react-icons";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import { authProvidersList } from "@/app/(auth)/authproviders";
 import { unlinkAuthProvider } from "@/app/api/actions/user";
 import { signIn } from "next-auth/react";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
+import { TrashIcon } from "@/components/Icons";
 
 type Props = {
 	id: string;
@@ -104,7 +100,10 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 												RemoveProvider(provider.name.toLowerCase());
 											}}
 										>
-											<TrashIcon className="w-4 h-4" />
+											<TrashIcon
+												size="1rem"
+												className="text-foreground/80 dark:text-foreground_dark/80"
+											/>
 											<p>Remove</p>
 										</Button>
 									) : (

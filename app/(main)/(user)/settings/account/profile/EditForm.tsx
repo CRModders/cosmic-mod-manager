@@ -287,7 +287,7 @@ const EditProfileInfoForm = ({
 							form.getValues().currProfileProvider === currProfileProvider
 						}
 					>
-						<p className="px-4 font-semibold">Save</p>
+						<p className="px-4">Save</p>
 					</Button>
 				</div>
 			</form>

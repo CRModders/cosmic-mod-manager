@@ -148,7 +148,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 				<Button
 					type="submit"
 					aria-label="Log in"
-					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark text-[1.05rem]"
+					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
 				>
 					Continue
 				</Button>

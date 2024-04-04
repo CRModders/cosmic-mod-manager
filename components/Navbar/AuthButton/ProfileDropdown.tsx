@@ -9,11 +9,11 @@
 import React from "react";
 import { auth } from "@/auth";
 import Link from "next/link";
-import { DashboardIcon, PersonIcon, GearIcon } from "@radix-ui/react-icons";
 import SignOutBtn from "./SignOutBtn";
 import ProfileDropdownLink from "./ProfileDropdownLink";
 import { findUserById } from "@/app/api/actions/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
 
 const ProfileDropdown = async () => {
 	const session = await auth().catch((e) => console.log(e));
@@ -35,17 +35,17 @@ const ProfileDropdown = async () => {
 				// biome-ignore lint/complexity/useOptionalChain: <explanation>
 				userData && userData?.userName ? userData.userName : "notSignedIn"
 			}`,
-			icon: <PersonIcon className="h-5 w-5" />,
+			icon: <PersonIcon size="1.25rem" />,
 		},
 		{
 			name: "Dashboard",
 			href: "/dashboard",
-			icon: <DashboardIcon className="h-5 w-5" />,
+			icon: <DashboardIcon size="1.25rem" />,
 		},
 		{
 			name: "Settings",
 			href: "/settings/account",
-			icon: <GearIcon className="h-5 w-5" />,
+			icon: <GearIcon size="1.25rem" />,
 		},
 	];
 
