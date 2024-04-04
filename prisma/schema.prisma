@@ -59,7 +59,7 @@ model Session {
 model User {
     id                    String              @id @default(auto()) @map("_id") @db.ObjectId
     name                  String?
-    userName              String              @unique
+    userName              String?             @unique
     email                 String              @unique
     password              String?
     unverifiedNewPassword String?

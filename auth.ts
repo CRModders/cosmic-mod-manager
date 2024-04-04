@@ -36,56 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			user.userName = parseUsername(user.id);
 			user.profileImageProvider = account.provider;
 
-			// Delete the previous auth provider if the same provider is registered with different email to the same account
-			try {
-				await db.account.deleteMany({
-					where: {
-						userId: user?.id,
-						provider: account?.provider,
-					},
-				});
-			} catch (error) {}
-
-			// To prevent the user from being logged into other account when linking a provider account with different email
-			const alreadyLoggedInUser = await getCurrentAuthUser();
-
-			if (alreadyLoggedInUser?.id) {
-				// Check if there is already the same provider linked to this account with different email
-				const linkedProviders = await db.account.findMany({
-					where: {
-						userId: alreadyLoggedInUser?.id,
-						provider: account.provider,
-					},
-					select: {
-						userId: true,
-					},
-				});
-
-				if (linkedProviders?.length > 0) {
-					try {
-						await db.account.deleteMany({
-							where: {
-								userId: alreadyLoggedInUser?.id,
-								provider: account.provider,
-							},
-						});
-					} catch (error) {}
-				}
-
-				return alreadyLoggedInUser;
-			}
-
-			const existingAccount = await db.account.findFirst({
-				where: { providerAccountId: account?.providerAccountId },
-			});
-
-			if (existingAccount?.userId) {
-				const userData = await findUserById(existingAccount?.userId);
-
-				if (userData?.id) return userData;
-			}
-
-			return user;
+			return true;
 		},
 
 		async session({ session, token }) {
@@ -130,6 +81,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			}
 		},
 		async signIn({ user, account, profile }) {
+			// Delete the previous provider account if the user signs in using the same provider with different email
+			const accountsData = await db.account.findMany({
+				where: {
+					userId: user?.id,
+					provider: account?.provider,
+				},
+			});
+
+			for (const providerAccount of accountsData) {
+				if (
+					providerAccount?.provider === account?.provider &&
+					providerAccount?.providerAccountId !== account?.providerAccountId
+				) {
+					await db.account.delete({
+						where: {
+							id: providerAccount?.id,
+						},
+					});
+				}
+			}
+
 			// profile?.image_url   ==>   Discord
 			// profile?.picture     ==>   Google
 			// profile?.avatar_url  ==>   Github and Gitlab
@@ -137,7 +109,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				profile?.image_url || profile?.picture || profile?.avatar_url;
 
 			await db.account.updateMany({
-				where: { userId: user?.id, provider: account?.provider },
+				where: {
+					userId: user?.id,
+					provider: account?.provider,
+					providerAccountId: account?.providerAccountId,
+				},
 				data: {
 					profileImage: profileImageLink,
 					providerAccountEmail: profile?.email,
