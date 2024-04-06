@@ -10,8 +10,7 @@ import React from "react";
 import AddPasswordForm from "./addPasswordForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { KeyIcon } from "@/components/Icons";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { KeyIcon, TrashIcon } from "@/components/Icons";
 import RemovePasswordForm from "./removePasswordForm";
 
 type Props = {
@@ -27,11 +26,11 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 		return (
 			<div className="w-full flex flex-wrap items-end justify-between gap-2">
 				<div className="flex flex-col items-start justify-center">
-					<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
+					<p className="text-xl text-foreground dark:text-foreground_dark">
 						Password
 					</p>
 					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
-						Add a password to be able to use email login
+						Add a password to use email login
 					</p>
 				</div>
 				<AddPasswordForm id={id} email={email} hasAPassword={hasAPassword} />
@@ -42,7 +41,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap items-end justify-between gap-2">
 			<div className="flex flex-col items-start justify-center">
-				<p className="text-xl font-semibold text-foreground_muted dark:text-foreground_muted_dark">
+				<p className="text-xl text-foreground dark:text-foreground_dark">
 					Password
 				</p>
 				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
@@ -59,7 +58,10 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 						className="flex items-center justify-center gap-2"
 						variant="outline"
 					>
-						<KeyIcon size="1.1rem" />
+						<KeyIcon
+							size="1rem"
+							className="text-foreground/90 dark:text-foreground_dark/90"
+						/>
 						Change password
 					</Button>
 				</Link>
@@ -68,7 +70,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 						className="flex items-center justify-center gap-2 text-primary_accent_text dark:text-primary_accent_text_dark hover:text-primary_accent_text hover:dark:text-primary_accent_text_dark"
 						variant="outline"
 					>
-						<TrashIcon className="h-4 w-4" />
+						<TrashIcon size="1rem" />
 						Remove password
 					</Button>
 				</RemovePasswordForm>

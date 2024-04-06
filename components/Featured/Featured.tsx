@@ -62,11 +62,11 @@ const FeaturedSection = async () => {
 										{" "}
 									</div>
 									<div className="flex flex-col items-start justify-start mr-4 max-h-24">
-										<h3 className={`${styles.item_name} font-semibold`}>
+										<h3 className={`${styles.item_name} text-lg sm:text-xl`}>
 											{item.name}
 										</h3>
 										<p
-											className={`${styles.item_description} text-foreground_muted dark:text-foreground_muted_dark`}
+											className={`${styles.item_description} text-foreground/80 dark:text-foreground_dark/80`}
 										>
 											{item.description}
 										</p>

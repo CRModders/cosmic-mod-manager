@@ -31,6 +31,7 @@ import { isValidEmail } from "@/lib/user";
 import { initiatePasswordChange } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 const formSchema = z.object({
 	email: z
@@ -126,14 +127,15 @@ const SendResetEmail = ({ userEmail }: Props) => {
 									</FormLabel>
 									<FormControl>
 										<Input
+											{...field}
 											type="email"
 											required
 											placeholder="example@abc.com"
 											className="w-full flex items-center justify-center"
-											onKeyUp={() => {
-												setFormError("");
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+												field.onChange(e);
+												setFormError(null);
 											}}
-											{...field}
 										/>
 									</FormControl>
 								</FormItem>
@@ -142,19 +144,12 @@ const SendResetEmail = ({ userEmail }: Props) => {
 					/>
 				</div>
 
-				{formError && (
-					<div className="w-full flex items-start min-h-6 justify-center gap-2 text-rose-600 dark:text-rose-400">
-						<>
-							<ExclamationTriangleIcon className="w-5 h-5" />
-							<p className="leading-tight">{formError}</p>
-						</>
-					</div>
-				)}
+				{formError && <FormErrorMsg msg={formError} />}
 
 				<Button
 					type="submit"
 					aria-label="Log in"
-					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark text-[1.05rem]"
+					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
 				>
 					Continue
 				</Button>

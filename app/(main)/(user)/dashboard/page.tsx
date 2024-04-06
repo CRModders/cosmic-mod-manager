@@ -1,5 +1,3 @@
-"use client";
-
 //     This file is part of Cosmic Reach Mod Manager.
 //
 //    Cosmic Reach Mod Manager is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -8,11 +6,11 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 import React from "react";
 
-const Modspage = () => {
-	const session = useSession();
+const Modspage = async () => {
+	const session = await auth();
 
 	return (
 		<div className="w-full flex items-center justify-center">

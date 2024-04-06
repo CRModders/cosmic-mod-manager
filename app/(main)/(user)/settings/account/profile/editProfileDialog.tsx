@@ -15,12 +15,13 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Pencil1Icon } from "@radix-ui/react-icons";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 
 import EditProfileInfoForm from "./EditForm";
 import { Button } from "@/components/ui/button";
 import { Providers } from "@prisma/client";
+import { EditIcon } from "@/components/Icons";
 
 type Props = {
 	name: string;
@@ -44,14 +45,17 @@ const EditProfileDialog = ({
 					className="flex gap-2 items-center justify-center"
 					variant="outline"
 				>
-					<Pencil1Icon className="w-4 h-4" />
-					<p className="text-lg pr-1">Edit</p>
+					<EditIcon
+						size="1rem"
+						className="text-foreground/90 dark:text-foreground_dark/90"
+					/>
+					<p className="pr-1">Edit</p>
 				</Button>
 			</DialogTrigger>
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Edit profile</DialogTitle>
+					<DialogTitle className="font-normal">Edit profile</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center py-4">

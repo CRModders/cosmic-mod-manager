@@ -10,8 +10,12 @@ import PanelLayout, {
 	PanelContent,
 	SidePanel,
 } from "@/components/PanelLayout/Panel";
-import { ShieldIcon } from "@/components/Icons";
-import { PersonIcon } from "@radix-ui/react-icons";
+import {
+	GearIcon,
+	DashboardIcon,
+	PersonIcon,
+	ShieldIcon,
+} from "@/components/Icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
 import { siteTitle } from "@/config";
@@ -46,7 +50,7 @@ const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">
-						<h1 className="w-full px-1 text-3xl font-bold tracking-wider mb-4 text-foreground/80 dark:text-foreground_dark/80">
+						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">
 							Settings
 						</h1>
 						<ul className="w-full flex flex-col items-start justify-center gap-1">

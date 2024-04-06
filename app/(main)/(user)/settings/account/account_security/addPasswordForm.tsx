@@ -35,9 +35,9 @@ import { DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { KeyIcon } from "@/components/Icons";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -136,7 +136,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Add a password</DialogTitle>
+					<DialogTitle className="font-normal">Add a password</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
@@ -185,17 +185,18 @@ const AddPasswordForm = ({ id, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -219,17 +220,18 @@ const AddPasswordForm = ({ id, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -239,12 +241,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 								</div>
 							</div>
 
-							{formError && (
-								<div className="w-full flex items-center justify-start px-1 py-1 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
-									<p>{formError}</p>
-								</div>
-							)}
+							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
@@ -262,7 +259,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 										!form.getValues().confirmNewPassword
 									}
 								>
-									<p className="px-4 font-semibold">Set password</p>
+									<p className="px-4">Set password</p>
 								</Button>
 							</div>
 						</form>

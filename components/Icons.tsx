@@ -617,17 +617,13 @@ export const ShieldIcon: React.FC<IconSvgProps> = ({
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
+			fill="currentColor"
+			viewBox="0 0 16 16"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
-			<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+			<path d="M5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
 		</svg>
 	);
 };
@@ -642,18 +638,15 @@ export const KeyIcon: React.FC<IconSvgProps> = ({
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			fill="none"
-			stroke="currentColor"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
+			viewBox="0 0 512 512"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
-			<path stroke="none" d="M0 0h24v24H0z" />
-			<path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 010 4.069l-2.643 2.643a2.877 2.877 0 01-4.069 0l-.301-.301-6.558 6.558a2 2 0 01-1.239.578L5.172 21H4a1 1 0 01-.993-.883L3 20v-1.172a2 2 0 01.467-1.284l.119-.13L4 17h2v-2h2v-2l2.144-2.144-.301-.301a2.877 2.877 0 010-4.069l2.643-2.643a2.877 2.877 0 014.069 0zM15 9h.01" />
+			<path
+				fill="currentColor"
+				d="M218.1,167.17c0,13,0,25.6,4.1,37.4-43.1,50.6-156.9,184.3-167.5,194.5a20.17,20.17,0,0,0-6.7,15c0,8.5,5.2,16.7,9.6,21.3,6.6,6.9,34.8,33,40,28,15.4-15,18.5-19,24.8-25.2,9.5-9.3-1-28.3,2.3-36s6.8-9.2,12.5-10.4,15.8,2.9,23.7,3c8.3.1,12.8-3.4,19-9.2,5-4.6,8.6-8.9,8.7-15.6.2-9-12.8-20.9-3.1-30.4s23.7,6.2,34,5,22.8-15.5,24.1-21.6-11.7-21.8-9.7-30.7c.7-3,6.8-10,11.4-11s25,6.9,29.6,5.9c5.6-1.2,12.1-7.1,17.4-10.4,15.5,6.7,29.6,9.4,47.7,9.4,68.5,0,124-53.4,124-119.2S408.5,48,340,48,218.1,101.37,218.1,167.17ZM400,144a32,32,0,1,1-32-32A32,32,0,0,1,400,144Z"
+			/>
 		</svg>
 	);
 };
@@ -683,6 +676,140 @@ export const GitlabIcon: React.FC<IconSvgProps> = ({
 			<path
 				fill="#fc6d26"
 				d="m103 336A97 97 0 0171 222q37 8 65 28l193 146 80-60a97 97 0 0032-114q-37 8-65 28L183 396"
+			/>
+		</svg>
+	);
+};
+
+export const GearIcon: React.FC<IconSvgProps> = ({
+	size,
+	width,
+	height,
+	...props
+}) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 20 20"
+			fill="currentColor"
+			aria-hidden="true"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path
+				fillRule="evenodd"
+				d="M7.84 1.804A1 1 0 018.82 1h2.36a1 1 0 01.98.804l.331 1.652a6.993 6.993 0 011.929 1.115l1.598-.54a1 1 0 011.186.447l1.18 2.044a1 1 0 01-.205 1.251l-1.267 1.113a7.047 7.047 0 010 2.228l1.267 1.113a1 1 0 01.206 1.25l-1.18 2.045a1 1 0 01-1.187.447l-1.598-.54a6.993 6.993 0 01-1.929 1.115l-.33 1.652a1 1 0 01-.98.804H8.82a1 1 0 01-.98-.804l-.331-1.652a6.993 6.993 0 01-1.929-1.115l-1.598.54a1 1 0 01-1.186-.447l-1.18-2.044a1 1 0 01.205-1.251l1.267-1.114a7.05 7.05 0 010-2.227L1.821 7.773a1 1 0 01-.206-1.25l1.18-2.045a1 1 0 011.187-.447l1.598.54A6.993 6.993 0 017.51 3.456l.33-1.652zM10 13a3 3 0 100-6 3 3 0 000 6z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+};
+
+export const DashboardIcon: React.FC<IconSvgProps> = ({
+	size,
+	width,
+	height,
+	...props
+}) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path fill="none" d="M0 0h24v24H0V0z" />
+			<path
+				fill="currentColor"
+				d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"
+			/>
+		</svg>
+	);
+};
+
+export const PersonIcon: React.FC<IconSvgProps> = ({
+	size,
+	width,
+	height,
+	...props
+}) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 512 512"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="M332.64,64.58C313.18,43.57,286,32,256,32c-30.16,0-57.43,11.5-76.8,32.38-19.58,21.11-29.12,49.8-26.88,80.78C156.76,206.28,203.27,256,256,256s99.16-49.71,103.67-110.82C361.94,114.48,352.34,85.85,332.64,64.58Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M432,480H80A31,31,0,0,1,55.8,468.87c-6.5-7.77-9.12-18.38-7.18-29.11C57.06,392.94,83.4,353.61,124.8,326c36.78-24.51,83.37-38,131.2-38s94.42,13.5,131.2,38c41.4,27.6,67.74,66.93,76.18,113.75,1.94,10.73-.68,21.34-7.18,29.11A31,31,0,0,1,432,480Z"
+			/>
+		</svg>
+	);
+};
+
+export const EditIcon: React.FC<IconSvgProps> = ({
+	size,
+	width,
+	height,
+	...props
+}) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<g id="Layer_2" data-name="Layer 2">
+				<g id="edit-2">
+					<g id="edit-2-2" data-name="edit-2">
+						<rect className="fill-current opacity-0" width="24" height="24" />
+						<path
+							className="fill-current"
+							d="M19,20H5a1,1,0,0,0,0,2H19a1,1,0,0,0,0-2Z"
+						/>
+						<path
+							className="fill-current"
+							d="M5,18h.09l4.17-.38a2,2,0,0,0,1.21-.57l9-9a1.92,1.92,0,0,0-.07-2.71h0L16.66,2.6A2,2,0,0,0,14,2.53l-9,9a2,2,0,0,0-.57,1.21L4,16.91a1,1,0,0,0,.29.8A1,1,0,0,0,5,18ZM15.27,4,18,6.73,16,8.68,13.32,6Z"
+						/>
+					</g>
+				</g>
+			</g>
+		</svg>
+	);
+};
+
+export const TrashIcon: React.FC<IconSvgProps> = ({
+	size,
+	width,
+	height,
+	...props
+}) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<rect fill="none" />
+			<path
+				fill="currentColor"
+				d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
 			/>
 		</svg>
 	);

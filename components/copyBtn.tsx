@@ -44,7 +44,7 @@ const CopyBtn = ({ text, className, successMessage }: Props) => {
 		<Button
 			size="icon"
 			variant="ghost"
-			className="flex items-center justify-center w-6 h-6"
+			className="shrink-0 flex items-center justify-center w-6 h-6"
 			onClick={copyText}
 		>
 			{showTickIcon ? (

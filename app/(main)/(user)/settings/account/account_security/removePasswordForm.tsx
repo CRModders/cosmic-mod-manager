@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 import { maxPasswordLength, minPasswordLength } from "@/config";
 import { ExclamationTriangleIcon, TrashIcon } from "@radix-ui/react-icons";
 import { removePassword } from "@/app/api/actions/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -101,7 +102,9 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Remove your account password</DialogTitle>
+					<DialogTitle className="font-normal">
+						Remove your account password
+					</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
@@ -150,17 +153,18 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																setFormError(null);
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -171,12 +175,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 							</div>
 
 							<div className="w-full min-h-6">
-								{formError && (
-									<div className="w-full flex items-center justify-start px-1 py-1 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-										<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
-										<p>{formError}</p>
-									</div>
-								)}
+								{formError && <FormErrorMsg msg={formError} />}
 							</div>
 
 							<div className="w-full flex items-center justify-end gap-2">

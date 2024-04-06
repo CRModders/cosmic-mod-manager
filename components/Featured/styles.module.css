@@ -9,7 +9,6 @@
 
 .showcase_item .item_name {
     width: 100%;
-    font-size: 1.4rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     line-clamp: 1;
@@ -28,21 +27,11 @@
 }
 
 
-@media screen and (max-width: 1280px) {
-    .showcase_item .item_name {
-        font-size: 1.2rem;
-    }
-}
-
-
 @media screen and (max-width: 640px) {
     .showcase {
         margin-bottom: 1rem;
     }
 
-    .showcase_wrapper {
-        --grid-size: 14rem;
-    }
 }
 
 

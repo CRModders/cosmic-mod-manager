@@ -37,6 +37,8 @@ import { isValidPassword } from "@/lib/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import FormErrorMsg from "@/components/formErrorMsg";
+import FormSuccessMsg from "@/components/formSuccessMsg";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -146,18 +148,24 @@ const AddPasswordForm = ({ token, email }: Props) => {
 
 	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
 		return (
-			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
-				<CheckCircledIcon className="w-6 h-6" />
-				<h1>Cancelled successfully</h1>
+			<div className=" w-full max-w-md">
+				<FormSuccessMsg
+					msg="Cancelled successfully"
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
 
 	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
 		return (
-			<div className="max-w-md w-full flex items-center justify-center gap-2 p-2 rounded-lg text-emerald-600 dark:text-emerald-500 text-lg bg-emerald-600/10 dark:bg-emerald-500/5">
-				<CheckCircledIcon className="w-6 h-6" />
-				<h1>Successfully changed password</h1>
+			<div className=" w-full max-w-md">
+				<FormSuccessMsg
+					msg="Successfully changed password"
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
@@ -184,18 +192,19 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="hidden">
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="email"
 															name="username"
 															autoComplete="username"
 															className="hidden"
 															readOnly={true}
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -219,17 +228,18 @@ const AddPasswordForm = ({ token, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -253,17 +263,18 @@ const AddPasswordForm = ({ token, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -273,12 +284,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 								</div>
 							</div>
 
-							{formError && (
-								<div className="w-full flex items-center justify-start px-1 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-									<ExclamationTriangleIcon className="pl-2 w-6 h-5" />
-									<p>{formError}</p>
-								</div>
-							)}
+							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<Button

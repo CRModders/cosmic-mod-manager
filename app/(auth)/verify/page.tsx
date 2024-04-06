@@ -19,6 +19,7 @@ import AddPasswordConfirmAction from "./AddPassword";
 import { Spinner } from "@/components/ui/spinner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import ChangePassword from "./ChangePassword";
+import DeleteAccountConfirmAction from "./DeleteAccount";
 
 const ConfirmActionPage = () => {
 	const token = decodeURIComponent(useSearchParams().get("token"));
@@ -50,17 +51,16 @@ const ConfirmActionPage = () => {
 		);
 	}
 
-	return (
-		<>
-			{actionType === UserVerificationActionTypes.ADD_PASSWORD ? (
-				<AddPasswordConfirmAction token={token} />
-			) : actionType === UserVerificationActionTypes.CHANGE_PASSWORD ? (
-				<ChangePassword token={token} email={email} />
-			) : (
-				<Spinner />
-			)}
-		</>
-	);
+	switch (actionType) {
+		case UserVerificationActionTypes.ADD_PASSWORD:
+			return <AddPasswordConfirmAction token={token} />;
+		case UserVerificationActionTypes.CHANGE_PASSWORD:
+			return <ChangePassword token={token} email={email} />;
+		case UserVerificationActionTypes.DELETE_USER_ACCOUNT:
+			return <DeleteAccountConfirmAction token={token} />;
+		default:
+			return <Spinner />;
+	}
 };
 
 export default ConfirmActionPage;

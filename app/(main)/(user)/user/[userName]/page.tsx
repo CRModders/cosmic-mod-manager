@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import CopyBtn from "@/components/copyBtn";
 import { findUserByUsername } from "@/app/api/actions/user";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type Props = {
 	params: {
@@ -40,15 +41,18 @@ const ProfilePage = async ({ params }: Props) => {
 									</AvatarFallback>
 								</Avatar>
 
-								<div className=" grow flex flex-col items-center sm:items-start justify-center">
+								<div className="grow max-w-full flex flex-col items-center sm:items-start justify-center">
 									<h1 className="text-2xl font-semibold">{user?.name}</h1>
-									<div className="flex items-center justify-center gap-4">
-										<p className="flex items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
-											<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">
-												@
-											</span>
-											{user?.userName}
-										</p>
+									<div className="max-w-full flex items-center justify-center gap-4">
+										<ScrollArea className="max-w-full">
+											<p className="flex w-full items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
+												<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">
+													@
+												</span>
+												{user?.userName}
+											</p>
+											<ScrollBar orientation="horizontal" />
+										</ScrollArea>
 										<CopyBtn
 											text={user.userName || "undefined"}
 											successMessage="Copied username to clipboard"

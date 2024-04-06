@@ -27,7 +27,7 @@ type PanelContentProps = {
 
 export const PanelContent = async ({ children }: PanelContentProps) => {
 	return (
-		<section className="grow flex items-center justify-center rounded-lg lg:w-64">
+		<section className="grow max-w-full flex items-center justify-center rounded-lg lg:w-64">
 			{children}
 		</section>
 	);

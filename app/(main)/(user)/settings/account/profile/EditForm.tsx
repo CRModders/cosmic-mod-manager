@@ -27,10 +27,6 @@ import { DialogClose } from "@/components/ui/dialog";
 import { updateUserProfile } from "@/app/api/actions/user";
 import { maxNameLength, maxUsernameLength } from "@/config";
 import { isValidName, isValidUsername, parseProfileProvider } from "@/lib/user";
-import {
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
 import { sleep } from "@/lib/utils";
 import { Providers } from "@prisma/client";
 import {
@@ -40,6 +36,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import FormErrorMsg from "@/components/formErrorMsg";
+import FormSuccessMsg from "@/components/formSuccessMsg";
 
 export const formSchema = z.object({
 	currProfileProvider: z.string(),
@@ -89,27 +87,15 @@ const EditProfileInfoForm = ({
 		},
 	});
 
-	const checkFormError = (
-		event?: React.KeyboardEvent<HTMLInputElement>,
-		inputName?: "name" | "username",
-	) => {
-		let name = form.getValues("name");
+	const checkFormError = () => {
+		const name = form.getValues("name");
 		let username = form.getValues("username");
 
 		// Make the username lower case
 		form.setValue("username", username.toLowerCase());
 		username = form.getValues("username");
 
-		if (event && inputName && inputName === "name") {
-			// @ts-expect-error
-			name = event.target.value;
-		}
-		if (event && inputName && inputName === "username") {
-			// @ts-expect-error
-			username = event.target.value;
-		}
-
-		if (!username && !name) return setFormError("");
+		if (!username && !name) return setFormError(null);
 
 		if (isValidUsername(username) !== true) {
 			const error = isValidUsername(username);
@@ -143,7 +129,7 @@ const EditProfileInfoForm = ({
 
 		const result = await updateUserProfile({
 			data: {
-				username: values.username,
+				userName: values.username,
 				name: values.name,
 				profileImageProvider: providerName,
 			},
@@ -181,7 +167,9 @@ const EditProfileInfoForm = ({
 											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
 										</FormLabel>
 										<Select
-											onValueChange={field.onChange}
+											onValueChange={(value: string) => {
+												field.onChange(value);
+											}}
 											defaultValue={field.value}
 										>
 											<FormControl className="capitalize">
@@ -224,12 +212,13 @@ const EditProfileInfoForm = ({
 										</FormLabel>
 										<FormControl>
 											<Input
+												{...field}
 												placeholder="john_doe"
 												className="w-full flex items-center justify-centerp"
-												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-													checkFormError(e, "username");
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+													field.onChange(e);
+													checkFormError();
 												}}
-												{...field}
 											/>
 										</FormControl>
 									</FormItem>
@@ -253,12 +242,13 @@ const EditProfileInfoForm = ({
 										</FormLabel>
 										<FormControl>
 											<Input
+												{...field}
 												placeholder="John Doe"
 												className="w-full flex items-center justify-center"
-												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-													checkFormError(e, "name");
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+													field.onChange(e);
+													checkFormError();
 												}}
-												{...field}
 											/>
 										</FormControl>
 									</FormItem>
@@ -269,17 +259,9 @@ const EditProfileInfoForm = ({
 				</div>
 
 				{formError ? (
-					<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-rose-600 dark:text-rose-500 bg-primary_accent bg-opacity-10 rounded-lg">
-						<ExclamationTriangleIcon className="pl-2 w-6 h-6" />
-						<p>{formError}</p>
-					</div>
+					<FormErrorMsg msg={formError} />
 				) : (
-					successMessage && (
-						<div className="w-full flex items-center justify-start px-2 py-2 gap-2 text-emerald-700 dark:text-emerald-500 bg-emerald-500 bg-opacity-15 dark:bg-opacity-10 rounded-lg">
-							<CheckCircledIcon className="pl-2 w-6 h-6" />
-							<p>{successMessage}</p>
-						</div>
-					)
+					successMessage && <FormSuccessMsg msg={successMessage} />
 				)}
 
 				<div className="w-full flex items-center justify-end gap-2">
@@ -297,7 +279,7 @@ const EditProfileInfoForm = ({
 							form.getValues().currProfileProvider === currProfileProvider
 						}
 					>
-						<p className="px-4 font-semibold">Save</p>
+						<p className="px-4">Save</p>
 					</Button>
 				</div>
 			</form>

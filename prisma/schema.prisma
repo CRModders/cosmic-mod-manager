@@ -10,6 +10,7 @@ datasource db {
 enum UserRoles {
     ADMIN
     MODERATOR
+    CREATOR
     USER
 }
 
@@ -27,19 +28,20 @@ enum Providers {
 }
 
 model Account {
-    id                String  @id @default(auto()) @map("_id") @db.ObjectId
-    userId            String  @db.ObjectId
-    type              String
-    provider          String
-    providerAccountId String
-    profileImage      String?
-    refresh_token     String? @db.String
-    access_token      String? @db.String
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.String
-    session_state     String?
+    id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId               String  @db.ObjectId
+    type                 String
+    provider             String
+    providerAccountId    String
+    providerAccountEmail String?
+    profileImage         String?
+    refresh_token        String? @db.String
+    access_token         String? @db.String
+    expires_at           Int?
+    token_type           String?
+    scope                String?
+    id_token             String? @db.String
+    session_state        String?
 
     user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -47,20 +49,24 @@ model Account {
 }
 
 model Session {
-    id           String   @id @default(auto()) @map("_id") @db.ObjectId
-    sessionToken String   @unique
-    userId       String   @db.ObjectId
+    id           String    @id @default(auto()) @map("_id") @db.ObjectId
+    userId       String    @db.ObjectId
+    lastUsed     DateTime?
+    createdOn    DateTime
+    ipAddr       String?
+    geoData      String?
+    sessionToken String    @unique
     expires      DateTime
-    user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
     id                    String              @id @default(auto()) @map("_id") @db.ObjectId
     name                  String?
-    userName              String              @unique
+    userName              String?             @unique
     email                 String              @unique
     password              String?
-    unverifiedNewPassword String? // When a user adds new password, the new password will be stored in this field until the user verifies that action through the link send to his email
+    unverifiedNewPassword String?
     role                  UserRoles           @default(USER)
     emailVerified         DateTime?
     image                 String?
@@ -68,6 +74,13 @@ model User {
     accounts              Account[]
     sessions              Session[]
     verificationEmail     VerificationEmail[]
+}
+
+model DeletedUser {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    userName     String
+    email        String   @unique
+    deletionTime DateTime
 }
 
 model VerificationEmail {

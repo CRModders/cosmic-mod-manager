@@ -10,15 +10,15 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Providers, UserRoles } from "@prisma/client";
+import { DeletedUser, Providers, UserRoles } from "@prisma/client";
 import {
 	findUserByEmail,
 	findUserById,
-	getCurrentAuthUser,
 	matchPassword,
 } from "@/app/api/actions/user";
 import db from "@/lib/db";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
+import { maxUsernameLength } from "./config";
 
 declare module "next-auth" {
 	interface User {
@@ -32,59 +32,30 @@ declare module "next-auth" {
 export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		async signIn({ user, account, profile }): Promise<any> {
-			user.userName = parseUsername(user.id);
+		async signIn({ user, account }): Promise<any> {
+			let deletedAccount: DeletedUser | null = null;
+			if (!user?.userName) {
+				try {
+					deletedAccount = await db.deletedUser.delete({
+						where: { email: user?.email },
+					});
+				} catch (error) {}
+			}
+			const newRandomUsername = parseUsername(user.id);
+			user.userName =
+				deletedAccount?.userName ||
+				newRandomUsername.slice(
+					0,
+					Math.min(maxUsernameLength, newRandomUsername.length),
+				);
 			user.profileImageProvider = account.provider;
 
-			const alreadyLoggedInUser = await getCurrentAuthUser();
-
-			if (alreadyLoggedInUser?.id) {
-				const linkedProviders = await db.account.findMany({
-					where: {
-						userId: alreadyLoggedInUser?.id,
-						provider: account.provider,
-					},
-				});
-
-				if (linkedProviders?.length > 0) {
-					try {
-						await db.account.deleteMany({
-							where: {
-								userId: alreadyLoggedInUser?.id,
-								provider: account.provider,
-							},
-						});
-					} catch (error) {}
-				} else if (
-					linkedProviders?.at(0)?.userId &&
-					alreadyLoggedInUser?.id !== linkedProviders?.at(0)?.userId
-				) {
-					return null;
-				}
-
-				return alreadyLoggedInUser;
-			}
-
-			try {
-				await db.account.deleteMany({
-					where: {
-						userId: user?.id,
-						provider: account?.provider,
-					},
-				});
-			} catch (error) {}
-
-			return user;
+			return true;
 		},
 
 		async session({ session, token }) {
 			if (token?.sub) {
 				session.user.id = token.sub;
-
-				const userData = await findUserById(token.sub);
-				if (userData?.role) {
-					session.user.role = userData.role;
-				}
 			}
 
 			return session;
@@ -124,6 +95,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			}
 		},
 		async signIn({ user, account, profile }) {
+			// Delete the previous provider account if the user signs in using the same provider with different email
+			const accountsData = await db.account.findMany({
+				where: {
+					userId: user?.id,
+					provider: account?.provider,
+				},
+			});
+
+			for (const providerAccount of accountsData) {
+				if (
+					providerAccount?.provider === account?.provider &&
+					providerAccount?.providerAccountId !== account?.providerAccountId
+				) {
+					await db.account.delete({
+						where: {
+							id: providerAccount?.id,
+						},
+					});
+				}
+			}
+
 			// profile?.image_url   ==>   Discord
 			// profile?.picture     ==>   Google
 			// profile?.avatar_url  ==>   Github and Gitlab
@@ -131,9 +123,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				profile?.image_url || profile?.picture || profile?.avatar_url;
 
 			await db.account.updateMany({
-				where: { userId: user?.id, provider: account?.provider },
+				where: {
+					userId: user?.id,
+					provider: account?.provider,
+					providerAccountId: account?.providerAccountId,
+				},
 				data: {
 					profileImage: profileImageLink,
+					providerAccountEmail: profile?.email,
 				},
 			});
 		},

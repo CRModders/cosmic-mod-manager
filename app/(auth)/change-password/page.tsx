@@ -20,9 +20,7 @@ const ResetPasswordPage = async () => {
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl font-semibold">
-							Change password
-						</h1>
+						<h1 className="w-full text-left text-xl">Change password</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
