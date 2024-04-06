@@ -55,7 +55,7 @@ const EditProfileDialog = ({
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Edit profile</DialogTitle>
+					<DialogTitle className="font-normal">Edit profile</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center py-4">

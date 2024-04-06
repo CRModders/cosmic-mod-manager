@@ -22,7 +22,7 @@ const ManageProviders = async ({ id }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-32 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-xl font-semibold text-foreground/90 dark:text-foreground_dark/90">
+				<p className="text-xl text-foreground dark:text-foreground_dark">
 					Manage authentication providers
 				</p>
 				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">

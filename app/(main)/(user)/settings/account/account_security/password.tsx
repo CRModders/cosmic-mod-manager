@@ -26,7 +26,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 		return (
 			<div className="w-full flex flex-wrap items-end justify-between gap-2">
 				<div className="flex flex-col items-start justify-center">
-					<p className="text-xl font-semibold text-foreground/90 dark:text-foreground_dark/90">
+					<p className="text-xl text-foreground dark:text-foreground_dark">
 						Password
 					</p>
 					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
@@ -41,7 +41,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap items-end justify-between gap-2">
 			<div className="flex flex-col items-start justify-center">
-				<p className="text-xl font-semibold text-foreground/90 dark:text-foreground_dark/90">
+				<p className="text-xl text-foreground dark:text-foreground_dark">
 					Password
 				</p>
 				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">

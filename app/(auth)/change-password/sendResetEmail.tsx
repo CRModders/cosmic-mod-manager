@@ -127,14 +127,15 @@ const SendResetEmail = ({ userEmail }: Props) => {
 									</FormLabel>
 									<FormControl>
 										<Input
+											{...field}
 											type="email"
 											required
 											placeholder="example@abc.com"
 											className="w-full flex items-center justify-center"
-											onKeyUp={() => {
-												setFormError("");
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+												field.onChange(e);
+												setFormError(null);
 											}}
-											{...field}
 										/>
 									</FormControl>
 								</FormItem>

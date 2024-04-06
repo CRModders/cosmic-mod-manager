@@ -136,7 +136,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Add a password</DialogTitle>
+					<DialogTitle className="font-normal">Add a password</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
@@ -185,17 +185,18 @@ const AddPasswordForm = ({ id, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -219,17 +220,18 @@ const AddPasswordForm = ({ id, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>

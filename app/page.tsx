@@ -14,6 +14,7 @@ import { Suspense } from "react";
 import AuthButton from "./AuthButton";
 import { Spinner } from "@/components/ui/spinner";
 import "@/app/globals.css";
+import { auth } from "@/auth";
 
 export default async function Home() {
 	// The animation keyframes in "@/app/globals.css" need to be updated according to the number of items in the list

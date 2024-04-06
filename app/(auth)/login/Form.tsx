@@ -29,6 +29,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { defaultLoginRedirect } from "@/config";
 import { isValidEmail } from "@/lib/user";
 import FormErrorMsg from "@/components/formErrorMsg";
+import { RevalidatePath } from "@/app/api/actions/utils";
 
 const formSchema = z.object({
 	email: z
@@ -125,14 +126,15 @@ const LoginForm = () => {
 									</FormLabel>
 									<FormControl>
 										<Input
+											{...field}
 											type="email"
 											required
 											placeholder="example@abc.com"
 											className="w-full flex items-center justify-center"
-											onKeyUp={() => {
-												setFormError("");
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+												field.onChange(e);
+												setFormError(null);
 											}}
-											{...field}
 										/>
 									</FormControl>
 								</FormItem>
@@ -154,13 +156,14 @@ const LoginForm = () => {
 									</FormLabel>
 									<FormControl>
 										<Input
+											{...field}
 											placeholder="********"
 											type="password"
 											className="w-full flex items-center justify-center"
-											onKeyUp={() => {
-												setFormError("");
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+												field.onChange(e);
+												setFormError(null);
 											}}
-											{...field}
 										/>
 									</FormControl>
 								</FormItem>

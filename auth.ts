@@ -10,15 +10,15 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Providers, UserRoles } from "@prisma/client";
+import { DeletedUser, Providers, UserRoles } from "@prisma/client";
 import {
 	findUserByEmail,
 	findUserById,
-	getCurrentAuthUser,
 	matchPassword,
 } from "@/app/api/actions/user";
 import db from "@/lib/db";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
+import { maxUsernameLength } from "./config";
 
 declare module "next-auth" {
 	interface User {
@@ -33,7 +33,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		async signIn({ user, account }): Promise<any> {
-			user.userName = parseUsername(user.id);
+			let deletedAccount: DeletedUser | null = null;
+			if (!user?.userName) {
+				try {
+					deletedAccount = await db.deletedUser.delete({
+						where: { email: user?.email },
+					});
+				} catch (error) {}
+			}
+			const newRandomUsername = parseUsername(user.id);
+			user.userName =
+				deletedAccount?.userName ||
+				newRandomUsername.slice(
+					0,
+					Math.min(maxUsernameLength, newRandomUsername.length),
+				);
 			user.profileImageProvider = account.provider;
 
 			return true;

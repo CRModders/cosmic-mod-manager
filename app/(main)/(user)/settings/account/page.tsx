@@ -40,7 +40,7 @@ const AccountSettingsPage = async () => {
 	}
 
 	const linkedProviders = (await getLinkedProvidersList()).map((provider) =>
-		parseProfileProvider(provider),
+		parseProfileProvider(provider.provider),
 	);
 
 	return (
@@ -48,7 +48,7 @@ const AccountSettingsPage = async () => {
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
 					<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-						<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
 							User profile
 						</h2>
 						<div>
@@ -94,13 +94,13 @@ const AccountSettingsPage = async () => {
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+					<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
 						Account security
 					</h2>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="text-xl font-semibold text-foreground/90 dark:text-foreground_dark/90">
+						<p className="text-xl text-foreground dark:text-foreground_dark">
 							Email
 						</p>
 						<EmailField email={user.email} />
@@ -118,7 +118,7 @@ const AccountSettingsPage = async () => {
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl font-semibold text-foreground/80 dark:text-foreground_dark/80">
+					<h2 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
 						Delete account
 					</h2>
 				</div>

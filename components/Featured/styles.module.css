@@ -9,7 +9,6 @@
 
 .showcase_item .item_name {
     width: 100%;
-    font-size: 1.4rem;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     line-clamp: 1;
@@ -25,13 +24,6 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-
-@media screen and (max-width: 1280px) {
-    .showcase_item .item_name {
-        font-size: 1.2rem;
-    }
 }
 
 

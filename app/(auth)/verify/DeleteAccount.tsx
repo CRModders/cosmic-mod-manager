@@ -7,8 +7,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import {
-	discardNewPasswordAddition,
-	confirmNewPasswordAddition,
+	cancelAccountDeletion,
+	confirmAccountDeletion,
 } from "@/app/api/actions/user";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +23,9 @@ import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 import { useToast } from "@/components/ui/use-toast";
+import { TrashIcon } from "@/components/Icons";
 
-const AddPasswordConfirmAction = ({ token }: { token: string }) => {
+const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 	const { toast } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [actionResult, setActionResult] = useState<{
@@ -32,13 +33,17 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 		message: string;
 	} | null>(null);
 
-	const addTheNewPassword = async () => {
+	const dontDeleteAccount = async () => {
 		if (loading) return;
 		setLoading(true);
 
-		const res = await confirmNewPasswordAddition(token);
+		const res = await cancelAccountDeletion(token);
 
 		setLoading(false);
+		if (res?.success === true) {
+			setActionResult(res);
+		}
+
 		if (res?.success === true) {
 			setActionResult(res);
 		} else {
@@ -48,13 +53,17 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 		}
 	};
 
-	const removeTheNewPassword = async () => {
+	const deleteAccount = async () => {
 		if (loading) return;
 		setLoading(true);
 
-		const res = await discardNewPasswordAddition(token);
+		const res = await confirmAccountDeletion(token);
 
 		setLoading(false);
+		if (res?.success === true) {
+			setActionResult(res);
+		}
+
 		if (res?.success === true) {
 			setActionResult(res);
 		} else {
@@ -62,6 +71,10 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 				title: res?.message || "Something went wrong",
 			});
 		}
+
+		setTimeout(() => {
+			window.location.href = "/";
+		}, 3_000);
 	};
 
 	if (actionResult?.success === true) {
@@ -91,12 +104,13 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	return (
 		<Card className="max-w-md gap-0 relative">
 			<CardHeader className="text-xl ms:text-3xl font-semibold text-left">
-				Verify your new password
+				Delete your account
 			</CardHeader>
 			<CardContent>
 				<p className="w-full text-left text-foreground/80 dark:text-foreground_dark/80">
-					A new password was recently added to your account. Confirm below if
-					this was you. The new password will not work until then.
+					Deleting your account will remove all of your data except your
+					projects from our database. There is no going back after you delete
+					your account.
 				</p>
 			</CardContent>
 			<CardFooter className="w-full flex flex-col items-center justify-end gap-4">
@@ -104,7 +118,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 					<form
 						onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
 							e.preventDefault();
-							removeTheNewPassword();
+							dontDeleteAccount();
 						}}
 					>
 						<Button type="submit" variant="outline">
@@ -114,10 +128,16 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 					<form
 						onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
 							e.preventDefault();
-							addTheNewPassword();
+							deleteAccount();
 						}}
 					>
-						<Button type="submit">Confirm</Button>
+						<Button
+							type="submit"
+							className="flex items-center justify-center gap-2 bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/90 hover:dark:bg-primary_accent_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
+						>
+							<TrashIcon size="1rem" />
+							Delete
+						</Button>
 					</form>
 				</div>
 				<div className="w-full flex items-center justify-start">
@@ -136,4 +156,4 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	);
 };
 
-export default AddPasswordConfirmAction;
+export default DeleteAccountConfirmAction;

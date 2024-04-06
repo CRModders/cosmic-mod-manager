@@ -102,7 +102,9 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Remove your account password</DialogTitle>
+					<DialogTitle className="font-normal">
+						Remove your account password
+					</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
@@ -151,17 +153,18 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																setFormError(null);
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>

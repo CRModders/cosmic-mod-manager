@@ -87,27 +87,15 @@ const EditProfileInfoForm = ({
 		},
 	});
 
-	const checkFormError = (
-		event?: React.KeyboardEvent<HTMLInputElement>,
-		inputName?: "name" | "username",
-	) => {
-		let name = form.getValues("name");
+	const checkFormError = () => {
+		const name = form.getValues("name");
 		let username = form.getValues("username");
 
 		// Make the username lower case
 		form.setValue("username", username.toLowerCase());
 		username = form.getValues("username");
 
-		if (event && inputName && inputName === "name") {
-			// @ts-expect-error
-			name = event.target.value;
-		}
-		if (event && inputName && inputName === "username") {
-			// @ts-expect-error
-			username = event.target.value;
-		}
-
-		if (!username && !name) return setFormError("");
+		if (!username && !name) return setFormError(null);
 
 		if (isValidUsername(username) !== true) {
 			const error = isValidUsername(username);
@@ -179,7 +167,9 @@ const EditProfileInfoForm = ({
 											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
 										</FormLabel>
 										<Select
-											onValueChange={field.onChange}
+											onValueChange={(value: string) => {
+												field.onChange(value);
+											}}
 											defaultValue={field.value}
 										>
 											<FormControl className="capitalize">
@@ -222,12 +212,13 @@ const EditProfileInfoForm = ({
 										</FormLabel>
 										<FormControl>
 											<Input
+												{...field}
 												placeholder="john_doe"
 												className="w-full flex items-center justify-centerp"
-												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-													checkFormError(e, "username");
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+													field.onChange(e);
+													checkFormError();
 												}}
-												{...field}
 											/>
 										</FormControl>
 									</FormItem>
@@ -251,12 +242,13 @@ const EditProfileInfoForm = ({
 										</FormLabel>
 										<FormControl>
 											<Input
+												{...field}
 												placeholder="John Doe"
 												className="w-full flex items-center justify-center"
-												onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
-													checkFormError(e, "name");
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+													field.onChange(e);
+													checkFormError();
 												}}
-												{...field}
 											/>
 										</FormControl>
 									</FormItem>

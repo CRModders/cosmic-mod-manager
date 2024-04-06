@@ -6,10 +6,15 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { ConfirmAddPasswordTokenExpiry } from "@/config";
+import {
+	changePasswordConfirmationTokenValidity_ms,
+	addNewPasswordVerificationTokenValidity_ms,
+	deleteAccountVerificationTokenValidity_ms,
+} from "@/config";
 import db from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import {
+	AccountDeletionVerificationEmailTemplate,
 	ChangePasswordVerificationEmailTemplate,
 	NewPasswordConfirmationEmailTemplate,
 } from "@/lib/email/templates";
@@ -35,7 +40,7 @@ export const sendNewPasswordVerificationEmail = async ({
 			data: {
 				userId: userId,
 				action: UserVerificationActionTypes.ADD_PASSWORD,
-				token: shuffleCharacters(`${userId}${generateRandomCode({})}`), // Longer sized token to make sure it's unique ever for a larger user base
+				token: `${userId}${generateRandomCode({})}`,
 			},
 		});
 
@@ -47,7 +52,7 @@ export const sendNewPasswordVerificationEmail = async ({
 				token,
 			)}`,
 			siteUrl: baseUrl,
-			expiryDurationMs: ConfirmAddPasswordTokenExpiry,
+			expiryDurationMs: addNewPasswordVerificationTokenValidity_ms,
 		});
 
 		await sendEmail({
@@ -79,7 +84,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 			data: {
 				userId: user.id,
 				action: UserVerificationActionTypes.CHANGE_PASSWORD,
-				token: shuffleCharacters(`${user.id}${generateRandomCode({})}`), // Longer sized token to make sure it's unique ever for a larger user base
+				token: `${user.id}${generateRandomCode({})}`,
 			},
 		});
 
@@ -91,7 +96,53 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 				token,
 			)}`,
 			siteUrl: baseUrl,
-			expiryDurationMs: ConfirmAddPasswordTokenExpiry,
+			expiryDurationMs: changePasswordConfirmationTokenValidity_ms,
+		});
+
+		await sendEmail({
+			receiver: user.email,
+			subject: emailTemplate.subject,
+			text: emailTemplate.text,
+			template: emailTemplate.EmailHTML,
+		});
+
+		return { success: true, message: "Email sent successfully" };
+	} catch (error) {
+		return {
+			success: false,
+			message: "Error while sending confirmation email",
+		};
+	}
+};
+
+export const sendAccountDeletionConfirmationEmail = async (
+	user: Partial<User>,
+) => {
+	try {
+		await db.verificationEmail.deleteMany({
+			where: {
+				userId: user.id,
+				action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
+			},
+		});
+
+		const res = await db.verificationEmail.create({
+			data: {
+				userId: user.id,
+				action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
+				token: `${user.id}${generateRandomCode({})}`, // Longer sized token to make sure it's unique ever for a larger user base
+			},
+		});
+
+		const token = res.token;
+
+		const emailTemplate = AccountDeletionVerificationEmailTemplate({
+			name: user.name,
+			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(
+				token,
+			)}`,
+			siteUrl: baseUrl,
+			expiryDurationMs: deleteAccountVerificationTokenValidity_ms,
 		});
 
 		await sendEmail({

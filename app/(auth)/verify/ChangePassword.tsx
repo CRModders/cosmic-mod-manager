@@ -192,18 +192,19 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="hidden">
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="email"
 															name="username"
 															autoComplete="username"
 															className="hidden"
 															readOnly={true}
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -227,17 +228,18 @@ const AddPasswordForm = ({ token, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>
@@ -261,17 +263,18 @@ const AddPasswordForm = ({ token, email }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<Input
+															{...field}
 															placeholder="********"
 															type="password"
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onKeyUp={(
-																e: React.KeyboardEvent<HTMLInputElement>,
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
 															) => {
+																field.onChange(e);
 																checkFormError();
 															}}
-															{...field}
 														/>
 													</FormControl>
 												</FormItem>

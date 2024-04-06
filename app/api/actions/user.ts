@@ -19,13 +19,23 @@ import {
 	parseProfileProvider,
 	parseUserName,
 } from "@/lib/user";
-import { Providers, User, UserVerificationActionTypes } from "@prisma/client";
+import {
+	Account,
+	Providers,
+	User,
+	UserVerificationActionTypes,
+	VerificationEmail,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import {
-	ConfirmAddPasswordTokenExpiry,
+	changePasswordConfirmationTokenValidity_ms,
+	addNewPasswordVerificationTokenValidity_ms,
+	deleteAccountVerificationTokenValidity_ms,
 	passwordHashingSaltRounds,
+	deletedUsernameReservationDuration_ms,
 } from "@/config";
 import {
+	sendAccountDeletionConfirmationEmail,
 	sendNewPasswordVerificationEmail,
 	sendPasswordChangeEmail,
 } from "./verificationEmails";
@@ -98,11 +108,28 @@ export const findUserByEmail = async (email: string) => {
 
 // Check if a username is available to be used
 const isUsernameAvailable = async (username: string, currId) => {
+	let result = true;
 	const existingUser = await findUserByUsername(username);
-	if (existingUser?.id && existingUser.id !== currId) {
-		return false;
+	if (existingUser?.id) {
+		result = false;
+	} else {
+		const recentlyDeletedUser = await db.deletedUser.findFirst({
+			where: { userName: username },
+		});
+
+		if (recentlyDeletedUser?.id) {
+			if (
+				recentlyDeletedUser?.deletionTime.getTime() +
+					deletedUsernameReservationDuration_ms >
+				new Date().getTime()
+			) {
+				result = false;
+			} else {
+				await db.deletedUser.delete({ where: { id: recentlyDeletedUser.id } });
+			}
+		}
 	}
-	return true;
+	return result;
 };
 
 type ProfileUpdateData = {
@@ -178,7 +205,7 @@ export const updateUserProfile = async ({
 			if (userNameAvailable !== true) {
 				return {
 					success: false,
-					message: "Username already taken",
+					message: "That username is not available, try something else",
 				};
 			}
 		}
@@ -281,7 +308,7 @@ export const loginUser = async ({
 };
 
 // Get a list of all the linked auth providers
-export const getLinkedProvidersList = async (): Promise<string[]> => {
+export const getLinkedProvidersList = async () => {
 	const session = await auth();
 	if (!session?.user?.id) return [];
 
@@ -290,9 +317,12 @@ export const getLinkedProvidersList = async (): Promise<string[]> => {
 			where: { userId: session?.user?.id },
 		});
 
-		const list = [];
+		const list: Partial<Account>[] = [];
 		for (const provider of linkedProviders) {
-			list.push(provider.provider);
+			list.push({
+				provider: provider.provider,
+				providerAccountEmail: provider.providerAccountEmail,
+			});
 		}
 
 		return list;
@@ -383,6 +413,20 @@ export const getCurrentAuthUser = async () => {
 	return userData;
 };
 
+const isVerificationTokenValid = (
+	tokenCreationDate: Date,
+	validityDuration_ms: number,
+) => {
+	if (
+		tokenCreationDate &&
+		validityDuration_ms &&
+		tokenCreationDate.getTime() + validityDuration_ms > new Date().getTime()
+	) {
+		return true;
+	}
+	return false;
+};
+
 // Returns actionType of confirmation action from the token
 export const getActionType = async (token: string) => {
 	if (!token) return null;
@@ -394,8 +438,11 @@ export const getActionType = async (token: string) => {
 
 		// Check if the token is expired
 		if (
-			verificationEmail.dateCreated.getTime() + ConfirmAddPasswordTokenExpiry <
-			new Date().getTime()
+			verificationEmail?.dateCreated &&
+			!isVerificationTokenValid(
+				verificationEmail?.dateCreated,
+				addNewPasswordVerificationTokenValidity_ms,
+			)
 		) {
 			await db.verificationEmail.delete({
 				where: { token: token },
@@ -518,7 +565,7 @@ export const removePassword = async ({
 
 		await db.user.update({
 			where: { id: userData.id },
-			data: { password: null },
+			data: { password: null, unverifiedNewPassword: null },
 		});
 
 		revalidatePath("/settings/account");
@@ -545,15 +592,35 @@ export const discardNewPasswordAddition = async (token: string) => {
 			};
 		}
 
-		await db.verificationEmail.delete({
-			where: { token: token, action: UserVerificationActionTypes.ADD_PASSWORD },
-		});
+		let res: VerificationEmail | null = null;
+
+		try {
+			res = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.ADD_PASSWORD,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		if (!res?.token) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
 
 		return {
 			success: true,
 			message: "Cancelled successfully",
 		};
 	} catch (error) {
+		console.log({ error });
 		return {
 			success: false,
 			message: "Internal server error",
@@ -570,14 +637,38 @@ export const confirmNewPasswordAddition = async (token: string) => {
 			};
 		}
 
-		const verificationActionData = await db.verificationEmail.delete({
-			where: { token: token, action: UserVerificationActionTypes.ADD_PASSWORD },
-		});
+		let verificationActionData: VerificationEmail | null = null;
+
+		try {
+			verificationActionData = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.ADD_PASSWORD,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
 
 		if (!verificationActionData?.token) {
 			return {
 				success: false,
 				message: "Invalid confirmation token",
+			};
+		}
+
+		if (
+			!isVerificationTokenValid(
+				verificationActionData?.dateCreated,
+				addNewPasswordVerificationTokenValidity_ms,
+			)
+		) {
+			return {
+				success: false,
+				message: "Expired token",
 			};
 		}
 
@@ -609,18 +700,13 @@ export const confirmNewPasswordAddition = async (token: string) => {
 			message: "Successfully added new password",
 		};
 	} catch (error) {
+		console.log({ error });
 		return {
 			success: false,
 			message: "Internal server error",
 		};
 	}
 };
-
-// TODO: Create this function
-export const initiateDeleteAccountAction = async () => {};
-
-// TODO: Confirm account deletion
-export const confirmAccountDeletion = async () => {};
 
 // Initiate password change action
 export const initiatePasswordChange = async (email: string) => {
@@ -653,7 +739,7 @@ export const initiatePasswordChange = async (email: string) => {
 
 		return {
 			success: true,
-			message: emailSendRes?.message || "Error while sending email",
+			message: emailSendRes?.message,
 		};
 	} catch (error) {
 		console.log({ error });
@@ -673,12 +759,28 @@ export const cancelPasswordChangeAction = async (token: string) => {
 			};
 		}
 
-		await db.verificationEmail.delete({
-			where: {
-				token: token,
-				action: UserVerificationActionTypes.CHANGE_PASSWORD,
-			},
-		});
+		let res: VerificationEmail | null = null;
+
+		try {
+			res = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.CHANGE_PASSWORD,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		if (!res?.token) {
+			return {
+				success: false,
+				message: "Invalid token type",
+			};
+		}
 
 		return {
 			success: true,
@@ -714,18 +816,37 @@ export const confirmPasswordChange = async ({
 				message: error as string,
 			};
 		}
+		let verificationActionData: VerificationEmail | null = null;
 
-		const verificationActionData = await db.verificationEmail.delete({
-			where: {
-				token: token,
-				action: UserVerificationActionTypes.CHANGE_PASSWORD,
-			},
-		});
-
+		try {
+			verificationActionData = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.CHANGE_PASSWORD,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
 		if (!verificationActionData?.token) {
 			return {
 				success: false,
 				message: "Invalid confirmation token",
+			};
+		}
+
+		if (
+			!isVerificationTokenValid(
+				verificationActionData?.dateCreated,
+				changePasswordConfirmationTokenValidity_ms,
+			)
+		) {
+			return {
+				success: false,
+				message: "Expired token",
 			};
 		}
 
@@ -758,6 +879,161 @@ export const confirmPasswordChange = async ({
 			message: "Successfully added new password",
 		};
 	} catch (error) {
+		return {
+			success: false,
+			message: "Internal server error",
+		};
+	}
+};
+
+export const initiateDeleteAccountAction = async () => {
+	const session = await auth();
+
+	if (!session?.user?.id) {
+		return {
+			success: false,
+			message: "Unauthenticated request",
+		};
+	}
+
+	try {
+		const userData = await findUserById(session?.user?.id);
+
+		const emailSendRes = await sendAccountDeletionConfirmationEmail(userData);
+
+		if (emailSendRes?.success !== true) {
+			return {
+				success: false,
+				message: emailSendRes?.message || "Error while sending email",
+			};
+		}
+
+		return {
+			success: true,
+			message: emailSendRes?.message || "Error while sending email",
+		};
+	} catch (error) {
+		return {
+			success: false,
+			message: "Internal server error",
+		};
+	}
+};
+
+export const confirmAccountDeletion = async (token: string) => {
+	if (!token) {
+		return {
+			success: false,
+			message: "Missing confirmation token",
+		};
+	}
+
+	try {
+		const session = await auth();
+
+		if (!session?.user?.id) {
+			return {
+				success: false,
+				message: "Unauthenticated user",
+			};
+		}
+		let verificationActionData: VerificationEmail | null = null;
+
+		try {
+			verificationActionData = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		if (!verificationActionData?.token) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		if (
+			!isVerificationTokenValid(
+				verificationActionData?.dateCreated,
+				deleteAccountVerificationTokenValidity_ms,
+			)
+		) {
+			return {
+				success: false,
+				message: "Expired token",
+			};
+		}
+
+		const userData = await db.user.delete({
+			where: { id: session?.user?.id },
+		});
+
+		await db.deletedUser.create({
+			data: {
+				userName: userData.userName,
+				email: userData.email,
+				deletionTime: new Date(),
+			},
+		});
+
+		return {
+			success: true,
+			message: "Successfully deleted your account",
+		};
+	} catch (error) {
+		console.log({ error });
+		return {
+			success: false,
+			message: "Internal server error",
+		};
+	}
+};
+
+export const cancelAccountDeletion = async (token: string) => {
+	if (!token) {
+		return {
+			success: false,
+			message: "Missing confirmation token",
+		};
+	}
+	try {
+		let res: VerificationEmail | null = null;
+
+		try {
+			res = await db.verificationEmail.delete({
+				where: {
+					token: token,
+					action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
+				},
+			});
+		} catch (error) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		if (!res?.token) {
+			return {
+				success: false,
+				message: "Invalid token",
+			};
+		}
+
+		return {
+			success: true,
+			message: "Successfully cancelled account deletion",
+		};
+	} catch (error) {
+		console.log({ error });
 		return {
 			success: false,
 			message: "Internal server error",

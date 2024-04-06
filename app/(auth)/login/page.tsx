@@ -19,7 +19,7 @@ const LoginPage = async () => {
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl font-semibold">Log In</h1>
+						<h1 className="w-full text-left text-xl">Log In</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
@@ -47,23 +47,23 @@ const LoginPage = async () => {
 
 						<div className="w-full flex flex-col items-center justify-center gap-1 mt-4 text-sm">
 							<p className="text-center text-foreground dark:text-foreground_dark">
-								<span className="text-foreground_muted dark:text-foreground_muted_dark">
+								<span className="text-foreground/80 dark:text-foreground_dark/80">
 									Need to create an account?&nbsp;
 								</span>
 								<Link
 									href="/register"
-									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-semibold"
+									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
 								>
 									Sign Up
 								</Link>
 							</p>
-							<p className="text-center text-foreground dark:text-foreground_dark">
-								<span className="text-foreground_muted dark:text-foreground_muted_dark">
+							<p className="text-center">
+								<span className="text-foreground/80 dark:text-foreground_dark/80">
 									Don't remember your password?&nbsp;
 								</span>
 								<Link
 									href="/change-password"
-									className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 font-semibold"
+									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
 								>
 									Change password
 								</Link>
