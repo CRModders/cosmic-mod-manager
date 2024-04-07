@@ -10,14 +10,13 @@ import React from "react";
 import { getLoggedInSessionsList } from "@/app/api/actions/auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { dbSessionTokenCookieKeyName } from "@/config";
-
 import { cookies } from "next/headers";
 import SessionListPageWrapper from "./pageWrapper";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
-import { formatDate, timeSince } from "@/lib/utils";
 import { KeyIcon } from "@/components/Icons";
 import RevokeBtn from "./revokeBtn";
 import TooltipWrapper from "./TooltipWrapper";
+import Timestamp from "./Timestamp";
 
 const DotSeparator = () => {
 	return (
@@ -85,29 +84,12 @@ const SessionsPage = async () => {
 															<DotSeparator />
 														</>
 													)}
-
-													<div className="">
-														Last used{" "}
-														<TooltipWrapper
-															text={formatDate(session?.lastUsed)}
-														>
-															<span className=" text-foreground dark:text-foreground_dark">
-																{timeSince(session?.lastUsed)}
-															</span>
-														</TooltipWrapper>
-													</div>
-													<DotSeparator />
-													<div className="">
-														created{" "}
-														<TooltipWrapper
-															text={formatDate(session?.createdOn)}
-														>
-															<span className=" text-foreground dark:text-foreground_dark">
-																{timeSince(session?.createdOn)}
-															</span>
-														</TooltipWrapper>
-													</div>
 												</div>
+
+												<Timestamp
+													lastUsed={session?.lastUsed}
+													createdOn={session?.createdOn}
+												/>
 											</div>
 											<TooltipWrapper
 												text={`This session was created using ${session?.provider} provider`}
