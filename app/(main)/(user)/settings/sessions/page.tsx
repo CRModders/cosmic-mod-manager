@@ -10,9 +10,11 @@ import React from "react";
 import { getLoggedInSessionsList } from "@/app/api/actions/auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { dbSessionTokenCookieKeyName } from "@/config";
+
 import { cookies } from "next/headers";
 import SessionListPageWrapper from "./pageWrapper";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
+
 import { KeyIcon } from "@/components/Icons";
 import RevokeBtn from "./revokeBtn";
 import TooltipWrapper from "./TooltipWrapper";
@@ -84,12 +86,11 @@ const SessionsPage = async () => {
 															<DotSeparator />
 														</>
 													)}
+													<Timestamp
+														lastUsed={session?.lastUsed}
+														createdOn={session?.createdOn}
+													/>
 												</div>
-
-												<Timestamp
-													lastUsed={session?.lastUsed}
-													createdOn={session?.createdOn}
-												/>
 											</div>
 											<TooltipWrapper
 												text={`This session was created using ${session?.provider} provider`}
