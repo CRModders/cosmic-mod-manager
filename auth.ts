@@ -18,7 +18,9 @@ import {
 } from "@/app/api/actions/user";
 import db from "@/lib/db";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
-import { maxUsernameLength } from "./config";
+import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
+import { cookies } from "next/headers";
+import { deleteSessionToken, setSessionToken } from "./app/api/actions/auth";
 
 declare module "next-auth" {
 	interface User {
@@ -56,6 +58,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		async session({ session, token }) {
 			if (token?.sub) {
 				session.user.id = token.sub;
+			}
+			const dbSessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
+			if (dbSessionToken) {
+				session.sessionToken = dbSessionToken;
 			}
 
 			return session;
@@ -133,11 +139,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					providerAccountEmail: profile?.email,
 				},
 			});
+			await setSessionToken(user?.id, account?.provider);
+		},
+		async signOut() {
+			deleteSessionToken();
 		},
 	},
+
 	adapter: PrismaAdapter(db),
-	session: { strategy: "jwt" },
+
+	session: {
+		strategy: "jwt",
+	},
+
 	secret: process.env.AUTH_SECRET,
+
 	providers: [
 		...authConfig.providers,
 		CredentialsProvider({

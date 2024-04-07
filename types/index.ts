@@ -49,3 +49,9 @@ export enum RouteTypes {
 	modOnly = "MODERATOR_ONLY",
 	adminOnly = "ADMIN_ONLY",
 }
+
+export type GeoApiData = {
+	city?: string;
+	region?: string;
+	country?: string;
+};

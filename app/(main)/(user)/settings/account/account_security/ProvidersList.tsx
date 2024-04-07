@@ -31,13 +31,13 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import { authProvidersList } from "@/app/(auth)/authproviders";
 import { unlinkAuthProvider } from "@/app/api/actions/user";
 import { signIn } from "next-auth/react";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 import { TrashIcon } from "@/components/Icons";
 import { Account } from "@prisma/client";
+import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 
 type Props = {
 	id: string;
@@ -85,7 +85,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 
 		await signIn(name, {
 			redirect: true,
-			callbackUrl: "/",
+			callbackUrl: "/settings/account",
 		});
 
 		setLoading(false);

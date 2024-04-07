@@ -39,6 +39,7 @@ import {
 	sendNewPasswordVerificationEmail,
 	sendPasswordChangeEmail,
 } from "./verificationEmails";
+import { getAuthenticatedUser } from "./auth";
 
 // Hash the user password using bcrypt
 const hashPassword = async (password: string) => {
@@ -183,7 +184,7 @@ export const updateUserProfile = async ({
 			};
 		}
 
-		const userData = await findUserById(user?.id);
+		const userData = await getAuthenticatedUser();
 
 		const updateData: ProfileUpdateData = {};
 		if (parsedName && parsedName !== userData?.name)
@@ -342,6 +343,15 @@ export const unlinkAuthProvider = async (name: string) => {
 		};
 	}
 
+	const userData = await getAuthenticatedUser();
+
+	if (!userData?.id) {
+		return {
+			success: false,
+			message: "Invalid request",
+		};
+	}
+
 	const existingProviders = await db.account.findMany({
 		where: { userId: user?.id },
 	});
@@ -489,11 +499,9 @@ export const initiateAddNewPasswordAction = async ({
 
 	try {
 		const user = (await auth())?.user;
-		const userData = await db.user.findUnique({
-			where: { id: user?.id },
-		});
+		const userData = await getAuthenticatedUser();
 
-		if (userData?.password) {
+		if (userData?.hasAPassword) {
 			revalidatePath("/settings/account");
 
 			return {
@@ -897,7 +905,14 @@ export const initiateDeleteAccountAction = async () => {
 	}
 
 	try {
-		const userData = await findUserById(session?.user?.id);
+		const userData = await getAuthenticatedUser();
+
+		if (!userData?.id) {
+			return {
+				success: false,
+				message: "Unauthenticated request",
+			};
+		}
 
 		const emailSendRes = await sendAccountDeletionConfirmationEmail(userData);
 
@@ -969,6 +984,15 @@ export const confirmAccountDeletion = async (token: string) => {
 			return {
 				success: false,
 				message: "Expired token",
+			};
+		}
+
+		const validUser = await getAuthenticatedUser();
+
+		if (!validUser?.id) {
+			return {
+				success: false,
+				message: "Unauthenticated user",
 			};
 		}
 

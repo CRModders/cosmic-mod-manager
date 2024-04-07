@@ -86,7 +86,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 		});
 		setLoading(false);
 
-		if (result.success === true) {
+		if (result?.success === true) {
 			toast({
 				title: result.message,
 			});
