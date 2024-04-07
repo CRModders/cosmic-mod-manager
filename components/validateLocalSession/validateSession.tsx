@@ -13,8 +13,11 @@ import SignOutBtn from "./signOutBtn";
 import { getAuthenticatedUser } from "@/app/api/actions/auth";
 import { dbSessionTokenCookieKeyName } from "@/config";
 import { cookies } from "next/headers";
+import { sleep } from "@/lib/utils";
 
 const ValidateSession = async () => {
+	await sleep(100);
+
 	const session = await auth();
 	const sessionToken = await cookies().get(dbSessionTokenCookieKeyName)?.value;
 

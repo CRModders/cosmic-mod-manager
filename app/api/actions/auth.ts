@@ -57,6 +57,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 			sameSite: "lax",
 			httpOnly: true,
 			expires: new Date(new Date().getTime() + userSessionValidity_ms),
+			secure: true,
 		});
 	} catch (error) {
 		console.log({ function: "setSessionToken_2", error });

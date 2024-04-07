@@ -43,7 +43,9 @@ export default async function RootLayout({
 					varela_round.className,
 				)}
 			>
-				<ValidateSession />
+				<Suspense>
+					<ValidateSession />
+				</Suspense>
 				<Providers>
 					<NavbarWrapper />
 
