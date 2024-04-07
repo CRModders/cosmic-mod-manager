@@ -26,8 +26,8 @@ import RevokeBtn from "./revokeBtn";
 
 const DotSeparator = () => {
 	return (
-		<span className=" text-foreground/80 dark:text-foreground_dark/80 text-lg mx-2">
-			-
+		<span className=" text-foreground/60 dark:text-foreground_dark/60 text-lg mx-2">
+			•
 		</span>
 	);
 };
@@ -106,12 +106,12 @@ const SessionsPage = async () => {
 													</span>
 												</p>
 
-												<div className="w-full flex items-center justify-start text-left">
+												<div className="w-full flex flex-wrap items-center justify-start text-left">
 													{(session?.region || session?.country) && (
 														<>
-															<span>{session?.region}</span>
-															<span className="mx-1">-</span>
-															<span>{session?.country}</span>
+															<p>
+																{session?.region} - {session?.country}
+															</p>
 															<DotSeparator />
 														</>
 													)}
