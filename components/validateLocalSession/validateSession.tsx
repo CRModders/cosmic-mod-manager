@@ -18,7 +18,7 @@ const ValidateSession = async () => {
 	const session = await auth();
 	const sessionToken = await cookies().get(dbSessionTokenCookieKeyName)?.value;
 
-	if (!session?.user?.id || !sessionToken) {
+	if (!session?.user?.id && !sessionToken) {
 		return null;
 	}
 

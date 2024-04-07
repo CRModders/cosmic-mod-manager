@@ -14,9 +14,7 @@ import { dbSessionTokenCookieKeyName } from "@/config";
 import { cookies } from "next/headers";
 import SessionListPageWrapper from "./pageWrapper";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
-import { Button } from "@/components/ui/button";
 import { formatDate, timeSince } from "@/lib/utils";
-import { Cross1Icon } from "@radix-ui/react-icons";
 import { KeyIcon } from "@/components/Icons";
 import {
 	Tooltip,
@@ -24,9 +22,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { revokeSession } from "@/app/api/actions/auth";
 import RevokeBtn from "./revokeBtn";
-import { revalidatePath } from "next/cache";
 
 const DotSeparator = () => {
 	return (
@@ -114,7 +110,7 @@ const SessionsPage = async () => {
 													{(session?.region || session?.country) && (
 														<>
 															<span>{session?.region}</span>
-															<DotSeparator />
+															<span className="mx-1">-</span>
 															<span>{session?.country}</span>
 															<DotSeparator />
 														</>
@@ -132,7 +128,7 @@ const SessionsPage = async () => {
 													</div>
 													<DotSeparator />
 													<div className="">
-														Created{" "}
+														created{" "}
 														<TooltipComponent
 															text={formatDate(session?.createdOn)}
 														>

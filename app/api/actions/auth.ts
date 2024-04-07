@@ -5,7 +5,6 @@ import db from "@/lib/db";
 import UAParser from "ua-parser-js";
 import { dbSessionTokenCookieKeyName, userSessionValidity_ms } from "@/config";
 import { generateRandomCode } from "@/lib/utils";
-import { User } from "@prisma/client";
 import { cookies, headers } from "next/headers";
 import { findUserById } from "./user";
 import { GeoApiData } from "@/types";
@@ -19,7 +18,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 	const os = `${parsedResult.os.name} ${parsedResult.os.version}`;
 
 	const ip = headers().get("x-forwarded-for");
-	const geoData: GeoApiData | null = null;
+	const geoData: GeoApiData | null = {};
 	if (ip) {
 		try {
 			const res = await fetch(
@@ -29,7 +28,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 			const resJsonData = await res.json();
 
 			if (resJsonData?.city || resJsonData?.region) {
-				geoData.city = `${resJsonData?.region} ${resJsonData?.city}`;
+				geoData.region = `${resJsonData?.region} ${resJsonData?.city}`;
 			}
 			if (resJsonData?.country) {
 				geoData.country = resJsonData?.country;

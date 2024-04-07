@@ -51,7 +51,6 @@ export enum RouteTypes {
 }
 
 export type GeoApiData = {
-	city?: string;
 	region?: string;
 	country?: string;
 };
