@@ -23,6 +23,7 @@
 		"@radix-ui/react-slot": "^1.0.2",
 		"@radix-ui/react-toast": "^1.1.5",
 		"@radix-ui/react-tooltip": "^1.0.7",
+		"@types/ua-parser-js": "^0.7.39",
 		"@vercel/speed-insights": "^1.0.10",
 		"bcrypt": "^5.1.1",
 		"class-variance-authority": "^0.7.0",
@@ -39,6 +40,7 @@
 		"tailwind-merge": "^2.2.2",
 		"tailwind-variants": "^0.2.1",
 		"tailwindcss-animate": "^1.0.7",
+		"ua-parser-js": "^1.0.37",
 		"uuid": "^9.0.1",
 		"zod": "^3.22.4"
 	},

@@ -51,12 +51,15 @@ model Account {
 model Session {
     id           String    @id @default(auto()) @map("_id") @db.ObjectId
     userId       String    @db.ObjectId
-    lastUsed     DateTime?
-    createdOn    DateTime
-    ipAddr       String?
-    geoData      String?
     sessionToken String    @unique
-    expires      DateTime
+    createdOn    DateTime
+    lastUsed     DateTime?
+    browser      String?
+    os           String?
+    ipAddr       String?
+    region       String?
+    country      String?
+    provider     String?
     user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

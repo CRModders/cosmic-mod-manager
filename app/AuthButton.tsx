@@ -13,7 +13,7 @@ import React from "react";
 
 const AuthButton = async () => {
 	const session = await auth().catch((error) => {
-		console.log({ error });
+		console.log({ function: "AuthButton", error });
 	});
 
 	// biome-ignore lint/complexity/useOptionalChain: <explanation>

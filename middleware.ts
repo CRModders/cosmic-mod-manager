@@ -16,6 +16,7 @@ import {
 	protectedRoutes,
 } from "./config";
 import { RouteTypes } from "./types";
+import { headers } from "next/headers";
 
 const isAuthApiRoute = (pathname: string): boolean => {
 	return pathname.startsWith(authRouteApiPrefix);
@@ -41,10 +42,8 @@ const isProtectedRoute = (pathname: string): boolean => {
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (request) => {
-	// console.log({
-	// 	IP: request.ip,
-	// 	GEO: request.geo,
-	// });
+	// const ip = headers().get("x-forwarded-for");
+	// console.log({ ip });
 
 	const user = request?.auth?.user;
 	const isAuthenticated = user?.email;

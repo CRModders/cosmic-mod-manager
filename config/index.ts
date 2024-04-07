@@ -55,7 +55,8 @@ export const protectedRoutes = ["/dashboard", "/settings"];
 
 export const defaultLoginRedirect = "/dashboard";
 
-//
+export const dbSessionTokenCookieKeyName = "authjs.db-session-token";
+
 export const maxNameLength = 32;
 export const maxUsernameLength = 32;
 
@@ -68,3 +69,5 @@ export const changePasswordConfirmationTokenValidity_ms = 60 * 60 * 1000;
 export const deleteAccountVerificationTokenValidity_ms = 60 * 60 * 1000;
 
 export const deletedUsernameReservationDuration_ms = 30 * 24 * 60 * 60 * 1000;
+
+export const userSessionValidity_ms = 30 * 24 * 60 * 60 * 1000;

@@ -6,22 +6,28 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { findUserById } from "@/app/api/actions/user";
 import { auth } from "@/auth";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SignOutBtn from "./signOutBtn";
+import { getAuthenticatedUser } from "@/app/api/actions/auth";
+import { dbSessionTokenCookieKeyName } from "@/config";
+import { cookies } from "next/headers";
+import { sleep } from "@/lib/utils";
 
 const ValidateSession = async () => {
-	const session = await auth();
+	await sleep(100);
 
-	if (!session?.user?.email) {
+	const session = await auth();
+	const sessionToken = await cookies().get(dbSessionTokenCookieKeyName)?.value;
+
+	if (!session?.user?.id && !sessionToken) {
 		return null;
 	}
 
-	const userData = await findUserById(session.user.id);
+	const authenticatedUser = await getAuthenticatedUser();
 
-	if (userData?.id) {
+	if (authenticatedUser?.id) {
 		return null;
 	}
 
