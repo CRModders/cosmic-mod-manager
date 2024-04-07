@@ -16,44 +16,14 @@ import SessionListPageWrapper from "./pageWrapper";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 import { formatDate, timeSince } from "@/lib/utils";
 import { KeyIcon } from "@/components/Icons";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import RevokeBtn from "./revokeBtn";
+import TooltipWrapper from "./TooltipWrapper";
 
 const DotSeparator = () => {
 	return (
 		<span className=" text-foreground/60 dark:text-foreground_dark/60 text-lg mx-2">
 			•
 		</span>
-	);
-};
-
-const TooltipComponent = ({
-	children,
-	text,
-	className,
-	asChild,
-}: {
-	children: React.ReactNode;
-	text: string;
-	className?: string;
-	asChild?: boolean;
-}) => {
-	return (
-		<TooltipProvider delayDuration={400}>
-			<Tooltip>
-				<TooltipTrigger asChild={asChild} className={className}>
-					{children}
-				</TooltipTrigger>
-				<TooltipContent>
-					<span className="text-sm sm:text-base">{text}</span>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
 	);
 };
 
@@ -118,28 +88,28 @@ const SessionsPage = async () => {
 
 													<div className="">
 														Last used{" "}
-														<TooltipComponent
+														<TooltipWrapper
 															text={formatDate(session?.lastUsed)}
 														>
 															<span className=" text-foreground dark:text-foreground_dark">
 																{timeSince(session?.lastUsed)}
 															</span>
-														</TooltipComponent>
+														</TooltipWrapper>
 													</div>
 													<DotSeparator />
 													<div className="">
 														created{" "}
-														<TooltipComponent
+														<TooltipWrapper
 															text={formatDate(session?.createdOn)}
 														>
 															<span className=" text-foreground dark:text-foreground_dark">
 																{timeSince(session?.createdOn)}
 															</span>
-														</TooltipComponent>
+														</TooltipWrapper>
 													</div>
 												</div>
 											</div>
-											<TooltipComponent
+											<TooltipWrapper
 												text={`This session was created using ${session?.provider} provider`}
 												className="text-sm sm:text-base flex items-center justify-start gap-2"
 											>
@@ -165,7 +135,7 @@ const SessionsPage = async () => {
 													<KeyIcon className="w-4 h-4" />
 												)}
 												<span className=" capitalize">{session?.provider}</span>
-											</TooltipComponent>
+											</TooltipWrapper>
 										</div>
 										<div className="h-full flex items-center justify-center">
 											{sessionToken !== session?.sessionToken ? (
