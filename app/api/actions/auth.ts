@@ -28,7 +28,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 			const resJsonData = await res.json();
 
 			if (resJsonData?.city || resJsonData?.region) {
-				geoData.region = `${resJsonData?.region} ${resJsonData?.city}`;
+				geoData.region = `${resJsonData?.city} ${resJsonData?.region}`;
 			}
 			if (resJsonData?.country) {
 				geoData.country = resJsonData?.country;

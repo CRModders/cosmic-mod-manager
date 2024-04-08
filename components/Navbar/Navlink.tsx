@@ -38,7 +38,7 @@ const Navlink = ({ children, href, className }: NavLinkProps) => {
 		<Link
 			href={href}
 			className={cn(
-				"text-foreground/70 dark:text-foreground_dark/70 data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:font-semibold rounded-lg",
+				"text-foreground/80 dark:text-foreground_dark/80 data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:font-semibold rounded-lg",
 				className,
 			)}
 			data-active={isActive}

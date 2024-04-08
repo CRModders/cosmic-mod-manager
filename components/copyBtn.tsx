@@ -17,11 +17,12 @@ import { useToast } from "@/components/ui/use-toast";
 type Props = {
 	text: string | number;
 	className?: string;
+	iconClassName?: string;
 	successMessage?: string;
 };
 let timeoutRef: NodeJS.Timeout = null;
 
-const CopyBtn = ({ text, className, successMessage }: Props) => {
+const CopyBtn = ({ text, className, iconClassName, successMessage }: Props) => {
 	const [showTickIcon, setShowTickIcon] = useState(false);
 	const { toast } = useToast();
 	const copyText = () => {
@@ -44,21 +45,24 @@ const CopyBtn = ({ text, className, successMessage }: Props) => {
 		<Button
 			size="icon"
 			variant="ghost"
-			className="shrink-0 flex items-center justify-center w-6 h-6"
+			className={cn(
+				"shrink-0 flex items-center justify-center w-6 h-6",
+				className,
+			)}
 			onClick={copyText}
 		>
 			{showTickIcon ? (
 				<CheckIcon
 					className={cn(
 						"w-5 h-5 text-emerald-600 dark:text-emerald-500",
-						className,
+						iconClassName,
 					)}
 				/>
 			) : (
 				<CopyIcon
 					className={cn(
 						"w-3 h-3 text-foreground/50 dark:text-foreground_dark/50",
-						className,
+						iconClassName,
 					)}
 				/>
 			)}

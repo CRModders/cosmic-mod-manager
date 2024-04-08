@@ -4,10 +4,14 @@ import React from "react";
 import { formatDate, timeSince } from "@/lib/utils";
 import TooltipWrapper from "./TooltipWrapper";
 
-const DotSeparator = () => {
+export const DotSeparator = () => {
 	return (
-		<span className=" text-foreground/60 dark:text-foreground_dark/60 text-lg mx-2">
-			•
+		<span className="flex items-center justify-center select-none">
+			&nbsp;
+			<span className="w-[0.25rem] h-[0.25rem] rounded bg-foreground/50 dark:bg-foreground_dark/50">
+				{" "}
+			</span>
+			&nbsp;
 		</span>
 	);
 };
@@ -20,19 +24,19 @@ type Props = {
 const Timestamp = ({ lastUsed, createdOn }: Props) => {
 	const lastUsed_year = lastUsed.getFullYear();
 	const lastUsed_monthIndex = lastUsed.getMonth();
-	const lastUsed_day = lastUsed.getDay();
+	const lastUsed_day = lastUsed.getDate();
 	const lastUsed_hours = lastUsed.getHours();
 	const lastUsed_minutes = lastUsed.getMinutes();
 
 	const createdOn_year = createdOn.getFullYear();
 	const createdOn_monthIndex = createdOn.getMonth();
-	const createdOn_day = createdOn.getDay();
+	const createdOn_day = createdOn.getDate();
 	const createdOn_hours = createdOn.getHours();
 	const createdOn_minutes = createdOn.getMinutes();
 
 	return (
 		<>
-			<div className="">
+			<div className="text-sm sm:text-base">
 				Last used{" "}
 				<TooltipWrapper
 					text={formatDate(
@@ -44,14 +48,12 @@ const Timestamp = ({ lastUsed, createdOn }: Props) => {
 						lastUsed_minutes,
 					)}
 				>
-					<span className=" text-foreground dark:text-foreground_dark">
-						{timeSince(lastUsed)}
-					</span>
+					<span>{timeSince(lastUsed)}</span>
 				</TooltipWrapper>
 			</div>
 			<DotSeparator />
-			<div className="">
-				created{" "}
+			<div className="text-sm sm:text-base">
+				Created{" "}
 				<TooltipWrapper
 					text={formatDate(
 						createdOn,
@@ -62,9 +64,7 @@ const Timestamp = ({ lastUsed, createdOn }: Props) => {
 						createdOn_minutes,
 					)}
 				>
-					<span className=" text-foreground dark:text-foreground_dark">
-						{timeSince(createdOn)}
-					</span>
+					<span>{timeSince(createdOn)}</span>
 				</TooltipWrapper>
 			</div>
 		</>

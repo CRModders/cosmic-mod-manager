@@ -39,7 +39,7 @@ export default async function RootLayout({
 		<html lang="en" suppressHydrationWarning={true}>
 			<body
 				className={cn(
-					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark",
+					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark min-h-[105dvh]",
 					varela_round.className,
 				)}
 			>

@@ -18,22 +18,15 @@ import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 import { KeyIcon } from "@/components/Icons";
 import RevokeBtn from "./revokeBtn";
 import TooltipWrapper from "./TooltipWrapper";
-import Timestamp from "./Timestamp";
-
-const DotSeparator = () => {
-	return (
-		<span className=" text-foreground/60 dark:text-foreground_dark/60 text-lg mx-2">
-			•
-		</span>
-	);
-};
+import Timestamp, { DotSeparator } from "./Timestamp";
+import CopyBtn from "@/components/copyBtn";
 
 const SessionsPage = async () => {
 	const sessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
 	const loggedInSessions = await getLoggedInSessionsList();
 
 	return (
-		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
+		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[105dvh]">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
 					<SessionListPageWrapper>
@@ -61,21 +54,21 @@ const SessionsPage = async () => {
 										key={session?.id}
 										className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-background_hover dark:bg-background_hover_dark"
 									>
-										<div className="flex flex-col items-start justify-center gap-2 text-foreground/90 dark:text-foreground_dark/90">
-											<div className="flex flex-col items-center justify-center">
-												<p className="w-full text-left">
-													<span className="font-semibold text-lg">
-														{session?.browser}
-													</span>
+										<div className="flex flex-col items-start justify-center gap-2 text-foreground/80 dark:text-foreground_dark/80">
+											<div className="flex flex-col gap-y-2 sm:gap-0 items-center justify-center">
+												<div className="w-full flex flex-wrap items-center text-left text-foreground dark:text-foreground_dark sm:text-lg">
+													<p>{session?.browser}</p>
 													<DotSeparator />
-													<span className="font-semibold text-lg">
-														{session?.os}
-													</span>
+													<p>{session?.os}</p>
 													<DotSeparator />
-													<span className="font-semibold text-lg">
-														{session?.ipAddr}
-													</span>
-												</p>
+													<div className="flex items-center justify-center gap-2">
+														<p>{session?.ipAddr}</p>
+														<CopyBtn
+															text={session?.ipAddr}
+															className="hover:bg-background dark:hover:bg-background_dark p-1"
+														/>
+													</div>
+												</div>
 
 												<div className="w-full flex flex-wrap items-center justify-start text-left">
 													{(session?.region || session?.country) && (
