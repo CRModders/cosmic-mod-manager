@@ -68,7 +68,7 @@ const Navbar = async () => {
 								<HamMenu />
 							</div>
 							<div className="hidden lg:flex items-center justify-center mx-2">
-								<Suspense fallback={<Spinner />}>
+								<Suspense fallback={<Spinner size="1.25rem" />}>
 									<AuthButton />
 								</Suspense>
 							</div>

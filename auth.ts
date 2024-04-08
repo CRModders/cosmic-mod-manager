@@ -35,6 +35,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		async signIn({ user, account }): Promise<any> {
+			await deleteSessionToken();
+
 			let deletedAccount: DeletedUser | null = null;
 			if (!user?.userName) {
 				try {
@@ -43,6 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					});
 				} catch (error) {}
 			}
+
 			const newRandomUsername = parseUsername(user.id);
 			user.userName =
 				deletedAccount?.userName ||

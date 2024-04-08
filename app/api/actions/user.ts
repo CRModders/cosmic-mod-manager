@@ -183,8 +183,14 @@ export const updateUserProfile = async ({
 				message: "Unauthorized request",
 			};
 		}
-
 		const userData = await getAuthenticatedUser();
+
+		if (!userData?.id) {
+			return {
+				success: false,
+				message: "Unauthorized request",
+			};
+		}
 
 		const updateData: ProfileUpdateData = {};
 		if (parsedName && parsedName !== userData?.name)
@@ -333,8 +339,15 @@ export const getLinkedProvidersList = async () => {
 	}
 };
 
+export const linkAuthProvider = async (newProviderName: string) => {
+	await signIn(newProviderName, {
+		redirect: true,
+		callbackUrl: "/settings/account",
+	});
+};
+
 // Unlink a provider from user's account; make sure there is at least one provider remaining
-export const unlinkAuthProvider = async (name: string) => {
+export const unlinkAuthProvider = async (newProviderName: string) => {
 	const user = (await auth())?.user;
 	if (!user?.id) {
 		return {
@@ -372,7 +385,7 @@ export const unlinkAuthProvider = async (name: string) => {
 
 	const targetProvider = existingProviders
 		.filter((provider) => {
-			if (provider.provider === name) {
+			if (provider.provider === newProviderName) {
 				return provider;
 			}
 		})
@@ -395,7 +408,7 @@ export const unlinkAuthProvider = async (name: string) => {
 
 		return {
 			success: true,
-			message: `Successfully removed ${name} provider`,
+			message: `Successfully removed ${newProviderName} provider`,
 		};
 	} catch (error) {
 		return {

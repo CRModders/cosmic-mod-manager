@@ -49,7 +49,7 @@ export default async function RootLayout({
 				<Providers>
 					<NavbarWrapper />
 
-					<Suspense fallback={<LoadingUI />}>
+					<Suspense fallback={<LoadingUI iconSize={"2.25rem"} />}>
 						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
 							{children}
 						</main>

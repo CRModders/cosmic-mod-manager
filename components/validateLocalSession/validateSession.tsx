@@ -11,17 +11,14 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SignOutBtn from "./signOutBtn";
 import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import { dbSessionTokenCookieKeyName } from "@/config";
-import { cookies } from "next/headers";
 import { sleep } from "@/lib/utils";
 
 const ValidateSession = async () => {
-	await sleep(100);
+	await sleep(500);
 
 	const session = await auth();
-	const sessionToken = await cookies().get(dbSessionTokenCookieKeyName)?.value;
 
-	if (!session?.user?.id && !sessionToken) {
+	if (!session?.user?.id) {
 		return null;
 	}
 

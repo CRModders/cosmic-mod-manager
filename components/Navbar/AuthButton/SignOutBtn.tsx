@@ -38,7 +38,7 @@ const SignOutBtn = ({ className }: Props) => {
 				!loading ? (
 					<LogoutIcon className="w-5 h-5 text-foreground_muted dark:text-foreground_muted_dark" />
 				) : (
-					<Spinner />
+					<Spinner size="1.25rem" />
 				)
 			}
 			disabled={loading}

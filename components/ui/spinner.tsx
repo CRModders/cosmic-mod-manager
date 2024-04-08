@@ -32,12 +32,12 @@ export const Spinner = ({ size = "1.8rem" }) => {
 	);
 };
 
-const LoadingUI = () => {
+const LoadingUI = ({ iconSize = "3rem" }: { iconSize?: string }) => {
 	return (
 		<div className="w-full min-h-[100dvh] flex items-center justify-center">
 			<Card>
 				<CardContent className="p-8">
-					<Spinner size="3rem" />
+					<Spinner size={iconSize} />
 				</CardContent>
 			</Card>
 		</div>

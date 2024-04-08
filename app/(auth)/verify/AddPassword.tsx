@@ -90,7 +90,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 
 	return (
 		<Card className="max-w-md gap-0 relative">
-			<CardHeader className="text-xl ms:text-3xl font-semibold text-left">
+			<CardHeader className="text-xl ms:text-3xl text-left">
 				Verify your new password
 			</CardHeader>
 			<CardContent>
@@ -128,7 +128,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
 					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-						<Spinner size="2.4rem" />
+						<Spinner size="1.5rem" />
 					</div>
 				</div>
 			)}

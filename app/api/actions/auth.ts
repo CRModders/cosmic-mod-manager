@@ -72,9 +72,11 @@ export const deleteSessionToken = async (token?: string) => {
 	}
 
 	try {
-		await db.session.delete({
-			where: { sessionToken: sessionToken },
-		});
+		if (sessionToken) {
+			await db.session.delete({
+				where: { sessionToken: sessionToken },
+			});
+		}
 	} catch (error) {}
 };
 

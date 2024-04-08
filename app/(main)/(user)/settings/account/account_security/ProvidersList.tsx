@@ -31,7 +31,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import { unlinkAuthProvider } from "@/app/api/actions/user";
+import { linkAuthProvider, unlinkAuthProvider } from "@/app/api/actions/user";
 import { signIn } from "next-auth/react";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
@@ -83,10 +83,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 		if (loading) return;
 		setLoading(true);
 
-		await signIn(name, {
-			redirect: true,
-			callbackUrl: "/settings/account",
-		});
+		await linkAuthProvider(name);
 
 		setLoading(false);
 	};
@@ -215,7 +212,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 						<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
 							<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 								<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-								<Spinner size="2.4rem" />
+								<Spinner size="1.5rem" />
 							</div>
 						</div>
 					)}

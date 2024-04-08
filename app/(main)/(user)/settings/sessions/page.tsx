@@ -25,11 +25,15 @@ const SessionsPage = async () => {
 	const sessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
 	const loggedInSessions = await getLoggedInSessionsList();
 
+	const showSessionPageWarning = cookies().get("showSessionPageWarning")?.value;
+
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[105dvh]">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
-					<SessionListPageWrapper>
+					<SessionListPageWrapper
+						showSessionPageWarning={showSessionPageWarning}
+					>
 						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
 							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
 								Sessions
