@@ -29,8 +29,8 @@ export const no_nn = {
 		home_page: {
 			hero: {
 				description: {
-					line_1: "Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
-					line_2: "Oppdag, spill, og skap innhold, alt på en plass.",
+					line_1: "Den beste plassen for dine modifikasjonar for [Cosmic Reach].",
+					line_2: "Oppdag, spel, og skap innhald, alt på ein plass.",
 				},
 			},
 		},
