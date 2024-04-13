@@ -6,13 +6,13 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
+import db from "@/lib/db";
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { DeletedUser, Providers, UserRoles } from "@prisma/client";
 import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
-import db from "@/lib/db";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
 import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
 import { cookies } from "next/headers";

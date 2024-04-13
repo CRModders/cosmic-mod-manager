@@ -6,18 +6,19 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
+import { locale_content_type } from "@/public/locales/interface";
 import Link from "next/link";
 import React from "react";
 
-const SecurityLink = () => {
+const SecurityLink = ({ locale }: { locale: locale_content_type }) => {
 	return (
 		<p className="flex flex-wrap items-center justify-start text-sm text-foreground/80 dark:text-foreground_dark/80">
-			Didn't request this action?&nbsp;
+			{locale.auth.action_verification_page.didnt_request_email}&nbsp;
 			<Link
 				href={"/settings/sessions"}
 				className="text-blue-500 dark:text-blue-400t p-1 rounded hover:bg-blue-500/10 dark:hover:bg-blue-400/10"
 			>
-				Check logged in sessions
+				{locale.auth.action_verification_page.check_sessions}
 			</Link>
 		</p>
 	);

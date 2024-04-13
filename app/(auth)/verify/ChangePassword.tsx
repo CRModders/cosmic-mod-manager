@@ -18,7 +18,6 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { Button } from "@/components/ui/button";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { cancelPasswordChangeAction, confirmPasswordChange } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,26 +25,32 @@ import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
+import SecurityLink from "./SecurityLink";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/client/getLangPref";
+import { locale_content_type } from "@/public/locales/interface";
 
-export const formSchema = z.object({
-	email: z.string(),
-	newPassword: z
-		.string()
-		.min(minPasswordLength, {
-			message: "Enter your new password",
-		})
-		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} character`,
-		}),
-	confirmNewPassword: z
-		.string()
-		.min(1, {
-			message: "Re-enter your password",
-		})
-		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} character`,
-		}),
-});
+export const getChangePasswordFormSchema = (locale: locale_content_type) => {
+	return z.object({
+		email: z.string(),
+		newPassword: z
+			.string()
+			.min(minPasswordLength, {
+				message: locale.auth.action_verification_page.enter_password,
+			})
+			.max(maxPasswordLength, {
+				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+			}),
+		confirmNewPassword: z
+			.string()
+			.min(1, {
+				message: locale.auth.action_verification_page.re_enter_password,
+			})
+			.max(maxPasswordLength, {
+				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+			}),
+	});
+};
 
 type Props = {
 	token: string;
@@ -58,6 +63,11 @@ enum SuccessPage {
 }
 
 const AddPasswordForm = ({ token, email }: Props) => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
+	const formSchema = getChangePasswordFormSchema(locale);
+
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
@@ -92,7 +102,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 		setLoading(false);
 
 		if (res?.success !== true) {
-			return setFormError(res?.message || "Something went wrong");
+			return setFormError(res?.message || locale.globals.messages.something_went_wrong);
 		}
 
 		setShowSuccessPage(SuccessPage.CANCELLATION_SUCCESS);
@@ -110,7 +120,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 		}
 
 		if (values.newPassword !== values.confirmNewPassword) {
-			return setFormError("Passwords do not match");
+			return setFormError(locale.auth.action_verification_page.password_dont_match);
 		}
 
 		setLoading(true);
@@ -134,7 +144,11 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
 		return (
 			<div className=" w-full max-w-md">
-				<FormSuccessMsg msg="Cancelled successfully" className="text-lg" iconClassName="pl-2 w-8 h-6" />
+				<FormSuccessMsg
+					msg={locale.auth.action_verification_page.cancelled_successfully}
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
@@ -142,7 +156,11 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
 		return (
 			<div className=" w-full max-w-md">
-				<FormSuccessMsg msg="Successfully changed password" className="text-lg" iconClassName="pl-2 w-8 h-6" />
+				<FormSuccessMsg
+					msg={locale.auth.action_verification_page.password_changed}
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
@@ -151,7 +169,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 		<Card className="max-w-md w-full relative">
 			<CardContent>
 				<CardHeader className="px-0">
-					<CardTitle className="w-full text-left">Change password</CardTitle>
+					<CardTitle className="w-full text-left font-normal text-xl">
+						{locale.auth.change_password_page.change_password}
+					</CardTitle>
 				</CardHeader>
 				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
@@ -197,7 +217,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
-															New password
+															{locale.auth.action_verification_page.new_password}
 														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
@@ -230,7 +250,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
-															Confirm new password
+															{locale.auth.action_verification_page.confirm_new_password}
 														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
@@ -258,17 +278,16 @@ const AddPasswordForm = ({ token, email }: Props) => {
 							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<Button variant="secondary" type="button" onClick={cancelAction}>
-									<p className="px-4 h-9 flex items-center justify-center">Cancel</p>
+								<Button variant="outline" type="button" onClick={cancelAction}>
+									<p className="px-4 h-9 flex items-center justify-center">{locale.globals.cancel}</p>
 								</Button>
 
 								<Button
 									type="submit"
-									aria-label="Log in"
-									className=""
+									aria-label={locale.auth.change_password_page.change_password}
 									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
 								>
-									<p className="px-4">Change password</p>
+									<p className="px-4">{locale.auth.change_password_page.change_password}</p>
 								</Button>
 							</div>
 						</form>
@@ -281,6 +300,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 							</div>
 						)}
 					</Form>
+				</div>
+				<div className="w-full flex items-center justify-center mt-6">
+					<SecurityLink locale={locale} />
 				</div>
 			</CardContent>
 		</Card>

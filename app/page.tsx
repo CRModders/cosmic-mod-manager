@@ -13,13 +13,13 @@ import FeaturedSection from "@/components/Featured/Featured";
 import { Suspense } from "react";
 import AuthButton from "./AuthButton";
 import { Spinner } from "@/components/ui/spinner";
-import "@/app/globals.css";
-import { cookies } from "next/headers";
 import { extract_elems, get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
+import "@/app/globals.css";
 
 export default async function Home() {
-	const langPref = cookies().get("hl")?.value;
-	const locale = get_locale(langPref);
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
 
 	// The animation keyframes in "@/app/globals.css" need to be updated according to the number of items in the list
 	const showcaseItems = [
@@ -30,9 +30,10 @@ export default async function Home() {
 		locale.globals.mods,
 	];
 	const extracted_desc = extract_elems(locale.home_page.hero.description.line_1);
+	const hero_section_locale = locale.home_page.hero;
 
 	return (
-		<main className="w-full h-fit flex flex-col items-center justify-start">
+		<main className="w-full h-fit flex flex-col items-center justify-start pb-8">
 			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
 				<BrandIcon size="18rem" className=" text-primary_accent dark:text-primary_accent_dark" />
 				<div className="w-full flex flex-col items-center justify-center">
@@ -71,7 +72,7 @@ export default async function Home() {
 							{extracted_desc.strings[1]}
 						</h2>
 						<h2 className="text-xl lg:text-2xl flex text-center text-foreground_muted dark:text-foreground_muted_dark">
-							{locale.home_page.hero.description.line_2}
+							{hero_section_locale.description.line_2}
 						</h2>
 					</div>
 				</div>
@@ -82,17 +83,19 @@ export default async function Home() {
 						size="lg"
 						aria-label="Explore mods"
 					>
-						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">Explore Mods</p>
+						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">
+							{hero_section_locale.explore_mods}
+						</p>
 					</Button>
 
 					<Suspense fallback={<Spinner />}>
-						<AuthButton />
+						<AuthButton authLocale={locale.auth} />
 					</Suspense>
 				</div>
 			</section>
 
 			<section className="w-full flex flex-col gap-2 items-center justify-center">
-				<FeaturedSection />
+				<FeaturedSection featuredSectionLocale={locale.home_page.featured_section} />
 			</section>
 		</main>
 	);

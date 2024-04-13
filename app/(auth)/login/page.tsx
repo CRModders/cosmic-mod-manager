@@ -12,33 +12,36 @@ import AuthProviders from "@/app/(auth)/authproviders";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import LoginForm from "./Form";
 import LoadingUI from "@/components/ui/spinner";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const LoginPage = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl">Log In</h1>
+						<h1 className="w-full text-left text-xl">{locale.auth.login}</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
 							<Suspense fallback={<LoadingUI />}>
-								<LoginForm />
+								<LoginForm locale={locale} />
 							</Suspense>
 						</div>
 
 						<div className="w-full flex items-start justify-center flex-col">
 							<div className="w-full flex items-center gap-4 mt-2">
 								<hr className="bg-background_hover dark:bg-background_hover_dark border-none w-full h-[0.1rem] flex-1" />
-								<p className="shrink-0 text-sm text-foreground_muted/50 dark:text-foreground_muted_dark/50">
-									OR
-								</p>
+								<p className="shrink-0 text-sm text-foreground_muted/50 dark:text-foreground_muted_dark/50">OR</p>
 								<hr className="bg-background_hover dark:bg-background_hover_dark border-none w-full h-[0.1rem] flex-1" />
 							</div>
 
 							<p className="text-sm flex items-center justify-start mx-1 my-2 text-foreground_muted dark:text-foreground_muted_dark">
-								Log In using :
+								{locale.auth.login_page.log_in_using}
 							</p>
 							<div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
 								<AuthProviders />
@@ -48,24 +51,26 @@ const LoginPage = async () => {
 						<div className="w-full flex flex-col items-center justify-center gap-1 mt-4 text-sm">
 							<p className="text-center text-foreground dark:text-foreground_dark">
 								<span className="text-foreground/80 dark:text-foreground_dark/80">
-									Need to create an account?&nbsp;
+									{locale.auth.login_page.dont_have_an_account}&nbsp;
 								</span>
 								<Link
 									href="/register"
+									aria-label={locale.auth.sign_up}
 									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
 								>
-									Sign Up
+									{locale.auth.sign_up}
 								</Link>
 							</p>
 							<p className="text-center">
 								<span className="text-foreground/80 dark:text-foreground_dark/80">
-									Don't remember your password?&nbsp;
+									{locale.auth.login_page.forgot_password_msg}&nbsp;
 								</span>
 								<Link
 									href="/change-password"
+									aria-label={locale.auth.change_password_page.change_password}
 									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
 								>
-									Change password
+									{locale.auth.change_password_page.change_password}
 								</Link>
 							</p>
 						</div>

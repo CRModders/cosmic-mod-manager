@@ -9,14 +9,9 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
-import {
-	authRouteApiPrefix,
-	authRoutes,
-	defaultLoginRedirect,
-	protectedRoutes,
-} from "./config";
+import { authRouteApiPrefix, authRoutes, defaultLoginRedirect, protectedRoutes } from "./config";
 import { RouteTypes } from "./types";
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
 
 const isAuthApiRoute = (pathname: string): boolean => {
 	return pathname.startsWith(authRouteApiPrefix);
@@ -47,8 +42,6 @@ export default auth(async (request) => {
 
 	const user = request?.auth?.user;
 	const isAuthenticated = user?.email;
-
-	// console.log(headers().get("Accept-Language"));
 
 	const pathname = request.nextUrl.pathname;
 

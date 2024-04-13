@@ -9,6 +9,7 @@
 import crypto from "crypto";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { time_past_phrases } from "@/public/locales/interface";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -38,14 +39,11 @@ type randomCodeGenOptions = {
 	onlyNumbers?: boolean;
 };
 
-export const generateRandomCode = ({
-	length = 32,
-	onlyNumbers = false,
-}: randomCodeGenOptions) => {
+export const generateRandomCode = ({ length = 32, onlyNumbers = false }: randomCodeGenOptions) => {
 	return shuffleCharacters(crypto.randomUUID().replaceAll("-", ""));
 };
 
-export const timeSince = (pastTime: Date): string => {
+export const timeSince = (pastTime: Date, timePastPhrases: time_past_phrases): string => {
 	try {
 		const now = new Date();
 		const diff = now.getTime() - pastTime.getTime();
@@ -58,24 +56,36 @@ export const timeSince = (pastTime: Date): string => {
 		const years = Math.round(days / 365.25);
 
 		if (seconds < 60) {
-			return "just now";
+			return timePastPhrases.just_now;
 		}
 		if (minutes < 60) {
-			return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+			return minutes === 1
+				? timePastPhrases.minute_ago.replace("${0}", `${minutes}`)
+				: timePastPhrases.minutes_ago.replace("${0}", `${minutes}`);
 		}
 		if (hours < 24) {
-			return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+			return hours === 1
+				? timePastPhrases.hour_ago.replace("${0}", `${hours}`)
+				: timePastPhrases.hours_ago.replace("${0}", `${hours}`);
 		}
 		if (days < 7) {
-			return `${days} ${days === 1 ? "day" : "days"} ago`;
+			return days === 1
+				? timePastPhrases.day_ago.replace("${0}", `${days}`)
+				: timePastPhrases.days_ago.replace("${0}", `${days}`);
 		}
 		if (weeks < 4) {
-			return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+			return weeks === 1
+				? timePastPhrases.week_ago.replace("${0}", `${weeks}`)
+				: timePastPhrases.weeks_ago.replace("${0}", `${weeks}`);
 		}
 		if (months < 12) {
-			return `${months} ${months === 1 ? "month" : "months"} ago`;
+			return months === 1
+				? timePastPhrases.month_ago.replace("${0}", `${months}`)
+				: timePastPhrases.months_ago.replace("${0}", `${months}`);
 		}
-		return `${years} ${years === 1 ? "year" : "years"} ago`;
+		return years === 1
+			? timePastPhrases.year_ago.replace("${0}", `${years}`)
+			: timePastPhrases.years_ago.replace("${0}", `${years}`);
 	} catch (error) {
 		console.log({ error });
 		return null;
@@ -84,6 +94,7 @@ export const timeSince = (pastTime: Date): string => {
 
 export const formatDate = (
 	date: Date,
+	timestamp_template: string,
 	local_year?: number,
 	local_monthIndex?: number,
 	local_day?: number,
@@ -118,7 +129,13 @@ export const formatDate = (
 
 		const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes.toString();
 
-		return `${month} ${day}, ${year} at ${adjustedHours}:${formattedMinutes} ${amPm}`;
+		return timestamp_template
+			.replace("${month}", `${month}`)
+			.replace("${day}", `${day}`)
+			.replace("${year}", `${year}`)
+			.replace("${hours}", `${adjustedHours}`)
+			.replace("${minutes}", `${formattedMinutes}`)
+			.replace("${amPm}", `${amPm}`);
 	} catch (error) {
 		console.log({ error });
 		return null;

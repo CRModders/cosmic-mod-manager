@@ -8,7 +8,6 @@
 
 import React, { Suspense } from "react";
 import ThemeSwitch from "./ThemeSwitch";
-import { NavLinks } from "@/config";
 import Navlink from "./Navlink";
 import Link from "next/link";
 import HamMenu, { MobileNav } from "./Menu";
@@ -16,8 +15,51 @@ import "@/app/globals.css";
 import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
 import { BrandIcon } from "@/components/Icons";
 import { Spinner } from "@/components/ui/spinner";
+import getLangPref from "@/lib/server/getLangPref";
+import { get_locale } from "@/lib/lang";
 
 const Navbar = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
+	const NavLinks = [
+		{
+			name: locale.globals.mods,
+			href: "/mods",
+		},
+		{
+			name: locale.globals.resource_packs,
+			href: "/resourcepacks",
+		},
+		{
+			name: locale.globals.modpacks,
+			href: "/modpacks",
+		},
+		{
+			name: locale.globals.shaders,
+			href: "/shaders",
+		},
+	];
+
+	const NavMenuLinks = [
+		{
+			name: locale.globals.mods,
+			href: "/mods",
+		},
+		{
+			name: locale.globals.resource_packs,
+			href: "/resourcepacks",
+		},
+		{
+			name: locale.globals.modpacks,
+			href: "/modpacks",
+		},
+		{
+			name: locale.globals.shaders,
+			href: "/shaders",
+		},
+	];
+
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<nav className="w-full flex flex-wrap items-start justify-start relative bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
@@ -27,7 +69,9 @@ const Navbar = async () => {
 						<div className="flex items-center justify-center gap-6">
 							<Link href="/" className="flex items-center justify-between rounded-lg">
 								<BrandIcon size="2.6rem" className=" text-primary_accent dark:text-primary_accent" />
-								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">CRMM</p>
+								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">
+									{locale.globals.site.short_name}
+								</p>
 							</Link>
 
 							<ul className="hidden lg:flex items-center justify-center gap-2">
@@ -56,7 +100,7 @@ const Navbar = async () => {
 							</div>
 							<div className="hidden lg:flex items-center justify-center mx-2">
 								<Suspense fallback={<Spinner size="1.25rem" />}>
-									<AuthButton />
+									<AuthButton locale={locale} />
 								</Suspense>
 							</div>
 						</div>
@@ -64,8 +108,8 @@ const Navbar = async () => {
 				</div>
 
 				{/* Mobile navbar */}
-				<MobileNav>
-					<MenuAuthButton />
+				<MobileNav NavMenuLinks={NavMenuLinks}>
+					<MenuAuthButton locale={locale} />
 				</MobileNav>
 			</nav>
 		</div>

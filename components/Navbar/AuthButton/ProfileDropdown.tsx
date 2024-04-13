@@ -15,8 +15,13 @@ import { findUserById } from "@/app/api/actions/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
 import "@/app/globals.css";
+import { locale_content_type } from "@/public/locales/interface";
 
-const ProfileDropdown = async () => {
+type Props = {
+	locale: locale_content_type;
+};
+
+const ProfileDropdown = async ({ locale }: Props) => {
 	const session = await auth().catch((e) => console.log(e));
 
 	if (!session || !session?.user?.id) {
@@ -31,7 +36,7 @@ const ProfileDropdown = async () => {
 
 	const dropdownLinks = [
 		{
-			name: "Your profile",
+			name: locale.auth.your_profile,
 			href: `/user/${
 				// biome-ignore lint/complexity/useOptionalChain: <explanation>
 				userData && userData?.userName ? userData.userName : "notSignedIn"
@@ -39,12 +44,12 @@ const ProfileDropdown = async () => {
 			icon: <PersonIcon size="1.25rem" />,
 		},
 		{
-			name: "Dashboard",
+			name: locale.auth.dashboard,
 			href: "/dashboard",
 			icon: <DashboardIcon size="1.25rem" />,
 		},
 		{
-			name: "Settings",
+			name: locale.auth.settings,
 			href: "/settings/account",
 			icon: <GearIcon size="1.25rem" />,
 		},
@@ -84,7 +89,7 @@ const ProfileDropdown = async () => {
 					</div>
 					<div className="w-full h-[0.1rem] bg-background_hover dark:bg-background_hover_dark" />
 					<div className="w-full">
-						<SignOutBtn />
+						<SignOutBtn authLocale={locale.auth} />
 					</div>
 				</div>
 			)}

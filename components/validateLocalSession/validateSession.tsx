@@ -13,8 +13,14 @@ import { getAuthenticatedUser } from "@/app/api/actions/auth";
 import { sleep } from "@/lib/utils";
 import FormErrorMsg from "../formErrorMsg";
 import { Spinner } from "../ui/spinner";
+import getLangPref from "@/lib/server/getLangPref";
+import { get_locale } from "@/lib/lang";
 
 const ValidateSession = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref);
+	const authLocale = locale.content.auth;
+
 	await sleep(500);
 
 	const session = await auth();
@@ -33,11 +39,15 @@ const ValidateSession = async () => {
 		<section className="w-full fixed top-0 left-0 z-[500] bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
 			<div className="w-full p-6 min-h-[100dvh] flex flex-col items-center justify-center gap-6">
 				<div className="max-w-lg w-full flex flex-col items-center justify-center gap-6 text-danger dark:text-danger_dark">
-					<FormErrorMsg msg="Invalid local session!" className="text-3xl p-4 font-mono" iconClassName="w-9 mr-2 h-8" />
+					<FormErrorMsg
+						msg={authLocale.invalid_session_msg}
+						className="text-3xl p-4 font-mono"
+						iconClassName="w-9 mr-2 h-8"
+					/>
 				</div>
 				<div className="flex gap-4 items-center justify-center">
 					<Spinner size="1.5rem" className=" text-danger dark:text-danger_dark" />
-					<p className="text-center text-danger dark:text-danger_dark text-2xl font-mono">Signing out</p>
+					<p className="text-center text-danger dark:text-danger_dark text-2xl font-mono">{authLocale.signing_out}</p>
 				</div>
 			</div>
 			<SignOutBtn />

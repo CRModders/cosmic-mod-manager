@@ -22,25 +22,27 @@ import { initiatePasswordChange } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import FormErrorMsg from "@/components/formErrorMsg";
-
-const formSchema = z.object({
-	email: z
-		.string()
-		.min(2, {
-			message: "Enter a valid email",
-		})
-		.max(256, { message: "Enter a valid email" }),
-});
+import { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	userEmail: string | undefined | null;
+	locale: locale_content_type;
 };
 
-const SendResetEmail = ({ userEmail }: Props) => {
+const SendResetEmail = ({ userEmail, locale }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const [showSuccessPage, setShowSuccessPage] = useState(false);
 	const router = useRouter();
+
+	const formSchema = z.object({
+		email: z
+			.string()
+			.min(2, {
+				message: locale.auth.login_page.invalid_email_msg,
+			})
+			.max(256, { message: locale.auth.login_page.invalid_email_msg }),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -55,7 +57,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 		let error = null;
 
 		if (!validEmail) {
-			error = "Enter a valid email address";
+			error = locale.auth.login_page.invalid_email_msg;
 			setFormError(error);
 		} else {
 			error = null;
@@ -75,7 +77,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 		setLoading(false);
 
 		if (result?.success !== true) {
-			return setFormError(result?.message || "Something went wrong");
+			return setFormError(result?.message || locale.globals.messages.something_went_wrong);
 		}
 
 		setShowSuccessPage(true);
@@ -89,10 +91,10 @@ const SendResetEmail = ({ userEmail }: Props) => {
 			<div className="container flex flex-col items-center justify-center gap-2">
 				<div className="w-full flex items-center justify-start gap-2 p-2 text-lg rounded-lg text-emerald-600 dark:text-emerald-500 bg-emerald-600/10 dark:bg-emerald-500/5">
 					<CheckCircledIcon className="w-8 pl-2 h-6" />
-					<h1 className="">Email sent successfully</h1>
+					<h1 className="">{locale.globals.messages.email_sent_successfully}</h1>
 				</div>
 				<p className="text-foreground/75 dark:text-foreground_dark/75">
-					Open the link sent to your email and change your password.
+					{locale.auth.change_password_page.email_sent_desc}
 				</p>
 			</div>
 		);
@@ -112,7 +114,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 							<>
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Email</span>
+										<span>{locale.auth.email}</span>
 										<FormMessage className=" text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
@@ -138,10 +140,10 @@ const SendResetEmail = ({ userEmail }: Props) => {
 
 				<Button
 					type="submit"
-					aria-label="Log in"
+					aria-label={locale.globals.continue}
 					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
 				>
-					Continue
+					{locale.globals.continue}
 				</Button>
 			</form>
 			{loading === true && (

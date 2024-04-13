@@ -8,10 +8,15 @@
 
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { auth_locale } from "@/public/locales/interface";
 import Link from "next/link";
 import React from "react";
 
-const AuthButton = async () => {
+type Props = {
+	authLocale: auth_locale;
+};
+
+const AuthButton = async ({ authLocale }: Props) => {
 	const session = await auth().catch((error) => {
 		console.log({ function: "AuthButton", error });
 	});
@@ -20,15 +25,8 @@ const AuthButton = async () => {
 	if (session && session?.user?.email) {
 		return (
 			<Link href="/dashboard">
-				<Button
-					className="h-10 sm:h-12 px-6 sm:px-8"
-					size="lg"
-					variant="outline"
-					aria-label="Go to Dashboard"
-				>
-					<p className="text-foreground dark:text-foreground_dark sm:text-lg">
-						Dashboard
-					</p>
+				<Button className="h-10 sm:h-12 px-6 sm:px-8" size="lg" variant="outline" aria-label={authLocale.dashboard}>
+					<p className="text-foreground dark:text-foreground_dark sm:text-lg">{authLocale.dashboard}</p>
 				</Button>
 			</Link>
 		);
@@ -36,15 +34,8 @@ const AuthButton = async () => {
 
 	return (
 		<Link href="/register">
-			<Button
-				className="h-10 sm:h-12 px-6 sm:px-8"
-				size="lg"
-				variant="outline"
-				aria-label="Sign up"
-			>
-				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">
-					Sign Up
-				</p>
+			<Button className="h-10 sm:h-12 px-6 sm:px-8" size="lg" variant="outline" aria-label={authLocale.sign_up}>
+				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">{authLocale.sign_up}</p>
 			</Button>
 		</Link>
 	);

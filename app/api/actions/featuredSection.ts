@@ -1,3 +1,4 @@
+"use server";
 //     This file is part of Cosmic Reach Mod Manager.
 //
 //    Cosmic Reach Mod Manager is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -7,6 +8,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { ContentCategories, FeaturedSectionContentData } from "@/types";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 type Res = {
 	featuredSectionContentData: FeaturedSectionContentData;
@@ -15,6 +18,10 @@ type Res = {
 };
 
 const getFeaturedSectionContent = async (): Promise<Res> => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref);
+	const featuredSectionLocale = locale.content.home_page.featured_section;
+
 	const result: Res = {
 		featuredSectionContentData: [],
 		message: null,
@@ -29,7 +36,7 @@ const getFeaturedSectionContent = async (): Promise<Res> => {
 	result.featuredSectionContentData = [
 		{
 			categoryName: ContentCategories.mod,
-			title: "Popular mods",
+			title: featuredSectionLocale.popular_mods,
 			items: [
 				{
 					name: "Sodium",
@@ -60,7 +67,7 @@ const getFeaturedSectionContent = async (): Promise<Res> => {
 
 		{
 			categoryName: ContentCategories.resourcePack,
-			title: "Popular resource packs",
+			title: featuredSectionLocale.popular_resource_packs,
 			items: [
 				{
 					name: "Bare bones",
@@ -76,15 +83,13 @@ const getFeaturedSectionContent = async (): Promise<Res> => {
 				},
 				{
 					name: "X-ray texture pack",
-					description:
-						"X-ray texture pack enables to see throught blocks and find ores",
+					description: "X-ray texture pack enables to see throught blocks and find ores",
 					logo: "NONE",
 					url: "/resourcepack/x-ray-texture-pack",
 				},
 				{
 					name: "PVP God texture pack",
-					description:
-						"A resource pack that make you the god of PvP, even if your cps don't go above 5",
+					description: "A resource pack that make you the god of PvP, even if your cps don't go above 5",
 					logo: "NONE",
 					url: "/resourcepack/pvp-god-texture-pack",
 				},

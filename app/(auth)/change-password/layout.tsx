@@ -6,12 +6,8 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: "Change password",
-	description: "Reset your CRMM account password.",
-};
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 export default function ChangePasswordPageLayout({
 	children,
@@ -24,3 +20,13 @@ export default function ChangePasswordPageLayout({
 		</section>
 	);
 }
+
+export const generateMetadata = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
+	return {
+		title: locale.auth.change_password_page.change_password,
+		description: locale.auth.change_password_page.meta_desc,
+	};
+};

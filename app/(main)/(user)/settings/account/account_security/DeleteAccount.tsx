@@ -17,8 +17,13 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import { initiateDeleteAccountAction } from "@/app/api/actions/user";
 import { Spinner } from "@/components/ui/spinner";
 import FormErrorMsg from "@/components/formErrorMsg";
+import { locale_content_type } from "@/public/locales/interface";
 
-const DeleteAccountSection = () => {
+type Props = {
+	locale: locale_content_type;
+};
+
+const DeleteAccountSection = ({ locale }: Props) => {
 	const { toast } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState(null);
@@ -36,8 +41,8 @@ const DeleteAccountSection = () => {
 		if (res?.success === true) {
 			setDialogOpen(false);
 			toast({
-				title: res?.message || "Confirmation email sent.",
-				description: "A confirmation email has been sent to your email addres. Confirm there to delete your account.",
+				title: res?.message,
+				description: locale.settings_page.account_section.deletion_email_sent_desc,
 			});
 
 			return;
@@ -49,16 +54,13 @@ const DeleteAccountSection = () => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-16 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
-					Once you delete your account, there is no going back. Deleting your account will remove all of your data,
-					except your projects, from our servers.
-				</p>
+				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">{locale.settings_page.account_section.account_deletion_desc}</p>
 			</div>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogTrigger asChild>
 					<Button className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark">
 						<TrashIcon size="1rem" />
-						Delete account
+						{locale.settings_page.account_section.delete_account}
 					</Button>
 				</DialogTrigger>
 
@@ -68,14 +70,14 @@ const DeleteAccountSection = () => {
 							<DialogTitle className="font-normal">Delete Account</DialogTitle>
 						</DialogHeader>
 						<div className="w-full flex flex-col gap-2 items-center justify-center">
-							<p className="w-full text-left">Are you sure that you want to delete your account.</p>
+							<p className="w-full text-left">{locale.settings_page.account_section.confirm_to_delete_account}</p>
 							{formError && <FormErrorMsg msg={formError} />}
 						</div>
 
 						<DialogFooter className="w-full flex flex-row flex-wrap items-center justify-end gap-2">
 							<DialogClose asChild>
 								<Button variant="ghost" size="md">
-									Cancel
+									{locale.globals.cancel}
 								</Button>
 							</DialogClose>
 
@@ -84,7 +86,7 @@ const DeleteAccountSection = () => {
 								onClick={handleDeleteClick}
 							>
 								<TrashIcon size="1rem" />
-								Delete
+								{locale.globals.delete}
 							</Button>
 						</DialogFooter>
 

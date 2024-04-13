@@ -14,12 +14,14 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import ProfileDropdownLink from "./ProfileDropdownLink";
 import { Spinner } from "@/components/ui/spinner";
+import { auth_locale } from "@/public/locales/interface";
 
 type Props = {
+	authLocale: auth_locale;
 	className?: string;
 };
 
-const SignOutBtn = ({ className }: Props) => {
+const SignOutBtn = ({ className, authLocale }: Props) => {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 
@@ -33,7 +35,7 @@ const SignOutBtn = ({ className }: Props) => {
 
 	return (
 		<ProfileDropdownLink
-			label={"Sign out"}
+			label={authLocale.sign_out}
 			icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <Spinner size="1.25rem" />}
 			disabled={loading}
 			onClick={handleClick}

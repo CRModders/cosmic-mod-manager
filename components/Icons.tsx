@@ -8,6 +8,7 @@
 
 import React from "react";
 import { IconSvgProps } from "@/types";
+import { cn } from "@/lib/utils";
 
 const DefaultSvgSize = "1.6rem";
 
@@ -497,12 +498,13 @@ export const GithubIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 	);
 };
 
-export const DiscordIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+export const DiscordIcon: React.FC<IconSvgProps> = ({ size, width, height, className, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			role="img"
-			fill="#5865f2"
+			className={cn("fill-[#5865f2] dark:fill-[#5865f2]", className)}
+			fill="currentColor"
 			viewBox="0 0 24 24"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
@@ -713,6 +715,61 @@ export const TrashIcon: React.FC<IconSvgProps> = ({ size, width, height, ...prop
 			<path
 				fill="currentColor"
 				d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"
+			/>
+		</svg>
+	);
+};
+
+export const GlobeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<rect width="256" height="256" fill="none" />
+			<circle
+				cx="128"
+				cy="128"
+				r="96"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="12"
+			/>
+			<path
+				d="M88,128c0,37.46,13.33,70.92,34.28,93.49a7.77,7.77,0,0,0,11.44,0C154.67,198.92,168,165.46,168,128s-13.33-70.92-34.28-93.49a7.77,7.77,0,0,0-11.44,0C101.33,57.08,88,90.54,88,128Z"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="12"
+			/>
+			<line
+				x1="37.46"
+				y1="96"
+				x2="218.54"
+				y2="96"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="12"
+			/>
+			<line
+				x1="37.46"
+				y1="160"
+				x2="218.54"
+				y2="160"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="12"
 			/>
 		</svg>
 	);
