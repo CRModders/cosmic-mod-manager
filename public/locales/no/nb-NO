@@ -1,0 +1,41 @@
+import { en_gb } from "../en/en-GB";
+import { locale_interface, locale_meta } from "../interface";
+
+export const nb_no = {
+	meta: {
+		language: {
+			no_name: "Norwegian",
+			locale_name: "Norsk bokmål",
+			code: "no",
+		},
+		region: {
+			name: "Norway",
+			code: "No",
+		},
+	} satisfies locale_meta,
+
+	// Saw someone else did this. So I set the default to the content in british english, to get away from typescript errors
+	content: {
+		globals: {
+			site: {
+				full_name: "Cosmic Reach Mod Manager",
+				short_name: "CRMM",
+			},
+			mods: "Modifikasjoner",
+			resource_packs: "Ressurspakker",
+			modpacks: "Modpakker",
+			shaders: "Shaders",
+		},
+		home_page: {
+			hero: {
+				description: {
+					line_1: "Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
+					line_2: "Oppdag, spill, og skap innhold, alt på en plass.",
+				},
+			},
+		},
+	},
+} satisfies {
+	meta: locale_meta;
+	content: locale_interface;
+};
