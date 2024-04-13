@@ -4,8 +4,8 @@ import { locale_interface, locale_meta } from "../interface";
 export const es_es = {
 	meta: {
 		language: {
-			en_name: "Spanish",
-			locale_name: "Español",
+			en_name: "Spanish (Spain)",
+			locale_name: "Español (España)",
 			code: "es",
 		},
 		region: {
