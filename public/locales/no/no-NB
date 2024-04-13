@@ -1,7 +1,7 @@
 import { en_gb } from "../en/en-GB";
 import { locale_interface, locale_meta } from "../interface";
 
-export const nb_no = {
+export const no_nb = {
 	meta: {
 		language: {
 			no_name: "Norwegian",
