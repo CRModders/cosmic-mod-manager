@@ -6,25 +6,21 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import {
-	discardNewPasswordAddition,
-	confirmNewPasswordAddition,
-} from "@/app/api/actions/user";
+import { discardNewPasswordAddition, confirmNewPasswordAddition } from "@/app/api/actions/user";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import React, { useState } from "react";
 import SecurityLink from "./SecurityLink";
 import { Spinner } from "@/components/ui/spinner";
-import Link from "next/link";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 import { useToast } from "@/components/ui/use-toast";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/client/getLangPref";
 
 const AddPasswordConfirmAction = ({ token }: { token: string }) => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const { toast } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [actionResult, setActionResult] = useState<{
@@ -43,7 +39,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 			setActionResult(res);
 		} else {
 			toast({
-				title: res?.message || "Something went wrong",
+				title: res?.message || locale.globals.messages.something_went_wrong,
 			});
 		}
 	};
@@ -59,7 +55,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 			setActionResult(res);
 		} else {
 			toast({
-				title: res?.message || "Something went wrong",
+				title: res?.message || locale.globals.messages.something_went_wrong,
 			});
 		}
 	};
@@ -67,23 +63,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	if (actionResult?.success === true) {
 		return (
 			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
-				<FormSuccessMsg
-					msg={actionResult?.message}
-					className="text-lg"
-					iconClassName="pl-2 w-8 h-6"
-				/>
-
-				<div>
-					<p className="text-lg">
-						Go back to&nbsp;
-						<Link
-							href="/"
-							className="text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 hover:dark:bg-blue-400/10 py-1 px-2 rounded"
-						>
-							Home page
-						</Link>
-					</p>
-				</div>
+				<FormSuccessMsg msg={actionResult?.message} className="text-lg" iconClassName="pl-2 w-8 h-6" />
 			</div>
 		);
 	}
@@ -91,12 +71,11 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	return (
 		<Card className="max-w-md gap-0 relative">
 			<CardHeader className="text-xl ms:text-3xl text-left">
-				Verify your new password
+				{locale.auth.action_verification_page.verify_new_password}
 			</CardHeader>
 			<CardContent>
 				<p className="w-full text-left text-foreground/80 dark:text-foreground_dark/80">
-					A new password was recently added to your account. Confirm below if
-					this was you. The new password will not work until then.
+					{locale.auth.action_verification_page.add_new_password_desc}
 				</p>
 			</CardContent>
 			<CardFooter className="w-full flex flex-col items-center justify-end gap-4">
@@ -107,8 +86,8 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 							removeTheNewPassword();
 						}}
 					>
-						<Button type="submit" variant="outline">
-							Cancel
+						<Button type="submit" variant="outline" aria-label={locale.globals.cancel}>
+							{locale.globals.cancel}
 						</Button>
 					</form>
 					<form
@@ -117,11 +96,13 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 							addTheNewPassword();
 						}}
 					>
-						<Button type="submit">Confirm</Button>
+						<Button type="submit" aria-label={locale.globals.confirm}>
+							{locale.globals.confirm}
+						</Button>
 					</form>
 				</div>
 				<div className="w-full flex items-center justify-start">
-					<SecurityLink />
+					<SecurityLink locale={locale} />
 				</div>
 			</CardFooter>
 			{loading === true && (

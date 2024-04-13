@@ -18,30 +18,34 @@ import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { loginUser } from "@/app/api/actions/user";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { defaultLoginRedirect } from "@/config";
 import { isValidEmail } from "@/lib/user";
 import FormErrorMsg from "@/components/formErrorMsg";
-import { RevalidatePath } from "@/app/api/actions/utils";
+import { locale_content_type } from "@/public/locales/interface";
 
-const formSchema = z.object({
-	email: z
-		.string()
-		.min(2, {
-			message: "Enter a valid email",
-		})
-		.max(256, { message: "Enter a valid email" }),
-	password: z.string().min(1, {
-		message: "Enter a valid password",
-	}),
-});
+type Props = {
+	locale: locale_content_type;
+};
 
-const LoginForm = () => {
-	// const router = useRouter();
+const LoginForm = ({ locale }: Props) => {
+	const authLocale = locale.auth;
+
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
 	const [callbackUrl, setCallbackUrl] = useState(searchParams.get("callbackUrl") || "");
+
+	const formSchema = z.object({
+		email: z
+			.string()
+			.min(2, {
+				message: authLocale.login_page.invalid_email_msg,
+			})
+			.max(256, { message: authLocale.login_page.invalid_email_msg }),
+		password: z.string().min(1, {
+			message: authLocale.login_page.invalid_password_msg,
+		}),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -57,7 +61,7 @@ const LoginForm = () => {
 		let error = null;
 
 		if (!validEmail) {
-			error = "Enter a valid email address";
+			error = authLocale.login_page.invalid_email_msg;
 			setFormError(error);
 		} else {
 			error = null;
@@ -82,11 +86,8 @@ const LoginForm = () => {
 		setLoading(false);
 
 		if (result?.success === false) {
-			return setFormError(result?.message || "Something went wrong");
+			return setFormError(result?.message || locale.globals.messages.something_went_wrong);
 		}
-		// For some reason Next app router does not reload the page so had to use window reload
-		// router.push(callbackUrl);
-		// router.refresh();
 		window.location.href = callbackUrl;
 	};
 
@@ -109,7 +110,7 @@ const LoginForm = () => {
 							<>
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Email</span>
+										<span>{locale.auth.email}</span>
 										<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
@@ -139,7 +140,7 @@ const LoginForm = () => {
 							<>
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Password</span>
+										<span>{locale.auth.password}</span>
 										<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
@@ -164,10 +165,10 @@ const LoginForm = () => {
 
 				<Button
 					type="submit"
-					aria-label="Log in"
+					aria-label={locale.auth.login}
 					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
 				>
-					Log In
+					{locale.auth.login}
 				</Button>
 			</form>
 			{loading === true && (

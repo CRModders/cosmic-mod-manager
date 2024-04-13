@@ -25,26 +25,7 @@ import { Providers } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
-
-export const formSchema = z.object({
-	currProfileProvider: z.string(),
-	username: z
-		.string()
-		.min(1, {
-			message: "Enter your username",
-		})
-		.max(maxUsernameLength, {
-			message: `Your username can only have a maximum of ${maxUsernameLength} characters`,
-		}),
-	name: z
-		.string()
-		.min(2, {
-			message: "Enter your name",
-		})
-		.max(maxNameLength, {
-			message: `Your name can only have a maximum of ${maxNameLength} characters`,
-		}),
-});
+import { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	name: string;
@@ -52,12 +33,33 @@ type Props = {
 	linkedProviders: Providers[];
 	currProfileProvider: Providers;
 	setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	locale: locale_content_type;
 };
 
-const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvider, setDialogOpen }: Props) => {
+const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvider, setDialogOpen, locale }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState(null);
 	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+	const formSchema = z.object({
+		currProfileProvider: z.string(),
+		username: z
+			.string()
+			.min(1, {
+				message: locale.settings_page.account_section.enter_username,
+			})
+			.max(maxUsernameLength, {
+				message: locale.settings_page.account_section.username_max_chars_limit.replace("${0}", `${maxUsernameLength}`),
+			}),
+		name: z
+			.string()
+			.min(2, {
+				message: locale.settings_page.account_section.enter_name,
+			})
+			.max(maxNameLength, {
+				message: locale.settings_page.account_section.name_max_chars_limit.replace("${0}", `${maxNameLength}`),
+			}),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -104,7 +106,7 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 		}
 
 		const providerName = parseProfileProvider(values.currProfileProvider);
-		if (!providerName) return setFormError("Invalid profile provider");
+		if (!providerName) return;
 
 		setLoading(true);
 
@@ -119,20 +121,17 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 		setLoading(false);
 
 		if (result?.success === true) {
-			setSuccessMessage(result?.message || "Profile successfully updated");
-			await sleep(1_000);
+			setSuccessMessage(result?.message);
+			await sleep(1500);
 			setDialogOpen(false);
 		} else if (result?.success === false) {
-			setFormError(result?.message || "Couldn't update your profile info!");
+			setFormError(result?.message);
 		}
 	};
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(handleSubmit)}
-				className="w-full flex flex-col items-center justify-center gap-3"
-			>
+			<form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex flex-col items-center justify-center gap-3">
 				<div className="w-full flex flex-col items-center justify-center gap-4">
 					<div className="w-full flex flex-col items-center justify-center">
 						<FormField
@@ -142,9 +141,7 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 										<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-											<span className="text-foreground_muted dark:text-foreground_muted_dark">
-												Profile image provider
-											</span>
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">{locale.settings_page.account_section.pfp_provider}</span>
 											<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<Select
@@ -155,7 +152,7 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 										>
 											<FormControl className="capitalize">
 												<SelectTrigger>
-													<SelectValue placeholder="Select a verified email to display" />
+													<SelectValue placeholder="" />
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
@@ -182,7 +179,7 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 										<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-											<span className="text-foreground_muted dark:text-foreground_muted_dark">Username</span>
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">{locale.settings_page.account_section.username}</span>
 											<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<FormControl>
@@ -210,7 +207,7 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 										<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-											<span className="text-foreground_muted dark:text-foreground_muted_dark">Full name</span>
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">{locale.settings_page.account_section.full_name}</span>
 											<FormMessage className=" text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<FormControl>
@@ -235,20 +232,16 @@ const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvi
 
 				<div className="w-full flex items-center justify-end gap-2">
 					<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-						<p className="px-4 h-9 flex items-center justify-center">Close</p>
+						<p className="px-4 h-9 flex items-center justify-center">{locale.globals.cancel}</p>
 					</DialogClose>
 
 					<Button
 						type="submit"
 						aria-label="Log in"
 						className=""
-						disabled={
-							form.getValues().name === name &&
-							form.getValues().username === username &&
-							form.getValues().currProfileProvider === currProfileProvider
-						}
+						disabled={form.getValues().name === name && form.getValues().username === username && form.getValues().currProfileProvider === currProfileProvider}
 					>
-						<p className="px-4">Save</p>
+						<p className="px-4">{locale.settings_page.account_section.save_profile}</p>
 					</Button>
 				</div>
 			</form>

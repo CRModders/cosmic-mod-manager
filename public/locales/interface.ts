@@ -1,13 +1,4 @@
-export enum languages {
-	en = "en", // English
-	es = "es", // Spanish
-	fr = "fr", // French
-	pt = "pt", // Portuguese
-
-	nn = "nn", // Norwegian Nynorsk
-	nb = "nb", // Norwegian Bokmål
-	no = "no",
-}
+import { en_gb } from "./en/en-GB";
 
 export interface locale_meta {
 	language: {
@@ -17,29 +8,16 @@ export interface locale_meta {
 	};
 	region: {
 		name: string;
+		short_name: string;
 		code: string;
 	};
 	similar_to?: string[];
 }
 
-export interface locale_interface {
-	globals: {
-		site: {
-			full_name: string;
-			short_name: string;
-		};
-		mods: string;
-		resource_packs: string;
-		modpacks: string;
-		shaders: string;
-	};
+export type home_page_locale = typeof en_gb.content.home_page;
+export type featured_section_locale = typeof en_gb.content.home_page.featured_section;
+export type auth_locale = typeof en_gb.content.auth;
+export type globals_locale = typeof en_gb.content.globals;
+export type time_past_phrases = typeof en_gb.content.settings_page.sessions_section.time_past_phrases;
 
-	home_page: {
-		hero: {
-			description: {
-				line_1: string;
-				line_2: string;
-			};
-		};
-	};
-}
+export type locale_content_type = typeof en_gb.content;

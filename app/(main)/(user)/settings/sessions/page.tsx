@@ -20,8 +20,13 @@ import RevokeBtn from "./revokeBtn";
 import TooltipWrapper from "./TooltipWrapper";
 import Timestamp, { DotSeparator } from "./Timestamp";
 import CopyBtn from "@/components/copyBtn";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const SessionsPage = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const sessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
 	const loggedInSessions = await getLoggedInSessionsList();
 
@@ -36,14 +41,8 @@ const SessionsPage = async () => {
 							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">Sessions</h1>
 						</div>
 						<div className="w-full flex flex-col items-center justify-center text-foreground/80 dark:text-foreground_dark/80">
-							<p className="w-full text-left">
-								Here are all the devices that are currently logged in with your account. You can log out of each one
-								individually.
-							</p>
-							<p className="w-full text-left">
-								If you see an entry you don't recognize, log out of that device and change the password of the account
-								which was used to create that session.
-							</p>
+							<p className="w-full text-left">{locale.settings_page.sessions_section.page_desc.line_1}</p>
+							<p className="w-full text-left">{locale.settings_page.sessions_section.page_desc.line_2}</p>
 						</div>
 
 						<div className="w-full flex flex-col items-center justify-center gap-4 mt-4">
@@ -78,11 +77,14 @@ const SessionsPage = async () => {
 															<DotSeparator />
 														</>
 													)}
-													<Timestamp lastUsed={session?.lastUsed} createdOn={session?.createdOn} />
+													<Timestamp lastUsed={session?.lastUsed} createdOn={session?.createdOn} locale={locale} />
 												</div>
 											</div>
 											<TooltipWrapper
-												text={`This session was created using ${session?.provider} provider`}
+												text={locale.settings_page.sessions_section.session_created_using_provider.replace(
+													"${0}",
+													`${session?.provider}`,
+												)}
 												className="text-sm sm:text-base flex items-center justify-start gap-2"
 											>
 												{session?.provider !== "credentials" ? (
@@ -95,14 +97,19 @@ const SessionsPage = async () => {
 												) : (
 													<KeyIcon className="w-4 h-4" />
 												)}
-												<span className=" capitalize">{session?.provider}</span>
+												<span className="capitalize">{session?.provider}</span>
 											</TooltipWrapper>
 										</div>
 										<div className="h-full flex items-center justify-center">
 											{sessionToken !== session?.sessionToken ? (
-												<RevokeBtn token={session?.sessionToken} />
+												<RevokeBtn
+													token={session?.sessionToken}
+													revoke_session={locale.settings_page.sessions_section.revoke_session}
+												/>
 											) : (
-												<p className="italic text-foreground/80 dark:text-foreground_dark/80">Current&nbsp;session</p>
+												<p className="italic text-foreground/80 dark:text-foreground_dark/80 text-nowrap">
+													{locale.settings_page.sessions_section.current_session}
+												</p>
 											)}
 										</div>
 									</div>

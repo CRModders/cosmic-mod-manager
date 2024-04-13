@@ -13,6 +13,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import CopyBtn from "@/components/copyBtn";
 import { findUserByUsername } from "@/app/api/actions/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 type Props = {
 	params: {
@@ -34,9 +36,7 @@ const ProfilePage = async ({ params }: Props) => {
 								<Avatar className="flex items-center justify-center w-20 h-20">
 									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
 
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-										{user?.name?.charAt(0).toUpperCase()}
-									</AvatarFallback>
+									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
 								</Avatar>
 
 								<div className="grow max-w-full flex flex-col items-center sm:items-start justify-center">
@@ -44,9 +44,7 @@ const ProfilePage = async ({ params }: Props) => {
 									<div className="max-w-full flex items-center justify-center gap-4">
 										<ScrollArea className="max-w-full">
 											<p className="flex w-full items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
-												<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">
-													@
-												</span>
+												<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">@</span>
 												{user?.userName}
 											</p>
 											<ScrollBar orientation="horizontal" />
@@ -63,8 +61,7 @@ const ProfilePage = async ({ params }: Props) => {
 			{(!user || !user?.email) && (
 				<div className="w-full flex items-center justify-center">
 					<h1 className="text-lg md:text-2xl p-4">
-						No user exists with username{" "}
-						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
+						No user exists with username <span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 						<span className="font-semibold">{params.userName}</span>
 						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 					</h1>
@@ -77,6 +74,9 @@ const ProfilePage = async ({ params }: Props) => {
 export default ProfilePage;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const userName = params.userName;
 	const user = await findUserByUsername(userName);
 
@@ -89,6 +89,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 	return {
 		title: user.userName,
-		description: `${user.userName}'s profile on CRMM`,
+		description: locale.user_profile_page.meta_desc.replace("${0}", user.userName),
 	};
 }

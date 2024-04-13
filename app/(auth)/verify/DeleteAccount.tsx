@@ -12,12 +12,16 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import React, { useState } from "react";
 import SecurityLink from "./SecurityLink";
 import { Spinner } from "@/components/ui/spinner";
-import Link from "next/link";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 import { useToast } from "@/components/ui/use-toast";
 import { TrashIcon } from "@/components/Icons";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/client/getLangPref";
 
 const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const { toast } = useToast();
 	const [loading, setLoading] = useState(false);
 	const [actionResult, setActionResult] = useState<{
@@ -40,7 +44,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 			setActionResult(res);
 		} else {
 			toast({
-				title: res?.message || "Something went wrong",
+				title: res?.message || locale.globals.messages.something_went_wrong,
 			});
 		}
 	};
@@ -60,7 +64,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 			setActionResult(res);
 		} else {
 			toast({
-				title: res?.message || "Something went wrong",
+				title: res?.message || locale.globals.messages.something_went_wrong,
 			});
 		}
 
@@ -73,29 +77,18 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 		return (
 			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
 				<FormSuccessMsg msg={actionResult?.message} className="text-lg" iconClassName="pl-2 w-8 h-6" />
-
-				<div>
-					<p className="text-lg">
-						Go back to&nbsp;
-						<Link
-							href="/"
-							className="text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 hover:dark:bg-blue-400/10 py-1 px-2 rounded"
-						>
-							Home page
-						</Link>
-					</p>
-				</div>
 			</div>
 		);
 	}
 
 	return (
 		<Card className="max-w-md gap-0 relative">
-			<CardHeader className="text-xl ms:text-3xl text-left">Delete your account</CardHeader>
+			<CardHeader className="text-xl ms:text-3xl text-left">
+				{locale.auth.action_verification_page.delete_account}
+			</CardHeader>
 			<CardContent>
 				<p className="w-full text-left text-foreground/80 dark:text-foreground_dark/80">
-					Deleting your account will remove all of your data except your projects from our database. There is no going
-					back after you delete your account.
+					{locale.auth.action_verification_page.delete_account_desc}
 				</p>
 			</CardContent>
 			<CardFooter className="w-full flex flex-col items-center justify-end gap-4">
@@ -106,8 +99,8 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 							dontDeleteAccount();
 						}}
 					>
-						<Button type="submit" variant="outline">
-							Cancel
+						<Button type="submit" variant="outline" aria-label={locale.globals.cancel}>
+							{locale.globals.cancel}
 						</Button>
 					</form>
 					<form
@@ -118,15 +111,16 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 					>
 						<Button
 							type="submit"
+							aria-label={locale.globals.delete}
 							className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
 						>
 							<TrashIcon size="1rem" />
-							Delete
+							{locale.globals.delete}
 						</Button>
 					</form>
 				</div>
 				<div className="w-full flex items-center justify-start">
-					<SecurityLink />
+					<SecurityLink locale={locale} />
 				</div>
 			</CardFooter>
 			{loading === true && (

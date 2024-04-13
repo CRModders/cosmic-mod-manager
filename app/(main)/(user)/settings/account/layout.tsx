@@ -7,15 +7,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { siteTitle } from "@/config";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: {
-		default: "Account settings",
-		template: `%s - ${siteTitle}`,
-	},
-	description: "CRMM account settings page",
-};
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const AccountSettingsPageLayout = ({
 	children,
@@ -26,3 +19,14 @@ const AccountSettingsPageLayout = ({
 };
 
 export default AccountSettingsPageLayout;
+
+export const generateMetadata = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+	return {
+		title: {
+			default: locale.settings_page.account_section.meta_title,
+			template: `%s - ${siteTitle}`,
+		},
+	};
+};

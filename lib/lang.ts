@@ -1,5 +1,5 @@
 import locales from "@/public/locales";
-import { locale_interface } from "@/public/locales/interface";
+import { locale_content_type, locale_meta } from "@/public/locales/interface";
 
 // const language_codes = [
 // 	"en-US", // English - United States
@@ -66,6 +66,8 @@ const default_language = {
 	code: locales.default.meta.language.code,
 	region: locales.default.meta.region.code,
 };
+
+// const lang_code_exceptions = ["nn-NO", "nb-NO"];
 
 type formatted_lang = {
 	lang_code: string;
@@ -139,7 +141,10 @@ export const get_locale = (
 		page_name?: string;
 		section_name?: string;
 	},
-): locale_interface => {
+): {
+	meta: locale_meta;
+	content: locale_content_type;
+} => {
 	const available_lang = get_available_lang_code(code);
 	const locale_data = locales[available_lang.base_lang][available_lang.lang_code];
 
@@ -155,7 +160,7 @@ export const get_locale = (
 		} catch (error) {}
 	}
 
-	return locale_data?.content;
+	return locale_data;
 };
 
 type extracted_elems = {
@@ -253,4 +258,36 @@ export const extract_elems = (str: string): extracted_elems => {
 	const str_parts = get_regular_str_parts(str);
 	result.strings = str_parts;
 	return result;
+};
+
+export type availableLocalesListData = {
+	code: string;
+	en_name: string;
+	locale_name?: string;
+	region: string;
+};
+
+export const getAvailableLocales = () => {
+	const languages: availableLocalesListData[] = [];
+	for (const langName of Object.keys(locales)) {
+		if (langName !== "default") {
+			const regionalLocales = locales[langName];
+
+			for (const localeCode of Object.keys(regionalLocales)) {
+				const localeMeta: locale_meta = regionalLocales[localeCode].meta;
+				// const localeMeta = locales.en["en-GB"].meta;
+
+				if (localeCode !== "default") {
+					languages.push({
+						code: localeCode,
+						en_name: localeMeta.language.en_name,
+						locale_name: localeMeta.language.locale_name,
+						region: localeMeta.region.short_name,
+					});
+				}
+			}
+		}
+	}
+
+	return languages;
 };

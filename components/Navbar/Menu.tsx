@@ -8,10 +8,9 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { Suspense, useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { StoreContext } from "@/contexts/StoreContext";
-import { NavMenuLinks } from "@/config";
 import styles from "./styles.module.css";
 import { NavMenuLink } from "./Navlink";
 import { Spinner } from "@/components/ui/spinner";
@@ -45,17 +44,21 @@ const HamMenu = () => {
 
 export default HamMenu;
 
-const MobileNav = ({ children }: { children: React.ReactNode }) => {
+type Props = {
+	children: React.ReactNode;
+	NavMenuLinks: {
+		name: string;
+		href: string;
+	}[];
+};
+
+const MobileNav = ({ children, NavMenuLinks }: Props) => {
 	const { isNavMenuOpen } = useContext(StoreContext);
 
 	return (
 		<>
 			{
-				<div
-					className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 ${
-						isNavMenuOpen && styles.menu_open
-					}`}
-				>
+				<div className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 ${isNavMenuOpen && styles.menu_open}`}>
 					<div className="w-full flex flex-col items-center justify-center row-span-2 relative">
 						<div className="absolute top-0 left-0 w-full h-full opacity-80 bg-background dark:bg-background_dark z-[3]" />
 
@@ -71,11 +74,7 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
 									</React.Fragment>
 								);
 							})}
-							{isNavMenuOpen === true && (
-								<Suspense fallback={<Spinner size="1.25rem" />}>
-									{children}
-								</Suspense>
-							)}
+							{isNavMenuOpen === true && <Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>}
 						</ul>
 					</div>
 				</div>

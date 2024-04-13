@@ -7,11 +7,7 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 const ModsPage = () => {
-	return (
-		<div className="w-full min-h-[100vh] flex flex-col items-center justify-center">
-			<p className="text-2xl p-4">Mods</p>
-		</div>
-	);
+	return <div className="w-full flex flex-col items-center justify-center">Mods</div>;
 };
 
 export default ModsPage;

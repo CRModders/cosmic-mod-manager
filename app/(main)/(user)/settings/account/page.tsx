@@ -18,70 +18,50 @@ import ManageProviders from "./account_security/ManageProviders";
 import DeleteAccountSection from "./account_security/DeleteAccount";
 import { parseProfileProvider } from "@/lib/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
-const UnauthenticatedUserMsg = () => {
-	return (
-		<div className="w-full flex items-center justify-center">
-			<p className="text-center">You are not signed in !</p>
-		</div>
-	);
-};
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const AccountSettingsPage = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const session = await auth();
 
 	if (!session?.user?.email) {
-		return <UnauthenticatedUserMsg />;
+		return null;
 	}
 	const user = await findUserById(session.user.id);
 
 	if (!user?.email) {
-		return <UnauthenticatedUserMsg />;
+		return null;
 	}
 
-	const linkedProviders = (await getLinkedProvidersList()).map((provider) =>
-		parseProfileProvider(provider.provider),
-	);
+	const linkedProviders = (await getLinkedProvidersList()).map((provider) => parseProfileProvider(provider.provider));
 
 	return (
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
 					<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
-							User profile
-						</h2>
+						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">{locale.settings_page.account_section.user_profile}</h2>
 						<div>
-							<EditProfileDialog
-								name={user.name}
-								username={user.userName}
-								currProfileProvider={user?.profileImageProvider}
-								linkedProviders={linkedProviders}
-							/>
+							<EditProfileDialog name={user.name} username={user.userName} currProfileProvider={user?.profileImageProvider} linkedProviders={linkedProviders} locale={locale} />
 						</div>
 					</div>
 					<div className="w-full flex flex-col items-center justify-center my-2">
 						<div className="w-full flex flex-wrap items-center justify-start gap-6">
 							<div className="flex grow sm:grow-0 items-center justify-center">
 								<Avatar className="flex items-center justify-center w-24 h-24">
-									{user?.image && (
-										<AvatarImage src={user?.image} alt={`${user?.name} `} />
-									)}
+									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
 
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-										{user?.name?.charAt(0).toUpperCase()}
-									</AvatarFallback>
+									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
 								</Avatar>
 							</div>
 							<div className="grow max-w-full flex flex-col items-start justify-center">
-								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">
-									{user.name}
-								</h1>
+								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">{user.name}</h1>
 								<ScrollArea className="w-full">
 									<div className="w-full flex text-sm sm:text-base items-center sm:justify-start justify-center">
-										<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">
-											@
-										</span>
+										<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">@</span>
 										{user.userName}
 									</div>
 									<ScrollBar orientation="horizontal" />
@@ -94,35 +74,25 @@ const AccountSettingsPage = async () => {
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
-						Account security
-					</h2>
+					<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">{locale.settings_page.account_section.account_security}</h2>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="text-xl text-foreground dark:text-foreground_dark">
-							Email
-						</p>
+						<p className="text-xl text-foreground dark:text-foreground_dark">{locale.auth.email}</p>
 						<EmailField email={user.email} />
 					</div>
 
-					<PasswordSection
-						id={user.id}
-						email={user.email}
-						hasAPassword={user.hasAPassword}
-					/>
+					<PasswordSection id={user.id} email={user.email} hasAPassword={user.hasAPassword} locale={locale} />
 
-					<ManageProviders id={user.id} />
+					<ManageProviders id={user.id} locale={locale} />
 				</div>
 			</Card>
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
-						Delete account
-					</h2>
+					<h2 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">{locale.settings_page.account_section.delete_account}</h2>
 				</div>
-				<DeleteAccountSection />
+				<DeleteAccountSection locale={locale} />
 			</Card>
 		</div>
 	);

@@ -6,13 +6,8 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: "Login",
-	description:
-		"Log into cosmic reach mod manager to get a more personalized experience.",
-};
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 export default function LoginPageLayout({
 	children,
@@ -21,3 +16,13 @@ export default function LoginPageLayout({
 }) {
 	return children;
 }
+
+export const generateMetadata = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
+	return {
+		title: locale.auth.login,
+		description: locale.auth.login_page.meta_desc,
+	};
+};
