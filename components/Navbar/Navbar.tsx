@@ -25,17 +25,9 @@ const Navbar = async () => {
 				<div className="w-full z-50 flex items-center justify-center border-b border-shadow dark:border-shadow_dark bg-background dark:bg-background_dark">
 					<div className="container flex flex-wrap items-center justify-between py-2 px-4 sm:px-8">
 						<div className="flex items-center justify-center gap-6">
-							<Link
-								href="/"
-								className="flex items-center justify-between rounded-lg"
-							>
-								<BrandIcon
-									size="2.6rem"
-									className=" text-primary_accent dark:text-primary_accent"
-								/>
-								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">
-									CRMM
-								</p>
+							<Link href="/" className="flex items-center justify-between rounded-lg">
+								<BrandIcon size="2.6rem" className=" text-primary_accent dark:text-primary_accent" />
+								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">CRMM</p>
 							</Link>
 
 							<ul className="hidden lg:flex items-center justify-center gap-2">
@@ -43,16 +35,11 @@ const Navbar = async () => {
 									return (
 										<li
 											key={link.href}
-											className=" list-none m-0 p-0 flex items-center justify-center"
+											className="group list-none m-0 p-0 flex items-center justify-center"
 											aria-label={link.name}
 										>
-											<Navlink
-												href={link.href}
-												className=" hover:text-foreground dark:hover:text-foreground_dark hover:transition-colors hover:duration-default"
-											>
-												<p className="px-2 h-12 flex items-center justify-center text-center">
-													{link.name}
-												</p>
+											<Navlink href={link.href}>
+												<p className="px-2 h-12 flex items-center justify-center text-center">{link.name}</p>
 											</Navlink>
 										</li>
 									);
@@ -88,9 +75,7 @@ const Navbar = async () => {
 const NavbarLoadingUI = () => {
 	return (
 		<div className="w-full shadow-shadow dark:shadow-shadow_dark bg-background dark:bg-background_dark">
-			<p className="w-full text-center h-16 pb-[2px] flex items-center justify-center shadow">
-				Loading Navbar...
-			</p>
+			<p className="w-full text-center h-16 pb-[2px] flex items-center justify-center shadow">Loading Navbar...</p>
 		</div>
 	);
 };

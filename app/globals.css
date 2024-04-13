@@ -207,3 +207,15 @@
         --unit-height: 3.5rem;
     }
 }
+
+.link_icon {
+    @apply text-foreground/50 dark:text-foreground_dark/50 group-hover:text-foreground/70 dark:group-hover:text-foreground_dark/70 transition-colors duration-default;
+}
+
+.navlink_text {
+    @apply text-foreground/80 dark:text-foreground_dark/80 group-hover:text-foreground dark:group-hover:text-foreground_dark data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:font-semibold transition-colors duration-default group-hover:duration-0
+}
+
+.link_bg_transition {
+    @apply bg-none dark:bg-none hover:bg-background_hover/75 dark:hover:bg-background_hover_dark/75 data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:font-semibold transition-colors duration-default hover:duration-0 dark:hover:duration-0
+}

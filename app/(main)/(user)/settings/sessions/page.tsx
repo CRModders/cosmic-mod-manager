@@ -28,26 +28,21 @@ const SessionsPage = async () => {
 	const showSessionPageWarning = cookies().get("showSessionPageWarning")?.value;
 
 	return (
-		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[105dvh]">
+		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[100vh]">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
-					<SessionListPageWrapper
-						showSessionPageWarning={showSessionPageWarning}
-					>
+					<SessionListPageWrapper showSessionPageWarning={showSessionPageWarning}>
 						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
-								Sessions
-							</h1>
+							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">Sessions</h1>
 						</div>
 						<div className="w-full flex flex-col items-center justify-center text-foreground/80 dark:text-foreground_dark/80">
 							<p className="w-full text-left">
-								Here are all the devices that are currently logged in with your
-								account. You can log out of each one individually.
+								Here are all the devices that are currently logged in with your account. You can log out of each one
+								individually.
 							</p>
 							<p className="w-full text-left">
-								If you see an entry you don't recognize, log out of that device
-								and change the password of the account which was used to create
-								that session.
+								If you see an entry you don't recognize, log out of that device and change the password of the account
+								which was used to create that session.
 							</p>
 						</div>
 
@@ -83,10 +78,7 @@ const SessionsPage = async () => {
 															<DotSeparator />
 														</>
 													)}
-													<Timestamp
-														lastUsed={session?.lastUsed}
-														createdOn={session?.createdOn}
-													/>
+													<Timestamp lastUsed={session?.lastUsed} createdOn={session?.createdOn} />
 												</div>
 											</div>
 											<TooltipWrapper
@@ -95,21 +87,10 @@ const SessionsPage = async () => {
 											>
 												{session?.provider !== "credentials" ? (
 													authProvidersList?.map((authProvider) => {
-														if (
-															authProvider?.name.toLowerCase() ===
-															session?.provider
-														) {
-															return (
-																<React.Fragment key={authProvider.name}>
-																	{authProvider?.icon}
-																</React.Fragment>
-															);
+														if (authProvider?.name.toLowerCase() === session?.provider) {
+															return <React.Fragment key={authProvider.name}>{authProvider?.icon}</React.Fragment>;
 														}
-														return (
-															<React.Fragment key={authProvider.name}>
-																{null}
-															</React.Fragment>
-														);
+														return <React.Fragment key={authProvider.name}>{null}</React.Fragment>;
 													})
 												) : (
 													<KeyIcon className="w-4 h-4" />
@@ -121,9 +102,7 @@ const SessionsPage = async () => {
 											{sessionToken !== session?.sessionToken ? (
 												<RevokeBtn token={session?.sessionToken} />
 											) : (
-												<p className="italic text-foreground/80 dark:text-foreground_dark/80">
-													Current&nbsp;session
-												</p>
+												<p className="italic text-foreground/80 dark:text-foreground_dark/80">Current&nbsp;session</p>
 											)}
 										</div>
 									</div>

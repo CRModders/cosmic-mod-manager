@@ -12,11 +12,11 @@ const FormSuccessMsg = ({ msg, className, iconClassName }: Props) => {
 	return (
 		<div
 			className={cn(
-				"w-full flex items-center justify-start p-2 gap-2 text-emerald-600 dark:text-emerald-500 bg-emerald-600/10 dark:bg-emerald-500/5 rounded-lg",
+				"w-full flex items-center justify-start p-2 gap-2 text-success dark:text-success_dark bg-success/10 dark:bg-success_dark/10 rounded-lg",
 				className,
 			)}
 		>
-			<CheckCircledIcon className={cn("w-4 h-4", iconClassName)} />
+			<CheckCircledIcon className={cn("pl-1 w-6 h-5 shrink-0", iconClassName)} />
 			<p>{msg}</p>
 		</div>
 	);

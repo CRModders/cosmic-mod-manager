@@ -12,27 +12,14 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 
 import { Button } from "@/components/ui/button";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import {
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
-import {
-	cancelPasswordChangeAction,
-	confirmPasswordChange,
-} from "@/app/api/actions/user";
+import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { cancelPasswordChangeAction, confirmPasswordChange } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sleep } from "@/lib/utils";
@@ -74,9 +61,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
-	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(
-		null,
-	);
+	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -149,11 +134,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
 		return (
 			<div className=" w-full max-w-md">
-				<FormSuccessMsg
-					msg="Cancelled successfully"
-					className="text-lg"
-					iconClassName="pl-2 w-8 h-6"
-				/>
+				<FormSuccessMsg msg="Cancelled successfully" className="text-lg" iconClassName="pl-2 w-8 h-6" />
 			</div>
 		);
 	}
@@ -161,11 +142,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
 		return (
 			<div className=" w-full max-w-md">
-				<FormSuccessMsg
-					msg="Successfully changed password"
-					className="text-lg"
-					iconClassName="pl-2 w-8 h-6"
-				/>
+				<FormSuccessMsg msg="Successfully changed password" className="text-lg" iconClassName="pl-2 w-8 h-6" />
 			</div>
 		);
 	}
@@ -199,9 +176,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															autoComplete="username"
 															className="hidden"
 															readOnly={true}
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -224,7 +199,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
 															New password
 														</span>
-														<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
 														<Input
@@ -234,9 +209,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -259,7 +232,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
 															Confirm new password
 														</span>
-														<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
 														<Input
@@ -269,9 +242,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -287,24 +258,15 @@ const AddPasswordForm = ({ token, email }: Props) => {
 							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<Button
-									variant="secondary"
-									type="button"
-									onClick={cancelAction}
-								>
-									<p className="px-4 h-9 flex items-center justify-center">
-										Cancel
-									</p>
+								<Button variant="secondary" type="button" onClick={cancelAction}>
+									<p className="px-4 h-9 flex items-center justify-center">Cancel</p>
 								</Button>
 
 								<Button
 									type="submit"
 									aria-label="Log in"
 									className=""
-									disabled={
-										!form.getValues().newPassword &&
-										!form.getValues().confirmNewPassword
-									}
+									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
 								>
 									<p className="px-4">Change password</p>
 								</Button>

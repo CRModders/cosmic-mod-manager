@@ -52,7 +52,7 @@ model Session {
     id           String    @id @default(auto()) @map("_id") @db.ObjectId
     userId       String    @db.ObjectId
     sessionToken String    @unique
-    createdOn    DateTime
+    createdOn    DateTime?
     lastUsed     DateTime?
     browser      String?
     os           String?

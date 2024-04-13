@@ -12,14 +12,7 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@/components/Icons";
 import { useToast } from "@/components/ui/use-toast";
 import React, { useState } from "react";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { initiateDeleteAccountAction } from "@/app/api/actions/user";
 import { Spinner } from "@/components/ui/spinner";
@@ -44,8 +37,7 @@ const DeleteAccountSection = () => {
 			setDialogOpen(false);
 			toast({
 				title: res?.message || "Confirmation email sent.",
-				description:
-					"A confirmation email has been sent to your email addres. Confirm there to delete your account.",
+				description: "A confirmation email has been sent to your email addres. Confirm there to delete your account.",
 			});
 
 			return;
@@ -58,14 +50,13 @@ const DeleteAccountSection = () => {
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-16 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
 				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
-					Once you delete your account, there is no going back. Deleting your
-					account will remove all of your data, except your projects, from our
-					servers.
+					Once you delete your account, there is no going back. Deleting your account will remove all of your data,
+					except your projects, from our servers.
 				</p>
 			</div>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogTrigger asChild>
-					<Button className="flex items-center justify-center gap-2 bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/90 hover:dark:bg-primary_accent_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark">
+					<Button className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark">
 						<TrashIcon size="1rem" />
 						Delete account
 					</Button>
@@ -77,13 +68,11 @@ const DeleteAccountSection = () => {
 							<DialogTitle className="font-normal">Delete Account</DialogTitle>
 						</DialogHeader>
 						<div className="w-full flex flex-col gap-2 items-center justify-center">
-							<p className="w-full text-left">
-								Are you sure that you want to delete your account.
-							</p>
+							<p className="w-full text-left">Are you sure that you want to delete your account.</p>
 							{formError && <FormErrorMsg msg={formError} />}
 						</div>
 
-						<DialogFooter className="w-full flex items-center justify-end gap-2">
+						<DialogFooter className="w-full flex flex-row flex-wrap items-center justify-end gap-2">
 							<DialogClose asChild>
 								<Button variant="ghost" size="md">
 									Cancel
@@ -91,7 +80,7 @@ const DeleteAccountSection = () => {
 							</DialogClose>
 
 							<Button
-								className="flex items-center justify-center gap-2 bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/90 hover:dark:bg-primary_accent_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
+								className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
 								onClick={handleDeleteClick}
 							>
 								<TrashIcon size="1rem" />

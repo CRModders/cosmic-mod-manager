@@ -23,7 +23,7 @@ export default function LoginPageLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="flex w-full flex-col items-center justify-center text-center min-h-[100dvh] py-12">
+		<section className="flex w-full flex-col items-center justify-center text-center min-h-[100vh] py-12">
 			{children}
 		</section>
 	);

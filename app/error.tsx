@@ -24,12 +24,8 @@ export default function ErrorPage({
 	}, [error]);
 
 	return (
-		<div className="w-full min-h-[100dvh] flex flex-col items-center justify-center gap-6">
-			<h1
-				className={`${title()} w-full flex items-center justify-center text-center`}
-			>
-				Uh oh! Something went wrong.
-			</h1>
+		<div className="w-full min-h-[100vh] flex flex-col items-center justify-center gap-6">
+			<h1 className={`${title()} w-full flex items-center justify-center text-center`}>Uh oh! Something went wrong.</h1>
 			<p className="text-xl text-[var(--regular-secondary-text)] max-w-xl flex items-center justify-center text-center">
 				Sorry about that. We'll work to get it fixed. In the meantime,
 				<br /> you can try refreshing the page.

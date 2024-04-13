@@ -13,14 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { DialogClose } from "@/components/ui/dialog";
@@ -29,13 +22,7 @@ import { maxNameLength, maxUsernameLength } from "@/config";
 import { isValidName, isValidUsername, parseProfileProvider } from "@/lib/user";
 import { sleep } from "@/lib/utils";
 import { Providers } from "@prisma/client";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 
@@ -67,13 +54,7 @@ type Props = {
 	setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const EditProfileInfoForm = ({
-	name,
-	username,
-	linkedProviders,
-	currProfileProvider,
-	setDialogOpen,
-}: Props) => {
+const EditProfileInfoForm = ({ name, username, linkedProviders, currProfileProvider, setDialogOpen }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState(null);
 	const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -164,7 +145,7 @@ const EditProfileInfoForm = ({
 											<span className="text-foreground_muted dark:text-foreground_muted_dark">
 												Profile image provider
 											</span>
-											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+											<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<Select
 											onValueChange={(value: string) => {
@@ -180,11 +161,7 @@ const EditProfileInfoForm = ({
 											<SelectContent>
 												{linkedProviders?.map((provider) => {
 													return (
-														<SelectItem
-															key={provider}
-															value={provider}
-															className="capitalize"
-														>
+														<SelectItem key={provider} value={provider} className="capitalize">
 															{provider}
 														</SelectItem>
 													);
@@ -205,10 +182,8 @@ const EditProfileInfoForm = ({
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 										<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-											<span className="text-foreground_muted dark:text-foreground_muted_dark">
-												Username
-											</span>
-											<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">Username</span>
+											<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<FormControl>
 											<Input
@@ -235,10 +210,8 @@ const EditProfileInfoForm = ({
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 										<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-											<span className="text-foreground_muted dark:text-foreground_muted_dark">
-												Full name
-											</span>
-											<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+											<span className="text-foreground_muted dark:text-foreground_muted_dark">Full name</span>
+											<FormMessage className=" text-danger dark:text-danger_dark leading-tight" />
 										</FormLabel>
 										<FormControl>
 											<Input
@@ -258,11 +231,7 @@ const EditProfileInfoForm = ({
 					</div>
 				</div>
 
-				{formError ? (
-					<FormErrorMsg msg={formError} />
-				) : (
-					successMessage && <FormSuccessMsg msg={successMessage} />
-				)}
+				{formError ? <FormErrorMsg msg={formError} /> : successMessage && <FormSuccessMsg msg={successMessage} />}
 
 				<div className="w-full flex items-center justify-end gap-2">
 					<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">

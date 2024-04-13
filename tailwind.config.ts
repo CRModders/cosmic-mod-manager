@@ -3,12 +3,7 @@ import colors from "tailwindcss/colors";
 
 const config = {
 	darkMode: ["class"],
-	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
-	],
+	content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
 	prefix: "",
 	theme: {
 		container: {
@@ -42,12 +37,16 @@ const config = {
 				foreground: colors.zinc[900],
 				foreground_muted: colors.zinc[600],
 				shadow: colors.zinc[300],
+				danger: colors.red[600],
+				success: colors.emerald[600],
 
 				background_dark: colors.zinc[900],
 				background_hover_dark: colors.zinc[800],
 				foreground_dark: colors.zinc[50],
 				foreground_muted_dark: colors.zinc[300],
 				shadow_dark: colors.zinc[700],
+				danger_dark: colors.red[500],
+				success_dark: colors.emerald[500],
 
 				primary_accent: colors.rose[500],
 				primary_accent_foreground: colors.zinc[50],

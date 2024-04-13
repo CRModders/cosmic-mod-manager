@@ -8,10 +8,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import {
-	getActionType,
-	getUserEmailFromVerificationToken,
-} from "@/app/api/actions/user";
+import { getActionType, getUserEmailFromVerificationToken } from "@/app/api/actions/user";
 import { UserVerificationActionTypes } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -23,9 +20,7 @@ import DeleteAccountConfirmAction from "./DeleteAccount";
 
 const ConfirmActionPage = () => {
 	const token = decodeURIComponent(useSearchParams().get("token"));
-	const [actionType, setActionType] = useState<
-		UserVerificationActionTypes | undefined | null
-	>(undefined);
+	const [actionType, setActionType] = useState<UserVerificationActionTypes | undefined | null>(undefined);
 	const [email, setEmail] = useState(null);
 
 	const fetchActionType = async () => {
@@ -43,7 +38,7 @@ const ConfirmActionPage = () => {
 	if (actionType === null) {
 		return (
 			<section className="w-full flex items-center justify-center">
-				<div className="max-w-md flex items-center justify-center gap-4 text-rose-500 dark:text-rose-400 bg-rose-500/10 py-2 px-4 rounded-lg">
+				<div className="max-w-md flex items-center justify-center gap-4 text-danger dark:text-danger_dark bg-danger/10 dark:bg-danger_dark/10 py-2 px-4 rounded-lg">
 					<ExclamationTriangleIcon className="w-6 h-6" />
 					<h1 className="text-2xl">Expired or invalid token</h1>
 				</div>

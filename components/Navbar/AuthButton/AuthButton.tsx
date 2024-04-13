@@ -10,20 +10,11 @@ import React from "react";
 import LoginBtn from "./LoginBtn";
 import { auth } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import { Button } from "@/components/ui/button";
 
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import SignOutBtn from "./SignOutBtn";
 import ProfileDropdown from "./ProfileDropdown";
 import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
@@ -61,9 +52,7 @@ const AuthButton = async () => {
 				>
 					<div className="flex items-center justify-center p-1">
 						<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
-							{userData?.image && (
-								<AvatarImage src={userData?.image} alt={`${userData?.name} `} />
-							)}
+							{userData?.image && <AvatarImage src={userData?.image} alt={`${userData?.name} `} />}
 							<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
 								{userData?.name?.charAt(0).toUpperCase()}
 							</AvatarFallback>
@@ -85,7 +74,7 @@ export const MenuAuthButton = async () => {
 	if (!session || !session?.user?.email) {
 		return (
 			<div className="w-full flex items-center justify-center">
-				<LoginBtn />
+				<LoginBtn size="lg" />
 			</div>
 		);
 	}
@@ -120,21 +109,14 @@ export const MenuAuthButton = async () => {
 					<AccordionTrigger className="w-full border-none outline-none">
 						<div className="w-full flex items-center justify-center gap-4 pr-8">
 							<Avatar>
-								{userData?.image && (
-									<AvatarImage
-										src={userData?.image}
-										alt={`${userData?.name} `}
-									/>
-								)}
+								{userData?.image && <AvatarImage src={userData?.image} alt={`${userData?.name} `} />}
 
 								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
 									{userData?.name?.charAt(0).toUpperCase()}
 								</AvatarFallback>
 							</Avatar>
 
-							<p className="text-lg text-foreground dark:text-foreground_dark font-normal">
-								{userData?.name}
-							</p>
+							<p className="text-lg text-foreground dark:text-foreground_dark font-normal">{userData?.name}</p>
 						</div>
 					</AccordionTrigger>
 					<AccordionContent className="w-full flex flex-col gap-2">
@@ -148,21 +130,17 @@ export const MenuAuthButton = async () => {
 								>
 									<Button
 										variant="ghost"
-										className={
-											"w-full text-lg flex items-center justify-center gap-2 text-foreground_muted dark:text-foreground_muted_dark"
-										}
+										className={"group w-full text-lg flex items-center justify-center gap-2"}
 										size="lg"
 										tabIndex={-1}
 									>
-										<span className="w-6 flex items-center justify-center">
-											{link.icon}
-										</span>
+										<span className="w-6 flex items-center justify-center link_icon">{link.icon}</span>
 										<p>{link.name}</p>
 									</Button>
 								</NavMenuLink>
 							);
 						})}
-						<SignOutBtn className="items-center justify-center" />
+						<SignOutBtn className="items-center justify-center h-12 navlink_text link_bg_transition hover:duration-0 dark:hover:duration-0" />
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>

@@ -1,11 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import React from "react";
 
-export const Spinner = ({ size = "1.8rem" }) => {
+export const Spinner = ({ size = "1.8rem", className }: { size?: string; className?: string }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
-			className="animate-spin ease-linear duration-700 text-foreground dark:text-foreground_dark"
+			className={cn("animate-spin ease-linear duration-700 text-foreground dark:text-foreground_dark", className)}
 			viewBox="0 0 64 64"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +35,7 @@ export const Spinner = ({ size = "1.8rem" }) => {
 
 const LoadingUI = ({ iconSize = "3rem" }: { iconSize?: string }) => {
 	return (
-		<div className="w-full min-h-[100dvh] flex items-center justify-center">
+		<div className="w-full min-h-[100vh] flex items-center justify-center">
 			<Card>
 				<CardContent className="p-8">
 					<Spinner size={iconSize} />

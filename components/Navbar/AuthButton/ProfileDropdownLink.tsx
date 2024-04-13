@@ -9,6 +9,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import "@/app/globals.css";
 
 type Props = {
 	icon: React.JSX.Element;
@@ -24,13 +25,13 @@ const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 		<Button
 			variant="ghost"
 			className={cn(
-				"w-full text-lg flex items-center justify-start gap-2 text-foreground_muted dark:text-foreground_muted_dark duration-default",
+				"group w-full text-lg flex items-center justify-start gap-2 navlink_text link_bg_transition",
 				className,
 			)}
 			size="md"
 			{...props}
 		>
-			<span className="w-6 flex items-center justify-start">{icon}</span>
+			<span className="w-6 flex items-center justify-start link_icon">{icon}</span>
 			<p>{label}</p>
 		</Button>
 	);

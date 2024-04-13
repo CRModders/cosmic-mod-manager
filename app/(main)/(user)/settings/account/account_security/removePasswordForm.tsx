@@ -12,21 +12,8 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
@@ -34,9 +21,9 @@ import { DialogClose } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { ExclamationTriangleIcon, TrashIcon } from "@radix-ui/react-icons";
 import { removePassword } from "@/app/api/actions/user";
 import FormErrorMsg from "@/components/formErrorMsg";
+import { TrashIcon } from "@/components/Icons";
 
 export const formSchema = z.object({
 	email: z.string(),
@@ -102,9 +89,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="font-normal">
-						Remove your account password
-					</DialogTitle>
+					<DialogTitle className="font-normal">Remove your account password</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
@@ -149,7 +134,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 														<span className="text-foreground_muted dark:text-foreground_muted_dark my-1">
 															Confirm your password
 														</span>
-														<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
 														<Input
@@ -159,9 +144,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																setFormError(null);
 															}}
@@ -174,9 +157,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 								</div>
 							</div>
 
-							<div className="w-full min-h-6">
-								{formError && <FormErrorMsg msg={formError} />}
-							</div>
+							<div className="w-full min-h-6">{formError && <FormErrorMsg msg={formError} />}</div>
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
@@ -187,8 +168,8 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 								<Button
 									type="submit"
-									aria-label="Log in"
-									className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80"
+									aria-label="Remove password"
+									className="bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90"
 									disabled={!form.getValues().password}
 								>
 									<TrashIcon className="h-4 w-4 text-foreground_dark" />

@@ -7,11 +7,8 @@ import TooltipWrapper from "./TooltipWrapper";
 export const DotSeparator = () => {
 	return (
 		<span className="flex items-center justify-center select-none">
-			&nbsp;
-			<span className="w-[0.25rem] h-[0.25rem] rounded bg-foreground/50 dark:bg-foreground_dark/50">
-				{" "}
-			</span>
-			&nbsp;
+			&nbsp;&nbsp;
+			<span className="w-[0.25rem] h-[0.25rem] rounded bg-foreground/50 dark:bg-foreground_dark/50"> </span>&nbsp;&nbsp;
 		</span>
 	);
 };
@@ -22,51 +19,51 @@ type Props = {
 };
 
 const Timestamp = ({ lastUsed, createdOn }: Props) => {
-	const lastUsed_year = lastUsed.getFullYear();
-	const lastUsed_monthIndex = lastUsed.getMonth();
-	const lastUsed_day = lastUsed.getDate();
-	const lastUsed_hours = lastUsed.getHours();
-	const lastUsed_minutes = lastUsed.getMinutes();
+	let formattedLastUsedDate = null;
 
-	const createdOn_year = createdOn.getFullYear();
-	const createdOn_monthIndex = createdOn.getMonth();
-	const createdOn_day = createdOn.getDate();
-	const createdOn_hours = createdOn.getHours();
-	const createdOn_minutes = createdOn.getMinutes();
+	try {
+		formattedLastUsedDate = formatDate(
+			lastUsed,
+			lastUsed.getFullYear(),
+			lastUsed.getMonth(),
+			lastUsed.getDate(),
+			lastUsed.getHours(),
+			lastUsed.getMinutes(),
+		);
+	} catch (error) {}
+
+	let formattedCreatedOnDate = null;
+
+	try {
+		formattedCreatedOnDate = formatDate(
+			createdOn,
+			createdOn.getFullYear(),
+			createdOn.getMonth(),
+			createdOn.getDate(),
+			createdOn.getHours(),
+			createdOn.getMinutes(),
+		);
+	} catch (error) {}
 
 	return (
 		<>
-			<div className="text-sm sm:text-base">
-				Last used{" "}
-				<TooltipWrapper
-					text={formatDate(
-						lastUsed,
-						lastUsed_year,
-						lastUsed_monthIndex,
-						lastUsed_day,
-						lastUsed_hours,
-						lastUsed_minutes,
-					)}
-				>
-					<span>{timeSince(lastUsed)}</span>
-				</TooltipWrapper>
-			</div>
-			<DotSeparator />
-			<div className="text-sm sm:text-base">
-				Created{" "}
-				<TooltipWrapper
-					text={formatDate(
-						createdOn,
-						createdOn_year,
-						createdOn_monthIndex,
-						createdOn_day,
-						createdOn_hours,
-						createdOn_minutes,
-					)}
-				>
-					<span>{timeSince(createdOn)}</span>
-				</TooltipWrapper>
-			</div>
+			{formattedLastUsedDate && (
+				<div className="text-sm sm:text-base">
+					Last used{" "}
+					<TooltipWrapper text={formattedLastUsedDate}>
+						<span>{timeSince(lastUsed)}</span>
+					</TooltipWrapper>
+				</div>
+			)}
+			{formattedCreatedOnDate && formattedLastUsedDate && <DotSeparator />}
+			{formattedCreatedOnDate && (
+				<div className="text-sm sm:text-base">
+					Created{" "}
+					<TooltipWrapper text={formattedCreatedOnDate}>
+						<span>{timeSince(createdOn)}</span>
+					</TooltipWrapper>
+				</div>
+			)}
 		</>
 	);
 };

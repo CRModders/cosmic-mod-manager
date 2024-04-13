@@ -14,27 +14,30 @@ import { Suspense } from "react";
 import AuthButton from "./AuthButton";
 import { Spinner } from "@/components/ui/spinner";
 import "@/app/globals.css";
+import { cookies } from "next/headers";
+import { extract_elems, get_locale } from "@/lib/lang";
 
 export default async function Home() {
+	const langPref = cookies().get("hl")?.value;
+	const locale = get_locale(langPref);
+
 	// The animation keyframes in "@/app/globals.css" need to be updated according to the number of items in the list
 	const showcaseItems = [
-		"mods",
-		"resource packs",
-		"modpacks",
-		"shaders",
-		"mods",
+		locale.globals.mods,
+		locale.globals.resource_packs,
+		locale.globals.modpacks,
+		locale.globals.shaders,
+		locale.globals.mods,
 	];
+	const extracted_desc = extract_elems(locale.home_page.hero.description.line_1);
 
 	return (
 		<main className="w-full h-fit flex flex-col items-center justify-start">
-			<section className="w-full min-h-[100dvh] flex flex-col items-center justify-center container py-12">
-				<BrandIcon
-					size="18rem"
-					className=" text-primary_accent dark:text-primary_accent_dark"
-				/>
+			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
+				<BrandIcon size="18rem" className=" text-primary_accent dark:text-primary_accent_dark" />
 				<div className="w-full flex flex-col items-center justify-center">
 					<h1 className="text-3xl lg:text-5xl text-center font-semibold text-foreground dark:text-foreground_dark">
-						Cosmic Reach Mod Manager
+						{locale.globals.site.full_name}
 					</h1>
 
 					<h2 className="h-10 lg:h-14 mb-2 overflow-hidden">
@@ -57,18 +60,18 @@ export default async function Home() {
 
 					<div className="flex flex-col items-center justify-center gap-2">
 						<h2 className="w-full text-center flex flex-wrap items-center justify-center text-xl lg:text-2xl text-foreground_muted dark:text-foreground_muted_dark">
-							The best place for your{" "}
+							{extracted_desc.strings[0]}{" "}
 							<Link
 								href="https://finalforeach.itch.io/cosmic-reach"
 								target="_blank"
 								className="text-primary_accent_text dark:text-primary_accent_dark"
 							>
-								&nbsp;Cosmic&nbsp;Reach&nbsp;
+								&nbsp;{extracted_desc.links[0]}&nbsp;
 							</Link>{" "}
-							mods.
+							{extracted_desc.strings[1]}
 						</h2>
 						<h2 className="text-xl lg:text-2xl flex text-center text-foreground_muted dark:text-foreground_muted_dark">
-							Discover, play, and create content, all in one spot.
+							{locale.home_page.hero.description.line_2}
 						</h2>
 					</div>
 				</div>
@@ -79,9 +82,7 @@ export default async function Home() {
 						size="lg"
 						aria-label="Explore mods"
 					>
-						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">
-							Explore Mods
-						</p>
+						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">Explore Mods</p>
 					</Button>
 
 					<Suspense fallback={<Spinner />}>

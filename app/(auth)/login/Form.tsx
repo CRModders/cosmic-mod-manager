@@ -13,14 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
@@ -48,9 +41,7 @@ const LoginForm = () => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
-	const [callbackUrl, setCallbackUrl] = useState(
-		searchParams.get("callbackUrl") || "",
-	);
+	const [callbackUrl, setCallbackUrl] = useState(searchParams.get("callbackUrl") || "");
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -101,10 +92,7 @@ const LoginForm = () => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setCallbackUrl(
-			searchParams.get("callbackUrl") ||
-				`${window.location.origin}${defaultLoginRedirect}`,
-		);
+		setCallbackUrl(searchParams.get("callbackUrl") || `${window.location.origin}${defaultLoginRedirect}`);
 	}, []);
 
 	return (
@@ -122,7 +110,7 @@ const LoginForm = () => {
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
 										<span>Email</span>
-										<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+										<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
 										<Input
@@ -152,7 +140,7 @@ const LoginForm = () => {
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
 										<span>Password</span>
-										<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+										<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
 										<Input

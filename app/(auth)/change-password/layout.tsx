@@ -9,11 +9,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Reset password",
+	title: "Change password",
 	description: "Reset your CRMM account password.",
 };
 
-export default function ResetPasswordPageLayout({
+export default function ChangePasswordPageLayout({
 	children,
 }: {
 	children: React.ReactNode;

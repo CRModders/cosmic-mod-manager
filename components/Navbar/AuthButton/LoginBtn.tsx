@@ -9,27 +9,28 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { NavMenuLink } from "../Navlink";
+import { cn } from "@/lib/utils";
 
 const LoginBtn = ({
+	className,
+	size = "md",
 	closeNavMenuOnLinkClick = true,
 }: {
+	className?: string;
+	size?: "sm" | "md" | "lg";
 	closeNavMenuOnLinkClick?: boolean;
 }) => {
 	return (
 		<NavMenuLink
-			className="w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark"
+			className={cn(
+				"w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark",
+				className,
+			)}
 			href="/login"
 			closeNavMenuOnLinkClick={closeNavMenuOnLinkClick}
 		>
-			<Button
-				variant="outline"
-				size="md"
-				className="w-full"
-				aria-label="Log In"
-			>
-				<p className="text-lg text-foreground dark:text-foreground_dark">
-					Log In
-				</p>
+			<Button variant="outline" size={size} className="w-full link_bg_transition" aria-label="Log In">
+				<p className="text-lg text-foreground dark:text-foreground_dark">Log In</p>
 			</Button>
 		</NavMenuLink>
 	);

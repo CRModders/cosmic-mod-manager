@@ -15,7 +15,6 @@ import NavbarWrapper from "@/components/Navbar/Navbar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteTitle } from "@/config";
 import LoadingUI from "@/components/ui/spinner";
 
@@ -32,14 +31,12 @@ export const metadata: Metadata = {
 	description: "A marketplace featuring all the mods for Cosmic reach",
 };
 
-export default async function RootLayout({
-	children,
-}: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
 			<body
 				className={cn(
-					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark min-h-[105dvh]",
+					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark min-h-[100vh]",
 					varela_round.className,
 				)}
 			>
@@ -50,13 +47,10 @@ export default async function RootLayout({
 					<NavbarWrapper />
 
 					<Suspense fallback={<LoadingUI iconSize={"2.25rem"} />}>
-						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">
-							{children}
-						</main>
+						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">{children}</main>
 					</Suspense>
 
 					<Toaster />
-					<SpeedInsights />
 				</Providers>
 			</body>
 		</html>

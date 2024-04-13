@@ -26,9 +26,7 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 		return (
 			<div className="w-full flex flex-wrap items-end justify-between gap-2">
 				<div className="flex flex-col items-start justify-center">
-					<p className="text-xl text-foreground dark:text-foreground_dark">
-						Password
-					</p>
+					<p className="text-xl text-foreground dark:text-foreground_dark">Password</p>
 					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
 						Add a password to use email login
 					</p>
@@ -41,33 +39,20 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap items-end justify-between gap-2">
 			<div className="flex flex-col items-start justify-center">
-				<p className="text-xl text-foreground dark:text-foreground_dark">
-					Password
-				</p>
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
-					Change your account password
-				</p>
+				<p className="text-xl text-foreground dark:text-foreground_dark">Password</p>
+				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">Change your account password</p>
 			</div>
 
 			<div className="flex flex-wrap gap-2">
-				<Link
-					href={"/change-password"}
-					className="flex items-center justify-center"
-				>
-					<Button
-						className="flex items-center justify-center gap-2"
-						variant="outline"
-					>
-						<KeyIcon
-							size="1rem"
-							className="text-foreground/90 dark:text-foreground_dark/90"
-						/>
+				<Link href={"/change-password"} className="flex items-center justify-center">
+					<Button className="flex items-center justify-center gap-2" variant="outline">
+						<KeyIcon size="1rem" className="text-foreground/90 dark:text-foreground_dark/90" />
 						Change password
 					</Button>
 				</Link>
 				<RemovePasswordForm id={id} email={email}>
 					<Button
-						className="flex items-center justify-center gap-2 text-primary_accent_text dark:text-primary_accent_text_dark hover:text-primary_accent_text hover:dark:text-primary_accent_text_dark"
+						className="flex items-center justify-center gap-2 text-danger dark:text-danger_dark hover:text-danger hover:dark:text-danger_dark"
 						variant="outline"
 					>
 						<TrashIcon size="1rem" />
