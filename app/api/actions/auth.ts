@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import db from "@/lib/db";
 import UAParser from "ua-parser-js";
 import { dbSessionTokenCookieKeyName, userSessionValidity_ms } from "@/config";
@@ -21,14 +21,12 @@ export const setSessionToken = async (id: string, provider?: string) => {
 	const geoData: GeoApiData | null = {};
 	if (ip) {
 		try {
-			const res = await fetch(
-				`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`,
-			);
+			const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`);
 
 			const resJsonData = await res.json();
 
 			if (resJsonData?.city || resJsonData?.region) {
-				geoData.region = `${resJsonData?.region} ${resJsonData?.city}`;
+				geoData.region = `${resJsonData?.city} ${resJsonData?.region}`;
 			}
 			if (resJsonData?.country) {
 				geoData.country = resJsonData?.country;
@@ -64,7 +62,10 @@ export const setSessionToken = async (id: string, provider?: string) => {
 	}
 };
 
-export const deleteSessionToken = async (token?: string) => {
+export const deleteSessionToken = async ({
+	token = null,
+	deleteFromDb = true,
+}: { token?: string; deleteFromDb?: boolean }) => {
 	let sessionToken = token || null;
 	if (!sessionToken) {
 		sessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
@@ -72,29 +73,29 @@ export const deleteSessionToken = async (token?: string) => {
 	}
 
 	try {
-		await db.session.delete({
-			where: { sessionToken: sessionToken },
-		});
-	} catch (error) {}
+		if (sessionToken && deleteFromDb === true) {
+			await db.session.delete({
+				where: { sessionToken: sessionToken },
+			});
+		}
+	} catch (error) {
+		console.log({ function: "deleteSessionToken", error });
+	}
 };
 
-export const getValidSessionToken = async (
-	sessionToken: string,
-): Promise<string | null> => {
+export const getValidSessionToken = async (sessionToken: string): Promise<string | null> => {
 	try {
 		const sessionData = await db.session.findUnique({
 			where: { sessionToken },
 		});
 
-		if (!sessionData?.sessionToken) return null;
+		if (!sessionData?.sessionToken) {
+			await deleteSessionToken({ deleteFromDb: false });
+			return null;
+		}
 
-		if (
-			sessionData?.createdOn?.getTime() + userSessionValidity_ms <
-			new Date().getTime()
-		) {
-			await db.session.delete({
-				where: { sessionToken },
-			});
+		if (sessionData?.createdOn?.getTime() + userSessionValidity_ms < new Date().getTime()) {
+			await deleteSessionToken({ token: sessionToken });
 
 			return null;
 		}
@@ -105,6 +106,7 @@ export const getValidSessionToken = async (
 
 		return sessionData?.userId;
 	} catch (error) {
+		console.log({ function: "getValidSessionToken", error });
 		return null;
 	}
 };
@@ -143,6 +145,6 @@ export const revokeSession = async (sessionToken: string) => {
 
 	if (!user?.id) return null;
 
-	await deleteSessionToken(sessionToken);
+	await deleteSessionToken({ token: sessionToken });
 	revalidatePath("/settings/sessions");
 };

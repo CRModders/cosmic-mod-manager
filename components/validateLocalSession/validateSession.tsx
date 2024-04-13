@@ -7,21 +7,19 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth } from "@/auth";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import React from "react";
 import SignOutBtn from "./signOutBtn";
 import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import { dbSessionTokenCookieKeyName } from "@/config";
-import { cookies } from "next/headers";
 import { sleep } from "@/lib/utils";
+import FormErrorMsg from "../formErrorMsg";
+import { Spinner } from "../ui/spinner";
 
 const ValidateSession = async () => {
-	await sleep(100);
+	await sleep(500);
 
 	const session = await auth();
-	const sessionToken = await cookies().get(dbSessionTokenCookieKeyName)?.value;
 
-	if (!session?.user?.id && !sessionToken) {
+	if (!session?.user?.id) {
 		return null;
 	}
 
@@ -34,15 +32,13 @@ const ValidateSession = async () => {
 	return (
 		<section className="w-full fixed top-0 left-0 z-[500] bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
 			<div className="w-full p-6 min-h-[100dvh] flex flex-col items-center justify-center gap-6">
-				<div className="w-full flex items-center justify-center gap-6 text-rose-600 dark:text-rose-500">
-					<ExclamationTriangleIcon className="w-10 h-10" />
-					<h1 className="text-4xl font-semibold font-mono">
-						Invalid local session!
-					</h1>
+				<div className="max-w-lg w-full flex flex-col items-center justify-center gap-6 text-danger dark:text-danger_dark">
+					<FormErrorMsg msg="Invalid local session!" className="text-3xl p-4 font-mono" iconClassName="w-9 mr-2 h-8" />
 				</div>
-				<p className="text-center text-rose-600 dark:text-rose-500 text-2xl font-mono font-semibold">
-					Signing out...
-				</p>
+				<div className="flex gap-4 items-center justify-center">
+					<Spinner size="1.5rem" className=" text-danger dark:text-danger_dark" />
+					<p className="text-center text-danger dark:text-danger_dark text-2xl font-mono">Signing out</p>
+				</div>
 			</div>
 			<SignOutBtn />
 		</section>

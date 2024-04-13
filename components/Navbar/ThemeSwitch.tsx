@@ -27,9 +27,7 @@ export default function ThemeSwitch() {
 	const setInitialTheme = () => {
 		if (theme !== "system") return;
 
-		const prefersDarkTheme = window.matchMedia(
-			"(prefers-color-scheme: dark)",
-		).matches;
+		const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 		if (prefersDarkTheme) {
 			setTheme("dark");

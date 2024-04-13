@@ -12,21 +12,8 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
@@ -125,10 +112,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
-				<Button
-					className="flex items-center justify-center gap-2"
-					variant="outline"
-				>
+				<Button className="flex items-center justify-center gap-2" variant="outline">
 					<KeyIcon size="1.1rem" />
 					<p>Add password</p>
 				</Button>
@@ -178,10 +162,8 @@ const AddPasswordForm = ({ id, email }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">
-															New password
-														</span>
-														<FormMessage className="text-rose-600 dark:text-rose-400 leading-tight" />
+														<span className="text-foreground_muted dark:text-foreground_muted_dark">New password</span>
+														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
 														<Input
@@ -191,9 +173,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -216,7 +196,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 														<span className="text-foreground_muted dark:text-foreground_muted_dark">
 															Confirm new password
 														</span>
-														<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
 														<Input
@@ -226,9 +206,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -245,19 +223,14 @@ const AddPasswordForm = ({ id, email }: Props) => {
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-									<p className="px-4 h-9 flex items-center justify-center">
-										Cancel
-									</p>
+									<p className="px-4 h-9 flex items-center justify-center">Cancel</p>
 								</DialogClose>
 
 								<Button
 									type="submit"
 									aria-label="Log in"
 									className=""
-									disabled={
-										!form.getValues().newPassword &&
-										!form.getValues().confirmNewPassword
-									}
+									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
 								>
 									<p className="px-4">Set password</p>
 								</Button>
@@ -267,7 +240,7 @@ const AddPasswordForm = ({ id, email }: Props) => {
 							<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
 								<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 									<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-									<Spinner size="2.4rem" />
+									<Spinner size="1.5rem" />
 								</div>
 							</div>
 						)}

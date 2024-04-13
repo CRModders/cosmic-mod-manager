@@ -82,7 +82,14 @@ export const timeSince = (pastTime: Date): string => {
 	}
 };
 
-export const formatDate = (date: Date): string => {
+export const formatDate = (
+	date: Date,
+	local_year?: number,
+	local_monthIndex?: number,
+	local_day?: number,
+	local_hours?: number,
+	local_minutes?: number,
+): string => {
 	try {
 		const monthNames = [
 			"January",
@@ -99,13 +106,13 @@ export const formatDate = (date: Date): string => {
 			"December",
 		];
 
-		const year = date.getFullYear();
-		const monthIndex = date.getMonth();
+		const year = local_year || date.getFullYear();
+		const monthIndex = local_monthIndex || date.getMonth();
 		const month = monthNames[monthIndex];
-		const day = date.getDate();
+		const day = local_day || date.getDate();
 
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
+		const hours = local_hours || date.getHours();
+		const minutes = local_minutes || date.getMinutes();
 		const amPm = hours >= 12 ? "PM" : "AM";
 		const adjustedHours = hours % 12 || 12; // Convert to 12-hour format
 

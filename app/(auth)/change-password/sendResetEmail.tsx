@@ -13,20 +13,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import {
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
+import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { isValidEmail } from "@/lib/user";
 import { initiatePasswordChange } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
@@ -123,7 +113,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
 										<span>Email</span>
-										<FormMessage className=" text-rose-600 dark:text-rose-400 leading-tight" />
+										<FormMessage className=" text-danger dark:text-danger_dark leading-tight" />
 									</FormLabel>
 									<FormControl>
 										<Input
@@ -158,7 +148,7 @@ const SendResetEmail = ({ userEmail }: Props) => {
 				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
 					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-						<Spinner size="2.4rem" />
+						<Spinner size="1.5rem" />
 					</div>
 				</div>
 			)}

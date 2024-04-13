@@ -6,17 +6,9 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import {
-	cancelAccountDeletion,
-	confirmAccountDeletion,
-} from "@/app/api/actions/user";
+import { cancelAccountDeletion, confirmAccountDeletion } from "@/app/api/actions/user";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import React, { useState } from "react";
 import SecurityLink from "./SecurityLink";
 import { Spinner } from "@/components/ui/spinner";
@@ -80,11 +72,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 	if (actionResult?.success === true) {
 		return (
 			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
-				<FormSuccessMsg
-					msg={actionResult?.message}
-					className="text-lg"
-					iconClassName="pl-2 w-8 h-6"
-				/>
+				<FormSuccessMsg msg={actionResult?.message} className="text-lg" iconClassName="pl-2 w-8 h-6" />
 
 				<div>
 					<p className="text-lg">
@@ -103,14 +91,11 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 
 	return (
 		<Card className="max-w-md gap-0 relative">
-			<CardHeader className="text-xl ms:text-3xl font-semibold text-left">
-				Delete your account
-			</CardHeader>
+			<CardHeader className="text-xl ms:text-3xl text-left">Delete your account</CardHeader>
 			<CardContent>
 				<p className="w-full text-left text-foreground/80 dark:text-foreground_dark/80">
-					Deleting your account will remove all of your data except your
-					projects from our database. There is no going back after you delete
-					your account.
+					Deleting your account will remove all of your data except your projects from our database. There is no going
+					back after you delete your account.
 				</p>
 			</CardContent>
 			<CardFooter className="w-full flex flex-col items-center justify-end gap-4">
@@ -133,7 +118,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 					>
 						<Button
 							type="submit"
-							className="flex items-center justify-center gap-2 bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/90 hover:dark:bg-primary_accent_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
+							className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark"
 						>
 							<TrashIcon size="1rem" />
 							Delete
@@ -148,7 +133,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
 					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-						<Spinner size="2.4rem" />
+						<Spinner size="1.5rem" />
 					</div>
 				</div>
 			)}

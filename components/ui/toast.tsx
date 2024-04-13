@@ -29,10 +29,9 @@ const toastVariants = cva(
 	{
 		variants: {
 			variant: {
-				default:
-					"border bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50",
+				default: "border bg-white text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50",
 				destructive:
-					"destructive group border-rose-500 bg-rose-500 text-zinc-50 dark:border-rose-900 dark:bg-rose-900 dark:text-zinc-50",
+					"destructive group border-red-500 bg-red-500 text-zinc-50 dark:border-red-800 dark:bg-red-800 dark:text-zinc-50",
 			},
 		},
 		defaultVariants: {
@@ -43,16 +42,9 @@ const toastVariants = cva(
 
 const Toast = React.forwardRef<
 	React.ElementRef<typeof ToastPrimitives.Root>,
-	React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-		VariantProps<typeof toastVariants>
+	React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
-	return (
-		<ToastPrimitives.Root
-			ref={ref}
-			className={cn(toastVariants({ variant }), className)}
-			{...props}
-		/>
-	);
+	return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
 });
 Toast.displayName = ToastPrimitives.Root.displayName;
 
@@ -93,11 +85,7 @@ const ToastTitle = React.forwardRef<
 	React.ElementRef<typeof ToastPrimitives.Title>,
 	React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
-	<ToastPrimitives.Title
-		ref={ref}
-		className={cn("text-sm font-semibold [&+div]:text-xs", className)}
-		{...props}
-	/>
+	<ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold [&+div]:text-xs", className)} {...props} />
 ));
 ToastTitle.displayName = ToastPrimitives.Title.displayName;
 
@@ -105,11 +93,7 @@ const ToastDescription = React.forwardRef<
 	React.ElementRef<typeof ToastPrimitives.Description>,
 	React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-	<ToastPrimitives.Description
-		ref={ref}
-		className={cn("text-sm opacity-90", className)}
-		{...props}
-	/>
+	<ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 

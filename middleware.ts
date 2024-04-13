@@ -48,6 +48,8 @@ export default auth(async (request) => {
 	const user = request?.auth?.user;
 	const isAuthenticated = user?.email;
 
+	// console.log(headers().get("Accept-Language"));
+
 	const pathname = request.nextUrl.pathname;
 
 	const routeType: RouteTypes = isAuthApiRoute(pathname)

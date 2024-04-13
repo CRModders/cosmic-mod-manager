@@ -72,7 +72,9 @@ const MobileNav = ({ children }: { children: React.ReactNode }) => {
 								);
 							})}
 							{isNavMenuOpen === true && (
-								<Suspense fallback={<Spinner />}>{children}</Suspense>
+								<Suspense fallback={<Spinner size="1.25rem" />}>
+									{children}
+								</Suspense>
 							)}
 						</ul>
 					</div>

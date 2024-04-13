@@ -5,10 +5,16 @@ import React, { useState } from "react";
 
 type Props = {
 	children: React.ReactNode;
+	showSessionPageWarning?: string;
 };
 
-const SessionListPageWrapper = ({ children }: Props) => {
-	const [showWarning, setShowWarning] = useState(true);
+const SessionListPageWrapper = ({
+	children,
+	showSessionPageWarning = "true",
+}: Props) => {
+	const [showWarning, setShowWarning] = useState<boolean>(
+		showSessionPageWarning !== "false",
+	);
 
 	if (showWarning !== false) {
 		return (

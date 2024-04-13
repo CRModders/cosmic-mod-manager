@@ -34,13 +34,7 @@ const SignOutBtn = ({ className }: Props) => {
 	return (
 		<ProfileDropdownLink
 			label={"Sign out"}
-			icon={
-				!loading ? (
-					<LogoutIcon className="w-5 h-5 text-foreground_muted dark:text-foreground_muted_dark" />
-				) : (
-					<Spinner />
-				)
-			}
+			icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <Spinner size="1.25rem" />}
 			disabled={loading}
 			onClick={handleClick}
 			className={className}

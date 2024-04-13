@@ -8,7 +8,7 @@
 
 const ModsPage = () => {
 	return (
-		<div className="w-full min-h-[100dvh] flex flex-col items-center justify-center">
+		<div className="w-full min-h-[100vh] flex flex-col items-center justify-center">
 			<p className="text-2xl p-4">Mods</p>
 		</div>
 	);

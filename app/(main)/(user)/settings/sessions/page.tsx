@@ -14,72 +14,35 @@ import { dbSessionTokenCookieKeyName } from "@/config";
 import { cookies } from "next/headers";
 import SessionListPageWrapper from "./pageWrapper";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
-import { formatDate, timeSince } from "@/lib/utils";
+
 import { KeyIcon } from "@/components/Icons";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import RevokeBtn from "./revokeBtn";
-
-const DotSeparator = () => {
-	return (
-		<span className=" text-foreground/80 dark:text-foreground_dark/80 text-lg mx-2">
-			-
-		</span>
-	);
-};
-
-const TooltipComponent = ({
-	children,
-	text,
-	className,
-	asChild,
-}: {
-	children: React.ReactNode;
-	text: string;
-	className?: string;
-	asChild?: boolean;
-}) => {
-	return (
-		<TooltipProvider delayDuration={400}>
-			<Tooltip>
-				<TooltipTrigger asChild={asChild} className={className}>
-					{children}
-				</TooltipTrigger>
-				<TooltipContent>
-					<span className="text-sm sm:text-base">{text}</span>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
-	);
-};
+import TooltipWrapper from "./TooltipWrapper";
+import Timestamp, { DotSeparator } from "./Timestamp";
+import CopyBtn from "@/components/copyBtn";
 
 const SessionsPage = async () => {
 	const sessionToken = cookies().get(dbSessionTokenCookieKeyName)?.value;
 	const loggedInSessions = await getLoggedInSessionsList();
 
+	const showSessionPageWarning = cookies().get("showSessionPageWarning")?.value;
+
 	return (
-		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
+		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[100vh]">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
-					<SessionListPageWrapper>
+					<SessionListPageWrapper showSessionPageWarning={showSessionPageWarning}>
 						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
-								Sessions
-							</h1>
+							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">Sessions</h1>
 						</div>
 						<div className="w-full flex flex-col items-center justify-center text-foreground/80 dark:text-foreground_dark/80">
 							<p className="w-full text-left">
-								Here are all the devices that are currently logged in with your
-								account. You can log out of each one individually.
+								Here are all the devices that are currently logged in with your account. You can log out of each one
+								individually.
 							</p>
 							<p className="w-full text-left">
-								If you see an entry you don't recognize, log out of that device
-								and change the password of the account which was used to create
-								that session.
+								If you see an entry you don't recognize, log out of that device and change the password of the account
+								which was used to create that session.
 							</p>
 						</div>
 
@@ -90,90 +53,56 @@ const SessionsPage = async () => {
 										key={session?.id}
 										className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-background_hover dark:bg-background_hover_dark"
 									>
-										<div className="flex flex-col items-start justify-center gap-2 text-foreground/90 dark:text-foreground_dark/90">
-											<div className="flex flex-col items-center justify-center">
-												<p className="w-full text-left">
-													<span className="font-semibold text-lg">
-														{session?.browser}
-													</span>
+										<div className="flex flex-col items-start justify-center gap-2 text-foreground/80 dark:text-foreground_dark/80">
+											<div className="flex flex-col gap-y-2 sm:gap-0 items-center justify-center">
+												<div className="w-full flex flex-wrap items-center text-left text-foreground dark:text-foreground_dark sm:text-lg">
+													<p>{session?.browser}</p>
 													<DotSeparator />
-													<span className="font-semibold text-lg">
-														{session?.os}
-													</span>
+													<p>{session?.os}</p>
 													<DotSeparator />
-													<span className="font-semibold text-lg">
-														{session?.ipAddr}
-													</span>
-												</p>
+													<div className="flex items-center justify-center gap-2">
+														<p>{session?.ipAddr}</p>
+														<CopyBtn
+															text={session?.ipAddr}
+															className="hover:bg-background dark:hover:bg-background_dark p-1"
+														/>
+													</div>
+												</div>
 
-												<div className="w-full flex items-center justify-start text-left">
+												<div className="w-full flex flex-wrap items-center justify-start text-left">
 													{(session?.region || session?.country) && (
 														<>
-															<span>{session?.region}</span>
-															<span className="mx-1">-</span>
-															<span>{session?.country}</span>
+															<p>
+																{session?.region} - {session?.country}
+															</p>
 															<DotSeparator />
 														</>
 													)}
-
-													<div className="">
-														Last used{" "}
-														<TooltipComponent
-															text={formatDate(session?.lastUsed)}
-														>
-															<span className=" text-foreground dark:text-foreground_dark">
-																{timeSince(session?.lastUsed)}
-															</span>
-														</TooltipComponent>
-													</div>
-													<DotSeparator />
-													<div className="">
-														created{" "}
-														<TooltipComponent
-															text={formatDate(session?.createdOn)}
-														>
-															<span className=" text-foreground dark:text-foreground_dark">
-																{timeSince(session?.createdOn)}
-															</span>
-														</TooltipComponent>
-													</div>
+													<Timestamp lastUsed={session?.lastUsed} createdOn={session?.createdOn} />
 												</div>
 											</div>
-											<TooltipComponent
+											<TooltipWrapper
 												text={`This session was created using ${session?.provider} provider`}
 												className="text-sm sm:text-base flex items-center justify-start gap-2"
 											>
 												{session?.provider !== "credentials" ? (
 													authProvidersList?.map((authProvider) => {
-														if (
-															authProvider?.name.toLowerCase() ===
-															session?.provider
-														) {
-															return (
-																<React.Fragment key={authProvider.name}>
-																	{authProvider?.icon}
-																</React.Fragment>
-															);
+														if (authProvider?.name.toLowerCase() === session?.provider) {
+															return <React.Fragment key={authProvider.name}>{authProvider?.icon}</React.Fragment>;
 														}
-														return (
-															<React.Fragment key={authProvider.name}>
-																{null}
-															</React.Fragment>
-														);
+														return <React.Fragment key={authProvider.name}>{null}</React.Fragment>;
 													})
 												) : (
 													<KeyIcon className="w-4 h-4" />
 												)}
 												<span className=" capitalize">{session?.provider}</span>
-											</TooltipComponent>
+											</TooltipWrapper>
 										</div>
 										<div className="h-full flex items-center justify-center">
 											{sessionToken !== session?.sessionToken ? (
 												<RevokeBtn token={session?.sessionToken} />
 											) : (
-												<p className="italic text-foreground/80 dark:text-foreground_dark/80">
-													Current&nbsp;session
-												</p>
+												<p className="italic text-foreground/80 dark:text-foreground_dark/80">Current&nbsp;session</p>
 											)}
 										</div>
 									</div>

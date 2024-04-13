@@ -56,7 +56,6 @@ export const isValidPassword = (password: string): boolean | string => {
 	const hasUpperCase = /[A-Z]/.test(password);
 	const hasLowerCase = /[a-z]/.test(password);
 	const hasNumber = /\d/.test(password);
-	const hasSymbol = /\W/.test(password);
 
 	if (!hasUpperCase && !hasLowerCase) {
 		return "Your password must contain an alphabetical character";
@@ -66,9 +65,6 @@ export const isValidPassword = (password: string): boolean | string => {
 		return "Your password must contain a number";
 	}
 
-	if (!hasSymbol) {
-		return "Your password must contain a special character. (eg @, $, #, %, & etc) ";
-	}
 	if (password.length < minLength) {
 		return `Your password must be ${minPasswordLength} characters long`;
 	}

@@ -12,11 +12,11 @@ const FormErrorMsg = ({ msg, className, iconClassName }: Props) => {
 	return (
 		<div
 			className={cn(
-				"w-full flex items-center justify-start px-4 py-2 gap-2 text-rose-500 dark:text-rose-400 bg-rose-500/10 dark:bg-rose-400/5 rounded-lg",
+				"w-full flex items-center justify-start p-2 gap-2 text-danger dark:text-danger_dark bg-danger/10 dark:bg-danger_dark/10 rounded-lg",
 				className,
 			)}
 		>
-			<ExclamationTriangleIcon className={cn("w-4 h-4", iconClassName)} />
+			<ExclamationTriangleIcon className={cn("pl-1 w-5 h-4 shrink-0", iconClassName)} />
 			<p>{msg}</p>
 		</div>
 	);

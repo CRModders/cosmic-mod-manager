@@ -11,11 +11,7 @@ import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { DeletedUser, Providers, UserRoles } from "@prisma/client";
-import {
-	findUserByEmail,
-	findUserById,
-	matchPassword,
-} from "@/app/api/actions/user";
+import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
 import db from "@/lib/db";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
 import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
@@ -35,6 +31,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		async signIn({ user, account }): Promise<any> {
+			await deleteSessionToken({});
+
 			let deletedAccount: DeletedUser | null = null;
 			if (!user?.userName) {
 				try {
@@ -43,13 +41,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					});
 				} catch (error) {}
 			}
+
 			const newRandomUsername = parseUsername(user.id);
 			user.userName =
-				deletedAccount?.userName ||
-				newRandomUsername.slice(
-					0,
-					Math.min(maxUsernameLength, newRandomUsername.length),
-				);
+				deletedAccount?.userName || newRandomUsername.slice(0, Math.min(maxUsernameLength, newRandomUsername.length));
 			user.profileImageProvider = account.provider;
 
 			return true;
@@ -125,8 +120,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			// profile?.image_url   ==>   Discord
 			// profile?.picture     ==>   Google
 			// profile?.avatar_url  ==>   Github and Gitlab
-			const profileImageLink =
-				profile?.image_url || profile?.picture || profile?.avatar_url;
+			const profileImageLink = profile?.image_url || profile?.picture || profile?.avatar_url;
 
 			await db.account.updateMany({
 				where: {
@@ -142,7 +136,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			await setSessionToken(user?.id, account?.provider);
 		},
 		async signOut() {
-			deleteSessionToken();
+			deleteSessionToken({});
 		},
 	},
 
@@ -168,10 +162,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					where: { email: credentials.email as string },
 				});
 
-				const isCorrectPassword = await matchPassword(
-					credentials?.password as string,
-					userData.password,
-				);
+				const isCorrectPassword = await matchPassword(credentials?.password as string, userData.password);
 
 				if (isCorrectPassword) {
 					const user = await findUserByEmail(credentials?.email as string);

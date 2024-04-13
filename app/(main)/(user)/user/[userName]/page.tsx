@@ -32,9 +32,7 @@ const ProfilePage = async ({ params }: Props) => {
 						<CardContent className="w-full flex flex-col items-center justify-center p-0">
 							<div className="w-full flex items-center justify-start gap-6 flex-col sm:flex-row">
 								<Avatar className="flex items-center justify-center w-20 h-20">
-									{user?.image && (
-										<AvatarImage src={user?.image} alt={`${user?.name} `} />
-									)}
+									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
 
 									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
 										{user?.name?.charAt(0).toUpperCase()}
@@ -53,10 +51,7 @@ const ProfilePage = async ({ params }: Props) => {
 											</p>
 											<ScrollBar orientation="horizontal" />
 										</ScrollArea>
-										<CopyBtn
-											text={user.userName || "undefined"}
-											successMessage="Copied username to clipboard"
-										/>
+										<CopyBtn text={user.userName || "undefined"} successMessage="Copied username to clipboard" />
 									</div>
 								</div>
 							</div>
@@ -69,13 +64,9 @@ const ProfilePage = async ({ params }: Props) => {
 				<div className="w-full flex items-center justify-center">
 					<h1 className="text-lg md:text-2xl p-4">
 						No user exists with username{" "}
-						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">
-							"
-						</span>
+						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 						<span className="font-semibold">{params.userName}</span>
-						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">
-							"
-						</span>
+						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 					</h1>
 				</div>
 			)}

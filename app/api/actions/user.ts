@@ -19,13 +19,7 @@ import {
 	parseProfileProvider,
 	parseUserName,
 } from "@/lib/user";
-import {
-	Account,
-	Providers,
-	User,
-	UserVerificationActionTypes,
-	VerificationEmail,
-} from "@prisma/client";
+import { Account, Providers, User, UserVerificationActionTypes, VerificationEmail } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import {
 	changePasswordConfirmationTokenValidity_ms,
@@ -119,11 +113,7 @@ const isUsernameAvailable = async (username: string, currId) => {
 		});
 
 		if (recentlyDeletedUser?.id) {
-			if (
-				recentlyDeletedUser?.deletionTime.getTime() +
-					deletedUsernameReservationDuration_ms >
-				new Date().getTime()
-			) {
+			if (recentlyDeletedUser?.deletionTime.getTime() + deletedUsernameReservationDuration_ms > new Date().getTime()) {
 				result = false;
 			} else {
 				await db.deletedUser.delete({ where: { id: recentlyDeletedUser.id } });
@@ -183,25 +173,23 @@ export const updateUserProfile = async ({
 				message: "Unauthorized request",
 			};
 		}
-
 		const userData = await getAuthenticatedUser();
 
+		if (!userData?.id) {
+			return {
+				success: false,
+				message: "Unauthorized request",
+			};
+		}
+
 		const updateData: ProfileUpdateData = {};
-		if (parsedName && parsedName !== userData?.name)
-			updateData.name = parsedName;
-		if (parsedUsername && parsedUsername !== userData?.userName)
-			updateData.userName = parsedUsername;
-		if (
-			parsedProfileImageProvider &&
-			parsedProfileImageProvider !== userData?.profileImageProvider
-		)
+		if (parsedName && parsedName !== userData?.name) updateData.name = parsedName;
+		if (parsedUsername && parsedUsername !== userData?.userName) updateData.userName = parsedUsername;
+		if (parsedProfileImageProvider && parsedProfileImageProvider !== userData?.profileImageProvider)
 			updateData.profileImageProvider = parsedProfileImageProvider;
 
 		if (updateData?.userName) {
-			const userNameAvailable = await isUsernameAvailable(
-				updateData?.userName,
-				user?.id,
-			);
+			const userNameAvailable = await isUsernameAvailable(updateData?.userName, user?.id);
 
 			if (userNameAvailable !== true) {
 				return {
@@ -285,10 +273,7 @@ export const loginUser = async ({
 		return { success: false, message: "Incorrect email or password" };
 	}
 
-	const isCorrectPassword = await matchPassword(
-		password as string,
-		userData?.password,
-	);
+	const isCorrectPassword = await matchPassword(password as string, userData?.password);
 
 	if (!isCorrectPassword) {
 		return { success: false, message: "Incorrect email or password" };
@@ -333,8 +318,15 @@ export const getLinkedProvidersList = async () => {
 	}
 };
 
+export const linkAuthProvider = async (newProviderName: string) => {
+	await signIn(newProviderName, {
+		redirect: true,
+		callbackUrl: "/settings/account",
+	});
+};
+
 // Unlink a provider from user's account; make sure there is at least one provider remaining
-export const unlinkAuthProvider = async (name: string) => {
+export const unlinkAuthProvider = async (newProviderName: string) => {
 	const user = (await auth())?.user;
 	if (!user?.id) {
 		return {
@@ -372,7 +364,7 @@ export const unlinkAuthProvider = async (name: string) => {
 
 	const targetProvider = existingProviders
 		.filter((provider) => {
-			if (provider.provider === name) {
+			if (provider.provider === newProviderName) {
 				return provider;
 			}
 		})
@@ -395,7 +387,7 @@ export const unlinkAuthProvider = async (name: string) => {
 
 		return {
 			success: true,
-			message: `Successfully removed ${name} provider`,
+			message: `Successfully removed ${newProviderName} provider`,
 		};
 	} catch (error) {
 		return {
@@ -423,10 +415,7 @@ export const getCurrentAuthUser = async () => {
 	return userData;
 };
 
-const isVerificationTokenValid = (
-	tokenCreationDate: Date,
-	validityDuration_ms: number,
-) => {
+const isVerificationTokenValid = (tokenCreationDate: Date, validityDuration_ms: number) => {
 	if (
 		tokenCreationDate &&
 		validityDuration_ms &&
@@ -449,10 +438,7 @@ export const getActionType = async (token: string) => {
 		// Check if the token is expired
 		if (
 			verificationEmail?.dateCreated &&
-			!isVerificationTokenValid(
-				verificationEmail?.dateCreated,
-				addNewPasswordVerificationTokenValidity_ms,
-			)
+			!isVerificationTokenValid(verificationEmail?.dateCreated, addNewPasswordVerificationTokenValidity_ms)
 		) {
 			await db.verificationEmail.delete({
 				where: { token: token },
@@ -489,9 +475,7 @@ export const getUserEmailFromVerificationToken = async (token: string) => {
 };
 
 // Add newly set password to the database and | TODO: send a confirmation link to the user's email to confirm the password change
-export const initiateAddNewPasswordAction = async ({
-	newPassword,
-}: { newPassword: string }) => {
+export const initiateAddNewPasswordAction = async ({ newPassword }: { newPassword: string }) => {
 	if (isValidPassword(newPassword) !== true) {
 		const error = isValidPassword(newPassword);
 		return { success: false, message: `Invalid password. ${error}` };
@@ -549,7 +533,14 @@ export const removePassword = async ({
 	}
 
 	try {
-		const user = (await auth())?.user;
+		const user = await getAuthenticatedUser();
+		if (!user) {
+			return {
+				success: false,
+				message: "Unauthenticated request!",
+			};
+		}
+
 		const userData = await db.user.findUnique({
 			where: { id: user?.id },
 		});
@@ -668,12 +659,7 @@ export const confirmNewPasswordAddition = async (token: string) => {
 			};
 		}
 
-		if (
-			!isVerificationTokenValid(
-				verificationActionData?.dateCreated,
-				addNewPasswordVerificationTokenValidity_ms,
-			)
-		) {
+		if (!isVerificationTokenValid(verificationActionData?.dateCreated, addNewPasswordVerificationTokenValidity_ms)) {
 			return {
 				success: false,
 				message: "Expired token",
@@ -727,11 +713,18 @@ export const initiatePasswordChange = async (email: string) => {
 
 	try {
 		const userData = await db.user.findUnique({ where: { email: email } });
+
+		if (!userData) {
+			return {
+				success: false,
+				message: "No account exists with this email address.",
+			};
+		}
+
 		if (!userData?.password) {
 			return {
 				success: false,
-				message:
-					"You can't change the password, you have not enabled password login.",
+				message: "You can't change the password, you have not enabled password login.",
 				description:
 					"Only the accounts which have password added could change the password. If not you can use auth providers to login.",
 			};
@@ -846,12 +839,7 @@ export const confirmPasswordChange = async ({
 			};
 		}
 
-		if (
-			!isVerificationTokenValid(
-				verificationActionData?.dateCreated,
-				changePasswordConfirmationTokenValidity_ms,
-			)
-		) {
+		if (!isVerificationTokenValid(verificationActionData?.dateCreated, changePasswordConfirmationTokenValidity_ms)) {
 			return {
 				success: false,
 				message: "Expired token",
@@ -868,8 +856,7 @@ export const confirmPasswordChange = async ({
 		if (!userData?.password) {
 			return {
 				success: false,
-				message:
-					"You can't use change password, your account doesn't have passwords enabled",
+				message: "You can't use change password, your account doesn't have passwords enabled",
 			};
 		}
 
@@ -975,12 +962,7 @@ export const confirmAccountDeletion = async (token: string) => {
 			};
 		}
 
-		if (
-			!isVerificationTokenValid(
-				verificationActionData?.dateCreated,
-				deleteAccountVerificationTokenValidity_ms,
-			)
-		) {
+		if (!isVerificationTokenValid(verificationActionData?.dateCreated, deleteAccountVerificationTokenValidity_ms)) {
 			return {
 				success: false,
 				message: "Expired token",

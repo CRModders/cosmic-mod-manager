@@ -14,6 +14,7 @@ import ProfileDropdownLink from "./ProfileDropdownLink";
 import { findUserById } from "@/app/api/actions/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
+import "@/app/globals.css";
 
 const ProfileDropdown = async () => {
 	const session = await auth().catch((e) => console.log(e));
@@ -59,9 +60,7 @@ const ProfileDropdown = async () => {
 								{userData.name}
 							</p>
 							<p className="w-full px-4 text-left text-foreground_muted dark:text-foreground_muted_dark">
-								<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">
-									@
-								</span>
+								<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">@</span>
 								{userData.userName}
 							</p>
 							<ScrollBar orientation="horizontal" />
@@ -78,11 +77,7 @@ const ProfileDropdown = async () => {
 									className="w-full flex items-center justify-center rounded-lg"
 									tabIndex={0}
 								>
-									<ProfileDropdownLink
-										label={link.name}
-										icon={link.icon}
-										tabIndex={-1}
-									/>
+									<ProfileDropdownLink label={link.name} icon={link.icon} tabIndex={-1} />
 								</Link>
 							);
 						})}
