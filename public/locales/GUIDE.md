@@ -39,9 +39,9 @@
             },
         } satisfies locale_meta,
 
-    	content: {
+        content: {
             // The translated content
-    	} satisfies locale_content_type,
+        } satisfies locale_content_type,
     };
 
     ```
@@ -55,8 +55,8 @@
     const es = {
         // Add the default locale and the locales itself, In this example we have added only one locale so i will add only that locale
         // The default locale is the locale that is most used locale of that language, like british english could be the default in English
-    	default: es_es,
-    	"es-ES": es_es,
+        default: es_es,
+        "es-ES": es_es,
     };
 
     // Export the language object
@@ -69,12 +69,11 @@
     // Import the new language object
     import es from "./es";
     
-
     const locales = {
-    	default: en.default,
-    	en: en,
+        default: en.default,
+        en: en,
         // Add the new object here, the key should the base language code in lowercase
-    	es: es,
+        es: es,
     };
 
     export default locales;
@@ -97,41 +96,39 @@
 
 - Locale file template
     ```typescript
-    import { locale_content_type, locale_meta } from "@/public/locales/interface";
 
+    import { locale_content_type, locale_meta } from "@/public/locales/interface";
+    
     // Replace "lang_code" with the actual language code in lowercase. (Example: es_es for Spanish (es-ES))
     export const lang_code = {
-    	meta: {
-    		language: {
-    			code: "BASE_LANGUAGE_CODE",  // Two letter code of that base language (lowercase)
-    			en_name: "ENGLISH_NAME",  // English name of the language (Normal case)
-    			locale_name: "LOCALE_NAME",  // Name of the language in that language (Normal writing)
-    		},
-    		region: {
+        meta: {
+            language: {
+                code: "BASE_LANGUAGE_CODE", // Two letter code of that base language (lowercase)
+                en_name: "ENGLISH_NAME", // English name of the language (Normal case)
+                locale_name: "LOCALE_NAME", // Name of the language in that language (Normal writing)
+            },
+            region: {
                 // Two letter code of that region (UPPERCASE)
-    			code: "REGION_CODE",
-
+                code: "REGION_CODE",
+    
                 // Name of the region in its own language (Normal writing)
-    			name: "REGION_NAME",
-
+                name: "REGION_NAME",
+    
                 // Any shorter name of the region if exists, else it will be same as region code,
                 // If the region code is not convincing enough to represent that region, then use then full name or some other shorter name that most people know about
                 // For example, region code of United kingdom is "GB" but many people won't understand that it means "UK", so instead of writing "GB" in the short name, use "UK"
                 // Another example, the region code of Spain is "ES" but people might not understand, so instead of writing "ES" in the display name,
                 // use "España" ("Spain" in Spanish because region's display name must be in its own language)
                 // ->  UPPERCASE
-    			display_name: "DISPLAY_NAME",
-    		},
-    	} satisfies locale_meta,
-
-    	content: {
-
+                display_name: "DISPLAY_NAME",
+            },
+        } satisfies locale_meta,
+    
+        content: {
             // Copy the content from the default locale, which is British english ("public/locales/en/en-GB.ts")
             // Replace the english string values with their translated versions
-
-    	} satisfies locale_content_type,
+        },
     };
-
     ```
 
 - Template of the file `index.ts` of a language folder
@@ -144,8 +141,8 @@
 
     // base_lang_code :=> Base language code of the language in lowercase
     const base_lang_code = {
-    	default: lang_code,
-    	"lang-CODE": lang_code,
+        default: lang_code,
+        "lang-CODE": lang_code,
     };
 
     // Export the language object
