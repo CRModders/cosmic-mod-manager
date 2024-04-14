@@ -87,7 +87,7 @@ export const no_nb = {
 			},
 			singup_page: {
 				meta_desc: "Registrer deg for å ha en konto for å kunne laste opp til Cosmic Reach mod manager",
-                signup_using_providers: "Registrer deg ved hjelp av en av autentiserings-leverandørene",
+                signup_using_providers: "Registrer deg ved hjelp av en autentiserings-leverandørene",
                 already_have_an_account: "Har du allerede en konto?",
 			},
 			change_password_page: {
