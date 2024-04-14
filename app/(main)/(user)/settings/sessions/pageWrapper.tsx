@@ -1,32 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { locale_content_type } from "@/public/locales/interface";
 import React, { useState } from "react";
 
 type Props = {
 	children: React.ReactNode;
 	showSessionPageWarning?: string;
+	locale: locale_content_type;
 };
 
-const SessionListPageWrapper = ({
-	children,
-	showSessionPageWarning = "true",
-}: Props) => {
-	const [showWarning, setShowWarning] = useState<boolean>(
-		showSessionPageWarning !== "false",
-	);
+const SessionListPageWrapper = ({ children, showSessionPageWarning = "true", locale }: Props) => {
+	const [showWarning, setShowWarning] = useState<boolean>(showSessionPageWarning !== "false");
+
+	const sessionSectionLocale = locale.settings_page.sessions_section;
 
 	if (showWarning !== false) {
 		return (
 			<div className="w-full flex flex-col items-center justify-center p-8 bg-yellow-600/10 dark:bg-yellow-400/5 rounded-lg">
 				<h1 className="text-xl sm:text-2xl mb-2 text-yellow-600 dark:text-yellow-400">
-					Warning: Sensitive info
+					{sessionSectionLocale.sensitive_info_warning}
 				</h1>
-				<p className="text-yellow-600 dark:text-yellow-400">
-					This page contains sensitive info such as your IP address and
-					location. Make sure not to send any screenshots, recordings, or info
-					from this page to people you dont want to have this info.
-				</p>
+				<p className="text-yellow-600 dark:text-yellow-400">{sessionSectionLocale.session_page_warning_message}</p>
 
 				<Button
 					className="px-10 mt-4"
@@ -35,7 +30,7 @@ const SessionListPageWrapper = ({
 						setShowWarning(false);
 					}}
 				>
-					View page
+					{sessionSectionLocale.view_page}
 				</Button>
 			</div>
 		);

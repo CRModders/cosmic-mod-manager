@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { setLanguagePreference } from "@/app/api/actions/lang";
 import { Spinner } from "../ui/spinner";
 import { useRouter } from "next/navigation";
@@ -47,14 +47,16 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 				</SelectTrigger>
 
 				<SelectContent>
-					{availableLocales?.map((availableLocale) => {
-						return (
-							<SelectItem
-								key={availableLocale.code}
-								value={availableLocale.code}
-							>{`${availableLocale.locale_name} (${availableLocale.region})`}</SelectItem>
-						);
-					})}
+					<SelectGroup>
+						{availableLocales?.map((availableLocale) => {
+							return (
+								<SelectItem
+									key={availableLocale.code}
+									value={availableLocale.code}
+								>{`${availableLocale.locale_name} (${availableLocale.region})`}</SelectItem>
+							);
+						})}
+					</SelectGroup>
 				</SelectContent>
 			</Select>
 			{loading && (

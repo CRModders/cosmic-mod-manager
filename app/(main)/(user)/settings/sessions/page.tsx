@@ -36,7 +36,7 @@ const SessionsPage = async () => {
 		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[100vh]">
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
-					<SessionListPageWrapper showSessionPageWarning={showSessionPageWarning}>
+					<SessionListPageWrapper showSessionPageWarning={showSessionPageWarning} locale={locale}>
 						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
 							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">Sessions</h1>
 						</div>

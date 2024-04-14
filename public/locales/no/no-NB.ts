@@ -172,6 +172,10 @@ export const no_nb = {
 			sessions_section: {
 				sessions: "økter",
 				meta_desc: "Administrer innloggede økter",
+				view_page: "Vis side",
+				sensitive_info_warning: "Advarsel: Sensitiv informasjon",
+				session_page_warning_message:
+					"Denne siden inneholder sensitiv informasjon som IP-adressen og posisjonen din. Pass på at du ikke sender skjermbilder, opptak eller informasjon fra denne siden til personer du ikke vil skal ha denne informasjonen.",
 				page_desc: {
 					line_1:
 						"Her er alle enheten som er logget inn i kontoen din akkurat nå. Du kan velge å tvinge dem til å logge ut individuelt her.",
