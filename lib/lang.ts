@@ -282,7 +282,7 @@ export const getAvailableLocales = () => {
 						code: localeCode,
 						en_name: localeMeta.language.en_name,
 						locale_name: localeMeta.language.locale_name,
-						region: localeMeta.region.short_name,
+						region: localeMeta.region.display_name,
 					});
 				}
 			}

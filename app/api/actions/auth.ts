@@ -85,6 +85,8 @@ export const deleteSessionToken = async ({
 
 export const getValidSessionToken = async (sessionToken: string): Promise<string | null> => {
 	try {
+		if (!sessionToken) return null;
+
 		const sessionData = await db.session.findUnique({
 			where: { sessionToken },
 		});
