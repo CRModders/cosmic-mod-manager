@@ -18,8 +18,10 @@ import {
 	ChangePasswordVerificationEmailTemplate,
 	NewPasswordConfirmationEmailTemplate,
 } from "@/lib/email/templates";
-import { generateRandomCode, shuffleCharacters } from "@/lib/utils";
+import { generateRandomCode } from "@/lib/utils";
 import { User, UserVerificationActionTypes } from "@prisma/client";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -28,6 +30,8 @@ export const sendNewPasswordVerificationEmail = async ({
 	email,
 	name,
 }: { userId: string; email: string; name: string }) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		await db.verificationEmail.deleteMany({
 			where: {
@@ -48,9 +52,7 @@ export const sendNewPasswordVerificationEmail = async ({
 
 		const emailTemplate = NewPasswordConfirmationEmailTemplate({
 			name: name,
-			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(
-				token,
-			)}`,
+			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
 			expiryDurationMs: addNewPasswordVerificationTokenValidity_ms,
 		});
@@ -62,16 +64,18 @@ export const sendNewPasswordVerificationEmail = async ({
 			template: emailTemplate.EmailHTML,
 		});
 
-		return { success: true, message: "Email sent successfully" };
+		return { success: true, message: locale.globals.messages.email_sent_successfully };
 	} catch (error) {
 		return {
 			success: false,
-			message: "Error while sending confirmation email",
+			message: locale.globals.messages.error_sending_email,
 		};
 	}
 };
 
 export const sendPasswordChangeEmail = async (user: Partial<User>) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		await db.verificationEmail.deleteMany({
 			where: {
@@ -92,9 +96,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 
 		const emailTemplate = ChangePasswordVerificationEmailTemplate({
 			name: user.name,
-			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(
-				token,
-			)}`,
+			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
 			expiryDurationMs: changePasswordConfirmationTokenValidity_ms,
 		});
@@ -106,18 +108,18 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 			template: emailTemplate.EmailHTML,
 		});
 
-		return { success: true, message: "Email sent successfully" };
+		return { success: true, message: locale.globals.messages.email_sent_successfully };
 	} catch (error) {
 		return {
 			success: false,
-			message: "Error while sending confirmation email",
+			message: locale.globals.messages.error_sending_email,
 		};
 	}
 };
 
-export const sendAccountDeletionConfirmationEmail = async (
-	user: Partial<User>,
-) => {
+export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		await db.verificationEmail.deleteMany({
 			where: {
@@ -138,9 +140,7 @@ export const sendAccountDeletionConfirmationEmail = async (
 
 		const emailTemplate = AccountDeletionVerificationEmailTemplate({
 			name: user.name,
-			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(
-				token,
-			)}`,
+			confirmationPageUrl: `${baseUrl}/verify?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
 			expiryDurationMs: deleteAccountVerificationTokenValidity_ms,
 		});
@@ -152,11 +152,11 @@ export const sendAccountDeletionConfirmationEmail = async (
 			template: emailTemplate.EmailHTML,
 		});
 
-		return { success: true, message: "Email sent successfully" };
+		return { success: true, message: locale.globals.messages.email_sent_successfully };
 	} catch (error) {
 		return {
 			success: false,
-			message: "Error while sending confirmation email",
+			message: locale.globals.messages.error_sending_email,
 		};
 	}
 };

@@ -6,46 +6,6 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-const NavLinks = [
-	{
-		name: "Mods",
-		href: "/mods",
-	},
-	{
-		name: "Resource Packs",
-		href: "/resourcepacks",
-	},
-	{
-		name: "Modpacks",
-		href: "/modpacks",
-	},
-	{
-		name: "Shaders",
-		href: "/shaders",
-	},
-];
-
-const NavMenuLinks = [
-	{
-		name: "Mods",
-		href: "/mods",
-	},
-	{
-		name: "Resource Packs",
-		href: "/resourcepacks",
-	},
-	{
-		name: "Modpacks",
-		href: "/modpacks",
-	},
-	{
-		name: "Shaders",
-		href: "/shaders",
-	},
-];
-
-export { NavLinks, NavMenuLinks };
-
 export const siteTitle = "Cosmic Reach Mod Manager";
 
 // Route types

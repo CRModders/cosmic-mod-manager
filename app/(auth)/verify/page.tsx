@@ -17,8 +17,13 @@ import { Spinner } from "@/components/ui/spinner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import ChangePassword from "./ChangePassword";
 import DeleteAccountConfirmAction from "./DeleteAccount";
+import getLangPref from "@/lib/client/getLangPref";
+import { get_locale } from "@/lib/lang";
 
 const ConfirmActionPage = () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const token = decodeURIComponent(useSearchParams().get("token"));
 	const [actionType, setActionType] = useState<UserVerificationActionTypes | undefined | null>(undefined);
 	const [email, setEmail] = useState(null);
@@ -40,7 +45,7 @@ const ConfirmActionPage = () => {
 			<section className="w-full flex items-center justify-center">
 				<div className="max-w-md flex items-center justify-center gap-4 text-danger dark:text-danger_dark bg-danger/10 dark:bg-danger_dark/10 py-2 px-4 rounded-lg">
 					<ExclamationTriangleIcon className="w-6 h-6" />
-					<h1 className="text-2xl">Expired or invalid token</h1>
+					<h1 className="text-2xl">{locale.auth.action_verification_page.invalid_token}</h1>
 				</div>
 			</section>
 		);

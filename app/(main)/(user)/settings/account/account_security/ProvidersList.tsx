@@ -21,30 +21,29 @@ import FormSuccessMsg from "@/components/formSuccessMsg";
 import { TrashIcon } from "@/components/Icons";
 import { Account } from "@prisma/client";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
+import { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	id: string;
 	linkedProviders: Partial<Account>[];
 	children: React.ReactNode;
+	locale: locale_content_type;
 };
 
-const ProviderEmailInfoTooltip = ({ email, provider }: { email: string; provider?: string }) => {
+const ProviderEmailInfoTooltip = ({ email, provider, provider_email_tooltip }: { email: string; provider?: string; provider_email_tooltip: string }) => {
 	return (
 		<TooltipProvider delayDuration={100}>
 			<Tooltip>
 				<TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">{email}</TooltipTrigger>
 				<TooltipContent>
-					<p className="text-sm sm:text-base">
-						The email of the linked{" "}
-						<span className="font-semibold capitalize">{provider ? `${provider}` : "provider"}</span> Account
-					</p>
+					<p className="text-sm sm:text-base">{provider_email_tooltip.replace("${0}", provider ? provider : "provider")}</p>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);
 };
 
-const ProvidersList = ({ id, linkedProviders, children }: Props) => {
+const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 	const linkedProvidersNameList = linkedProviders.map((linkedProvoder) => linkedProvoder.provider);
 
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -67,7 +66,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 		const result = await unlinkAuthProvider(name);
 
 		if (result?.success !== true) {
-			setFormError(result?.message || "Something went wrong");
+			setFormError(result?.message);
 		}
 
 		setSuccessMessage(result?.message);
@@ -81,7 +80,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 
 			<DialogContent autoFocus={false}>
 				<DialogHeader>
-					<DialogTitle className="font-normal">Authentication providers</DialogTitle>
+					<DialogTitle className="font-normal">{locale.settings_page.account_section.auth_providers_label}</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center py-4 gap-4">
@@ -89,11 +88,7 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 						<Accordion type="single" collapsible className="w-full">
 							{authProvidersList?.map((provider) => {
 								return (
-									<AccordionItem
-										value={provider.name}
-										key={provider.name}
-										className=" border-foreground/25 dark:border-foreground_dark/25"
-									>
+									<AccordionItem value={provider.name} key={provider.name} className=" border-foreground/25 dark:border-foreground_dark/25">
 										<AccordionTrigger>
 											<div className="w-full flex items-center justify-start mb-1">
 												<i className="w-8 flex items-center justify-start">{provider.icon}</i>
@@ -105,15 +100,13 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 												{linkedProvidersNameList.includes(provider.name.toLowerCase()) ? (
 													<>
 														{linkedProviders.map((linkedProvider) => {
-															if (
-																linkedProvider.provider === provider.name.toLowerCase() &&
-																linkedProvider?.providerAccountEmail
-															) {
+															if (linkedProvider.provider === provider.name.toLowerCase() && linkedProvider?.providerAccountEmail) {
 																return (
 																	<ProviderEmailInfoTooltip
 																		key={provider?.name}
 																		email={linkedProvider?.providerAccountEmail}
 																		provider={linkedProvider?.provider}
+																		provider_email_tooltip={locale.settings_page.account_section.provider_email_tooltip}
 																	/>
 																);
 															}
@@ -126,21 +119,19 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 															size="md"
 															className="py-4 gap-2 flex items-center justify-center"
 															variant="secondary"
+															aria-label={locale.globals.remove}
 															onClick={() => {
 																RemoveProvider(provider.name.toLowerCase());
 															}}
 														>
 															<TrashIcon size="1rem" className="text-foreground/80 dark:text-foreground_dark/80" />
-															<p>Remove</p>
+															<p>{locale.globals.remove}</p>
 														</Button>
 													</>
 												) : (
 													<>
-														<p
-															className="text-base text-foreground/90 dark:text-foreground_dark/90"
-															key={provider?.name}
-														>
-															Add {provider?.name} provider
+														<p className="text-base text-foreground/90 dark:text-foreground_dark/90" key={provider?.name}>
+															{locale.settings_page.account_section.link_a_provier.replace("${0}", provider?.name)}
 														</p>
 
 														<Button
@@ -148,12 +139,13 @@ const ProvidersList = ({ id, linkedProviders, children }: Props) => {
 															size="md"
 															className="py-4 gap-2 flex items-center justify-center"
 															variant="secondary"
+															aria-label={locale.globals.link}
 															onClick={() => {
 																AddProvider(provider.name.toLowerCase());
 															}}
 														>
 															<ArrowTopRightIcon className="w-4 h-4" />
-															<p className="text-foreground dark:text-foreground_dark">Add</p>
+															<p className="text-foreground dark:text-foreground_dark">{locale.globals.link}</p>
 														</Button>
 													</>
 												)}

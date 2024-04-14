@@ -6,40 +6,28 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import PanelLayout, {
-	PanelContent,
-	SidePanel,
-} from "@/components/PanelLayout/Panel";
-import {
-	GearIcon,
-	DashboardIcon,
-	PersonIcon,
-	ShieldIcon,
-} from "@/components/Icons";
+import PanelLayout, { PanelContent, SidePanel } from "@/components/PanelLayout/Panel";
+import { PersonIcon, ShieldIcon } from "@/components/Icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
 import { siteTitle } from "@/config";
-import { Metadata } from "next";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
-export const metadata: Metadata = {
-	title: {
-		default: "Settings",
-		template: `%s - ${siteTitle}`,
-	},
-	description: "CRMM settings page",
-};
+export default async function SettingsPageLayout({ children }: { children: React.ReactNode }) {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
 
-const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 	const baseUrlPrefix = "/settings";
 
 	const SidePanelLinks = [
 		{
-			name: "Account",
+			name: locale.settings_page.account_section.account,
 			href: `${baseUrlPrefix}/account`,
 			icon: <PersonIcon className="w-5 h-5" />,
 		},
 		{
-			name: "Sessions",
+			name: locale.settings_page.sessions_section.sessions,
 			href: `${baseUrlPrefix}/sessions`,
 			icon: <ShieldIcon className="w-5 h-5" />,
 		},
@@ -50,18 +38,12 @@ const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">
-						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">
-							Settings
-						</h1>
+						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">{locale.auth.settings}</h1>
 						<ul className="w-full flex flex-col items-start justify-center gap-1">
 							{SidePanelLinks?.map((link) => {
 								return (
 									<li key={link.href} className="w-full">
-										<SidepanelLink
-											href={link.href}
-											label={link.name}
-											icon={link.icon}
-										/>
+										<SidepanelLink href={link.href} label={link.name} icon={link.icon} />
 									</li>
 								);
 							})}
@@ -72,6 +54,16 @@ const SettingsPageLayout = ({ children }: { children: React.ReactNode }) => {
 			</PanelLayout>
 		</div>
 	);
-};
+}
 
-export default SettingsPageLayout;
+export const generateMetadata = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+	return {
+		title: {
+			default: locale.auth.settings,
+			template: `%s - ${siteTitle}`,
+		},
+		description: locale.settings_page.meta_desc,
+	};
+};

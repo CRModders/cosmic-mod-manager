@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { siteTitle } from "@/config";
 import LoadingUI from "@/components/ui/spinner";
+import Footer from "@/components/Footer/Footer";
 
 const varela_round = Varela_Round({
 	weight: ["400"],
@@ -34,22 +35,19 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
-			<body
-				className={cn(
-					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark min-h-[100vh]",
-					varela_round.className,
-				)}
-			>
+			<body className={cn("bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark", varela_round.className)}>
 				<Suspense>
 					<ValidateSession />
 				</Suspense>
 				<Providers>
-					<NavbarWrapper />
+					<div className="w-full flex flex-col items-center justify-between min-h-[100vh]">
+						<NavbarWrapper />
+						<Suspense fallback={<LoadingUI iconSize={"2.25rem"} />}>
+							<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">{children}</main>
 
-					<Suspense fallback={<LoadingUI iconSize={"2.25rem"} />}>
-						<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">{children}</main>
-					</Suspense>
-
+							<Footer />
+						</Suspense>
+					</div>
 					<Toaster />
 				</Providers>
 			</body>

@@ -12,8 +12,14 @@ import { useTheme } from "next-themes";
 import { SunIcon, MoonIcon } from "@/components/Icons";
 import { useEffect } from "react";
 import "@/app/globals.css";
+import { cn } from "@/lib/utils";
 
-export default function ThemeSwitch() {
+type Props = {
+	className?: string;
+	iconWrapperClassName?: string;
+	label?: string;
+};
+export default function ThemeSwitch({ className, iconWrapperClassName, label }: Props) {
 	const { theme, setTheme } = useTheme();
 
 	const switchTheme = () => {
@@ -48,16 +54,22 @@ export default function ThemeSwitch() {
 			<button
 				type="button"
 				aria-label="Toggle theme"
-				className="relative flex items-center overflow-hidden justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark h-12 w-12 rounded-full"
+				className={cn(
+					"flex items-center overflow-hidden justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark rounded-full",
+					className,
+				)}
 				onClick={switchTheme}
 			>
-				<div className="sun_icon_wrapper" data-hide-on-theme="light">
-					<SunIcon size={"1.3rem"} />
-				</div>
+				<div className={cn("h-12 w-12 relative flex items-center justify-center", iconWrapperClassName)}>
+					<div className="sun_icon_wrapper" data-hide-on-theme="light">
+						<SunIcon size={"1.3rem"} />
+					</div>
 
-				<div className="moon_icon_wrapper" data-hide-on-theme="dark">
-					<MoonIcon size={"1.3rem"} />
+					<div className="moon_icon_wrapper" data-hide-on-theme="dark">
+						<MoonIcon size={"1.3rem"} />
+					</div>
 				</div>
+				{label && <p className="pr-4">{label}</p>}
 			</button>
 		</div>
 	);

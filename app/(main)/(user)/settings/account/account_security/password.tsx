@@ -12,26 +12,26 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { KeyIcon, TrashIcon } from "@/components/Icons";
 import RemovePasswordForm from "./removePasswordForm";
+import { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	id: string | null;
 	email: string | null;
 	hasAPassword?: boolean;
+	locale: locale_content_type;
 };
 
-const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
+const PasswordSection = ({ id, email, hasAPassword = false, locale }: Props) => {
 	if (!id) return;
 
 	if (!hasAPassword) {
 		return (
 			<div className="w-full flex flex-wrap items-end justify-between gap-2">
 				<div className="flex flex-col items-start justify-center">
-					<p className="text-xl text-foreground dark:text-foreground_dark">Password</p>
-					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">
-						Add a password to use email login
-					</p>
+					<p className="text-xl text-foreground dark:text-foreground_dark">{locale.auth.password}</p>
+					<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">{locale.settings_page.account_section.add_a_password_msg}</p>
 				</div>
-				<AddPasswordForm id={id} email={email} hasAPassword={hasAPassword} />
+				<AddPasswordForm id={id} email={email} hasAPassword={hasAPassword} locale={locale} />
 			</div>
 		);
 	}
@@ -39,24 +39,21 @@ const PasswordSection = ({ id, email, hasAPassword = false }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap items-end justify-between gap-2">
 			<div className="flex flex-col items-start justify-center">
-				<p className="text-xl text-foreground dark:text-foreground_dark">Password</p>
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">Change your account password</p>
+				<p className="text-xl text-foreground dark:text-foreground_dark">{locale.auth.password}</p>
+				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80">{locale.settings_page.account_section.change_account_password}</p>
 			</div>
 
 			<div className="flex flex-wrap gap-2">
 				<Link href={"/change-password"} className="flex items-center justify-center">
 					<Button className="flex items-center justify-center gap-2" variant="outline">
 						<KeyIcon size="1rem" className="text-foreground/90 dark:text-foreground_dark/90" />
-						Change password
+						{locale.auth.change_password_page.change_password}
 					</Button>
 				</Link>
-				<RemovePasswordForm id={id} email={email}>
-					<Button
-						className="flex items-center justify-center gap-2 text-danger dark:text-danger_dark hover:text-danger hover:dark:text-danger_dark"
-						variant="outline"
-					>
+				<RemovePasswordForm id={id} email={email} locale={locale}>
+					<Button className="flex items-center justify-center gap-2 text-danger dark:text-danger_dark hover:text-danger hover:dark:text-danger_dark" variant="outline">
 						<TrashIcon size="1rem" />
-						Remove password
+						{locale.settings_page.account_section.remove_password}
 					</Button>
 				</RemovePasswordForm>
 			</div>

@@ -9,9 +9,10 @@ import React, { useState } from "react";
 
 type Props = {
 	token: string;
+	revoke_session: string;
 };
 
-const RevokeBtn = ({ token }: Props) => {
+const RevokeBtn = ({ token, revoke_session }: Props) => {
 	const [loading, setLoading] = useState(false);
 
 	return (
@@ -28,7 +29,7 @@ const RevokeBtn = ({ token }: Props) => {
 			disabled={loading}
 		>
 			{loading ? <Spinner size="1rem" /> : <Cross1Icon />}
-			Revoke session
+			{revoke_session}
 		</Button>
 	);
 };

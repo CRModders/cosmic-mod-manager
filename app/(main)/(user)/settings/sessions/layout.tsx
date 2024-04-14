@@ -7,15 +7,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { siteTitle } from "@/config";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: {
-		default: "Sessions",
-		template: `%s - ${siteTitle}`,
-	},
-	description: "CRMM session management page",
-};
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const SessionsPageLayout = ({
 	children,
@@ -26,3 +19,16 @@ const SessionsPageLayout = ({
 };
 
 export default SessionsPageLayout;
+
+export const generateMetadata = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
+	return {
+		title: {
+			default: locale.settings_page.sessions_section.sessions,
+			template: `%s - ${siteTitle}`,
+		},
+		description: locale.settings_page.sessions_section.meta_desc,
+	};
+};

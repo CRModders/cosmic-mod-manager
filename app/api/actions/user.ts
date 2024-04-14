@@ -34,6 +34,8 @@ import {
 	sendPasswordChangeEmail,
 } from "./verificationEmails";
 import { getAuthenticatedUser } from "./auth";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 // Hash the user password using bcrypt
 const hashPassword = async (password: string) => {
@@ -63,12 +65,17 @@ export const findUserById = async (id: string) => {
 	try {
 		if (!id) throw new Error("id is required");
 		const user = await db.user.findUnique({
-			where: { id: id },
+			where: {
+				id: id,
+			},
 		});
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ function: "findUserById", error });
+		console.log({
+			function: "findUserById",
+			error,
+		});
 		return null;
 	}
 };
@@ -77,12 +84,17 @@ export const findUserById = async (id: string) => {
 export const findUserByUsername = async (username: string) => {
 	try {
 		const user = await db.user.findUnique({
-			where: { userName: username },
+			where: {
+				userName: username,
+			},
 		});
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ function: "findUserByUsername", error });
+		console.log({
+			function: "findUserByUsername",
+			error,
+		});
 		return null;
 	}
 };
@@ -91,12 +103,17 @@ export const findUserByUsername = async (username: string) => {
 export const findUserByEmail = async (email: string) => {
 	try {
 		const user = await db.user.findUnique({
-			where: { email: email },
+			where: {
+				email: email,
+			},
 		});
 
 		return await ReturnPublicUserData(user);
 	} catch (error) {
-		console.log({ function: "findUserByEmail", error });
+		console.log({
+			function: "findUserByEmail",
+			error,
+		});
 		return null;
 	}
 };
@@ -109,14 +126,20 @@ const isUsernameAvailable = async (username: string, currId) => {
 		result = false;
 	} else {
 		const recentlyDeletedUser = await db.deletedUser.findFirst({
-			where: { userName: username },
+			where: {
+				userName: username,
+			},
 		});
 
 		if (recentlyDeletedUser?.id) {
 			if (recentlyDeletedUser?.deletionTime.getTime() + deletedUsernameReservationDuration_ms > new Date().getTime()) {
 				result = false;
 			} else {
-				await db.deletedUser.delete({ where: { id: recentlyDeletedUser.id } });
+				await db.deletedUser.delete({
+					where: {
+						id: recentlyDeletedUser.id,
+					},
+				});
 			}
 		}
 	}
@@ -135,6 +158,8 @@ export const updateUserProfile = async ({
 }: {
 	data: ProfileUpdateData;
 }) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		const parsedName = data?.name ? parseName(data.name) : null;
 		const parsedUsername = data?.userName ? parseUserName(data.userName) : null;
@@ -145,7 +170,7 @@ export const updateUserProfile = async ({
 		if (!parsedName && !parsedUsername && !parsedProfileImageProvider) {
 			return {
 				success: false,
-				message: "Invalid form data",
+				message: locale.api_responses.user.invalid_form_data,
 			};
 		}
 
@@ -194,7 +219,7 @@ export const updateUserProfile = async ({
 			if (userNameAvailable !== true) {
 				return {
 					success: false,
-					message: "That username is not available, try something else",
+					message: locale.api_responses.user.username_not_available,
 				};
 			}
 		}
@@ -202,10 +227,14 @@ export const updateUserProfile = async ({
 		if (updateData?.profileImageProvider) {
 			const newProfileImage = (
 				await db.user.findUnique({
-					where: { id: user?.id },
+					where: {
+						id: user?.id,
+					},
 					select: {
 						accounts: {
-							where: { provider: updateData?.profileImageProvider },
+							where: {
+								provider: updateData?.profileImageProvider,
+							},
 							select: {
 								profileImage: true,
 							},
@@ -215,7 +244,9 @@ export const updateUserProfile = async ({
 			).accounts[0].profileImage;
 
 			await db.user.update({
-				where: { id: user.id },
+				where: {
+					id: user.id,
+				},
 				data: {
 					...updateData,
 					image: newProfileImage,
@@ -223,7 +254,9 @@ export const updateUserProfile = async ({
 			});
 		} else {
 			await db.user.update({
-				where: { id: user.id },
+				where: {
+					id: user.id,
+				},
 				data: {
 					...updateData,
 				},
@@ -231,12 +264,17 @@ export const updateUserProfile = async ({
 		}
 
 		revalidatePath("/settings/account");
-		return { success: true, message: "Successfully updated profile" };
+		return {
+			success: true,
+			message: locale.api_responses.user.profile_update_success,
+		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Something went wrong! Please try again",
+			message: locale.api_responses.user.something_went_wrong_try_again,
 		};
 	}
 };
@@ -254,29 +292,42 @@ export const loginUser = async ({
 	email: string;
 	password: string;
 }) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (!email || !password) {
-		return { success: false, message: "Email and password are required" };
+		return {
+			success: false,
+			message: locale.api_responses.user.email_and_pass_required,
+		};
 	}
 
 	const userData = await db.user.findUnique({
-		where: { email: email },
+		where: {
+			email: email,
+		},
 	});
 
 	if (!userData?.email) {
 		return {
 			success: false,
-			message: "No account exists with the entered email address",
+			message: locale.api_responses.user.no_account_exists_with_that_email,
 		};
 	}
 
 	if (!userData?.password) {
-		return { success: false, message: "Incorrect email or password" };
+		return {
+			success: false,
+			message: locale.api_responses.user.incorrect_email_or_pass,
+		};
 	}
 
 	const isCorrectPassword = await matchPassword(password as string, userData?.password);
 
 	if (!isCorrectPassword) {
-		return { success: false, message: "Incorrect email or password" };
+		return {
+			success: false,
+			message: locale.api_responses.user.incorrect_email_or_pass,
+		};
 	}
 
 	try {
@@ -286,10 +337,18 @@ export const loginUser = async ({
 			redirect: false,
 		});
 
-		return { success: true, message: "Login successful!" };
+		return {
+			success: true,
+			message: locale.api_responses.user.login_success,
+		};
 	} catch (error) {
-		console.log({ error });
-		return { success: false, message: "Internal server error" };
+		console.log({
+			error,
+		});
+		return {
+			success: false,
+			message: locale.globals.messages.internal_server_error,
+		};
 	}
 };
 
@@ -300,7 +359,9 @@ export const getLinkedProvidersList = async () => {
 
 	try {
 		const linkedProviders = await db.account.findMany({
-			where: { userId: session?.user?.id },
+			where: {
+				userId: session?.user?.id,
+			},
 		});
 
 		const list: Partial<Account>[] = [];
@@ -313,7 +374,9 @@ export const getLinkedProvidersList = async () => {
 
 		return list;
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return [];
 	}
 };
@@ -326,12 +389,14 @@ export const linkAuthProvider = async (newProviderName: string) => {
 };
 
 // Unlink a provider from user's account; make sure there is at least one provider remaining
-export const unlinkAuthProvider = async (newProviderName: string) => {
+export const unlinkAuthProvider = async (providerName: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	const user = (await auth())?.user;
 	if (!user?.id) {
 		return {
 			success: false,
-			message: "Invalid request",
+			message: locale.globals.messages.invalid_request,
 		};
 	}
 
@@ -340,31 +405,33 @@ export const unlinkAuthProvider = async (newProviderName: string) => {
 	if (!userData?.id) {
 		return {
 			success: false,
-			message: "Invalid request",
+			message: locale.globals.messages.invalid_request,
 		};
 	}
 
 	const existingProviders = await db.account.findMany({
-		where: { userId: user?.id },
+		where: {
+			userId: user?.id,
+		},
 	});
 
 	if (!existingProviders?.length) {
 		return {
 			success: false,
-			message: "Invalid request",
+			message: locale.globals.messages.invalid_request,
 		};
 	}
 
 	if (existingProviders.length === 1) {
 		return {
 			success: false,
-			message: "You can't unlink the only remaining auth provider",
+			message: locale.api_responses.user.cant_unlink_the_last_auth_provider,
 		};
 	}
 
 	const targetProvider = existingProviders
 		.filter((provider) => {
-			if (provider.provider === newProviderName) {
+			if (provider.provider === providerName) {
 				return provider;
 			}
 		})
@@ -373,7 +440,7 @@ export const unlinkAuthProvider = async (newProviderName: string) => {
 	if (!targetProvider) {
 		return {
 			success: false,
-			message: "Invalid request",
+			message: locale.globals.messages.invalid_request,
 		};
 	}
 	try {
@@ -387,12 +454,12 @@ export const unlinkAuthProvider = async (newProviderName: string) => {
 
 		return {
 			success: true,
-			message: `Successfully removed ${newProviderName} provider`,
+			message: locale.api_responses.user.successfully_removed_provider.replace("${0}", `${providerName}`),
 		};
 	} catch (error) {
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
@@ -408,7 +475,9 @@ export const getCurrentAuthUser = async () => {
 	}
 
 	const userData = await db.user.findUnique({
-		where: { id: user?.id },
+		where: {
+			id: user?.id,
+		},
 	});
 
 	if (!userData?.id) return null;
@@ -432,7 +501,9 @@ export const getActionType = async (token: string) => {
 
 	try {
 		const verificationEmail = await db.verificationEmail.findUnique({
-			where: { token: token },
+			where: {
+				token: token,
+			},
 		});
 
 		// Check if the token is expired
@@ -441,7 +512,9 @@ export const getActionType = async (token: string) => {
 			!isVerificationTokenValid(verificationEmail?.dateCreated, addNewPasswordVerificationTokenValidity_ms)
 		) {
 			await db.verificationEmail.delete({
-				where: { token: token },
+				where: {
+					token: token,
+				},
 			});
 
 			return null;
@@ -449,14 +522,18 @@ export const getActionType = async (token: string) => {
 
 		return verificationEmail?.action || null;
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return null;
 	}
 };
 
 export const getUserEmailFromVerificationToken = async (token: string) => {
 	const tokenData = await db.verificationEmail.findUnique({
-		where: { token: token },
+		where: {
+			token: token,
+		},
 	});
 	const userId = tokenData?.userId;
 
@@ -465,7 +542,9 @@ export const getUserEmailFromVerificationToken = async (token: string) => {
 	}
 
 	const userData = await db.user.findUnique({
-		where: { id: userId },
+		where: {
+			id: userId,
+		},
 		select: {
 			email: true,
 		},
@@ -475,10 +554,19 @@ export const getUserEmailFromVerificationToken = async (token: string) => {
 };
 
 // Add newly set password to the database and | TODO: send a confirmation link to the user's email to confirm the password change
-export const initiateAddNewPasswordAction = async ({ newPassword }: { newPassword: string }) => {
+export const initiateAddNewPasswordAction = async ({
+	newPassword,
+}: {
+	newPassword: string;
+}) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (isValidPassword(newPassword) !== true) {
 		const error = isValidPassword(newPassword);
-		return { success: false, message: `Invalid password. ${error}` };
+		return {
+			success: false,
+			message: locale.api_responses.user.invalid_password.replace("${}", `${error}`),
+		};
 	}
 
 	try {
@@ -490,14 +578,18 @@ export const initiateAddNewPasswordAction = async ({ newPassword }: { newPasswor
 
 			return {
 				success: false,
-				message: "Invalid request!",
+				message: locale.globals.messages.invalid_request,
 			};
 		}
 
 		const hashedPassword = await hashPassword(newPassword);
 		await db.user.update({
-			where: { id: user.id },
-			data: { unverifiedNewPassword: hashedPassword },
+			where: {
+				id: user.id,
+			},
+			data: {
+				unverifiedNewPassword: hashedPassword,
+			},
 		});
 
 		const res = await sendNewPasswordVerificationEmail({
@@ -508,14 +600,20 @@ export const initiateAddNewPasswordAction = async ({ newPassword }: { newPasswor
 		if (res?.success !== true) {
 			return {
 				success: false,
-				message: res?.message || "Error while sending confirmation email",
+				message: res?.message,
 			};
 		}
 
 		revalidatePath("/settings/account");
-		return { success: true, message: "Confirmation email sent!" };
+		return {
+			success: true,
+			message: locale.globals.messages.email_sent_successfully,
+		};
 	} catch (error) {
-		return { success: false, message: "Internal server error" };
+		return {
+			success: false,
+			message: locale.globals.messages.internal_server_error,
+		};
 	}
 };
 
@@ -525,10 +623,12 @@ export const removePassword = async ({
 }: {
 	password: string;
 }) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (!password) {
 		return {
 			success: false,
-			message: "Invalid request!",
+			message: locale.globals.messages.invalid_request,
 		};
 	}
 
@@ -542,7 +642,9 @@ export const removePassword = async ({
 		}
 
 		const userData = await db.user.findUnique({
-			where: { id: user?.id },
+			where: {
+				id: user?.id,
+			},
 		});
 
 		if (!userData?.password) {
@@ -550,7 +652,7 @@ export const removePassword = async ({
 
 			return {
 				success: false,
-				message: "Invalid request!",
+				message: locale.globals.messages.invalid_request,
 			};
 		}
 
@@ -558,31 +660,40 @@ export const removePassword = async ({
 		if (!isCorrectPassword) {
 			return {
 				success: false,
-				message: "Incorrect password!",
+				message: locale.api_responses.user.incorrect_password,
 			};
 		}
 
 		await db.user.update({
-			where: { id: userData.id },
-			data: { password: null, unverifiedNewPassword: null },
+			where: {
+				id: userData.id,
+			},
+			data: {
+				password: null,
+				unverifiedNewPassword: null,
+			},
 		});
 
 		revalidatePath("/settings/account");
 
 		return {
 			success: true,
-			message: "Successfully removed password",
+			message: locale.api_responses.user.successfully_removed_password,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error!",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 export const discardNewPasswordAddition = async (token: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		if (!token) {
 			return {
@@ -603,31 +714,35 @@ export const discardNewPasswordAddition = async (token: string) => {
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!res?.token) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		return {
 			success: true,
-			message: "Cancelled successfully",
+			message: locale.globals.messages.cancelled_successfully,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 export const confirmNewPasswordAddition = async (token: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		if (!token) {
 			return {
@@ -648,26 +763,28 @@ export const confirmNewPasswordAddition = async (token: string) => {
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!verificationActionData?.token) {
 			return {
 				success: false,
-				message: "Invalid confirmation token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!isVerificationTokenValid(verificationActionData?.dateCreated, addNewPasswordVerificationTokenValidity_ms)) {
 			return {
 				success: false,
-				message: "Expired token",
+				message: locale.globals.messages.expired_token,
 			};
 		}
 
 		const userData = await db.user.findUnique({
-			where: { id: verificationActionData?.userId },
+			where: {
+				id: verificationActionData?.userId,
+			},
 			select: {
 				unverifiedNewPassword: true,
 				password: true,
@@ -682,7 +799,9 @@ export const confirmNewPasswordAddition = async (token: string) => {
 		}
 
 		await db.user.update({
-			where: { id: verificationActionData.userId },
+			where: {
+				id: verificationActionData.userId,
+			},
 			data: {
 				password: userData.unverifiedNewPassword,
 				unverifiedNewPassword: null,
@@ -691,19 +810,23 @@ export const confirmNewPasswordAddition = async (token: string) => {
 
 		return {
 			success: true,
-			message: "Successfully added new password",
+			message: locale.api_responses.user.successfully_added_new_password,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 // Initiate password change action
 export const initiatePasswordChange = async (email: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (!email) {
 		return {
 			success: false,
@@ -712,21 +835,24 @@ export const initiatePasswordChange = async (email: string) => {
 	}
 
 	try {
-		const userData = await db.user.findUnique({ where: { email: email } });
+		const userData = await db.user.findUnique({
+			where: {
+				email: email,
+			},
+		});
 
 		if (!userData) {
 			return {
 				success: false,
-				message: "No account exists with this email address.",
+				message: locale.api_responses.user.no_account_exists_with_that_email,
 			};
 		}
 
 		if (!userData?.password) {
 			return {
 				success: false,
-				message: "You can't change the password, you have not enabled password login.",
-				description:
-					"Only the accounts which have password added could change the password. If not you can use auth providers to login.",
+				message: locale.api_responses.user.password_login_not_enabled,
+				description: locale.api_responses.user.password_login_not_enabled_desc,
 			};
 		}
 		const emailSendRes = await sendPasswordChangeEmail(userData);
@@ -734,7 +860,7 @@ export const initiatePasswordChange = async (email: string) => {
 		if (emailSendRes?.success !== true) {
 			return {
 				success: false,
-				message: emailSendRes?.message || "Error while sending email",
+				message: emailSendRes?.message,
 			};
 		}
 
@@ -743,15 +869,19 @@ export const initiatePasswordChange = async (email: string) => {
 			message: emailSendRes?.message,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 export const cancelPasswordChangeAction = async (token: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		if (!token) {
 			return {
@@ -772,25 +902,25 @@ export const cancelPasswordChangeAction = async (token: string) => {
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!res?.token) {
 			return {
 				success: false,
-				message: "Invalid token type",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		return {
 			success: true,
-			message: "Cancelled successfully",
+			message: locale.globals.messages.cancelled_successfully,
 		};
 	} catch (error) {
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
@@ -802,6 +932,8 @@ export const confirmPasswordChange = async ({
 	token: string;
 	newPassword: string;
 }) => {
+	const locale = get_locale(getLangPref()).content;
+
 	try {
 		if (!token) {
 			return {
@@ -829,25 +961,27 @@ export const confirmPasswordChange = async ({
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 		if (!verificationActionData?.token) {
 			return {
 				success: false,
-				message: "Invalid confirmation token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!isVerificationTokenValid(verificationActionData?.dateCreated, changePasswordConfirmationTokenValidity_ms)) {
 			return {
 				success: false,
-				message: "Expired token",
+				message: locale.globals.messages.expired_token,
 			};
 		}
 
 		const userData = await db.user.findUnique({
-			where: { id: verificationActionData?.userId },
+			where: {
+				id: verificationActionData?.userId,
+			},
 			select: {
 				password: true,
 			},
@@ -856,14 +990,16 @@ export const confirmPasswordChange = async ({
 		if (!userData?.password) {
 			return {
 				success: false,
-				message: "You can't use change password, your account doesn't have passwords enabled",
+				message: locale.api_responses.user.password_login_not_enabled,
 			};
 		}
 
 		const hashedPassword = await hashPassword(newPassword);
 
 		await db.user.update({
-			where: { id: verificationActionData.userId },
+			where: {
+				id: verificationActionData.userId,
+			},
 			data: {
 				password: hashedPassword,
 			},
@@ -871,17 +1007,18 @@ export const confirmPasswordChange = async ({
 
 		return {
 			success: true,
-			message: "Successfully added new password",
+			message: locale.api_responses.user.successfully_added_new_password,
 		};
 	} catch (error) {
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.auth.action_verification_page.password_changed,
 		};
 	}
 };
 
 export const initiateDeleteAccountAction = async () => {
+	const locale = get_locale(getLangPref()).content;
 	const session = await auth();
 
 	if (!session?.user?.id) {
@@ -906,23 +1043,25 @@ export const initiateDeleteAccountAction = async () => {
 		if (emailSendRes?.success !== true) {
 			return {
 				success: false,
-				message: emailSendRes?.message || "Error while sending email",
+				message: emailSendRes?.message,
 			};
 		}
 
 		return {
 			success: true,
-			message: emailSendRes?.message || "Error while sending email",
+			message: emailSendRes?.message,
 		};
 	} catch (error) {
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 export const confirmAccountDeletion = async (token: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (!token) {
 		return {
 			success: false,
@@ -951,21 +1090,21 @@ export const confirmAccountDeletion = async (token: string) => {
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!verificationActionData?.token) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!isVerificationTokenValid(verificationActionData?.dateCreated, deleteAccountVerificationTokenValidity_ms)) {
 			return {
 				success: false,
-				message: "Expired token",
+				message: locale.globals.messages.expired_token,
 			};
 		}
 
@@ -979,7 +1118,9 @@ export const confirmAccountDeletion = async (token: string) => {
 		}
 
 		const userData = await db.user.delete({
-			where: { id: session?.user?.id },
+			where: {
+				id: session?.user?.id,
+			},
 		});
 
 		await db.deletedUser.create({
@@ -992,18 +1133,22 @@ export const confirmAccountDeletion = async (token: string) => {
 
 		return {
 			success: true,
-			message: "Successfully deleted your account",
+			message: locale.api_responses.user.successfully_deleted_account,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };
 
 export const cancelAccountDeletion = async (token: string) => {
+	const locale = get_locale(getLangPref()).content;
+
 	if (!token) {
 		return {
 			success: false,
@@ -1023,26 +1168,28 @@ export const cancelAccountDeletion = async (token: string) => {
 		} catch (error) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		if (!res?.token) {
 			return {
 				success: false,
-				message: "Invalid token",
+				message: locale.globals.messages.invalid_token,
 			};
 		}
 
 		return {
 			success: true,
-			message: "Successfully cancelled account deletion",
+			message: locale.api_responses.user.cancelled_account_deletion,
 		};
 	} catch (error) {
-		console.log({ error });
+		console.log({
+			error,
+		});
 		return {
 			success: false,
-			message: "Internal server error",
+			message: locale.globals.messages.internal_server_error,
 		};
 	}
 };

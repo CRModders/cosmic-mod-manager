@@ -7,21 +7,14 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-	title: "Modpacks",
-	description: "Modpacks on CRMM",
+export default async function ModpacksPageLayout({ children }: { children: React.ReactNode }) {
+	return <section className="w-full flex items-center justify-center">{children}</section>;
+}
+
+export const generateMetadata = async () => {
+	return {
+		title: "Modpacks",
+		description: "Modpacks on CRMM",
+	};
 };
-
-const ModpacksPageLayout = async ({
-	children,
-}: { children: React.ReactNode }) => {
-	return (
-		<section className="w-full flex items-center justify-center">
-			{children}
-		</section>
-	);
-};
-
-export default ModpacksPageLayout;

@@ -20,34 +20,31 @@ import { Spinner } from "@/components/ui/spinner";
 import { DialogClose } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { maxPasswordLength, minPasswordLength } from "@/config";
+import { minPasswordLength } from "@/config";
 import { removePassword } from "@/app/api/actions/user";
 import FormErrorMsg from "@/components/formErrorMsg";
 import { TrashIcon } from "@/components/Icons";
-
-export const formSchema = z.object({
-	email: z.string(),
-	password: z
-		.string()
-		.min(minPasswordLength, {
-			message: "Enter your password",
-		})
-		.max(maxPasswordLength, {
-			message: `Invalid password. Password can only have a maximum of ${maxPasswordLength} character`,
-		}),
-});
+import { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	id: string;
 	email: string;
 	children: React.ReactNode;
+	locale: locale_content_type;
 };
 
-const RemovePasswordForm = ({ id, email, children }: Props) => {
+const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 	const { toast } = useToast();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState(null);
+
+	const formSchema = z.object({
+		email: z.string(),
+		password: z.string().min(minPasswordLength, {
+			message: locale.settings_page.account_section.enter_your_password,
+		}),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -59,12 +56,8 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 		if (loading) return;
-		if (
-			!values?.password ||
-			(values?.password?.length || 0) < minPasswordLength ||
-			(values?.password?.length || 0) > maxPasswordLength
-		) {
-			return setFormError("Enter a valid password.");
+		if (!values?.password || (values?.password?.length || 0) < minPasswordLength) {
+			return setFormError(locale.auth.login_page.invalid_password_msg);
 		}
 		setLoading(true);
 
@@ -89,15 +82,12 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="font-normal">Remove your account password</DialogTitle>
+					<DialogTitle className="font-normal">{locale.settings_page.account_section.remove_account_password}</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
-						<form
-							onSubmit={form.handleSubmit(handleSubmit)}
-							className="w-full flex flex-col items-center justify-center gap-3"
-						>
+						<form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex flex-col items-center justify-center gap-3">
 							<div className="w-full flex flex-col items-center justify-center gap-4">
 								<div className="w-full flex flex-col items-center justify-center">
 									<FormField
@@ -107,15 +97,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 											<>
 												<FormItem aria-hidden={true} className="hidden">
 													<FormControl>
-														<Input
-															placeholder="********"
-															type="email"
-															name="username"
-															autoComplete="username"
-															className="hidden"
-															aria-hidden={true}
-															{...field}
-														/>
+														<Input placeholder="********" type="email" name="username" autoComplete="username" className="hidden" aria-hidden={true} {...field} />
 													</FormControl>
 												</FormItem>
 											</>
@@ -131,9 +113,7 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark my-1">
-															Confirm your password
-														</span>
+														<span className="text-foreground_muted dark:text-foreground_muted_dark my-1">{locale.settings_page.account_section.enter_your_password}</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
@@ -161,19 +141,17 @@ const RemovePasswordForm = ({ id, email, children }: Props) => {
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-									<p className="px-4 h-9 flex items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
-										Cancel
-									</p>
+									<p className="px-4 h-9 flex items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">{locale.globals.cancel}</p>
 								</DialogClose>
 
 								<Button
 									type="submit"
-									aria-label="Remove password"
+									aria-label={locale.settings_page.account_section.remove_password}
 									className="bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90"
 									disabled={!form.getValues().password}
 								>
 									<TrashIcon className="h-4 w-4 text-foreground_dark" />
-									<p className="px-2 text-foreground_dark">Remove password</p>
+									<p className="px-2 text-foreground_dark">{locale.settings_page.account_section.remove_password}</p>
 								</Button>
 							</div>
 						</form>

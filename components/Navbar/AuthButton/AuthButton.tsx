@@ -20,25 +20,30 @@ import ProfileDropdown from "./ProfileDropdown";
 import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
 import { findUserById } from "@/app/api/actions/user";
 import { NavMenuLink } from "../Navlink";
+import { locale_content_type, auth_locale } from "@/public/locales/interface";
 
-const LoginButton = () => {
+const LoginButton = ({ authLocale }: { authLocale: auth_locale }) => {
 	return (
 		<div className="flex items-center justify-center">
-			<LoginBtn closeNavMenuOnLinkClick={false} />
+			<LoginBtn closeNavMenuOnLinkClick={false} authLocale={authLocale} />
 		</div>
 	);
 };
 
-const AuthButton = async () => {
+type Props = {
+	locale?: locale_content_type;
+};
+
+const AuthButton = async ({ locale }: Props) => {
 	const session = await auth();
 
 	if (!session?.user?.id) {
-		return <LoginButton />;
+		return <LoginButton authLocale={locale.auth} />;
 	}
 	const userData = await findUserById(session?.user?.id);
 
 	if (!userData?.id) {
-		return <LoginButton />;
+		return <LoginButton authLocale={locale.auth} />;
 	}
 
 	return (
@@ -61,20 +66,20 @@ const AuthButton = async () => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-80">
-				<ProfileDropdown />
+				<ProfileDropdown locale={locale} />
 			</PopoverContent>
 		</Popover>
 	);
 };
 
 // Mobile NavMenu Profile button
-export const MenuAuthButton = async () => {
+export const MenuAuthButton = async ({ locale }: { locale: locale_content_type }) => {
 	const session = await auth().catch((e) => console.log(e));
 
 	if (!session || !session?.user?.email) {
 		return (
 			<div className="w-full flex items-center justify-center">
-				<LoginBtn size="lg" />
+				<LoginBtn size="lg" authLocale={locale.auth} />
 			</div>
 		);
 	}
@@ -83,7 +88,7 @@ export const MenuAuthButton = async () => {
 
 	const dropdownLinks = [
 		{
-			name: "Your profile",
+			name: locale.auth.your_profile,
 			href: `/user/${
 				// biome-ignore lint/complexity/useOptionalChain: <explanation>
 				userData && userData?.userName ? userData.userName : "notSignedIn"
@@ -91,12 +96,12 @@ export const MenuAuthButton = async () => {
 			icon: <PersonIcon size="1.25rem" />,
 		},
 		{
-			name: "Dashboard",
+			name: locale.auth.dashboard,
 			href: "/dashboard",
 			icon: <DashboardIcon size="1.25rem" />,
 		},
 		{
-			name: "Settings",
+			name: locale.auth.settings,
 			href: "/settings/account",
 			icon: <GearIcon size="1.25rem" />,
 		},
@@ -140,7 +145,10 @@ export const MenuAuthButton = async () => {
 								</NavMenuLink>
 							);
 						})}
-						<SignOutBtn className="items-center justify-center h-12 navlink_text link_bg_transition hover:duration-0 dark:hover:duration-0" />
+						<SignOutBtn
+							authLocale={locale.auth}
+							className="items-center justify-center h-12 navlink_text link_bg_transition hover:duration-0 dark:hover:duration-0"
+						/>
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>

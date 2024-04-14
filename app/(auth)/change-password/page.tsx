@@ -11,8 +11,13 @@ import React from "react";
 import SendResetEmail from "./sendResetEmail";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 
 const ResetPasswordPage = async () => {
+	const langPref = getLangPref();
+	const locale = get_locale(langPref).content;
+
 	const user = (await auth())?.user;
 
 	return (
@@ -20,19 +25,17 @@ const ResetPasswordPage = async () => {
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl">Change password</h1>
+						<h1 className="w-full text-left text-xl">{locale.auth.change_password_page.change_password}</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
-							<SendResetEmail userEmail={user?.email} />
+							<SendResetEmail userEmail={user?.email} locale={locale} />
 						</div>
 
 						<div className="w-full flex items-start justify-center flex-col">
 							<div className="w-full flex items-center gap-4 mt-2">
 								<hr className="bg-background_hover dark:bg-background_hover_dark border-none w-full h-[0.1rem] flex-1" />
-								<p className="shrink-0 text-sm text-foreground_muted/50 dark:text-foreground_muted_dark/50">
-									OR
-								</p>
+								<p className="shrink-0 text-sm text-foreground_muted/50 dark:text-foreground_muted_dark/50">OR</p>
 								<hr className="bg-background_hover dark:bg-background_hover_dark border-none w-full h-[0.1rem] flex-1" />
 							</div>
 						</div>
@@ -42,7 +45,7 @@ const ResetPasswordPage = async () => {
 								href="/"
 								className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 text-sm"
 							>
-								Go to Home page
+								{locale.auth.login}
 							</Link>
 						</div>
 					</CardContent>

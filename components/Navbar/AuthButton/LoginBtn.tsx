@@ -10,15 +10,18 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { NavMenuLink } from "../Navlink";
 import { cn } from "@/lib/utils";
+import { auth_locale } from "@/public/locales/interface";
 
 const LoginBtn = ({
 	className,
 	size = "md",
 	closeNavMenuOnLinkClick = true,
+	authLocale,
 }: {
 	className?: string;
 	size?: "sm" | "md" | "lg";
 	closeNavMenuOnLinkClick?: boolean;
+	authLocale: auth_locale;
 }) => {
 	return (
 		<NavMenuLink
@@ -29,8 +32,8 @@ const LoginBtn = ({
 			href="/login"
 			closeNavMenuOnLinkClick={closeNavMenuOnLinkClick}
 		>
-			<Button variant="outline" size={size} className="w-full link_bg_transition" aria-label="Log In">
-				<p className="text-lg text-foreground dark:text-foreground_dark">Log In</p>
+			<Button variant="outline" size={size} className="w-full link_bg_transition" aria-label={authLocale.login}>
+				<p className="text-lg text-foreground dark:text-foreground_dark">{authLocale.login}</p>
 			</Button>
 		</NavMenuLink>
 	);
