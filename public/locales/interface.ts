@@ -2,14 +2,14 @@ import { en_gb } from "./en/en-GB";
 
 export interface locale_meta {
 	language: {
-		en_name: string;
-		locale_name: string;
-		code: string;
+		code: string; // Two letter code of that base language -> (lowercase)
+		en_name: string; // English name of the language -> (Normal writing)
+		locale_name: string; // Name of the language in that language -> (Normal writing)
 	};
 	region: {
-		name: string;
-		short_name: string;
-		code: string;
+		code: string; // Two letter code of that region -> (UPPERCASE)
+		name: string; // Name of the region (should be written in the language it is being used for) -> (Normal writing)
+		short_name: string; // Any shorter name of the region if exists else it will be same as region code  (UPPERCASE)
 	};
 	similar_to?: string[];
 }
