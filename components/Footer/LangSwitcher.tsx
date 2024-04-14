@@ -20,7 +20,7 @@ type Props = {
 const LangSwitcher = ({ locale, availableLocales }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-	const currentLang = `${locale.meta.language.locale_name} (${locale.meta.region.short_name})`;
+	const currentLang = `${locale.meta.language.locale_name} (${locale.meta.region.display_name})`;
 
 	const setPref = async (value: string) => {
 		if (loading) return;

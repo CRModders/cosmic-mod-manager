@@ -9,7 +9,7 @@ export interface locale_meta {
 	region: {
 		code: string; // Two letter code of that region -> (UPPERCASE)
 		name: string; // Name of the region (should be written in the language it is being used for) -> (Normal writing)
-		short_name: string; // Any shorter name of the region if exists else it will be same as region code  (UPPERCASE)
+		display_name: string; // Any shorter name of the region if exists else it will be same as region code  (UPPERCASE)
 	};
 	similar_to?: string[];
 }

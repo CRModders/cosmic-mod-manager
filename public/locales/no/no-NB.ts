@@ -1,4 +1,4 @@
-import { locale_content_type, locale_meta } from "../interface";
+import { locale_content_type, locale_meta } from "@/public/locales/interface";
 
 export const no_nb = {
 	meta: {
@@ -10,7 +10,7 @@ export const no_nb = {
 		region: {
 			code: "NB",
 			name: "Bokmål",
-			short_name: "Bokmål",
+			display_name: "Bokmål",
 		},
 	} satisfies locale_meta,
 

@@ -9,12 +9,12 @@ export const es_es = {
 		},
 		region: {
 			name: "Spain",
-			short_name: "ES",
 			code: "ES",
+			display_name: "España",
 		},
-	},
+	} satisfies locale_meta,
 
-	// This ai generated translaton is just for testing
+	// This temporary ai generated translaton is just for testing
 	content: {
 		globals: {
 			site: {
@@ -214,8 +214,5 @@ export const es_es = {
 			terms: "Términos",
 			change_theme: "Cambiar tema",
 		},
-	},
-} satisfies {
-	meta: locale_meta;
-	content: locale_content_type;
+	} satisfies locale_content_type,
 };

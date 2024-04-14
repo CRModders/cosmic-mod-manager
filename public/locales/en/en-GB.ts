@@ -22,7 +22,7 @@ export const en_gb = {
 			// Any shorter name of the region if exists, else it will be same as region code,
 			// For example, region code of United kingdom is "GB" but many people won't get it as UK so instead of writing "GB" in the short name, use "UK"
 			// ->  UPPERCASE
-			short_name: "UK",
+			display_name: "UK",
 		},
 	} satisfies locale_meta,
 
