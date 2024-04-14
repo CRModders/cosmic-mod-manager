@@ -3,14 +3,26 @@ import { locale_meta } from "@/public/locales/interface";
 export const en_gb = {
 	meta: {
 		language: {
-			en_name: "English",
-			locale_name: "English",
+			// Two letter code of that base language -> lowercase
 			code: "en",
+
+			// English name of the language -> Normal writing
+			en_name: "English",
+
+			// Name of the language in that language (It's en here so the word "English" is written it English) -> Normal writing
+			locale_name: "English",
 		},
 		region: {
-			name: "United Kingdom",
-			short_name: "UK",
+			// Two letter code of that region -> UPPERCASE
 			code: "GB",
+
+			// Name of the region (should be written in the language it is being used for) -> Normal writing
+			name: "United Kingdom",
+
+			// Any shorter name of the region if exists, else it will be same as region code,
+			// For example, region code of United kingdom is "GB" but many people won't get it as UK so instead of writing "GB" in the short name, use "UK"
+			// ->  UPPERCASE
+			short_name: "UK",
 		},
 	} satisfies locale_meta,
 
@@ -211,5 +223,9 @@ export const en_gb = {
 			terms: "Terms",
 			change_theme: "Change theme",
 		},
-	},
+	}, // satisfies locale_content_type,
 };
+
+// The above satisfies statement must be used in other locales, it can't be used here, because en-Gb's content is providing the base type
+// Its own type can't be used to constraint itself
+// Stupid note: That comma before the "satisfies" keyword come after that statement as in the meta object above

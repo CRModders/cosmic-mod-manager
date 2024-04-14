@@ -29,23 +29,33 @@
 
     export const en_au = {
         meta: {
-		    language: {
-		    	en_name: "English",
-		    	locale_name: "English",
-		    	code: "en",
-		    },
-		    region: {
-		    	name: "Australia",
-		    	short_name: "AU",
-		    	code: "AU",
-		    },
-	    },
+            language: {
+                // Two letter code of that base language -> lowercase
+                code: "en",
+
+                // English name of the language -> Normal writing
+                en_name: "English",
+
+                // Name of the language in that language (It's en here so the word "English" is written it English) -> Normal writing
+                locale_name: "English",
+            },
+            region: {
+                // Two letter code of that region -> UPPERCASE
+                code: "GB",
+
+                // Name of the region (should be written in the language it is being used for) -> Normal writing
+                name: "United Kingdom",
+
+                // Any shorter name of the region if exists, else it will be same as region code,
+                // For example, region code of United kingdom is "GB" but many people won't get it as UK so instead of writing "GB" in the short name, use "UK"
+                // ->  UPPERCASE
+                short_name: "UK",
+            },
+	    } satisfies locale_meta,
         content: {
-            // Copy the content from the default locale which is "public/locale/en/en-GB.ts", and use that as a template to replace the english values with their translation
-        }
-    } satisfies {
-        meta: locale_meta;
-        content: locale_content_type;
+            // Copy the content from the default locale which is "public/locale/en/en-GB.ts",
+            // and use that as a template to replace the english values with their translation
+        } satisfies locale_content_type,
     };
     ```
     
@@ -77,16 +87,22 @@
 
     // Import the language object from the folder's index.ts
     import en from "./en";
-    import es from "./es";
 
     // Add that to this object with that language's code in lowercase as key
+    // Format -> 
+    // language's_code: the language object that contains all the variants
     const locales = {
     	default: en.default,
     	en: en,
-    	es: es,
     };
 
     export default locales;
 
 
     ```
+
+
+
+## Notes
+- Make sure to use the type constraint using the satisfies keyword
+- Make sure not to leave any key empty, it could break the application, open a pr when you have all the values translated
