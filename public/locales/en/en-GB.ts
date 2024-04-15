@@ -184,6 +184,10 @@ export const en_gb = {
 			sessions_section: {
 				sessions: "Sessions",
 				meta_desc: "Manage logged in sessions",
+				view_page: "View page",
+				sensitive_info_warning: "Warning: Sensitive info",
+				session_page_warning_message:
+					"This page contains sensitive info such as your IP address and location. Make sure not to send any screenshots, recordings, or info from this page to people you dont want to have this info.",
 				page_desc: {
 					line_1:
 						"Here are all the devices that are currently logged in with your account. You can log out of each one individually.",

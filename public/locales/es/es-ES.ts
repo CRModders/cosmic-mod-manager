@@ -175,6 +175,10 @@ export const es_es = {
 			sessions_section: {
 				sessions: "Sesiones",
 				meta_desc: "Administrar sesiones iniciadas",
+				view_page: "Ver pagina",
+				sensitive_info_warning: "Advertencia: información confidencial",
+				session_page_warning_message:
+					"Esta página contiene información confidencial como su dirección IP y ubicación. Asegúrate de no enviar capturas de pantalla, grabaciones o información de esta página a personas que no deseas que tengan esta información.",
 				page_desc: {
 					line_1:
 						"Aquí están todos los dispositivos que están actualmente conectados con tu cuenta. Puedes cerrar sesión en cada uno individualmente.",
