@@ -7,21 +7,13 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth } from "@/auth";
-import React from "react";
-import SignOutBtn from "./signOutBtn";
-import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import { sleep } from "@/lib/utils";
-import FormErrorMsg from "../formErrorMsg";
-import { Spinner } from "../ui/spinner";
-import getLangPref from "@/lib/server/getLangPref";
+import getLangPref from "@/lib/client/getLangPref";
 import { get_locale } from "@/lib/lang";
+import SignOutWidget from "./signOutWidget";
 
 const ValidateSession = async () => {
 	const langPref = getLangPref();
-	const locale = get_locale(langPref);
-	const authLocale = locale.content.auth;
-
-	await sleep(500);
+	const locale = get_locale(langPref).content;
 
 	const session = await auth();
 
@@ -29,30 +21,7 @@ const ValidateSession = async () => {
 		return null;
 	}
 
-	const authenticatedUser = await getAuthenticatedUser();
-
-	if (authenticatedUser?.id) {
-		return null;
-	}
-
-	return (
-		<section className="w-full fixed top-0 left-0 z-[500] bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark">
-			<div className="w-full p-6 min-h-[100dvh] flex flex-col items-center justify-center gap-6">
-				<div className="max-w-lg w-full flex flex-col items-center justify-center gap-6 text-danger dark:text-danger_dark">
-					<FormErrorMsg
-						msg={authLocale.invalid_session_msg}
-						className="text-3xl p-4 font-mono"
-						iconClassName="w-9 mr-2 h-8"
-					/>
-				</div>
-				<div className="flex gap-4 items-center justify-center">
-					<Spinner size="1.5rem" className=" text-danger dark:text-danger_dark" />
-					<p className="text-center text-danger dark:text-danger_dark text-2xl font-mono">{authLocale.signing_out}</p>
-				</div>
-			</div>
-			<SignOutBtn />
-		</section>
-	);
+	return <SignOutWidget locale={locale} />;
 };
 
 export default ValidateSession;

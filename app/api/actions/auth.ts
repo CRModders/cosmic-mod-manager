@@ -79,7 +79,7 @@ export const deleteSessionToken = async ({
 			});
 		}
 	} catch (error) {
-		console.log({ function: "deleteSessionToken", error });
+		// console.log({ function: "deleteSessionToken", error });
 	}
 };
 
