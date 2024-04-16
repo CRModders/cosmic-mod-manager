@@ -54,7 +54,9 @@ const DeleteAccountSection = ({ locale }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-16 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">{locale.settings_page.account_section.account_deletion_desc}</p>
+				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
+					{locale.settings_page.account_section.account_deletion_desc}
+				</p>
 			</div>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogTrigger asChild>
@@ -67,7 +69,7 @@ const DeleteAccountSection = ({ locale }: Props) => {
 				<DialogContent>
 					<div className="w-full flex flex-col relative gap-4">
 						<DialogHeader>
-							<DialogTitle className="font-normal">Delete Account</DialogTitle>
+							<DialogTitle className="font-normal">{locale.settings_page.account_section.delete_account}</DialogTitle>
 						</DialogHeader>
 						<div className="w-full flex flex-col gap-2 items-center justify-center">
 							<p className="w-full text-left">{locale.settings_page.account_section.confirm_to_delete_account}</p>

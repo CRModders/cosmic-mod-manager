@@ -69,7 +69,7 @@ export default function ThemeSwitch({ className, iconWrapperClassName, label }: 
 						<MoonIcon size={"1.3rem"} />
 					</div>
 				</div>
-				{label && <p className="pr-4">{label}</p>}
+				{label && <p className="pr-4 whitespace-nowrap text-nowrap">{label}</p>}
 			</button>
 		</div>
 	);

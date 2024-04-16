@@ -137,28 +137,12 @@ export const get_available_lang_code = (language_code: string | null): formatted
 
 export const get_locale = (
 	code: string | null,
-	options?: {
-		page_name?: string;
-		section_name?: string;
-	},
 ): {
 	meta: locale_meta;
 	content: locale_content_type;
 } => {
 	const available_lang = get_available_lang_code(code);
 	const locale_data = locales[available_lang.base_lang][available_lang.lang_code];
-
-	if (options?.page_name) {
-		try {
-			const page_locale_data = locale_data?.content[options.page_name];
-
-			if (options?.section_name) {
-				const section_locale_data = page_locale_data[options?.section_name];
-				if (section_locale_data) return section_locale_data;
-			}
-			return page_locale_data;
-		} catch (error) {}
-	}
 
 	return locale_data;
 };

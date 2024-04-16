@@ -27,6 +27,7 @@ import {
 	deleteAccountVerificationTokenValidity_ms,
 	passwordHashingSaltRounds,
 	deletedUsernameReservationDuration_ms,
+	dbSessionTokenCookieKeyName,
 } from "@/config";
 import {
 	sendAccountDeletionConfirmationEmail,
@@ -36,6 +37,7 @@ import {
 import { getAuthenticatedUser } from "./auth";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import { cookies } from "next/headers";
 
 // Hash the user password using bcrypt
 const hashPassword = async (password: string) => {
