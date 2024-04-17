@@ -178,14 +178,14 @@ export const no_nb = {
 					"Denne siden inneholder sensitiv informasjon som IP-adressen og posisjonen din. Pass på at du ikke sender skjermbilder, opptak eller informasjon fra denne siden til personer du ikke vil skal ha denne informasjonen.",
 				page_desc: {
 					line_1:
-						"Her er alle enheten som er logget inn i kontoen din akkurat nå. Du kan velge å tvinge dem til å logge ut individuelt her.",
+						"Her er alle enhetene som er logget inn i kontoen din akkurat nå. Du kan velge å tvinge dem til å logge ut individuelt her.",
 					line_2:
 						"Hvis du ser en økt du ikke kjenner igjen, så logg ut av den enheten og endre passordet til kontoen som var logget inn i.",
 				},
 				current_session: "Nåværende økt",
 				timestamp_template: "${day}/${month}/${year} ved ${hours}:${minutes} ${amPm}",
-				last_used: "Last used",
-				created: "Created",
+				last_used: "Sist brukt",
+				created: "Oppretta",
 				time_past_phrases: {
 					// should be in lower case, adjust the position of ${0} according to the translation in other languages
 					just_now: "akkurat nå",
