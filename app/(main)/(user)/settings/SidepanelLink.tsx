@@ -11,6 +11,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import "@/app/globals.css";
 
 type Props = {
 	href: string;
@@ -27,17 +28,24 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 	}
 
 	return (
-		<Link
-			href={href}
+		<li
+			className="w-full link_bg_transition data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark overflow-hidden"
 			data-active={isActive}
-			className="group w-full px-4 py-2 relative flex items-center justify-start gap-1 rounded-lg hover:text-foreground dark:hover:text-foreground_dark text-foreground/80 dark:text-foreground_dark/80 data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark hover:transition-colors hover:duration-default hover:bg-background_hover dark:hover:bg-background_hover_dark data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark overflow-hidden"
 		>
-			{isActive && (
-				<div className="absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-primary_accent dark:bg-primary_accent_dark" />
-			)}
-			<div className="w-6 h-6 flex items-center justify-start link_icon">{icon}</div>
-			<p className="text-lg">{label}</p>
-		</Link>
+			<Link
+				href={href}
+				data-active={isActive}
+				className="group w-full px-4 py-2 relative flex items-center justify-start gap-1 rounded-lg navlink_text"
+			>
+				{isActive && (
+					<div className="absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-primary_accent dark:bg-primary_accent_dark" />
+				)}
+				<div className="w-6 h-6 flex items-center justify-start link_icon">
+					{icon}
+				</div>
+				<p className="text-lg">{label}</p>
+			</Link>
+		</li>
 	);
 };
 

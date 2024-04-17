@@ -37,7 +37,10 @@ const Navlink = ({ children, href, className }: NavLinkProps) => {
 	return (
 		<Link
 			href={href}
-			className={cn("navlink_text rounded-lg decoration-foreground/80 dark:decoration-foreground_dark/80", className)}
+			className={cn(
+				"navlink_text rounded-lg decoration-foreground/80 dark:decoration-foreground_dark/80 data-[active=true]:font-normal",
+				className,
+			)}
 			data-active={isActive}
 		>
 			{children}
@@ -72,10 +75,16 @@ export function NavMenuLink({
 	return (
 		<li
 			key={`${href}`}
-			className={cn("group w-full flex items-center justify-center rounded-lg link_bg_transition", className)}
+			className={cn(
+				"group w-full flex items-center justify-center rounded-lg link_bg_transition",
+				className,
+			)}
 		>
 			<Link
-				className={cn("w-full h-full flex items-center justify-center navlink_text", classNames?.link)}
+				className={cn(
+					"w-full h-full flex items-center justify-center navlink_text rounded-lg",
+					classNames?.link,
+				)}
 				color={"foreground"}
 				href={href}
 				data-active={isActive}

@@ -32,8 +32,16 @@ const LoginBtn = ({
 			href="/login"
 			closeNavMenuOnLinkClick={closeNavMenuOnLinkClick}
 		>
-			<Button variant="outline" size={size} className="w-full link_bg_transition" aria-label={authLocale.login}>
-				<p className="text-lg text-foreground dark:text-foreground_dark">{authLocale.login}</p>
+			<Button
+				tabIndex={-1}
+				variant="outline"
+				size={size}
+				className="w-full link_bg_transition"
+				aria-label={authLocale.login}
+			>
+				<p className="text-lg text-foreground dark:text-foreground_dark">
+					{authLocale.login}
+				</p>
 			</Button>
 		</NavMenuLink>
 	);

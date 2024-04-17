@@ -1,12 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
 import { setLanguagePreference } from "@/app/api/actions/lang";
 import { Spinner } from "../ui/spinner";
 import { GlobeIcon } from "../Icons";
 import { locale_content_type, locale_meta } from "@/public/locales/interface";
 import { availableLocalesListData } from "@/lib/lang";
+import { DotSeparator } from "@/app/(main)/(user)/settings/sessions/Timestamp";
 
 type Props = {
 	locale?: {
@@ -18,7 +26,9 @@ type Props = {
 
 const LangSwitcher = ({ locale, availableLocales }: Props) => {
 	const [loading, setLoading] = useState(false);
-	const [currValue, setCurrValue] = useState<string>(`${locale.meta.language.code}-${locale.meta.region.code}`);
+	const [currValue, setCurrValue] = useState<string>(
+		`${locale.meta.language.code}-${locale.meta.region.code}`,
+	);
 	const currentLang = `${locale.meta.language.locale_name} (${locale.meta.region.display_name})`;
 
 	const setPref = async (value: string) => {
@@ -50,7 +60,10 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 				>
 					<div className="flex items-center justify-center gap-2 pr-2">
 						<GlobeIcon size="1.25rem" />
-						<SelectValue placeholder={<p>{currentLang}</p>} />
+						<SelectValue
+							className="flex items-center justify-start"
+							placeholder={<p>{currentLang}</p>}
+						/>
 					</div>
 				</SelectTrigger>
 
@@ -58,8 +71,21 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 					<SelectGroup>
 						{availableLocales?.map((availableLocale) => {
 							return (
-								<SelectItem key={availableLocale.code} value={availableLocale.code}>
-									{`${availableLocale.locale_name} (${availableLocale.region})`}
+								<SelectItem
+									key={availableLocale.code}
+									value={availableLocale.code}
+								>
+									<p className="w-full flex items-end justify-start gap-0.5 align-bottom">
+										<span className="flex items-end justify-center align-bottom">
+											{availableLocale.locale_name}
+										</span>
+										<DotSeparator className="w-[0.2rem] h-[0.2rem] bg-foreground/30 dark:bg-foreground_dark/30" />
+										{availableLocale.region && (
+											<span className="flex items-end justify-center align-bottom text-foreground/90 dark:text-foreground_dark/80">
+												{availableLocale.region}
+											</span>
+										)}
+									</p>
 								</SelectItem>
 							);
 						})}

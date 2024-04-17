@@ -3,7 +3,12 @@ import colors from "tailwindcss/colors";
 
 const config = {
 	darkMode: ["class"],
-	content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+	content: [
+		"./pages/**/*.{ts,tsx}",
+		"./components/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}",
+	],
 	prefix: "",
 	theme: {
 		container: {
@@ -12,6 +17,17 @@ const config = {
 			screens: {
 				"2xl": "1400px",
 			},
+		},
+		borderRadius: {
+			// none: "0px",
+			// sm: "0.125rem",
+			// DEFAULT: "0.25rem",
+			// md: "0.375rem",
+			// lg: "0.5rem",
+			// xl: "0.75rem",
+			// "2xl": "1rem",
+			// "3xl": "1.5rem",
+			// full: "9999px",
 		},
 		extend: {
 			keyframes: {

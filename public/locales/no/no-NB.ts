@@ -1,6 +1,6 @@
-import { locale_content_type, locale_meta } from "@/public/locales/interface";
+import { locale_variant_object } from "@/public/locales/interface";
 
-export const no_nb = {
+export const no_nb: locale_variant_object = {
 	meta: {
 		language: {
 			code: "no",
@@ -12,7 +12,8 @@ export const no_nb = {
 			name: "Bokmål",
 			display_name: "Bokmål",
 		},
-	} satisfies locale_meta,
+		similar_to: "no-NN",
+	},
 
 	content: {
 		globals: {
@@ -45,20 +46,25 @@ export const no_nb = {
 		api_responses: {
 			user: {
 				invalid_form_data: "Ugyldig formdata",
-				username_not_available: "Det brukernavnet er ikke tilgjengelig. Prøv noe annet",
+				username_not_available:
+					"Det brukernavnet er ikke tilgjengelig. Prøv noe annet",
 				profile_update_success: "Suksessfullt oppdaterte profil",
 				something_went_wrong_try_again: "Noe gikk galt! Prøv igjen",
 				email_and_pass_required: "E-post og passord kreves",
-				no_account_exists_with_that_email: "Det fins ikke en konto med den E-postadressen",
+				no_account_exists_with_that_email:
+					"Det fins ikke en konto med den E-postadressen",
 				incorrect_email_or_pass: "Feil E-post eller passord",
 				incorrect_password: "Feil passord",
 				login_success: "Logget inn suksefult",
-				cant_unlink_the_last_auth_provider: "Du kan ikke fjerne den siste gjenværende autentisering-leverandøren",
-				successfully_removed_provider: "Suksessfullt fjernet autentiserings-leverandøren ${0}",
+				cant_unlink_the_last_auth_provider:
+					"Du kan ikke fjerne den siste gjenværende autentisering-leverandøren",
+				successfully_removed_provider:
+					"Suksessfullt fjernet autentiserings-leverandøren ${0}",
 				invalid_password: "Ugyldig passord. ${0}",
 				successfully_removed_password: "Fjernet passord suksessfullt",
 				successfully_added_new_password: "La til nytt passord suksessfullt",
-				password_login_not_enabled: "Du kan ikke endre passordet, når du ikke har aktivert innlogging med passord.",
+				password_login_not_enabled:
+					"Du kan ikke endre passordet, når du ikke har aktivert innlogging med passord.",
 				password_login_not_enabled_desc:
 					"Bare kontoer som har et passord tilknyttet som kan endre passordet. Du kan bruke en autentiserings-leverandør for å logge inn hvis du ikke har passord.",
 				successfully_deleted_account: "Slettet kontoen din suksessfullt",
@@ -79,7 +85,8 @@ export const no_nb = {
 			something_went_wrong: "Noe gikk galt",
 
 			login_page: {
-				meta_desc: "Logg inn i Cosmic Reach Mod Manager for å få en mer personlig opplevelse.",
+				meta_desc:
+					"Logg inn i Cosmic Reach Mod Manager for å få en mer personlig opplevelse.",
 				dont_have_an_account: "Har du ikke en konto?",
 				forgot_password_msg: "Glemt passordet ditt?",
 				log_in_using: "Logg inn med:",
@@ -87,14 +94,18 @@ export const no_nb = {
 				invalid_password_msg: "Skriv inn et gyldig passord",
 			},
 			singup_page: {
-				meta_desc: "Registrer deg for å ha en konto for å kunne laste opp til Cosmic Reach mod manager",
-				signup_using_providers: "Registrer deg ved hjelp av en av de følgende autentiserings-leverandørene",
+				meta_desc:
+					"Registrer deg for å ha en konto for å kunne laste opp til Cosmic Reach mod manager",
+				signup_using_providers:
+					"Registrer deg ved hjelp av en av de følgende autentiserings-leverandørene",
 				already_have_an_account: "Har du allerede en konto?",
 			},
 			change_password_page: {
 				change_password: "Endre passordet",
-				meta_desc: "Tilbakestill passordet til kontoen din for Cosmic Reach Mod Manager.",
-				email_sent_desc: "Åpne lenken som ble sendt til E-posten din for å endre passordet ditt.",
+				meta_desc:
+					"Tilbakestill passordet til kontoen din for Cosmic Reach Mod Manager.",
+				email_sent_desc:
+					"Åpne lenken som ble sendt til E-posten din for å endre passordet ditt.",
 			},
 			action_verification_page: {
 				invalid_token: "Utgått eller ugyldig token",
@@ -119,7 +130,8 @@ export const no_nb = {
 		home_page: {
 			hero: {
 				description: {
-					line_1: "Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
+					line_1:
+						"Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
 					line_2: "Oppdag, spill, og skap innhold, alt på en plass.",
 				},
 				explore_mods: "Utforsk modifikasjoner",
@@ -143,21 +155,24 @@ export const no_nb = {
 				edit_profile: "Rediger profil",
 				enter_username: "Skriv inn brukernavnet ditt",
 				enter_name: "Skriv inn navnet ditt",
-				username_max_chars_limit: "Brukernavnet ditt kan bare ha maksimalt ${0} tegn",
+				username_max_chars_limit:
+					"Brukernavnet ditt kan bare ha maksimalt ${0} tegn",
 				name_max_chars_limit: "Navnet ditt kan bare ha maksimalt ${0} tegn",
 				pfp_provider: "Leverandør av profilbilde",
 				username: "Brukernavn",
 				full_name: "Fult navn",
 				save_profile: "Lagre profil",
 				account_security: "Kontosikkerhet",
-				add_a_password_msg: "Legg til et passord for å kunne bruke påloggingsinformasjon for å logge inn",
+				add_a_password_msg:
+					"Legg til et passord for å kunne bruke påloggingsinformasjon for å logge inn",
 				change_account_password: "Endre passordet ditt til kontoen din",
 				add_password: "Legg til passord",
 				remove_password: "Fjern passord",
 				enter_your_password: "Skriv inn passordet ditt",
 				remove_account_password: "Fjern passordet til kontoen din",
 				manage_auth_providers: "Administrer autentiserings-leverandører",
-				manage_auth_providers_desc: "legg til eller fjern metoder for å logge inn til kontoen din.",
+				manage_auth_providers_desc:
+					"legg til eller fjern metoder for å logge inn til kontoen din.",
 				manage_providers_label: "Administrer leverandører",
 				provider_email_tooltip: "E-posten til linkede kontoen ${0}",
 				auth_providers_label: "Autentiserings-leverandører",
@@ -167,7 +182,8 @@ export const no_nb = {
 					"En E-postbekreftelse er sendt til E-postadressen din. Bekreft via E-posten for å slette kontoen din.",
 				account_deletion_desc:
 					"Det er ingen vei tilbake etter du har slettet kontoen din. Sletting av kontoen din vil fjerne all dataen din fra serveren vår, untatt prosjektene dine.",
-				confirm_to_delete_account: "Er du virkelig sikker på at du vil slette kontoen din?",
+				confirm_to_delete_account:
+					"Er du virkelig sikker på at du vil slette kontoen din?",
 			},
 			sessions_section: {
 				sessions: "økter",
@@ -183,7 +199,8 @@ export const no_nb = {
 						"Hvis du ser en økt du ikke kjenner igjen, så logg ut av den enheten og endre passordet til kontoen som var logget inn i.",
 				},
 				current_session: "Nåværende økt",
-				timestamp_template: "${day}/${month}/${year} ved ${hours}:${minutes} ${amPm}",
+				timestamp_template:
+					"${day}/${month}/${year} ved ${hours}:${minutes} ${amPm}",
 				last_used: "Sist brukt",
 				created: "Oppretta",
 				time_past_phrases: {
@@ -202,18 +219,20 @@ export const no_nb = {
 					year_ago: "${0} år siden",
 					years_ago: "${0} år siden",
 				},
-				session_created_using_provider: "Denne økten ble opprettet ved hjelp av leverandøreren ${0}.",
+				session_created_using_provider:
+					"Denne økten ble opprettet ved hjelp av leverandøreren ${0}.",
 				revoke_session: "Opphev økten",
 			},
 		},
 
 		footer: {
-			site_desc: "Modifikasjoner, shaders, ressurspakker, modpakker, og mer for Cosmic reach, alt på ett sted. ",
+			site_desc:
+				"Modifikasjoner, shaders, ressurspakker, modpakker, og mer for Cosmic reach, alt på ett sted. ",
 			socials: "Sosialt",
 			explore: "Utforsk",
 			privacy_policy: "Retningslinjer for personvern",
 			terms: "Vilkår",
 			change_theme: "Endre tema",
 		},
-	} satisfies locale_content_type,
+	},
 };

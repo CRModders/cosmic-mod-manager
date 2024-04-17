@@ -6,15 +6,21 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import PanelLayout, { PanelContent, SidePanel } from "@/components/PanelLayout/Panel";
+import PanelLayout, {
+	PanelContent,
+	SidePanel,
+} from "@/components/PanelLayout/Panel";
 import { PersonIcon, ShieldIcon } from "@/components/Icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
 import { siteTitle } from "@/config";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import "@/app/globals.css";
 
-export default async function SettingsPageLayout({ children }: { children: React.ReactNode }) {
+export default async function SettingsPageLayout({
+	children,
+}: { children: React.ReactNode }) {
 	const langPref = getLangPref();
 	const locale = get_locale(langPref).content;
 
@@ -38,13 +44,19 @@ export default async function SettingsPageLayout({ children }: { children: React
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">
-						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">{locale.auth.settings}</h1>
+						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">
+							{locale.auth.settings}
+						</h1>
 						<ul className="w-full flex flex-col items-start justify-center gap-1">
 							{SidePanelLinks?.map((link) => {
 								return (
-									<li key={link.href} className="w-full">
-										<SidepanelLink href={link.href} label={link.name} icon={link.icon} />
-									</li>
+									<React.Fragment key={link.href}>
+										<SidepanelLink
+											href={link.href}
+											label={link.name}
+											icon={link.icon}
+										/>
+									</React.Fragment>
 								);
 							})}
 						</ul>

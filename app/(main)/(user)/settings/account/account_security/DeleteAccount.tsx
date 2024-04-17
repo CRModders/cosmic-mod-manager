@@ -12,7 +12,14 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@/components/Icons";
 import { useToast } from "@/components/ui/use-toast";
 import React, { useState } from "react";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { initiateDeleteAccountAction } from "@/app/api/actions/user";
 import { Spinner } from "@/components/ui/spinner";
@@ -42,7 +49,8 @@ const DeleteAccountSection = ({ locale }: Props) => {
 			setDialogOpen(false);
 			toast({
 				title: res?.message,
-				description: locale.settings_page.account_section.deletion_email_sent_desc,
+				description:
+					locale.settings_page.account_section.deletion_email_sent_desc,
 			});
 
 			return;
@@ -69,14 +77,18 @@ const DeleteAccountSection = ({ locale }: Props) => {
 				<DialogContent>
 					<div className="w-full flex flex-col relative gap-4">
 						<DialogHeader>
-							<DialogTitle className="font-normal">{locale.settings_page.account_section.delete_account}</DialogTitle>
+							<DialogTitle className="font-normal">
+								{locale.settings_page.account_section.delete_account}
+							</DialogTitle>
 						</DialogHeader>
 						<div className="w-full flex flex-col gap-2 items-center justify-center">
-							<p className="w-full text-left">{locale.settings_page.account_section.confirm_to_delete_account}</p>
+							<p className="w-full text-left">
+								{locale.settings_page.account_section.confirm_to_delete_account}
+							</p>
 							{formError && <FormErrorMsg msg={formError} />}
 						</div>
 
-						<DialogFooter className="w-full flex flex-row flex-wrap items-center justify-end gap-2">
+						<DialogFooter className="w-full flex flex-row flex-wrap items-center justify-end gap-2 mt-4">
 							<DialogClose asChild>
 								<Button variant="ghost" size="md">
 									{locale.globals.cancel}
