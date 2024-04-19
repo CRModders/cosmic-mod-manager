@@ -8,7 +8,6 @@ const prismaClientSingleton = () => {
 };
 
 declare global {
-	// biome-ignore lint/style/noVar: <explanation>
 	var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 

@@ -12,7 +12,8 @@ import { StoreContext } from "@/contexts/StoreContext";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useContext } from "react";
+import type React from "react";
+import { useContext } from "react";
 
 interface NavLinkProps {
 	href: string;
@@ -78,16 +79,10 @@ export function NavMenuLink({
 	return (
 		<li
 			key={`${href}`}
-			className={cn(
-				"group w-full flex items-center justify-center rounded-lg link_bg_transition",
-				className,
-			)}
+			className={cn("group w-full flex items-center justify-center rounded-lg link_bg_transition", className)}
 		>
 			<Link
-				className={cn(
-					"w-full h-full flex items-center justify-center navlink_text rounded-lg",
-					classNames?.link,
-				)}
+				className={cn("w-full h-full flex items-center justify-center navlink_text rounded-lg", classNames?.link)}
 				color={"foreground"}
 				href={href}
 				data-active={isActive}

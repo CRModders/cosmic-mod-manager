@@ -19,15 +19,11 @@ export const StoreContext = createContext({
 	isNavMenuOpen: false,
 } as StoreContextValues);
 
-export default function StoreContextProvider({
-	children,
-}: { children: React.ReactNode }) {
+export default function StoreContextProvider({ children }: { children: React.ReactNode }) {
 	const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
 
 	const toggleNavMenu = (newState?: boolean) => {
-		setIsNavMenuOpen((current) =>
-			newState === true || newState === false ? newState : !current,
-		);
+		setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
 	};
 
 	return (

@@ -24,11 +24,7 @@ export const NewPasswordConfirmationEmailTemplate = ({
 	)} minutes</span></p></td></tr><tr><td><div style="width: 100%; height: 1px; background-color: #85878A; margin: 16px 0;"></div></td></tr><tr><td align="center"> <a href="${siteUrl}" style="color: #050608; text-decoration: none;"><p style="text-decoration: underline; text-underline-offset: 2px;">Cosmic Reach Mod Manager</p></a> </td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></body> </html> `;
 	const subject = "Verify your new password";
 	const text = `A new password was recently added to your account. Confirm below if this was you. The new password will not work until then.\nOpen the link for more details and options\n${confirmationPageUrl}\n${
-		expiryDurationMs
-			? `This link is valid for ${Math.round(
-					expiryDurationMs / (60 * 1000),
-			  )} minutes`
-			: ""
+		expiryDurationMs ? `This link is valid for ${Math.round(expiryDurationMs / (60 * 1000))} minutes` : ""
 	}\n\nCosmic Reach Mod Manager`;
 
 	return { EmailHTML, subject, text };
@@ -53,11 +49,7 @@ export const ChangePasswordVerificationEmailTemplate = ({
 
 	const subject = "Change your CRMM account password";
 	const text = `Open the link to change your account password.\n${confirmationPageUrl}${
-		expiryDurationMs
-			? `\nThis link is valid for${Math.round(
-					expiryDurationMs / (60 * 1000),
-			  )} minutes`
-			: ""
+		expiryDurationMs ? `\nThis link is valid for${Math.round(expiryDurationMs / (60 * 1000))} minutes` : ""
 	}\n\nCosmic Reach Mod Manager`;
 
 	return { EmailHTML, subject, text };
@@ -82,11 +74,7 @@ export const AccountDeletionVerificationEmailTemplate = ({
 
 	const subject = "Confirm to delete your account on crmm";
 	const text = `Click this link to verify that you want to delete your account.\n${confirmationPageUrl}${
-		expiryDurationMs
-			? `\nThis link is valid for${Math.round(
-					expiryDurationMs / (60 * 1000),
-			  )} minutes`
-			: ""
+		expiryDurationMs ? `\nThis link is valid for${Math.round(expiryDurationMs / (60 * 1000))} minutes` : ""
 	}\n\nCosmic Reach Mod Manager`;
 
 	return { EmailHTML, subject, text };

@@ -5,12 +5,7 @@ import no from "./no";
 import ru from "./ru";
 
 // All the available languages to date
-export type available_languages =
-	| "en-GB"
-	| "es-ES"
-	| "no-NB"
-	| "no-NN"
-	| "ru-RU";
+export type available_languages = "en-GB" | "es-ES" | "no-NB" | "no-NN" | "ru-RU";
 
 const locales = {
 	default: en.default,
@@ -78,16 +73,10 @@ for (const localeKey of localeKeys) {
 
 		// If the localeVariant has a localeVariant similar to it, use that first to replace any null values
 		if (sourceObj?.content) {
-			localeVariantObj.content = updateObject(
-				sourceObj?.content,
-				localeVariantObj?.content,
-			);
+			localeVariantObj.content = updateObject(sourceObj?.content, localeVariantObj?.content);
 		}
 		// Use the default localeVariant to replace any undefined | null values remaining there
-		localeVariantObj.content = updateObject(
-			locales.default.content,
-			localeVariantObj?.content,
-		);
+		localeVariantObj.content = updateObject(locales.default.content, localeVariantObj?.content);
 	}
 }
 

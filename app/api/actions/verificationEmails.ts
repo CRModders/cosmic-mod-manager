@@ -19,7 +19,7 @@ import {
 	NewPasswordConfirmationEmailTemplate,
 } from "@/lib/email/templates";
 import { generateRandomCode } from "@/lib/utils";
-import { User, UserVerificationActionTypes } from "@prisma/client";
+import { type User, UserVerificationActionTypes } from "@prisma/client";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
 

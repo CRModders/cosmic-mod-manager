@@ -8,19 +8,13 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
@@ -28,7 +22,7 @@ import { loginUser } from "@/app/api/actions/user";
 import { defaultLoginRedirect } from "@/config";
 import { isValidEmail } from "@/lib/user";
 import FormErrorMsg from "@/components/formErrorMsg";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	locale: locale_content_type;
@@ -40,9 +34,7 @@ const LoginForm = ({ locale }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
-	const [callbackUrl, setCallbackUrl] = useState(
-		searchParams.get("callbackUrl") || "",
-	);
+	const [callbackUrl, setCallbackUrl] = useState(searchParams.get("callbackUrl") || "");
 
 	const formSchema = z.object({
 		email: z
@@ -95,19 +87,14 @@ const LoginForm = ({ locale }: Props) => {
 		setLoading(false);
 
 		if (result?.success === false) {
-			return setFormError(
-				result?.message || locale.globals.messages.something_went_wrong,
-			);
+			return setFormError(result?.message || locale.globals.messages.something_went_wrong);
 		}
 		window.location.href = callbackUrl;
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setCallbackUrl(
-			searchParams.get("callbackUrl") ||
-				`${window.location.origin}${defaultLoginRedirect}`,
-		);
+		setCallbackUrl(searchParams.get("callbackUrl") || `${window.location.origin}${defaultLoginRedirect}`);
 	}, []);
 
 	return (

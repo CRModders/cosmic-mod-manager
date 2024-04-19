@@ -41,13 +41,9 @@ const Footer = () => {
 					<div className="flex flex-col items-start justify-center pr-4 col-span-2">
 						<div className="flex flex-col items-start justify-center">
 							<BrandIcon size="4rem" />
-							<h2 className="text-xl font-semibold">
-								{locale.globals.site.full_name}
-							</h2>
+							<h2 className="text-xl font-semibold">{locale.globals.site.full_name}</h2>
 						</div>
-						<p className="text-foreground_muted dark:text-foreground_muted_dark">
-							{locale.footer.site_desc}
-						</p>
+						<p className="text-foreground_muted dark:text-foreground_muted_dark">{locale.footer.site_desc}</p>
 					</div>
 
 					<div className="w-full flex flex-col items-start justify-start">
@@ -66,9 +62,7 @@ const Footer = () => {
 												size="1rem"
 												className="text-foreground_muted dark:text-foreground_muted_dark group-hover:text-foreground dark:group-hover:text-foreground_dark fill-foreground_muted dark:fill-foreground_muted_dark group-hover:fill-foreground dark:group-hover:fill-foreground_dark"
 											/>
-											<p className="h-full flex items-center justify-center ml-2 mr-1">
-												{socialLink.label}
-											</p>
+											<p className="h-full flex items-center justify-center ml-2 mr-1">{socialLink.label}</p>
 											<ArrowTopRightIcon className="w-4 h-4" />
 										</Link>
 									</li>
@@ -86,11 +80,7 @@ const Footer = () => {
 										key={link.href}
 										className="inline-block text-foreground_muted dark:text-foreground_muted_dark m-0 p-0 hover:text-foreground dark:hover:text-foreground_dark"
 									>
-										<Link
-											href={link.href}
-											aria-label={link.label}
-											className="py-[0.1rem] inline-block"
-										>
+										<Link href={link.href} aria-label={link.label} className="py-[0.1rem] inline-block">
 											{link.label}
 										</Link>
 									</li>
@@ -108,10 +98,7 @@ const Footer = () => {
 							<SettingsButton locale={locale} />
 						</Suspense>
 
-						<LangSwitcher
-							locale={locale_data}
-							availableLocales={availableLocales}
-						/>
+						<LangSwitcher locale={locale_data} availableLocales={availableLocales} />
 					</div>
 				</div>
 			</div>

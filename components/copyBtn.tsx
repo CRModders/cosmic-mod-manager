@@ -46,26 +46,13 @@ const CopyBtn = ({ text, className, iconClassName, successMessage }: Props) => {
 			size="icon"
 			variant="ghost"
 			aria-label="Copy"
-			className={cn(
-				"shrink-0 flex items-center justify-center w-6 h-6",
-				className,
-			)}
+			className={cn("shrink-0 flex items-center justify-center w-6 h-6", className)}
 			onClick={copyText}
 		>
 			{showTickIcon ? (
-				<CheckIcon
-					className={cn(
-						"w-5 h-5 text-emerald-600 dark:text-emerald-500",
-						iconClassName,
-					)}
-				/>
+				<CheckIcon className={cn("w-5 h-5 text-emerald-600 dark:text-emerald-500", iconClassName)} />
 			) : (
-				<CopyIcon
-					className={cn(
-						"w-3 h-3 text-foreground/50 dark:text-foreground_dark/50",
-						iconClassName,
-					)}
-				/>
+				<CopyIcon className={cn("w-3 h-3 text-foreground/50 dark:text-foreground_dark/50", iconClassName)} />
 			)}
 		</Button>
 	);

@@ -23,7 +23,7 @@
 4. Open the locale file. `es-ES.ts` file in the current example and paste the locale file template (You can find the templates in the bottom part of this file). Replace the placeholders with appropriate values.
 
     ```typescript
-    import { locale_variant_object } from "@/public/locales/interface";
+    import type { locale_variant_object } from "@/public/locales/interface";
 
     export const es_es: locale_variant_object = {
         meta: {
@@ -106,7 +106,7 @@
 - Locale file template
     ```typescript
 
-    import { locale_variant_object } from "@/public/locales/interface";
+    import type { locale_variant_object } from "@/public/locales/interface";
     
     // Replace "lang_code" with the actual language code in lowercase. (Example: es_es for Spanish (es-ES))
     export const lang_code: locale_variant_object = {

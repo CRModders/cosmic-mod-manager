@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import FormErrorMsg from "../formErrorMsg";
 import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 import { Spinner } from "../ui/spinner";
 import { signOut } from "next-auth/react";
 import { sleep } from "@/lib/utils";

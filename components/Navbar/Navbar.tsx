@@ -72,10 +72,7 @@ const Navbar = async () => {
 								aria-label={locale.globals.site.short_name}
 								className="flex items-center justify-between rounded-lg"
 							>
-								<BrandIcon
-									size="2.6rem"
-									className=" text-primary_accent dark:text-primary_accent"
-								/>
+								<BrandIcon size="2.6rem" className=" text-primary_accent dark:text-primary_accent" />
 								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">
 									{locale.globals.site.short_name}
 								</p>
@@ -90,9 +87,7 @@ const Navbar = async () => {
 											aria-label={link.name}
 										>
 											<Navlink href={link.href} label={link.name}>
-												<p className="px-2 h-12 flex items-center justify-center text-center">
-													{link.name}
-												</p>
+												<p className="px-2 h-12 flex items-center justify-center text-center">{link.name}</p>
 											</Navlink>
 										</li>
 									);
@@ -128,9 +123,7 @@ const Navbar = async () => {
 const NavbarLoadingUI = () => {
 	return (
 		<div className="w-full shadow-shadow dark:shadow-shadow_dark bg-background dark:bg-background_dark">
-			<p className="w-full text-center h-16 pb-[2px] flex items-center justify-center shadow">
-				Loading Navbar...
-			</p>
+			<p className="w-full text-center h-16 pb-[2px] flex items-center justify-center shadow">Loading Navbar...</p>
 		</div>
 	);
 };

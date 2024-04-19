@@ -8,7 +8,8 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -19,9 +20,9 @@ import { linkAuthProvider, unlinkAuthProvider } from "@/app/api/actions/user";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
 import { TrashIcon } from "@/components/Icons";
-import { Account } from "@prisma/client";
+import type { Account } from "@prisma/client";
 import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	id: string;
@@ -30,13 +31,19 @@ type Props = {
 	locale: locale_content_type;
 };
 
-const ProviderEmailInfoTooltip = ({ email, provider, provider_email_tooltip }: { email: string; provider?: string; provider_email_tooltip: string }) => {
+const ProviderEmailInfoTooltip = ({
+	email,
+	provider,
+	provider_email_tooltip,
+}: { email: string; provider?: string; provider_email_tooltip: string }) => {
 	return (
 		<TooltipProvider delayDuration={100}>
 			<Tooltip>
 				<TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">{email}</TooltipTrigger>
 				<TooltipContent>
-					<p className="text-sm sm:text-base">{provider_email_tooltip.replace("${0}", provider ? provider : "provider")}</p>
+					<p className="text-sm sm:text-base">
+						{provider_email_tooltip.replace("${0}", provider ? provider : "provider")}
+					</p>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
@@ -88,7 +95,11 @@ const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 						<Accordion type="single" collapsible className="w-full">
 							{authProvidersList?.map((provider) => {
 								return (
-									<AccordionItem value={provider.name} key={provider.name} className=" border-foreground/25 dark:border-foreground_dark/25">
+									<AccordionItem
+										value={provider.name}
+										key={provider.name}
+										className=" border-foreground/25 dark:border-foreground_dark/25"
+									>
 										<AccordionTrigger>
 											<div className="w-full flex items-center justify-start mb-1">
 												<i className="w-8 flex items-center justify-start">{provider.icon}</i>
@@ -100,7 +111,10 @@ const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 												{linkedProvidersNameList.includes(provider.name.toLowerCase()) ? (
 													<>
 														{linkedProviders.map((linkedProvider) => {
-															if (linkedProvider.provider === provider.name.toLowerCase() && linkedProvider?.providerAccountEmail) {
+															if (
+																linkedProvider.provider === provider.name.toLowerCase() &&
+																linkedProvider?.providerAccountEmail
+															) {
 																return (
 																	<ProviderEmailInfoTooltip
 																		key={provider?.name}
@@ -110,8 +124,6 @@ const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 																	/>
 																);
 															}
-
-															return null;
 														})}
 
 														<Button
@@ -130,7 +142,10 @@ const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 													</>
 												) : (
 													<>
-														<p className="text-base text-foreground/90 dark:text-foreground_dark/90" key={provider?.name}>
+														<p
+															className="text-base text-foreground/90 dark:text-foreground_dark/90"
+															key={provider?.name}
+														>
 															{locale.settings_page.account_section.link_a_provier.replace("${0}", provider?.name)}
 														</p>
 

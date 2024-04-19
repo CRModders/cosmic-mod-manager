@@ -29,18 +29,13 @@ export default async function Home() {
 		locale.globals.shaders,
 		locale.globals.mods,
 	];
-	const extracted_desc = extract_elems(
-		locale.home_page.hero.description.line_1,
-	);
+	const extracted_desc = extract_elems(locale.home_page.hero.description.line_1);
 	const home_page_locale = locale.home_page;
 
 	return (
 		<main className="w-full h-fit flex flex-col items-center justify-start pb-8">
 			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
-				<BrandIcon
-					size="18rem"
-					className=" text-primary_accent dark:text-primary_accent_dark"
-				/>
+				<BrandIcon size="18rem" className=" text-primary_accent dark:text-primary_accent_dark" />
 				<div className="w-full flex flex-col items-center justify-center">
 					<h1 className="text-3xl lg:text-5xl text-center font-semibold text-foreground dark:text-foreground_dark">
 						{locale.globals.site.full_name}
@@ -101,9 +96,7 @@ export default async function Home() {
 			</section>
 
 			<section className="w-full flex flex-col gap-2 items-center justify-center">
-				<FeaturedSection
-					featuredSectionLocale={home_page_locale.featured_section}
-				/>
+				<FeaturedSection featuredSectionLocale={home_page_locale.featured_section} />
 			</section>
 		</main>
 	);

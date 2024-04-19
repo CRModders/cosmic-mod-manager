@@ -8,7 +8,7 @@
 
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { auth_locale } from "@/public/locales/interface";
+import type { auth_locale } from "@/public/locales/interface";
 import Link from "next/link";
 import React from "react";
 
@@ -32,9 +32,7 @@ const AuthButton = async ({ authLocale }: Props) => {
 					aria-label={authLocale.dashboard}
 					tabIndex={-1}
 				>
-					<p className="text-foreground dark:text-foreground_dark sm:text-lg">
-						{authLocale.dashboard}
-					</p>
+					<p className="text-foreground dark:text-foreground_dark sm:text-lg">{authLocale.dashboard}</p>
 				</Button>
 			</Link>
 		);
@@ -49,9 +47,7 @@ const AuthButton = async ({ authLocale }: Props) => {
 				aria-label={authLocale.sign_up}
 				tabIndex={-1}
 			>
-				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">
-					{authLocale.sign_up}
-				</p>
+				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">{authLocale.sign_up}</p>
 			</Button>
 		</Link>
 	);

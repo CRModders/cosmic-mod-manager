@@ -11,12 +11,8 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { DeletedUser, Providers, UserRoles } from "@prisma/client";
-import {
-	findUserByEmail,
-	findUserById,
-	matchPassword,
-} from "@/app/api/actions/user";
+import type { DeletedUser, Providers, UserRoles } from "@prisma/client";
+import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
 import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
 import { cookies } from "next/headers";
@@ -51,11 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 			const newRandomUsername = parseUsername(user.id);
 			user.userName =
-				deletedAccount?.userName ||
-				newRandomUsername.slice(
-					0,
-					Math.min(maxUsernameLength, newRandomUsername.length),
-				);
+				deletedAccount?.userName || newRandomUsername.slice(0, Math.min(maxUsernameLength, newRandomUsername.length));
 			user.profileImageProvider = account.provider;
 
 			return true;
@@ -136,8 +128,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			// profile?.image_url   ==>   Discord
 			// profile?.picture     ==>   Google
 			// profile?.avatar_url  ==>   Github and Gitlab
-			const profileImageLink =
-				profile?.image_url || profile?.picture || profile?.avatar_url;
+			const profileImageLink = profile?.image_url || profile?.picture || profile?.avatar_url;
 
 			await db.account.updateMany({
 				where: {
@@ -182,10 +173,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					where: { email: credentials.email as string },
 				});
 
-				const isCorrectPassword = await matchPassword(
-					credentials?.password as string,
-					userData.password,
-				);
+				const isCorrectPassword = await matchPassword(credentials?.password as string, userData.password);
 
 				if (isCorrectPassword) {
 					const user = await findUserByEmail(credentials?.email as string);

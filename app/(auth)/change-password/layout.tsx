@@ -23,8 +23,7 @@ export default function ChangePasswordPageLayout({
 
 export const generateMetadata = async () => {
 	const langPref = getLangPref();
-	const change_password_page_locale =
-		get_locale(langPref).content.auth.change_password_page;
+	const change_password_page_locale = get_locale(langPref).content.auth.change_password_page;
 
 	return {
 		title: change_password_page_locale.change_password,

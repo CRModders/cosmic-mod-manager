@@ -3,7 +3,7 @@ import React from "react";
 import { GearIcon } from "../Icons";
 import { auth } from "@/auth";
 import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 const SettingsButton = async ({ locale }: { locale: locale_content_type }) => {
 	const session = await auth();

@@ -1,6 +1,6 @@
-import { locale_content_type, locale_meta } from "@/public/locales/interface";
+import type { locale_variant_object } from "@/public/locales/interface";
 
-export const ru_ru = {
+export const ru_ru: locale_variant_object = {
 	meta: {
 		language: {
 			code: "ru",
@@ -12,7 +12,7 @@ export const ru_ru = {
 			name: "Russia",
 			display_name: "Россия",
 		},
-	} satisfies locale_meta,
+	},
 
 	content: {
 		globals: {
@@ -172,15 +172,13 @@ export const ru_ru = {
 			sessions_section: {
 				sessions: "Сессии",
 				meta_desc: "Управлять активными сессиями",
-                view_page: "Просмотреть страницу",
+				view_page: "Просмотреть страницу",
 				sensitive_info_warning: "Предупреждение: Персональные данные",
 				session_page_warning_message:
 					"Эта страница содержит такие персональные данные, как ваш IP-Адрес и местоположение. Пожалуйста, не отправляйте скриншоты, записи экрана и любую другую информацию с этой страницы посторонним людям.",
 				page_desc: {
-					line_1:
-						"Активные сессии. Вы можете остановить каждую из них.",
-					line_2:
-						"Если вы видите незнакомую сессию, закройте её и измените пароль от аккаунта.",
+					line_1: "Активные сессии. Вы можете остановить каждую из них.",
+					line_2: "Если вы видите незнакомую сессию, закройте её и измените пароль от аккаунта.",
 				},
 				current_session: "Текущая сессия",
 				timestamp_template: "${day} ${month}, ${year} в ${hours}:${minutes} ${amPm}",
@@ -215,5 +213,5 @@ export const ru_ru = {
 			terms: "Условия использования",
 			change_theme: "Изменить тему",
 		},
-	} satisfies locale_content_type,
+	},
 };

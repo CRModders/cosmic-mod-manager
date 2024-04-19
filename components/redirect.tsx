@@ -8,7 +8,8 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { sleep } from "@/lib/utils";
 
@@ -20,13 +21,7 @@ type Props = {
 	pushToStack?: boolean;
 };
 
-const Redirect = ({
-	children,
-	text,
-	url,
-	timeoutMs = 0,
-	pushToStack = false,
-}: Props) => {
+const Redirect = ({ children, text, url, timeoutMs = 0, pushToStack = false }: Props) => {
 	const router = useRouter();
 
 	const redirectUser = async () => {
@@ -50,9 +45,7 @@ const Redirect = ({
 			{children ? (
 				children
 			) : (
-				<p className="w-full flex items-center justify-center text-2xl">
-					{text ? text : "Redirecting..."}
-				</p>
+				<p className="w-full flex items-center justify-center text-2xl">{text ? text : "Redirecting..."}</p>
 			)}
 		</div>
 	);

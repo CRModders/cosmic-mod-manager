@@ -3,20 +3,13 @@
 import React from "react";
 import { cn, formatDate, timeSince } from "@/lib/utils";
 import TooltipWrapper from "./TooltipWrapper";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 export const DotSeparator = ({ className }: { className?: string }) => {
 	return (
 		<span className="flex items-center justify-center select-none">
 			&nbsp;&nbsp;
-			<span
-				className={cn(
-					"w-1 h-1 rounded bg-foreground/50 dark:bg-foreground_dark/50",
-					className,
-				)}
-			>
-				{" "}
-			</span>
+			<span className={cn("w-1 h-1 rounded bg-foreground/50 dark:bg-foreground_dark/50", className)}> </span>
 			&nbsp;&nbsp;
 		</span>
 	);
@@ -29,8 +22,7 @@ type Props = {
 };
 
 const Timestamp = ({ lastUsed, createdOn, locale }: Props) => {
-	const timestamp_template =
-		locale.settings_page.sessions_section.timestamp_template;
+	const timestamp_template = locale.settings_page.sessions_section.timestamp_template;
 	let formattedLastUsedDate = null;
 
 	try {
@@ -65,12 +57,7 @@ const Timestamp = ({ lastUsed, createdOn, locale }: Props) => {
 				<div className="text-sm sm:text-base">
 					{locale.settings_page.sessions_section.last_used}{" "}
 					<TooltipWrapper text={formattedLastUsedDate}>
-						<span>
-							{timeSince(
-								lastUsed,
-								locale.settings_page.sessions_section.time_past_phrases,
-							)}
-						</span>
+						<span>{timeSince(lastUsed, locale.settings_page.sessions_section.time_past_phrases)}</span>
 					</TooltipWrapper>
 				</div>
 			)}
@@ -79,12 +66,7 @@ const Timestamp = ({ lastUsed, createdOn, locale }: Props) => {
 				<div className="text-sm sm:text-base">
 					{locale.settings_page.sessions_section.created}{" "}
 					<TooltipWrapper text={formattedCreatedOnDate}>
-						<span>
-							{timeSince(
-								createdOn,
-								locale.settings_page.sessions_section.time_past_phrases,
-							)}
-						</span>
+						<span>{timeSince(createdOn, locale.settings_page.sessions_section.time_past_phrases)}</span>
 					</TooltipWrapper>
 				</div>
 			)}

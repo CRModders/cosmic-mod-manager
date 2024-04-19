@@ -1,8 +1,9 @@
 "use client";
 
+import type { locale_content_type } from "@/public/locales/interface";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { locale_content_type } from "@/public/locales/interface";
-import React, { useState } from "react";
 
 type Props = {
 	children: React.ReactNode;
@@ -10,14 +11,8 @@ type Props = {
 	locale: locale_content_type;
 };
 
-const SessionListPageWrapper = ({
-	children,
-	showSessionPageWarning = "true",
-	locale,
-}: Props) => {
-	const [showWarning, setShowWarning] = useState<boolean>(
-		showSessionPageWarning !== "false",
-	);
+const SessionListPageWrapper = ({ children, showSessionPageWarning = "true", locale }: Props) => {
+	const [showWarning, setShowWarning] = useState<boolean>(showSessionPageWarning !== "false");
 
 	const sessionSectionLocale = locale.settings_page.sessions_section;
 
@@ -27,9 +22,7 @@ const SessionListPageWrapper = ({
 				<h1 className="text-xl sm:text-2xl mb-2 text-yellow-600 dark:text-yellow-400">
 					{sessionSectionLocale.sensitive_info_warning}
 				</h1>
-				<p className="text-yellow-600 dark:text-yellow-400">
-					{sessionSectionLocale.session_page_warning_message}
-				</p>
+				<p className="text-yellow-600 dark:text-yellow-400">{sessionSectionLocale.session_page_warning_message}</p>
 
 				<Button
 					className="px-10 mt-4"

@@ -6,7 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
 	title: "Profile",
@@ -18,9 +18,5 @@ export default function ProfilePageLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return (
-		<section className="flex w-full flex-col items-center justify-center">
-			{children}
-		</section>
-	);
+	return <section className="flex w-full flex-col items-center justify-center">{children}</section>;
 }

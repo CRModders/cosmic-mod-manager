@@ -1,4 +1,4 @@
-import { locale_variant_object } from "@/public/locales/interface";
+import type { locale_variant_object } from "@/public/locales/interface";
 
 export const no_nn: locale_variant_object = {
 	meta: {
@@ -46,25 +46,20 @@ export const no_nn: locale_variant_object = {
 		api_responses: {
 			user: {
 				invalid_form_data: "Ugyldig formdata",
-				username_not_available:
-					"Det brukarnamnet er ikkje tilgjengeleg. Prøv noko anna",
+				username_not_available: "Det brukarnamnet er ikkje tilgjengeleg. Prøv noko anna",
 				profile_update_success: "Suksessfullt oppdaterte profil",
 				something_went_wrong_try_again: "Noko gjekk gale! Prøv igjen",
 				email_and_pass_required: "E-post og passord krevst",
-				no_account_exists_with_that_email:
-					"Det finst ikkje ein konto med den E-postadressa",
+				no_account_exists_with_that_email: "Det finst ikkje ein konto med den E-postadressa",
 				incorrect_email_or_pass: "Feil E-post eller passord",
 				incorrect_password: "Feil passord",
 				login_success: "Logga inn suksefult",
-				cant_unlink_the_last_auth_provider:
-					"Du kan ikkje fjerne den siste gjenverande autentisering-leverandøren",
-				successfully_removed_provider:
-					"Suksessfullt fjerna autentisering-leverandøren ${0}",
+				cant_unlink_the_last_auth_provider: "Du kan ikkje fjerne den siste gjenverande autentisering-leverandøren",
+				successfully_removed_provider: "Suksessfullt fjerna autentisering-leverandøren ${0}",
 				invalid_password: "Ugyldig passord. ${0}",
 				successfully_removed_password: "Fjerna passord suksessfullt",
 				successfully_added_new_password: "La til nytt passord suksessfullt",
-				password_login_not_enabled:
-					"Du kan ikkje endra passordet, når du ikke har aktivert innlogging med passord.",
+				password_login_not_enabled: "Du kan ikkje endra passordet, når du ikke har aktivert innlogging med passord.",
 				password_login_not_enabled_desc:
 					"Berre kontoar som har eit passord knytt til som kan endra passordet. Du kan bruka ein autentisering-leverandør for å logga inn viss du ikkje har passord.",
 				successfully_deleted_account: "Sletta kontoen din suksessfullt",
@@ -85,8 +80,7 @@ export const no_nn: locale_variant_object = {
 			something_went_wrong: "Noko gjekk gale",
 
 			login_page: {
-				meta_desc:
-					"Logg inn i Cosmic Reach Mod Manager for å få ei meir personleg oppleving.",
+				meta_desc: "Logg inn i Cosmic Reach Mod Manager for å få ei meir personleg oppleving.",
 				dont_have_an_account: "Har du ikkje ein konto?",
 				forgot_password_msg: "Gløymt passordet ditt?",
 				log_in_using: "Logg inn med:",
@@ -94,18 +88,14 @@ export const no_nn: locale_variant_object = {
 				invalid_password_msg: "Skriv inn eit gyldig passord",
 			},
 			singup_page: {
-				meta_desc:
-					"Registrer deg for å ha en konto for å kunna lasta opp til Cosmic Reach mod manager",
-				signup_using_providers:
-					"Registrer deg ved hjelp av ein av dei følgjande autentiserings-leverandørane",
+				meta_desc: "Registrer deg for å ha en konto for å kunna lasta opp til Cosmic Reach mod manager",
+				signup_using_providers: "Registrer deg ved hjelp av ein av dei følgjande autentiserings-leverandørane",
 				already_have_an_account: "Har du allereie ein konto?",
 			},
 			change_password_page: {
 				change_password: "Endre passordet",
-				meta_desc:
-					"Tilbakestill passordet til kontoen din for Cosmic Reach Mod Manager.",
-				email_sent_desc:
-					"Opne lenkja som vart send til E-posten din for å endra passordet ditt.",
+				meta_desc: "Tilbakestill passordet til kontoen din for Cosmic Reach Mod Manager.",
+				email_sent_desc: "Opne lenkja som vart send til E-posten din for å endra passordet ditt.",
 			},
 			action_verification_page: {
 				invalid_token: "Utgått eller ugyldig token",
@@ -130,8 +120,7 @@ export const no_nn: locale_variant_object = {
 		home_page: {
 			hero: {
 				description: {
-					line_1:
-						"Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
+					line_1: "Den beste plassen for dine modifikajsoner for [Cosmic Reach].",
 					line_2: "Oppdag, spel, og skap innhald, alt på ein plass.",
 				},
 				explore_mods: "Utforsk modifikasjoner",
@@ -155,24 +144,21 @@ export const no_nn: locale_variant_object = {
 				edit_profile: "Rediger profil",
 				enter_username: "Skriv inn brukarnamnet ditt",
 				enter_name: "Skriv inn namnet ditt",
-				username_max_chars_limit:
-					"Brukarnamnet ditt kan berre ha maksimalt ${0} teikn",
+				username_max_chars_limit: "Brukarnamnet ditt kan berre ha maksimalt ${0} teikn",
 				name_max_chars_limit: "Namnet ditt kan berre ha maksimalt ${0} teikn",
 				pfp_provider: "Leverandør av profilbilete",
 				username: "Brukernamn",
 				full_name: "Fult namn",
 				save_profile: "Lagre profil",
 				account_security: "Kontotryggleik",
-				add_a_password_msg:
-					"Legg til eit passord for å kunna bruka påloggingsinformasjon for å logga inn",
+				add_a_password_msg: "Legg til eit passord for å kunna bruka påloggingsinformasjon for å logga inn",
 				change_account_password: "Endre passordet ditt til kontoen din",
 				add_password: "Legg til passord",
 				remove_password: "Fjern passord",
 				enter_your_password: "Skriv inn passordet ditt",
 				remove_account_password: "Fjern passordet til kontoen din",
 				manage_auth_providers: "Administrer autentiserings-leverandørar",
-				manage_auth_providers_desc:
-					"legg til eller fjern metodar for å logga inn til kontoen din.",
+				manage_auth_providers_desc: "legg til eller fjern metodar for å logga inn til kontoen din.",
 				manage_providers_label: "Administrer leverandørar",
 				provider_email_tooltip: "E-posten til den linka kontoen ${0}",
 				auth_providers_label: "Autentiserings-leverandørar",
@@ -182,8 +168,7 @@ export const no_nn: locale_variant_object = {
 					"Ei E-poststadfesting er send til E-postadressa di. Stadfest via E-posten for å sletta kontoen din.",
 				account_deletion_desc:
 					"Det er ingen veg tilbake etter du har sletta kontoen din. Sletting av kontoen din vil fjerna all dataet din frå serveren vår, untatt prosjekta dine.",
-				confirm_to_delete_account:
-					"Er du verkeleg sikker på at du vil sletta kontoen din?",
+				confirm_to_delete_account: "Er du verkeleg sikker på at du vil sletta kontoen din?",
 			},
 			sessions_section: {
 				sessions: "økter",
@@ -199,8 +184,7 @@ export const no_nn: locale_variant_object = {
 						"Viss du ser ei økt du ikkje kjenner igjen, så logg ut av den eininga og endra passordet til kontoen som var logga inn i.",
 				},
 				current_session: "Noverande økt",
-				timestamp_template:
-					"${day}/${month}/${year} ved ${hours}:${minutes} ${amPm}",
+				timestamp_template: "${day}/${month}/${year} ved ${hours}:${minutes} ${amPm}",
 				last_used: "Sist brukt",
 				created: "Oppretta",
 				time_past_phrases: {
@@ -219,15 +203,13 @@ export const no_nn: locale_variant_object = {
 					year_ago: "${0} år sidan",
 					years_ago: "${0} år sidan",
 				},
-				session_created_using_provider:
-					"Denne økta vart oppretta ved hjelp av leverandøren ${0}.",
+				session_created_using_provider: "Denne økta vart oppretta ved hjelp av leverandøren ${0}.",
 				revoke_session: "Opphev økta",
 			},
 		},
 
 		footer: {
-			site_desc:
-				"Modifikasjonar, shaders, ressurspakkar, modpakkar, og meir for Cosmic Reach, alt på éin stad. ",
+			site_desc: "Modifikasjonar, shaders, ressurspakkar, modpakkar, og meir for Cosmic Reach, alt på éin stad. ",
 			socials: "Sosialt",
 			explore: "Utforsk",
 			privacy_policy: "Retningslinjer for personvern",

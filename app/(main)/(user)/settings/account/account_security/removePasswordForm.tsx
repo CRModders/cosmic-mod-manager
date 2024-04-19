@@ -8,25 +8,13 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
@@ -37,7 +25,7 @@ import { minPasswordLength } from "@/config";
 import { removePassword } from "@/app/api/actions/user";
 import FormErrorMsg from "@/components/formErrorMsg";
 import { TrashIcon } from "@/components/Icons";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	id: string;
@@ -69,10 +57,7 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 
 	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
 		if (loading) return;
-		if (
-			!values?.password ||
-			(values?.password?.length || 0) < minPasswordLength
-		) {
+		if (!values?.password || (values?.password?.length || 0) < minPasswordLength) {
 			return setFormError(locale.auth.login_page.invalid_password_msg);
 		}
 		setLoading(true);
@@ -143,10 +128,7 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
 														<span className="text-foreground_muted dark:text-foreground_muted_dark my-1">
-															{
-																locale.settings_page.account_section
-																	.enter_your_password
-															}
+															{locale.settings_page.account_section.enter_your_password}
 														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
@@ -158,9 +140,7 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(
-																e: React.ChangeEvent<HTMLInputElement>,
-															) => {
+															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(e);
 																setFormError(null);
 															}}
@@ -173,9 +153,7 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 								</div>
 							</div>
 
-							<div className="w-full min-h-6">
-								{formError && <FormErrorMsg msg={formError} />}
-							</div>
+							<div className="w-full min-h-6">{formError && <FormErrorMsg msg={formError} />}</div>
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<DialogClose
@@ -189,16 +167,12 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 
 								<Button
 									type="submit"
-									aria-label={
-										locale.settings_page.account_section.remove_password
-									}
+									aria-label={locale.settings_page.account_section.remove_password}
 									className="bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90"
 									disabled={!form.getValues().password}
 								>
 									<TrashIcon className="h-4 w-4 text-foreground_dark" />
-									<p className="px-2 text-foreground_dark">
-										{locale.settings_page.account_section.remove_password}
-									</p>
+									<p className="px-2 text-foreground_dark">{locale.settings_page.account_section.remove_password}</p>
 								</Button>
 							</div>
 						</form>
