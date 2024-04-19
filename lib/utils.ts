@@ -6,10 +6,12 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import crypto from "node:crypto";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import type { time_past_phrases } from "@/public/locales/interface";
+import { clsx, type ClassValue } from "clsx";
+
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import crypto from "crypto";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
