@@ -12,13 +12,23 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 
 import { Button } from "@/components/ui/button";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { cancelPasswordChangeAction, confirmPasswordChange } from "@/app/api/actions/user";
+import {
+	cancelPasswordChangeAction,
+	confirmPasswordChange,
+} from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { sleep } from "@/lib/utils";
@@ -39,7 +49,11 @@ export const getChangePasswordFormSchema = (locale: locale_content_type) => {
 				message: locale.auth.action_verification_page.enter_password,
 			})
 			.max(maxPasswordLength, {
-				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+				message:
+					locale.auth.action_verification_page.max_password_length_msg.replace(
+						"${0}",
+						`${maxPasswordLength}`,
+					),
 			}),
 		confirmNewPassword: z
 			.string()
@@ -47,7 +61,11 @@ export const getChangePasswordFormSchema = (locale: locale_content_type) => {
 				message: locale.auth.action_verification_page.re_enter_password,
 			})
 			.max(maxPasswordLength, {
-				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+				message:
+					locale.auth.action_verification_page.max_password_length_msg.replace(
+						"${0}",
+						`${maxPasswordLength}`,
+					),
 			}),
 	});
 };
@@ -71,7 +89,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
-	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(null);
+	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(
+		null,
+	);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -102,7 +122,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 		setLoading(false);
 
 		if (res?.success !== true) {
-			return setFormError(res?.message || locale.globals.messages.something_went_wrong);
+			return setFormError(
+				res?.message || locale.globals.messages.something_went_wrong,
+			);
 		}
 
 		setShowSuccessPage(SuccessPage.CANCELLATION_SUCCESS);
@@ -120,7 +142,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 		}
 
 		if (values.newPassword !== values.confirmNewPassword) {
-			return setFormError(locale.auth.action_verification_page.password_dont_match);
+			return setFormError(
+				locale.auth.action_verification_page.password_dont_match,
+			);
 		}
 
 		setLoading(true);
@@ -177,6 +201,7 @@ const AddPasswordForm = ({ token, email }: Props) => {
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(handleSubmit)}
+							name={locale.auth.change_password_page.change_password}
 							className="w-full flex flex-col items-center justify-center gap-6"
 						>
 							<div className="w-full flex flex-col items-center justify-center gap-4">
@@ -196,7 +221,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															autoComplete="username"
 															className="hidden"
 															readOnly={true}
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
+															) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -217,7 +244,10 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
-															{locale.auth.action_verification_page.new_password}
+															{
+																locale.auth.action_verification_page
+																	.new_password
+															}
 														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
@@ -229,7 +259,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
+															) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -250,7 +282,10 @@ const AddPasswordForm = ({ token, email }: Props) => {
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
 														<span className="text-foreground_muted dark:text-foreground_muted_dark py-1">
-															{locale.auth.action_verification_page.confirm_new_password}
+															{
+																locale.auth.action_verification_page
+																	.confirm_new_password
+															}
 														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
@@ -262,7 +297,9 @@ const AddPasswordForm = ({ token, email }: Props) => {
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
+															) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -279,15 +316,22 @@ const AddPasswordForm = ({ token, email }: Props) => {
 
 							<div className="w-full flex items-center justify-end gap-2">
 								<Button variant="outline" type="button" onClick={cancelAction}>
-									<p className="px-4 h-9 flex items-center justify-center">{locale.globals.cancel}</p>
+									<p className="px-4 h-9 flex items-center justify-center">
+										{locale.globals.cancel}
+									</p>
 								</Button>
 
 								<Button
 									type="submit"
 									aria-label={locale.auth.change_password_page.change_password}
-									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
+									disabled={
+										!form.getValues().newPassword &&
+										!form.getValues().confirmNewPassword
+									}
 								>
-									<p className="px-4">{locale.auth.change_password_page.change_password}</p>
+									<p className="px-4">
+										{locale.auth.change_password_page.change_password}
+									</p>
 								</Button>
 							</div>
 						</form>

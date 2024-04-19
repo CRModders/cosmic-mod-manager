@@ -24,18 +24,34 @@ const AuthButton = async ({ authLocale }: Props) => {
 	// biome-ignore lint/complexity/useOptionalChain: <explanation>
 	if (session && session?.user?.email) {
 		return (
-			<Link href="/dashboard">
-				<Button className="h-10 sm:h-12 px-6 sm:px-8" size="lg" variant="outline" aria-label={authLocale.dashboard}>
-					<p className="text-foreground dark:text-foreground_dark sm:text-lg">{authLocale.dashboard}</p>
+			<Link href="/dashboard" aria-label={authLocale.dashboard}>
+				<Button
+					className="h-10 sm:h-12 px-6 sm:px-8"
+					size="lg"
+					variant="outline"
+					aria-label={authLocale.dashboard}
+					tabIndex={-1}
+				>
+					<p className="text-foreground dark:text-foreground_dark sm:text-lg">
+						{authLocale.dashboard}
+					</p>
 				</Button>
 			</Link>
 		);
 	}
 
 	return (
-		<Link href="/register">
-			<Button className="h-10 sm:h-12 px-6 sm:px-8" size="lg" variant="outline" aria-label={authLocale.sign_up}>
-				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">{authLocale.sign_up}</p>
+		<Link href="/register" aria-label={authLocale.sign_up}>
+			<Button
+				className="h-10 sm:h-12 px-6 sm:px-8"
+				size="lg"
+				variant="outline"
+				aria-label={authLocale.sign_up}
+				tabIndex={-1}
+			>
+				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">
+					{authLocale.sign_up}
+				</p>
 			</Button>
 		</Link>
 	);

@@ -12,13 +12,18 @@ import authConfig from "@/auth.config";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { DeletedUser, Providers, UserRoles } from "@prisma/client";
-import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
+import {
+	findUserByEmail,
+	findUserById,
+	matchPassword,
+} from "@/app/api/actions/user";
 import { parseProfileProvider, parseUsername } from "@/lib/user";
 import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
 import { cookies } from "next/headers";
 import { deleteSessionToken, setSessionToken } from "./app/api/actions/auth";
 
 declare module "next-auth" {
+	// Additional types in the User field
 	interface User {
 		role?: UserRoles;
 		userName?: string;
@@ -31,6 +36,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	callbacks: {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		async signIn({ user, account }): Promise<any> {
+			// Delete any previous session, if exists
+			// If not done, stale sessions may stack up when usere links and unlinks auth providers
 			await deleteSessionToken({});
 
 			let deletedAccount: DeletedUser | null = null;
@@ -44,12 +51,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 			const newRandomUsername = parseUsername(user.id);
 			user.userName =
-				deletedAccount?.userName || newRandomUsername.slice(0, Math.min(maxUsernameLength, newRandomUsername.length));
+				deletedAccount?.userName ||
+				newRandomUsername.slice(
+					0,
+					Math.min(maxUsernameLength, newRandomUsername.length),
+				);
 			user.profileImageProvider = account.provider;
 
 			return true;
 		},
 
+		// Returns the session object when using auth() function and useSession() also i guess
 		async session({ session, token }) {
 			if (token?.sub) {
 				session.user.id = token.sub;
@@ -67,10 +79,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		},
 	},
 
+	// Events are fired when an action happens, callback functions execute first and then the event functions
 	events: {
 		...authConfig,
+		// Event fired when user links a provider account. To link a provider account a user has to login using a provider that has the same email as his account on site
 		async linkAccount({ user, account }) {
-			// Set the email verified for oauth users
 			const userData = await findUserById(user.id);
 
 			const data: {
@@ -79,6 +92,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			} = {};
 
 			if (!userData?.emailVerified || !userData?.profileImageProvider) {
+				// Set the email verified to the date if it's null i.e. this is a new registration
 				if (!userData?.emailVerified) {
 					data.emailVerified = new Date();
 				}
@@ -87,6 +101,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					data.profileImageProvider = parseProfileProvider(account.provider);
 				}
 
+				// Update the data in the database
 				await db.user.update({
 					where: {
 						id: user?.id,
@@ -95,6 +110,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 				});
 			}
 		},
+		// Event fired when the user signs in
 		async signIn({ user, account, profile }) {
 			// Delete the previous provider account if the user signs in using the same provider with different email
 			const accountsData = await db.account.findMany({
@@ -120,7 +136,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			// profile?.image_url   ==>   Discord
 			// profile?.picture     ==>   Google
 			// profile?.avatar_url  ==>   Github and Gitlab
-			const profileImageLink = profile?.image_url || profile?.picture || profile?.avatar_url;
+			const profileImageLink =
+				profile?.image_url || profile?.picture || profile?.avatar_url;
 
 			await db.account.updateMany({
 				where: {
@@ -136,7 +153,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 			await setSessionToken(user?.id, account?.provider);
 		},
 		async signOut() {
-			deleteSessionToken({});
+			await deleteSessionToken({});
 		},
 	},
 
@@ -150,9 +167,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 	providers: [
 		...authConfig.providers,
+		// The credential provider is being added here instead of auth.config.ts file because that config file is used inside of middleware and that does not support db (prisma + MongoDB) integration
 		CredentialsProvider({
 			id: "credentials",
 			name: "Credentials",
+
+			// The signIn logic of the credentials provider
 			async authorize(credentials) {
 				if (!credentials?.email || !credentials?.password) {
 					return null;
@@ -162,7 +182,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 					where: { email: credentials.email as string },
 				});
 
-				const isCorrectPassword = await matchPassword(credentials?.password as string, userData.password);
+				const isCorrectPassword = await matchPassword(
+					credentials?.password as string,
+					userData.password,
+				);
 
 				if (isCorrectPassword) {
 					const user = await findUserByEmail(credentials?.email as string);

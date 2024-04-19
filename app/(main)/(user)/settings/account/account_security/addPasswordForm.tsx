@@ -12,8 +12,21 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+	Dialog,
+	DialogTrigger,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
@@ -48,7 +61,11 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 				message: locale.auth.action_verification_page.enter_password,
 			})
 			.max(maxPasswordLength, {
-				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+				message:
+					locale.auth.action_verification_page.max_password_length_msg.replace(
+						"${0}",
+						`${maxPasswordLength}`,
+					),
 			}),
 		confirmNewPassword: z
 			.string()
@@ -56,7 +73,11 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 				message: locale.auth.action_verification_page.re_enter_password,
 			})
 			.max(maxPasswordLength, {
-				message: locale.auth.action_verification_page.max_password_length_msg.replace("${0}", `${maxPasswordLength}`),
+				message:
+					locale.auth.action_verification_page.max_password_length_msg.replace(
+						"${0}",
+						`${maxPasswordLength}`,
+					),
 			}),
 	});
 
@@ -89,7 +110,9 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 		}
 
 		if (values.newPassword !== values.confirmNewPassword) {
-			return setFormError(locale.auth.action_verification_page.password_dont_match);
+			return setFormError(
+				locale.auth.action_verification_page.password_dont_match,
+			);
 		}
 
 		setLoading(true);
@@ -114,7 +137,10 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
-				<Button className="flex items-center justify-center gap-2" variant="outline">
+				<Button
+					className="flex items-center justify-center gap-2"
+					variant="outline"
+				>
 					<KeyIcon size="1.1rem" />
 					<p>{locale.settings_page.account_section.add_password}</p>
 				</Button>
@@ -122,12 +148,18 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="font-normal">{locale.settings_page.account_section.add_password}</DialogTitle>
+					<DialogTitle className="font-normal">
+						{locale.settings_page.account_section.add_password}
+					</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex flex-col items-center justify-center gap-6">
+						<form
+							name={locale.settings_page.account_section.add_password}
+							onSubmit={form.handleSubmit(handleSubmit)}
+							className="w-full flex flex-col items-center justify-center gap-6"
+						>
 							<div className="w-full flex flex-col items-center justify-center gap-4">
 								<div className="w-full flex flex-col items-center justify-center">
 									<FormField
@@ -137,7 +169,15 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 											<>
 												<FormItem aria-hidden={true} className="hidden">
 													<FormControl>
-														<Input placeholder="********" type="email" name="username" autoComplete="username" className="hidden" aria-hidden={true} {...field} />
+														<Input
+															placeholder="********"
+															type="email"
+															name="username"
+															autoComplete="username"
+															className="hidden"
+															aria-hidden={true}
+															{...field}
+														/>
 													</FormControl>
 												</FormItem>
 											</>
@@ -153,7 +193,12 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">{locale.auth.action_verification_page.new_password}</span>
+														<span className="text-foreground_muted dark:text-foreground_muted_dark">
+															{
+																locale.auth.action_verification_page
+																	.new_password
+															}
+														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
@@ -164,7 +209,9 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 															name="password"
 															autoComplete="password"
 															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
+															) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -184,7 +231,12 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
 													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-														<span className="text-foreground_muted dark:text-foreground_muted_dark">{locale.auth.action_verification_page.confirm_new_password}</span>
+														<span className="text-foreground_muted dark:text-foreground_muted_dark">
+															{
+																locale.auth.action_verification_page
+																	.confirm_new_password
+															}
+														</span>
 														<FormMessage className="text-danger dark:text-danger_dark leading-tight" />
 													</FormLabel>
 													<FormControl>
@@ -195,7 +247,9 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 															name="confirm_password"
 															autoComplete="confirm_password"
 															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+															onChange={(
+																e: React.ChangeEvent<HTMLInputElement>,
+															) => {
 																field.onChange(e);
 																checkFormError();
 															}}
@@ -211,12 +265,26 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 							{formError && <FormErrorMsg msg={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<DialogClose className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg">
-									<p className="px-4 h-9 flex items-center justify-center">{locale.globals.cancel}</p>
+								<DialogClose
+									className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-lg"
+									aria-label={locale.globals.cancel}
+								>
+									<p className="px-4 h-9 flex items-center justify-center">
+										{locale.globals.cancel}
+									</p>
 								</DialogClose>
 
-								<Button type="submit" aria-label="Log in" className="" disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}>
-									<p className="px-4">{locale.auth.change_password_page.change_password}</p>
+								<Button
+									type="submit"
+									aria-label={locale.auth.change_password_page.change_password}
+									disabled={
+										!form.getValues().newPassword &&
+										!form.getValues().confirmNewPassword
+									}
+								>
+									<p className="px-4">
+										{locale.auth.change_password_page.change_password}
+									</p>
 								</Button>
 							</div>
 						</form>

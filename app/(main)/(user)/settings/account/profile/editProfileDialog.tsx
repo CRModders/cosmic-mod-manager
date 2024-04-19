@@ -40,6 +40,7 @@ const EditProfileDialog = ({
 				<Button
 					className="flex gap-2 items-center justify-center"
 					variant="outline"
+					aria-label={locale.settings_page.account_section.edit_profile}
 				>
 					<EditIcon
 						size="1rem"

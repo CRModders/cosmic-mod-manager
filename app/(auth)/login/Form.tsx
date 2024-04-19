@@ -115,6 +115,7 @@ const LoginForm = ({ locale }: Props) => {
 			<form
 				onSubmit={form.handleSubmit(handleSubmit)}
 				className="w-full flex flex-col items-center justify-center gap-5"
+				name={authLocale.login}
 			>
 				<div className="w-full flex flex-col items-center justify-center">
 					<FormField

@@ -150,8 +150,9 @@ export const MenuAuthButton = async ({
 								<NavMenuLink
 									key={link.name}
 									href={link.href}
-									className="w-full flex items-center justify-center rounded-lg"
+									label={link.name}
 									tabIndex={0}
+									className="w-full flex items-center justify-center rounded-lg"
 								>
 									<Button
 										variant="ghost"
@@ -160,6 +161,7 @@ export const MenuAuthButton = async ({
 										}
 										size="lg"
 										tabIndex={-1}
+										aria-label={link.name}
 									>
 										<span className="w-6 flex items-center justify-center link_icon">
 											{link.icon}

@@ -173,6 +173,7 @@ const EditProfileInfoForm = ({
 
 			<Form {...form}>
 				<form
+					name={locale.settings_page.account_section.edit_profile}
 					onSubmit={form.handleSubmit(handleSubmit)}
 					className="w-full flex flex-col items-center justify-center gap-3"
 				>

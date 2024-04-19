@@ -81,6 +81,7 @@ const ProfileDropdown = async ({ locale }: Props) => {
 								<Link
 									key={link.name}
 									href={link.href}
+									aria-label={link.name}
 									className="w-full flex items-center justify-center rounded-lg link_bg_transition"
 									tabIndex={0}
 								>

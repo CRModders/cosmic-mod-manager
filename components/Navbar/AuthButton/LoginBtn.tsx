@@ -30,6 +30,7 @@ const LoginBtn = ({
 				className,
 			)}
 			href="/login"
+			label={authLocale.login}
 			closeNavMenuOnLinkClick={closeNavMenuOnLinkClick}
 		>
 			<Button

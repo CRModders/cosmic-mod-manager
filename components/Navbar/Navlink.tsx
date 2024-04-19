@@ -16,17 +16,18 @@ import React, { useContext } from "react";
 
 interface NavLinkProps {
 	href: string;
+	label: string;
 	children: React.ReactNode;
 	className?: string;
-	classNames?: {
-		link: string;
-	};
 	isDisabled?: boolean;
 	tabIndex?: number;
 	closeNavMenuOnLinkClick?: boolean;
+	classNames?: {
+		link: string;
+	};
 }
 
-const Navlink = ({ children, href, className }: NavLinkProps) => {
+const Navlink = ({ children, href, label, className }: NavLinkProps) => {
 	const pathname = usePathname();
 	let isActive = pathname === href;
 	if (href === "/") {
@@ -37,6 +38,7 @@ const Navlink = ({ children, href, className }: NavLinkProps) => {
 	return (
 		<Link
 			href={href}
+			aria-label={label}
 			className={cn(
 				"navlink_text rounded-lg decoration-foreground/80 dark:decoration-foreground_dark/80 data-[active=true]:font-normal",
 				className,
@@ -52,6 +54,7 @@ export default Navlink;
 
 export function NavMenuLink({
 	href,
+	label,
 	children,
 	className,
 	classNames,
@@ -88,13 +91,14 @@ export function NavMenuLink({
 				color={"foreground"}
 				href={href}
 				data-active={isActive}
+				tabIndex={tabIndex || isDisabled ? -1 : 0}
+				aria-disabled={isDisabled}
+				aria-label={label}
 				onClick={() => {
 					if (closeNavMenuOnLinkClick === true) {
 						CloseNavMenu();
 					}
 				}}
-				aria-disabled={isDisabled}
-				tabIndex={tabIndex || isDisabled ? -1 : 0}
 			>
 				{children}
 			</Link>

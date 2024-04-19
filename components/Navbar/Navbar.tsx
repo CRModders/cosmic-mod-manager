@@ -69,6 +69,7 @@ const Navbar = async () => {
 						<div className="flex items-center justify-center gap-6">
 							<Link
 								href="/"
+								aria-label={locale.globals.site.short_name}
 								className="flex items-center justify-between rounded-lg"
 							>
 								<BrandIcon
@@ -88,7 +89,7 @@ const Navbar = async () => {
 											className="group list-none m-0 p-0 flex items-center justify-center"
 											aria-label={link.name}
 										>
-											<Navlink href={link.href}>
+											<Navlink href={link.href} label={link.name}>
 												<p className="px-2 h-12 flex items-center justify-center text-center">
 													{link.name}
 												</p>

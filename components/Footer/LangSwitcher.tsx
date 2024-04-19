@@ -56,6 +56,7 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 			>
 				<SelectTrigger
 					tabIndex={loading ? -1 : 0}
+					aria-label={currValue}
 					className="h-10 bg-background dark:bg-background_dark hover:bg-transparent dark:hover:bg-transparent px-4 min-w-36 rounded-full text-base dark:shadow-blue-500/0 dark:border-zinc-600"
 				>
 					<div className="flex items-center justify-center gap-2 pr-2">
@@ -74,6 +75,7 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 								<SelectItem
 									key={availableLocale.code}
 									value={availableLocale.code}
+									aria-label={`${availableLocale.locale_name} ${availableLocale.region}`}
 								>
 									<p className="w-full flex items-end justify-start gap-0.5 align-bottom">
 										<span className="flex items-end justify-center align-bottom">

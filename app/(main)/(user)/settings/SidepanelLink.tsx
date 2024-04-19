@@ -29,13 +29,14 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 
 	return (
 		<li
-			className="w-full link_bg_transition data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark overflow-hidden"
+			className="w-full link_bg_transition data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark rounded-lg"
 			data-active={isActive}
 		>
 			<Link
 				href={href}
+				aria-label={label}
 				data-active={isActive}
-				className="group w-full px-4 py-2 relative flex items-center justify-start gap-1 rounded-lg navlink_text"
+				className="group w-full px-4 py-2 relative flex items-center justify-start gap-1 rounded-lg navlink_text overflow-hidden"
 			>
 				{isActive && (
 					<div className="absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-primary_accent dark:bg-primary_accent_dark" />
@@ -43,7 +44,7 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 				<div className="w-6 h-6 flex items-center justify-start link_icon">
 					{icon}
 				</div>
-				<p className="text-lg">{label}</p>
+				<p className="text-lg font-normal">{label}</p>
 			</Link>
 		</li>
 	);

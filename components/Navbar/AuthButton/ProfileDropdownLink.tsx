@@ -23,6 +23,7 @@ type Props = {
 const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 	return (
 		<Button
+			aria-label={label}
 			type="button"
 			variant="ghost"
 			size="md"

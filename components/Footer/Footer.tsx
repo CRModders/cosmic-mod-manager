@@ -86,7 +86,11 @@ const Footer = () => {
 										key={link.href}
 										className="inline-block text-foreground_muted dark:text-foreground_muted_dark m-0 p-0 hover:text-foreground dark:hover:text-foreground_dark"
 									>
-										<Link href={link.href} className="py-[0.1rem] inline-block">
+										<Link
+											href={link.href}
+											aria-label={link.label}
+											className="py-[0.1rem] inline-block"
+										>
 											{link.label}
 										</Link>
 									</li>

@@ -32,10 +32,10 @@ const HamMenu = () => {
 
 	return (
 		<button
-			className="h-12 w-10 flex items-center justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark cursor-pointer rounded-lg"
 			type="button"
+			className="h-12 w-10 flex items-center justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark cursor-pointer rounded-lg"
 			onClick={handleHamMenuClick}
-			aria-label="Toggle mobile nav menu"
+			aria-label="Menu"
 		>
 			<HamburgerMenuIcon width={"60%"} height={"60%"} />
 		</button>
@@ -58,7 +58,11 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 	return (
 		<>
 			{
-				<div className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 ${isNavMenuOpen && styles.menu_open}`}>
+				<div
+					className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 ${
+						isNavMenuOpen && styles.menu_open
+					}`}
+				>
 					<div className="w-full flex flex-col items-center justify-center row-span-2 relative">
 						<div className="absolute top-0 left-0 w-full h-full opacity-80 bg-background dark:bg-background_dark z-[3]" />
 
@@ -66,7 +70,11 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 							{NavMenuLinks.map((link) => {
 								return (
 									<React.Fragment key={link.href}>
-										<NavMenuLink href={link.href} isDisabled={!isNavMenuOpen}>
+										<NavMenuLink
+											href={link.href}
+											label={link.name}
+											isDisabled={!isNavMenuOpen}
+										>
 											<p className="text-lg w-full h-12 flex flex-col items-center justify-center text-center">
 												{link.name}
 											</p>
@@ -74,7 +82,11 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 									</React.Fragment>
 								);
 							})}
-							{isNavMenuOpen === true && <Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>}
+							{isNavMenuOpen === true && (
+								<Suspense fallback={<Spinner size="1.25rem" />}>
+									{children}
+								</Suspense>
+							)}
 						</ul>
 					</div>
 				</div>

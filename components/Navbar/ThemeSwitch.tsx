@@ -63,7 +63,7 @@ export default function ThemeSwitch({
 		<div className="flex items-center justify-center">
 			<button
 				type="button"
-				aria-label="Toggle theme"
+				aria-label={label ? label : "Change theme"}
 				className={cn(
 					"flex items-center overflow-hidden justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark rounded-full",
 					className,
