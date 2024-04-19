@@ -6,7 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import type React from "react";
 import { Card } from "../ui/card";
 
 type SidePanelProps = {
@@ -14,11 +14,7 @@ type SidePanelProps = {
 };
 
 export const SidePanel = async ({ children }: SidePanelProps) => {
-	return (
-		<Card className="w-full px-4 py-4 rounded-lg lg:w-80 shadow-none">
-			{children}
-		</Card>
-	);
+	return <Card className="w-full px-4 py-4 rounded-lg lg:w-80 shadow-none">{children}</Card>;
 };
 
 type PanelContentProps = {
@@ -26,11 +22,7 @@ type PanelContentProps = {
 };
 
 export const PanelContent = async ({ children }: PanelContentProps) => {
-	return (
-		<section className="grow max-w-full flex items-center justify-center rounded-lg lg:w-64">
-			{children}
-		</section>
-	);
+	return <section className="grow max-w-full flex items-center justify-center rounded-lg lg:w-64">{children}</section>;
 };
 
 type Props = {
@@ -38,11 +30,7 @@ type Props = {
 };
 
 const PanelLayout = ({ children }: Props) => {
-	return (
-		<div className="w-full flex flex-wrap items-start justify-start gap-8 mt-4">
-			{children}
-		</div>
-	);
+	return <div className="w-full flex flex-wrap items-start justify-start gap-8 mt-4">{children}</div>;
 };
 
 export default PanelLayout;

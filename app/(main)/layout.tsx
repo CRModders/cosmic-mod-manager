@@ -6,10 +6,9 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
+import type { Metadata } from "next";
+import type React from "react";
 import { siteTitle } from "@/config";
-import { Metadata } from "next";
-
-import React from "react";
 
 export const metadata: Metadata = {
 	title: {
@@ -19,11 +18,7 @@ export const metadata: Metadata = {
 };
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-	return (
-		<section className="w-full flex items-center justify-center">
-			{children}
-		</section>
-	);
+	return <section className="w-full flex items-center justify-center">{children}</section>;
 };
 
 export default Layout;

@@ -7,7 +7,7 @@ import { dbSessionTokenCookieKeyName, userSessionValidity_ms } from "@/config";
 import { generateRandomCode } from "@/lib/utils";
 import { cookies, headers } from "next/headers";
 import { findUserById } from "./user";
-import { GeoApiData } from "@/types";
+import type { GeoApiData } from "@/types";
 import { revalidatePath } from "next/cache";
 
 // Sets a cookies that contains the sessionToken
@@ -24,9 +24,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 	// Gettings Geo data from the IP address
 	if (ip) {
 		try {
-			const res = await fetch(
-				`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`,
-			);
+			const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`);
 
 			const resJsonData = await res.json();
 
@@ -89,9 +87,7 @@ export const deleteSessionToken = async ({
 	} catch (error) {}
 };
 
-export const getValidSessionToken = async (
-	sessionToken: string,
-): Promise<string | null> => {
+export const getValidSessionToken = async (sessionToken: string): Promise<string | null> => {
 	try {
 		if (!sessionToken) return null;
 
@@ -104,10 +100,7 @@ export const getValidSessionToken = async (
 			return null;
 		}
 
-		if (
-			sessionData?.createdOn?.getTime() + userSessionValidity_ms <
-			new Date().getTime()
-		) {
+		if (sessionData?.createdOn?.getTime() + userSessionValidity_ms < new Date().getTime()) {
 			await deleteSessionToken({ token: sessionToken });
 
 			return null;

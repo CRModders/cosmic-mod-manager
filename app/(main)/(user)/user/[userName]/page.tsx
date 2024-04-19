@@ -36,7 +36,9 @@ const ProfilePage = async ({ params }: Props) => {
 								<Avatar className="flex items-center justify-center w-20 h-20">
 									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
 
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
+										{user?.name?.charAt(0).toUpperCase()}
+									</AvatarFallback>
 								</Avatar>
 
 								<div className="grow max-w-full flex flex-col items-center sm:items-start justify-center">
@@ -44,7 +46,9 @@ const ProfilePage = async ({ params }: Props) => {
 									<div className="max-w-full flex items-center justify-center gap-4">
 										<ScrollArea className="max-w-full">
 											<p className="flex w-full items-center justify-center text-foreground_muted dark:text-foreground_muted_dark">
-												<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">@</span>
+												<span className=" text-foreground_muted/70 dark:text-foreground_muted_dark/70 select-none">
+													@
+												</span>
 												{user?.userName}
 											</p>
 											<ScrollBar orientation="horizontal" />
@@ -61,7 +65,8 @@ const ProfilePage = async ({ params }: Props) => {
 			{(!user || !user?.email) && (
 				<div className="w-full flex items-center justify-center">
 					<h1 className="text-lg md:text-2xl p-4">
-						No user exists with username <span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
+						No user exists with username{" "}
+						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 						<span className="font-semibold">{params.userName}</span>
 						<span className=" text-foreground/70 dark:text-foreground_dark/70 font-semibold">"</span>
 					</h1>

@@ -19,7 +19,13 @@ import {
 	parseProfileProvider,
 	parseUserName,
 } from "@/lib/user";
-import { Account, Providers, User, UserVerificationActionTypes, VerificationEmail } from "@prisma/client";
+import {
+	type Account,
+	type Providers,
+	type User,
+	UserVerificationActionTypes,
+	type VerificationEmail,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import {
 	changePasswordConfirmationTokenValidity_ms,

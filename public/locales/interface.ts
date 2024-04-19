@@ -1,5 +1,5 @@
-import { available_languages } from ".";
-import { en_gb } from "./en/en-GB";
+import type { available_languages } from ".";
+import type { en_gb } from "./en/en-GB";
 
 export interface locale_meta {
 	language: {
@@ -16,12 +16,10 @@ export interface locale_meta {
 }
 
 export type home_page_locale = typeof en_gb.content.home_page;
-export type featured_section_locale =
-	typeof en_gb.content.home_page.featured_section;
+export type featured_section_locale = typeof en_gb.content.home_page.featured_section;
 export type auth_locale = typeof en_gb.content.auth;
 export type globals_locale = typeof en_gb.content.globals;
-export type time_past_phrases =
-	typeof en_gb.content.settings_page.sessions_section.time_past_phrases;
+export type time_past_phrases = typeof en_gb.content.settings_page.sessions_section.time_past_phrases;
 
 export type locale_content_type = typeof en_gb.content;
 

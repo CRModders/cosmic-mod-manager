@@ -10,7 +10,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { NavMenuLink } from "../Navlink";
 import { cn } from "@/lib/utils";
-import { auth_locale } from "@/public/locales/interface";
+import type { auth_locale } from "@/public/locales/interface";
 
 const LoginBtn = ({
 	className,
@@ -40,9 +40,7 @@ const LoginBtn = ({
 				className="w-full link_bg_transition"
 				aria-label={authLocale.login}
 			>
-				<p className="text-lg text-foreground dark:text-foreground_dark">
-					{authLocale.login}
-				</p>
+				<p className="text-lg text-foreground dark:text-foreground_dark">{authLocale.login}</p>
 			</Button>
 		</NavMenuLink>
 	);

@@ -13,9 +13,9 @@ import React, { useState } from "react";
 
 import EditProfileInfoForm from "./EditForm";
 import { Button } from "@/components/ui/button";
-import { Providers } from "@prisma/client";
+import type { Providers } from "@prisma/client";
 import { EditIcon } from "@/components/Icons";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	name: string;
@@ -25,13 +25,7 @@ type Props = {
 	locale: locale_content_type;
 };
 
-const EditProfileDialog = ({
-	name,
-	username,
-	linkedProviders,
-	currProfileProvider,
-	locale,
-}: Props) => {
+const EditProfileDialog = ({ name, username, linkedProviders, currProfileProvider, locale }: Props) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	return (
@@ -42,10 +36,7 @@ const EditProfileDialog = ({
 					variant="outline"
 					aria-label={locale.settings_page.account_section.edit_profile}
 				>
-					<EditIcon
-						size="1rem"
-						className="text-foreground/90 dark:text-foreground_dark/90"
-					/>
+					<EditIcon size="1rem" className="text-foreground/90 dark:text-foreground_dark/90" />
 					<p className="pr-1">{locale.settings_page.account_section.edit}</p>
 				</Button>
 			</DialogTrigger>

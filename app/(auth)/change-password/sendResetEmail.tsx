@@ -8,31 +8,22 @@
 
 // You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import {
-	CheckCircledIcon,
-	ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
+import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { isValidEmail } from "@/lib/user";
 import { initiatePasswordChange } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import FormErrorMsg from "@/components/formErrorMsg";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
 	userEmail: string | undefined | null;
@@ -87,9 +78,7 @@ const SendResetEmail = ({ userEmail, locale }: Props) => {
 		setLoading(false);
 
 		if (result?.success !== true) {
-			return setFormError(
-				result?.message || locale.globals.messages.something_went_wrong,
-			);
+			return setFormError(result?.message || locale.globals.messages.something_went_wrong);
 		}
 
 		setShowSuccessPage(true);
@@ -103,9 +92,7 @@ const SendResetEmail = ({ userEmail, locale }: Props) => {
 			<div className="container flex flex-col items-center justify-center gap-2">
 				<div className="w-full flex items-center justify-start gap-2 p-2 text-lg rounded-lg text-emerald-600 dark:text-emerald-500 bg-emerald-600/10 dark:bg-emerald-500/5">
 					<CheckCircledIcon className="w-8 pl-2 h-6" />
-					<h1 className="">
-						{locale.globals.messages.email_sent_successfully}
-					</h1>
+					<h1 className="">{locale.globals.messages.email_sent_successfully}</h1>
 				</div>
 				<p className="text-foreground/75 dark:text-foreground_dark/75">
 					{locale.auth.change_password_page.email_sent_desc}

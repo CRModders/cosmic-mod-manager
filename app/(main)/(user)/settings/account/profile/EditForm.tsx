@@ -8,43 +8,25 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import {
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
 import { updateUserProfile } from "@/app/api/actions/user";
+import FormErrorMsg from "@/components/formErrorMsg";
+import FormSuccessMsg from "@/components/formSuccessMsg";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { maxNameLength, maxUsernameLength } from "@/config";
 import { isValidName, isValidUsername, parseProfileProvider } from "@/lib/user";
 import { sleep } from "@/lib/utils";
-import { Providers } from "@prisma/client";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import FormErrorMsg from "@/components/formErrorMsg";
-import FormSuccessMsg from "@/components/formSuccessMsg";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { Providers } from "@prisma/client";
+import type React from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type Props = {
 	name: string;
@@ -75,11 +57,7 @@ const EditProfileInfoForm = ({
 				message: locale.settings_page.account_section.enter_username,
 			})
 			.max(maxUsernameLength, {
-				message:
-					locale.settings_page.account_section.username_max_chars_limit.replace(
-						"${0}",
-						`${maxUsernameLength}`,
-					),
+				message: locale.settings_page.account_section.username_max_chars_limit.replace("${0}", `${maxUsernameLength}`),
 			}),
 		name: z
 			.string()
@@ -87,11 +65,7 @@ const EditProfileInfoForm = ({
 				message: locale.settings_page.account_section.enter_name,
 			})
 			.max(maxNameLength, {
-				message:
-					locale.settings_page.account_section.name_max_chars_limit.replace(
-						"${0}",
-						`${maxNameLength}`,
-					),
+				message: locale.settings_page.account_section.name_max_chars_limit.replace("${0}", `${maxNameLength}`),
 			}),
 	});
 
@@ -166,9 +140,7 @@ const EditProfileInfoForm = ({
 	return (
 		<DialogContent className="gap-4">
 			<DialogHeader>
-				<DialogTitle className="font-normal">
-					{locale.settings_page.account_section.edit_profile}
-				</DialogTitle>
+				<DialogTitle className="font-normal">{locale.settings_page.account_section.edit_profile}</DialogTitle>
 			</DialogHeader>
 
 			<Form {...form}>
@@ -205,11 +177,7 @@ const EditProfileInfoForm = ({
 												<SelectContent>
 													{linkedProviders?.map((provider) => {
 														return (
-															<SelectItem
-																key={provider}
-																value={provider}
-																className="capitalize"
-															>
+															<SelectItem key={provider} value={provider} className="capitalize">
 																{provider}
 															</SelectItem>
 														);
@@ -240,9 +208,7 @@ const EditProfileInfoForm = ({
 													{...field}
 													placeholder="john_doe"
 													className="w-full flex items-center justify-centerp"
-													onChange={(
-														e: React.ChangeEvent<HTMLInputElement>,
-													) => {
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 														field.onChange(e);
 														checkFormError();
 													}}
@@ -272,9 +238,7 @@ const EditProfileInfoForm = ({
 													{...field}
 													placeholder="John Doe"
 													className="w-full flex items-center justify-center"
-													onChange={(
-														e: React.ChangeEvent<HTMLInputElement>,
-													) => {
+													onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 														field.onChange(e);
 														checkFormError();
 													}}
@@ -287,11 +251,7 @@ const EditProfileInfoForm = ({
 						</div>
 					</div>
 
-					{formError ? (
-						<FormErrorMsg msg={formError} />
-					) : (
-						successMessage && <FormSuccessMsg msg={successMessage} />
-					)}
+					{formError ? <FormErrorMsg msg={formError} /> : successMessage && <FormSuccessMsg msg={successMessage} />}
 
 					<DialogFooter className="w-full mt-4">
 						<div className="w-full flex items-center justify-end gap-2">
@@ -299,9 +259,7 @@ const EditProfileInfoForm = ({
 								className="w-fit hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground/80 dark:text-foreground_dark/80 rounded-lg"
 								aria-label={locale.globals.cancel}
 							>
-								<p className="text-base px-4 h-10 flex items-center justify-center">
-									{locale.globals.cancel}
-								</p>
+								<p className="text-base px-4 h-10 flex items-center justify-center">{locale.globals.cancel}</p>
 							</DialogClose>
 
 							<Button
@@ -314,9 +272,7 @@ const EditProfileInfoForm = ({
 									form.getValues().currProfileProvider === currProfileProvider
 								}
 							>
-								<p className="px-4">
-									{locale.settings_page.account_section.save_profile}
-								</p>
+								<p className="px-4">{locale.settings_page.account_section.save_profile}</p>
 							</Button>
 						</div>
 					</DialogFooter>

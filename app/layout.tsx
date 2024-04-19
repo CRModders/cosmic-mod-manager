@@ -7,7 +7,7 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import "./globals.css";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Varela_Round } from "next/font/google";
 import { Providers } from "./providers";
 import { Suspense } from "react";
@@ -35,7 +35,12 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning={true}>
-			<body className={cn("bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark", varela_round.className)}>
+			<body
+				className={cn(
+					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark",
+					varela_round.className,
+				)}
+			>
 				<Suspense>
 					<ValidateSession />
 				</Suspense>

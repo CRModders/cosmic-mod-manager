@@ -6,7 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 import Link from "next/link";
 import React from "react";
 

@@ -37,12 +37,8 @@ const AuthProviders = () => {
 								className="w-full py-4 flex items-center justify-center"
 								variant="secondary"
 							>
-								<i className="w-8 flex items-center justify-start">
-									{provider.icon}
-								</i>
-								<p className="text-foreground dark:text-foreground_dark">
-									{provider.name}
-								</p>
+								<i className="w-8 flex items-center justify-start">{provider.icon}</i>
+								<p className="text-foreground dark:text-foreground_dark">{provider.name}</p>
 							</Button>
 						</form>
 					</React.Fragment>

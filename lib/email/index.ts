@@ -25,12 +25,7 @@ type sendEmailOptions = {
 	text?: string;
 };
 
-export const sendEmail = async ({
-	receiver,
-	subject,
-	text,
-	template,
-}: sendEmailOptions) => {
+export const sendEmail = async ({ receiver, subject, text, template }: sendEmailOptions) => {
 	const res = await emailTransporter.sendMail({
 		from: process.env.SUPPORT_EMAIL,
 		to: receiver,

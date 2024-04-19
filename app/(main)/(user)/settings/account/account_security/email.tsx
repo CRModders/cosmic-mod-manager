@@ -16,13 +16,7 @@ type Props = {
 const EmailField = ({ email }: Props) => {
 	return (
 		<form className="w-full flex items-center justify-start" name="Email">
-			<Input
-				type="email"
-				placeholder="johndoe@xyz.com"
-				className="grow min-w-48 sm:max-w-96"
-				readOnly
-				value={email}
-			/>
+			<Input type="email" placeholder="johndoe@xyz.com" className="grow min-w-48 sm:max-w-96" readOnly value={email} />
 		</form>
 	);
 };

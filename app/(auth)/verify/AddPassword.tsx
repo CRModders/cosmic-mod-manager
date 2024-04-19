@@ -6,18 +6,11 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import {
-	discardNewPasswordAddition,
-	confirmNewPasswordAddition,
-} from "@/app/api/actions/user";
+import { discardNewPasswordAddition, confirmNewPasswordAddition } from "@/app/api/actions/user";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
-import React, { useState } from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import type React from "react";
+import { useState } from "react";
 import SecurityLink from "./SecurityLink";
 import { Spinner } from "@/components/ui/spinner";
 import FormSuccessMsg from "@/components/formSuccessMsg";
@@ -71,11 +64,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 	if (actionResult?.success === true) {
 		return (
 			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
-				<FormSuccessMsg
-					msg={actionResult?.message}
-					className="text-lg"
-					iconClassName="pl-2 w-8 h-6"
-				/>
+				<FormSuccessMsg msg={actionResult?.message} className="text-lg" iconClassName="pl-2 w-8 h-6" />
 			</div>
 		);
 	}
@@ -99,11 +88,7 @@ const AddPasswordConfirmAction = ({ token }: { token: string }) => {
 						}}
 						name={locale.globals.cancel}
 					>
-						<Button
-							type="submit"
-							variant="outline"
-							aria-label={locale.globals.cancel}
-						>
+						<Button type="submit" variant="outline" aria-label={locale.globals.cancel}>
 							{locale.globals.cancel}
 						</Button>
 					</form>

@@ -6,7 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
 	size?: string;

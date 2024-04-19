@@ -6,10 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import PanelLayout, {
-	PanelContent,
-	SidePanel,
-} from "@/components/PanelLayout/Panel";
+import PanelLayout, { PanelContent, SidePanel } from "@/components/PanelLayout/Panel";
 import { PersonIcon, ShieldIcon } from "@/components/Icons";
 import React from "react";
 import SidepanelLink from "./SidepanelLink";
@@ -18,9 +15,7 @@ import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
 import "@/app/globals.css";
 
-export default async function SettingsPageLayout({
-	children,
-}: { children: React.ReactNode }) {
+export default async function SettingsPageLayout({ children }: { children: React.ReactNode }) {
 	const langPref = getLangPref();
 	const locale = get_locale(langPref).content;
 
@@ -51,11 +46,7 @@ export default async function SettingsPageLayout({
 							{SidePanelLinks?.map((link) => {
 								return (
 									<React.Fragment key={link.href}>
-										<SidepanelLink
-											href={link.href}
-											label={link.name}
-											icon={link.icon}
-										/>
+										<SidepanelLink href={link.href} label={link.name} icon={link.icon} />
 									</React.Fragment>
 								);
 							})}

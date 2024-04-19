@@ -48,10 +48,10 @@ export default auth(async (request) => {
 	const routeType: RouteTypes = isAuthApiRoute(pathname)
 		? RouteTypes.authApi
 		: isAuthPage(pathname)
-		  ? RouteTypes.authPage
-		  : isProtectedRoute(pathname)
-			  ? RouteTypes.protected
-			  : RouteTypes.public;
+			? RouteTypes.authPage
+			: isProtectedRoute(pathname)
+				? RouteTypes.protected
+				: RouteTypes.public;
 
 	if (routeType === RouteTypes.authApi) return null;
 

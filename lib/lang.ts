@@ -1,5 +1,5 @@
 import locales from "@/public/locales";
-import { locale_content_type, locale_meta } from "@/public/locales/interface";
+import type { locale_content_type, locale_meta } from "@/public/locales/interface";
 
 const default_language = {
 	code: locales.default.meta.language.code,
@@ -41,9 +41,7 @@ export const format_lang_code = (lang_code: string | null): formatted_lang => {
 	};
 };
 
-export const get_available_lang_code = (
-	language_code: string | null,
-): formatted_lang => {
+export const get_available_lang_code = (language_code: string | null): formatted_lang => {
 	const { lang_code, base_lang, region } = format_lang_code(language_code);
 
 	try {
@@ -60,8 +58,7 @@ export const get_available_lang_code = (
 				};
 			}
 
-			const default_locale_region: string =
-				locale_lang.default.meta.region.code;
+			const default_locale_region: string = locale_lang.default.meta.region.code;
 			return {
 				lang_code: `${base_lang}-${default_locale_region}`,
 				base_lang: base_lang,
@@ -84,8 +81,7 @@ export const get_locale = (
 	content: locale_content_type;
 } => {
 	const available_lang = get_available_lang_code(code);
-	const locale_data =
-		locales[available_lang.base_lang][available_lang.lang_code];
+	const locale_data = locales[available_lang.base_lang][available_lang.lang_code];
 
 	return locale_data;
 };
@@ -155,9 +151,7 @@ const get_regular_str_parts = (str: string) => {
 				throw new Error(`Unterminated ']' character in string : \n ${str}`);
 			}
 
-			str_ref = `${str_ref.slice(0, start_index)}${separator}${str_ref.slice(
-				terminating_index + 1,
-			)}`;
+			str_ref = `${str_ref.slice(0, start_index)}${separator}${str_ref.slice(terminating_index + 1)}`;
 			if (!str_ref.includes(identifier.start)) break;
 		}
 	}

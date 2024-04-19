@@ -41,9 +41,7 @@ export default function ThemeSwitch({
 	const setInitialTheme = () => {
 		if (theme !== "system") return;
 
-		const prefersDarkTheme = window.matchMedia(
-			"(prefers-color-scheme: dark)",
-		).matches;
+		const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 		if (prefersDarkTheme) {
 			setTheme("dark");
@@ -70,12 +68,7 @@ export default function ThemeSwitch({
 				)}
 				onClick={switchTheme}
 			>
-				<div
-					className={cn(
-						"h-12 w-12 relative flex items-center justify-center rounded-full",
-						iconWrapperClassName,
-					)}
-				>
+				<div className={cn("h-12 w-12 relative flex items-center justify-center rounded-full", iconWrapperClassName)}>
 					<div className="sun_icon_wrapper" data-hide-on-theme="light">
 						<SunIcon size={iconSize} />
 					</div>

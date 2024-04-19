@@ -14,7 +14,7 @@ import ProfileDropdownLink from "./ProfileDropdownLink";
 import { findUserById } from "@/app/api/actions/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
-import { locale_content_type } from "@/public/locales/interface";
+import type { locale_content_type } from "@/public/locales/interface";
 import "@/app/globals.css";
 
 type Props = {
@@ -65,9 +65,7 @@ const ProfileDropdown = async ({ locale }: Props) => {
 								{userData.name}
 							</p>
 							<p className="w-full px-4 text-left text-foreground_muted dark:text-foreground_muted_dark">
-								<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">
-									@
-								</span>
+								<span className=" text-foreground/60 dark:text-foreground_dark/60 select-none tracking-wider">@</span>
 								{userData.userName}
 							</p>
 							<ScrollBar orientation="horizontal" />
@@ -85,11 +83,7 @@ const ProfileDropdown = async ({ locale }: Props) => {
 									className="w-full flex items-center justify-center rounded-lg link_bg_transition"
 									tabIndex={0}
 								>
-									<ProfileDropdownLink
-										label={link.name}
-										icon={link.icon}
-										tabIndex={-1}
-									/>
+									<ProfileDropdownLink label={link.name} icon={link.icon} tabIndex={-1} />
 								</Link>
 							);
 						})}

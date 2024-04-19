@@ -6,7 +6,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
+import type React from "react";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
 import { Button } from "@/components/ui/button";
@@ -33,9 +33,7 @@ const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 			)}
 			{...props}
 		>
-			<span className="w-6 flex items-center justify-start link_icon">
-				{icon}
-			</span>
+			<span className="w-6 flex items-center justify-start link_icon">{icon}</span>
 			<p>{label}</p>
 		</Button>
 	);

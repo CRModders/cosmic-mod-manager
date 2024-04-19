@@ -1,4 +1,4 @@
-import { locale_variant_object } from "@/public/locales/interface";
+import type { locale_variant_object } from "@/public/locales/interface";
 
 export const es_es: locale_variant_object = {
 	meta: {
@@ -35,8 +35,7 @@ export const es_es: locale_variant_object = {
 			messages: {
 				something_went_wrong: "Algo salió mal",
 				email_sent_successfully: "Correo electrónico enviado exitosamente",
-				error_sending_email:
-					"Error al enviar correo electrónico de confirmación",
+				error_sending_email: "Error al enviar correo electrónico de confirmación",
 				internal_server_error: "Error interno del servidor",
 				invalid_request: "Solicitud inválida",
 				invalid_token: "Token inválido",
@@ -47,32 +46,25 @@ export const es_es: locale_variant_object = {
 		api_responses: {
 			user: {
 				invalid_form_data: "Datos de formulario inválidos",
-				username_not_available:
-					"Ese nombre de usuario no está disponible, prueba con otro",
+				username_not_available: "Ese nombre de usuario no está disponible, prueba con otro",
 				profile_update_success: "Perfil actualizado exitosamente",
-				something_went_wrong_try_again:
-					"¡Algo salió mal! Por favor, inténtalo de nuevo",
-				email_and_pass_required:
-					"Correo electrónico y contraseña son requeridos",
-				no_account_exists_with_that_email:
-					"No existe una cuenta con el correo electrónico proporcionado",
+				something_went_wrong_try_again: "¡Algo salió mal! Por favor, inténtalo de nuevo",
+				email_and_pass_required: "Correo electrónico y contraseña son requeridos",
+				no_account_exists_with_that_email: "No existe una cuenta con el correo electrónico proporcionado",
 				incorrect_email_or_pass: "Correo electrónico o contraseña incorrectos",
 				incorrect_password: "Contraseña incorrecta",
 				login_success: "Inicio de sesión exitoso",
-				cant_unlink_the_last_auth_provider:
-					"No puedes desvincular el único proveedor de autenticación restante",
+				cant_unlink_the_last_auth_provider: "No puedes desvincular el único proveedor de autenticación restante",
 				successfully_removed_provider: "Proveedor ${0} eliminado exitosamente",
 				invalid_password: "Contraseña inválida. ${0}",
 				successfully_removed_password: "Contraseña eliminada exitosamente",
-				successfully_added_new_password:
-					"Nueva contraseña añadida exitosamente",
+				successfully_added_new_password: "Nueva contraseña añadida exitosamente",
 				password_login_not_enabled:
 					"No puedes cambiar la contraseña, no has habilitado el inicio de sesión con contraseña.",
 				password_login_not_enabled_desc:
 					"Solo las cuentas que tienen una contraseña agregada pueden cambiarla. Si no, puedes usar proveedores de autenticación para iniciar sesión.",
 				successfully_deleted_account: "Cuenta eliminada exitosamente",
-				cancelled_account_deletion:
-					"Eliminación de cuenta cancelada exitosamente",
+				cancelled_account_deletion: "Eliminación de cuenta cancelada exitosamente",
 			},
 		},
 		auth: {
@@ -94,22 +86,18 @@ export const es_es: locale_variant_object = {
 				dont_have_an_account: "¿No tienes una cuenta?",
 				forgot_password_msg: "¿No recuerdas tu contraseña?",
 				log_in_using: "Iniciar sesión usando:",
-				invalid_email_msg:
-					"Introduce una dirección de correo electrónico válida",
+				invalid_email_msg: "Introduce una dirección de correo electrónico válida",
 				invalid_password_msg: "Introduce una contraseña válida",
 			},
 			singup_page: {
-				meta_desc:
-					"Regístrate para obtener una cuenta y tener acceso a subir contenido en Cosmic Reach mod manager",
-				signup_using_providers:
-					"Regístrate usando cualquiera de los proveedores de autenticación",
+				meta_desc: "Regístrate para obtener una cuenta y tener acceso a subir contenido en Cosmic Reach mod manager",
+				signup_using_providers: "Regístrate usando cualquiera de los proveedores de autenticación",
 				already_have_an_account: "¿Ya tienes una cuenta?",
 			},
 			change_password_page: {
 				change_password: "Cambiar contraseña",
 				meta_desc: "Restablece la contraseña de tu cuenta de CRMM.",
-				email_sent_desc:
-					"Abre el enlace enviado a tu correo electrónico y cambia tu contraseña.",
+				email_sent_desc: "Abre el enlace enviado a tu correo electrónico y cambia tu contraseña.",
 			},
 			action_verification_page: {
 				invalid_token: "Token caducado o inválido",
@@ -123,8 +111,7 @@ export const es_es: locale_variant_object = {
 					"Eliminar tu cuenta eliminará todos tus datos excepto tus proyectos de nuestra base de datos. No hay vuelta atrás después de eliminar tu cuenta.",
 				enter_password: "Ingresa tu nueva contraseña",
 				re_enter_password: "Vuelve a ingresar tu contraseña",
-				max_password_length_msg:
-					"Tu contraseña solo puede tener un máximo de ${0} caracteres",
+				max_password_length_msg: "Tu contraseña solo puede tener un máximo de ${0} caracteres",
 				password_dont_match: "Las contraseñas no coinciden",
 				cancelled_successfully: "Cancelado exitosamente",
 				password_changed: "Contraseña cambiada exitosamente",
@@ -159,28 +146,23 @@ export const es_es: locale_variant_object = {
 				edit_profile: "Editar perfil",
 				enter_username: "Ingresa tu nombre de usuario",
 				enter_name: "Ingresa tu nombre",
-				username_max_chars_limit:
-					"Tu nombre de usuario solo puede tener un máximo de ${0} caracteres",
-				name_max_chars_limit:
-					"Tu nombre solo puede tener un máximo de ${0} caracteres",
+				username_max_chars_limit: "Tu nombre de usuario solo puede tener un máximo de ${0} caracteres",
+				name_max_chars_limit: "Tu nombre solo puede tener un máximo de ${0} caracteres",
 				pfp_provider: "Proveedor de imagen de perfil",
 				username: "Nombre de usuario",
 				full_name: "Nombre completo",
 				save_profile: "Guardar perfil",
 				account_security: "Seguridad de la cuenta",
-				add_a_password_msg:
-					"Agrega una contraseña para usar el inicio de sesión con credenciales",
+				add_a_password_msg: "Agrega una contraseña para usar el inicio de sesión con credenciales",
 				change_account_password: "Cambiar contraseña de tu cuenta",
 				add_password: "Agregar contraseña",
 				remove_password: "Eliminar contraseña",
 				enter_your_password: "Ingresa tu contraseña",
 				remove_account_password: "Eliminar la contraseña de tu cuenta",
 				manage_auth_providers: "Administrar proveedores de autenticación",
-				manage_auth_providers_desc:
-					"Agrega o elimina métodos de inicio de sesión de tu cuenta.",
+				manage_auth_providers_desc: "Agrega o elimina métodos de inicio de sesión de tu cuenta.",
 				manage_providers_label: "Administrar proveedores",
-				provider_email_tooltip:
-					"El correo electrónico de la cuenta ${0} vinculada",
+				provider_email_tooltip: "El correo electrónico de la cuenta ${0} vinculada",
 				auth_providers_label: "Proveedores de autenticación",
 				link_a_provier: "Vincular proveedor ${0}",
 				delete_account: "Eliminar cuenta",
@@ -188,8 +170,7 @@ export const es_es: locale_variant_object = {
 					"Se ha enviado un correo electrónico de confirmación a tu dirección de correo electrónico. Confirma allí para eliminar tu cuenta.",
 				account_deletion_desc:
 					"Una vez que elimines tu cuenta, no hay vuelta atrás. Eliminar tu cuenta eliminará todos tus datos, excepto tus proyectos, de nuestros servidores.",
-				confirm_to_delete_account:
-					"¿Estás seguro de que quieres eliminar tu cuenta?",
+				confirm_to_delete_account: "¿Estás seguro de que quieres eliminar tu cuenta?",
 			},
 			sessions_section: {
 				sessions: "Sesiones",
@@ -205,8 +186,7 @@ export const es_es: locale_variant_object = {
 						"Si ves una entrada que no reconoces, cierra la sesión en ese dispositivo y cambia la contraseña de la cuenta que se usó para crear esa sesión.",
 				},
 				current_session: "Sesión actual",
-				timestamp_template:
-					"${month} ${day}, ${year} a las ${hours}:${minutes} ${amPm}",
+				timestamp_template: "${month} ${day}, ${year} a las ${hours}:${minutes} ${amPm}",
 				last_used: "Último uso",
 				created: "Creado",
 				time_past_phrases: {
@@ -224,8 +204,7 @@ export const es_es: locale_variant_object = {
 					year_ago: "hace ${0} año",
 					years_ago: "hace ${0} años",
 				},
-				session_created_using_provider:
-					"Esta sesión se creó utilizando el proveedor ${0}",
+				session_created_using_provider: "Esta sesión se creó utilizando el proveedor ${0}",
 				revoke_session: "Revocar sesión",
 			},
 		},

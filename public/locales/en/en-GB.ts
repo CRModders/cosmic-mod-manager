@@ -1,4 +1,4 @@
-import { locale_meta } from "@/public/locales/interface";
+import type { locale_meta } from "@/public/locales/interface";
 
 export const en_gb = {
 	meta: {
@@ -57,25 +57,20 @@ export const en_gb = {
 		api_responses: {
 			user: {
 				invalid_form_data: "Invalid form data",
-				username_not_available:
-					"That username is not available, try something else",
+				username_not_available: "That username is not available, try something else",
 				profile_update_success: "Successfully updated profile",
-				something_went_wrong_try_again:
-					"Something went wrong! Please try again",
+				something_went_wrong_try_again: "Something went wrong! Please try again",
 				email_and_pass_required: "Email and password are required",
-				no_account_exists_with_that_email:
-					"No account exists with the entered email address",
+				no_account_exists_with_that_email: "No account exists with the entered email address",
 				incorrect_email_or_pass: "Incorrect email or password",
 				incorrect_password: "Incorrect password",
 				login_success: "Login successful",
-				cant_unlink_the_last_auth_provider:
-					"You can't unlink the only remaining auth provider",
+				cant_unlink_the_last_auth_provider: "You can't unlink the only remaining auth provider",
 				successfully_removed_provider: "Successfully removed ${0} provider",
 				invalid_password: "Invalid password. ${0}",
 				successfully_removed_password: "Successfully removed password",
 				successfully_added_new_password: "Successfully added new password",
-				password_login_not_enabled:
-					"You can't change the password, you have not enabled password login.",
+				password_login_not_enabled: "You can't change the password, you have not enabled password login.",
 				password_login_not_enabled_desc:
 					"Only the accounts which have password added could change the password. If not you can use auth providers to login.",
 				successfully_deleted_account: "Successfully deleted your account",
@@ -96,8 +91,7 @@ export const en_gb = {
 			something_went_wrong: "Something went wrong",
 
 			login_page: {
-				meta_desc:
-					"Log into cosmic reach mod manager to get a more personalized experience.",
+				meta_desc: "Log into cosmic reach mod manager to get a more personalized experience.",
 				dont_have_an_account: "Don't have an account?",
 				forgot_password_msg: "Don't remember your password?",
 				log_in_using: "Log In using :",
@@ -105,16 +99,14 @@ export const en_gb = {
 				invalid_password_msg: "Enter a valid password",
 			},
 			singup_page: {
-				meta_desc:
-					"Register for an account to get upload access Cosmic Reach mod manager",
+				meta_desc: "Register for an account to get upload access Cosmic Reach mod manager",
 				signup_using_providers: "Sign Up using any of the auth providers",
 				already_have_an_account: "Already have an account?",
 			},
 			change_password_page: {
 				change_password: "Change password",
 				meta_desc: "Reset your CRMM account password.",
-				email_sent_desc:
-					"Open the link sent to your email and change your password.",
+				email_sent_desc: "Open the link sent to your email and change your password.",
 			},
 			action_verification_page: {
 				invalid_token: "Expired or invalid token",
@@ -128,8 +120,7 @@ export const en_gb = {
 					"Deleting your account will remove all of your data except your projects from our database. There is no going back after you delete your account.",
 				enter_password: "Enter your new password",
 				re_enter_password: "Re-enter your password",
-				max_password_length_msg:
-					"Your password can only have a maximum of ${0} characters",
+				max_password_length_msg: "Your password can only have a maximum of ${0} characters",
 				password_dont_match: "Passwords do not match",
 				cancelled_successfully: "Cancelled successfully",
 				password_changed: "Successfully changed password",
@@ -164,10 +155,8 @@ export const en_gb = {
 				edit_profile: "Edit profile",
 				enter_username: "Enter your username",
 				enter_name: "Enter your name",
-				username_max_chars_limit:
-					"Your username can only have a maximum of ${0} characters",
-				name_max_chars_limit:
-					"Your name can only have a maximum of ${0} characters",
+				username_max_chars_limit: "Your username can only have a maximum of ${0} characters",
+				name_max_chars_limit: "Your name can only have a maximum of ${0} characters",
 				pfp_provider: "Profile image provider",
 				username: "Username",
 				full_name: "Full name",
@@ -180,8 +169,7 @@ export const en_gb = {
 				enter_your_password: "Enter your password",
 				remove_account_password: "Remove your account password",
 				manage_auth_providers: "Manage authentication providers",
-				manage_auth_providers_desc:
-					"Add or remove login methods from your account.",
+				manage_auth_providers_desc: "Add or remove login methods from your account.",
 				manage_providers_label: "Manage providers",
 				provider_email_tooltip: "The email of the linked ${0} account",
 				auth_providers_label: "Authentication providers",
@@ -191,8 +179,7 @@ export const en_gb = {
 					"A confirmation email has been sent to your email addres. Confirm there to delete your account.",
 				account_deletion_desc:
 					"Once you delete your account, there is no going back. Deleting your account will remove all of your data, except your projects, from our servers.",
-				confirm_to_delete_account:
-					"Are you sure that you want to delete your account.",
+				confirm_to_delete_account: "Are you sure that you want to delete your account.",
 			},
 			sessions_section: {
 				sessions: "Sessions",
@@ -208,8 +195,7 @@ export const en_gb = {
 						"If you see an entry you don't recognize, log out of that device and change the password of the account which was used to create that session.",
 				},
 				current_session: "Current session",
-				timestamp_template:
-					"${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
+				timestamp_template: "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
 				last_used: "Last used",
 				created: "Created",
 				time_past_phrases: {
@@ -228,15 +214,13 @@ export const en_gb = {
 					year_ago: "${0} year ago",
 					years_ago: "${0} years ago",
 				},
-				session_created_using_provider:
-					"This session was created using ${0} provider",
+				session_created_using_provider: "This session was created using ${0} provider",
 				revoke_session: "Revoke session",
 			},
 		},
 
 		footer: {
-			site_desc:
-				"A one stop solution for cosmic reach content. Mods, shaders, resource packs, modpacks and more",
+			site_desc: "A one stop solution for cosmic reach content. Mods, shaders, resource packs, modpacks and more",
 			socials: "Socials",
 			explore: "Explore",
 			privacy_policy: "Privacy policy",

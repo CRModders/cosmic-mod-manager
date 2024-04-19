@@ -43,9 +43,17 @@ const AccountSettingsPage = async () => {
 			<Card className="w-full px-5 py-4 rounded-lg">
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
 					<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">{locale.settings_page.account_section.user_profile}</h2>
+						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
+							{locale.settings_page.account_section.user_profile}
+						</h2>
 						<div>
-							<EditProfileDialog name={user.name} username={user.userName} currProfileProvider={user?.profileImageProvider} linkedProviders={linkedProviders} locale={locale} />
+							<EditProfileDialog
+								name={user.name}
+								username={user.userName}
+								currProfileProvider={user?.profileImageProvider}
+								linkedProviders={linkedProviders}
+								locale={locale}
+							/>
 						</div>
 					</div>
 					<div className="w-full flex flex-col items-center justify-center my-2">
@@ -54,11 +62,15 @@ const AccountSettingsPage = async () => {
 								<Avatar className="flex items-center justify-center w-24 h-24">
 									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
 
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
+										{user?.name?.charAt(0).toUpperCase()}
+									</AvatarFallback>
 								</Avatar>
 							</div>
 							<div className="grow max-w-full flex flex-col items-start justify-center">
-								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">{user.name}</h1>
+								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">
+									{user.name}
+								</h1>
 								<ScrollArea className="w-full">
 									<div className="w-full flex text-sm sm:text-base items-center sm:justify-start justify-center">
 										<span className="text-foreground/60 dark:text-foreground_dark/60 select-none text-xl">@</span>
@@ -74,7 +86,9 @@ const AccountSettingsPage = async () => {
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">{locale.settings_page.account_section.account_security}</h2>
+					<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
+						{locale.settings_page.account_section.account_security}
+					</h2>
 				</div>
 				<div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
@@ -90,7 +104,9 @@ const AccountSettingsPage = async () => {
 
 			<Card className="w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg">
 				<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-					<h2 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">{locale.settings_page.account_section.delete_account}</h2>
+					<h2 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">
+						{locale.settings_page.account_section.delete_account}
+					</h2>
 				</div>
 				<DeleteAccountSection locale={locale} />
 			</Card>

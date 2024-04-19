@@ -10,7 +10,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import type React from "react";
 import "@/app/globals.css";
 
 type Props = {
@@ -41,9 +41,7 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 				{isActive && (
 					<div className="absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-primary_accent dark:bg-primary_accent_dark" />
 				)}
-				<div className="w-6 h-6 flex items-center justify-start link_icon">
-					{icon}
-				</div>
+				<div className="w-6 h-6 flex items-center justify-start link_icon">{icon}</div>
 				<p className="text-lg font-normal">{label}</p>
 			</Link>
 		</li>
