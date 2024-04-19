@@ -1,67 +1,6 @@
 import locales from "@/public/locales";
 import { locale_content_type, locale_meta } from "@/public/locales/interface";
 
-// const language_codes = [
-// 	"en-US", // English - United States
-// 	"en-GB", //         - United Kingdom
-// 	"en-CA", //         - Canada
-// 	"en-AU", //         - Australia
-// 	"en-NZ", //         - New Zealand
-// 	"en-IE", //         - Ireland
-// 	"en-IN", //         - India
-// 	"en-ZA", //         - South Africa
-// 	"en-JM", //         - Jamaica
-// 	"en-BZ", //         - Belize
-
-// 	"fr-FR", // French - France
-// 	"fr-CA", //        - Canada
-// 	"fr-BE", //        - Belgium
-// 	"fr-CH", //        - Switzerland
-// 	"fr-LU", //        - Luxembourg
-// 	"fr-MC", //        - Monaco
-
-// 	"pt-PT", // Portuguese - Portugal
-// 	"pt-BR", //            - Brazil
-// 	"pt-AO", //            - Angola
-// 	"pt-MZ", //            - Mozambique
-// 	"pt-GW", //            - Guinea-Bissau
-// 	"pt-CV", //            - Cape Verde
-// 	"pt-ST", //            - São Tomé and Príncipe
-
-// 	"es-ES", // Spanish - Spain
-// 	"es-MX", //         - Mexico
-// 	"es-AR", //         - Argentina
-// 	"es-CO", //         - Colombia
-// 	"es-PE", //         - Peru
-// 	"es-VE", //         - Venezuela
-// 	"es-CL", //         - Chile
-// 	"es-EC", //         - Ecuador
-// 	"es-GT", //         - Guatemala
-// 	"es-CU", //         - Cuba
-// 	"es-DO", //         - Dominican Republic
-// 	"es-HN", //         - Honduras
-// 	"es-NI", //         - Nicaragua
-// 	"es-CR", //         - Costa Rica
-// 	"es-PA", //         - Panama
-// 	"es-UY", //         - Uruguay
-// 	"es-PR", //         - Puerto Rico
-
-// 	"nb-NO", // Norwegian - Norway (Norwegian Bokmål)
-// 	"nn-NO", //           - Norway (Norwegian Nynorsk)
-// ];
-
-// const lang = {
-// 	en: "en",
-// 	es: "es",
-// 	fr: "fr",
-// 	pt: "pt",
-
-// 	// Norwegian
-// 	nn: "nn",
-// 	nb: "nb",
-// 	no: "no",
-// };
-
 const default_language = {
 	code: locales.default.meta.language.code,
 	region: locales.default.meta.region.code,
@@ -102,7 +41,9 @@ export const format_lang_code = (lang_code: string | null): formatted_lang => {
 	};
 };
 
-export const get_available_lang_code = (language_code: string | null): formatted_lang => {
+export const get_available_lang_code = (
+	language_code: string | null,
+): formatted_lang => {
 	const { lang_code, base_lang, region } = format_lang_code(language_code);
 
 	try {
@@ -119,7 +60,8 @@ export const get_available_lang_code = (language_code: string | null): formatted
 				};
 			}
 
-			const default_locale_region: string = locale_lang.default.meta.region.code;
+			const default_locale_region: string =
+				locale_lang.default.meta.region.code;
 			return {
 				lang_code: `${base_lang}-${default_locale_region}`,
 				base_lang: base_lang,
@@ -142,7 +84,8 @@ export const get_locale = (
 	content: locale_content_type;
 } => {
 	const available_lang = get_available_lang_code(code);
-	const locale_data = locales[available_lang.base_lang][available_lang.lang_code];
+	const locale_data =
+		locales[available_lang.base_lang][available_lang.lang_code];
 
 	return locale_data;
 };
@@ -212,7 +155,9 @@ const get_regular_str_parts = (str: string) => {
 				throw new Error(`Unterminated ']' character in string : \n ${str}`);
 			}
 
-			str_ref = `${str_ref.slice(0, start_index)}${separator}${str_ref.slice(terminating_index + 1)}`;
+			str_ref = `${str_ref.slice(0, start_index)}${separator}${str_ref.slice(
+				terminating_index + 1,
+			)}`;
 			if (!str_ref.includes(identifier.start)) break;
 		}
 	}

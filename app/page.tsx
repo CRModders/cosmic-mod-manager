@@ -29,13 +29,18 @@ export default async function Home() {
 		locale.globals.shaders,
 		locale.globals.mods,
 	];
-	const extracted_desc = extract_elems(locale.home_page.hero.description.line_1);
-	const hero_section_locale = locale.home_page.hero;
+	const extracted_desc = extract_elems(
+		locale.home_page.hero.description.line_1,
+	);
+	const home_page_locale = locale.home_page;
 
 	return (
 		<main className="w-full h-fit flex flex-col items-center justify-start pb-8">
 			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
-				<BrandIcon size="18rem" className=" text-primary_accent dark:text-primary_accent_dark" />
+				<BrandIcon
+					size="18rem"
+					className=" text-primary_accent dark:text-primary_accent_dark"
+				/>
 				<div className="w-full flex flex-col items-center justify-center">
 					<h1 className="text-3xl lg:text-5xl text-center font-semibold text-foreground dark:text-foreground_dark">
 						{locale.globals.site.full_name}
@@ -65,6 +70,7 @@ export default async function Home() {
 							<Link
 								href="https://finalforeach.itch.io/cosmic-reach"
 								target="_blank"
+								aria-label={extracted_desc.links[0]}
 								className="text-primary_accent_text dark:text-primary_accent_dark"
 							>
 								&nbsp;{extracted_desc.links[0]}&nbsp;
@@ -72,7 +78,7 @@ export default async function Home() {
 							{extracted_desc.strings[1]}
 						</h2>
 						<h2 className="text-xl lg:text-2xl flex text-center text-foreground_muted dark:text-foreground_muted_dark">
-							{hero_section_locale.description.line_2}
+							{home_page_locale.hero.description.line_2}
 						</h2>
 					</div>
 				</div>
@@ -84,7 +90,7 @@ export default async function Home() {
 						aria-label="Explore mods"
 					>
 						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">
-							{hero_section_locale.explore_mods}
+							{home_page_locale.hero.explore_mods}
 						</p>
 					</Button>
 
@@ -95,7 +101,9 @@ export default async function Home() {
 			</section>
 
 			<section className="w-full flex flex-col gap-2 items-center justify-center">
-				<FeaturedSection featuredSectionLocale={locale.home_page.featured_section} />
+				<FeaturedSection
+					featuredSectionLocale={home_page_locale.featured_section}
+				/>
 			</section>
 		</main>
 	);

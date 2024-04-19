@@ -16,6 +16,7 @@ const SecurityLink = ({ locale }: { locale: locale_content_type }) => {
 			{locale.auth.action_verification_page.didnt_request_email}&nbsp;
 			<Link
 				href={"/settings/sessions"}
+				aria-label={locale.auth.action_verification_page.check_sessions}
 				className="text-blue-500 dark:text-blue-400t p-1 rounded hover:bg-blue-500/10 dark:hover:bg-blue-400/10"
 			>
 				{locale.auth.action_verification_page.check_sessions}

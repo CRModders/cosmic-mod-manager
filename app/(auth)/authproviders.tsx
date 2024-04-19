@@ -28,6 +28,7 @@ const AuthProviders = () => {
 								signIn(provider.name.toLowerCase());
 							}}
 							className="w-full flex items-center justify-center gap-4"
+							name={provider.name}
 						>
 							<Button
 								type="submit"

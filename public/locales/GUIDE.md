@@ -9,7 +9,7 @@
 ## Adding a new language
 - This example will show you how to add a new language, for this example i will be showing how to add Spanish (`es-ES` is the language code of that spanish locale).
 1.  Start by creating a folder for the language inside the `public/locales/` folder. I will make a folder named `es` inside that folder as per the conventions.
-2. Create a file for the locale of the language in the folder just created. I will create a typescript file named `es-ES.ts` inside `public/locales/es/` as per conventions.
+2. Create a file for the locale of the language in the folder just created. I will create a typescript file named `es-ES.ts` inside `public/locales/es/` as per the conventions.
 3. Create a file named `index.ts` inside that same folder.<br>
     Your folder structure should look like this:<br>
     ```
@@ -20,12 +20,12 @@
             └── index.ts
     ```
 
-4. Open the locale file. `es-ES.ts` file in the current example and add paste the locale file template (You can find the templates in the bottom part of this file). Replace the placeholders with appropriate values.
+4. Open the locale file. `es-ES.ts` file in the current example and paste the locale file template (You can find the templates in the bottom part of this file). Replace the placeholders with appropriate values.
 
     ```typescript
-    import { locale_content_type, locale_meta } from "@/public/locales/interface";
+    import { locale_variant_object } from "@/public/locales/interface";
 
-    export const es_es = {
+    export const es_es: locale_variant_object = {
         meta: {
             language: {
                 code: "es",  // Language code of spanish
@@ -37,11 +37,11 @@
                 name: "Spain",  // Region name
                 display_name: "España",  // Display name (Spain), written in spanish
             },
-        } satisfies locale_meta,
+        },
 
         content: {
             // The translated content
-        } satisfies locale_content_type,
+        },
     };
 
     ```
@@ -68,6 +68,13 @@
     import en from "./en";
     // Import the new language object
     import es from "./es";
+
+        
+    // All the available languages to date
+    export type available_languages =
+    	| "en-GB"
+        // Add the code of the language here, pipe character and then the language code in string format => | "lang-CODE"
+    	| "es-ES"
     
     const locales = {
         default: en.default,
@@ -75,6 +82,8 @@
         // Add the new object here, the key should the base language code in lowercase
         es: es,
     };
+
+    // ... some other pre-existing stuff here that you don't need to meddle with
 
     export default locales;
     ```
@@ -97,10 +106,10 @@
 - Locale file template
     ```typescript
 
-    import { locale_content_type, locale_meta } from "@/public/locales/interface";
+    import { locale_variant_object } from "@/public/locales/interface";
     
     // Replace "lang_code" with the actual language code in lowercase. (Example: es_es for Spanish (es-ES))
-    export const lang_code = {
+    export const lang_code: locale_variant_object = {
         meta: {
             language: {
                 code: "BASE_LANGUAGE_CODE", // Two letter code of that base language (lowercase)
@@ -122,7 +131,7 @@
                 // ->  UPPERCASE
                 display_name: "DISPLAY_NAME",
             },
-        } satisfies locale_meta,
+        },
     
         content: {
             // Copy the content from the default locale, which is British english ("public/locales/en/en-GB.ts")

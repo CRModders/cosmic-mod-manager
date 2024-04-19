@@ -15,7 +15,7 @@ type Props = {
 
 const EmailField = ({ email }: Props) => {
 	return (
-		<div className="w-full flex items-center justify-start">
+		<form className="w-full flex items-center justify-start" name="Email">
 			<Input
 				type="email"
 				placeholder="johndoe@xyz.com"
@@ -23,7 +23,7 @@ const EmailField = ({ email }: Props) => {
 				readOnly
 				value={email}
 			/>
-		</div>
+		</form>
 	);
 };
 

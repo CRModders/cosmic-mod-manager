@@ -18,6 +18,7 @@ const RevokeBtn = ({ token, revoke_session }: Props) => {
 	return (
 		<Button
 			variant="outline"
+			aria-label={revoke_session}
 			className="gap-2 hover:bg-background dark:hover:bg-background_dark hover:text-foreground/80 dark:hover:text-foreground_dark/80"
 			onClick={async () => {
 				if (loading) return;

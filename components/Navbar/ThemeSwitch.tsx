@@ -17,9 +17,17 @@ import { cn } from "@/lib/utils";
 type Props = {
 	className?: string;
 	iconWrapperClassName?: string;
+	iconClassName?: string;
+	iconSize?: string;
 	label?: string;
 };
-export default function ThemeSwitch({ className, iconWrapperClassName, label }: Props) {
+export default function ThemeSwitch({
+	className,
+	iconWrapperClassName,
+	iconClassName,
+	iconSize = "1.3rem",
+	label,
+}: Props) {
 	const { theme, setTheme } = useTheme();
 
 	const switchTheme = () => {
@@ -33,7 +41,9 @@ export default function ThemeSwitch({ className, iconWrapperClassName, label }: 
 	const setInitialTheme = () => {
 		if (theme !== "system") return;
 
-		const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		const prefersDarkTheme = window.matchMedia(
+			"(prefers-color-scheme: dark)",
+		).matches;
 
 		if (prefersDarkTheme) {
 			setTheme("dark");
@@ -50,23 +60,28 @@ export default function ThemeSwitch({ className, iconWrapperClassName, label }: 
 	}, []);
 
 	return (
-		<div className="theme_switcher flex items-center justify-center">
+		<div className="flex items-center justify-center">
 			<button
 				type="button"
-				aria-label="Toggle theme"
+				aria-label={label ? label : "Change theme"}
 				className={cn(
 					"flex items-center overflow-hidden justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark text-foreground dark:text-foreground_dark rounded-full",
 					className,
 				)}
 				onClick={switchTheme}
 			>
-				<div className={cn("h-12 w-12 relative flex items-center justify-center", iconWrapperClassName)}>
+				<div
+					className={cn(
+						"h-12 w-12 relative flex items-center justify-center rounded-full",
+						iconWrapperClassName,
+					)}
+				>
 					<div className="sun_icon_wrapper" data-hide-on-theme="light">
-						<SunIcon size={"1.3rem"} />
+						<SunIcon size={iconSize} />
 					</div>
 
 					<div className="moon_icon_wrapper" data-hide-on-theme="dark">
-						<MoonIcon size={"1.3rem"} />
+						<MoonIcon size={iconSize} />
 					</div>
 				</div>
 				{label && <p className="pr-4 whitespace-nowrap text-nowrap">{label}</p>}

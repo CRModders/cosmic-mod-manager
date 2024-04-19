@@ -34,13 +34,21 @@ const SignOutBtn = ({ className, authLocale }: Props) => {
 	};
 
 	return (
-		<ProfileDropdownLink
-			label={authLocale.sign_out}
-			icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <Spinner size="1.25rem" />}
-			disabled={loading}
-			onClick={handleClick}
-			className={className}
-		/>
+		<div className="w-full flex items-center justify-center rounded-lg link_bg_transition">
+			<ProfileDropdownLink
+				label={authLocale.sign_out}
+				icon={
+					!loading ? (
+						<LogoutIcon className="w-5 h-5" />
+					) : (
+						<Spinner size="1.25rem" />
+					)
+				}
+				disabled={loading}
+				onClick={handleClick}
+				className={className}
+			/>
+		</div>
 	);
 };
 

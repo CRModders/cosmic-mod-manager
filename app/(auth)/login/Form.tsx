@@ -13,7 +13,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
@@ -33,7 +40,9 @@ const LoginForm = ({ locale }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const searchParams = useSearchParams();
-	const [callbackUrl, setCallbackUrl] = useState(searchParams.get("callbackUrl") || "");
+	const [callbackUrl, setCallbackUrl] = useState(
+		searchParams.get("callbackUrl") || "",
+	);
 
 	const formSchema = z.object({
 		email: z
@@ -86,14 +95,19 @@ const LoginForm = ({ locale }: Props) => {
 		setLoading(false);
 
 		if (result?.success === false) {
-			return setFormError(result?.message || locale.globals.messages.something_went_wrong);
+			return setFormError(
+				result?.message || locale.globals.messages.something_went_wrong,
+			);
 		}
 		window.location.href = callbackUrl;
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setCallbackUrl(searchParams.get("callbackUrl") || `${window.location.origin}${defaultLoginRedirect}`);
+		setCallbackUrl(
+			searchParams.get("callbackUrl") ||
+				`${window.location.origin}${defaultLoginRedirect}`,
+		);
 	}, []);
 
 	return (
@@ -101,6 +115,7 @@ const LoginForm = ({ locale }: Props) => {
 			<form
 				onSubmit={form.handleSubmit(handleSubmit)}
 				className="w-full flex flex-col items-center justify-center gap-5"
+				name={authLocale.login}
 			>
 				<div className="w-full flex flex-col items-center justify-center">
 					<FormField

@@ -10,8 +10,14 @@ type Props = {
 	locale: locale_content_type;
 };
 
-const SessionListPageWrapper = ({ children, showSessionPageWarning = "true", locale }: Props) => {
-	const [showWarning, setShowWarning] = useState<boolean>(showSessionPageWarning !== "false");
+const SessionListPageWrapper = ({
+	children,
+	showSessionPageWarning = "true",
+	locale,
+}: Props) => {
+	const [showWarning, setShowWarning] = useState<boolean>(
+		showSessionPageWarning !== "false",
+	);
 
 	const sessionSectionLocale = locale.settings_page.sessions_section;
 
@@ -21,10 +27,13 @@ const SessionListPageWrapper = ({ children, showSessionPageWarning = "true", loc
 				<h1 className="text-xl sm:text-2xl mb-2 text-yellow-600 dark:text-yellow-400">
 					{sessionSectionLocale.sensitive_info_warning}
 				</h1>
-				<p className="text-yellow-600 dark:text-yellow-400">{sessionSectionLocale.session_page_warning_message}</p>
+				<p className="text-yellow-600 dark:text-yellow-400">
+					{sessionSectionLocale.session_page_warning_message}
+				</p>
 
 				<Button
 					className="px-10 mt-4"
+					aria-label={sessionSectionLocale.view_page}
 					variant="outline"
 					onClick={() => {
 						setShowWarning(false);

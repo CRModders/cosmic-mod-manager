@@ -7,9 +7,9 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
+import { Button } from "@/components/ui/button";
 
 type Props = {
 	icon: React.JSX.Element;
@@ -23,15 +23,19 @@ type Props = {
 const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 	return (
 		<Button
+			aria-label={label}
+			type="button"
 			variant="ghost"
+			size="md"
 			className={cn(
-				"group w-full text-lg flex items-center justify-start gap-2 navlink_text link_bg_transition",
+				"group w-full text-lg flex items-center justify-start gap-2 navlink_text hover:bg-transparent dark:hover:bg-transparent",
 				className,
 			)}
-			size="md"
 			{...props}
 		>
-			<span className="w-6 flex items-center justify-start link_icon">{icon}</span>
+			<span className="w-6 flex items-center justify-start link_icon">
+				{icon}
+			</span>
 			<p>{label}</p>
 		</Button>
 	);

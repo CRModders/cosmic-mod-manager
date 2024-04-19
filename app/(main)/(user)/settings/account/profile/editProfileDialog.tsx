@@ -8,7 +8,7 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import React, { useState } from "react";
 
 import EditProfileInfoForm from "./EditForm";
@@ -25,34 +25,41 @@ type Props = {
 	locale: locale_content_type;
 };
 
-const EditProfileDialog = ({ name, username, linkedProviders, currProfileProvider, locale }: Props) => {
+const EditProfileDialog = ({
+	name,
+	username,
+	linkedProviders,
+	currProfileProvider,
+	locale,
+}: Props) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
-				<Button className="flex gap-2 items-center justify-center" variant="outline">
-					<EditIcon size="1rem" className="text-foreground/90 dark:text-foreground_dark/90" />
+				<Button
+					className="flex gap-2 items-center justify-center"
+					variant="outline"
+					aria-label={locale.settings_page.account_section.edit_profile}
+				>
+					<EditIcon
+						size="1rem"
+						className="text-foreground/90 dark:text-foreground_dark/90"
+					/>
 					<p className="pr-1">{locale.settings_page.account_section.edit}</p>
 				</Button>
 			</DialogTrigger>
 
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle className="font-normal">{locale.settings_page.account_section.edit_profile}</DialogTitle>
-				</DialogHeader>
-
-				<div className="w-full flex flex-col items-center justify-center py-4">
-					<EditProfileInfoForm
-						name={name}
-						username={username}
-						linkedProviders={linkedProviders}
-						currProfileProvider={currProfileProvider}
-						setDialogOpen={setDialogOpen}
-						locale={locale}
-					/>
-				</div>
-			</DialogContent>
+			<div className="w-full flex flex-col items-center justify-center py-4">
+				<EditProfileInfoForm
+					name={name}
+					username={username}
+					linkedProviders={linkedProviders}
+					currProfileProvider={currProfileProvider}
+					setDialogOpen={setDialogOpen}
+					locale={locale}
+				/>
+			</div>
 		</Dialog>
 	);
 };

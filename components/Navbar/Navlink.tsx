@@ -16,17 +16,18 @@ import React, { useContext } from "react";
 
 interface NavLinkProps {
 	href: string;
+	label: string;
 	children: React.ReactNode;
 	className?: string;
-	classNames?: {
-		link: string;
-	};
 	isDisabled?: boolean;
 	tabIndex?: number;
 	closeNavMenuOnLinkClick?: boolean;
+	classNames?: {
+		link: string;
+	};
 }
 
-const Navlink = ({ children, href, className }: NavLinkProps) => {
+const Navlink = ({ children, href, label, className }: NavLinkProps) => {
 	const pathname = usePathname();
 	let isActive = pathname === href;
 	if (href === "/") {
@@ -37,7 +38,11 @@ const Navlink = ({ children, href, className }: NavLinkProps) => {
 	return (
 		<Link
 			href={href}
-			className={cn("navlink_text rounded-lg decoration-foreground/80 dark:decoration-foreground_dark/80", className)}
+			aria-label={label}
+			className={cn(
+				"navlink_text rounded-lg decoration-foreground/80 dark:decoration-foreground_dark/80 data-[active=true]:font-normal",
+				className,
+			)}
 			data-active={isActive}
 		>
 			{children}
@@ -49,6 +54,7 @@ export default Navlink;
 
 export function NavMenuLink({
 	href,
+	label,
 	children,
 	className,
 	classNames,
@@ -72,20 +78,27 @@ export function NavMenuLink({
 	return (
 		<li
 			key={`${href}`}
-			className={cn("group w-full flex items-center justify-center rounded-lg link_bg_transition", className)}
+			className={cn(
+				"group w-full flex items-center justify-center rounded-lg link_bg_transition",
+				className,
+			)}
 		>
 			<Link
-				className={cn("w-full h-full flex items-center justify-center navlink_text", classNames?.link)}
+				className={cn(
+					"w-full h-full flex items-center justify-center navlink_text rounded-lg",
+					classNames?.link,
+				)}
 				color={"foreground"}
 				href={href}
 				data-active={isActive}
+				tabIndex={tabIndex || isDisabled ? -1 : 0}
+				aria-disabled={isDisabled}
+				aria-label={label}
 				onClick={() => {
 					if (closeNavMenuOnLinkClick === true) {
 						CloseNavMenu();
 					}
 				}}
-				aria-disabled={isDisabled}
-				tabIndex={tabIndex || isDisabled ? -1 : 0}
 			>
 				{children}
 			</Link>

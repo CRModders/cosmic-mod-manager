@@ -12,11 +12,7 @@ declare global {
 	var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 
-const createNewClient = () => {
-	return prismaClientSingleton();
-};
-
-const db = globalThis.prismaGlobal ?? createNewClient();
+const db = globalThis.prismaGlobal ?? prismaClientSingleton();
 
 export default db;
 

@@ -45,6 +45,7 @@ const CopyBtn = ({ text, className, iconClassName, successMessage }: Props) => {
 		<Button
 			size="icon"
 			variant="ghost"
+			aria-label="Copy"
 			className={cn(
 				"shrink-0 flex items-center justify-center w-6 h-6",
 				className,

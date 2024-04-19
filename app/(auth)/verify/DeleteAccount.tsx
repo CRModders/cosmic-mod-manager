@@ -6,9 +6,17 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { cancelAccountDeletion, confirmAccountDeletion } from "@/app/api/actions/user";
+import {
+	cancelAccountDeletion,
+	confirmAccountDeletion,
+} from "@/app/api/actions/user";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+} from "@/components/ui/card";
 import React, { useState } from "react";
 import SecurityLink from "./SecurityLink";
 import { Spinner } from "@/components/ui/spinner";
@@ -76,7 +84,11 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 	if (actionResult?.success === true) {
 		return (
 			<div className="w-full max-w-md flex flex-col items-center justify-center gap-4">
-				<FormSuccessMsg msg={actionResult?.message} className="text-lg" iconClassName="pl-2 w-8 h-6" />
+				<FormSuccessMsg
+					msg={actionResult?.message}
+					className="text-lg"
+					iconClassName="pl-2 w-8 h-6"
+				/>
 			</div>
 		);
 	}
@@ -94,12 +106,17 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 			<CardFooter className="w-full flex flex-col items-center justify-end gap-4">
 				<div className="w-full flex items-center justify-end gap-4">
 					<form
+						name={locale.globals.cancel}
 						onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
 							e.preventDefault();
 							dontDeleteAccount();
 						}}
 					>
-						<Button type="submit" variant="outline" aria-label={locale.globals.cancel}>
+						<Button
+							type="submit"
+							variant="outline"
+							aria-label={locale.globals.cancel}
+						>
 							{locale.globals.cancel}
 						</Button>
 					</form>
@@ -108,6 +125,7 @@ const DeleteAccountConfirmAction = ({ token }: { token: string }) => {
 							e.preventDefault();
 							deleteAccount();
 						}}
+						name={locale.globals.delete}
 					>
 						<Button
 							type="submit"
