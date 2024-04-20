@@ -10,7 +10,6 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import type { auth_locale } from "@/public/locales/interface";
 import Link from "next/link";
-import React from "react";
 
 type Props = {
 	authLocale: auth_locale;

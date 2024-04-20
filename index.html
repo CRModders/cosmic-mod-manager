@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imgur API Image Uploader</title>
+</head>
+
+<body>
+    <img src="https://i.imgur.com/U7afLiO.png" id="img" height="200px">
+    <br />
+    <input type="file" id="file">
+    <br />
+    <strong>
+        <p id="url"></p>
+    </strong>
+
+    <script>
+        const file = document.getElementById("file")
+        const img = document.getElementById("img")
+        const url = document.getElementById("url")
+
+        const apiKey = "13fd60d2f28e6a247adc619f2aba6e7e";
+
+        file.addEventListener("change", ev => {
+            const formdata = new FormData()
+            formdata.append("image", ev.target.files[0])
+            fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                method: "POST",
+                body: formdata
+            }).then(data => data.json()).then(data => {
+                img.src = data.data.image.url
+                url.innerText = data.data.image.url
+            })
+        })
+    </script>
+
+</body>
+
+</html>

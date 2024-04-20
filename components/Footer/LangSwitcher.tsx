@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { setLanguagePreference } from "@/app/api/actions/lang";
-import { Spinner } from "../ui/spinner";
-import { GlobeIcon } from "../Icons";
-import type { locale_content_type, locale_meta } from "@/public/locales/interface";
-import type { availableLocalesListData } from "@/lib/lang";
 import { DotSeparator } from "@/app/(main)/(user)/settings/sessions/Timestamp";
+import { setLanguagePreference } from "@/app/api/actions/lang";
+import type { availableLocalesListData } from "@/lib/lang";
+import type { locale_content_type, locale_meta } from "@/public/locales/interface";
+import { useState } from "react";
+import { GlobeIcon } from "../Icons";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Spinner } from "../ui/spinner";
 
 type Props = {
 	locale?: {
@@ -65,7 +65,7 @@ const LangSwitcher = ({ locale, availableLocales }: Props) => {
 									value={availableLocale.code}
 									aria-label={`${availableLocale.locale_name} ${availableLocale.region}`}
 								>
-									<p className="w-full flex items-end justify-start gap-0.5 align-bottom">
+									<p className="w-full flex items-end justify-start align-bottom">
 										<span className="flex items-end justify-center align-bottom">{availableLocale.locale_name}</span>
 										<DotSeparator className="w-[0.2rem] h-[0.2rem] bg-foreground/30 dark:bg-foreground_dark/30" />
 										{availableLocale.region && (

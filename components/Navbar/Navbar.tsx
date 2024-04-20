@@ -6,17 +6,17 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { Suspense } from "react";
-import ThemeSwitch from "./ThemeSwitch";
-import Navlink from "./Navlink";
-import Link from "next/link";
-import HamMenu, { MobileNav } from "./Menu";
 import "@/app/globals.css";
-import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
 import { BrandIcon } from "@/components/Icons";
 import { Spinner } from "@/components/ui/spinner";
-import getLangPref from "@/lib/server/getLangPref";
 import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
+import Link from "next/link";
+import { Suspense } from "react";
+import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
+import HamMenu, { MobileNav } from "./Menu";
+import Navlink from "./Navlink";
+import ThemeSwitch from "./ThemeSwitch";
 
 const Navbar = async () => {
 	const langPref = getLangPref();
@@ -87,7 +87,7 @@ const Navbar = async () => {
 											aria-label={link.name}
 										>
 											<Navlink href={link.href} label={link.name}>
-												<p className="px-2 h-12 flex items-center justify-center text-center">{link.name}</p>
+												<span className="px-2 h-12 flex items-center justify-center text-center">{link.name}</span>
 											</Navlink>
 										</li>
 									);
@@ -99,13 +99,13 @@ const Navbar = async () => {
 							<div className="">
 								<ThemeSwitch iconWrapperClassName="h-11 w-11" />
 							</div>
-							<div className="flex lg:hidden items-center justify-center">
-								<HamMenu />
-							</div>
 							<div className="hidden lg:flex items-center justify-center mx-2">
 								<Suspense fallback={<Spinner size="1.25rem" />}>
 									<AuthButton locale={locale} />
 								</Suspense>
+							</div>
+							<div className="flex lg:hidden items-center justify-center">
+								<HamMenu />
 							</div>
 						</div>
 					</div>

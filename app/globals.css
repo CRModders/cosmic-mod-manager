@@ -11,20 +11,28 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --scrollbar-width: 0.6rem;
+}
+
+body.navmenu-open {
+    width: calc(100% - var(--scrollbar-width));
+    overflow: hidden;
+}
 
 
 ::-webkit-scrollbar {
-    width: 0.6rem;
+    width: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-thumb {
-    width: 0.6rem;
+    width: var(--scrollbar-width);
     border-radius: 1rem;
     background-color: #d4d4d8;
 }
 
 ::-webkit-scrollbar-track {
-    width: 0.6rem;
+    width: var(--scrollbar-width);
     background-color: white;
 }
 

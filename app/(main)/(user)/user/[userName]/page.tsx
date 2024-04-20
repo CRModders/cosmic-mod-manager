@@ -6,15 +6,14 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-import type { Metadata } from "next";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import CopyBtn from "@/components/copyBtn";
 import { findUserByUsername } from "@/app/api/actions/user";
+import CopyBtn from "@/components/copyBtn";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import type { Metadata } from "next";
+import Image from "next/image";
 
 type Props = {
 	params: {
@@ -33,13 +32,18 @@ const ProfilePage = async ({ params }: Props) => {
 					<Card className="w-full flex items-center justify-start gap-6 p-8">
 						<CardContent className="w-full flex flex-col items-center justify-center p-0">
 							<div className="w-full flex items-center justify-start gap-6 flex-col sm:flex-row">
-								<Avatar className="flex items-center justify-center w-20 h-20">
-									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
-
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-										{user?.name?.charAt(0).toUpperCase()}
-									</AvatarFallback>
-								</Avatar>
+								{user?.image ? (
+									<Image
+										src={user?.image}
+										alt={`${user?.name} `}
+										width={96}
+										height={96}
+										className="rounded-full"
+										quality={100}
+									/>
+								) : (
+									<span>{user?.name[0]}</span>
+								)}
 
 								<div className="grow max-w-full flex flex-col items-center sm:items-start justify-center">
 									<h1 className="text-2xl font-semibold">{user?.name}</h1>

@@ -6,16 +6,16 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import Link from "next/link";
+import "@/app/globals.css";
+import FeaturedSection from "@/components/Featured/Featured";
 import { BrandIcon } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
-import FeaturedSection from "@/components/Featured/Featured";
-import { Suspense } from "react";
-import AuthButton from "./AuthButton";
 import { Spinner } from "@/components/ui/spinner";
 import { extract_elems, get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
-import "@/app/globals.css";
+import Link from "next/link";
+import { Suspense } from "react";
+import AuthButton from "./AuthButton";
 
 export default async function Home() {
 	const langPref = getLangPref();

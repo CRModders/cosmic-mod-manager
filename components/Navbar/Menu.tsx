@@ -8,12 +8,11 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { Suspense, useContext, useEffect } from "react";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { StoreContext } from "@/contexts/StoreContext";
-import styles from "./styles.module.css";
-import { NavMenuLink } from "./Navlink";
 import { Spinner } from "@/components/ui/spinner";
+import { StoreContext } from "@/contexts/StoreContext";
+import React, { Suspense, useContext, useEffect } from "react";
+import { NavMenuLink } from "./Navlink";
+import styles from "./styles.module.css";
 
 const HamMenu = () => {
 	const { isNavMenuOpen, toggleNavMenu } = useContext(StoreContext);
@@ -24,20 +23,31 @@ const HamMenu = () => {
 
 	useEffect(() => {
 		if (isNavMenuOpen) {
-			document.body.style.overflow = "hidden";
+			document.body.classList.add("navmenu-open");
 		} else {
-			document.body.style.overflow = "auto";
+			document.body.classList.remove("navmenu-open");
 		}
 	}, [isNavMenuOpen]);
 
 	return (
 		<button
 			type="button"
-			className="h-12 w-10 flex items-center justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark cursor-pointer rounded-lg"
+			className="h-10 w-10 flex items-center justify-center hover:bg-background_hover dark:hover:bg-background_hover_dark cursor-pointer rounded-lg"
 			onClick={handleHamMenuClick}
 			aria-label="Menu"
 		>
-			<HamburgerMenuIcon width={"60%"} height={"60%"} />
+			{/* <HamburgerMenuIcon width={"60%"} height={"60%"} /> */}
+			<div className={`${styles.ham_menu_icon} ${isNavMenuOpen && styles.ham_menu_open} aspect-square w-full relative`}>
+				<i
+					className={`${styles.ham_menu_line_1} block absolute top-[30%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+				/>
+				<i
+					className={`${styles.ham_menu_line_2} block absolute top-[50%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+				/>
+				<i
+					className={`${styles.ham_menu_line_3} block absolute top-[70%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+				/>
+			</div>
 		</button>
 	);
 };
@@ -58,7 +68,11 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 	return (
 		<>
 			{
-				<div className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 ${isNavMenuOpen && styles.menu_open}`}>
+				<div
+					className={` ${styles.mobile_navmenu} w-full absolute top-0 left-0 duration-default ${
+						isNavMenuOpen && styles.menu_open
+					}`}
+				>
 					<div className="w-full flex flex-col items-center justify-center row-span-2 relative">
 						<div className="absolute top-0 left-0 w-full h-full opacity-80 bg-background dark:bg-background_dark z-[3]" />
 
@@ -66,15 +80,27 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 							{NavMenuLinks.map((link) => {
 								return (
 									<React.Fragment key={link.href}>
-										<NavMenuLink href={link.href} label={link.name} isDisabled={!isNavMenuOpen}>
-											<p className="text-lg w-full h-12 flex flex-col items-center justify-center text-center">
-												{link.name}
-											</p>
-										</NavMenuLink>
+										<li
+											key={`${link.href}`}
+											className="group w-full flex items-center justify-center rounded-lg link_bg_transition"
+										>
+											<NavMenuLink href={link.href} label={link.name} isDisabled={!isNavMenuOpen}>
+												<span className="text-lg w-full h-12 flex flex-col items-center justify-center text-center">
+													{link.name}
+												</span>
+											</NavMenuLink>
+										</li>
 									</React.Fragment>
 								);
 							})}
-							{isNavMenuOpen === true && <Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>}
+							{isNavMenuOpen === true && (
+								// The children is either the login button or the dropdown menu depends on whether logged in or not
+								<Suspense fallback={<Spinner size="1.25rem" />}>
+									<li className="group w-full flex items-center justify-center rounded-lg link_bg_transition">
+										{children}
+									</li>
+								</Suspense>
+							)}
 						</ul>
 					</div>
 				</div>

@@ -6,28 +6,21 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-import LoginBtn from "./LoginBtn";
-import { auth } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
-import { Button } from "@/components/ui/button";
-
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import SignOutBtn from "./SignOutBtn";
-import ProfileDropdown from "./ProfileDropdown";
-import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
 import { findUserById } from "@/app/api/actions/user";
+import { auth } from "@/auth";
+import { DashboardIcon, GearIcon, PersonIcon } from "@/components/Icons";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { auth_locale, locale_content_type } from "@/public/locales/interface";
+import Image from "next/image";
 import { NavMenuLink } from "../Navlink";
-import type { locale_content_type, auth_locale } from "@/public/locales/interface";
+import LoginBtn from "./LoginBtn";
+import ProfileDropdown from "./ProfileDropdown";
+import SignOutBtn from "./SignOutBtn";
 
 const LoginButton = ({ authLocale }: { authLocale: auth_locale }) => {
-	return (
-		<div className="flex items-center justify-center">
-			<LoginBtn closeNavMenuOnLinkClick={false} authLocale={authLocale} />
-		</div>
-	);
+	return <LoginBtn closeNavMenuOnLinkClick={false} authLocale={authLocale} />;
 };
 
 type Props = {
@@ -56,16 +49,22 @@ const AuthButton = async ({ locale }: Props) => {
 					className="hover:bg-background_hover dark:hover:bg-background_hover_dark rounded-full"
 				>
 					<div className="flex items-center justify-center p-1">
-						<Avatar className=" bg-background_hover dark:bg-background_hover_dark">
-							{userData?.image && <AvatarImage src={userData?.image} alt={`${userData?.name} `} />}
-							<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-								{userData?.name?.charAt(0).toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
+						{userData?.image ? (
+							<Image
+								src={userData?.image}
+								alt={`${userData?.name} `}
+								width={48}
+								height={48}
+								className="rounded-full"
+								quality={100}
+							/>
+						) : (
+							<span>{userData?.name[0]}</span>
+						)}
 					</div>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-80">
+			<PopoverContent className="max-w-md min-w-72 mx-[auto] mr-4" align="center">
 				<ProfileDropdown locale={locale} />
 			</PopoverContent>
 		</Popover>
@@ -77,14 +76,10 @@ export const MenuAuthButton = async ({ locale }: { locale: locale_content_type }
 	const session = await auth().catch((e) => console.log(e));
 
 	if (!session || !session?.user?.email) {
-		return (
-			<div className="w-full flex items-center justify-center">
-				<LoginBtn size="lg" authLocale={locale.auth} />
-			</div>
-		);
+		return <LoginBtn size="lg" authLocale={locale.auth} />;
 	}
 
-	const userData = await findUserById(session.user.id);
+	const userData = await findUserById(session?.user?.id);
 
 	const dropdownLinks = [
 		{
@@ -113,13 +108,18 @@ export const MenuAuthButton = async ({ locale }: { locale: locale_content_type }
 				<AccordionItem value="item-1" className="border-none outline-none">
 					<AccordionTrigger className="w-full border-none outline-none">
 						<div className="w-full flex items-center justify-center gap-4 pr-8">
-							<Avatar>
-								{userData?.image && <AvatarImage src={userData?.image} alt={`${userData?.name} `} />}
-
-								<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark h-12 w-12">
-									{userData?.name?.charAt(0).toUpperCase()}
-								</AvatarFallback>
-							</Avatar>
+							{userData?.image ? (
+								<Image
+									src={userData?.image}
+									alt={`${userData?.name} `}
+									width={48}
+									height={48}
+									className="rounded-full"
+									quality={100}
+								/>
+							) : (
+								<span>{userData?.name[0]}</span>
+							)}
 
 							<p className="text-lg text-foreground dark:text-foreground_dark font-normal">{userData?.name}</p>
 						</div>
