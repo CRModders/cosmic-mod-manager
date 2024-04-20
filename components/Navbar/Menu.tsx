@@ -36,7 +36,6 @@ const HamMenu = () => {
 			onClick={handleHamMenuClick}
 			aria-label="Menu"
 		>
-			{/* <HamburgerMenuIcon width={"60%"} height={"60%"} /> */}
 			<div className={`${styles.ham_menu_icon} ${isNavMenuOpen && styles.ham_menu_open} aspect-square w-full relative`}>
 				<i
 					className={`${styles.ham_menu_line_1} block absolute top-[30%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
