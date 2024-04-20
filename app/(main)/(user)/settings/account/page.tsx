@@ -6,20 +6,19 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { auth } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React from "react";
-import EditProfileDialog from "./profile/editProfileDialog";
 import { findUserById, getLinkedProvidersList } from "@/app/api/actions/user";
+import { auth } from "@/auth";
 import { Card, CardContent } from "@/components/ui/card";
-import EmailField from "./account_security/email";
-import PasswordSection from "./account_security/password";
-import ManageProviders from "./account_security/ManageProviders";
-import DeleteAccountSection from "./account_security/DeleteAccount";
-import { parseProfileProvider } from "@/lib/user";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import { parseProfileProvider } from "@/lib/user";
+import Image from "next/image";
+import DeleteAccountSection from "./account_security/DeleteAccount";
+import ManageProviders from "./account_security/ManageProviders";
+import EmailField from "./account_security/email";
+import PasswordSection from "./account_security/password";
+import EditProfileDialog from "./profile/editProfileDialog";
 
 const AccountSettingsPage = async () => {
 	const langPref = getLangPref();
@@ -59,13 +58,18 @@ const AccountSettingsPage = async () => {
 					<div className="w-full flex flex-col items-center justify-center my-2">
 						<div className="w-full flex flex-wrap items-center justify-start gap-6">
 							<div className="flex grow sm:grow-0 items-center justify-center">
-								<Avatar className="flex items-center justify-center w-24 h-24">
-									{user?.image && <AvatarImage src={user?.image} alt={`${user?.name} `} />}
-
-									<AvatarFallback className="bg-background_hover dark:bg-background_hover_dark w-3/4 h-3/4">
-										{user?.name?.charAt(0).toUpperCase()}
-									</AvatarFallback>
-								</Avatar>
+								{user?.image ? (
+									<Image
+										src={user?.image}
+										alt={`${user?.name} `}
+										width={90}
+										height={90}
+										className="rounded-full"
+										quality={100}
+									/>
+								) : (
+									<span>{user?.name[0]}</span>
+								)}
 							</div>
 							<div className="grow max-w-full flex flex-col items-start justify-center">
 								<h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">

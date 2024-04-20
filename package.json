@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "next dev --turbo",
 		"build": "npx prisma generate && next build",
 		"start": "next start",
 		"lint": "next lint"
@@ -37,6 +37,7 @@
 		"react": "^18",
 		"react-dom": "^18",
 		"react-hook-form": "^7.51.1",
+		"sharp": "^0.33.3",
 		"tailwind-merge": "^2.2.2",
 		"tailwind-variants": "^0.2.1",
 		"tailwindcss-animate": "^1.0.7",

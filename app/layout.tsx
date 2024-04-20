@@ -6,18 +6,18 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import "./globals.css";
-import type { Metadata } from "next";
-import { Varela_Round } from "next/font/google";
-import { Providers } from "./providers";
-import { Suspense } from "react";
+import Footer from "@/components/Footer/Footer";
 import NavbarWrapper from "@/components/Navbar/Navbar";
-import { cn } from "@/lib/utils";
+import LoadingUI from "@/components/ui/spinner";
 import { Toaster } from "@/components/ui/toaster";
 import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { siteTitle } from "@/config";
-import LoadingUI from "@/components/ui/spinner";
-import Footer from "@/components/Footer/Footer";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import { Varela_Round } from "next/font/google";
+import { Suspense } from "react";
+import "./globals.css";
+import { Providers } from "./providers";
 
 const varela_round = Varela_Round({
 	weight: ["400"],

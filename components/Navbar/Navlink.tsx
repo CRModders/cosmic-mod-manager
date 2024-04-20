@@ -23,9 +23,6 @@ interface NavLinkProps {
 	isDisabled?: boolean;
 	tabIndex?: number;
 	closeNavMenuOnLinkClick?: boolean;
-	classNames?: {
-		link: string;
-	};
 }
 
 const Navlink = ({ children, href, label, className }: NavLinkProps) => {
@@ -58,7 +55,6 @@ export function NavMenuLink({
 	label,
 	children,
 	className,
-	classNames,
 	isDisabled = false,
 	tabIndex,
 	closeNavMenuOnLinkClick = true,
@@ -77,26 +73,21 @@ export function NavMenuLink({
 	};
 
 	return (
-		<li
-			key={`${href}`}
-			className={cn("group w-full flex items-center justify-center rounded-lg link_bg_transition", className)}
+		<Link
+			className={cn("w-full h-full flex items-center justify-center navlink_text rounded-lg", className)}
+			color={"foreground"}
+			href={href}
+			data-active={isActive}
+			tabIndex={tabIndex || isDisabled ? -1 : 0}
+			aria-disabled={isDisabled}
+			aria-label={label}
+			onClick={() => {
+				if (closeNavMenuOnLinkClick === true) {
+					CloseNavMenu();
+				}
+			}}
 		>
-			<Link
-				className={cn("w-full h-full flex items-center justify-center navlink_text rounded-lg", classNames?.link)}
-				color={"foreground"}
-				href={href}
-				data-active={isActive}
-				tabIndex={tabIndex || isDisabled ? -1 : 0}
-				aria-disabled={isDisabled}
-				aria-label={label}
-				onClick={() => {
-					if (closeNavMenuOnLinkClick === true) {
-						CloseNavMenu();
-					}
-				}}
-			>
-				{children}
-			</Link>
-		</li>
+			{children}
+		</Link>
 	);
 }

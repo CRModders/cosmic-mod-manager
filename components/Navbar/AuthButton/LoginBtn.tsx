@@ -6,11 +6,10 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { NavMenuLink } from "../Navlink";
 import { cn } from "@/lib/utils";
 import type { auth_locale } from "@/public/locales/interface";
+import { NavMenuLink } from "../Navlink";
 
 const LoginBtn = ({
 	className,
@@ -26,7 +25,7 @@ const LoginBtn = ({
 	return (
 		<NavMenuLink
 			className={cn(
-				"w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark",
+				"w-full flex items-center justify-center rounded-lg text-foreground dark:text-foreground_dark link_bg_transition",
 				className,
 			)}
 			href="/login"
@@ -37,10 +36,10 @@ const LoginBtn = ({
 				tabIndex={-1}
 				variant="outline"
 				size={size}
-				className="w-full link_bg_transition"
+				className="w-full navlink_text hover:bg-transparent dark:hover:bg-transparent text-lg text-foreground dark:text-foreground_dark"
 				aria-label={authLocale.login}
 			>
-				<p className="text-lg text-foreground dark:text-foreground_dark">{authLocale.login}</p>
+				{authLocale.login}
 			</Button>
 		</NavMenuLink>
 	);
