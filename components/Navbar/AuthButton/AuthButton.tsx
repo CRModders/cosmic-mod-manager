@@ -55,7 +55,7 @@ const AuthButton = async ({ locale }: Props) => {
 								alt={`${userData?.name} `}
 								width={48}
 								height={48}
-								className="rounded-full"
+								className="rounded-full bg-background_hover dark:bg-background_hover_dark"
 								quality={100}
 							/>
 						) : (
@@ -76,7 +76,11 @@ export const MenuAuthButton = async ({ locale }: { locale: locale_content_type }
 	const session = await auth().catch((e) => console.log(e));
 
 	if (!session || !session?.user?.email) {
-		return <LoginBtn size="lg" authLocale={locale.auth} />;
+		return (
+			<li className="group w-full flex items-center justify-center rounded-lg link_bg_transition">
+				<LoginBtn size="lg" authLocale={locale.auth} />
+			</li>
+		);
 	}
 
 	const userData = await findUserById(session?.user?.id);
@@ -127,24 +131,30 @@ export const MenuAuthButton = async ({ locale }: { locale: locale_content_type }
 					<AccordionContent className="w-full flex flex-col gap-2">
 						{dropdownLinks?.map((link) => {
 							return (
-								<NavMenuLink
+								<li
+									className="group w-full flex items-center justify-center rounded-lg link_bg_transition"
 									key={link.name}
-									href={link.href}
-									label={link.name}
-									tabIndex={0}
-									className="w-full flex items-center justify-center rounded-lg"
 								>
-									<Button
-										variant="ghost"
-										className={"group w-full text-lg flex items-center justify-center gap-2"}
-										size="lg"
-										tabIndex={-1}
-										aria-label={link.name}
+									<NavMenuLink
+										href={link.href}
+										label={link.name}
+										tabIndex={0}
+										className="w-full flex items-center justify-center rounded-lg"
 									>
-										<span className="w-6 flex items-center justify-center link_icon">{link.icon}</span>
-										<p>{link.name}</p>
-									</Button>
-								</NavMenuLink>
+										<Button
+											variant="ghost"
+											className={
+												"group w-full text-lg flex items-center justify-center gap-2 duration-0 dark:duration-0"
+											}
+											size="lg"
+											tabIndex={-1}
+											aria-label={link.name}
+										>
+											<span className="w-6 flex items-center justify-center link_icon">{link.icon}</span>
+											<p>{link.name}</p>
+										</Button>
+									</NavMenuLink>
+								</li>
 							);
 						})}
 						<SignOutBtn
