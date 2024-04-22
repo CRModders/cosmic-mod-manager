@@ -104,7 +104,7 @@ const Navbar = async () => {
 									<AuthButton locale={locale} />
 								</Suspense>
 							</div>
-							<div className="flex align-center justify-center">
+							<div className="flex lg:hidden align-center justify-center">
 								<HamMenu />
 							</div>
 						</div>
