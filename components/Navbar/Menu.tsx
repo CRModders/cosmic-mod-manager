@@ -15,7 +15,7 @@ import { NavMenuLink } from "./Navlink";
 import styles from "./styles.module.css";
 
 const HamMenu = () => {
-	const { isNavMenuOpen, toggleNavMenu } = useContext(StoreContext);
+	const { isNavMenuOpen, toggleNavMenu, isDesktop } = useContext(StoreContext);
 
 	const handleHamMenuClick = () => {
 		toggleNavMenu();
@@ -24,10 +24,14 @@ const HamMenu = () => {
 	useEffect(() => {
 		if (isNavMenuOpen) {
 			document.body.classList.add("navmenu-open");
+			isDesktop && document.body.classList.add("subtract-scrollbar-width");
 		} else {
 			document.body.classList.remove("navmenu-open");
+			document.body.classList.remove("subtract-scrollbar-width");
 		}
-	}, [isNavMenuOpen]);
+	}, [isNavMenuOpen, isDesktop]);
+
+	useEffect(() => {}, []);
 
 	return (
 		<button
@@ -38,13 +42,13 @@ const HamMenu = () => {
 		>
 			<div className={`${styles.ham_menu_icon} ${isNavMenuOpen && styles.ham_menu_open} aspect-square w-full relative`}>
 				<i
-					className={`${styles.ham_menu_line_1} block absolute top-[30%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+					className={`${styles.ham_menu_line_1} block absolute top-[33%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
 				/>
 				<i
-					className={`${styles.ham_menu_line_2} block absolute top-[50%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+					className={`${styles.ham_menu_line_2} block absolute top-[50%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
 				/>
 				<i
-					className={`${styles.ham_menu_line_3} block absolute top-[70%] left-1/2 h-[0.15rem] w-[60%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
+					className={`${styles.ham_menu_line_3} block absolute top-[67%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]`}
 				/>
 			</div>
 		</button>
@@ -94,11 +98,7 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 							})}
 							{isNavMenuOpen === true && (
 								// The children is either the login button or the dropdown menu depends on whether logged in or not
-								<Suspense fallback={<Spinner size="1.25rem" />}>
-									<li className="group w-full flex items-center justify-center rounded-lg link_bg_transition">
-										{children}
-									</li>
-								</Suspense>
+								<Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>
 							)}
 						</ul>
 					</div>

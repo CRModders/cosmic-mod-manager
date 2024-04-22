@@ -8,11 +8,13 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import UAParser from "ua-parser-js";
 
 type StoreContextValues = {
 	isNavMenuOpen: boolean;
 	toggleNavMenu: (newState?: boolean) => void;
+	isDesktop: boolean;
 };
 
 export const StoreContext = createContext({
@@ -21,16 +23,28 @@ export const StoreContext = createContext({
 
 export default function StoreContextProvider({ children }: { children: React.ReactNode }) {
 	const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
+	const [isDesktop, setIsDesktop] = useState<boolean | undefined>(undefined);
 
 	const toggleNavMenu = (newState?: boolean) => {
 		setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
 	};
+
+	const determineDeviceType = (deviceType: string | null) => {
+		setIsDesktop(deviceType === undefined || !["wearable", "mobile"].includes(deviceType));
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const parsedUserAgentData = new UAParser(navigator.userAgent).getResult();
+		determineDeviceType(parsedUserAgentData.device.type);
+	}, []);
 
 	return (
 		<StoreContext.Provider
 			value={{
 				isNavMenuOpen,
 				toggleNavMenu,
+				isDesktop,
 			}}
 		>
 			{children}
