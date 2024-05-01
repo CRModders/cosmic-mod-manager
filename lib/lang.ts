@@ -1,5 +1,5 @@
 import locales from "@/public/locales";
-import type { locale_content_type, locale_meta } from "@/public/locales/interface";
+import type { locale_content_type, locale_meta, availableLocalesListData} from "@/public/locales/interface";
 
 const default_language = {
 	code: locales.default.meta.language.code,
@@ -181,13 +181,6 @@ export const extract_elems = (str: string): extracted_elems => {
 	const str_parts = get_regular_str_parts(str);
 	result.strings = str_parts;
 	return result;
-};
-
-export type availableLocalesListData = {
-	code: string;
-	en_name: string;
-	locale_name?: string;
-	region: string;
 };
 
 export const getAvailableLocales = () => {

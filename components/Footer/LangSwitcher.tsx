@@ -2,7 +2,7 @@
 
 import { DotSeparator } from "@/app/(main)/(user)/settings/sessions/Timestamp";
 import { setLanguagePreference } from "@/app/api/actions/lang";
-import type { availableLocalesListData } from "@/lib/lang";
+import type { availableLocalesListData } from "@/public/locales/interface";
 import type { locale_content_type, locale_meta } from "@/public/locales/interface";
 import { useState } from "react";
 import { GlobeIcon } from "../Icons";

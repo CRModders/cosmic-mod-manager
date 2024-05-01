@@ -27,3 +27,10 @@ export type locale_variant_object = {
 	meta: locale_meta;
 	content: locale_content_type;
 };
+
+export type availableLocalesListData = {
+    	code: string;
+        	en_name: string;
+            	locale_name?: string;
+                	region: string;
+                    };
