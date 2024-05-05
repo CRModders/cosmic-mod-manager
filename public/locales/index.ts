@@ -1,4 +1,3 @@
-import { locale_variant_object } from "./interface";
 import en from "./en";
 import es from "./es";
 import no from "./no";

@@ -1,14 +1,14 @@
 "use server";
 
 import { auth } from "@/auth";
-import db from "@/lib/db";
-import UAParser from "ua-parser-js";
 import { dbSessionTokenCookieKeyName, userSessionValidity_ms } from "@/config";
+import db from "@/lib/db";
 import { generateRandomCode } from "@/lib/utils";
-import { cookies, headers } from "next/headers";
-import { findUserById } from "./user";
 import type { GeoApiData } from "@/types";
 import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
+import UAParser from "ua-parser-js";
+import { findUserById } from "./user";
 
 // Sets a cookies that contains the sessionToken
 export const setSessionToken = async (id: string, provider?: string) => {
@@ -25,7 +25,6 @@ export const setSessionToken = async (id: string, provider?: string) => {
 	if (ip) {
 		try {
 			const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`);
-
 			const resJsonData = await res.json();
 
 			if (resJsonData?.city || resJsonData?.region) {
@@ -112,7 +111,7 @@ export const getValidSessionToken = async (sessionToken: string): Promise<string
 
 		return sessionData?.userId;
 	} catch (error) {
-		console.log({ function: "getValidSessionToken", error });
+		// console.log({ function: "getValidSessionToken", error });
 		return null;
 	}
 };
@@ -149,7 +148,6 @@ export const getLoggedInSessionsList = async () => {
 export const revokeSession = async (sessionToken: string) => {
 	const user = await getAuthenticatedUser();
 
-	console.log("REVOKING THE SESSION");
 	if (!user?.id) return null;
 
 	await deleteSessionToken({ token: sessionToken });
