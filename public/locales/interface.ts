@@ -29,8 +29,8 @@ export type locale_variant_object = {
 };
 
 export type availableLocalesListData = {
-    	code: string;
-        	en_name: string;
-            	locale_name?: string;
-                	region: string;
-                    };
+	code: string;
+	en_name: string;
+	locale_name?: string;
+	region: string;
+};

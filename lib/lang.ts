@@ -1,5 +1,5 @@
 import locales from "@/public/locales";
-import type { locale_content_type, locale_meta, availableLocalesListData} from "@/public/locales/interface";
+import type { availableLocalesListData, locale_content_type, locale_meta } from "@/public/locales/interface";
 
 const default_language = {
 	code: locales.default.meta.language.code,
@@ -155,8 +155,6 @@ const get_regular_str_parts = (str: string) => {
 			if (!str_ref.includes(identifier.start)) break;
 		}
 	}
-	// console.log("\n");
-	// console.log({ original_str: str, modified_str: str_ref });
 	return str_ref.split(separator);
 };
 
