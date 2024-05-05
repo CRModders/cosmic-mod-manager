@@ -6,29 +6,28 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import GitHubProvider from "next-auth/providers/github";
-import DiscordProvider from "next-auth/providers/discord";
-import GoogleProvider from "@auth/core/providers/google";
-import GitlabProvider from "@auth/core/providers/gitlab";
 import type { NextAuthConfig } from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
+import GitHubProvider from "next-auth/providers/github";
+import GitlabProvider from "next-auth/providers/gitlab";
+import GoogleProvider from "next-auth/providers/google";
+
+export const authjsErrorDocsPageURL = "https://authjs.dev/reference/core/errors";
 
 export default {
 	providers: [
 		GitHubProvider({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
-			allowDangerousEmailAccountLinking: true,
 		}),
 		DiscordProvider({
 			clientId: process.env.DISCORD_ID,
 			clientSecret: process.env.DISCORD_SECRET,
-			allowDangerousEmailAccountLinking: true,
 		}),
 
 		GoogleProvider({
 			clientId: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
-			allowDangerousEmailAccountLinking: true,
 			authorization: {
 				params: {
 					prompt: "consent",
@@ -40,7 +39,6 @@ export default {
 		GitlabProvider({
 			clientId: process.env.GITLAB_ID,
 			clientSecret: process.env.GITLAB_SECRET,
-			allowDangerousEmailAccountLinking: true,
 		}),
 	],
 } satisfies NextAuthConfig;

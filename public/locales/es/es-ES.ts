@@ -80,6 +80,10 @@ export const es_es: locale_variant_object = {
 			signing_out: "Cerrando sesión",
 			something_went_wrong: "Algo salió mal",
 
+			errors: {
+				OAuthAccountNotLinked: null,
+			},
+
 			login_page: {
 				meta_desc:
 					"Inicia sesión en el administrador de mods de Cosmic Reach para obtener una experiencia más personalizada.",

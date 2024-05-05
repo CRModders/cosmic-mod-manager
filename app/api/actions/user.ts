@@ -9,8 +9,16 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth, signIn } from "@/auth";
+import {
+	addNewPasswordVerificationTokenValidity_ms,
+	changePasswordConfirmationTokenValidity_ms,
+	deleteAccountVerificationTokenValidity_ms,
+	deletedUsernameReservationDuration_ms,
+	passwordHashingSaltRounds,
+} from "@/config";
 import db from "@/lib/db";
-import bcrypt from "bcrypt";
+import { get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
 import {
 	isValidName,
 	isValidPassword,
@@ -20,30 +28,20 @@ import {
 	parseUserName,
 } from "@/lib/user";
 import {
+	UserVerificationActionTypes,
 	type Account,
 	type Providers,
 	type User,
-	UserVerificationActionTypes,
 	type VerificationEmail,
 } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
-import {
-	changePasswordConfirmationTokenValidity_ms,
-	addNewPasswordVerificationTokenValidity_ms,
-	deleteAccountVerificationTokenValidity_ms,
-	passwordHashingSaltRounds,
-	deletedUsernameReservationDuration_ms,
-	dbSessionTokenCookieKeyName,
-} from "@/config";
+import { getAuthenticatedUser } from "./auth";
 import {
 	sendAccountDeletionConfirmationEmail,
 	sendNewPasswordVerificationEmail,
 	sendPasswordChangeEmail,
 } from "./verificationEmails";
-import { getAuthenticatedUser } from "./auth";
-import { get_locale } from "@/lib/lang";
-import getLangPref from "@/lib/server/getLangPref";
-import { cookies } from "next/headers";
 
 // Hash the user password using bcrypt
 const hashPassword = async (password: string) => {
@@ -318,7 +316,7 @@ export const loginUser = async ({
 	if (!userData?.email) {
 		return {
 			success: false,
-			message: locale.api_responses.user.no_account_exists_with_that_email,
+			message: locale.api_responses.user.incorrect_email_or_pass,
 		};
 	}
 

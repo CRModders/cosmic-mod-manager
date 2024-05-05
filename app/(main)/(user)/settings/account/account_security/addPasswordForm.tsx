@@ -8,25 +8,24 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
+import type { locale_content_type } from "@/public/locales/interface";
 import type React from "react";
-import { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
+import { KeyIcon } from "@/components/Icons";
+import FormErrorMsg from "@/components/formErrorMsg";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { DialogClose } from "@/components/ui/dialog";
-
-import { Button } from "@/components/ui/button";
-import { KeyIcon } from "@/components/Icons";
+import { useToast } from "@/components/ui/use-toast";
 import { maxPasswordLength, minPasswordLength } from "@/config";
-import { initiateAddNewPasswordAction } from "@/app/api/actions/user";
 import { isValidPassword } from "@/lib/user";
-import FormErrorMsg from "@/components/formErrorMsg";
-import type { locale_content_type } from "@/public/locales/interface";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type Props = {
 	id: string;
@@ -113,7 +112,16 @@ const AddPasswordForm = ({ id, email, locale }: Props) => {
 	};
 
 	return (
-		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+		<Dialog
+			open={dialogOpen}
+			onOpenChange={(open: boolean) => {
+				if (open === false) {
+					form.reset();
+					setFormError("");
+				}
+				setDialogOpen(open);
+			}}
+		>
 			<DialogTrigger asChild>
 				<Button className="flex items-center justify-center gap-2" variant="outline">
 					<KeyIcon size="1.1rem" />

@@ -9,12 +9,11 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { LogoutIcon } from "@/components/Icons";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import ProfileDropdownLink from "./ProfileDropdownLink";
 import { Spinner } from "@/components/ui/spinner";
 import type { auth_locale } from "@/public/locales/interface";
+import { signOut } from "next-auth/react";
+import { useState } from "react";
+import ProfileDropdownLink from "./ProfileDropdownLink";
 
 type Props = {
 	authLocale: auth_locale;
@@ -22,15 +21,12 @@ type Props = {
 };
 
 const SignOutBtn = ({ className, authLocale }: Props) => {
-	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 
 	const handleClick = async () => {
 		if (loading) return;
 		setLoading(true);
 		await signOut();
-		setLoading(false);
-		router.push("/login");
 	};
 
 	return (

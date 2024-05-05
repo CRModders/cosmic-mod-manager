@@ -6,14 +6,15 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { Suspense } from "react";
-import Link from "next/link";
 import AuthProviders from "@/app/(auth)/authproviders";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import LoginForm from "./Form";
 import LoadingUI from "@/components/ui/spinner";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import Link from "next/link";
+import { Suspense } from "react";
+import LoginForm from "./Form";
+import AuthError from "./authError";
 
 const LoginPage = async () => {
 	const langPref = getLangPref();
@@ -22,6 +23,9 @@ const LoginPage = async () => {
 	return (
 		<div className="w-full flex items-center justify-center ">
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
+				<Suspense fallback={<LoadingUI />}>
+					<AuthError locale={locale} />
+				</Suspense>
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
 						<h1 className="w-full text-left text-xl">{locale.auth.login}</h1>

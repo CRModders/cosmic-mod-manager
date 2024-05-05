@@ -79,6 +79,10 @@ export const no_nb: locale_variant_object = {
 			signing_out: "Logger ut",
 			something_went_wrong: "Noe gikk galt",
 
+			errors: {
+				OAuthAccountNotLinked: null,
+			},
+
 			login_page: {
 				meta_desc: "Logg inn i Cosmic Reach Mod Manager for å få en mer personlig opplevelse.",
 				dont_have_an_account: "Har du ikke en konto?",

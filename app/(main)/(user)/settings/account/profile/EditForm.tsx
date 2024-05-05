@@ -33,6 +33,7 @@ type Props = {
 	username: string;
 	linkedProviders: Providers[];
 	currProfileProvider: Providers;
+	dialogOpen: boolean;
 	setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	locale: locale_content_type;
 };
@@ -42,6 +43,7 @@ const EditProfileInfoForm = ({
 	username,
 	linkedProviders,
 	currProfileProvider,
+	dialogOpen,
 	setDialogOpen,
 	locale,
 }: Props) => {

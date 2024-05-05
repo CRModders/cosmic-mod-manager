@@ -9,13 +9,13 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import EditProfileInfoForm from "./EditForm";
-import { Button } from "@/components/ui/button";
-import type { Providers } from "@prisma/client";
 import { EditIcon } from "@/components/Icons";
+import { Button } from "@/components/ui/button";
 import type { locale_content_type } from "@/public/locales/interface";
+import type { Providers } from "@prisma/client";
+import EditProfileInfoForm from "./EditForm";
 
 type Props = {
 	name: string;
@@ -47,6 +47,7 @@ const EditProfileDialog = ({ name, username, linkedProviders, currProfileProvide
 					username={username}
 					linkedProviders={linkedProviders}
 					currProfileProvider={currProfileProvider}
+					dialogOpen={dialogOpen}
 					setDialogOpen={setDialogOpen}
 					locale={locale}
 				/>

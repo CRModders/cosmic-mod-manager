@@ -17,9 +17,13 @@ type StoreContextValues = {
 	isDesktop: boolean;
 };
 
-export const StoreContext = createContext({
+export const StoreContext = createContext<StoreContextValues | null>({
 	isNavMenuOpen: false,
-} as StoreContextValues);
+	toggleNavMenu: (newState?: boolean) => {
+		return;
+	},
+	isDesktop: false,
+});
 
 export default function StoreContextProvider({ children }: { children: React.ReactNode }) {
 	const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
