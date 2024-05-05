@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import React from "react";
 
 type Props = {
-	msg: string;
+	children?: React.ReactNode;
+	msg?: string;
 	className?: string;
 	iconClassName?: string;
 };
 
-const FormErrorMsg = ({ msg, className, iconClassName }: Props) => {
+const FormErrorMsg = ({ children, msg, className, iconClassName }: Props) => {
 	return (
 		<div
 			className={cn(
@@ -17,7 +17,7 @@ const FormErrorMsg = ({ msg, className, iconClassName }: Props) => {
 			)}
 		>
 			<ExclamationTriangleIcon className={cn("pl-1 w-5 h-4 shrink-0", iconClassName)} />
-			<p>{msg}</p>
+			{children ? children : <p className="text-left">{msg}</p>}
 		</div>
 	);
 };

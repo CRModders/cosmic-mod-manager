@@ -8,23 +8,22 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import type React from "react";
-import { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { Spinner } from "@/components/ui/spinner";
-import { DialogClose } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type React from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { removePassword } from "@/app/api/actions/user";
+import { TrashIcon } from "@/components/Icons";
+import FormErrorMsg from "@/components/formErrorMsg";
 import { Button } from "@/components/ui/button";
 import { minPasswordLength } from "@/config";
-import { removePassword } from "@/app/api/actions/user";
-import FormErrorMsg from "@/components/formErrorMsg";
-import { TrashIcon } from "@/components/Icons";
 import type { locale_content_type } from "@/public/locales/interface";
 
 type Props = {
@@ -78,7 +77,16 @@ const RemovePasswordForm = ({ id, email, children, locale }: Props) => {
 	};
 
 	return (
-		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+		<Dialog
+			open={dialogOpen}
+			onOpenChange={(open: boolean) => {
+				if (open === false) {
+					form.reset();
+					setFormError("");
+				}
+				setDialogOpen(open);
+			}}
+		>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 
 			<DialogContent>

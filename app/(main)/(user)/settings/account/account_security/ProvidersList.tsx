@@ -8,21 +8,21 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import type React from "react";
-import { useState } from "react";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 import { linkAuthProvider, unlinkAuthProvider } from "@/app/api/actions/user";
+import { TrashIcon } from "@/components/Icons";
 import FormErrorMsg from "@/components/formErrorMsg";
 import FormSuccessMsg from "@/components/formSuccessMsg";
-import { TrashIcon } from "@/components/Icons";
-import type { Account } from "@prisma/client";
-import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { locale_content_type } from "@/public/locales/interface";
+import type { Account } from "@prisma/client";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import type React from "react";
+import { useState } from "react";
 
 type Props = {
 	id: string;
@@ -82,7 +82,16 @@ const ProvidersList = ({ id, linkedProviders, children, locale }: Props) => {
 	};
 
 	return (
-		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+		<Dialog
+			open={dialogOpen}
+			onOpenChange={(open: boolean) => {
+				if (open === false) {
+					setFormError("");
+					setSuccessMessage("");
+				}
+				setDialogOpen(open);
+			}}
+		>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 
 			<DialogContent autoFocus={false}>

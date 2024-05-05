@@ -45,7 +45,7 @@ const AccountSettingsPage = async () => {
 						<h2 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/80">
 							{locale.settings_page.account_section.user_profile}
 						</h2>
-						<div>
+						<div className="flex h-full items-center justify-center">
 							<EditProfileDialog
 								name={user.name}
 								username={user.userName}

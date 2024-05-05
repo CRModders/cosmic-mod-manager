@@ -8,16 +8,16 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Button } from "@/components/ui/button";
-import { TrashIcon } from "@/components/Icons";
-import { useToast } from "@/components/ui/use-toast";
-import React, { useState } from "react";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import { initiateDeleteAccountAction } from "@/app/api/actions/user";
-import { Spinner } from "@/components/ui/spinner";
+import { TrashIcon } from "@/components/Icons";
 import FormErrorMsg from "@/components/formErrorMsg";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { useToast } from "@/components/ui/use-toast";
 import type { locale_content_type } from "@/public/locales/interface";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useState } from "react";
 
 type Props = {
 	locale: locale_content_type;
@@ -58,7 +58,15 @@ const DeleteAccountSection = ({ locale }: Props) => {
 					{locale.settings_page.account_section.account_deletion_desc}
 				</p>
 			</div>
-			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+			<Dialog
+				open={dialogOpen}
+				onOpenChange={(open: boolean) => {
+					if (open === false) {
+						setFormError("");
+					}
+					setDialogOpen(open);
+				}}
+			>
 				<DialogTrigger asChild>
 					<Button className="flex items-center justify-center gap-2 bg-danger dark:bg-danger_dark hover:bg-danger/90 hover:dark:bg-danger_dark/90 text-foreground_dark hover:text-foreground_dark dark:text-foreground_dark">
 						<TrashIcon size="1rem" />

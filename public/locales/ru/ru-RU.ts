@@ -78,6 +78,10 @@ export const ru_ru: locale_variant_object = {
 			signing_out: "Выходим",
 			something_went_wrong: "Что-то пошло не так",
 
+			errors: {
+				OAuthAccountNotLinked: null,
+			},
+
 			login_page: {
 				meta_desc: "Войдите в Менеджер Модов Cosmic Reach, чтобы получить доступ к новым возможностям.",
 				dont_have_an_account: "Не зарегистрированы?",

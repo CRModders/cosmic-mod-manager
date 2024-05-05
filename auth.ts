@@ -6,17 +6,17 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import db from "@/lib/db";
-import NextAuth from "next-auth";
+import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
 import authConfig from "@/auth.config";
-import CredentialsProvider from "next-auth/providers/credentials";
+import db from "@/lib/db";
+import { parseProfileProvider, parseUsername } from "@/lib/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { DeletedUser, Providers, UserRoles } from "@prisma/client";
-import { findUserByEmail, findUserById, matchPassword } from "@/app/api/actions/user";
-import { parseProfileProvider, parseUsername } from "@/lib/user";
-import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
 import { deleteSessionToken, setSessionToken } from "./app/api/actions/auth";
+import { dbSessionTokenCookieKeyName, maxUsernameLength } from "./config";
 
 declare module "next-auth" {
 	// Additional types in the User field
@@ -155,6 +155,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 	},
 
 	secret: process.env.AUTH_SECRET,
+
+	pages: {
+		signIn: "/login",
+		// newUser: "/onboarding",
+	},
 
 	providers: [
 		...authConfig.providers,

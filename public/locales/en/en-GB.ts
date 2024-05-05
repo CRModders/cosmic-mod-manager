@@ -90,6 +90,11 @@ export const en_gb = {
 			signing_out: "Signing out",
 			something_went_wrong: "Something went wrong",
 
+			errors: {
+				OAuthAccountNotLinked:
+					"The email address is already associated with an account but you are trying to use an OAuth account that is not linked to it.",
+			},
+
 			login_page: {
 				meta_desc: "Log into cosmic reach mod manager to get a more personalized experience.",
 				dont_have_an_account: "Don't have an account?",
