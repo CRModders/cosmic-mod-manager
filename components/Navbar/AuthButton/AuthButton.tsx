@@ -20,7 +20,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import SignOutBtn from "./SignOutBtn";
 
 const LoginButton = ({ authLocale }: { authLocale: auth_locale }) => {
-	return <LoginBtn closeNavMenuOnLinkClick={false} authLocale={authLocale} />;
+	return <LoginBtn closeNavMenuOnLinkClick={false} btnClassName="h-10" authLocale={authLocale} />;
 };
 
 type Props = {
@@ -65,7 +65,7 @@ const AuthButton = async ({ locale }: Props) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="max-w-md min-w-72 mx-[auto] mr-4" align="center">
-				<ProfileDropdown locale={locale} />
+				<ProfileDropdown userData={userData} locale={locale} />
 			</PopoverContent>
 		</Popover>
 	);

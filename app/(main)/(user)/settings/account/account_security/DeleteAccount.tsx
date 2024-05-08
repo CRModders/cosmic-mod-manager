@@ -54,7 +54,7 @@ const DeleteAccountSection = ({ locale }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-16 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
+				<p className="text-base text-foreground/80 dark:text-foreground_dark/80 shrink">
 					{locale.settings_page.account_section.account_deletion_desc}
 				</p>
 			</div>

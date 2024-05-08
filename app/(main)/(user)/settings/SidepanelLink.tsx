@@ -8,10 +8,10 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
+import "@/app/globals.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
-import "@/app/globals.css";
 
 type Props = {
 	href: string;
@@ -29,7 +29,7 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 
 	return (
 		<li
-			className="w-full link_bg_transition data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark rounded-lg"
+			className="w-full link_bg_transition data-[active=true]:bg-background_hover/75 dark:data-[active=true]:bg-background_hover_dark rounded-lg"
 			data-active={isActive}
 		>
 			<Link
@@ -42,7 +42,7 @@ const SidepanelLink = ({ href, icon, label }: Props) => {
 					<div className="absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-primary_accent dark:bg-primary_accent_dark" />
 				)}
 				<div className="w-6 h-6 flex items-center justify-start link_icon">{icon}</div>
-				<p className="text-lg font-normal">{label}</p>
+				<p className="text-lg font-semibold">{label}</p>
 			</Link>
 		</li>
 	);

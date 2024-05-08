@@ -7,12 +7,11 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import { auth } from "@/auth";
-import React from "react";
-import SendResetEmail from "./sendResetEmail";
-import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import Link from "next/link";
+import SendResetEmail from "./sendResetEmail";
 
 const ResetPasswordPage = async () => {
 	const langPref = getLangPref();
@@ -26,7 +25,9 @@ const ResetPasswordPage = async () => {
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl">{change_password_page_locale.change_password}</h1>
+						<h1 className="w-full text-left text-xl text-foreground/80 dark:text-foreground_dark/90 font-semibold">
+							{change_password_page_locale.change_password}
+						</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
@@ -44,8 +45,8 @@ const ResetPasswordPage = async () => {
 						<div className="w-full flex flex-col items-center justify-center gap-6">
 							<Link
 								aria-label={locale.auth.login}
-								href="/"
-								className="text-foreground dark:text-foreground_dark hover:underline underline-offset-2 text-sm"
+								href="/login"
+								className="text-foreground/80 dark:text-foreground_dark/90 hover:underline decoration-[0.1rem] underline-offset-2 text-sm font-semibold"
 							>
 								{locale.auth.login}
 							</Link>

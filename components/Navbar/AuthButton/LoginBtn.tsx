@@ -13,11 +13,13 @@ import { NavMenuLink } from "../Navlink";
 
 const LoginBtn = ({
 	className,
+	btnClassName,
 	size = "md",
 	closeNavMenuOnLinkClick = true,
 	authLocale,
 }: {
 	className?: string;
+	btnClassName?: string;
 	size?: "sm" | "md" | "lg";
 	closeNavMenuOnLinkClick?: boolean;
 	authLocale: auth_locale;
@@ -36,7 +38,7 @@ const LoginBtn = ({
 				tabIndex={-1}
 				variant="outline"
 				size={size}
-				className="w-full navlink_text hover:bg-transparent dark:hover:bg-transparent text-lg text-foreground dark:text-foreground_dark"
+				className={cn("w-full navlink_text hover:bg-transparent dark:hover:bg-transparent text-lg", btnClassName)}
 				aria-label={authLocale.login}
 			>
 				{authLocale.login}

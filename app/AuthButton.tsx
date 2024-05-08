@@ -24,14 +24,10 @@ const AuthButton = async ({ authLocale }: Props) => {
 	if (session && session?.user?.email) {
 		return (
 			<Link href="/dashboard" aria-label={authLocale.dashboard}>
-				<Button
-					className="h-10 sm:h-12 px-6 sm:px-8"
-					size="lg"
-					variant="outline"
-					aria-label={authLocale.dashboard}
-					tabIndex={-1}
-				>
-					<p className="text-foreground dark:text-foreground_dark sm:text-lg">{authLocale.dashboard}</p>
+				<Button size="md" variant="outline" aria-label={authLocale.dashboard} tabIndex={-1}>
+					<p className="text-foreground/80 dark:text-foreground_dark/90 font-semibold text-base sm:text-md">
+						{authLocale.dashboard}
+					</p>
 				</Button>
 			</Link>
 		);
@@ -39,14 +35,10 @@ const AuthButton = async ({ authLocale }: Props) => {
 
 	return (
 		<Link href="/register" aria-label={authLocale.sign_up}>
-			<Button
-				className="h-10 sm:h-12 px-6 sm:px-8"
-				size="lg"
-				variant="outline"
-				aria-label={authLocale.sign_up}
-				tabIndex={-1}
-			>
-				<p className="text-foreground dark:text-foreground_dark sm:text-lg ">{authLocale.sign_up}</p>
+			<Button size="md" variant="outline" aria-label={authLocale.sign_up} tabIndex={-1}>
+				<p className="text-foreground/80 dark:text-foreground_dark/90 font-semibold text-base sm:text-md">
+					{authLocale.sign_up}
+				</p>
 			</Button>
 		</Link>
 	);

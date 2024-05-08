@@ -17,7 +17,7 @@ export const ru_ru: locale_variant_object = {
 	content: {
 		globals: {
 			site: {
-				full_name: "Менеджер Модов Cosmic Reach",
+				full_name: "Cosmic Reach Mod Manager",
 				short_name: "CRMM",
 			},
 			mods: "Моды",

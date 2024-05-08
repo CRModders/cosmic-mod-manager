@@ -6,22 +6,22 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
 import { getLoggedInSessionsList } from "@/app/api/actions/auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { dbSessionTokenCookieKeyName } from "@/config";
+import React from "react";
 
+import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 import { cookies } from "next/headers";
 import SessionListPageWrapper from "./pageWrapper";
-import authProvidersList from "@/app/(auth)/avaiableAuthProviders";
 
 import { KeyIcon } from "@/components/Icons";
-import RevokeBtn from "./revokeBtn";
-import TooltipWrapper from "./TooltipWrapper";
-import Timestamp, { DotSeparator } from "./Timestamp";
 import CopyBtn from "@/components/copyBtn";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import Timestamp, { DotSeparator } from "./Timestamp";
+import TooltipWrapper from "./TooltipWrapper";
+import RevokeBtn from "./revokeBtn";
 
 const SessionsPage = async () => {
 	const langPref = getLangPref();
@@ -38,7 +38,9 @@ const SessionsPage = async () => {
 				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
 					<SessionListPageWrapper showSessionPageWarning={showSessionPageWarning} locale={locale}>
 						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-							<h1 className="flex text-left text-2xl text-foreground dark:text-foreground_dark">Sessions</h1>
+							<h1 className="flex text-left text-2xl text-foreground/80 dark:text-foreground_dark/90 font-semibold">
+								{locale.settings_page.sessions_section.sessions}
+							</h1>
 						</div>
 						<div className="w-full flex flex-col items-center justify-center text-foreground/80 dark:text-foreground_dark/80">
 							<p className="w-full text-left">{locale.settings_page.sessions_section.page_desc.line_1}</p>
@@ -54,7 +56,7 @@ const SessionsPage = async () => {
 									>
 										<div className="flex flex-col items-start justify-center gap-2 text-foreground/80 dark:text-foreground_dark/80">
 											<div className="flex flex-col gap-y-2 sm:gap-0 items-center justify-center">
-												<div className="w-full flex flex-wrap items-center text-left text-foreground dark:text-foreground_dark sm:text-lg">
+												<div className="w-full flex flex-wrap items-center text-left text-foreground/80 dark:text-foreground_dark/90 sm:text-md font-semibold">
 													<p>{session?.browser}</p>
 													<DotSeparator />
 													<p>{session?.os}</p>
@@ -68,7 +70,7 @@ const SessionsPage = async () => {
 													</div>
 												</div>
 
-												<div className="w-full flex flex-wrap items-center justify-start text-left">
+												<div className="w-full flex flex-wrap items-center justify-start text-left text-base">
 													{(session?.region || session?.country) && (
 														<>
 															<p>
@@ -80,6 +82,7 @@ const SessionsPage = async () => {
 													<Timestamp lastUsed={session?.lastUsed} createdOn={session?.createdOn} locale={locale} />
 												</div>
 											</div>
+
 											<TooltipWrapper
 												text={locale.settings_page.sessions_section.session_created_using_provider.replace(
 													"${0}",
@@ -100,6 +103,7 @@ const SessionsPage = async () => {
 												<span className="capitalize">{session?.provider}</span>
 											</TooltipWrapper>
 										</div>
+
 										<div className="h-full flex items-center justify-center">
 											{sessionToken !== session?.sessionToken ? (
 												<RevokeBtn

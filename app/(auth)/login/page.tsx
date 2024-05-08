@@ -28,7 +28,9 @@ const LoginPage = async () => {
 				</Suspense>
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl">{locale.auth.login}</h1>
+						<h1 className="w-full text-left text-xl font-semibold text-foreground/80 dark:text-foreground_dark/90">
+							{locale.auth.login}
+						</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-center justify-center gap-4">
@@ -60,7 +62,7 @@ const LoginPage = async () => {
 								<Link
 									href="/register"
 									aria-label={locale.auth.sign_up}
-									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
+									className="text-foreground/80 dark:text-foreground_dark/90 font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
 								>
 									{locale.auth.sign_up}
 								</Link>
@@ -72,7 +74,7 @@ const LoginPage = async () => {
 								<Link
 									href="/change-password"
 									aria-label={locale.auth.change_password_page.change_password}
-									className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
+									className="text-foreground/80 dark:text-foreground_dark/90 font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
 								>
 									{locale.auth.change_password_page.change_password}
 								</Link>

@@ -13,9 +13,16 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { extract_elems, get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import { cn } from "@/lib/utils";
+import { Frijole } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import AuthButton from "./AuthButton";
+
+const frijole = Frijole({
+	weight: ["400"],
+	subsets: ["latin"],
+});
 
 export default async function Home() {
 	const langPref = getLangPref();
@@ -35,9 +42,14 @@ export default async function Home() {
 	return (
 		<main className="w-full h-fit flex flex-col items-center justify-start pb-8">
 			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
-				<BrandIcon size="18rem" className=" text-primary_accent dark:text-primary_accent_dark" />
+				<BrandIcon size="16rem" className=" text-primary_accent dark:text-primary_accent_dark" />
 				<div className="w-full flex flex-col items-center justify-center">
-					<h1 className="text-3xl lg:text-5xl text-center font-semibold text-foreground dark:text-foreground_dark">
+					<h1
+						className={cn(
+							"text-2xl lg:text-4xl text-center font-semibold text-foreground dark:text-foreground_dark",
+							frijole.className,
+						)}
+					>
 						{locale.globals.site.full_name}
 					</h1>
 
@@ -50,7 +62,10 @@ export default async function Home() {
 											// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 											index
 										}`}
-										className="flex items-center justify-center text-3xl h-10 lg:h-14 lg:text-5xl font-bold bg-clip-text bg-primary_accent_text dark:bg-primary_accent_dark text-transparent bg-cover bg-gradient-to-b from-rose-200 to-primary_accent_text via-primary_accent dark:via-primary_accent_dark dark:to-primary_accent_dark leading-loose"
+										className={cn(
+											"flex items-center justify-center h-10 lg:h-14 text-2xl lg:text-4xl font-bold bg-clip-text bg-primary_accent_text dark:bg-primary_accent_dark text-transparent bg-cover bg-gradient-to-b from-rose-200 to-primary_accent_text via-primary_accent dark:via-primary_accent_dark dark:to-primary_accent_dark leading-loose",
+											frijole.className,
+										)}
 									>
 										{item}
 									</strong>
@@ -80,11 +95,11 @@ export default async function Home() {
 
 				<div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
 					<Button
-						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 h-10 sm:h-12 px-6 sm:px-8"
-						size="lg"
+						className="bg-primary_accent dark:bg-primary_accent hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 "
+						size="md"
 						aria-label="Explore mods"
 					>
-						<p className="text-foreground_dark dark:text-foreground_dark sm:text-lg">
+						<p className="text-foreground_dark dark:text-foreground_dark font-semibold text-base sm:text-md">
 							{home_page_locale.hero.explore_mods}
 						</p>
 					</Button>

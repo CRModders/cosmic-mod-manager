@@ -36,12 +36,7 @@ export const shuffleCharacters = (str: string) => {
 	return characters.join("");
 };
 
-type randomCodeGenOptions = {
-	length?: number;
-	onlyNumbers?: boolean;
-};
-
-export const generateRandomCode = ({ length = 32, onlyNumbers = false }: randomCodeGenOptions) => {
+export const generateRandomCode = () => {
 	return shuffleCharacters(crypto.randomUUID().replaceAll("-", ""));
 };
 

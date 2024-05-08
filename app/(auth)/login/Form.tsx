@@ -8,21 +8,21 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import type React from "react";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { loginUser } from "@/app/api/actions/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
-import { loginUser } from "@/app/api/actions/user";
 import { defaultLoginRedirect } from "@/config";
 import { isValidEmail } from "@/lib/user";
-import FormErrorMsg from "@/components/formErrorMsg";
 import type { locale_content_type } from "@/public/locales/interface";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type Props = {
 	locale: locale_content_type;
@@ -168,7 +168,7 @@ const LoginForm = ({ locale }: Props) => {
 				<Button
 					type="submit"
 					aria-label={locale.auth.login}
-					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
+					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark font-semibold text-md"
 				>
 					{locale.auth.login}
 				</Button>

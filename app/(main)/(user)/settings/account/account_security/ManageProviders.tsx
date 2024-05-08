@@ -6,12 +6,11 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { Button } from "@/components/ui/button";
-import React from "react";
-import ProvidersList from "./ProvidersList";
 import { getLinkedProvidersList } from "@/app/api/actions/user";
 import { GearIcon } from "@/components/Icons";
+import { Button } from "@/components/ui/button";
 import type { locale_content_type } from "@/public/locales/interface";
+import ProvidersList from "./ProvidersList";
 
 type Props = {
 	id: string;
@@ -24,10 +23,10 @@ const ManageProviders = async ({ id, locale }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-32 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-xl text-foreground dark:text-foreground_dark">
+				<p className="text-lg font-semibold text-foreground/80 dark:text-foreground_dark/90">
 					{locale.settings_page.account_section.manage_auth_providers}
 				</p>
-				<p className="text-foreground_muted/80 dark:text-foreground_muted_dark/80 shrink">
+				<p className="text-base text-foreground/80 dark:text-foreground_dark/80 shrink">
 					{locale.settings_page.account_section.manage_auth_providers_desc}
 				</p>
 			</div>

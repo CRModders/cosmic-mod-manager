@@ -7,8 +7,8 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import {
-	changePasswordConfirmationTokenValidity_ms,
 	addNewPasswordVerificationTokenValidity_ms,
+	changePasswordConfirmationTokenValidity_ms,
 	deleteAccountVerificationTokenValidity_ms,
 } from "@/config";
 import db from "@/lib/db";
@@ -18,10 +18,10 @@ import {
 	ChangePasswordVerificationEmailTemplate,
 	NewPasswordConfirmationEmailTemplate,
 } from "@/lib/email/templates";
-import { generateRandomCode } from "@/lib/utils";
-import { type User, UserVerificationActionTypes } from "@prisma/client";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import { generateRandomCode } from "@/lib/utils";
+import { UserVerificationActionTypes, type User } from "@prisma/client";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -44,7 +44,7 @@ export const sendNewPasswordVerificationEmail = async ({
 			data: {
 				userId: userId,
 				action: UserVerificationActionTypes.ADD_PASSWORD,
-				token: `${userId}${generateRandomCode({})}`,
+				token: `${userId}${generateRandomCode()}`,
 			},
 		});
 
@@ -88,7 +88,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 			data: {
 				userId: user.id,
 				action: UserVerificationActionTypes.CHANGE_PASSWORD,
-				token: `${user.id}${generateRandomCode({})}`,
+				token: `${user.id}${generateRandomCode()}`,
 			},
 		});
 
@@ -132,7 +132,7 @@ export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) 
 			data: {
 				userId: user.id,
 				action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
-				token: `${user.id}${generateRandomCode({})}`, // Longer sized token to make sure it's unique ever for a larger user base
+				token: `${user.id}${generateRandomCode()}`, // Longer sized token to make sure it's unique ever for a larger user base
 			},
 		});
 

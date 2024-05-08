@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import FormErrorMsg from "../formErrorMsg";
-import { getAuthenticatedUser } from "@/app/api/actions/auth";
-import type { locale_content_type } from "@/public/locales/interface";
-import { Spinner } from "../ui/spinner";
-import { signOut } from "next-auth/react";
+import { findUserById } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
+import type { locale_content_type } from "@/public/locales/interface";
+import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
+import FormErrorMsg from "../formErrorMsg";
+import { Spinner } from "../ui/spinner";
 
 type Props = {
 	locale: locale_content_type;
+	userId: string;
 };
 
 const SignOutBtn = () => {
@@ -26,12 +27,12 @@ const SignOutBtn = () => {
 	return null;
 };
 
-const SignOutWidget = ({ locale }: Props) => {
+const SignOutWidget = ({ locale, userId }: Props) => {
 	const authLocale = locale.auth;
 	const [authenticatedUser, setAuthenticatedUser] = useState(undefined);
 
 	const fetchUser = async () => {
-		const userData = await getAuthenticatedUser();
+		const userData = await findUserById(userId);
 		setAuthenticatedUser(userData);
 	};
 

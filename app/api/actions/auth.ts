@@ -44,7 +44,7 @@ export const setSessionToken = async (id: string, provider?: string) => {
 			data: {
 				userId: id,
 				createdOn: new Date(),
-				sessionToken: `${id}${generateRandomCode({})}`,
+				sessionToken: `${id}${generateRandomCode()}`,
 				browser: browser,
 				os: os,
 				ipAddr: ip || null,
