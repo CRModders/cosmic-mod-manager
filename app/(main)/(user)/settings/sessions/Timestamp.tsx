@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import { cn, formatDate, timeSince } from "@/lib/utils";
-import TooltipWrapper from "./TooltipWrapper";
 import type { locale_content_type } from "@/public/locales/interface";
+import TooltipWrapper from "./TooltipWrapper";
 
 export const DotSeparator = ({ className }: { className?: string }) => {
 	return (

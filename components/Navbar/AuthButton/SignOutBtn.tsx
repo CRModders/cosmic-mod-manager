@@ -18,9 +18,10 @@ import ProfileDropdownLink from "./ProfileDropdownLink";
 type Props = {
 	authLocale: auth_locale;
 	className?: string;
+	labelClassName?: string;
 };
 
-const SignOutBtn = ({ className, authLocale }: Props) => {
+const SignOutBtn = ({ authLocale, ...props }: Props) => {
 	const [loading, setLoading] = useState(false);
 
 	const handleClick = async () => {
@@ -36,7 +37,7 @@ const SignOutBtn = ({ className, authLocale }: Props) => {
 				icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <Spinner size="1.25rem" />}
 				disabled={loading}
 				onClick={handleClick}
-				className={className}
+				{...props}
 			/>
 		</div>
 	);

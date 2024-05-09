@@ -69,7 +69,6 @@ const ReturnPublicUserData = async (user: User) => {
 // Find user from database using userId
 export const findUserById = async (id: string) => {
 	try {
-		if (!id) throw new Error("id is required");
 		const user = await db.user.findUnique({
 			where: {
 				id: id,

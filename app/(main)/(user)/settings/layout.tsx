@@ -6,14 +6,14 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import PanelLayout, { PanelContent, SidePanel } from "@/components/PanelLayout/Panel";
+import "@/app/globals.css";
 import { PersonIcon, ShieldIcon } from "@/components/Icons";
-import React from "react";
-import SidepanelLink from "./SidepanelLink";
+import PanelLayout, { PanelContent, SidePanel } from "@/components/PanelLayout/Panel";
 import { siteTitle } from "@/config";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
-import "@/app/globals.css";
+import React from "react";
+import SidepanelLink from "./SidepanelLink";
 
 export default async function SettingsPageLayout({ children }: { children: React.ReactNode }) {
 	const langPref = getLangPref();
@@ -39,7 +39,7 @@ export default async function SettingsPageLayout({ children }: { children: React
 			<PanelLayout>
 				<SidePanel>
 					<div className="w-full">
-						<h1 className="w-full px-1 text-3xl font-semibold tracking-wider mb-4 text-foreground/90 dark:text-foreground_dark/90">
+						<h1 className="w-full px-1 text-3xl font-semibold mb-4 text-foreground/80 dark:text-foreground_dark/80">
 							{locale.auth.settings}
 						</h1>
 						<ul className="w-full flex flex-col items-start justify-center gap-1">

@@ -14,13 +14,13 @@ import ValidateSession from "@/components/validateLocalSession/validateSession";
 import { siteTitle } from "@/config";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Varela_Round } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const varela_round = Varela_Round({
-	weight: ["400"],
+const play = Noto_Sans({
+	weight: ["400", "600", "800"],
 	subsets: ["latin"],
 });
 
@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			<body
 				className={cn(
 					"bg-background dark:bg-background_dark text-foreground dark:text-foreground_dark",
-					varela_round.className,
+					play.className,
 				)}
 			>
 				<Suspense>
@@ -48,7 +48,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					<div className="w-full flex flex-col items-center justify-between min-h-[100vh]">
 						<NavbarWrapper />
 						<Suspense fallback={<LoadingUI iconSize={"2.25rem"} />}>
-							<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit]">{children}</main>
+							<main className="container flex items-center justify-center px-4 sm:px-8 font-[inherit] min-h-[100vh]">
+								{children}
+							</main>
 
 							<Footer />
 						</Suspense>

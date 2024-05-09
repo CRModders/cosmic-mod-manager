@@ -8,10 +8,10 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React, { useState } from "react";
-import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { signIn } from "next-auth/react";
+import React, { useState } from "react";
 import authProvidersList from "./avaiableAuthProviders";
 
 const AuthProviders = () => {
@@ -38,7 +38,7 @@ const AuthProviders = () => {
 								variant="secondary"
 							>
 								<i className="w-8 flex items-center justify-start">{provider.icon}</i>
-								<p className="text-foreground dark:text-foreground_dark">{provider.name}</p>
+								<p className="text-foreground/80 dark:text-foreground_dark/90 font-semibold text-md">{provider.name}</p>
 							</Button>
 						</form>
 					</React.Fragment>

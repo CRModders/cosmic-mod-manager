@@ -223,7 +223,7 @@ body.subtract-scrollbar-width {
 }
 
 .navlink_text {
-    @apply text-foreground/80 dark:text-foreground_dark/80 group-hover:text-foreground dark:group-hover:text-foreground_dark data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark data-[active=true]:font-semibold transition-colors duration-default group-hover:duration-0
+    @apply font-semibold text-foreground/75 dark:text-foreground_dark/80 group-hover:text-foreground dark:group-hover:text-foreground_dark data-[active=true]:text-foreground dark:data-[active=true]:text-foreground_dark transition-colors duration-default group-hover:duration-0
 }
 
 .link_bg_transition {

@@ -11,6 +11,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { StoreContext } from "@/contexts/StoreContext";
 import React, { Suspense, useContext, useEffect } from "react";
+import { ScrollArea } from "../ui/scroll-area";
 import { NavMenuLink } from "./Navlink";
 import styles from "./styles.module.css";
 
@@ -77,30 +78,34 @@ const MobileNav = ({ children, NavMenuLinks }: Props) => {
 					}`}
 				>
 					<div className="w-full flex flex-col items-center justify-center row-span-2 relative">
-						<div className="absolute top-0 left-0 w-full h-full opacity-80 bg-background dark:bg-background_dark z-[3]" />
+						<div className="absolute top-0 left-0 w-full h-full bg-background dark:bg-background_dark z-[3]" />
 
-						<ul className="container pt-32 sm:pt-24 pb-28 px-6 flex flex-col items-start justify-start h-[100vh] z-20 gap-2 overflow-y-scroll backdrop-blur-md">
-							{NavMenuLinks.map((link) => {
-								return (
-									<React.Fragment key={link.href}>
-										<li
-											key={`${link.href}`}
-											className="group w-full flex items-center justify-center rounded-lg link_bg_transition"
-										>
-											<NavMenuLink href={link.href} label={link.name} isDisabled={!isNavMenuOpen}>
-												<span className="text-lg w-full h-12 flex flex-col items-center justify-center text-center">
-													{link.name}
-												</span>
-											</NavMenuLink>
-										</li>
-									</React.Fragment>
-								);
-							})}
-							{isNavMenuOpen === true && (
-								// The children is either the login button or the dropdown menu depends on whether logged in or not
-								<Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>
-							)}
-						</ul>
+						<ScrollArea className="w-full flex items-start justify-center z-20 h-[100vh]">
+							<ul
+								className={`${styles.navlink_list} container pt-32 sm:pt-24 pb-28 px-6 flex flex-col items-start justify-start z-20 gap-2`}
+							>
+								{NavMenuLinks.map((link) => {
+									return (
+										<React.Fragment key={link.href}>
+											<li
+												key={`${link.href}`}
+												className="w-full group flex items-center justify-center rounded-lg link_bg_transition"
+											>
+												<NavMenuLink href={link.href} label={link.name} isDisabled={!isNavMenuOpen}>
+													<span className="text-lg font-semibold w-full h-12 flex flex-col items-center justify-center text-center">
+														{link.name}
+													</span>
+												</NavMenuLink>
+											</li>
+										</React.Fragment>
+									);
+								})}
+								{isNavMenuOpen === true && (
+									// The children is either the login button or the dropdown menu depends on whether logged in or not
+									<Suspense fallback={<Spinner size="1.25rem" />}>{children}</Suspense>
+								)}
+							</ul>
+						</ScrollArea>
 					</div>
 				</div>
 			}

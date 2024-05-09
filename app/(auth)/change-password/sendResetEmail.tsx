@@ -8,22 +8,22 @@
 
 // You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import type React from "react";
-import { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { initiatePasswordChange } from "@/app/api/actions/user";
+import FormErrorMsg from "@/components/formErrorMsg";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { isValidEmail } from "@/lib/user";
-import { initiatePasswordChange } from "@/app/api/actions/user";
 import { sleep } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import FormErrorMsg from "@/components/formErrorMsg";
 import type { locale_content_type } from "@/public/locales/interface";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type Props = {
 	userEmail: string | undefined | null;
@@ -143,7 +143,7 @@ const SendResetEmail = ({ userEmail, locale }: Props) => {
 				<Button
 					type="submit"
 					aria-label={locale.globals.continue}
-					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark"
+					className="w-full bg-primary_accent dark:bg-primary_accent_dark hover:bg-primary_accent/80 dark:hover:bg-primary_accent_dark/80 text-foreground_dark dark:text-foreground_dark text-md"
 				>
 					{locale.globals.continue}
 				</Button>

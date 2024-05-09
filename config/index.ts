@@ -7,6 +7,7 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 export const siteTitle = "Cosmic Reach Mod Manager";
+export const serverUrl = "http://localhost:5000";
 
 // Route types
 export const authRouteApiPrefix = "/api/auth";

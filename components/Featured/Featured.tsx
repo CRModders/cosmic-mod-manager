@@ -6,14 +6,13 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-import type { FeaturedSectionContentData } from "@/types";
 import { getFeaturedSectionContent } from "@/app/api/actions/featuredSection";
+import { Button } from "@/components/ui/button";
+import type { featured_section_locale } from "@/public/locales/interface";
+import type { FeaturedSectionContentData } from "@/types";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import styles from "./styles.module.css";
-import { Button } from "@/components/ui/button";
-import type { featured_section_locale } from "@/public/locales/interface";
 
 type Props = {
 	featuredSectionLocale: featured_section_locale;
@@ -46,7 +45,9 @@ const FeaturedSection = async ({ featuredSectionLocale }: Props) => {
 		<>
 			{FeaturedSectionContent.map((section) => (
 				<div className="w-full flex items-start justify-start flex-col px-4 my-2" key={section.categoryName}>
-					<h2 className="text-left text-2xl py-2 px-1 underline underline-offset-2">{section.title}</h2>
+					<h2 className="text-left text-2xl py-2 px-1 underline underline-offset-2 text-foreground/80 dark:text-foreground_dark/90">
+						{section.title}
+					</h2>
 
 					<div className={`${styles.showcase_wrapper} w-full grid rounded-lg gap-6`}>
 						{section.items.map((item) => {
@@ -61,7 +62,11 @@ const FeaturedSection = async ({ featuredSectionLocale }: Props) => {
 										{" "}
 									</div>
 									<div className="flex flex-col items-start justify-start mr-4 max-h-24">
-										<h3 className={`${styles.item_name} text-lg sm:text-xl`}>{item.name}</h3>
+										<h3
+											className={`${styles.item_name} text-lg sm:text-xl text-foreground/80 dark:text-foreground_dark/90 font-semibold`}
+										>
+											{item.name}
+										</h3>
 										<p className={`${styles.item_description} text-foreground/80 dark:text-foreground_dark/80`}>
 											{item.description}
 										</p>

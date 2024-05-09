@@ -21,7 +21,7 @@ const ValidateSession = async () => {
 		return null;
 	}
 
-	return <SignOutWidget locale={locale} />;
+	return <SignOutWidget userId={session.user?.id} locale={locale} />;
 };
 
 export default ValidateSession;

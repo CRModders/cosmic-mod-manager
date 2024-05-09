@@ -6,41 +6,26 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-import { auth } from "@/auth";
-import Link from "next/link";
-import SignOutBtn from "./SignOutBtn";
-import ProfileDropdownLink from "./ProfileDropdownLink";
-import { findUserById } from "@/app/api/actions/user";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { GearIcon, DashboardIcon, PersonIcon } from "@/components/Icons";
-import type { locale_content_type } from "@/public/locales/interface";
 import "@/app/globals.css";
+import { DashboardIcon, GearIcon, PersonIcon } from "@/components/Icons";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import type { locale_content_type } from "@/public/locales/interface";
+import type { User } from "@prisma/client";
+import Link from "next/link";
+import ProfileDropdownLink from "./ProfileDropdownLink";
+import SignOutBtn from "./SignOutBtn";
 
 type Props = {
 	locale: locale_content_type;
+	userData: Partial<User>;
 };
 
-const ProfileDropdown = async ({ locale }: Props) => {
-	const session = await auth().catch((e) => console.log(e));
-
-	if (!session || !session?.user?.id) {
-		return null;
-	}
-
-	const userData = await findUserById(session.user.id);
-
-	if (!userData?.email) {
-		return null;
-	}
-
+const ProfileDropdown = async ({ locale, userData }: Props) => {
 	const dropdownLinks = [
 		{
 			name: locale.auth.your_profile,
-			href: `/user/${
-				// biome-ignore lint/complexity/useOptionalChain: <explanation>
-				userData && userData?.userName ? userData.userName : "notSignedIn"
-			}`,
+			href: // biome-ignore lint/complexity/useOptionalChain: <explanation>
+				userData && userData?.userName ? `/user/${userData.userName}` : "/login",
 			icon: <PersonIcon size="1.25rem" />,
 		},
 		{
@@ -83,14 +68,19 @@ const ProfileDropdown = async ({ locale }: Props) => {
 									className="w-full flex items-center justify-center rounded-lg link_bg_transition"
 									tabIndex={0}
 								>
-									<ProfileDropdownLink label={link.name} icon={link.icon} tabIndex={-1} />
+									<ProfileDropdownLink
+										label={link.name}
+										icon={link.icon}
+										tabIndex={-1}
+										labelClassName="text-foreground/90 dark:text-foreground_dark/90"
+									/>
 								</Link>
 							);
 						})}
 					</div>
 					<div className="w-full h-[0.1rem] bg-background_hover dark:bg-background_hover_dark" />
 					<div className="w-full">
-						<SignOutBtn authLocale={locale.auth} />
+						<SignOutBtn authLocale={locale.auth} labelClassName="text-foreground/90 dark:text-foreground_dark/90" />
 					</div>
 				</div>
 			)}

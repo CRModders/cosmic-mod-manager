@@ -1,14 +1,14 @@
-import React, { Suspense } from "react";
+import { getAvailableLocales, get_locale } from "@/lib/lang";
+import getLangPref from "@/lib/server/getLangPref";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { Suspense } from "react";
 import { BrandIcon } from "../Icons";
 import ThemeSwitch from "../Navbar/ThemeSwitch";
-import Link from "next/link";
-import styles from "./styles.module.css";
 import socialLinks from "../Socials";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import LangSwitcher from "./LangSwitcher";
-import getLangPref from "@/lib/server/getLangPref";
-import { getAvailableLocales, get_locale } from "@/lib/lang";
 import SettingsButton from "./SettingsButton";
+import styles from "./styles.module.css";
 
 const Footer = () => {
 	const currentLang = getLangPref();
@@ -22,7 +22,7 @@ const Footer = () => {
 		},
 		{
 			label: locale.globals.resource_packs,
-			href: "/resource_packs",
+			href: "/resourcepacks",
 		},
 		{
 			label: locale.globals.modpacks,

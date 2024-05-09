@@ -1,19 +1,13 @@
-import Link from "next/link";
-import React from "react";
-import { GearIcon } from "../Icons";
 import { auth } from "@/auth";
-import { getAuthenticatedUser } from "@/app/api/actions/auth";
 import type { locale_content_type } from "@/public/locales/interface";
+import Link from "next/link";
+import { GearIcon } from "../Icons";
 
 const SettingsButton = async ({ locale }: { locale: locale_content_type }) => {
 	const session = await auth();
 	if (!session?.user?.id) {
 		return null;
 	}
-
-	const user = await getAuthenticatedUser();
-
-	if (!user?.id) return null;
 
 	return (
 		<Link

@@ -15,12 +15,13 @@ type Props = {
 	icon: React.JSX.Element;
 	label: string;
 	className?: string;
+	labelClassName?: string;
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 	tabIndex?: number;
 	disabled?: boolean;
 };
 
-const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
+const ProfileDropdownLink = ({ icon, label, className, labelClassName, ...props }: Props) => {
 	return (
 		<Button
 			aria-label={label}
@@ -28,13 +29,13 @@ const ProfileDropdownLink = ({ icon, label, className, ...props }: Props) => {
 			variant="ghost"
 			size="md"
 			className={cn(
-				"group w-full text-lg flex items-center justify-start gap-2 navlink_text hover:bg-transparent dark:hover:bg-transparent",
+				"group w-full text-md flex items-center justify-start gap-2 navlink_text hover:bg-transparent dark:hover:bg-transparent",
 				className,
 			)}
 			{...props}
 		>
 			<i className="w-6 flex items-center justify-start link_icon">{icon}</i>
-			<span>{label}</span>
+			<span className={cn("font-semibold", labelClassName)}>{label}</span>
 		</Button>
 	);
 };

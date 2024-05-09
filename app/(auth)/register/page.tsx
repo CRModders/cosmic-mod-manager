@@ -6,12 +6,11 @@
 //
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import React from "react";
-import Link from "next/link";
 import AuthProviders from "@/app/(auth)/authproviders";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import Link from "next/link";
 
 const RegisterPage = async () => {
 	const langPref = getLangPref();
@@ -22,7 +21,9 @@ const RegisterPage = async () => {
 			<div className="flex w-full max-w-md flex-col gap-4 rounded-large">
 				<Card className="relative">
 					<CardHeader className="w-full flex items-center justify-start">
-						<h1 className="w-full text-left text-xl ">{locale.auth.sign_up}</h1>
+						<h1 className="w-full text-left text-xl font-semibold text-foreground/80 dark:text-foreground_dark/90">
+							{locale.auth.sign_up}
+						</h1>
 					</CardHeader>
 					<CardContent className="w-full flex flex-col gap-2">
 						<div className="w-full flex flex-col items-start justify-center">
@@ -46,7 +47,7 @@ const RegisterPage = async () => {
 							<Link
 								href="/login"
 								aria-label={locale.auth.login}
-								className="text-foreground dark:text-foreground_dark decoration-[0.1rem] hover:underline underline-offset-2"
+								className="text-foreground/80 dark:text-foreground_dark/90 font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
 							>
 								{locale.auth.login}
 							</Link>

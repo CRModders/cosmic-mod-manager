@@ -67,6 +67,9 @@ const config = {
 				primary_accent_foreground_dark: colors.zinc[50],
 				primary_accent_text_dark: colors.rose[400],
 			},
+			fontSize: {
+				base: "0.95rem",
+			},
 		},
 	},
 	plugins: [require("tailwindcss-animate")],

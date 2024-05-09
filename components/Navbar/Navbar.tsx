@@ -7,16 +7,23 @@
 //   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
 import "@/app/globals.css";
-import { BrandIcon } from "@/components/Icons";
 import { Spinner } from "@/components/ui/spinner";
 import { get_locale } from "@/lib/lang";
 import getLangPref from "@/lib/server/getLangPref";
+import { cn } from "@/lib/utils";
+import { Frijole } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
+import { BrandIcon } from "../Icons";
 import AuthButton, { MenuAuthButton } from "./AuthButton/AuthButton";
 import HamMenu, { MobileNav } from "./Menu";
 import Navlink from "./Navlink";
 import ThemeSwitch from "./ThemeSwitch";
+
+const frijole = Frijole({
+	weight: ["400"],
+	subsets: ["latin"],
+});
 
 const Navbar = async () => {
 	const langPref = getLangPref();
@@ -70,10 +77,17 @@ const Navbar = async () => {
 							<Link
 								href="/"
 								aria-label={locale.globals.site.short_name}
-								className="flex items-center justify-between rounded-lg"
+								className="flex items-center justify-between rounded-lg h-12"
 							>
-								<BrandIcon size="2.6rem" className=" text-primary_accent dark:text-primary_accent" />
-								<p className="text-xl lg:text-lg h-12 px-1 flex items-center justify-center rounded-lg">
+								<BrandIcon size="2.2rem" className="text-primary_accent dark:text-primary_accent outline-2" />
+								<p
+									className={cn(
+										"text-xl lg:text-lg px-1 flex items-end justify-center rounded-lg",
+										"bg-clip-text bg-primary_accent_text dark:bg-primary_accent_dark text-transparent bg-cover bg-gradient-to-b from-rose-200 to-primary_accent_text via-primary_accent dark:via-primary_accent_dark dark:to-primary_accent_dark",
+										" drop-shadow-2xl",
+										frijole.className,
+									)}
+								>
 									{locale.globals.site.short_name}
 								</p>
 							</Link>
@@ -87,7 +101,9 @@ const Navbar = async () => {
 											aria-label={link.name}
 										>
 											<Navlink href={link.href} label={link.name}>
-												<span className="px-2 h-12 flex items-center justify-center text-center">{link.name}</span>
+												<span className="px-2 h-12 flex items-center justify-center text-center text-md font-semibold">
+													{link.name}
+												</span>
 											</Navlink>
 										</li>
 									);
@@ -113,7 +129,9 @@ const Navbar = async () => {
 
 				{/* Mobile navbar */}
 				<MobileNav NavMenuLinks={NavMenuLinks}>
-					<MenuAuthButton locale={locale} />
+					<Suspense fallback={<Spinner size="1.25rem" />}>
+						<MenuAuthButton locale={locale} />
+					</Suspense>
 				</MobileNav>
 			</nav>
 		</div>
