@@ -119,7 +119,7 @@ export const en_gb = {
 				check_sessions: "Check logged in sessions",
 				verify_new_password: "Verify your new password",
 				add_new_password_desc:
-					"A new password was recently added to your account. Confirm below if this was you. The new password will not work until then.",
+					"A new password was recently added to your account and is awaiting confirmation. Confirm below if this was you.",
 				delete_account: "Delete your account",
 				delete_account_desc:
 					"Deleting your account will remove all of your data except your projects from our database. There is no going back after you delete your account.",
@@ -181,7 +181,7 @@ export const en_gb = {
 				link_a_provier: "Link ${0} provider",
 				delete_account: "Delete account",
 				deletion_email_sent_desc:
-					"A confirmation email has been sent to your email addres. Confirm there to delete your account.",
+					"A confirmation email has been sent to your email address. Confirm there to delete your account.",
 				account_deletion_desc:
 					"Once you delete your account, there is no going back. Deleting your account will remove all of your data, except your projects, from our servers.",
 				confirm_to_delete_account: "Are you sure that you want to delete your account.",
@@ -192,12 +192,12 @@ export const en_gb = {
 				view_page: "View page",
 				sensitive_info_warning: "Warning: Sensitive info",
 				session_page_warning_message:
-					"This page contains sensitive info such as your IP address and location. Make sure not to send any screenshots, recordings, or info from this page to people you dont want to have this info.",
+					"This page contains sensitive info such as your IP address and location. Only share this page to people you can trust.",
 				page_desc: {
 					line_1:
-						"Here are all the devices that are currently logged in with your account. You can log out of each one individually.",
+						"These devices are currently logged into your account; you can revoke any session at any time.",
 					line_2:
-						"If you see an entry you don't recognize, log out of that device and change the password of the account which was used to create that session.",
+						"If you see something you don't recognize immediately, revoke the session and change your passwords.",
 				},
 				current_session: "Current session",
 				timestamp_template: "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
