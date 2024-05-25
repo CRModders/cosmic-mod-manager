@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
 import { UserVerificationActionTypes, type Account, type VerificationRequest } from "@prisma/client";
 import {
-	addNewPasswordVerificationTokenValidity_ms,
-	changePasswordConfirmationTokenValidity_ms,
-	deleteAccountVerificationTokenValidity_ms,
+	addNewPasswordVerificationTokenValidity,
+	changePasswordConfirmationTokenValidity,
+	deleteAccountVerificationTokenValidity,
 } from "@root/config";
 import { isValidName, isValidPassword, isValidUsername } from "@root/lib/user";
 import { password } from "bun";
@@ -254,7 +254,7 @@ userRouter.post("/verification-code-action-type", async (c) => {
 		// Check if the token is expired
 		if (
 			verificationAction?.date_created &&
-			!isVerificationTokenValid(verificationAction?.date_created, addNewPasswordVerificationTokenValidity_ms)
+			!isVerificationTokenValid(verificationAction?.date_created, addNewPasswordVerificationTokenValidity)
 		) {
 			await prisma.verificationRequest.delete({
 				where: {
@@ -394,7 +394,7 @@ userRouter.post("/confirm-new-password", async (c) => {
 			});
 		}
 
-		if (!isVerificationTokenValid(verificationRequestData?.date_created, addNewPasswordVerificationTokenValidity_ms)) {
+		if (!isVerificationTokenValid(verificationRequestData?.date_created, addNewPasswordVerificationTokenValidity)) {
 			return c.json({
 				success: false,
 				message: "Expired token",
@@ -572,7 +572,7 @@ userRouter.post("/change-account-password", async (c) => {
 			});
 		}
 
-		if (!isVerificationTokenValid(verificationRequestData?.date_created, changePasswordConfirmationTokenValidity_ms)) {
+		if (!isVerificationTokenValid(verificationRequestData?.date_created, changePasswordConfirmationTokenValidity)) {
 			return c.json({
 				success: false,
 				message: "Expired token",
@@ -826,7 +826,7 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
 			});
 		}
 
-		if (!isVerificationTokenValid(verificationActionData?.date_created, deleteAccountVerificationTokenValidity_ms)) {
+		if (!isVerificationTokenValid(verificationActionData?.date_created, deleteAccountVerificationTokenValidity)) {
 			return c.json({
 				success: false,
 				message: "Expired token",

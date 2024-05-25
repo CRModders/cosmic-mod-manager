@@ -14,7 +14,6 @@ export default async function gitlabSigninHandler(c: Context<Env, "/signin/gitla
 	const signinUrl = generateSignInUrl(state);
 
 	setCookie(c, "oauth-req-state", state, {
-		maxAge: 3600,
 		secure: true,
 	});
 

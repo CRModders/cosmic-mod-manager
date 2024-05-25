@@ -62,11 +62,11 @@ export const getUserSession = async (
 	}
 };
 
-export const isVerificationTokenValid = (tokenCreationDate: Date, validityDuration_ms: number) => {
+export const isVerificationTokenValid = (tokenCreationDate: Date, validityDuration: number) => {
 	if (
 		tokenCreationDate &&
-		validityDuration_ms &&
-		tokenCreationDate.getTime() + validityDuration_ms > new Date().getTime()
+		validityDuration &&
+		tokenCreationDate.getTime() + validityDuration * 1000 > new Date().getTime()
 	) {
 		return true;
 	}

@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { Capitalize } from "@/lib/utils";
 import type { authHandlerResult } from "@/types";
 import type { Session, User } from "@prisma/client";
-import { userSessionValidity_ms } from "@root/config";
+import { userSessionValidity } from "@root/config";
 import type { AuthProviderType, LocalUserSession } from "@root/types";
 import type { Context } from "hono";
 import { Hono } from "hono";
@@ -43,7 +43,7 @@ const processCallbackHandlerResult = async (
 
 	// Set the session data inside the cookie
 	setCookie(c, "auth-session", JSON.stringify(session), {
-		maxAge: 3600_000,
+		maxAge: userSessionValidity,
 		secure: true,
 	});
 
@@ -176,7 +176,7 @@ authRouter.get("/session/validate", async (c) => {
 	}
 
 	setCookie(c, "auth-session", JSON.stringify(user), {
-		maxAge: userSessionValidity_ms / 1000,
+		maxAge: userSessionValidity,
 		secure: true,
 	});
 

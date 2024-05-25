@@ -10,9 +10,10 @@ export const minPasswordLength = 8;
 export const maxPasswordLength = 64;
 
 export const passwordHashingSaltRounds = 8;
-export const addNewPasswordVerificationTokenValidity_ms = 60 * 60 * 1000; // 60 mins
-export const changePasswordConfirmationTokenValidity_ms = 60 * 60 * 1000;
-export const deleteAccountVerificationTokenValidity_ms = 60 * 60 * 1000;
+export const addNewPasswordVerificationTokenValidity = 24 * 60 * 60; // A day
+export const changePasswordConfirmationTokenValidity = 24 * 60 * 60;
+export const deleteAccountVerificationTokenValidity = 24 * 60 * 60;
 
 export const deletedUsernameReservationDuration_ms = 30 * 24 * 60 * 60 * 1000;
-export const userSessionValidity_ms = 30 * 24 * 60 * 60 * 1000;
+export const userSessionValidity = 2592000; // 30 * 24 * 60 * 60; A month
+

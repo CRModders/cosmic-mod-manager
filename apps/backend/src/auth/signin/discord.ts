@@ -14,7 +14,6 @@ export default async function discordSigninHandler(c: Context<Env, "/signin/disc
 	const signinUrl = generateSignInUrl(state);
 
 	setCookie(c, "oauth-req-state", state, {
-		maxAge: 3600,
 		secure: true,
 	});
 

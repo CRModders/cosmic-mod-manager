@@ -8,9 +8,9 @@ import prisma from "@/lib/prisma";
 import { generateRandomCode } from "@/lib/utils";
 import { UserVerificationActionTypes, type User } from "@prisma/client";
 import {
-	addNewPasswordVerificationTokenValidity_ms,
-	changePasswordConfirmationTokenValidity_ms,
-	deleteAccountVerificationTokenValidity_ms,
+	addNewPasswordVerificationTokenValidity,
+	changePasswordConfirmationTokenValidity,
+	deleteAccountVerificationTokenValidity,
 } from "@root/config";
 
 const baseUrl = process.env.BASE_URL;
@@ -44,7 +44,7 @@ export const sendNewPasswordVerificationEmail = async ({
 			name: name,
 			confirmationPageUrl: `${baseUrl}/verify-action?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
-			expiryDurationMs: addNewPasswordVerificationTokenValidity_ms,
+			expiryDuration: addNewPasswordVerificationTokenValidity,
 		});
 
 		await sendEmail({
@@ -89,7 +89,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 			name: user.name,
 			confirmationPageUrl: `${baseUrl}/verify-action?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
-			expiryDurationMs: changePasswordConfirmationTokenValidity_ms,
+			expiryDuration: changePasswordConfirmationTokenValidity,
 		});
 
 		await sendEmail({
@@ -133,7 +133,7 @@ export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) 
 			name: user.name,
 			confirmationPageUrl: `${baseUrl}/verify-action?token=${encodeURIComponent(token)}`,
 			siteUrl: baseUrl,
-			expiryDurationMs: deleteAccountVerificationTokenValidity_ms,
+			expiryDuration: deleteAccountVerificationTokenValidity,
 		});
 
 		await sendEmail({

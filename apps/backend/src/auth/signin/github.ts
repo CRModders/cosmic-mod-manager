@@ -15,7 +15,6 @@ export default async function githubSigninHandler(c: Context<Env, "/signin/githu
 	const signinUrl = generateSignInUrl(state);
 
 	setCookie(c, "oauth-req-state", state, {
-		maxAge: 3600,
 		secure: true,
 	});
 
