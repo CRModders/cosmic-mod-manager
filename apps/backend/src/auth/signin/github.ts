@@ -1,4 +1,5 @@
 import { generateRandomCode } from "@/lib/utils";
+import { secureCookie } from "@root/config";
 import type { Context } from "hono";
 import { setCookie } from "hono/cookie";
 import type { BlankInput, Env } from "hono/types";
@@ -15,7 +16,7 @@ export default async function githubSigninHandler(c: Context<Env, "/signin/githu
 	const signinUrl = generateSignInUrl(state);
 
 	setCookie(c, "oauth-req-state", state, {
-		secure: true,
+		secure: secureCookie,
 	});
 
 	return c.json({ signinUrl });
