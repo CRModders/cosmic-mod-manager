@@ -1,31 +1,7 @@
-//     This file is part of Cosmic Reach Mod Manager.
-//
-//    Cosmic Reach Mod Manager is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-//
-//    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
 
-import { maxNameLength, maxUsernameLength, minPasswordLength } from "@/config";
-import { Providers } from "@prisma/client";
+import { maxNameLength, maxUsernameLength, minPasswordLength } from "@root/config";
+import { AuthProvidersEnum } from "@root/types";
 
-export const parseName = (name: string) => {
-	if (name.length > maxNameLength) {
-		return name.slice(0, maxNameLength - 1);
-	}
-	return name;
-};
-
-export const parseUserName = (username: string) => {
-	if (username.length > maxUsernameLength) {
-		return username.slice(0, maxUsernameLength - 1).toLowerCase();
-	}
-	return username.toLowerCase();
-};
-
-export const parseUsername = (username: string): string => {
-	return encodeURIComponent(username).replaceAll("-", "_").toLowerCase();
-};
 
 export const isValidUsername = (username: string): string | boolean => {
 	const usernameRegex = /^[a-zA-Z0-9_]+$/;
@@ -38,6 +14,10 @@ export const isValidUsername = (username: string): string | boolean => {
 		return "No special character other than underscore( _ ) is allowed";
 	}
 
+    if(username.length > maxUsernameLength){
+        return `Your username can only have a maximum of ${maxUsernameLength} character`;
+    }
+
 	return true;
 };
 
@@ -47,6 +27,10 @@ export const isValidName = (username: string): string | boolean => {
 	if (!nameRegex.test(username.replaceAll(" ", ""))) {
 		return "Your name cannot contain special characters";
 	}
+
+    if(username.length > maxUsernameLength){
+        return `Your name can only have a maximum of ${maxNameLength} character`;
+    }
 
 	return true;
 };
@@ -78,10 +62,10 @@ export const isValidEmail = (email: string): boolean => {
 	return emailRegex.test(email);
 };
 
-export const parseProfileProvider = (provider: string): Providers | null => {
-	if (provider === "google") return Providers.google;
-	if (provider === "discord") return Providers.discord;
-	if (provider === "github") return Providers.github;
-	if (provider === "gitlab") return Providers.gitlab;
+export const parseProfileProvider = (provider: string): AuthProvidersEnum | null => {
+	if (provider === "google") return AuthProvidersEnum.GOOGLE;
+	if (provider === "discord") return AuthProvidersEnum.DISCORD;
+	if (provider === "github") return AuthProvidersEnum.GITHUB;
+	if (provider === "gitlab") return AuthProvidersEnum.GITLAB;
 	return null;
 };

@@ -1,0 +1,7 @@
+.active.sidePanelLink {
+    @apply bg-bg-hover;
+}
+
+.active .activeLinkIndicator {
+    @apply flex;
+}

@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Frijole&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+:root {
+    --scrollbar-width: 0.6rem;
+    --tint-hue: 220;
+
+    /* Light mode color scheme */
+    --accent-bg-light: 350, 89%, 60%;
+    --accent-foreground-light: 347, 77%, 50%;
+    --background-light: 0, 0%, 98%;
+    --background-shallow-light: var(--tint-hue), 6%, 90%;
+    --foreground-light: var(--tint-hue), 6%, 10%;
+    --foreground-muted-light: var(--foreground-light), 0.75;
+    --bg-hover-light: var(--tint-hue), 4%, 90%;
+    --danger-bg-light: 0, 84%, 60%;
+    --danger-text-light: 0, 74%, 42%;
+    --success-bg-light: 161, 94%, 30%;
+    --success-text-light: 163, 94%, 24%;
+    --shadow-light: var(--tint-hue), 6%, 90%;
+    --border-light: var(--tint-hue), 6%, 90%;
+    --border-hicontrast-light: var(--tint-hue), 5%, 65%;
+
+    /* Dark mode color scheme */
+    --accent-bg-dark: 350, 89%, 60%;
+    --accent-foreground-dark: 351, 95%, 71%;
+    --background-dark: var(--tint-hue), 6%, 10%;
+    --background-shallow-dark: var(--tint-hue), 4%, 16%;
+    --foreground-dark: 0, 0%, 98%;
+    --foreground-muted-dark: var(--foreground-dark), 0.8;
+    --bg-hover-dark: var(--tint-hue), 5%, 15%;
+    --danger-bg-dark: 0, 84%, 60%;
+    --danger-text-dark: 0, 91%, 71%;
+    --success-bg-dark: 160, 84%, 39%;
+    --success-text-dark: 158, 64%, 52%;
+    --shadow-dark: var(--tint-hue), 10%, 4%;
+    --border-dark: var(--tint-hue), 5%, 26%;
+    --border-hicontrast-dark: var(--tint-hue), 4%, 46%;
+}
+
+.dark {
+    --accent-bg: var(--accent-bg-dark);
+    --accent-foreground: var(--accent-foreground-dark);
+    --background: var(--background-dark);
+    --background-shallow: var(--background-shallow-dark);
+    --foreground: var(--foreground-dark);
+    --foreground-muted: var(--foreground-muted-dark);
+    --bg-hover: var(--bg-hover-dark);
+    --danger-bg: var(--danger-bg-dark);
+    --danger-text: var(--danger-text-dark);
+    --success-bg: var(--success-bg-dark);
+    --success-text: var(--success-text-dark);
+    --shadow: var(--shadow-dark);
+    --border: var(--border-dark);
+    --border-hicontrast: var(--border-hicontrast-dark);
+}
+
+.light {
+    --accent-bg: var(--accent-bg-light);
+    --accent-foreground: var(--accent-foreground-light);
+    --background: var(--background-light);
+    --background-shallow: var(--background-shallow-light);
+    --foreground: var(--foreground-light);
+    --foreground-muted: var(--foreground-muted-light);
+    --bg-hover: var(--bg-hover-light);
+    --danger-bg: var(--danger-bg-light);
+    --danger-text: var(--danger-text-light);
+    --success-bg: var(--success-bg-light);
+    --success-text: var(--success-text-light);
+    --shadow: var(--shadow-light);
+    --border: var(--border-light);
+    --border-hicontrast: var(--border-hicontrast-light);
+}
+
+
+body {
+
+    --fallback-fonts: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color-scheme: light;
+    font-family: "Noto Sans", var(--fallback-fonts);
+}
+
+.dark body {
+    color-scheme: dark;
+}
+
+.font-frijole {
+    font-family: "Frijole", var(--fallback-fonts);
+}
+
+body.navmenu-open {
+    overflow: hidden;
+}
+
+body.subtract-scrollbar-width {
+    width: calc(100% - var(--scrollbar-width));
+}
+
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-thumb {
+    width: var(--scrollbar-width);
+    border-radius: 1rem;
+    background-color: #d4d4d8;
+}
+
+::-webkit-scrollbar-track {
+    width: var(--scrollbar-width);
+    background-color: white;
+}
+
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #27272a;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background-color: #09090b;
+}
+
+
+/* Theme switcher styling */
+.sun_icon_wrapper,
+.moon_icon_wrapper {
+
+    --animation-duration: 600ms;
+    --sun-corona-animation-duration: 250ms;
+
+    overflow: hidden;
+    position: absolute;
+    transform-origin: -2rem -1.5rem;
+    transform-box: border-box;
+}
+
+.sun_icon_wrapper svg,
+.moon_icon_wrapper svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.light [data-hide-on-theme='dark'],
+.dark [data-hide-on-theme='light'] {
+
+    scale: 0;
+    opacity: 0;
+    animation: fadeIn var(--animation-duration) forwards ease-in-out;
+}
+
+
+.dark [data-hide-on-theme='dark'] {
+    animation: fadeOut var(--animation-duration) forwards ease-in-out;
+}
+
+
+.light [data-hide-on-theme='light'] {
+    animation: fadeOut var(--animation-duration) var(--sun-corona-animation-duration) forwards ease-in-out;
+}
+
+
+#sun_corona {
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+.light #sun_corona {
+    animation: fadeOutSunCorona var(--sun-corona-animation-duration) ease-in-out forwards;
+}
+
+
+.dark #sun_corona {
+    opacity: 0;
+    transform: scale(0);
+    animation: fadeInSunCorona var(--sun-corona-animation-duration) ease-in-out var(--animation-duration) forwards;
+}
+
+
+@keyframes fadeOut {
+    0% {
+        scale: 1;
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+        rotate: 180deg;
+    }
+
+    100% {
+        scale: 0;
+        opacity: 0;
+    }
+}
+
+
+@keyframes fadeIn {
+    0% {
+        scale: 0;
+        opacity: 0;
+        rotate: 180deg;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 1;
+        rotate: 360deg;
+    }
+}
+
+@keyframes fadeInSunCorona {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes fadeOutSunCorona {
+    0% {
+        scale: 1;
+    }
+
+    100% {
+        scale: 0;
+    }
+}
+
+
+
+.hero_section_showcase {
+    --unit-height: 2.5rem;
+    animation: animateShowcaseItems 7.5s ease infinite;
+}
+
+/* Made for 5 showcase items */
+@keyframes animateShowcaseItems {
+
+    0%,
+    20% {
+        transform: translateY(calc(var(--unit-height) * 0));
+    }
+
+    25%,
+    45% {
+        transform: translateY(calc(var(--unit-height) * -1));
+    }
+
+    50%,
+    70% {
+        transform: translateY(calc(var(--unit-height) * -2));
+    }
+
+    75%,
+    95% {
+        transform: translateY(calc(var(--unit-height) * -3));
+    }
+
+    100%,
+    100% {
+        transform: translateY(calc(var(--unit-height) * -4));
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero_section_showcase {
+        --unit-height: 3.5rem;
+    }
+}
+
+.bg_stagger_animation {
+    @apply transition-colors duration-300 group-hover:duration-0 hover:duration-0 group-hover:bg-bg-hover hover:bg-bg-hover;
+}
+
+.text_stagger_animation {
+    @apply transition-colors duration-300 group-hover:duration-0 hover:duration-0 group-hover:text-foreground hover:text-foreground;
+}

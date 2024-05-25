@@ -1,46 +1,6 @@
-//     This file is part of Cosmic Reach Mod Manager.
-//
-//    Cosmic Reach Mod Manager is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-//
-//    Cosmic Reach Mod Manager is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-//
-//   You should have received a copy of the GNU General Public License along with Cosmic Reach Mod Manager. If not, see <https://www.gnu.org/licenses/>.
+import { TypeTimePastPhrases } from "@root/types";
 
-import type { time_past_phrases } from "@/public/locales/interface";
-import { clsx, type ClassValue } from "clsx";
-
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import crypto from "crypto";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
-}
-
-export const sleep = async (timeoutMs = 1_000) => {
-	const p = new Promise((resolve) => {
-		setTimeout(() => {
-			resolve("...");
-		}, timeoutMs);
-	});
-
-	await p;
-};
-
-export const shuffleCharacters = (str: string) => {
-	const characters = str.split("");
-	for (let i = characters.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[characters[i], characters[j]] = [characters[j], characters[i]];
-	}
-	return characters.join("");
-};
-
-export const generateRandomCode = () => {
-	return shuffleCharacters(crypto.randomUUID().replaceAll("-", ""));
-};
-
-export const timeSince = (pastTime: Date, timePastPhrases: time_past_phrases): string => {
+export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
 	try {
 		const now = new Date();
 		const diff = now.getTime() - pastTime.getTime();
@@ -84,8 +44,8 @@ export const timeSince = (pastTime: Date, timePastPhrases: time_past_phrases): s
 			? timePastPhrases.year_ago.replace("${0}", `${years}`)
 			: timePastPhrases.years_ago.replace("${0}", `${years}`);
 	} catch (error) {
-		console.log({ error });
-		return null;
+		console.error(error)
+		return "";
 	}
 };
 
@@ -134,7 +94,7 @@ export const formatDate = (
 			.replace("${minutes}", `${formattedMinutes}`)
 			.replace("${amPm}", `${amPm}`);
 	} catch (error) {
-		console.log({ error });
-		return null;
+		console.error(error)
+		return "";
 	}
 };

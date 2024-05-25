@@ -1,0 +1,93 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum UserRoles {
+    ADMIN
+    MODERATOR
+    CREATOR
+    USER
+}
+
+enum UserVerificationActionTypes {
+    ADD_PASSWORD
+    CHANGE_PASSWORD
+    DELETE_USER_ACCOUNT
+}
+
+enum Providers {
+    google
+    discord
+    github
+    gitlab
+}
+
+model Account {
+    id                     String  @id @default(uuid())
+    user_id                String
+    provider               String
+    provider_account_id    String
+    provider_account_email String?
+    avatar_image           String?
+    refresh_token          String?
+    access_token           String?
+    token_type             String?
+    auth_type              String?
+    scope                  String?
+
+    user User? @relation(name: "OAuthAccounts", fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id                      String                @id @default(uuid())
+    name                    String?               @db.VarChar(48)
+    user_name               String?               @unique @default(uuid()) @db.VarChar(48)
+    email                   String                @unique @db.VarChar(256)
+    password                String?               @db.VarChar(256)
+    unverified_new_password String?               @db.VarChar(256)
+    role                    UserRoles             @default(USER)
+    email_verified          DateTime?
+    avatar_image            String?
+    avatar_image_provider   String?               @db.VarChar(32)
+    accounts                Account[]             @relation(name: "OAuthAccounts")
+    sessions                Session[]             @relation(name: "UserSessions")
+    verification_request    VerificationRequest[]
+}
+
+model Session {
+    id            String    @id @default(uuid())
+    user_id       String
+    session_token String    @unique @db.VarChar(48)
+    created_on    DateTime?
+    last_used     DateTime?
+    browser       String?   @db.VarChar(32)
+    os            String?   @db.VarChar(32)
+    ip_addr       String?   @db.VarChar(48)
+    region        String?   @db.VarChar(32)
+    country       String?   @db.VarChar(32)
+    provider      String?   @db.VarChar(32)
+
+    user User? @relation(name: "UserSessions", fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model DeletedUser {
+    id            String   @id @default(uuid())
+    user_name     String   @unique @db.VarChar(48)
+    email         String   @unique @db.VarChar(256)
+    deletion_time DateTime
+}
+
+model VerificationRequest {
+    id           String                      @id @default(uuid())
+    user_id      String                      @unique
+    action       UserVerificationActionTypes
+    token        String                      @unique @default(uuid()) @db.VarChar(128)
+    date_created DateTime                    @default(now())
+
+    user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
