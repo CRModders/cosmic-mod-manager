@@ -39,7 +39,7 @@ const VerifyActionPage = () => {
 		}
 	}, [verificationCode]);
 
-	if (verificationCode === undefined) {
+	if (verificationCode === undefined || verificationActionType === undefined) {
 		return (
 			<div className="w-full min-h-[100vh] flex items-center justify-center">
 				<Spinner size="2rem" />
