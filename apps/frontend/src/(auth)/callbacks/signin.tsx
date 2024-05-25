@@ -53,7 +53,7 @@ export const SignInCallbackPage = () => {
 
 		if (code?.length && code.length > 1 && localCookieState === urlCallbackState) {
 			sendDataToServer({ code, localCookieState, urlCallbackState, codeVerifier, codeChallenge });
-		} else if (!code || code.length > 1) {
+		} else if (!code || code.length < 1) {
 			redirectToMessagePage("Token is invalid or is blank!", "error", "/login", "Back to Login page");
 		} else if (localCookieState !== urlCallbackState) {
 			redirectToMessagePage("Local state and url state doesn't match.", "error", "/login", "Back to Login page");

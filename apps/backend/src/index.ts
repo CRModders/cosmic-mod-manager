@@ -8,6 +8,7 @@ type Bindings = {
 	ip: SocketAddress;
 };
 
+const PORT = 5500;
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use(
@@ -23,9 +24,9 @@ app.route("/api/user", userRouter);
 
 app.get("/api/test", (c) => {
 	const headers = c.req.raw.headers.toJSON();
-	
+
 	return c.json({
-		headers: headers	
+		headers: headers,
 	});
 });
 
@@ -35,9 +36,9 @@ app.post("/api/test", async (c) => {
 
 	return c.json({
 		body,
-		headers
-	})
-})
+		headers,
+	});
+});
 
 // 404 responses for non-existing api routes
 app.get("/api/*", (c) => {
@@ -47,8 +48,9 @@ app.post("/api/*", (c) => {
 	return c.text("Route does not exist", 404);
 });
 
+console.log(`App starting on port ${PORT}`);
 Bun.serve({
-	port: 5500,
+	port: PORT,
 	fetch(req, server) {
 		return app.fetch(req, { ip: server.requestIP(req) });
 	},
