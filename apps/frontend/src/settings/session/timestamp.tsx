@@ -7,7 +7,7 @@ export const DotSeparator = ({ className }: { className?: string }) => {
 	return (
 		<span className="flex items-center justify-center select-none">
 			&nbsp;&nbsp;
-			<span className={cn("w-1 h-1 rounded bg-foreground/50 dark:bg-foreground_dark/50", className)}> </span>
+			<span className={cn("w-1 h-1 rounded bg-foreground/50", className)}> </span>
 			&nbsp;&nbsp;
 		</span>
 	);

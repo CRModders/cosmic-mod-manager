@@ -6,17 +6,29 @@ import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
 import { getUserSession } from "../helpers/auth";
 
+export function ValidateProviderProfileData({ email, providerAccountId, accessToken }: Profile) {
+	if (!email || !providerAccountId || !accessToken) {
+		throw new Error("Invalid profile data received from the auth provider");
+	}
+
+	return true;
+}
+
 type AuthenticationResult = {
 	success: boolean;
 	message?: string;
 	user?: User;
 };
 
-export async function Login({
+export async function GetUserData({
 	email,
 	id,
 	updated_avatar_image,
-}: { email?: string; id?: string; updated_avatar_image?: string | null }): Promise<AuthenticationResult> {
+}: {
+	email?: string;
+	id?: string;
+	updated_avatar_image?: string | null;
+}): Promise<AuthenticationResult> {
 	if (!email && !id) {
 		throw new Error("Either email or id is required");
 	}
@@ -34,7 +46,6 @@ export async function Login({
 
 		return {
 			success: true,
-			message: `Logged in as ${user.user_name}`,
 			user: { ...user, avatar_image: updated_avatar_image },
 		};
 	}
@@ -47,7 +58,6 @@ export async function Login({
 
 	return {
 		success: true,
-		message: `Logged in as ${user.user_name}`,
 		user: user,
 	};
 }
@@ -166,7 +176,10 @@ export default async function authenticateUser(
 
 		const updated_avatar_image =
 			existingAuthAccount?.user?.avatar_image_provider === profile.providerName ? profile?.avatarImage : null;
-		return await Login({ id: existingAuthAccount.user_id, updated_avatar_image });
+		return await GetUserData({
+			id: existingAuthAccount.user_id,
+			updated_avatar_image,
+		});
 	}
 
 	// Check if there's any account with that email, if yes means this auth provider is not linked with that account, so just return an error

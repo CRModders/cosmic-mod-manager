@@ -52,7 +52,7 @@ export type GeoApiData = {
 	country?: string;
 };
 
-export const getDeviceDetails = async (userAgent: string, ip: string) => {
+export const getDeviceDetails = async (userAgent: string, ip_addr: string) => {
 	const parsedResult = new UAParser(userAgent).getResult();
 	const browser = parsedResult.browser.name;
 	const os = `${parsedResult.os.name} ${parsedResult.os.version || ""}`;
@@ -60,9 +60,9 @@ export const getDeviceDetails = async (userAgent: string, ip: string) => {
 	const geoData: GeoApiData | null = {};
 
 	// Gettings Geo data from the IP address
-	if (ip) {
+	if (ip_addr) {
 		try {
-			const res = await fetch(`https://ipinfo.io/${ip}?token=${process.env.IP_TO_GEO_API_KEY}`);
+			const res = await fetch(`https://ipinfo.io/${ip_addr}?token=${process.env.IP_TO_GEO_API_KEY}`);
 			const resJsonData = await res.json();
 
 			if (resJsonData?.city || resJsonData?.region) {
@@ -79,7 +79,7 @@ export const getDeviceDetails = async (userAgent: string, ip: string) => {
 	return {
 		browser,
 		os,
-		ip,
+		ip_addr,
 		...geoData,
 	};
 };

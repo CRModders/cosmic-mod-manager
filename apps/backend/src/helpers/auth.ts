@@ -23,10 +23,13 @@ export async function getLoggedInUser(session_id: string, session_token: string)
 			throw new Error("Missing required fields!");
 		}
 
-		const session = await prisma.session.findUnique({
+		const session = await prisma.session.update({
 			where: {
 				id: session_id,
 				session_token: session_token,
+			},
+			data: {
+				last_used: new Date(),
 			},
 			select: {
 				user: true,

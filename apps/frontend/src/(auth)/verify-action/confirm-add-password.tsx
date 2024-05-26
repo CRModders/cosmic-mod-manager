@@ -70,7 +70,7 @@ const AddPasswordConfirmAction = ({ code }: { code: string }) => {
 		<Card className="max-w-md gap-0 relative">
 			<CardHeader className="text-xl ms:text-3xl text-left">Verify your new password</CardHeader>
 			<CardContent>
-				<p className="w-full text-left text-foreground/80 dark:text-foreground_dark/80">
+				<p className="w-full text-left text-foreground-muted">
 					A new password was recently added to your account and is awaiting confirmation. Confirm below if this was you.
 				</p>
 			</CardContent>

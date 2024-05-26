@@ -1,7 +1,7 @@
 import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
-import authenticateUser from "../authenticate";
+import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
 
 async function fetchUserProfile(access_token: string, access_token_type: string) {
 	const userDataRes = await fetch("https://gitlab.com/api/v4/user", {
@@ -51,24 +51,6 @@ async function fetchGitlabUserData(temp_access_code: string) {
 	return profile;
 }
 
-const validateProfileData = ({
-	email,
-	providerAccountId,
-	accessToken,
-}: Profile): { success: boolean; err?: string } => {
-	const result = {
-		success: true,
-		err: "",
-	};
-
-	if (!email || !providerAccountId || !accessToken) {
-		result.success = false;
-		result.err = "Invalid profile data";
-	}
-
-	return result;
-};
-
 export default async function gitlabCallbackHandler(
 	c: Context<Env, "/callback/gitlab", BlankInput>,
 ): Promise<authHandlerResult> {
@@ -77,16 +59,8 @@ export default async function gitlabCallbackHandler(
 		const temp_access_code = body?.code;
 		const profile = await fetchGitlabUserData(temp_access_code);
 
-		const isValidProfile = validateProfileData(profile);
-		if (isValidProfile.success !== true) {
-			return {
-				status: {
-					success: false,
-					message: (isValidProfile?.err as string) || "Invalid auth code!",
-				},
-			};
-		}
-
+		// Throws an error if the profile is not valid, returns true for valid profile
+		ValidateProviderProfileData(profile);
 		const { user, success, message } = await authenticateUser(profile, c);
 
 		if (success !== true) {

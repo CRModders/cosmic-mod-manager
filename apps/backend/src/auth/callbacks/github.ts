@@ -1,7 +1,7 @@
 import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
-import authenticateUser from "../authenticate";
+import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
 
 async function fetchUserData(access_token: string) {
 	const userDataRes = await fetch("https://api.github.com/user", {
@@ -9,10 +9,18 @@ async function fetchUserData(access_token: string) {
 			Authorization: `token ${access_token}`,
 		},
 	});
+
 	return await userDataRes.json();
 }
 
-async function fetchUserEmail(access_token: string) {
+type EmailData = {
+	email: string;
+	primary: boolean;
+	verified: boolean;
+	visibility: string | null;
+};
+
+async function fetchUserEmail(access_token: string): Promise<EmailData | null> {
 	const userEmailRes = await fetch("https://api.github.com/user/emails", {
 		headers: {
 			Accept: "application/vnd.github+json",
@@ -21,7 +29,20 @@ async function fetchUserEmail(access_token: string) {
 		},
 	});
 
-	return await userEmailRes.json();
+	const userEmailData = (await userEmailRes.json()) as EmailData[];
+	let userEmailObj: EmailData | null = null;
+
+	for (const emailObj of userEmailData) {
+		if (emailObj?.primary === true) {
+			userEmailObj = emailObj;
+		}
+	}
+
+	if (userEmailObj?.verified !== true) {
+		throw new Error("Your email is not verified. First verify your email on Github");
+	}
+
+	return userEmailObj;
 }
 
 async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
@@ -41,10 +62,11 @@ async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
 	const fetchPromises = [fetchUserData(access_token), fetchUserEmail(access_token)];
 
 	const [userData, userEmailData] = await Promise.all(fetchPromises);
+	console.log(userEmailData);
 
 	const profile: Profile = {
 		name: userData?.name || null,
-		email: userEmailData?.[1]?.email || null,
+		email: userEmailData?.email || null,
 		providerName: "github",
 		providerAccountId: userData?.id || null,
 		authType: "oauth",
@@ -58,24 +80,6 @@ async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
 	return profile;
 }
 
-const validateProfileData = ({
-	email,
-	providerAccountId,
-	accessToken,
-}: Profile): { success: boolean; err?: string } => {
-	const result = {
-		success: true,
-		err: "",
-	};
-
-	if (!email || !providerAccountId || !accessToken) {
-		result.success = false;
-		result.err = "Invalid profile data";
-	}
-
-	return result;
-};
-
 export default async function githubCallbackHandler(
 	c: Context<Env, "/callback/github", BlankInput>,
 ): Promise<authHandlerResult> {
@@ -83,16 +87,8 @@ export default async function githubCallbackHandler(
 		const temp_access_code = (await c.req.json())?.code;
 		const profile = await fetchGithubUserData(temp_access_code);
 
-		const isValidProfile = validateProfileData(profile);
-		if (isValidProfile.success !== true) {
-			return {
-				status: {
-					success: false,
-					message: (isValidProfile?.err as string) || "Invalid auth code!",
-				},
-			};
-		}
-
+		// Throws an error if the profile is not valid, returns true for valid profile
+		ValidateProviderProfileData(profile);
 		const { user, success, message } = await authenticateUser(profile, c);
 
 		if (success !== true) {

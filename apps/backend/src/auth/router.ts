@@ -20,15 +20,15 @@ import gitlabSigninHandler from "./signin/gitlab";
 
 const authRouter = new Hono();
 
-const processCallbackHandlerResult = async (
+const signinAndCreateUserSession = async (
 	c: Context<Env, string, BlankInput>,
 	user: User,
 	provider: AuthProviderType,
 	responseMsg?: string,
 ) => {
 	const userAgent = c.req.header("user-agent");
-	const ip = c.req.header("x-forwarded-for") || (c.env.ip as string);
-	const sessionDeviceData = await getDeviceDetails(userAgent, ip);
+	const ip_addr = c.req.header("x-forwarded-for") || (c.env.ip as string);
+	const sessionDeviceData = await getDeviceDetails(userAgent, ip_addr);
 
 	const session = await CreateUserSession({
 		user_id: user.id,
@@ -38,7 +38,11 @@ const processCallbackHandlerResult = async (
 		avatar_image: user.avatar_image,
 		role: user.role,
 		provider: provider,
-		...sessionDeviceData,
+		ip_addr: sessionDeviceData?.ip_addr,
+		os: sessionDeviceData?.os,
+		browser: sessionDeviceData?.browser,
+		country: sessionDeviceData?.country,
+		region: sessionDeviceData?.region,
 	});
 
 	// Set the session data inside the cookie
@@ -97,7 +101,7 @@ authRouter.post("/callback/:provider", async (c) => {
 		}
 
 		// If the handler returns a user, create a new session for the user
-		return await processCallbackHandlerResult(c, result.user, provider, result.status.message);
+		return await signinAndCreateUserSession(c, result.user, provider, result.status.message);
 	} catch (error) {
 		return c.json({
 			message: "Internal server error!",
@@ -149,7 +153,7 @@ authRouter.post("/signin/credentials", async (c) => {
 			});
 		}
 
-		return await processCallbackHandlerResult(c, userData, "credential");
+		return await signinAndCreateUserSession(c, userData, "credential");
 	} catch (error) {
 		console.error(error);
 		return c.json({

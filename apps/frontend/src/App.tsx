@@ -173,14 +173,10 @@ export function HomePage() {
 								>
 									<div className="h-16 w-16 bg-bg-hover rounded-lg flex items-center justify-center"> </div>
 									<div className="flex flex-col items-start justify-start mr-4 max-h-24">
-										<h3
-											className={`${styles.item_name} text-lg sm:text-xl text-foreground/80 dark:text-foreground_dark/90 font-semibold`}
-										>
+										<h3 className={`${styles.item_name} text-lg sm:text-xl text-foreground-muted font-semibold`}>
 											{item.name}
 										</h3>
-										<p className={`${styles.item_description} text-foreground/80 dark:text-foreground_dark/80`}>
-											{item.description}
-										</p>
+										<p className={`${styles.item_description} text-foreground-muted`}>{item.description}</p>
 									</div>
 								</Link>
 							);

@@ -20,7 +20,7 @@ const EditProfileDialog = ({ name, username, linkedProviders, setNewSession, cur
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
 				<Button className="flex gap-2 items-center justify-center" variant="outline" aria-label="Edit profile">
-					<EditIcon size="1rem" className="text-foreground/90 dark:text-foreground_dark/90" />
+					<EditIcon size="1rem" className="text-foreground-muted" />
 					<p className="pr-1">Edit</p>
 				</Button>
 			</DialogTrigger>

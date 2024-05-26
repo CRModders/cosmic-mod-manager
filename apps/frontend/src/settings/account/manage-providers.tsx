@@ -23,17 +23,13 @@ const ManageProviders = ({ linkedProviders, fetchLinkedProviders }: Props) => {
 	return (
 		<div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-32 gap-y-2">
 			<div className="flex shrink flex-col items-start justify-center">
-				<p className="text-lg font-semibold text-foreground/80 dark:text-foreground_dark/90">
-					Manage authentication providers
-				</p>
-				<p className="text-base text-foreground/80 dark:text-foreground_dark/80 shrink">
-					Add or remove login methods from your account.
-				</p>
+				<p className="text-lg font-semibold text-foreground">Manage authentication providers</p>
+				<p className="text-base text-foreground-muted shrink">Add or remove login methods from your account.</p>
 			</div>
 
 			<ProvidersList linkedProviders={linkedProviders} fetchLinkedProviders={fetchLinkedProviders}>
-				<Button className="flex items-center justify-center gap-2" variant="outline">
-					<GearIcon size="1rem" className=" text-foreground/90 dark:text-foreground_dark/90" />
+				<Button className="flex items-center justify-center gap-2 text-foreground-muted" variant="outline">
+					<GearIcon size="1rem" />
 					Manage providers
 				</Button>
 			</ProvidersList>
