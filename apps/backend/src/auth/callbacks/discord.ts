@@ -78,6 +78,7 @@ export default async function discordCallbackHandler(
 			user,
 		};
 	} catch (error) {
+		console.error(error);
 		return {
 			status: {
 				success: false,

@@ -12,17 +12,13 @@ export default function RootLayout() {
 	return (
 		<Providers>
 			<Navbar />
-			<main className="flex items-center justify-center container">
+			<main className="flex items-center justify-center container px-4 sm:px-8">
 				<Outlet />
 			</main>
 			<Toaster />
 		</Providers>
 	);
 }
-
-// import FeaturedSection from "@/components/Featured/Featured";
-// import { extract_elems, get_locale } from "@/lib/lang";
-// import getLangPref from "@/lib/server/getLangPref";
 
 const featuredSectionContentData = [
 	{
@@ -149,10 +145,6 @@ export function HomePage() {
 					</Button>
 
 					<CTAButton />
-
-					{/* <Suspense fallback={<Spinner />}>
-						<AuthButton authLocale={locale.auth} />
-					</Suspense> */}
 				</div>
 			</section>
 

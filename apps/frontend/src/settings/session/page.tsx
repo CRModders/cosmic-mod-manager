@@ -27,7 +27,7 @@ type UserSession = {
 };
 
 const Sessions = () => {
-	const [showWarning, setShowWarning] = useState<boolean>(false);
+	const [showWarning, setShowWarning] = useState<boolean>(true);
 	const [loggedInSessions, setLoggedInSessions] = useState<UserSession[]>([]);
 	const [loading, setLoading] = useState(false);
 	const { session: userSession } = useContext(AuthContext);
@@ -176,7 +176,7 @@ const SessionsList = ({
 							</div>
 
 							<TooltipWrapper
-								text={`Session create using ${session?.provider} provider`}
+								text={`Session created using ${session?.provider} provider`}
 								className="text-sm sm:text-base flex items-center justify-start gap-2"
 							>
 								{session?.provider !== "credential" ? (

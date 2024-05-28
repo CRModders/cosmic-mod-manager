@@ -50,8 +50,8 @@ const AccountSettingsPage = () => {
 
 	if (session === undefined || linkedProviders.length === 0 || hasAPassword === undefined) {
 		return (
-			<div className="min-h-[50vh] py-12 flex items-center justify-center">
-				<Spinner size="2rem" />
+			<div className="py-12 flex">
+				<Spinner size="2rem" className="mt-8" />
 			</div>
 		);
 	}

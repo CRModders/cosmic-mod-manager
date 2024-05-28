@@ -12,6 +12,11 @@ import SignupPageLayout from "./(auth)/signup/layout";
 import SignupPage from "./(auth)/signup/page";
 import VerifyActionPage from "./(auth)/verify-action/page";
 import MessagePage from "./Message";
+import DashboardPageLayout from "./dashboard/layout";
+import Notifications from "./dashboard/notifications";
+import Overview from "./dashboard/overview";
+import DashboardPage from "./dashboard/page";
+import ReportsPage from "./dashboard/reports";
 import AccountSettingsPage from "./settings/account/page";
 import SettingsPageLayout from "./settings/layout";
 import SettingsPage from "./settings/page";
@@ -71,6 +76,32 @@ const router = createBrowserRouter([
 					{
 						path: "sessions",
 						element: <Sessions />,
+					},
+				],
+			},
+			{
+				path: "dashboard",
+				element: <DashboardPageLayout />,
+				children: [
+					{
+						path: "",
+						element: <DashboardPage />,
+					},
+					{
+						path: "overview",
+						element: <Overview />,
+					},
+					{
+						path: "notifications",
+						element: <Notifications />,
+					},
+					{
+						path: "reports",
+						element: <ReportsPage />,
+					},
+					{
+						path: "*",
+						element: <p>DASHBOARD_PAGE</p>,
 					},
 				],
 			},

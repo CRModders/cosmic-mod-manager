@@ -60,9 +60,7 @@ async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
 	const access_token = tokenData?.access_token;
 
 	const fetchPromises = [fetchUserData(access_token), fetchUserEmail(access_token)];
-
 	const [userData, userEmailData] = await Promise.all(fetchPromises);
-	console.log(userEmailData);
 
 	const profile: Profile = {
 		name: userData?.name || null,
@@ -103,6 +101,7 @@ export default async function githubCallbackHandler(
 			user,
 		};
 	} catch (error) {
+		console.error(error);
 		return {
 			status: {
 				success: false,

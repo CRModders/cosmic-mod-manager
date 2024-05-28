@@ -1,7 +1,8 @@
 {
-  "devDependencies": {
-    "biome": "^0.3.3",
-    "turbo": "^1.13.3"
+    "devDependencies": {
+        "biome": "^0.3.3",
+        "turbo": "^1.13.3",
+        "@swc/types": "^0.1.7"
   },
   "packageManager": "bun@1.1.8",
   "private": true,
@@ -10,5 +11,5 @@
     "dev": "turbo dev",
     "lint": "turbo lint"
   },
-  "workspaces": ["apps/frontend", "apps/backend"]
+  "workspaces": ["apps/backend", "apps/frontend"]
 }

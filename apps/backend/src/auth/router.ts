@@ -20,6 +20,15 @@ import gitlabSigninHandler from "./signin/gitlab";
 
 const authRouter = new Hono();
 
+type IpAddressType =
+	| {
+			address: string;
+			family: string;
+			port: number;
+	  }
+	| string
+	| null;
+
 const signinAndCreateUserSession = async (
 	c: Context<Env, string, BlankInput>,
 	user: User,
@@ -27,7 +36,10 @@ const signinAndCreateUserSession = async (
 	responseMsg?: string,
 ) => {
 	const userAgent = c.req.header("user-agent");
-	const ip_addr = c.req.header("x-forwarded-for") || (c.env.ip as string);
+	let ip_addr = c.req.header("x-forwarded-for") || (c.env.ip as string as IpAddressType);
+	if (typeof ip_addr !== "string") {
+		ip_addr = ip_addr?.address || null;
+	}
 	const sessionDeviceData = await getDeviceDetails(userAgent, ip_addr);
 
 	const session = await CreateUserSession({
@@ -103,6 +115,7 @@ authRouter.post("/callback/:provider", async (c) => {
 		// If the handler returns a user, create a new session for the user
 		return await signinAndCreateUserSession(c, result.user, provider, result.status.message);
 	} catch (error) {
+		console.error(error);
 		return c.json({
 			message: "Internal server error!",
 			success: false,

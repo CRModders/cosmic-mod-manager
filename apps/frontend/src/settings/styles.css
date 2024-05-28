@@ -2,6 +2,14 @@
     @apply bg-bg-hover;
 }
 
+.active.sidePanelLink .linkLabel {
+    @apply text-foreground;
+}
+
+.active.sidePanelLink .linkIcon {
+    @apply text-foreground/75;
+}
+
 .active .activeLinkIndicator {
     @apply flex;
 }

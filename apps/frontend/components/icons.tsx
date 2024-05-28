@@ -4,12 +4,7 @@ import type React from "react";
 
 const DefaultSvgSize = "1.6rem";
 
-export const SunIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const SunIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -34,12 +29,7 @@ export const SunIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const MoonIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const MoonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -55,21 +45,12 @@ export const MoonIcon: React.FC<IconSvgProps> = ({
 			viewBox="0 0 24 24"
 			aria-hidden="true"
 		>
-			<path
-				id="moon_path"
-				d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-			/>
+			<path id="moon_path" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
 		</svg>
 	);
 };
 
-export const BrandIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	className,
-	...props
-}) => {
+export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, className, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -91,21 +72,9 @@ export const BrandIcon: React.FC<IconSvgProps> = ({
 					href="#gradient-5"
 				/>
 				<linearGradient id="gradient-5">
-					<stop
-						className="text-[#f43f5e] dark:text-[#f43f5e]"
-						stopColor="currentColor"
-						offset="0"
-					/>
-					<stop
-						className="text-[#e11d48] dark:text-[#e11d48]"
-						stopColor="currentColor"
-						offset="0.468"
-					/>
-					<stop
-						className="text-[#9f1239] dark:text-[#9f1239]"
-						stopColor="currentColor"
-						offset="1"
-					/>
+					<stop className="text-[#f43f5e] dark:text-[#f43f5e]" stopColor="currentColor" offset="0" />
+					<stop className="text-[#e11d48] dark:text-[#e11d48]" stopColor="currentColor" offset="0.468" />
+					<stop className="text-[#9f1239] dark:text-[#9f1239]" stopColor="currentColor" offset="1" />
 				</linearGradient>
 				<linearGradient
 					id="gradient-5-1"
@@ -350,10 +319,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({
 						d="M 292.632 189.159 C 291.066 187.733 289.47 186.377 287.849 185.089 C 286.226 183.802 284.577 182.583 282.903 181.432 C 281.23 180.281 279.532 179.197 277.814 178.181 C 276.095 177.165 274.356 176.215 272.599 175.331 C 270.842 174.448 269.066 173.63 267.275 172.877 C 265.484 172.125 263.679 171.437 261.861 170.813 C 260.043 170.189 258.213 169.629 256.373 169.133 C 254.534 168.636 252.686 168.202 250.831 167.831 C 248.976 167.459 247.115 167.15 245.251 166.901 C 243.386 166.654 241.518 166.467 239.651 166.34 M 222.91 166.801 C 221.067 167.028 219.233 167.311 217.409 167.652 C 215.586 167.992 213.774 168.389 211.977 168.841 C 210.179 169.294 208.396 169.802 206.631 170.364 C 204.866 170.927 203.117 171.544 201.389 172.215 C 199.662 172.885 197.954 173.61 196.27 174.387 C 194.586 175.164 192.924 175.994 191.29 176.876 C 189.655 177.758 188.047 178.691 186.468 179.675 C 184.889 180.659 183.339 181.695 181.822 182.78 C 180.304 183.865 178.819 185 177.368 186.184 C 175.918 187.368 174.503 188.601 173.126 189.881 C 171.749 191.162 170.41 192.491 169.112 193.867 C 167.814 195.243 166.557 196.666 165.344 198.135 C 164.131 199.604 162.962 201.12 161.84 202.68 C 160.718 204.241 159.643 205.846 158.618 207.496 C 157.593 209.146 156.618 210.84 155.695 212.578 C 154.773 214.315 153.903 216.096 153.09 217.919 C 152.276 219.742 151.519 221.608 150.819 223.515 C 150.12 225.422 149.48 227.37 148.901 229.359 C 148.323 231.348 147.806 233.377 147.354 235.446 C 146.902 237.515 146.525 239.575 146.221 241.623 C 145.917 243.672 145.687 245.71 145.526 247.735 C 145.366 249.76 145.277 251.771 145.255 253.768 C 145.234 255.764 145.282 257.745 145.395 259.709 C 145.509 261.673 145.688 263.619 145.932 265.546 C 146.175 267.474 146.482 269.381 146.851 271.268 C 147.22 273.154 147.65 275.019 148.14 276.86 C 148.629 278.701 149.178 280.519 149.783 282.31 C 150.389 284.102 151.052 285.869 151.769 287.608 C 152.486 289.346 153.258 291.057 154.083 292.738 C 154.907 294.419 155.783 296.07 156.71 297.689 C 157.636 299.309 158.613 300.896 159.637 302.449 C 160.662 304.003 161.735 305.521 162.852 307.005 C 163.97 308.488 165.133 309.935 166.339 311.344 C 167.546 312.752 168.795 314.123 170.085 315.454 C 171.376 316.784 172.707 318.074 174.077 319.322 C 175.447 320.569 176.856 321.775 178.3 322.936 C 179.745 324.097 181.226 325.213 182.741 326.283 C 184.256 327.353 185.806 328.376 187.386 329.351 C 188.967 330.326 190.58 331.252 192.222 332.127 C 193.864 333.002 195.535 333.827 197.233 334.599 C 198.932 335.371 200.658 336.09 202.408 336.754 C 204.159 337.419 205.934 338.028 207.732 338.58 C 209.53 339.132 211.35 339.627 213.191 340.063 C 215.032 340.499 216.893 340.876 218.771 341.192 C 220.65 341.507 222.547 341.763 224.459 341.954 C 226.372 342.145 228.3 342.273 230.241 342.336 C 232.183 342.399 234.138 342.397 236.103 342.327 M 254.033 339.82 C 256.045 339.327 258.061 338.76 260.078 338.117 C 261.254 337.743 262.417 337.345 263.568 336.925 C 264.718 336.505 265.856 336.063 266.981 335.599 C 268.105 335.135 269.217 334.648 270.315 334.141 C 271.413 333.634 272.497 333.105 273.567 332.556 C 274.638 332.007 275.695 331.437 276.736 330.847 C 277.778 330.257 278.806 329.648 279.819 329.019 C 280.832 328.39 281.83 327.741 282.813 327.073 C 283.796 326.406 284.763 325.72 285.715 325.015 C 286.667 324.311 287.603 323.588 288.524 322.848 C 289.444 322.108 290.348 321.35 291.235 320.575 C 292.123 319.8 292.994 319.007 293.848 318.199 C 294.702 317.39 295.54 316.566 296.359 315.725 C 297.179 314.884 297.981 314.028 298.766 313.157 C 299.551 312.285 300.318 311.398 301.066 310.496 C 301.815 309.595 302.545 308.679 303.257 307.749 C 303.969 306.819 304.662 305.875 305.336 304.917 C 306.011 303.959 306.666 302.989 307.301 302.004 C 307.937 301.021 308.553 300.025 309.149 299.016 M 316.548 283.043 C 316.934 281.927 317.299 280.802 317.641 279.668 C 317.983 278.534 318.303 277.392 318.6 276.242 C 318.897 275.091 319.171 273.933 319.421 272.767 C 319.672 271.602 319.9 270.428 320.103 269.249 C 320.307 268.068 320.488 266.882 320.643 265.689 C 320.8 264.496 320.931 263.296 321.038 262.092 C 321.146 260.887 321.229 259.677 321.286 258.461 C 321.344 257.246 321.377 256.026 321.384 254.801 C 321.392 253.576 321.374 252.347 321.33 251.114"
 					/>
 				</g>
-				<g
-					id="Br-3yOTDEaBP83UML-jtr"
-					transform="matrix(0.39896, 0.153146, -0.153146, 0.39896, 412.844489, 359.250677)"
-				>
+				<g id="Br-3yOTDEaBP83UML-jtr" transform="matrix(0.39896, 0.153146, -0.153146, 0.39896, 412.844489, 359.250677)">
 					<g
 						id="v_rOhgub5qGj28Tyw4pmT"
 						transform="matrix(-0.282771, 0.736641, -0.736641, -0.282771, -480.948371, -77.264627)"
@@ -503,12 +469,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const GithubIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const GithubIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -525,13 +486,7 @@ export const GithubIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const DiscordIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	className,
-	...props
-}) => {
+export const DiscordIcon: React.FC<IconSvgProps> = ({ size, width, height, className, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -549,12 +504,7 @@ export const DiscordIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const LogoutIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const LogoutIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -576,12 +526,7 @@ export const LogoutIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const GoogleIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const GoogleIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -593,29 +538,15 @@ export const GoogleIcon: React.FC<IconSvgProps> = ({
 			{...props}
 		>
 			<path d="m0 0H512V512H0" fill="none" />
-			<path
-				fill="#34a853"
-				d="m90 341a192 192 0 00296 59v-48h-62c-53 35-141 22-171-60"
-			/>
-			<path
-				fill="#4285f4"
-				d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-			/>
+			<path fill="#34a853" d="m90 341a192 192 0 00296 59v-48h-62c-53 35-141 22-171-60" />
+			<path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57" />
 			<path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73" />
-			<path
-				fill="#ea4335"
-				d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-			/>
+			<path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55" />
 		</svg>
 	);
 };
 
-export const ShieldIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const ShieldIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -631,12 +562,7 @@ export const ShieldIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const KeyIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const KeyIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -654,12 +580,7 @@ export const KeyIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const GitlabIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const GitlabIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -671,10 +592,7 @@ export const GitlabIcon: React.FC<IconSvgProps> = ({
 			{...props}
 		>
 			<path d="m0 0H512V512H0" fill="#FFFFFF00" />
-			<path
-				fill="#e24329"
-				d="m71 222 52-136c5-12 21-12 26 0l35.5 109h143L363 86c5-12 21-12 26 0l52 136-185 120"
-			/>
+			<path fill="#e24329" d="m71 222 52-136c5-12 21-12 26 0l35.5 109h143L363 86c5-12 21-12 26 0l52 136-185 120" />
 			<path fill="#fca326" d="m244 442q12 10 24 0l61-46V340.8H183V396" />
 			<path
 				fill="#fc6d26"
@@ -684,12 +602,7 @@ export const GitlabIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const GearIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const GearIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -709,12 +622,7 @@ export const GearIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const DashboardIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const DashboardIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -733,12 +641,23 @@ export const DashboardIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const PersonIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const DashboardIconOutlined: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M13 21V11H21V21H13ZM3 13V3H11V13H3ZM9 11V5H5V11H9ZM3 21V15H11V21H3ZM5 19H9V17H5V19ZM15 19H19V13H15V19ZM13 3H21V9H13V3ZM15 5V7H19V5H15Z" />
+		</svg>
+	);
+};
+
+export const PersonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -760,12 +679,7 @@ export const PersonIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const EditIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const EditIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -779,10 +693,7 @@ export const EditIcon: React.FC<IconSvgProps> = ({
 				<g id="edit-2">
 					<g id="edit-2-2" data-name="edit-2">
 						<rect className="fill-current opacity-0" width="24" height="24" />
-						<path
-							className="fill-current"
-							d="M19,20H5a1,1,0,0,0,0,2H19a1,1,0,0,0,0-2Z"
-						/>
+						<path className="fill-current" d="M19,20H5a1,1,0,0,0,0,2H19a1,1,0,0,0,0-2Z" />
 						<path
 							className="fill-current"
 							d="M5,18h.09l4.17-.38a2,2,0,0,0,1.21-.57l9-9a1.92,1.92,0,0,0-.07-2.71h0L16.66,2.6A2,2,0,0,0,14,2.53l-9,9a2,2,0,0,0-.57,1.21L4,16.91a1,1,0,0,0,.29.8A1,1,0,0,0,5,18ZM15.27,4,18,6.73,16,8.68,13.32,6Z"
@@ -794,12 +705,7 @@ export const EditIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const TrashIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const TrashIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -818,12 +724,7 @@ export const TrashIcon: React.FC<IconSvgProps> = ({
 	);
 };
 
-export const GlobeIcon: React.FC<IconSvgProps> = ({
-	size,
-	width,
-	height,
-	...props
-}) => {
+export const GlobeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
@@ -874,6 +775,201 @@ export const GlobeIcon: React.FC<IconSvgProps> = ({
 				strokeLinejoin="round"
 				strokeWidth="12"
 			/>
+		</svg>
+	);
+};
+
+export const BellIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="3"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+			<path d="M13.73 21a2 2 0 0 1-3.46 0" />
+		</svg>
+	);
+};
+
+export const FlagIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="3"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+			<line x1="4" y1="22" x2="4" y2="15" />
+		</svg>
+	);
+};
+
+export const BarChartIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M3 3v18h18" />
+			<path d="M18 17V9" />
+			<path d="M13 17V5" />
+			<path d="M8 17v-3" />
+		</svg>
+	);
+};
+
+export const LayoutListIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<rect width="7" height="7" x="3" y="3" rx="1" />
+			<rect width="7" height="7" x="3" y="14" rx="1" />
+			<path d="M14 4h7" />
+			<path d="M14 9h7" />
+			<path d="M14 15h7" />
+			<path d="M14 20h7" />
+		</svg>
+	);
+};
+
+export const BuildingsIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+			<path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+			<path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+			<path d="M10 6h4" />
+			<path d="M10 10h4" />
+			<path d="M10 14h4" />
+			<path d="M10 18h4" />
+		</svg>
+	);
+};
+
+export const CollectionsIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="m16 6 4 14" />
+			<path d="M12 6v14" />
+			<path d="M8 8v12" />
+			<path d="M4 4v16" />
+		</svg>
+	);
+};
+
+export const DollarIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 320 512"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M160 0c17.7 0 32 14.3 32 32V67.7c1.6 .2 3.1 .4 4.7 .7c.4 .1 .7 .1 1.1 .2l48 8.8c17.4 3.2 28.9 19.9 25.7 37.2s-19.9 28.9-37.2 25.7l-47.5-8.7c-31.3-4.6-58.9-1.5-78.3 6.2s-27.2 18.3-29 28.1c-2 10.7-.5 16.7 1.2 20.4c1.8 3.9 5.5 8.3 12.8 13.2c16.3 10.7 41.3 17.7 73.7 26.3l2.9 .8c28.6 7.6 63.6 16.8 89.6 33.8c14.2 9.3 27.6 21.9 35.9 39.5c8.5 17.9 10.3 37.9 6.4 59.2c-6.9 38-33.1 63.4-65.6 76.7c-13.7 5.6-28.6 9.2-44.4 11V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.1c-.4-.1-.9-.1-1.3-.2l-.2 0 0 0c-24.4-3.8-64.5-14.3-91.5-26.3c-16.1-7.2-23.4-26.1-16.2-42.2s26.1-23.4 42.2-16.2c20.9 9.3 55.3 18.5 75.2 21.6c31.9 4.7 58.2 2 76-5.3c16.9-6.9 24.6-16.9 26.8-28.9c1.9-10.6 .4-16.7-1.3-20.4c-1.9-4-5.6-8.4-13-13.3c-16.4-10.7-41.5-17.7-74-26.3l-2.8-.7 0 0C119.4 279.3 84.4 270 58.4 253c-14.2-9.3-27.5-22-35.8-39.6c-8.4-17.9-10.1-37.9-6.1-59.2C23.7 116 52.3 91.2 84.8 78.3c13.3-5.3 27.9-8.9 43.2-11V32c0-17.7 14.3-32 32-32z" />
+		</svg>
+	);
+};
+
+export const ChevronRightIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke-width="1.5"
+			stroke="currentColor"
+			aria-hidden="true"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+		</svg>
+	);
+};
+
+export const HistoryIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+			<path d="M3 3v5h5" />
+			<path d="M12 7v5l4 2" />
 		</svg>
 	);
 };

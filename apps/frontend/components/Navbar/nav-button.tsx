@@ -37,9 +37,13 @@ const NavButton = () => {
 		<Popover>
 			<PopoverTrigger asChild>
 				<Button size="lg" variant="ghost" aria-label="Profile icon" className="p-0 m-0 h-fit rounded-full w-fit">
-					<div className="flex items-center justify-center navItemHeight aspect-square p-1.5 hover:bg-bg-hover rounded-full">
+					<div className="flex items-center justify-center navItemHeight aspect-square p-1 hover:bg-bg-hover rounded-full">
 						{session?.avatar_image ? (
-							<img src={session?.avatar_image} alt={`${session?.user_name} `} className="w-full aspect-square rounded-full bg-bg-hover" />
+							<img
+								src={session?.avatar_image}
+								alt={`${session?.user_name} `}
+								className="w-full aspect-square rounded-full bg-bg-hover"
+							/>
 						) : (
 							<span>{session?.name[0]}</span>
 						)}

@@ -75,6 +75,7 @@ export default async function gitlabCallbackHandler(
 			user,
 		};
 	} catch (error) {
+		console.error(error);
 		return {
 			status: {
 				success: false,
