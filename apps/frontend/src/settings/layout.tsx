@@ -1,4 +1,4 @@
-import { PersonIcon, ShieldIcon } from "@/components/icons";
+import { DevicesIcon, PersonIcon } from "@/components/icons";
 import "@/src/globals.css";
 import React from "react";
 import { Outlet } from "react-router-dom";
@@ -16,7 +16,7 @@ export default function SettingsPageLayout() {
 		{
 			name: "Sessions",
 			href: `${baseUrlPrefix}/sessions`,
-			icon: <ShieldIcon className="w-4 h-4" />,
+			icon: <DevicesIcon size="1.15rem" />,
 		},
 	];
 

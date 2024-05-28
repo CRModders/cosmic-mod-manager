@@ -1,6 +1,7 @@
 import { ChevronRightIcon, HistoryIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../providers/auth-provider";
 import { ContentWrapperCard } from "../settings/panel";
@@ -9,6 +10,11 @@ const Overview = () => {
 
 	return (
 		<div className="w-full flex flex-col items-center justify-center gap-4">
+			<Helmet>
+				<title>Dashboard | CRMM</title>
+				<meta name="description" content="Your dashboard." />
+			</Helmet>
+
 			{/* Profile overview */}
 			<ContentWrapperCard>
 				<div className="w-full flex flex-col items-center justify-center my-2">

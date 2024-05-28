@@ -1,8 +1,8 @@
 {
-    "devDependencies": {
-        "biome": "^0.3.3",
-        "turbo": "^1.13.3",
-        "@swc/types": "^0.1.7"
+  "name": "crmm",
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
+    "turbo": "latest"
   },
   "packageManager": "bun@1.1.8",
   "private": true,
@@ -11,5 +11,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint"
   },
-  "workspaces": ["apps/backend", "apps/frontend"]
+  "workspaces": [
+    "apps/*"
+  ]
 }

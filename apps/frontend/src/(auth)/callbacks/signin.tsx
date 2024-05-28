@@ -4,6 +4,7 @@ import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { useContext, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { authConfig } from "../auth";
 
@@ -62,6 +63,10 @@ export const SignInCallbackPage = () => {
 
 	return (
 		<div className="w-full min-h-[100vh] flex items-center justify-center">
+			<Helmet>
+				<title>Signing in... | CRMM</title>
+				<meta name="description" content="Your verification token is either invalid or expired." />
+			</Helmet>
 			<div className="max-w-xl flex items-center justify-center gap-4 flex-col p-8">
 				<Spinner size="2rem" />
 			</div>

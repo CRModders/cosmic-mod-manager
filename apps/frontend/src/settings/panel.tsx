@@ -49,7 +49,7 @@ export const SidepanelLink = ({ href, icon, label }: SidePanelLinkProps) => {
 			>
 				<div className="hidden activeLinkIndicator absolute top-[50%] left-0 translate-y-[-50%] h-full w-[0.25rem] bg-accent-bg" />
 
-				<i className="text_stagger_animation linkIcon text-foreground/60 group-hover:text-foreground/60 hover:text-foreground/60 w-5 flex items-center justify-start">
+				<i className="text_stagger_animation linkIcon text-foreground/60 group-hover:text-foreground/60 hover:text-foreground/60 w-6 flex items-center justify-start">
 					{icon}
 				</i>
 				<span className="text_stagger_animation linkLabel font-semibold text-foreground-muted group-hover:text-foreground">

@@ -604,19 +604,32 @@ export const GitlabIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 
 export const GearIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 20 20"
-			fill="currentColor"
-			aria-hidden="true"
+			viewBox="0 0 256 256"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
+			<rect width="256" height="256" fill="none" />
+			<circle
+				cx="128"
+				cy="128"
+				r="40"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="16"
+			/>
 			<path
-				fillRule="evenodd"
-				d="M7.84 1.804A1 1 0 018.82 1h2.36a1 1 0 01.98.804l.331 1.652a6.993 6.993 0 011.929 1.115l1.598-.54a1 1 0 011.186.447l1.18 2.044a1 1 0 01-.205 1.251l-1.267 1.113a7.047 7.047 0 010 2.228l1.267 1.113a1 1 0 01.206 1.25l-1.18 2.045a1 1 0 01-1.187.447l-1.598-.54a6.993 6.993 0 01-1.929 1.115l-.33 1.652a1 1 0 01-.98.804H8.82a1 1 0 01-.98-.804l-.331-1.652a6.993 6.993 0 01-1.929-1.115l-1.598.54a1 1 0 01-1.186-.447l-1.18-2.044a1 1 0 01.205-1.251l1.267-1.114a7.05 7.05 0 010-2.227L1.821 7.773a1 1 0 01-.206-1.25l1.18-2.045a1 1 0 011.187-.447l1.598.54A6.993 6.993 0 017.51 3.456l.33-1.652zM10 13a3 3 0 100-6 3 3 0 000 6z"
-				clipRule="evenodd"
+				d="M130.05,206.11c-1.34,0-2.69,0-4,0L94,224a104.61,104.61,0,0,1-34.11-19.2l-.12-36c-.71-1.12-1.38-2.25-2-3.41L25.9,147.24a99.15,99.15,0,0,1,0-38.46l31.84-18.1c.65-1.15,1.32-2.29,2-3.41l.16-36A104.58,104.58,0,0,1,94,32l32,17.89c1.34,0,2.69,0,4,0L162,32a104.61,104.61,0,0,1,34.11,19.2l.12,36c.71,1.12,1.38,2.25,2,3.41l31.85,18.14a99.15,99.15,0,0,1,0,38.46l-31.84,18.1c-.65,1.15-1.32,2.29-2,3.41l-.16,36A104.58,104.58,0,0,1,162,224Z"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="16"
 			/>
 		</svg>
 	);
@@ -662,19 +675,18 @@ export const PersonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 512 512"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="3"
+			stroke-linecap="round"
+			stroke-linejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
-			<path
-				fill="currentColor"
-				d="M332.64,64.58C313.18,43.57,286,32,256,32c-30.16,0-57.43,11.5-76.8,32.38-19.58,21.11-29.12,49.8-26.88,80.78C156.76,206.28,203.27,256,256,256s99.16-49.71,103.67-110.82C361.94,114.48,352.34,85.85,332.64,64.58Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M432,480H80A31,31,0,0,1,55.8,468.87c-6.5-7.77-9.12-18.38-7.18-29.11C57.06,392.94,83.4,353.61,124.8,326c36.78-24.51,83.37-38,131.2-38s94.42,13.5,131.2,38c41.4,27.6,67.74,66.93,76.18,113.75,1.94,10.73-.68,21.34-7.18,29.11A31,31,0,0,1,432,480Z"
-			/>
+			<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+			<circle cx="12" cy="7" r="4" />
 		</svg>
 	);
 };
@@ -970,6 +982,64 @@ export const HistoryIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 			<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
 			<path d="M3 3v5h5" />
 			<path d="M12 7v5l4 2" />
+		</svg>
+	);
+};
+
+export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<rect width="256" height="256" fill="none" />
+			<rect
+				x="136"
+				y="104"
+				width="128"
+				height="80"
+				rx="16"
+				transform="translate(344 -56) rotate(90)"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="24"
+			/>
+			<line
+				x1="128"
+				y1="208"
+				x2="88"
+				y2="208"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="24"
+			/>
+			<path
+				d="M160,176H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H184a16,16,0,0,1,16,16V80"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="24"
+			/>
+			<line
+				x1="192"
+				y1="112"
+				x2="208"
+				y2="112"
+				fill="none"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="24"
+			/>
 		</svg>
 	);
 };

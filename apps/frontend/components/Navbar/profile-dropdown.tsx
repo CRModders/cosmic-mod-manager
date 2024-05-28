@@ -1,4 +1,4 @@
-import { DashboardIcon, GearIcon, PersonIcon } from "@/components/icons";
+import { DashboardIcon, DashboardIconOutlined, GearIcon, PersonIcon } from "@/components/icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -35,10 +35,15 @@ export const ProfileDropdownLink = ({ icon, label, className, labelClassName, ..
 			)}
 			{...props}
 		>
-			<i className="text_stagger_animation text-foreground/40 group-hover:text-foreground/55 hover:text-foreground/55 w-6 flex items-center justify-start">
+			<i className="text_stagger_animation text-foreground/65 group-hover:text-foreground/75 hover:text-foreground/75 w-6 flex items-center justify-start">
 				{icon}
 			</i>
-			<span className={cn("text_stagger_animation font-semibold text-foreground-muted group-hover:text-foreground", labelClassName)}>
+			<span
+				className={cn(
+					"text_stagger_animation font-semibold text-foreground-muted group-hover:text-foreground",
+					labelClassName,
+				)}
+			>
 				{label}
 			</span>
 		</Button>
@@ -59,7 +64,7 @@ const ProfileDropdown = ({ session }: Props) => {
 		{
 			name: "Dashboard",
 			href: "/dashboard",
-			icon: <DashboardIcon size="1.25rem" />,
+			icon: <DashboardIconOutlined size="1.25rem" />,
 		},
 		{
 			name: "Settings",
@@ -174,7 +179,12 @@ export const MenuProfileLinks = ({
 									key={`${link.href}`}
 									className="w-full group flex items-center justify-center rounded-lg bg_stagger_animation hover:bg-bg-hover"
 								>
-									<NavMenuLink href={link.href} label={link.label} isDisabled={!isNavMenuOpen} toggleNavMenu={toggleNavMenu}>
+									<NavMenuLink
+										href={link.href}
+										label={link.label}
+										isDisabled={!isNavMenuOpen}
+										toggleNavMenu={toggleNavMenu}
+									>
 										<ProfileDropdownLink
 											label={link.label}
 											icon={link.icon}

@@ -10,6 +10,7 @@ import { AuthContext } from "@/src/providers/auth-provider";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import type { AuthProviderType, LocalUserSession } from "@root/types";
 import React, { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import SessionListPageWrapper from "./page-wrapper";
 import Timestamp, { DotSeparator, TooltipWrapper } from "./timestamp";
 
@@ -55,41 +56,48 @@ const Sessions = () => {
 	}, [userSession]);
 
 	return (
-		<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[100vh]">
-			<Card className="w-full px-5 py-4 rounded-lg">
-				<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
-					<SessionListPageWrapper showWarning={showWarning} setShowWarning={setShowWarning}>
-						<div className="w-full flex flex-wrap gap-4 items-center justify-between">
-							<h1 className="flex text-left text-2xl text-foreground-muted font-semibold">Sessions</h1>
-						</div>
-						<div className="w-full flex flex-col items-center justify-center text-foreground-muted">
-							<p className="w-full text-left">
-								These devices are currently logged into your account; you can revoke any session at any time
-							</p>
-							<p className="w-full text-left">
-								If you see something you don't recognize, immediately revoke the session and change the password of the
-								provider account which was used to create that session.{" "}
-							</p>
-						</div>
+		<>
+			<Helmet>
+				<title>Sessions | CRMM</title>
+				<meta name="description" content="All devices where you are logged in." />
+			</Helmet>
 
-						<div className="w-full relative flex flex-col items-center justify-center gap-4 mt-4 min-h-24">
-							{userSession && (
-								<SessionsList
-									loggedInSessions={loggedInSessions}
-									userSession={userSession}
-									fetchLoggedInSessions={fetchLoggedInSessions}
-								/>
-							)}
-							{(userSession === undefined || loading === true) && (
-								<div className="absolute bg-background/50 w-full h-full flex items-center justify-center rounded-lg">
-									<Spinner size="1.6rem" />
-								</div>
-							)}
-						</div>
-					</SessionListPageWrapper>
-				</CardContent>
-			</Card>
-		</div>
+			<div className="w-full flex flex-col items-center justify-start pb-8 gap-4 min-h-[100vh]">
+				<Card className="w-full px-5 py-4 rounded-lg">
+					<CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
+						<SessionListPageWrapper showWarning={showWarning} setShowWarning={setShowWarning}>
+							<div className="w-full flex flex-wrap gap-4 items-center justify-between">
+								<h1 className="flex text-left text-2xl text-foreground-muted font-semibold">Sessions</h1>
+							</div>
+							<div className="w-full flex flex-col items-center justify-center text-foreground-muted">
+								<p className="w-full text-left">
+									These devices are currently logged into your account; you can revoke any session at any time
+								</p>
+								<p className="w-full text-left">
+									If you see something you don't recognize, immediately revoke the session and change the password of
+									the provider account which was used to create that session.{" "}
+								</p>
+							</div>
+
+							<div className="w-full relative flex flex-col items-center justify-center gap-4 mt-4 min-h-24">
+								{userSession && (
+									<SessionsList
+										loggedInSessions={loggedInSessions}
+										userSession={userSession}
+										fetchLoggedInSessions={fetchLoggedInSessions}
+									/>
+								)}
+								{(userSession === undefined || loading === true) && (
+									<div className="absolute bg-background/50 w-full h-full flex items-center justify-center rounded-lg">
+										<Spinner size="1.6rem" />
+									</div>
+								)}
+							</div>
+						</SessionListPageWrapper>
+					</CardContent>
+				</Card>
+			</div>
+		</>
 	);
 };
 
