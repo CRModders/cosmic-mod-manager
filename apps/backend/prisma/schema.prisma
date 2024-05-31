@@ -98,16 +98,25 @@ model VerificationRequest {
 
 // Project and organisation models
 model Organisation {
-    id       String               @id @default(uuid())
-    members  OrganisationMember[] @relation(name: "Organisation")
-    projects Project[]            @relation(name: "Project Organisation")
+    id         String               @id @default(uuid())
+    created_on DateTime             @default(now())
+    members    OrganisationMember[] @relation(name: "Organisation")
+    projects   Project[]            @relation(name: "Project Organisation")
 }
 
 model Project {
-    id           String          @id @default(uuid())
+    id           String            @id @default(uuid())
     org_id       String?
-    members      ProjectMember[] @relation(name: "Project")
-    organisation Organisation?   @relation(name: "Project Organisation", fields: [org_id], references: [id])
+    name         String
+    url_slug     String            @unique
+    visibility   ProjectVisibility @default(PUBLIC)
+    status       ProjectStatus     @default(DRAFT)
+    type         ProjectType       @default(PROJECT)
+    summary      String?           @db.VarChar(324)
+    created_on   DateTime          @default(now())
+    updated_on   DateTime          @default(now())
+    members      ProjectMember[]   @relation(name: "Project")
+    organisation Organisation?     @relation(name: "Project Organisation", fields: [org_id], references: [id])
 }
 
 model ProjectMember {
@@ -115,8 +124,8 @@ model ProjectMember {
     user_id    String
     project_id String
     role       UserRolesInProject @default(MEMBER)
-    user       User               @relation(name: "Project Member", fields: [user_id], references: [id])
-    project    Project            @relation(name: "Project", fields: [project_id], references: [id])
+    user       User               @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
+    project    Project            @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
 }
 
 model OrganisationMember {
@@ -124,8 +133,27 @@ model OrganisationMember {
     user_id      String
     org_id       String
     role         UserRolesInOrganisation @default(MEMBER)
-    user         User                    @relation(name: "Organisation Member", fields: [user_id], references: [id])
-    organisation Organisation            @relation(name: "Organisation", fields: [org_id], references: [id])
+    user         User                    @relation(name: "Organisation Member", fields: [user_id], references: [id], onDelete: Cascade)
+    organisation Organisation            @relation(name: "Organisation", fields: [org_id], references: [id], onDelete: Cascade)
+}
+
+enum ProjectStatus {
+    LISTED
+    ARCHIVED
+    DRAFT
+    UNLISTED
+    SCHEDULED
+    UNKNOWN
+}
+
+enum ProjectType {
+    PROJECT // This will be shown as the project type until the user selects which type this project is going to be
+    MOD
+    MODPACK
+    SHADER
+    RESOURCEPACK
+    DATAPACK
+    PLUGIN
 }
 
 enum UserRolesInProject {
@@ -137,4 +165,10 @@ enum UserRolesInOrganisation {
     OWNER
     MODERATOR
     MEMBER
+}
+
+enum ProjectVisibility {
+    PUBLIC
+    PRIVATE
+    UNLISTED
 }

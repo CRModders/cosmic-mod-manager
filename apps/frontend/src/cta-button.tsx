@@ -18,7 +18,7 @@ const CTAButton = () => {
 	return (
 		<>
 			{session?.user_id ? (
-				<Link to={"/dashboard"}>
+				<Link to={"/dashboard/projects"}>
 					<Button className="" size="lg" variant="outline" aria-label="Explore mods">
 						<p className="font-semibold text-base sm:text-md duration-0 dark:duration-0">Dashboard</p>
 					</Button>

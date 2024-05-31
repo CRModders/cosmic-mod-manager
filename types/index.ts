@@ -7,6 +7,30 @@ export enum AuthProvidersEnum {
 
 export type AuthProviderType = "google" | "github" | "discord" | "gitlab" | "credential";
 
+export enum ProjectType {
+    MOD = "Mod",
+    MODPACK = "Modpack",
+    SHADER = "Shader",
+    RESOURCEPACK = "Resource pack",
+    DATAPACK = "Data pack",
+    PLUGIN = "Plugin"
+}
+
+export enum ProjectVisibility {
+    PUBLIC = "Public",
+    PRIVATE = "Private",
+    UNLISTED = "Unlisted"
+}
+
+export enum ProjectStatuses {
+    LISTED = "Listed",
+    ARCHIVED = "Archived",
+    DRAFT = "Draft",
+    UNLISTED = "Unlisted",
+    SCHEDULED = "Scheduled",
+    UNKNOWN = "Unknown",
+}
+
 export interface LocalUserSession {
     user_id: string;
     email: string;

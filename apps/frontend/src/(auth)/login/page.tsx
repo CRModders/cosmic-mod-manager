@@ -104,16 +104,14 @@ const LoginPage = () => {
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center">
 										<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-											<span>Email</span>
-											<FormMessage className="text-danger-text leading-tight" />
+											<span className="text-foreground">Email</span>
+											<FormMessage className="leading-tight" />
 										</FormLabel>
 										<FormControl>
 											<Input
 												{...field}
 												type="email"
-												required
 												placeholder="example@abc.com"
-												className="w-full flex items-center justify-center"
 												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 													field.onChange(e);
 													setFormError(null);
@@ -134,15 +132,14 @@ const LoginPage = () => {
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center">
 										<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-											<span>Password</span>
-											<FormMessage className="text-danger-text leading-tight" />
+											<span className="text-foreground">Password</span>
+											<FormMessage className="leading-tight" />
 										</FormLabel>
 										<FormControl>
 											<Input
 												{...field}
 												placeholder="********"
 												type="password"
-												className="w-full flex items-center justify-center"
 												onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 													field.onChange(e);
 													setFormError(null);

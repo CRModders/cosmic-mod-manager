@@ -9,7 +9,6 @@ const Notifications = () => {
 				<meta name="description" content="Your unread notifications." />
 			</Helmet>
 
-			{/* Profile overview */}
 			<ContentWrapperCard>
 				<h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
 					Notifications

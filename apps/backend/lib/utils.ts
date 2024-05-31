@@ -1,3 +1,5 @@
+import { ProjectVisibility } from "@prisma/client";
+
 export const shuffleCharacters = (str: string) => {
 	const characters = str.split("");
 	for (let i = characters.length - 1; i > 0; i--) {
@@ -19,4 +21,17 @@ export const generateRandomCode = (length = 32) => {
 export const Capitalize = (str: string) => {
 	if (!str) return str;
 	return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+export const GetProjectVisibilityType = (visibility): ProjectVisibility => {
+	switch (visibility) {
+		case ProjectVisibility.PUBLIC:
+			return ProjectVisibility.PUBLIC;
+		case ProjectVisibility.PRIVATE:
+			return ProjectVisibility.PRIVATE;
+		case ProjectVisibility.UNLISTED:
+			return ProjectVisibility.UNLISTED;
+		default:
+			return ProjectVisibility.PUBLIC;
+	}
 };

@@ -2,6 +2,7 @@ import type { SocketAddress } from "bun";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import authRouter from "./auth/router";
+import projectRouter from "./project/router";
 import userRouter from "./user/router";
 
 type Bindings = {
@@ -21,6 +22,7 @@ app.use(
 
 app.route("/api/auth", authRouter);
 app.route("/api/user", userRouter);
+app.route("/api/project", projectRouter);
 
 app.get("/api/test", (c) => {
 	const headers = c.req.raw.headers.toJSON();

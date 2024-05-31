@@ -34,12 +34,14 @@ const Overview = () => {
 							<h1 className="flex w-full items-center sm:justify-start justify-center text-4xl font-semibold text-foreground-muted">
 								{session?.user_name}
 							</h1>
-							<Link
-								to={"/settings/account"}
-								className="w-full flex items-center sm:justify-start justify-center text-blue-600 dark:text-blue-400 hover:underline underline-offset-2 mt-2"
-							>
-								View your profile <ChevronRightIcon size="1rem" />
-							</Link>
+							<div className="w-full flex items-center sm:justify-start justify-center ">
+								<Link
+									to={"/settings/account"}
+									className="flex items-center justify-center gap-1 text-blue-600 dark:text-blue-400 hover:underline underline-offset-2 mt-2"
+								>
+									View your profile <ChevronRightIcon size="1rem" />
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>

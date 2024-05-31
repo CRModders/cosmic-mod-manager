@@ -16,6 +16,8 @@ import DashboardPageLayout from "./dashboard/layout";
 import Notifications from "./dashboard/notifications";
 import Overview from "./dashboard/overview";
 import DashboardPage from "./dashboard/page";
+import ProjectSettingsPage from "./dashboard/projects/project/project";
+import Projects from "./dashboard/projects/projects";
 import ReportsPage from "./dashboard/reports";
 import AccountSettingsPage from "./settings/account/page";
 import SettingsPageLayout from "./settings/layout";
@@ -98,6 +100,14 @@ const router = createBrowserRouter([
 					{
 						path: "reports",
 						element: <ReportsPage />,
+					},
+					{
+						path: "projects",
+						element: <Projects />,
+					},
+					{
+						path: "project/:projectName",
+						element: <ProjectSettingsPage />,
 					},
 					{
 						path: "*",

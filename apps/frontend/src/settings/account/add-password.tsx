@@ -125,7 +125,7 @@ const AddPasswordForm = ({ email }: Props) => {
 
 			<DialogContent className="m-0 gap-0">
 				<DialogHeader className="p-0">
-					<DialogTitle className="font-semibold text-xl text-foreground-muted">Add password</DialogTitle>
+					<DialogTitle className="font-semibold text-foreground-muted">Add password</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">

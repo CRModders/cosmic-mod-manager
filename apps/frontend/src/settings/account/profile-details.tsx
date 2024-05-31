@@ -180,9 +180,9 @@ const EditProfileInfoForm = ({
 	};
 
 	return (
-		<DialogContent className="gap-4">
+		<DialogContent>
 			<DialogHeader>
-				<DialogTitle className="font-semibold text-xl text-foreground-muted">Edit profile</DialogTitle>
+				<DialogTitle className="font-semibold text-foreground-muted">Edit profile</DialogTitle>
 			</DialogHeader>
 
 			<Form {...form}>

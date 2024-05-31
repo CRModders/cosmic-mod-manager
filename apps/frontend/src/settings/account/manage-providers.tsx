@@ -28,7 +28,7 @@ const ManageProviders = ({ linkedProviders, fetchLinkedProviders }: Props) => {
 			</div>
 
 			<ProvidersList linkedProviders={linkedProviders} fetchLinkedProviders={fetchLinkedProviders}>
-				<Button className="flex items-center justify-center gap-2 text-foreground-muted" variant="outline">
+				<Button className="flex items-center justify-center gap-2 text-foreground" variant="outline">
 					<GearIcon size="1rem" />
 					Manage providers
 				</Button>

@@ -619,17 +619,17 @@ export const GearIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 				r="40"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="16"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="16"
 			/>
 			<path
 				d="M130.05,206.11c-1.34,0-2.69,0-4,0L94,224a104.61,104.61,0,0,1-34.11-19.2l-.12-36c-.71-1.12-1.38-2.25-2-3.41L25.9,147.24a99.15,99.15,0,0,1,0-38.46l31.84-18.1c.65-1.15,1.32-2.29,2-3.41l.16-36A104.58,104.58,0,0,1,94,32l32,17.89c1.34,0,2.69,0,4,0L162,32a104.61,104.61,0,0,1,34.11,19.2l.12,36c.71,1.12,1.38,2.25,2,3.41l31.85,18.14a99.15,99.15,0,0,1,0,38.46l-31.84,18.1c-.65,1.15-1.32,2.29-2,3.41l-.16,36A104.58,104.58,0,0,1,162,224Z"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="16"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="16"
 			/>
 		</svg>
 	);
@@ -678,9 +678,9 @@ export const PersonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="3"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="3"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -799,9 +799,9 @@ export const BellIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="3"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="3"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -820,9 +820,9 @@ export const FlagIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="3"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="3"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -841,9 +841,9 @@ export const BarChartIcon: React.FC<IconSvgProps> = ({ size, width, height, ...p
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -864,9 +864,9 @@ export const LayoutListIcon: React.FC<IconSvgProps> = ({ size, width, height, ..
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -889,9 +889,9 @@ export const BuildingsIcon: React.FC<IconSvgProps> = ({ size, width, height, ...
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -915,9 +915,9 @@ export const CollectionsIcon: React.FC<IconSvgProps> = ({ size, width, height, .
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -952,14 +952,14 @@ export const ChevronRightIcon: React.FC<IconSvgProps> = ({ size, width, height, 
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
-			stroke-width="1.5"
+			strokeWidth="1.5"
 			stroke="currentColor"
 			aria-hidden="true"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
-			<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+			<path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
 		</svg>
 	);
 };
@@ -972,9 +972,9 @@ export const HistoryIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
@@ -1006,9 +1006,9 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				transform="translate(344 -56) rotate(90)"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="24"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="24"
 			/>
 			<line
 				x1="128"
@@ -1017,17 +1017,17 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				y2="208"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="24"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="24"
 			/>
 			<path
 				d="M160,176H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H184a16,16,0,0,1,16,16V80"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="24"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="24"
 			/>
 			<line
 				x1="192"
@@ -1036,9 +1036,9 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				y2="112"
 				fill="none"
 				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="24"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="24"
 			/>
 		</svg>
 	);

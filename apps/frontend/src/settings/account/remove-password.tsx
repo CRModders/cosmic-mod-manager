@@ -83,7 +83,7 @@ const RemovePasswordForm = ({ email, children, fetchPageData }: Props) => {
 
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className="font-normal">Remove account password</DialogTitle>
+					<DialogTitle className="text-foreground-muted font-semibold">Remove account password</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex flex-col items-center justify-center">
