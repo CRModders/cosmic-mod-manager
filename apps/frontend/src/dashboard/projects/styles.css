@@ -1,0 +1,15 @@
+.navItemHeight {
+    @apply h-10;
+}
+
+.navLinkText {
+    @apply font-semibold text-foreground-muted hover:text-foreground/85 dark:hover:text-foreground/90;
+}
+
+.active .navLinkText {
+    @apply text-foreground dark:text-foreground;
+}
+
+.active .activityIndicator {
+    @apply flex absolute bottom-0 left-[50%] translate-x-[-50%] w-full h-1 rounded-lg bg-accent-bg;
+}

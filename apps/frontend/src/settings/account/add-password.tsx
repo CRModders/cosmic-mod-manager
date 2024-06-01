@@ -166,8 +166,8 @@ const AddPasswordForm = ({ email }: Props) => {
 										render={({ field }) => (
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground-muted">New password</span>
+													<FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
+														<span className="text-foreground font-semibold">New password</span>
 														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 													</FormLabel>
 													<FormControl>
@@ -197,8 +197,8 @@ const AddPasswordForm = ({ email }: Props) => {
 										render={({ field }) => (
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-														<span className="text-foreground-muted">Confirm new password</span>
+													<FormLabel className="w-full my-1 flex items-end justify-between text-left min-h-4 gap-12">
+														<span className="text-foreground font-semibold">Confirm new password</span>
 														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 													</FormLabel>
 													<FormControl>

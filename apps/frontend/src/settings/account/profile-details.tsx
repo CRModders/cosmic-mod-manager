@@ -199,8 +199,8 @@ const EditProfileInfoForm = ({
 								render={({ field }) => (
 									<>
 										<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-											<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-												<span className="text-foreground-muted">Profile image provider</span>
+											<FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
+												<span className="text-foreground font-semibold">Profile image provider</span>
 												<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 											</FormLabel>
 											<Select
@@ -237,8 +237,8 @@ const EditProfileInfoForm = ({
 								render={({ field }) => (
 									<>
 										<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-											<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-												<span className="text-foreground-muted">Username</span>
+											<FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
+												<span className="text-foreground font-semibold">Username</span>
 												<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 											</FormLabel>
 											<FormControl>
@@ -265,8 +265,8 @@ const EditProfileInfoForm = ({
 								render={({ field }) => (
 									<>
 										<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-											<FormLabel className="w-full flex items-end justify-between text-left min-h-4 gap-12">
-												<span className="text-foreground-muted">Name</span>
+											<FormLabel className="py-1 w-full flex items-end justify-between text-left min-h-4 gap-12">
+												<span className="text-foreground font-semibold">Name</span>
 												<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 											</FormLabel>
 											<FormControl>

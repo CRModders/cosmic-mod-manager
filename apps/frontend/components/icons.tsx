@@ -1043,3 +1043,226 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 		</svg>
 	);
 };
+
+export const CrownIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+		</svg>
+	);
+};
+
+export const TagsIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M9 5H2v7l6.29 6.29c.94.94 2.48.94 3.42 0l3.58-3.58c.94-.94.94-2.48 0-3.42L9 5Z" />
+			<path d="M6 9.01V9" />
+			<path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" />
+		</svg>
+	);
+};
+
+export const TextIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M17 6.1H3" />
+			<path d="M21 12.1H3" />
+			<path d="M15.1 18H3" />
+		</svg>
+	);
+};
+
+export const CopyrightIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<circle cx="12" cy="12" r="10" />
+			<path d="M15 9.354a4 4 0 1 0 0 5.292" />
+		</svg>
+	);
+};
+
+export const ChainIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+			<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+		</svg>
+	);
+};
+
+export const PeopleIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			strokeWidth="2"
+			stroke="currentColor"
+			fill="none"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+			<path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+			<path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+			<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+			<path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+		</svg>
+	);
+};
+
+export const PhotoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			strokeWidth="2"
+			stroke="currentColor"
+			fill="none"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+			<path d="M15 8h.01" />
+			<path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z" />
+			<path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" />
+			<path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />
+		</svg>
+	);
+};
+
+export const VersionIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 256 256"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<rect width="256" height="256" fill="none" />
+			<circle
+				cx="128"
+				cy="128"
+				r="48"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="20"
+			/>
+			<line
+				x1="8"
+				y1="128"
+				x2="80"
+				y2="128"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="20"
+			/>
+			<line
+				x1="176"
+				y1="128"
+				x2="248"
+				y2="128"
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="20"
+			/>
+		</svg>
+	);
+};
+
+export const SaveIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+			<polyline points="17 21 17 13 7 13 7 21" />
+			<polyline points="7 3 7 8 15 8" />
+		</svg>
+	);
+};

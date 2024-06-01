@@ -19,7 +19,9 @@ export enum ProjectType {
 export enum ProjectVisibility {
     PUBLIC = "Public",
     PRIVATE = "Private",
-    UNLISTED = "Unlisted"
+    LISTED = "Listed",
+    UNLISTED = "Unlisted",
+    ARCHIVED = "Archived"
 }
 
 export enum ProjectStatuses {
@@ -50,17 +52,17 @@ export interface OAuthCallbackHandlerResult {
 }
 export const time_past_phrases = {
     just_now: "just now",
-    minute_ago: "${0} minute ago",
+    minute_ago: "a minute ago",
     minutes_ago: "${0} minutes ago",
-    hour_ago: "${0} hour ago",
+    hour_ago: "an hour ago",
     hours_ago: "${0} hours ago",
-    day_ago: "${0} day ago",
+    day_ago: "a day ago",
     days_ago: "${0} days ago",
-    week_ago: "${0} week ago",
+    week_ago: "a week ago",
     weeks_ago: "${0} weeks ago",
-    month_ago: "${0} month ago",
+    month_ago: "a month ago",
     months_ago: "${0} months ago",
-    year_ago: "${0} year ago",
+    year_ago: "a year ago",
     years_ago: "${0} years ago",
 }
 

@@ -6,23 +6,33 @@ import { NavLink as RouterNavLink } from "react-router-dom";
 import "./styles.css";
 
 type SidePanelProps = {
+	className?: string;
 	children: React.ReactNode;
 };
 
-export const SidePanel = ({ children }: SidePanelProps) => {
+export const SidePanel = ({ children, className }: SidePanelProps) => {
 	return (
-		<Card className="w-full px-4 py-4 rounded-lg lg:w-80 shadow-none border-2 dark:border border-border">
+		<Card
+			className={cn("w-full lg:w-80 px-4 py-4 rounded-lg shadow-none border-2 dark:border border-border", className)}
+		>
 			{children}
 		</Card>
 	);
 };
 
 type PanelContentProps = {
+	className?: string;
 	children: React.ReactNode;
 };
 
-export const PanelContent = ({ children }: PanelContentProps) => {
-	return <section className="grow max-w-full flex items-center justify-center rounded-lg lg:w-64">{children}</section>;
+export const PanelContent = ({ children, className }: PanelContentProps) => {
+	return (
+		<section
+			className={cn("grow max-w-full flex flex-col gap-4 items-center justify-center rounded-lg lg:w-64", className)}
+		>
+			{children}
+		</section>
+	);
 };
 
 type Props = {

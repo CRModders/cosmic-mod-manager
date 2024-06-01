@@ -109,4 +109,73 @@ projectRouter.get("/get-all-projects", async (c) => {
 	}
 });
 
+projectRouter.get("/:projectSlug", async (c) => {
+	try {
+		const projectSlug = c.req.param("projectSlug");
+		const [user] = await getUserSession(c);
+
+		const projectData = await prisma.project.findFirst({
+			where: {
+				OR: [
+					{
+						id: projectSlug,
+					},
+					{
+						url_slug: projectSlug,
+					},
+				],
+			},
+			select: {
+				created_on: true,
+				id: true,
+				name: true,
+				org_id: true,
+				status: true,
+				summary: true,
+				type: true,
+				updated_on: true,
+				url_slug: true,
+				visibility: true,
+				members: {
+					select: {
+						user: {
+							select: {
+								user_name: true,
+								avatar_image: true,
+							},
+						},
+						role: true,
+						role_title: true,
+					},
+				},
+			},
+		});
+
+		if (projectData.visibility === "PUBLIC" || projectData.visibility === "UNLISTED") {
+			return c.json({
+				data: {
+					created_on: projectData.created_on,
+					id: projectData.id,
+					name: projectData.name,
+					org_id: projectData.org_id,
+					status: projectData.status,
+					summary: projectData.summary,
+					type: projectData.type,
+					updated_on: projectData.updated_on,
+					url_slug: projectData.url_slug,
+					visibility: projectData.visibility,
+					members: projectData.members,
+				},
+			});
+		}
+
+		return c.json({ message: "Project not found", data: null }, 400);
+	} catch (error) {
+		console.error(error);
+		return c.json({
+			message: "Internal server error",
+		});
+	}
+});
+
 export default projectRouter;

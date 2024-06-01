@@ -67,7 +67,7 @@ const Timestamp = ({ lastUsed, createdOn }: Props) => {
 			{formattedCreatedOnDate && formattedLastUsedDate && <DotSeparator />}
 			{formattedCreatedOnDate && (
 				<div className="text-sm sm:text-base">
-					Created on{" "}
+					Created{" "}
 					<TooltipWrapper text={formattedCreatedOnDate}>
 						<span>{timeSince(createdOn, time_past_phrases)}</span>
 					</TooltipWrapper>

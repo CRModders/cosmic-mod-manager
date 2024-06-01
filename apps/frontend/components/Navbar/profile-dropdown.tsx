@@ -1,4 +1,4 @@
-import { DashboardIcon, DashboardIconOutlined, GearIcon, PersonIcon } from "@/components/icons";
+import { DashboardIconOutlined, GearIcon, PersonIcon } from "@/components/icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -145,7 +145,7 @@ export const MenuProfileLinks = ({
 		{
 			label: "Dashboard",
 			href: "/dashboard",
-			icon: <DashboardIcon size="1.25rem" />,
+			icon: <DashboardIconOutlined size="1.25rem" />,
 		},
 		{
 			label: "Settings",

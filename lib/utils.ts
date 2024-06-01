@@ -17,31 +17,31 @@ export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases):
 		}
 		if (minutes < 60) {
 			return minutes === 1
-				? timePastPhrases.minute_ago.replace("${0}", `${minutes}`)
+				? timePastPhrases.minute_ago
 				: timePastPhrases.minutes_ago.replace("${0}", `${minutes}`);
 		}
 		if (hours < 24) {
 			return hours === 1
-				? timePastPhrases.hour_ago.replace("${0}", `${hours}`)
+				? timePastPhrases.hour_ago
 				: timePastPhrases.hours_ago.replace("${0}", `${hours}`);
 		}
 		if (days < 7) {
 			return days === 1
-				? timePastPhrases.day_ago.replace("${0}", `${days}`)
+				? timePastPhrases.day_ago
 				: timePastPhrases.days_ago.replace("${0}", `${days}`);
 		}
 		if (weeks < 4) {
 			return weeks === 1
-				? timePastPhrases.week_ago.replace("${0}", `${weeks}`)
+				? timePastPhrases.week_ago
 				: timePastPhrases.weeks_ago.replace("${0}", `${weeks}`);
 		}
 		if (months < 12) {
 			return months === 1
-				? timePastPhrases.month_ago.replace("${0}", `${months}`)
+				? timePastPhrases.month_ago
 				: timePastPhrases.months_ago.replace("${0}", `${months}`);
 		}
 		return years === 1
-			? timePastPhrases.year_ago.replace("${0}", `${years}`)
+			? timePastPhrases.year_ago
 			: timePastPhrases.years_ago.replace("${0}", `${years}`);
 	} catch (error) {
 		console.error(error)

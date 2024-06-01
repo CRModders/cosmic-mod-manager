@@ -123,8 +123,8 @@ const RemovePasswordForm = ({ email, children, fetchPageData }: Props) => {
 										render={({ field }) => (
 											<>
 												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground-muted my-1">Enter your current password</span>
+													<FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
+														<span className="text-foreground font-semibold my-1">Enter your current password</span>
 														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
 													</FormLabel>
 													<FormControl>

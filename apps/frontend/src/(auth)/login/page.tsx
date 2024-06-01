@@ -104,7 +104,7 @@ const LoginPage = () => {
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center">
 										<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-											<span className="text-foreground">Email</span>
+											<span className="text-foreground font-semibold">Email</span>
 											<FormMessage className="leading-tight" />
 										</FormLabel>
 										<FormControl>
@@ -132,7 +132,7 @@ const LoginPage = () => {
 								<>
 									<FormItem className="w-full flex flex-col items-center justify-center">
 										<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-											<span className="text-foreground">Password</span>
+											<span className="text-foreground font-semibold">Password</span>
 											<FormMessage className="leading-tight" />
 										</FormLabel>
 										<FormControl>

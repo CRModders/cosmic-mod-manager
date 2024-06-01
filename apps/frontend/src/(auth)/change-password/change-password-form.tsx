@@ -107,7 +107,7 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 							<>
 								<FormItem className="w-full flex flex-col items-center justify-center">
 									<FormLabel className="w-full flex items-center justify-between text-left gap-12">
-										<span>Email</span>
+										<span className="text-foreground font-semibold">Email</span>
 										<FormMessage className="text-danger-text leading-tight" />
 									</FormLabel>
 									<FormControl>
