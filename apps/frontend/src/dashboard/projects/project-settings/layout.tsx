@@ -19,45 +19,47 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Spinner } from "@/components/ui/spinner";
 import "@/src/globals.css";
-import useFetch from "@/src/hooks/fetch";
 import NotFoundPage from "@/src/not-found";
+import { AuthContext } from "@/src/providers/auth-provider";
+import { Projectcontext } from "@/src/providers/project-context";
 import { PanelContent, PanelLayout, SidePanel, SidepanelLink } from "@/src/settings/panel";
-import type { ProjectDataType } from "@/types";
 import { CubeIcon } from "@radix-ui/react-icons";
-import React, { useEffect, useState } from "react";
+import { createURLSafeSlug } from "@root/lib/utils";
+import React, { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
 
-export default function ProjectSettingsLayout() {
-	const { projectUrlSlug } = useParams();
-	const [projectData, setProjectData] = useState<ProjectDataType | null | undefined>(undefined);
-	const [loading, setLoading] = useState(false);
+export function ProjectSettingsLayoutContent({
+	projectType,
+	projectUrlSlug,
+}: { projectType: string; projectUrlSlug: string }) {
 	const [baseUrl, setBaseUrl] = useState("");
+	const { projectData, fetchingProjectData } = useContext(Projectcontext);
+	const { session } = useContext(AuthContext);
 	const navigate = useNavigate();
-
-	const fetchProjectData = async () => {
-		setLoading(true);
-
-		const response = await useFetch(`/api/project/${projectUrlSlug}`);
-		setLoading(false);
-		const result = await response.json();
-
-		setProjectData(result?.data || null);
-		if (result.data?.id && window.location.href.includes(result.data?.id)) {
-			navigate(window.location.pathname.replace(result.data.id, result.data.url_slug));
-		}
-	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		fetchProjectData();
-	}, []);
 
 	useEffect(() => {
 		if (projectData?.url_slug) {
-			setBaseUrl(`/project/${projectData?.url_slug}/settings`);
+			setBaseUrl(`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}`);
 		}
 	}, [projectData]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (session === undefined) return;
+
+		if (!session?.user_id) {
+			return navigate(`/${projectType}/${projectUrlSlug}`);
+		}
+
+		if (session?.user_id && projectData?.members) {
+			for (const member of projectData.members) {
+				if (member?.user?.id === session.user_id) return;
+			}
+			return navigate(`/${projectType}/${projectUrlSlug}`);
+		}
+	}, [session, projectData]);
 
 	if (projectData === null) {
 		return <NotFoundPage />;
@@ -67,7 +69,7 @@ export default function ProjectSettingsLayout() {
 		<div className="w-full pb-32">
 			<PanelLayout>
 				<SidePanel>
-					{loading === true || projectData === undefined ? (
+					{fetchingProjectData === true || projectData === undefined ? (
 						<div className="w-full min-h-[50vh] flex items-center justify-center">
 							<Spinner size="2rem" />
 						</div>
@@ -81,7 +83,9 @@ export default function ProjectSettingsLayout() {
 										</BreadcrumbItem>
 										<BreadcrumbSeparator />
 										<BreadcrumbItem>
-											<BreadcrumbLink href={`/project/${projectData.url_slug}`}>{projectData?.name}</BreadcrumbLink>
+											<BreadcrumbLink href={`/${createURLSafeSlug(projectData.type).value}/${projectData.url_slug}`}>
+												{projectData?.name}
+											</BreadcrumbLink>
 										</BreadcrumbItem>
 										<BreadcrumbSeparator />
 										<BreadcrumbItem>
@@ -152,32 +156,32 @@ export default function ProjectSettingsLayout() {
 const SidePanelLinks = [
 	{
 		name: "General",
-		href: "general",
+		href: "settings/general",
 		icon: <GearIcon size="1rem" />,
 	},
 	{
 		name: "Tags",
-		href: "tags",
+		href: "settings/tags",
 		icon: <TagsIcon size="1rem" />,
 	},
 	{
 		name: "Description",
-		href: "description",
+		href: "settings/description",
 		icon: <TextIcon size="1rem" />,
 	},
 	{
 		name: "License",
-		href: "license",
+		href: "settings/license",
 		icon: <CopyrightIcon size="1rem" />,
 	},
 	{
 		name: "Links",
-		href: "links",
+		href: "settings/links",
 		icon: <ChainIcon size="1rem" />,
 	},
 	{
 		name: "Members",
-		href: "members",
+		href: "settings/members",
 		icon: <PeopleIcon size="1rem" />,
 	},
 ];
@@ -185,7 +189,7 @@ const SidePanelLinks = [
 const viewPageLinks = [
 	{
 		name: "Analytics",
-		href: "analytics",
+		href: "settings/analytics",
 		icon: <BarChartIcon size="1rem" />,
 	},
 ];
@@ -202,3 +206,16 @@ const UploadPageLinks = [
 		icon: <VersionIcon size="1rem" />,
 	},
 ];
+
+export default function ProjectSettingsLayout({ projectType }: { projectType: string }) {
+	const { projectUrlSlug } = useParams();
+	return (
+		<>
+			<Helmet>
+				<title>Project settings | CRMM</title>
+				<meta name="description" content="Your projects on crmm." />
+			</Helmet>
+			<ProjectSettingsLayoutContent projectUrlSlug={projectUrlSlug || ""} projectType={projectType || ""} />
+		</>
+	);
+}

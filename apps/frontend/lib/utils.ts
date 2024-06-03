@@ -25,21 +25,3 @@ export const redirectToMessagePage = (
 		linkLabel || "",
 	)}`;
 };
-
-// a2`!@$()-_+.,"
-const allowedURLCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`!@$()-_.,"';
-
-export function createURLSafeSlug(slug: string) {
-	const result = {
-		validInput: false,
-		value: "",
-	};
-
-	for (const char of slug.replaceAll(" ", "-").toLowerCase()) {
-		if (allowedURLCharacters.includes(char)) {
-			result.value += char;
-		}
-	}
-
-	return result;
-}

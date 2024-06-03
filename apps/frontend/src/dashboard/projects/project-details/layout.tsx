@@ -1,13 +1,14 @@
 import CopyBtn from "@/components/copy-btn";
-import { CrownIcon, GearIcon, PersonIcon } from "@/components/icons";
+import { ChevronRightIcon, CrownIcon, GearIcon, PersonIcon } from "@/components/icons";
+import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import "@/src/globals.css";
-import useFetch from "@/src/hooks/fetch";
 import NotFoundPage from "@/src/not-found";
+import { AuthContext } from "@/src/providers/auth-provider";
+import { Projectcontext } from "@/src/providers/project-context";
 import { PanelContent, PanelLayout, SidePanel } from "@/src/settings/panel";
-import type { ProjectDataType } from "@/types";
 import {
 	BookmarkIcon,
 	CalendarIcon,
@@ -17,41 +18,19 @@ import {
 	HeartIcon,
 	UpdateIcon,
 } from "@radix-ui/react-icons";
-import { formatDate, timeSince } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, timeSince } from "@root/lib/utils";
 import { time_past_phrases } from "@root/types";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, Outlet, NavLink as RouterNavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, Outlet, NavLink as RouterNavLink } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
 import "./../styles.css";
 
 const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}";
 
 export default function ProjectDetailsLayout() {
-	const { projectUrlSlug } = useParams();
-	const [loading, setLoading] = useState(false);
-	const [projectData, setProjectData] = useState<ProjectDataType | null | undefined>(undefined);
-	const navigate = useNavigate();
-
-	const fetchProjectData = async () => {
-		setLoading(true);
-
-		const response = await useFetch(`/api/project/${projectUrlSlug}`);
-		setLoading(false);
-		const result = await response.json();
-
-		setProjectData(result?.data || null);
-
-		if (result.data?.id && window.location.href.includes(result.data?.id)) {
-			navigate(window.location.pathname.replace(result.data.id, result.data.url_slug));
-		}
-	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		fetchProjectData();
-	}, []);
-
+	const { projectData, fetchingProjectData, featuredProjectVersions } = useContext(Projectcontext);
+	const { session } = useContext(AuthContext);
 	if (projectData === null) {
 		return <NotFoundPage />;
 	}
@@ -65,7 +44,7 @@ export default function ProjectDetailsLayout() {
 			<div className="w-full pb-32">
 				<PanelLayout>
 					<div className="w-full lg:w-80 flex items-center justify-center gap-4 flex-col">
-						{loading === true || projectData === undefined ? (
+						{fetchingProjectData === true || projectData === undefined ? (
 							<div className="w-full min-h-[50vh] flex items-center justify-center">
 								<Spinner size="2rem" />
 							</div>
@@ -131,6 +110,70 @@ export default function ProjectDetailsLayout() {
 								</SidePanel>
 								<SidePanel>
 									<div className="w-full flex flex-col gap-1 p-2">
+										{featuredProjectVersions?.versions?.length && featuredProjectVersions?.versions?.length > 0 && (
+											<div className="w-full flex flex-col">
+												<div className="w-full flex items-center justify-between flex-wrap mb-3">
+													<h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
+													<Link
+														to={`/${createURLSafeSlug(projectData?.type).value}/${projectData?.url_slug}/versions`}
+														className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
+													>
+														<span>See all</span>
+														<ChevronRightIcon size="1rem" />
+													</Link>
+												</div>
+												{featuredProjectVersions?.versions.map((version) => {
+													return (
+														<div
+															key={version.id}
+															className="w-full flex items-start justify-start p-4 rounded-lg hover:bg-bg-hover gap-3"
+														>
+															<a
+																href={`${window.location.origin}/api/file/${encodeURIComponent(
+																	version.files[0].file_url,
+																)}`}
+															>
+																<Button
+																	tabIndex={-1}
+																	size={"icon"}
+																	className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground h-fit w-fit px-2.5 py-2.5"
+																>
+																	<DownloadIcon className="w-5 h-5" />
+																</Button>
+															</a>
+
+															<Link
+																to={`/${createURLSafeSlug(projectData?.type || "").value}/${
+																	projectData?.url_slug
+																}/version/${version.url_slug}`}
+																onClick={() => {
+																	window.scrollTo({ top: 0 });
+																}}
+																className="flex w-fit h-full overflow-hidden grow flex-col gap-1 select-text"
+															>
+																<p className="text-lg leading-none font-semibold text-foreground-muted">
+																	{version.version_title}
+																</p>
+																<div className="flex flex-wrap gap-x-2 gap-1">
+																	<p className="text-foreground-muted leading-none">
+																		{version.supported_loaders
+																			.map((loader) => CapitalizeAndFormatString(loader))
+																			.join(", ")}
+																	</p>
+																	<p className="text-foreground-muted leading-none">
+																		{version.supported_game_versions
+																			.map((game_version) => CapitalizeAndFormatString(game_version))
+																			.join(", ")}
+																	</p>
+																</div>
+																<ReleaseChannelIndicator release_channel={version.release_channel} />
+															</Link>
+														</div>
+													);
+												})}
+												<span className="w-full h-[1px] my-2 bg-border" />
+											</div>
+										)}
 										<h2 className="text-lg font-semibold text-foreground">Project members</h2>
 										<div className="w-full flex items-center justify-center gap-2 flex-col">
 											{projectData?.members?.map((member) => {
@@ -168,6 +211,7 @@ export default function ProjectDetailsLayout() {
 												<CopyBtn
 													text={projectData.id}
 													label={`...${projectData.id.slice(projectData.id.length - 10)}`}
+													labelClassName="text-foreground-muted"
 												/>
 											</div>
 										</div>
@@ -178,7 +222,11 @@ export default function ProjectDetailsLayout() {
 					</div>
 					<PanelContent>
 						<PublishingChecklist />
-						<ProjectDetailsNav baseHref="/project/mekanism" />
+						<ProjectDetailsNav
+							baseHref={`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}`}
+							user_id={session?.user_id}
+							members_id_list={projectData?.members?.map((member) => member.user.id) || []}
+						/>
 						<Outlet />
 					</PanelContent>
 				</PanelLayout>
@@ -187,7 +235,7 @@ export default function ProjectDetailsLayout() {
 	);
 }
 
-const ProjectMember = ({
+export const ProjectMember = ({
 	username,
 	role,
 	role_title,
@@ -196,6 +244,7 @@ const ProjectMember = ({
 	return (
 		<Link
 			to={`/user/${username}`}
+			role="link"
 			className="w-full flex items-center justify-start gap-3 hover:bg-background-shallow rounded-lg"
 		>
 			<div className="flex shrink-0 items-center justify-center rounded-full bg-background-shallow h-14 w-14">
@@ -214,13 +263,19 @@ const ProjectMember = ({
 						</TooltipWrapper>
 					)}
 				</div>
-				<p className="text-foreground-muted text-sm">{role_title}</p>
+				<p className="text-foreground-muted">{role_title}</p>
 			</div>
 		</Link>
 	);
 };
 
-const ProjectDetailsNav = ({ baseHref }: { baseHref: string }) => {
+const ProjectDetailsNav = ({
+	baseHref,
+	user_id,
+	members_id_list,
+}: { baseHref: string; user_id: string | undefined; members_id_list: string[] }) => {
+	const isProjectMember = user_id && (members_id_list || []).includes(user_id);
+
 	const links = [
 		{
 			label: "Description",
@@ -260,12 +315,18 @@ const ProjectDetailsNav = ({ baseHref }: { baseHref: string }) => {
 				})}
 			</ul>
 
-			<Link to={`${baseHref}/settings`}>
-				<Button className="gap-2 hover:bg-background hover:text-foreground-muted text-foreground" variant={"ghost"}>
-					<GearIcon size="1.25rem" />
-					Settings
-				</Button>
-			</Link>
+			{isProjectMember === true && (
+				<Link to={`${baseHref}/settings`}>
+					<Button
+						className="gap-2 hover:bg-background hover:text-foreground-muted text-foreground"
+						variant={"ghost"}
+						tabIndex={-1}
+					>
+						<GearIcon size="1.25rem" />
+						Settings
+					</Button>
+				</Link>
+			)}
 		</nav>
 	);
 };

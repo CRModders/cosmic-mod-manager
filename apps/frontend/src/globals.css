@@ -87,8 +87,9 @@ body {
     padding: 0;
     box-sizing: border-box;
     color-scheme: light;
-    font-family: "Noto Sans", var(--fallback-fonts);
+    font-family: "Inter", var(--fallback-fonts);
     scrollbar-gutter: stable;
+    scroll-behavior: smooth;
 }
 
 .dark body {

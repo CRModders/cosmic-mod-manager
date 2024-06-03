@@ -16,6 +16,12 @@ export enum ProjectType {
     PLUGIN = "Plugin"
 }
 
+export enum ReleaseChannels {
+    RELEASE = "Release",
+    BETA = "Beta",
+    ALPHA = "Alpha"
+}
+
 export enum ProjectVisibility {
     PUBLIC = "Public",
     PRIVATE = "Private",
@@ -50,6 +56,39 @@ export interface OAuthCallbackHandlerResult {
     success: boolean;
     user?: LocalUserSession
 }
+
+export const modLoaders = {
+    FABRIC: "Fabric",
+    QUILT: "Quilt"
+}
+
+export const modpackLoaders = {};
+
+export const shaderLoaders = {};
+
+export const pluginLoaders = {};
+
+export const dataPackLoaders = {};
+
+export const getProjectLoaders  = (project_type: ProjectType) => {
+    switch(project_type){
+        case ProjectType.MOD:
+            return modLoaders;
+        case ProjectType.MODPACK:
+            return modpackLoaders;
+        case ProjectType.DATAPACK:
+            return dataPackLoaders;
+        case ProjectType.RESOURCEPACK:
+            return {};
+        case ProjectType.PLUGIN:
+            return pluginLoaders;
+        case ProjectType.SHADER:
+            return shaderLoaders;
+        default:
+            return {};
+    }
+}
+
 export const time_past_phrases = {
     just_now: "just now",
     minute_ago: "a minute ago",

@@ -3,6 +3,7 @@ import { GearIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CubeIcon } from "@radix-ui/react-icons";
+import { createURLSafeSlug } from "@root/lib/utils";
 import { Link } from "react-router-dom";
 import type { ProjectData } from "./projects";
 
@@ -26,16 +27,16 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 							<TableRow key={project.id}>
 								<TableCell>
 									<Link
-										to={`/project/${project.url_slug}`}
+										to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}`}
 										className="flex w-fit h-full aspect-square p-2 rounded-lg bg-background-shallow"
 									>
 										<CubeIcon className="w-8 h-8 text-foreground-muted" />
 									</Link>
 								</TableCell>
 								<TableCell>
-									<Button variant={"link"}>
-										<Link to={`/project/${project.url_slug}`}>{project.name}</Link>
-									</Button>
+									<Link to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}`}>
+										<Button variant={"link"}>{project.name}</Button>
+									</Link>
 								</TableCell>
 								<TableCell>
 									<div className="w-fit flex items-center justify-start gap-2 rounded pl-2 pr-1">
@@ -46,7 +47,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 								<TableCell>{project.status}</TableCell>
 								<TableCell>
 									<Link
-										to={`/project/${project.url_slug}/settings`}
+										to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}/settings`}
 										className="flex items-center justify-center h-full w-fit text-foreground-muted"
 									>
 										<GearIcon size="2.25rem" className="hover:bg-bg-hover rounded-lg p-2" />

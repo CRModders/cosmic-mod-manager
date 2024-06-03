@@ -105,28 +105,62 @@ model Organisation {
 }
 
 model Project {
-    id           String            @id @default(uuid())
-    org_id       String?
-    name         String
-    url_slug     String            @unique
-    visibility   ProjectVisibility @default(PUBLIC)
-    status       ProjectStatus     @default(DRAFT)
-    type         ProjectType       @default(PROJECT)
-    summary      String?           @db.VarChar(324)
-    created_on   DateTime          @default(now())
-    updated_on   DateTime          @default(now())
-    members      ProjectMember[]   @relation(name: "Project")
-    organisation Organisation?     @relation(name: "Project Organisation", fields: [org_id], references: [id])
+    id              String            @id @default(uuid())
+    org_id          String?
+    name            String
+    url_slug        String            @unique
+    visibility      ProjectVisibility @default(PUBLIC)
+    icon            String?
+    status          ProjectStatus     @default(DRAFT)
+    type            ProjectType
+    summary         String?           @db.VarChar(324)
+    created_on      DateTime          @default(now())
+    updated_on      DateTime          @default(now()) @updatedAt
+    total_downloads Int               @default(0)
+    members         ProjectMember[]   @relation(name: "Project")
+    versions        ProjectVersion[]  @relation(name: "project_version")
+    organisation    Organisation?     @relation(name: "Project Organisation", fields: [org_id], references: [id])
+}
+
+model ProjectVersion {
+    id                      String                 @id @default(uuid())
+    project_id              String
+    publisher_id            String
+    version_number          String
+    version_title           String
+    changelog               String
+    url_slug                String
+    is_featured             Boolean                @default(false)
+    published_on            DateTime               @default(now())
+    downloads               Int                    @default(0)
+    release_channel         VersionReleaseChannels @default(RELEASE)
+    supported_game_versions String[]
+    supported_loaders       Loaders[]
+    publisher               ProjectMember?         @relation(name: "version_publisher", fields: [publisher_id], references: [id])
+    files                   VersionFile[]          @relation(name: "version_file")
+    project                 Project                @relation(name: "project_version", fields: [project_id], references: [id], onDelete: Cascade)
+}
+
+model VersionFile {
+    id         String         @id @default(uuid())
+    file_name  String
+    file_size  String
+    file_type  String
+    file_url   String
+    is_primary Boolean        @default(false)
+    version_id String
+    version    ProjectVersion @relation(name: "version_file", fields: [version_id], references: [id], onDelete: Cascade)
 }
 
 model ProjectMember {
-    id         String             @id @default(uuid())
-    user_id    String
-    project_id String
-    role       UserRolesInProject @default(MEMBER)
-    role_title String?            @default("Member") // A custom title given to that member by the user
-    user       User               @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
-    project    Project            @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
+    id                 String             @id @default(uuid())
+    user_id            String
+    project_id         String
+    role               UserRolesInProject @default(MEMBER)
+    role_title         String?            @default("Member") // A custom title given to that member by the project owner
+    user               User               @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
+    project            Project            @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
+    published_versions ProjectVersion[]   @relation(name: "version_publisher")
 }
 
 model OrganisationMember {
@@ -148,7 +182,6 @@ enum ProjectStatus {
 }
 
 enum ProjectType {
-    PROJECT // This will be shown as the project type until the user selects which type this project is going to be
     MOD
     MODPACK
     SHADER
@@ -172,4 +205,21 @@ enum ProjectVisibility {
     PUBLIC
     PRIVATE
     UNLISTED
+}
+
+enum VersionReleaseChannels {
+    RELEASE
+    BETA
+    ALPHA
+}
+
+enum Loaders {
+    // Modloaders
+    FABRIC
+    QUILT
+
+    // ModpackLoaders
+    // PluginLoaders
+    // ShaderLoaders
+    // DataPackLoaders
 }

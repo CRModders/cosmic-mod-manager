@@ -9,8 +9,12 @@ export const maxUsernameLength = 32;
 export const minPasswordLength = 8;
 export const maxPasswordLength = 64;
 
+export const minProjectNameLength = 3;
 export const maxProjectNameLength = 64;
 export const maxProjectSummaryLength = 256;
+
+export const maxChangelogLength = 65526;
+export const maxFileSize = 33554432;  // 32 MiB
 
 export const passwordHashingSaltRounds = 8;
 export const addNewPasswordVerificationTokenValidity = 24 * 60 * 60; // A day

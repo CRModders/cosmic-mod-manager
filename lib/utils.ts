@@ -1,4 +1,4 @@
-import { TypeTimePastPhrases } from "@root/types";
+import { ProjectVisibility, TypeTimePastPhrases } from "@root/types";
 
 export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
 	try {
@@ -98,3 +98,69 @@ export const formatDate = (
 		return "";
 	}
 };
+
+
+export const getProjectVisibilityType = (visibility: string): ProjectVisibility => {
+	switch (visibility) {
+		case ProjectVisibility.PUBLIC:
+			return ProjectVisibility.PUBLIC;
+		case ProjectVisibility.PRIVATE:
+			return ProjectVisibility.PRIVATE;
+		case ProjectVisibility.ARCHIVED:
+			return ProjectVisibility.ARCHIVED;
+		case ProjectVisibility.LISTED:
+			return ProjectVisibility.LISTED;
+		case ProjectVisibility.UNLISTED:
+			return ProjectVisibility.UNLISTED;
+		default:
+			return ProjectVisibility.PUBLIC;
+	}
+};
+
+const allowedURLCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`!@$()-_.,"';
+
+export function createURLSafeSlug(slug: string) {
+	const result = {
+		validInput: false,
+		value: "",
+	};
+
+	for (const char of slug.replaceAll(" ", "-").toLowerCase()) {
+		if (allowedURLCharacters.includes(char)) {
+			result.value += char;
+		}
+	}
+
+	return result;
+}
+
+const fileSizeSuffixes = {
+    bytes: "bytes",
+    kib: "KiB",
+    mib: "MiB",
+    gib: "GiB"
+}
+
+export function parseFileSize (size: number): string{
+    if(!size){
+        return `0 ${fileSizeSuffixes.bytes}`
+    } 
+    else if(size >= 0 && size < 1024){
+        return `${size} ${fileSizeSuffixes.bytes}`
+    } 
+    else if(size >= 1024 && size < 1024_000 ){
+        return `${(size / 1024).toFixed(1)} ${fileSizeSuffixes.kib}`
+    }
+     else if(size >= 1024_000 && size < 1048576000 ){
+        return `${(size / (1024*1024)).toFixed(2)} ${fileSizeSuffixes.mib}`
+    }
+    else{
+        return `${(size / (1024*1024*1024)).toFixed(3)} ${fileSizeSuffixes.gib}`
+    }
+}
+
+export function CapitalizeAndFormatString (str: string){
+    if(!str) return str;
+
+    return `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
+}

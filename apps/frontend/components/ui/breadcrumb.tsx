@@ -39,7 +39,7 @@ const BreadcrumbLink = ({
 	children,
 }: { className?: string; href: string; children: React.ReactNode }) => {
 	return (
-		<Link className={cn("transition-colors hover:text-foreground", className)} to={href}>
+		<Link className={cn("text-foreground-muted transition-colors hover:text-foreground", className)} to={href}>
 			{children}
 		</Link>
 	);

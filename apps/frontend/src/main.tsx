@@ -20,13 +20,119 @@ import Overview from "./dashboard/overview";
 import DashboardPage from "./dashboard/page";
 import ProjectDescription from "./dashboard/projects/project-details/description";
 import ProjectDetailsLayout from "./dashboard/projects/project-details/layout";
+import CreateVersionPage from "./dashboard/projects/project-details/versions/create-version";
+import EditVersionPage from "./dashboard/projects/project-details/versions/edit-version";
+import VersionListPage from "./dashboard/projects/project-details/versions/page";
+import ProjectVersionPage from "./dashboard/projects/project-details/versions/version-page";
 import GeneralProjectSettings from "./dashboard/projects/project-settings/general";
 import Projects from "./dashboard/projects/projects";
 import ReportsPage from "./dashboard/reports";
+import { ProjectContextProvider } from "./providers/project-context";
 import AccountSettingsPage from "./settings/account/page";
 import SettingsPageLayout from "./settings/layout";
 import SettingsPage from "./settings/page";
 import Sessions from "./settings/session/page";
+
+const projectRoute = (project_type: string) => {
+	return {
+		path: project_type,
+		element: <Outlet />,
+		children: [
+			{
+				path: "",
+				element: <NotFoundPage />,
+			},
+			{
+				path: ":projectUrlSlug",
+				element: (
+					<ProjectContextProvider>
+						<Outlet />
+					</ProjectContextProvider>
+				),
+				children: [
+					{
+						path: "",
+						element: <ProjectDetailsLayout />,
+						children: [
+							{
+								path: "",
+								element: <RedrectTo destinationUrl="description" />,
+							},
+							{
+								path: "description",
+								element: <ProjectDescription />,
+							},
+							{
+								path: "gallery",
+								element: <p>Project gallery</p>,
+							},
+							{
+								path: "changelog",
+								element: <p>Changelogs</p>,
+							},
+							{
+								path: "versions",
+								element: <VersionListPage projectType={project_type} />,
+							},
+							{
+								path: "version",
+								element: <Outlet />,
+								children: [
+									{
+										path: "create",
+										element: <CreateVersionPage projectType={project_type} />,
+									},
+									{
+										path: ":versionUrlSlug",
+										element: <Outlet />,
+										children: [
+											{
+												path: "",
+												element: <ProjectVersionPage projectType={project_type} />,
+											},
+											{
+												path: "edit",
+												element: <EditVersionPage projectType={project_type} />,
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+					{
+						path: "settings",
+						element: <ProjectSettingsLayout projectType={project_type} />,
+						children: [
+							{
+								path: "",
+								element: <RedrectTo destinationUrl="general" />,
+							},
+							{
+								path: "general",
+								element: <GeneralProjectSettings />,
+							},
+						],
+					},
+				],
+			},
+		],
+	};
+};
+
+const getProjectPageRoutes = () => {
+	const projectTypes = ["mod", "modpack", "resource-pack", "data-pack", "plugin", "shader"];
+
+	const projectRouteType = projectRoute("a");
+
+	const list: (typeof projectRouteType)[] = [];
+
+	for (const project_type of projectTypes) {
+		list.push(projectRoute(project_type));
+	}
+
+	return list;
+};
 
 const router = createBrowserRouter([
 	{
@@ -115,62 +221,7 @@ const router = createBrowserRouter([
 					},
 				],
 			},
-			{
-				path: "project",
-				element: <Outlet />,
-				children: [
-					{
-						path: "",
-						element: <NotFoundPage />,
-					},
-					{
-						path: ":projectUrlSlug",
-						element: <Outlet />,
-						children: [
-							{
-								path: "",
-								element: <ProjectDetailsLayout />,
-								children: [
-									{
-										path: "",
-										element: <RedrectTo destinationUrl="description" />,
-									},
-									{
-										path: "description",
-										element: <ProjectDescription />,
-									},
-									{
-										path: "gallery",
-										element: <p>Project gallery</p>,
-									},
-									{
-										path: "changelog",
-										element: <p>Changelogs</p>,
-									},
-									{
-										path: "versions",
-										element: <p>Project versions</p>,
-									},
-								],
-							},
-							{
-								path: "settings",
-								element: <ProjectSettingsLayout />,
-								children: [
-									{
-										path: "",
-										element: <RedrectTo destinationUrl="general" />,
-									},
-									{
-										path: "general",
-										element: <GeneralProjectSettings />,
-									},
-								],
-							},
-						],
-					},
-				],
-			},
+			...getProjectPageRoutes(),
 			{
 				path: "auth/callback/:authProvider",
 				element: <SignInCallbackPage />,

@@ -5,58 +5,67 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
+import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import type { ProjectDataType } from "@/types";
 import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
-import { frontendUrl, maxProjectSummaryLength } from "@root/config";
+import { maxProjectSummaryLength } from "@root/config";
+import { createURLSafeSlug, getProjectVisibilityType } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
-import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 
 const GeneralProjectSettings = () => {
-	const { projectUrlSlug } = useParams();
-	const [projectData, setProjectData] = useState<ProjectDataType | null | undefined>(undefined);
+	const { projectData, fetchingProjectData, fetchProjectData } = useContext(Projectcontext);
 	const [loading, setLoading] = useState(false);
+	const { toast } = useToast();
 
 	// Form states
 	const [projectName, setProjectName] = useState("");
 	const [projectUrl, setProjectUrl] = useState("");
 	const [projectSummary, setProjectSummary] = useState("");
-	const [visibility, setProjectVisibility] = useState<ProjectVisibility>(ProjectVisibility.PUBLIC);
+	const [visibility, setProjectVisibility] = useState<ProjectVisibility | "">("");
 
-	const fetchProjectData = async () => {
+	const saveProjectData = async () => {
 		setLoading(true);
 
-		const response = await useFetch(`/api/project/${projectUrlSlug}`);
-		setLoading(false);
+		const response = await useFetch(
+			`/api/project/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}/update`,
+			{
+				method: "POST",
+				body: JSON.stringify({
+					name: projectName,
+					url_slug: projectUrl,
+					summary: projectSummary,
+					visibility: visibility,
+				}),
+			},
+		);
 		const result = await response.json();
+		setLoading(false);
+		toast({
+			title: result?.message,
+		});
 
-		setProjectData(result?.data || null);
+		if (!response.ok) {
+			return;
+		}
+
+		await fetchProjectData(result?.data?.url_slug);
 	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		fetchProjectData();
-	}, []);
 
 	useEffect(() => {
 		if (projectData?.id) {
 			setProjectName(projectData?.name);
 			setProjectUrl(projectData?.url_slug);
 			setProjectSummary(projectData?.summary);
+			setProjectVisibility(getProjectVisibilityType(projectData?.visibility));
 		}
 	}, [projectData]);
 
 	return (
 		<div className="w-full flex flex-col items-center justify-center gap-4">
-			<Helmet>
-				<title>Projects | CRMM</title>
-				<meta name="description" content="Your projects on crmm." />
-			</Helmet>
-
-			{loading === true || projectData === undefined ? (
+			{loading === true || projectData === undefined || fetchingProjectData === true ? (
 				<div className="w-full min-h-[50vh] flex items-center justify-center">
 					<Spinner size="2rem" />
 				</div>
@@ -108,7 +117,7 @@ const GeneralProjectSettings = () => {
 
 						<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
 							<label htmlFor="settings-project-url-input" className="text-foreground/50 text-base cursor-text">
-								{frontendUrl}/project/
+								/{createURLSafeSlug(projectData?.type || "").value}/
 							</label>
 							<Input
 								id="settings-project-url-input"
@@ -122,7 +131,7 @@ const GeneralProjectSettings = () => {
 						</div>
 					</div>
 					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<Label htmlFor="settings-project-name-input" className="font-semibold text-lg">
+						<Label htmlFor="settings-summary-textarea" className="font-semibold text-lg">
 							Summary
 						</Label>
 						<Textarea
@@ -130,6 +139,7 @@ const GeneralProjectSettings = () => {
 							cols={8}
 							maxLength={maxProjectSummaryLength}
 							className="resize-none w-full md:w-[48ch] h-28 text-base dark:text-foreground-muted"
+							id="settings-summary-textarea"
 							value={projectSummary}
 							onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
 								setProjectSummary(e.target.value);
@@ -167,7 +177,16 @@ const GeneralProjectSettings = () => {
 					</div>
 
 					<div className="w-full flex items-center justify-end mt-4 mb-2">
-						<Button className="gap-2 px-6 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground">
+						<Button
+							className="gap-2 px-6 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
+							disabled={
+								projectName === projectData?.name &&
+								projectUrl === projectData?.url_slug &&
+								projectSummary === projectData?.summary &&
+								visibility === getProjectVisibilityType(projectData?.visibility)
+							}
+							onClick={saveProjectData}
+						>
 							<SaveIcon size="1rem" />
 							<span>Save changes</span>
 						</Button>

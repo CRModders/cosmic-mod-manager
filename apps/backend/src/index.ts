@@ -2,7 +2,8 @@ import type { SocketAddress } from "bun";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import authRouter from "./auth/router";
-import projectRouter from "./project/router";
+import cdnRouter from "./cdn/router";
+import projectRouter from "./project/project";
 import userRouter from "./user/router";
 
 type Bindings = {
@@ -22,25 +23,9 @@ app.use(
 
 app.route("/api/auth", authRouter);
 app.route("/api/user", userRouter);
+
 app.route("/api/project", projectRouter);
-
-app.get("/api/test", (c) => {
-	const headers = c.req.raw.headers.toJSON();
-
-	return c.json({
-		headers: headers,
-	});
-});
-
-app.post("/api/test", async (c) => {
-	const body = await c.req.json();
-	const headers = c.req.raw.headers.toJSON();
-
-	return c.json({
-		body,
-		headers,
-	});
-});
+app.route("/api/file", cdnRouter);
 
 // 404 responses for non-existing api routes
 app.get("/api/*", (c) => {

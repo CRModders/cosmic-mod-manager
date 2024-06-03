@@ -8,12 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { createURLSafeSlug } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { frontendUrl, maxProjectNameLength, maxProjectSummaryLength } from "@root/config";
-import { ProjectVisibility } from "@root/types";
+import { maxProjectNameLength, maxProjectSummaryLength, minProjectNameLength } from "@root/config";
+import { createURLSafeSlug } from "@root/lib/utils";
+import { ProjectType, ProjectVisibility } from "@root/types";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,13 +27,21 @@ type Props = {
 const formSchema = z.object({
 	name: z
 		.string()
-		.min(1, "Enter the project name")
+		.min(minProjectNameLength, "Enter the project name")
 		.max(maxProjectNameLength, `Project name can contain only a maximum of ${maxProjectNameLength} characters`),
 	url: z
 		.string()
-		.min(1)
+		.min(minProjectNameLength)
 		.max(maxProjectNameLength, `Project url slug can contain only a maximum of ${maxProjectNameLength} characters`),
 	visibility: z.enum([ProjectVisibility.PRIVATE, ProjectVisibility.PUBLIC, ProjectVisibility.UNLISTED]),
+	project_type: z.enum([
+		ProjectType.MOD,
+		ProjectType.MODPACK,
+		ProjectType.SHADER,
+		ProjectType.RESOURCEPACK,
+		ProjectType.DATAPACK,
+		ProjectType.PLUGIN,
+	]),
 	summary: z.string().max(maxProjectSummaryLength).optional(),
 });
 
@@ -43,12 +51,14 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const [keepNameAndUrlSynced, setKeepNameAndUrlSynced] = useState<boolean>(true);
+	const [projectType, setProjectType] = useState<string>(ProjectType.MOD.toString());
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
 			url: "",
+			project_type: ProjectType.MOD,
 			visibility: ProjectVisibility.PUBLIC,
 			summary: "",
 		},
@@ -65,6 +75,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 			body: JSON.stringify({
 				name: values.name,
 				url: values.url,
+				project_type: values.project_type,
 				visibility: values.visibility,
 				summary: values.summary,
 			}),
@@ -150,8 +161,11 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 													</FormLabel>
 													<FormControl>
 														<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
-															<label htmlFor="project-url-input" className="text-foreground/50 text-sm cursor-text">
-																{frontendUrl}/project/
+															<label
+																htmlFor="project-url-input"
+																className="whitespace-nowrap text-foreground/50 text-sm cursor-text"
+															>
+																/{createURLSafeSlug(projectType).value}/
 															</label>
 															<Input
 																id="project-url-input"
@@ -173,6 +187,43 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 									<div className="w-full flex flex-col items-center justify-center">
 										<FormField
 											control={form.control}
+											name="project_type"
+											render={({ field }) => (
+												<FormItem className="w-full">
+													<FormControl>
+														<>
+															<FormLabel className="w-full flex items-center justify-start text-foreground font-semibold">
+																Project type
+															</FormLabel>
+															<Select
+																value={field.value}
+																onValueChange={(value) => {
+																	setProjectType(value);
+																	field.onChange(value);
+																}}
+															>
+																<SelectTrigger className="w-full">
+																	<SelectValue placeholder="Select project type..." />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value={ProjectType.MOD}>{ProjectType.MOD}</SelectItem>
+																	<SelectItem value={ProjectType.MODPACK}>{ProjectType.MODPACK}</SelectItem>
+																	<SelectItem value={ProjectType.SHADER}>{ProjectType.SHADER}</SelectItem>
+																	<SelectItem value={ProjectType.RESOURCEPACK}>{ProjectType.RESOURCEPACK}</SelectItem>
+																	<SelectItem value={ProjectType.DATAPACK}>{ProjectType.DATAPACK}</SelectItem>
+																	<SelectItem value={ProjectType.PLUGIN}>{ProjectType.PLUGIN}</SelectItem>
+																</SelectContent>
+															</Select>
+														</>
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+									</div>
+
+									<div className="w-full flex flex-col items-center justify-center">
+										<FormField
+											control={form.control}
 											name="visibility"
 											render={({ field }) => (
 												<FormItem className="w-full">
@@ -183,7 +234,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 															</FormLabel>
 															<Select value={field.value} onValueChange={field.onChange}>
 																<SelectTrigger className="w-full">
-																	<SelectValue placeholder="Theme" />
+																	<SelectValue placeholder="Project visibility..." />
 																</SelectTrigger>
 																<SelectContent>
 																	<SelectItem value={ProjectVisibility.PRIVATE}>{ProjectVisibility.PRIVATE}</SelectItem>
@@ -236,7 +287,12 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 										type="submit"
 										aria-label="Continue"
 										className="bg-accent-bg dark:text-foreground hover:bg-accent-bg/80"
-										disabled={!form.getValues().name || !form.getValues().url || !form.getValues().summary}
+										disabled={
+											!form.getValues().name ||
+											!form.getValues().url ||
+											!form.getValues().summary ||
+											!form.getValues().project_type
+										}
 									>
 										<ArrowRightIcon className="w-4 h-4" />
 										<p className="px-2">Continue</p>
