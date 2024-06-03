@@ -171,7 +171,7 @@ export function isValidUrl(url: string) {
 }
 
 export function isValidString(str: string | undefined | null,  maxLength: number, minLength = 1, noTrailingSpaces = true) {
-    const value = (noTrailingSpaces ? str.trim() : str) || "";
+    const value = (noTrailingSpaces ? str?.trim() : str) || "";
     if (value.length > minLength && value.length <= maxLength) {
         return {
             isValid: true,

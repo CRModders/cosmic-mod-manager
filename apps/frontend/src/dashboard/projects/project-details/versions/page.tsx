@@ -40,7 +40,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
 export default VersionListPage;
 
 const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: string; projectUrlSlug: string }) => {
-	const { projectData, allProjectVersions } = useContext(Projectcontext);
+	const { allProjectVersions } = useContext(Projectcontext);
 	const navigate = useNavigate();
 
 	const redirectToVersionpage = (versionUrl: string) => {
