@@ -72,7 +72,7 @@ export const SidepanelLink = ({ href, icon, label }: SidePanelLinkProps) => {
 
 export const ContentWrapperCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
 	return (
-		<Card className={cn("w-full flex flex-col items-center justify-center px-5 py-4 gap-4 rounded-lg", className)}>
+		<Card className={cn("w-full flex flex-col items-start justify-center px-5 py-4 gap-4 rounded-lg", className)}>
 			{children}
 		</Card>
 	);

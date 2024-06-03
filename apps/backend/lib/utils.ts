@@ -5,7 +5,6 @@ import {
 	ProjectType as db_ProjectType,
 	type ProjectMember,
 } from "@prisma/client";
-import { createURLSafeSlug } from "@root/lib/utils";
 import { ReleaseChannels, ProjectType as ts_ProjectType } from "@root/types";
 
 export const shuffleCharacters = (str: string) => {
@@ -47,27 +46,21 @@ export const GetProjectVisibilityType = (visibility): ProjectVisibility => {
 export const GetProjectTypeType = (project_type: string): db_ProjectType => {
 	switch (project_type) {
 		case ts_ProjectType.MOD:
-		case createURLSafeSlug(ts_ProjectType.MOD).value:
 			return db_ProjectType.MOD;
 
 		case ts_ProjectType.MODPACK:
-		case createURLSafeSlug(ts_ProjectType.MODPACK).value:
 			return db_ProjectType.MODPACK;
 
 		case ts_ProjectType.SHADER:
-		case createURLSafeSlug(ts_ProjectType.SHADER).value:
 			return db_ProjectType.SHADER;
 
-		case ts_ProjectType.RESOURCEPACK:
-		case createURLSafeSlug(ts_ProjectType.RESOURCEPACK).value:
-			return db_ProjectType.RESOURCEPACK;
+		case ts_ProjectType.RESOURCE_PACK:
+			return db_ProjectType.RESOURCE_PACK;
 
-		case ts_ProjectType.DATAPACK:
-		case createURLSafeSlug(ts_ProjectType.DATAPACK).value:
-			return db_ProjectType.DATAPACK;
+		case ts_ProjectType.DATA_PACK:
+			return db_ProjectType.DATA_PACK;
 
 		case ts_ProjectType.PLUGIN:
-		case createURLSafeSlug(ts_ProjectType.PLUGIN).value:
 			return db_ProjectType.PLUGIN;
 
 		default:
@@ -105,10 +98,12 @@ export const GetProjectVersionReleaseChannel = (releaseChannel: string) => {
 
 export const GetProjectLoader = (loader: string) => {
 	switch (loader) {
-		case "Fabric":
+		case "FABRIC":
 			return Loaders.FABRIC;
-		case "Quilt":
+		case "QUILT":
 			return Loaders.QUILT;
+		case "PUZZLE_LOADER":
+			return Loaders.PUZZLE_LOADER;
 		default:
 			return Loaders.QUILT;
 	}

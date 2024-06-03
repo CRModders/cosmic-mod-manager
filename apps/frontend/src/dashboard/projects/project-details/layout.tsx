@@ -1,5 +1,5 @@
 import CopyBtn from "@/components/copy-btn";
-import { ChevronRightIcon, CrownIcon, GearIcon, PersonIcon } from "@/components/icons";
+import { BookIcon, ChevronRightIcon, CrownIcon, DiscordIcon, GearIcon, PersonIcon } from "@/components/icons";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -12,9 +12,11 @@ import { PanelContent, PanelLayout, SidePanel } from "@/src/settings/panel";
 import {
 	BookmarkIcon,
 	CalendarIcon,
+	CodeIcon,
 	CubeIcon,
 	DotsHorizontalIcon,
 	DownloadIcon,
+	ExclamationTriangleIcon,
 	HeartIcon,
 	UpdateIcon,
 } from "@radix-ui/react-icons";
@@ -22,7 +24,7 @@ import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, timeSince } f
 import { time_past_phrases } from "@root/types";
 import React, { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, Outlet, NavLink as RouterNavLink } from "react-router-dom";
+import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
 import "./../styles.css";
 
@@ -31,6 +33,8 @@ const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${am
 export default function ProjectDetailsLayout() {
 	const { projectData, fetchingProjectData, featuredProjectVersions } = useContext(Projectcontext);
 	const { session } = useContext(AuthContext);
+	const navigate = useNavigate();
+
 	if (projectData === null) {
 		return <NotFoundPage />;
 	}
@@ -63,7 +67,8 @@ export default function ProjectDetailsLayout() {
 										<p className="text-foreground-muted">{projectData?.summary}</p>
 										<span className="w-full h-[1px] my-2 bg-border" />
 
-										<div className="text-foreground-muted flex items-center justify-start gap-2">
+										{/* // TODO: TO BE ADDED AFTER IMPLEMENTED */}
+										{/* <div className="text-foreground-muted flex items-center justify-start gap-2">
 											<DownloadIcon className="w-4 h-4" />
 											<p className="flex gap-1 items-end justify-start">
 												<strong className="text-xl text-foreground dark:text-foreground-muted">82.4k</strong>
@@ -76,7 +81,7 @@ export default function ProjectDetailsLayout() {
 												<strong className="text-xl text-foreground dark:text-foreground-muted">3.8k</strong>
 												<span>followers</span>
 											</p>
-										</div>
+										</div> */}
 
 										<div className="flex items-center justify-start gap-2 text-foreground-muted">
 											<CalendarIcon className="w-4 h-4" />
@@ -110,7 +115,52 @@ export default function ProjectDetailsLayout() {
 								</SidePanel>
 								<SidePanel>
 									<div className="w-full flex flex-col gap-1 p-2">
-										{featuredProjectVersions?.versions?.length && featuredProjectVersions?.versions?.length > 0 && (
+										{projectData?.external_links?.issue_tracker_link ||
+										projectData?.external_links?.project_source_link ||
+										projectData?.external_links?.project_wiki_link ||
+										projectData?.external_links?.discord_invite_link ? (
+											<div className="w-full flex flex-col gap-2">
+												<h2 className="text-lg font-semibold text-foreground">External resources</h2>
+												<div className="w-full flex gap-x-3 gap-y-2 flex-wrap">
+													{projectData?.external_links?.issue_tracker_link ? (
+														<ExternalLink
+															url={projectData?.external_links?.issue_tracker_link}
+															label="Issues"
+															icon={<ExclamationTriangleIcon className="w-4 h-4" />}
+														/>
+													) : null}
+
+													{projectData?.external_links?.project_source_link ? (
+														<ExternalLink
+															url={projectData?.external_links?.project_source_link}
+															label="Source"
+															icon={<CodeIcon className="w-5 h-5" />}
+														/>
+													) : null}
+
+													{projectData?.external_links?.project_wiki_link ? (
+														<ExternalLink
+															url={projectData?.external_links?.project_wiki_link}
+															label="Wiki"
+															icon={<BookIcon className="w-4 h-4" />}
+														/>
+													) : null}
+
+													{projectData?.external_links?.project_wiki_link ? (
+														<ExternalLink
+															url={projectData?.external_links?.project_wiki_link}
+															label="Discord"
+															icon={
+																<DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />
+															}
+														/>
+													) : null}
+												</div>
+												<span className="w-full h-[1px] my-2 bg-border" />
+											</div>
+										) : null}
+
+										{featuredProjectVersions?.versions?.length ? (
 											<div className="w-full flex flex-col">
 												<div className="w-full flex items-center justify-between flex-wrap mb-3">
 													<h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
@@ -124,14 +174,30 @@ export default function ProjectDetailsLayout() {
 												</div>
 												{featuredProjectVersions?.versions.map((version) => {
 													return (
+														// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 														<div
 															key={version.id}
-															className="w-full flex items-start justify-start p-4 rounded-lg hover:bg-bg-hover gap-3"
+															className="w-full flex items-start justify-start p-4 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+															onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+																if (
+																	// @ts-expect-error
+																	!e.target.closest(".versionFileDownloadLink") &&
+																	// @ts-expect-error
+																	!e.target.closest(".versionPageLink")
+																) {
+																	const link = `/${createURLSafeSlug(projectData?.type || "").value}/${
+																		projectData?.url_slug
+																	}/version/${version.url_slug}`;
+																	if (window.location.pathname !== link) {
+																		window.scrollTo({ top: 0 });
+																		navigate(link);
+																	}
+																}
+															}}
 														>
 															<a
-																href={`${window.location.origin}/api/file/${encodeURIComponent(
-																	version.files[0].file_url,
-																)}`}
+																href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+																className="versionFileDownloadLink"
 															>
 																<Button
 																	tabIndex={-1}
@@ -142,18 +208,17 @@ export default function ProjectDetailsLayout() {
 																</Button>
 															</a>
 
-															<Link
-																to={`/${createURLSafeSlug(projectData?.type || "").value}/${
-																	projectData?.url_slug
-																}/version/${version.url_slug}`}
-																onClick={() => {
-																	window.scrollTo({ top: 0 });
-																}}
-																className="flex w-fit h-full overflow-hidden grow flex-col gap-1 select-text"
-															>
-																<p className="text-lg leading-none font-semibold text-foreground-muted">
-																	{version.version_title}
-																</p>
+															<div className="flex w-fit h-full grow flex-col gap-1 select-text">
+																<Link
+																	to={`/${createURLSafeSlug(projectData?.type || "").value}/${
+																		projectData?.url_slug
+																	}/version/${version.url_slug}`}
+																	className="versionPageLink w-fit"
+																>
+																	<p className="text-lg leading-none font-semibold text-foreground-muted">
+																		{version.version_title}
+																	</p>
+																</Link>
 																<div className="flex flex-wrap gap-x-2 gap-1">
 																	<p className="text-foreground-muted leading-none">
 																		{version.supported_loaders
@@ -162,18 +227,22 @@ export default function ProjectDetailsLayout() {
 																	</p>
 																	<p className="text-foreground-muted leading-none">
 																		{version.supported_game_versions
+																			.slice(0, Math.min(5, version.supported_game_versions.length))
 																			.map((game_version) => CapitalizeAndFormatString(game_version))
 																			.join(", ")}
+																		{version.supported_game_versions.length > 5 ? (
+																			<span> and {version.supported_game_versions.length - 5} more</span>
+																		) : null}
 																	</p>
 																</div>
 																<ReleaseChannelIndicator release_channel={version.release_channel} />
-															</Link>
+															</div>
 														</div>
 													);
 												})}
 												<span className="w-full h-[1px] my-2 bg-border" />
 											</div>
-										)}
+										) : null}
 										<h2 className="text-lg font-semibold text-foreground">Project members</h2>
 										<div className="w-full flex items-center justify-center gap-2 flex-col">
 											{projectData?.members?.map((member) => {
@@ -339,5 +408,16 @@ const TooltipWrapper = ({ children, text }: { text: string; children: React.Reac
 				<TooltipContent className="text-base">{text}</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
+	);
+};
+
+const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
+	return (
+		<Link to={url} className="flex items-center justify-center">
+			<Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-1 text-foreground-muted">
+				{icon}
+				<span>{label}</span>
+			</Button>
+		</Link>
 	);
 };

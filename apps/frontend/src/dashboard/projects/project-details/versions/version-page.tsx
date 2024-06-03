@@ -197,7 +197,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 
 			<div className="w-full flex flex-wrap lg:flex-nowrap gap-4">
 				<div className="w-fit grow flex flex-col gap-4">
-					{versionData?.versions[0]?.changelog?.length && (
+					{versionData?.versions[0]?.changelog?.length ? (
 						<ContentWrapperCard className="items-start flex-wrap">
 							<h1 className="text-foreground font-semibold text-2xl">Changelog</h1>
 							<p className="text-foreground/95 text-base">
@@ -211,7 +211,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 								})}
 							</p>
 						</ContentWrapperCard>
-					)}
+					) : null}
 					<ContentWrapperCard className="items-start">
 						<h1 className=" text-foreground font-semibold text-2xl">Files</h1>
 						<div className="w-full flex flex-col gap-4">
@@ -231,11 +231,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 											{versionFile.is_primary && <p className="text-base text-foreground-muted italic">Primary</p>}
 										</div>
 
-										<a
-											href={`${window.location.origin}/api/file/${encodeURIComponent(
-												versionData?.versions[0].files[0].file_url,
-											)}`}
-										>
+										<a href={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
 											<Button
 												className={cn(
 													"gap-2",

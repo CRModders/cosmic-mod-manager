@@ -8,35 +8,35 @@ export enum AuthProvidersEnum {
 export type AuthProviderType = "google" | "github" | "discord" | "gitlab" | "credential";
 
 export enum ProjectType {
-    MOD = "Mod",
-    MODPACK = "Modpack",
-    SHADER = "Shader",
-    RESOURCEPACK = "Resource pack",
-    DATAPACK = "Data pack",
-    PLUGIN = "Plugin"
+    MOD = "MOD",
+    MODPACK = "MODPACK",
+    SHADER = "SHADER",
+    RESOURCE_PACK = "RESOURCE_PACK",
+    DATA_PACK = "DATA_PACK",
+    PLUGIN = "PLUGIN",
 }
 
 export enum ReleaseChannels {
-    RELEASE = "Release",
-    BETA = "Beta",
-    ALPHA = "Alpha"
+    RELEASE = "RELEASE",
+    BETA = "BETA",
+    ALPHA = "ALPHA"
 }
 
 export enum ProjectVisibility {
-    PUBLIC = "Public",
-    PRIVATE = "Private",
-    LISTED = "Listed",
-    UNLISTED = "Unlisted",
-    ARCHIVED = "Archived"
+    PUBLIC = "PUBLIC",
+    PRIVATE = "PRIVATE",
+    LISTED = "LISTED",
+    UNLISTED = "UNLISTED",
+    ARCHIVED = "ARCHIVED"
 }
 
 export enum ProjectStatuses {
-    LISTED = "Listed",
-    ARCHIVED = "Archived",
-    DRAFT = "Draft",
-    UNLISTED = "Unlisted",
-    SCHEDULED = "Scheduled",
-    UNKNOWN = "Unknown",
+    LISTED = "LISTED",
+    ARCHIVED = "ARCHIVED",
+    DRAFT = "DRAFT",
+    UNLISTED = "UNLISTED",
+    SCHEDULED = "SCHEDULED",
+    UNKNOWN = "UNKNOWN",
 }
 
 export interface LocalUserSession {
@@ -58,8 +58,9 @@ export interface OAuthCallbackHandlerResult {
 }
 
 export const modLoaders = {
-    FABRIC: "Fabric",
-    QUILT: "Quilt"
+    FABRIC: "FABRIC",
+    QUILT: "QUILT",
+    PUZZLE_LOADER: "PUZZLE_LOADER"
 }
 
 export const modpackLoaders = {};
@@ -70,15 +71,15 @@ export const pluginLoaders = {};
 
 export const dataPackLoaders = {};
 
-export const getProjectLoaders  = (project_type: ProjectType) => {
+export const getProjectLoaders  = (project_type: string) => {
     switch(project_type){
         case ProjectType.MOD:
             return modLoaders;
         case ProjectType.MODPACK:
             return modpackLoaders;
-        case ProjectType.DATAPACK:
+        case ProjectType.DATA_PACK:
             return dataPackLoaders;
-        case ProjectType.RESOURCEPACK:
+        case ProjectType.RESOURCE_PACK:
             return {};
         case ProjectType.PLUGIN:
             return pluginLoaders;

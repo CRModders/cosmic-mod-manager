@@ -24,7 +24,9 @@ import CreateVersionPage from "./dashboard/projects/project-details/versions/cre
 import EditVersionPage from "./dashboard/projects/project-details/versions/edit-version";
 import VersionListPage from "./dashboard/projects/project-details/versions/page";
 import ProjectVersionPage from "./dashboard/projects/project-details/versions/version-page";
+import ProjectDescriptSettingsPage from "./dashboard/projects/project-settings/description";
 import GeneralProjectSettings from "./dashboard/projects/project-settings/general";
+import ProjectLinksSettings from "./dashboard/projects/project-settings/links";
 import Projects from "./dashboard/projects/projects";
 import ReportsPage from "./dashboard/reports";
 import { ProjectContextProvider } from "./providers/project-context";
@@ -111,6 +113,14 @@ const projectRoute = (project_type: string) => {
 							{
 								path: "general",
 								element: <GeneralProjectSettings />,
+							},
+							{
+								path: "description",
+								element: <ProjectDescriptSettingsPage />,
+							},
+							{
+								path: "links",
+								element: <ProjectLinksSettings />,
 							},
 						],
 					},

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import useMultiSelect from "@/src/hooks/use-multi-select";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { CapitalizeAndFormatString } from "@root/lib/utils";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Input } from "./input";
@@ -75,7 +76,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 								key={item}
 								className="flex items-center justify-center gap-1 px-2 rounded-full text-sm border-2 border-accent-bg"
 							>
-								<span className="font-semibold text-foreground-muted">{item}</span>
+								<span className="font-semibold text-foreground-muted">{CapitalizeAndFormatString(item)}</span>
 								<Cross2Icon
 									className="text-foreground-muted rounded-lg cursor-pointer"
 									onClick={() => {
@@ -118,7 +119,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 					htmlFor={input_id}
 					className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] py-2 rounded-lg rounded-tl-none rounded-tr-none bg-background border border-border-hicontrast border-t-0"
 				>
-					<ScrollArea className="max-h-72">
+					<ScrollArea className="max-h-72 overflow-auto">
 						<div className="w-full">
 							{visibleList.map((item, index) => {
 								return (
@@ -137,7 +138,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 											currentFocusedItem && AddItemToSelectedList(currentFocusedItem);
 										}}
 									>
-										{item}
+										{CapitalizeAndFormatString(item)}
 									</p>
 								);
 							})}

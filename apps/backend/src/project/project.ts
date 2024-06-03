@@ -1,8 +1,15 @@
 import prisma from "@/lib/prisma";
 import { GetProjectTypeType, GetProjectVisibilityType, GetUsersProjectMembership } from "@/lib/utils";
 import { ProjectVisibility, UserRolesInProject } from "@prisma/client";
-import { maxProjectNameLength, maxProjectSummaryLength, minProjectNameLength } from "@root/config";
-import { createURLSafeSlug, getProjectVisibilityType } from "@root/lib/utils";
+import {
+	maxExternalLinkLength,
+	maxNameLength,
+	maxProjectDescriptionLength,
+	maxProjectNameLength,
+	maxProjectSummaryLength,
+	minProjectNameLength,
+} from "@root/config";
+import { createURLSafeSlug, getProjectVisibilityType, isValidString, isValidUrl } from "@root/lib/utils";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import versionRouter from "./version";
@@ -12,25 +19,14 @@ const projectRouter = new Hono();
 projectRouter.post("/create-new-project", async (c) => {
 	try {
 		const body = await c.req.json();
-		const { name, url, summary }: { name: string; url: string; summary: string } = body;
+		const name = isValidString(body?.name, maxNameLength, 1, true).value;
+		const url = isValidString(body?.url, maxNameLength, 1, true).value;
+		const summary = isValidString(body?.summary, maxProjectSummaryLength, 1, true).value;
+
 		if (!name || !url || !body?.visibility || !body?.project_type || !summary) {
 			return c.json(
 				{
 					message: "Missing required data",
-				},
-				400,
-			);
-		}
-
-		if (
-			name.length < minProjectNameLength ||
-			name.length > maxProjectNameLength ||
-			url.length > maxProjectNameLength ||
-			summary.length > maxProjectSummaryLength
-		) {
-			return c.json(
-				{
-					message: "Length check failed",
 				},
 				400,
 			);
@@ -82,6 +78,10 @@ projectRouter.post("/create-new-project", async (c) => {
 
 		return c.json({
 			message: "New project created successfully",
+			data: {
+				projectUrl: project.url_slug,
+				projectType: project.type,
+			},
 		});
 	} catch (error) {
 		console.error(error);
@@ -154,10 +154,12 @@ projectRouter.get("/:projectSlug", async (c) => {
 				org_id: true,
 				status: true,
 				summary: true,
+				description: true,
 				type: true,
 				updated_on: true,
 				url_slug: true,
 				visibility: true,
+				external_links: true,
 				members: {
 					select: {
 						user: {
@@ -193,10 +195,12 @@ projectRouter.get("/:projectSlug", async (c) => {
 					org_id: projectData.org_id,
 					status: projectData.status,
 					summary: projectData.summary,
+					description: projectData.description,
 					type: projectData.type,
 					updated_on: projectData.updated_on,
 					url_slug: projectData.url_slug,
 					visibility: projectData.visibility,
+					external_links: projectData?.external_links,
 					members: projectData.members,
 				},
 			});
@@ -211,21 +215,18 @@ projectRouter.get("/:projectSlug", async (c) => {
 	}
 });
 
-type projectInfoUpdateData = {
-	name: string;
-	url_slug: string;
-	summary: string;
-	visibility: ProjectVisibility;
-};
-
 projectRouter.post("/:projectSlug/update", async (c) => {
 	try {
 		const body = await c.req.json();
-		const { name, url_slug, summary, visibility }: projectInfoUpdateData = body;
+		const visibility = body?.visibility;
+		const name = isValidString(body?.name, maxNameLength, 1, true).value;
+		const url_slug = isValidString(body?.url, maxNameLength, 1, true).value;
+		const summary = isValidString(body?.summary, maxProjectSummaryLength, 1, true).value;
+
 		const currUrlSlug = c.req.param("projectSlug");
 		const urlSafeUrlSlug = createURLSafeSlug(url_slug);
 
-		if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !summary || !visibility) {
+		if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
 			return c.json(
 				{
 					message: "Missing required data",
@@ -324,6 +325,192 @@ projectRouter.post("/:projectSlug/update", async (c) => {
 				visibility: getProjectVisibilityType(visibility),
 			},
 		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				message: "Internal server error",
+			},
+			500,
+		);
+	}
+});
+
+projectRouter.get("/:projectSlug/delete", async (c) => {
+	try {
+		const [user] = await getUserSession(c);
+		const projectSlug = c.req.param("projectSlug");
+		if (!user?.id || !projectSlug) {
+			return c.json({ message: "Invalid request" }, 400);
+		}
+
+		const project = await prisma.project.findUnique({
+			where: {
+				url_slug: projectSlug,
+			},
+			select: {
+				id: true,
+				members: {
+					where: {
+						user_id: user.id,
+						role: "OWNER",
+					},
+					select: {
+						user_id: true,
+					},
+				},
+			},
+		});
+
+		if (!project?.id) return c.json({ message: "Not found" }, 404);
+
+		await prisma.project.delete({
+			where: {
+				id: project.id,
+			},
+		});
+
+		return c.json({ message: "Project deleted successfully" });
+	} catch (error) {
+		console.log(error);
+		return c.json({ message: "Internal server error" }, 500);
+	}
+});
+
+projectRouter.post("/:projectSlug/update-description", async (c) => {
+	try {
+		const projectSlug = c.req.param("projectSlug");
+		const body = await c.req.json();
+		const description = body?.description;
+
+		if (!projectSlug || !description || description.length > maxProjectDescriptionLength) {
+			return c.json({ message: "Invalid request" }, 400);
+		}
+
+		const [user] = await getUserSession(c);
+		if (!user?.id) {
+			return c.json({ message: "Unauthenticated request" }, 403);
+		}
+
+		const project = await prisma.project.findUnique({
+			where: {
+				url_slug: projectSlug,
+			},
+			select: {
+				members: {
+					where: {
+						user_id: user.id,
+						role: "OWNER",
+					},
+					select: {
+						user_id: true,
+					},
+				},
+				id: true,
+			},
+		});
+
+		if (!project?.members) {
+			return c.json({ message: "Not found" }, 404);
+		}
+
+		await prisma.project.update({
+			where: {
+				id: project.id,
+			},
+			data: {
+				description: description,
+			},
+		});
+
+		return c.json({ message: "Description updated" });
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				message: "Internal server error",
+			},
+			500,
+		);
+	}
+});
+
+projectRouter.post("/:projectSlug/update-external-links", async (c) => {
+	try {
+		const projectSlug = c.req.param("projectSlug");
+		const body = await c.req.json();
+		const issueTrackerLink = isValidString(body?.issueTrackerLink, maxExternalLinkLength, 1, true).value;
+		const projectSourceLink = isValidString(body?.projectSourceLink, maxExternalLinkLength, 1, true).value;
+		const projectWikiLink = isValidString(body?.projectWikiLink, maxExternalLinkLength, 1, true).value;
+		const projectDiscordLink = isValidString(body?.projectDiscordLink, maxExternalLinkLength, 1, true).value;
+
+		if (issueTrackerLink && !isValidUrl(issueTrackerLink)) {
+			return c.json({ message: "Invalid issueTrackerLink" });
+		}
+		if (projectSourceLink && !isValidUrl(projectSourceLink)) {
+			return c.json({ message: "Invalid projectSourceLink" });
+		}
+		if (projectWikiLink && !isValidUrl(projectWikiLink)) {
+			return c.json({ message: "Invalid projectWikiLink" });
+		}
+		if (projectDiscordLink && !isValidUrl(projectDiscordLink)) {
+			return c.json({ message: "Invalid projectDiscordLink" });
+		}
+
+		const [user] = await getUserSession(c);
+		if (!user?.id) {
+			return c.json({ message: "Unauthenticated request" }, 403);
+		}
+
+		const project = await prisma.project.findUnique({
+			where: {
+				url_slug: projectSlug,
+			},
+			select: {
+				members: {
+					where: {
+						user_id: user.id,
+						role: "OWNER",
+					},
+					select: {
+						user_id: true,
+					},
+				},
+				external_links: true,
+				id: true,
+			},
+		});
+
+		if (!project?.members) {
+			return c.json({ message: "Not found" }, 404);
+		}
+
+		if (!project.external_links?.id) {
+			await prisma.projectExternalLinks.create({
+				data: {
+					project_id: project.id,
+					issue_tracker_link: issueTrackerLink,
+					project_source_link: projectSourceLink,
+					project_wiki_link: projectWikiLink,
+					discord_invite_link: projectDiscordLink,
+				},
+			});
+		} else {
+			await prisma.projectExternalLinks.update({
+				where: {
+					id: project.external_links?.id,
+				},
+				data: {
+					project_id: project.id,
+					issue_tracker_link: issueTrackerLink,
+					project_source_link: projectSourceLink,
+					project_wiki_link: projectWikiLink,
+					discord_invite_link: projectDiscordLink,
+				},
+			});
+		}
+
+		return c.json({ message: "External links updated" });
 	} catch (error) {
 		console.error(error);
 		return c.json(

@@ -21,9 +21,9 @@ import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import { Cross1Icon, FileIcon, PlusIcon } from "@radix-ui/react-icons";
-import { maxChangelogLength, maxFileSize } from "@root/config";
-import { createURLSafeSlug, parseFileSize } from "@root/lib/utils";
-import { ReleaseChannels } from "@root/types";
+import { GameVersions, maxChangelogLength, maxFileSize } from "@root/config";
+import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import { ReleaseChannels, getProjectLoaders } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -207,9 +207,13 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 								<SelectValue placeholder="Theme" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value={ReleaseChannels.RELEASE}>{ReleaseChannels.RELEASE}</SelectItem>
-								<SelectItem value={ReleaseChannels.BETA}>{ReleaseChannels.BETA}</SelectItem>
-								<SelectItem value={ReleaseChannels.ALPHA}>{ReleaseChannels.ALPHA}</SelectItem>
+								<SelectItem value={ReleaseChannels.RELEASE}>
+									{CapitalizeAndFormatString(ReleaseChannels.RELEASE)}
+								</SelectItem>
+								<SelectItem value={ReleaseChannels.BETA}>{CapitalizeAndFormatString(ReleaseChannels.BETA)}</SelectItem>
+								<SelectItem value={ReleaseChannels.ALPHA}>
+									{CapitalizeAndFormatString(ReleaseChannels.ALPHA)}
+								</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -237,7 +241,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Loaders</Label>
 						<MultiSelectInput
-							options={["Fabric", "Quilt"]}
+							options={Object.values(getProjectLoaders(projectData?.type || ""))}
 							inputPlaceholder="Choose loaders.."
 							input_id={"supported-loaders-filter-input"}
 							setSelectedValues={setLoaders}
@@ -246,7 +250,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Game versions</Label>
 						<MultiSelectInput
-							options={["0.1.33", "0.1.32", "0.1.31"]}
+							options={GameVersions}
 							inputPlaceholder="Choose versions.."
 							input_id={"supported-game-version-filter-input"}
 							setSelectedValues={setSupportedGameVersions}

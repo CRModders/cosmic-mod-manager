@@ -27,11 +27,18 @@ export type ProjectDataType = {
 	org_id?: string;
 	status: string;
 	summary: string;
+	description?: string;
 	type: string;
 	updated_on: Date;
 	created_on: Date;
 	url_slug: string;
 	visibility: string;
+	external_links: {
+		issue_tracker_link?: string;
+		project_source_link?: string;
+		project_wiki_link?: string;
+		discord_invite_link?: string;
+	};
 	members?: {
 		role: string;
 		role_title: string;

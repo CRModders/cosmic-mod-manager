@@ -105,21 +105,23 @@ model Organisation {
 }
 
 model Project {
-    id              String            @id @default(uuid())
+    id              String                @id @default(uuid())
     org_id          String?
     name            String
-    url_slug        String            @unique
-    visibility      ProjectVisibility @default(PUBLIC)
+    url_slug        String                @unique
+    visibility      ProjectVisibility     @default(PUBLIC)
     icon            String?
-    status          ProjectStatus     @default(DRAFT)
+    status          ProjectStatus         @default(DRAFT)
     type            ProjectType
-    summary         String?           @db.VarChar(324)
-    created_on      DateTime          @default(now())
-    updated_on      DateTime          @default(now()) @updatedAt
-    total_downloads Int               @default(0)
-    members         ProjectMember[]   @relation(name: "Project")
-    versions        ProjectVersion[]  @relation(name: "project_version")
-    organisation    Organisation?     @relation(name: "Project Organisation", fields: [org_id], references: [id])
+    summary         String?               @db.VarChar(324)
+    description     String?               @db.VarChar(65256)
+    created_on      DateTime              @default(now())
+    updated_on      DateTime              @default(now()) @updatedAt
+    total_downloads Int                   @default(0)
+    external_links  ProjectExternalLinks? @relation(name: "project_external_links")
+    members         ProjectMember[]       @relation(name: "Project")
+    versions        ProjectVersion[]      @relation(name: "project_version")
+    organisation    Organisation?         @relation(name: "Project Organisation", fields: [org_id], references: [id])
 }
 
 model ProjectVersion {
@@ -136,7 +138,7 @@ model ProjectVersion {
     release_channel         VersionReleaseChannels @default(RELEASE)
     supported_game_versions String[]
     supported_loaders       Loaders[]
-    publisher               ProjectMember?         @relation(name: "version_publisher", fields: [publisher_id], references: [id])
+    publisher               ProjectMember?         @relation(name: "version_publisher", fields: [publisher_id], references: [id], onDelete: Cascade)
     files                   VersionFile[]          @relation(name: "version_file")
     project                 Project                @relation(name: "project_version", fields: [project_id], references: [id], onDelete: Cascade)
 }
@@ -150,6 +152,16 @@ model VersionFile {
     is_primary Boolean        @default(false)
     version_id String
     version    ProjectVersion @relation(name: "version_file", fields: [version_id], references: [id], onDelete: Cascade)
+}
+
+model ProjectExternalLinks {
+    id                  String  @id @default(uuid())
+    project_id          String  @unique
+    issue_tracker_link  String?
+    project_source_link String?
+    project_wiki_link   String?
+    discord_invite_link String?
+    project             Project @relation(name: "project_external_links", fields: [project_id], references: [id], onDelete: Cascade)
 }
 
 model ProjectMember {
@@ -185,8 +197,8 @@ enum ProjectType {
     MOD
     MODPACK
     SHADER
-    RESOURCEPACK
-    DATAPACK
+    RESOURCE_PACK
+    DATA_PACK
     PLUGIN
 }
 
@@ -217,6 +229,7 @@ enum Loaders {
     // Modloaders
     FABRIC
     QUILT
+    PUZZLE_LOADER
 
     // ModpackLoaders
     // PluginLoaders

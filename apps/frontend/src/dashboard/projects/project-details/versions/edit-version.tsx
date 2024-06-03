@@ -20,10 +20,10 @@ import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import type { ProjectVersionData } from "@/types";
-import { Cross1Icon, FileIcon, StarIcon } from "@radix-ui/react-icons";
-import { maxChangelogLength } from "@root/config";
+import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { GameVersions, maxChangelogLength } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
-import { ReleaseChannels } from "@root/types";
+import { ReleaseChannels, getProjectLoaders } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -31,7 +31,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const { projectUrlSlug, versionUrlSlug } = useParams();
 	const [versionData, setVersionData] = useState<ProjectVersionData | null | undefined>(undefined);
 
-	const { fetchFeaturedProjectVersions, fetchAllProjectVersions } = useContext(Projectcontext);
+	const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions } = useContext(Projectcontext);
 	const [loading, setLoading] = useState(false);
 	const isAProjectMember = useIsUseAProjectMember();
 	const navigate = useNavigate();
@@ -44,7 +44,25 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const [loaders, setLoaders] = useState<string[]>([]);
 	const [supportedGameVersions, setSupportedGameVersions] = useState<string[]>([]);
 
-	const toggleVersionFeaturing = () => {};
+	const toggleVersionFeaturing = async () => {
+		setLoading(true);
+
+		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/set-featured`, {
+			method: "POST",
+			body: JSON.stringify({
+				is_featured: !(versionData?.versions[0].is_featured === true),
+			}),
+		});
+		const result = await response.json();
+		setLoading(false);
+
+		if (!response.ok) {
+			return toast({ title: result?.message, variant: "destructive" });
+		}
+
+		toast({ title: result?.message });
+		await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), fetchVersiondata()]);
+	};
 
 	const updateProjectVersion = async () => {
 		if (!versionName) return toast({ title: "Version title is required", variant: "destructive" });
@@ -175,17 +193,25 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
 					<div className="flex gap-4 items-center justify-start">
 						<Button
-							disabled={loading}
 							className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
 							onClick={updateProjectVersion}
+							disabled={loading}
 						>
 							{loading === true ? <Spinner className="w-5 h-5" /> : <SaveIcon className="w-4 h-4" />}
 							<span className="text-base font-semibold">Save</span>
 						</Button>
 
 						<Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
-							{loading === true ? <Spinner className="w-5 h-5" /> : <StarIcon className="w-4 h-4" />}
-							<span className="text-base font-semibold text-foreground-muted">Feature version</span>
+							{loading === true ? (
+								<Spinner className="w-5 h-5" />
+							) : versionData?.versions[0].is_featured === true ? (
+								<StarFilledIcon className="w-4 h-4" />
+							) : (
+								<StarIcon className="w-4 h-4" />
+							)}
+							<span className="text-base font-semibold text-foreground-muted">
+								{versionData?.versions[0].is_featured === true ? "Unfeature version" : "Feature version"}
+							</span>
 						</Button>
 
 						<Link to={`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`}>
@@ -241,9 +267,13 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 								<SelectValue placeholder="Theme" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value={ReleaseChannels.RELEASE}>{ReleaseChannels.RELEASE}</SelectItem>
-								<SelectItem value={ReleaseChannels.BETA}>{ReleaseChannels.BETA}</SelectItem>
-								<SelectItem value={ReleaseChannels.ALPHA}>{ReleaseChannels.ALPHA}</SelectItem>
+								<SelectItem value={ReleaseChannels.RELEASE}>
+									{CapitalizeAndFormatString(ReleaseChannels.RELEASE)}
+								</SelectItem>
+								<SelectItem value={ReleaseChannels.BETA}>{CapitalizeAndFormatString(ReleaseChannels.BETA)}</SelectItem>
+								<SelectItem value={ReleaseChannels.ALPHA}>
+									{CapitalizeAndFormatString(ReleaseChannels.ALPHA)}
+								</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -271,7 +301,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Loaders</Label>
 						<MultiSelectInput
-							options={["Fabric", "Quilt"]}
+							options={Object.values(getProjectLoaders(projectData?.type || ""))}
 							inputPlaceholder="Choose loaders.."
 							input_id={"supported-loaders-filter-input"}
 							initialSelected={loaders?.map((val) => val)}
@@ -281,7 +311,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Game versions</Label>
 						<MultiSelectInput
-							options={["0.1.33", "0.1.32", "0.1.31"]}
+							options={GameVersions}
 							inputPlaceholder="Choose versions.."
 							input_id={"supported-game-version-filter-input"}
 							initialSelected={supportedGameVersions?.map((val) => val)}

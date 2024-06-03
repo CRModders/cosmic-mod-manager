@@ -12,11 +12,12 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { maxProjectNameLength, maxProjectSummaryLength, minProjectNameLength } from "@root/config";
-import { createURLSafeSlug } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
 import { ProjectType, ProjectVisibility } from "@root/types";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 type Props = {
@@ -38,8 +39,8 @@ const formSchema = z.object({
 		ProjectType.MOD,
 		ProjectType.MODPACK,
 		ProjectType.SHADER,
-		ProjectType.RESOURCEPACK,
-		ProjectType.DATAPACK,
+		ProjectType.RESOURCE_PACK,
+		ProjectType.DATA_PACK,
 		ProjectType.PLUGIN,
 	]),
 	summary: z.string().max(maxProjectSummaryLength).optional(),
@@ -52,6 +53,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 	const [formError, setFormError] = useState<string | null>(null);
 	const [keepNameAndUrlSynced, setKeepNameAndUrlSynced] = useState<boolean>(true);
 	const [projectType, setProjectType] = useState<string>(ProjectType.MOD.toString());
+	const navigate = useNavigate();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -92,6 +94,8 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 		});
 		setDialogOpen(false);
 		await fetchProjects();
+
+		navigate(`/${result?.data?.projectType}/${result?.data?.projectUrl}`);
 	};
 
 	return (
@@ -206,12 +210,24 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 																	<SelectValue placeholder="Select project type..." />
 																</SelectTrigger>
 																<SelectContent>
-																	<SelectItem value={ProjectType.MOD}>{ProjectType.MOD}</SelectItem>
-																	<SelectItem value={ProjectType.MODPACK}>{ProjectType.MODPACK}</SelectItem>
-																	<SelectItem value={ProjectType.SHADER}>{ProjectType.SHADER}</SelectItem>
-																	<SelectItem value={ProjectType.RESOURCEPACK}>{ProjectType.RESOURCEPACK}</SelectItem>
-																	<SelectItem value={ProjectType.DATAPACK}>{ProjectType.DATAPACK}</SelectItem>
-																	<SelectItem value={ProjectType.PLUGIN}>{ProjectType.PLUGIN}</SelectItem>
+																	<SelectItem value={ProjectType.MOD}>
+																		{CapitalizeAndFormatString(ProjectType.MOD)}
+																	</SelectItem>
+																	<SelectItem value={ProjectType.MODPACK}>
+																		{CapitalizeAndFormatString(ProjectType.MODPACK)}
+																	</SelectItem>
+																	<SelectItem value={ProjectType.SHADER}>
+																		{CapitalizeAndFormatString(ProjectType.SHADER)}
+																	</SelectItem>
+																	<SelectItem value={ProjectType.RESOURCE_PACK}>
+																		{CapitalizeAndFormatString(ProjectType.RESOURCE_PACK)}
+																	</SelectItem>
+																	<SelectItem value={ProjectType.DATA_PACK}>
+																		{CapitalizeAndFormatString(ProjectType.DATA_PACK)}
+																	</SelectItem>
+																	<SelectItem value={ProjectType.PLUGIN}>
+																		{CapitalizeAndFormatString(ProjectType.PLUGIN)}
+																	</SelectItem>
 																</SelectContent>
 															</Select>
 														</>
@@ -237,10 +253,14 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 																	<SelectValue placeholder="Project visibility..." />
 																</SelectTrigger>
 																<SelectContent>
-																	<SelectItem value={ProjectVisibility.PRIVATE}>{ProjectVisibility.PRIVATE}</SelectItem>
-																	<SelectItem value={ProjectVisibility.PUBLIC}>{ProjectVisibility.PUBLIC}</SelectItem>
+																	<SelectItem value={ProjectVisibility.PRIVATE}>
+																		{CapitalizeAndFormatString(ProjectVisibility.PRIVATE)}
+																	</SelectItem>
+																	<SelectItem value={ProjectVisibility.PUBLIC}>
+																		{CapitalizeAndFormatString(ProjectVisibility.PUBLIC)}
+																	</SelectItem>
 																	<SelectItem value={ProjectVisibility.UNLISTED}>
-																		{ProjectVisibility.UNLISTED}
+																		{CapitalizeAndFormatString(ProjectVisibility.UNLISTED)}
 																	</SelectItem>
 																</SelectContent>
 															</Select>

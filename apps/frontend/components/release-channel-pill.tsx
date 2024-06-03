@@ -12,11 +12,11 @@ const ReleaseChannelIndicator = ({ release_channel, labelClassName }: Props) => 
 		<div
 			className={cn(
 				"flex gap-2 items-center justify-start",
-				CapitalizeAndFormatString(release_channel) === ReleaseChannels.RELEASE
+				release_channel === ReleaseChannels.RELEASE
 					? " text-blue-500 dark:text-blue-400"
-					: CapitalizeAndFormatString(release_channel) === ReleaseChannels.BETA
+					: release_channel === ReleaseChannels.BETA
 						? "text-orange-500 dark:text-orange-400"
-						: CapitalizeAndFormatString(release_channel) === ReleaseChannels.ALPHA
+						: release_channel === ReleaseChannels.ALPHA
 							? " text-danger-text"
 							: "",
 			)}

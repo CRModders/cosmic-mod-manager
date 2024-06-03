@@ -351,6 +351,72 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
 	}
 });
 
+versionRouter.post("/:versionSlug/set-featured", async (c) => {
+	try {
+		const projectSlug = c.req.param("projectSlug");
+		const versionSlug = c.req.param("versionSlug");
+		const body = await c.req.json();
+		const is_featured = body?.is_featured === true;
+
+		if (!projectSlug || !versionSlug || is_featured === undefined) {
+			return c.json({ message: "Invalid request" }, 400);
+		}
+
+		const [user] = await getUserSession(c);
+		if (!user?.id) {
+			return c.json({ message: "Unauthenticated request" }, 403);
+		}
+
+		const project = await prisma.project.findUnique({
+			where: {
+				url_slug: projectSlug,
+			},
+			select: {
+				members: {
+					where: {
+						user_id: user.id,
+					},
+					select: {
+						user_id: true,
+					},
+				},
+				versions: {
+					where: {
+						url_slug: versionSlug,
+					},
+					select: {
+						id: true,
+						is_featured: true,
+					},
+				},
+			},
+		});
+
+		if (!project?.members) {
+			return c.json({ message: "Not found" }, 404);
+		}
+
+		await prisma.projectVersion.update({
+			where: {
+				id: project.versions[0].id,
+			},
+			data: {
+				is_featured: is_featured,
+			},
+		});
+
+		return c.json({ message: "Version added to featured list" });
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				message: "Internal server error",
+			},
+			500,
+		);
+	}
+});
+
 versionRouter.post("/create", async (c) => {
 	try {
 		const body = await c.req.formData();

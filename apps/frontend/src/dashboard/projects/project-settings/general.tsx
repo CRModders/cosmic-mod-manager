@@ -1,19 +1,29 @@
 import { SaveIcon, TrashIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import { CubeIcon, UploadIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, CubeIcon, UploadIcon } from "@radix-ui/react-icons";
 import { maxProjectSummaryLength } from "@root/config";
-import { createURLSafeSlug, getProjectVisibilityType } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug, getProjectVisibilityType } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const GeneralProjectSettings = () => {
 	const { projectData, fetchingProjectData, fetchProjectData } = useContext(Projectcontext);
@@ -125,7 +135,7 @@ const GeneralProjectSettings = () => {
 								className="px-0 border-none bg-transparent w-full md:w-[32ch] text-base dark:text-foreground-muted"
 								value={projectUrl}
 								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-									setProjectUrl(e.target.value);
+									setProjectUrl(createURLSafeSlug(e.target.value).value);
 								}}
 							/>
 						</div>
@@ -164,13 +174,21 @@ const GeneralProjectSettings = () => {
 								}}
 							>
 								<SelectTrigger className="w-fit min-w-[24ch]">
-									<SelectValue placeholder="Theme" />
+									<SelectValue placeholder="Visibility" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value={ProjectVisibility.PRIVATE}>{ProjectVisibility.PRIVATE}</SelectItem>
-									<SelectItem value={ProjectVisibility.PUBLIC}>{ProjectVisibility.PUBLIC}</SelectItem>
-									<SelectItem value={ProjectVisibility.ARCHIVED}>{ProjectVisibility.ARCHIVED}</SelectItem>
-									<SelectItem value={ProjectVisibility.UNLISTED}>{ProjectVisibility.UNLISTED}</SelectItem>
+									<SelectItem value={ProjectVisibility.PRIVATE}>
+										{CapitalizeAndFormatString(ProjectVisibility.PRIVATE)}
+									</SelectItem>
+									<SelectItem value={ProjectVisibility.PUBLIC}>
+										{CapitalizeAndFormatString(ProjectVisibility.PUBLIC)}
+									</SelectItem>
+									<SelectItem value={ProjectVisibility.ARCHIVED}>
+										{CapitalizeAndFormatString(ProjectVisibility.ARCHIVED)}
+									</SelectItem>
+									<SelectItem value={ProjectVisibility.UNLISTED}>
+										{CapitalizeAndFormatString(ProjectVisibility.UNLISTED)}
+									</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
@@ -193,8 +211,87 @@ const GeneralProjectSettings = () => {
 					</div>
 				</ContentWrapperCard>
 			)}
+
+			<DeleteProjectCard projectName={projectData?.name || ""} projectUrlSlug={projectData?.url_slug || ""} />
 		</div>
 	);
 };
 
 export default GeneralProjectSettings;
+
+const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: string; projectUrlSlug: string }) => {
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [inputValue, setinputValue] = useState("");
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
+
+	const deleteProject = async () => {
+		setLoading(true);
+
+		const response = await useFetch(`/api/project/${projectUrlSlug}/delete`);
+		const result = await response.json();
+		setLoading(false);
+		if (!response.ok) {
+			return toast({ title: result?.message, variant: "destructive" });
+		}
+		toast({ title: result?.message });
+		navigate("/dashboard/projects");
+	};
+
+	return (
+		<ContentWrapperCard className="items-start">
+			<h2 className="font-semibold text-foreground text-2xl">Delete project</h2>
+			<p className="text-foreground-muted">
+				Removes your project from our servers and search. Clicking on this will delete your project, so be extra
+				careful!
+			</p>
+			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+				<DialogTrigger asChild>
+					<Button className=" bg-danger-bg hover:bg-danger-bg/85 gap-2 dark:text-foreground">
+						<TrashIcon size="1.15rem" />
+						<span>Delete project</span>
+					</Button>
+				</DialogTrigger>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Are you sure you want to delete this project?</DialogTitle>
+					</DialogHeader>
+					<p className="text-foreground-muted">
+						If you proceed, all versions and any attached data will be removed from our servers. This may break other
+						projects, so be careful.
+					</p>
+
+					<div className="w-full flex flex-col items-start justify-center gap-1">
+						<p className="text-foreground font-semibold">
+							To verify, type <span className="font-medium italic text-foreground-muted">{projectName}</span> below:
+						</p>
+						<Input
+							type="text"
+							value={inputValue}
+							onChange={(e) => {
+								setinputValue(e.target.value);
+							}}
+						/>
+					</div>
+					<DialogFooter className="w-full flex items-center justify-end gap-2">
+						<DialogClose asChild>
+							<Button className="gap-2 text-foreground-muted" variant={"secondary"}>
+								<Cross2Icon />
+								<span>Cancel</span>
+							</Button>
+						</DialogClose>
+
+						<Button
+							onClick={deleteProject}
+							className=" bg-danger-bg hover:bg-danger-bg/85 gap-2 dark:text-foreground"
+							disabled={projectName !== inputValue || loading}
+						>
+							{loading ? <Spinner size="1.15rem" /> : <TrashIcon size="1.15rem" />}
+							<span>Delete project</span>
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</ContentWrapperCard>
+	);
+};
