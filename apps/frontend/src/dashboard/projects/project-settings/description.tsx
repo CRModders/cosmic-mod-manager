@@ -1,6 +1,6 @@
 import { SaveIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
@@ -22,8 +22,8 @@ const ProjectDescriptSettingsPage = () => {
 			method: "POST",
 			body: JSON.stringify({ description: description }),
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({ title: result?.message, variant: "destructive" });
@@ -41,13 +41,13 @@ const ProjectDescriptSettingsPage = () => {
 	if (projectData === undefined) {
 		return (
 			<div className="w-full flex items-center justify-center py-8">
-				<Spinner size="1.5rem" />
+				<CubeLoader size="lg" />
 			</div>
 		);
 	}
 
 	return (
-		<ContentWrapperCard className="items-start">
+		<ContentWrapperCard className="items-start relative">
 			<h2 className=" text-xl font-semibold">Description</h2>
 
 			<Textarea
@@ -66,10 +66,12 @@ const ProjectDescriptSettingsPage = () => {
 					onClick={updateProjectDescription}
 					disabled={loading || projectData?.description === description}
 				>
-					{loading ? <Spinner size="1.25rem" /> : <SaveIcon size="1.25rem" />}
+					<SaveIcon size="1.25rem" />
 					<span>Save changes</span>
 				</Button>
 			</div>
+
+			{loading && <AbsolutePositionedSpinner />}
 		</ContentWrapperCard>
 	);
 };

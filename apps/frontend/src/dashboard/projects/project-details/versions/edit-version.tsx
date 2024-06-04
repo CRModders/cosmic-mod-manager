@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
@@ -53,8 +53,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 				is_featured: !(versionData?.versions[0].is_featured === true),
 			}),
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({ title: result?.message, variant: "destructive" });
@@ -90,8 +90,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			method: "POST",
 			body: formData,
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({
@@ -113,8 +113,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 		setLoading(true);
 
 		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}`);
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 		const data = result?.data as ProjectVersionData;
 		setVersionData(data || null);
 	};
@@ -154,7 +154,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	if (versionData === undefined) {
 		return (
 			<div className="w-full flex items-center justify-center py-8">
-				<Spinner />
+				<CubeLoader size="lg" />
 			</div>
 		);
 	}
@@ -191,19 +191,19 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 						}}
 					/>
 
-					<div className="flex gap-4 items-center justify-start">
+					<div className="flex flex-wrap gap-4 items-center justify-start">
 						<Button
 							className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
 							onClick={updateProjectVersion}
 							disabled={loading}
 						>
-							{loading === true ? <Spinner className="w-5 h-5" /> : <SaveIcon className="w-4 h-4" />}
+							{loading === true ? <CubeLoader size="xs" /> : <SaveIcon className="w-4 h-4" />}
 							<span className="text-base font-semibold">Save</span>
 						</Button>
 
 						<Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
 							{loading === true ? (
-								<Spinner className="w-5 h-5" />
+								<CubeLoader size="xs" />
 							) : versionData?.versions[0].is_featured === true ? (
 								<StarFilledIcon className="w-4 h-4" />
 							) : (
@@ -334,7 +334,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 									key={file.id}
 									className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
 								>
-									<div className="flex gap-3 items-center">
+									<div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
 										<FileIcon className="w-5 h-5 text-foreground-muted" />
 										<p className="text-lg font-semibold text-foreground-muted mr-2">{file.file_name}</p>
 										<p className="text-base text-foreground-muted">{parseFileSize(file.file_size)}</p>

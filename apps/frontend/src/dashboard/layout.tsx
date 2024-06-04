@@ -8,12 +8,16 @@ import {
 	FlagIcon,
 	LayoutListIcon,
 } from "@/components/icons";
+import RedrectTo from "@/components/redirect-to";
+import { CubeLoader } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import { PanelContent, PanelLayout, SidePanel, SidepanelLink } from "@/src/settings/panel";
-import React from "react";
+import React, { useContext } from "react";
 import { Outlet } from "react-router-dom";
+import { AuthContext } from "../providers/auth-provider";
 
 export default function DashboardPageLayout() {
+	const { session } = useContext(AuthContext);
 	const baseUrlPrefix = "/dashboard";
 
 	const SidePanelLinks = [
@@ -61,6 +65,18 @@ export default function DashboardPageLayout() {
 			icon: <DollarIcon size="1rem" />,
 		},
 	];
+
+	if (session === undefined) {
+		return (
+			<div className="w-full flex items-center justify-center py-8">
+				<CubeLoader size="lg" />
+			</div>
+		);
+	}
+
+	if (!session?.user_id) {
+		return <RedrectTo destinationUrl="/login" />;
+	}
 
 	return (
 		<div className="w-full pb-32">

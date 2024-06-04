@@ -7,3 +7,129 @@
 .multi-select-input-container:focus-within .multi-select-options-list {
     @apply visible flex;
 }
+
+
+:root {
+    --animation-duration: 2s;
+    --start-angle: 45deg;
+}
+
+.scene {
+    position: relative;
+    z-index: 2;
+    height: calc(var(--size) * 2.75);
+    width: calc(var(--size) * 2.75);
+    display: grid;
+    place-items: center;
+}
+
+.cube-wrapper {
+    transform-style: preserve-3d;
+    animation: bouncing var(--animation-duration) infinite;
+}
+
+.cube {
+    transform-style: preserve-3d;
+    transform: rotateX(45deg) rotateZ(45deg);
+    animation: rotation var(--animation-duration) infinite;
+}
+
+.cube-faces {
+    transform-style: preserve-3d;
+    height: var(--size);
+    width: var(--size);
+    position: relative;
+    transform-origin: 0 0;
+    transform: translateX(0) translateY(0) translateZ(calc(var(--size) / -2));
+}
+
+.cube-face {
+    position: absolute;
+    inset: 0;
+    font-size: var(--size);
+
+    @apply bg-foreground/90 border-[0.1rem] dark:border-[0.11rem] border-background;
+}
+
+.cube-face.shadow {
+    transform: translateZ(calc(-1 * var(--size)));
+    animation: bouncing-shadow var(--animation-duration) infinite;
+}
+
+.cube-face.top {
+    transform: translateZ(var(--size));
+}
+
+.cube-face.front {
+    transform-origin: 0 50%;
+    transform: rotateY(-90deg);
+}
+
+.cube-face.back {
+    transform-origin: 0 50%;
+    transform: rotateY(-90deg) translateZ(calc(-1 * var(--size)));
+}
+
+.cube-face.right {
+    transform-origin: 50% 0;
+    transform: rotateX(-90deg) translateY(calc(-1 * var(--size)));
+}
+
+.cube-face.left {
+    transform-origin: 50% 0;
+    transform: rotateX(-90deg) translateY(calc(-1 * var(--size))) translateZ(var(--size));
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(var(--start-angle));
+        animation-timing-function: cubic-bezier(0.17, 0.84, 0.44, 1);
+    }
+
+    50% {
+        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(calc((calc(var(--start-angle) + 360deg)) / 2));
+        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+    }
+
+    100% {
+        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(calc(var(--start-angle) + 360deg));
+        animation-timing-function: cubic-bezier(0.17, 0.84, 0.44, 1);
+    }
+}
+
+@keyframes bouncing {
+    0% {
+        transform: translateY(calc(var(--size) / -2));
+        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+    }
+
+    45% {
+        transform: translateY(var(--size));
+        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    100% {
+        transform: translateY(calc(var(--size) / -2));
+        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+    }
+}
+
+@keyframes bouncing-shadow {
+    0% {
+        transform: translateZ(calc(-1 * var(--size))) scale(1.3);
+        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+        opacity: 0.05;
+    }
+
+    45% {
+        transform: translateZ(0);
+        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translateZ(calc(-1 * var(--size))) scale(1.3);
+        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+        opacity: 0.05;
+    }
+}

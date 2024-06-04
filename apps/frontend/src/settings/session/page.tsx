@@ -2,7 +2,7 @@ import CopyBtn from "@/components/copy-btn";
 import { KeyIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";
@@ -38,10 +38,9 @@ const Sessions = () => {
 		setLoading(true);
 
 		const response = await useFetch("/api/auth/session/get-logged-in-sessions");
+		setLoading(false);
 		const result = await response.json();
 		setLoggedInSessions(result?.data || []);
-
-		setLoading(false);
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -87,11 +86,7 @@ const Sessions = () => {
 										fetchLoggedInSessions={fetchLoggedInSessions}
 									/>
 								)}
-								{(userSession === undefined || loading === true) && (
-									<div className="absolute bg-background/50 w-full h-full flex items-center justify-center rounded-lg">
-										<Spinner size="1.6rem" />
-									</div>
-								)}
+								{(userSession === undefined || loading === true) && <AbsolutePositionedSpinner />}
 							</div>
 						</SessionListPageWrapper>
 					</CardContent>
@@ -135,7 +130,7 @@ const RevokeBtn = ({ session_id, fetchLoggedInSessions }: Props) => {
 			}}
 			disabled={loading}
 		>
-			{loading ? <Spinner size="1rem" /> : <Cross1Icon />}
+			{loading ? <CubeLoader size="xs" /> : <Cross1Icon />}
 			Revoke session
 		</Button>
 	);

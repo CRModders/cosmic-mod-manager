@@ -1,6 +1,6 @@
 import { DiscordIcon, GithubIcon, GitlabIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { AuthProvidersEnum, type AuthProviderType } from "@root/types";
 import React, { useState } from "react";
 import { getSignInUrl } from "./auth";
@@ -63,14 +63,7 @@ const AuthProviders = () => {
 					</React.Fragment>
 				);
 			})}
-			{loading === true && (
-				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-						<Spinner size="1.5rem" />
-					</div>
-				</div>
-			)}
+			{loading === true && <AbsolutePositionedSpinner />}
 		</>
 	);
 };

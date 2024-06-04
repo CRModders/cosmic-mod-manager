@@ -48,7 +48,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -162,8 +162,8 @@ const EditProfileInfoForm = ({
 			}),
 		});
 
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (result?.success === true) {
 			toast({
@@ -310,14 +310,7 @@ const EditProfileInfoForm = ({
 						</div>
 					</DialogFooter>
 				</form>
-				{loading === true && (
-					<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-						<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-							<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-							<Spinner size="1.5rem" />
-						</div>
-					</div>
-				)}
+				{loading === true && <AbsolutePositionedSpinner />}
 			</Form>
 		</DialogContent>
 	);

@@ -45,24 +45,24 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 
 		setFetchingProjectData(true);
 		const response = await useFetch(`/api/project/${slug || currProjectSlug}`);
-		const result = await response.json();
 		setFetchingProjectData(false);
+		const result = await response.json();
 		setProjectData(result?.data || null);
 	};
 
 	const fetchFeaturedProjectVersions = async () => {
 		setFetchingProjectData(true);
 		const response = await useFetch(`/api/project/${currProjectSlug}/version?featured=true`);
-		const result = await response.json();
 		setFetchingProjectData(false);
+		const result = await response.json();
 		setFeaturedProjectVersions(result?.data || null);
 	};
 
 	const fetchAllProjectVersions = async () => {
 		setFetchingProjectData(true);
 		const response = await useFetch(`/api/project/${currProjectSlug}/version`);
-		const result = await response.json();
 		setFetchingProjectData(false);
+		const result = await response.json();
 		setAllProjectVersions(result?.data || null);
 	};
 

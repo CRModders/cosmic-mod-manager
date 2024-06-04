@@ -2,8 +2,8 @@ import { GearIcon, TrashIcon } from "@/components/icons";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FormSuccessMessage } from "@/components/ui/form-message";
-import { Spinner } from "@/components/ui/spinner";
+import { FormErrorMessage, FormSuccessMessage } from "@/components/ui/form-message";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getSignInUrl } from "@/src/(auth)/auth";
 import { authProvidersList } from "@/src/(auth)/oauth-providers";
@@ -91,7 +91,7 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
 		});
 		const result = await response.json();
 
-		if (result?.success !== true) {
+		if (!response.ok || result?.success !== true) {
 			setFormError(result?.message);
 		}
 		await fetchLinkedProviders();
@@ -193,19 +193,12 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
 					</div>
 
 					{formError ? (
-						<FormSuccessMessage text={formError} />
+						<FormErrorMessage text={formError} />
 					) : (
 						successMessage && <FormSuccessMessage text={successMessage} />
 					)}
 
-					{loading === true && (
-						<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-							<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-								<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background dark:bg-background_dark opacity-60" />
-								<Spinner size="1.5rem" />
-							</div>
-						</div>
-					)}
+					{loading === true && <AbsolutePositionedSpinner />}
 				</div>
 			</DialogContent>
 		</Dialog>

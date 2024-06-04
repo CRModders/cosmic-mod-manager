@@ -2,7 +2,7 @@ import { TrashIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { FormSuccessMessage } from "@/components/ui/form-message";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import type React from "react";
@@ -25,9 +25,9 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
 			method: "POST",
 			body: JSON.stringify({ token: code }),
 		});
+		setLoading(false);
 		const result = await response.json();
 
-		setLoading(false);
 		if (result?.success === true) {
 			setActionResult(result);
 		}
@@ -49,9 +49,9 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
 			method: "POST",
 			body: JSON.stringify({ token: code }),
 		});
+		setLoading(false);
 		const result = await response.json();
 
-		setLoading(false);
 		if (result?.success === true) {
 			setActionResult(result);
 		}
@@ -122,14 +122,7 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
 					<SecurityLink />
 				</div>
 			</CardFooter>
-			{loading === true && (
-				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background opacity-60" />
-						<Spinner size="1.5rem" />
-					</div>
-				</div>
-			)}
+			{loading === true && <AbsolutePositionedSpinner />}
 		</Card>
 	);
 };

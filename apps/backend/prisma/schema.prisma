@@ -88,7 +88,7 @@ model DeletedUser {
 
 model VerificationRequest {
     id           String                      @id @default(uuid())
-    user_id      String                      @unique
+    user_id      String
     action       UserVerificationActionTypes
     token        String                      @unique @default(uuid()) @db.VarChar(128)
     date_created DateTime                    @default(now())

@@ -124,10 +124,13 @@ export const LogoutUser = async (c: Context<Env, "/session/logout", BlankInput>)
 	const cookieSession = getCookie(c, "auth-session");
 
 	if (!cookieSession || !providedSession) {
-		return c.json({
-			success: false,
-			message: "Missing credentials",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Missing credentials",
+			},
+			400,
+		);
 	}
 	const cookieSessiondata = JSON.parse(cookieSession);
 
@@ -138,10 +141,13 @@ export const LogoutUser = async (c: Context<Env, "/session/logout", BlankInput>)
 		providedSession?.user_id !== cookieSessiondata?.user_id ||
 		providedSession?.session_id !== cookieSessiondata?.session_id
 	) {
-		return c.json({
-			success: false,
-			message: "Invalid request",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Invalid request",
+			},
+			400,
+		);
 	}
 
 	await prisma.session.delete({

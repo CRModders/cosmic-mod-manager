@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { PlusIcon } from "@radix-ui/react-icons";
 import type { ProjectStatuses, ProjectType, ProjectVisibility } from "@root/types";
@@ -27,8 +27,8 @@ const Projects = () => {
 		setLoading(true);
 
 		const res = await useFetch("/api/project/get-all-projects");
-		const result = await res.json();
 		setLoading(false);
+		const result = await res.json();
 
 		const projects: ProjectData[] = [];
 		for (const project of result?.projects || []) {
@@ -72,7 +72,7 @@ const Projects = () => {
 				<div className="w-full flex relative">
 					{projectsList === null || loading === true ? (
 						<div className="w-full flex items-center justify-center my-4">
-							<Spinner />
+							<CubeLoader />
 						</div>
 					) : projectsList?.length > 0 ? (
 						<ProjectListTable projectsList={projectsList} />

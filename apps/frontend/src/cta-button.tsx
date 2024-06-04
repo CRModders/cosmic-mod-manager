@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./providers/auth-provider";
@@ -10,7 +10,7 @@ const CTAButton = () => {
 	if (session === undefined) {
 		return (
 			<Button className="" size="lg" variant="outline" aria-label="Explore mods">
-				<Spinner size="1.2rem" />
+				<CubeLoader size="sm" />
 			</Button>
 		);
 	}

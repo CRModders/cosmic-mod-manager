@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormErrorMessage, FormSuccessMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { sleep } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -81,9 +81,9 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 			method: "POST",
 			body: JSON.stringify({ token: code }),
 		});
+		setLoading(false);
 		const result = await response.json();
 
-		setLoading(false);
 		if (result?.success !== true) {
 			return setFormError(result?.message);
 		}
@@ -112,8 +112,8 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 				newPassword: values.newPassword,
 			}),
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (result.success === true) {
 			form.reset();
@@ -265,14 +265,7 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 								</Button>
 							</div>
 						</form>
-						{loading === true && (
-							<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-								<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-									<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background opacity-60" />
-									<Spinner size="1.5rem" />
-								</div>
-							</div>
-						)}
+						{loading === true && <AbsolutePositionedSpinner />}
 					</Form>
 				</div>
 				<div className="w-full flex items-center justify-start mt-6">

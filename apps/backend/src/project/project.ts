@@ -445,16 +445,16 @@ projectRouter.post("/:projectSlug/update-external-links", async (c) => {
 		const projectDiscordLink = isValidString(body?.projectDiscordLink, maxExternalLinkLength, 1, true).value;
 
 		if (issueTrackerLink && !isValidUrl(issueTrackerLink)) {
-			return c.json({ message: "Invalid issueTrackerLink" });
+			return c.json({ message: "Invalid issueTrackerLink" }, 400);
 		}
 		if (projectSourceLink && !isValidUrl(projectSourceLink)) {
-			return c.json({ message: "Invalid projectSourceLink" });
+			return c.json({ message: "Invalid projectSourceLink" }, 400);
 		}
 		if (projectWikiLink && !isValidUrl(projectWikiLink)) {
-			return c.json({ message: "Invalid projectWikiLink" });
+			return c.json({ message: "Invalid projectWikiLink" }, 400);
 		}
 		if (projectDiscordLink && !isValidUrl(projectDiscordLink)) {
-			return c.json({ message: "Invalid projectDiscordLink" });
+			return c.json({ message: "Invalid projectDiscordLink" }, 400);
 		}
 
 		const [user] = await getUserSession(c);

@@ -22,7 +22,7 @@ export const sendNewPasswordVerificationEmail = async ({
 }: { user_id: string; email: string; name: string }) => {
 	try {
 		try {
-			await prisma.verificationRequest.delete({
+			await prisma.verificationRequest.deleteMany({
 				where: {
 					user_id: user_id,
 					action: UserVerificationActionTypes.ADD_PASSWORD,
@@ -67,7 +67,7 @@ export const sendNewPasswordVerificationEmail = async ({
 export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 	try {
 		try {
-			await prisma.verificationRequest.delete({
+			await prisma.verificationRequest.deleteMany({
 				where: {
 					user_id: user.id,
 					action: UserVerificationActionTypes.CHANGE_PASSWORD,
@@ -101,6 +101,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 
 		return { success: true, message: "Email sent successfully" };
 	} catch (error) {
+		console.error(error);
 		return {
 			success: false,
 			message: "Error while sending email",
@@ -111,7 +112,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
 export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) => {
 	try {
 		try {
-			await prisma.verificationRequest.delete({
+			await prisma.verificationRequest.deleteMany({
 				where: {
 					user_id: user.id,
 					action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
@@ -145,6 +146,7 @@ export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) 
 
 		return { success: true, message: "Email sent successfully" };
 	} catch (error) {
+		console.error(error);
 		return {
 			success: false,
 			message: "Error while sending email",

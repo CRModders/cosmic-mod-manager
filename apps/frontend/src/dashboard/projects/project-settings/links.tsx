@@ -1,7 +1,7 @@
 import { SaveIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
@@ -30,8 +30,8 @@ const ProjectLinksSettings = () => {
 				projectDiscordLink: projectDiscordLink,
 			}),
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({ title: result?.message, variant: "destructive" });
@@ -53,13 +53,13 @@ const ProjectLinksSettings = () => {
 	if (projectData === undefined) {
 		return (
 			<div className="w-full flex items-center justify-center py-8">
-				<Spinner size="1.5rem" />
+				<CubeLoader size="lg" />
 			</div>
 		);
 	}
 
 	return (
-		<ContentWrapperCard className="items-start lg:p-8 pt-4">
+		<ContentWrapperCard className="items-start lg:p-8 pt-4 relative">
 			<h2 className=" text-2xl font-semibold">External links</h2>
 			<div className="w-full flex-col flex gap-4">
 				<div className="w-full flex flex-wrap lg:flex-nowrap items-center justify-between gap-x-4 gap-y-2">
@@ -148,6 +148,7 @@ const ProjectLinksSettings = () => {
 					<span>Save changes</span>
 				</Button>
 			</div>
+			{loading && <AbsolutePositionedSpinner />}
 		</ContentWrapperCard>
 	);
 };

@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { useContext, useEffect, useState } from "react";
@@ -56,7 +56,7 @@ const AccountSettingsPage = () => {
 					<title>... | CRMM</title>
 				</Helmet>
 				<div className="py-12 flex">
-					<Spinner size="2rem" className="mt-8" />
+					<CubeLoader size="lg" />
 				</div>
 			</>
 		);

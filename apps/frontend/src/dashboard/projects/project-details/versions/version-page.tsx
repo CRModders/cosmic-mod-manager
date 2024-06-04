@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
@@ -50,8 +50,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 		setLoading(true);
 
 		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/delete`);
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({
@@ -88,7 +88,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 	if (loading === true) {
 		return (
 			<div className="w-full flex items-center justify-center py-4">
-				<Spinner size="1.5rem" />
+				<CubeLoader size="lg" />
 			</div>
 		);
 	}
@@ -224,7 +224,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 											versionFile.is_primary === true && "bg-bg-hover",
 										)}
 									>
-										<div className="flex gap-3 items-center">
+										<div className="flex flex-wrap gap-x-3 items-center">
 											<FileIcon className="w-5 h-5 text-foreground-muted" />
 											<p className="text-lg font-semibold text-foreground-muted mr-2">{versionFile.file_name}</p>
 											<p className="text-base text-foreground-muted">{parseFileSize(versionFile.file_size)}</p>

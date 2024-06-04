@@ -1,6 +1,7 @@
 import { UploadIcon } from "@/components/icons";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
@@ -43,87 +44,102 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 	const { allProjectVersions } = useContext(Projectcontext);
 	const navigate = useNavigate();
 
-	const redirectToVersionpage = (versionUrl: string) => {
-		navigate(`/${projectType}/${projectUrlSlug}/version/${versionUrl}`);
-	};
-
-	if (!allProjectVersions?.versions.length) {
-		return null;
-	}
-
 	return (
-		<ContentWrapperCard>
-			<div className="w-full flex flex-col">
-				<div className="w-full flex flex-col p-2">
-					<div className="w-full flex flex-wrap p-2 pb-4">
-						<p className="font-semibold text-foreground text-lg overflow-hidden w-[40%]">
-							<span className="ml-14">Version</span>
-						</p>
-						<p className="font-semibold text-foreground text-lg overflow-hidden w-[30%]">Supports</p>
-						<p className="font-semibold text-foreground text-lg overflow-hidden w-[30%]">Stats</p>
+		<div className="w-full flex items-center justify-center" id="all-versions">
+			{allProjectVersions?.versions.length ? (
+				<ContentWrapperCard>
+					<div className="w-full flex items-center justify-center">
+						<Table>
+							<TableHeader className="align-top pb-4 h-16">
+								<TableRow className="border-none">
+									<TableHead className="overflow-hidden w-[5%] font-semibold text-foreground text-lg"> </TableHead>
+									<TableHead className="overflow-hidden w-[35%] font-semibold text-foreground text-lg">
+										Version
+									</TableHead>
+									<TableHead className="overflow-hidden w-[35%] font-semibold text-foreground text-lg">
+										Supports
+									</TableHead>
+									<TableHead className="overflow-hidden w-[25%] font-semibold text-foreground text-lg">Stats</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{allProjectVersions?.versions.map((version) => {
+									return (
+										<TableRow
+											key={version.id}
+											className="cursor-pointer hover:bg-bg-hover"
+											onClick={(e) => {
+												// @ts-expect-error
+												if (!e.target.closest(".noClickRedirect")) {
+													navigate(`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`);
+												}
+											}}
+										>
+											<TableCell className="align-top">
+												<div className="flex items-start justify-center py-1.5">
+													<a
+														href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+														className="noClickRedirect flex h-fit items-center justify-center"
+													>
+														<Button
+															className="h-fit w-fit p-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground font-semibold gap-2"
+															size={"icon"}
+															tabIndex={-1}
+														>
+															<DownloadIcon className="w-5 h-5" />
+														</Button>
+													</a>
+												</div>
+											</TableCell>
+											<TableCell className="align-top">
+												<div className="w-full flex flex-col items-start justify-start">
+													<Link
+														to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
+														className="noClickRedirect"
+													>
+														<p className="leading-snug text-lg font-semibold text-foreground-muted">
+															{version.version_title}
+														</p>
+													</Link>
+													<div className="w-full flex items-start justify-start gap-x-2 gap-y-1">
+														<ReleaseChannelIndicator
+															release_channel={version.release_channel}
+															labelClassName="text-base"
+														/>
+														<p className="text-foreground-muted">{version.version_number}</p>
+													</div>
+												</div>
+											</TableCell>
+											<TableCell className="align-top">
+												<div className="flex flex-col items-start justify-start">
+													<p>
+														{version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
+													</p>
+													<p>
+														{version.supported_game_versions
+															.map((gameVersion) => CapitalizeAndFormatString(gameVersion))
+															.join(", ")}
+													</p>
+												</div>
+											</TableCell>
+											<TableCell className="align-top">
+												<div className="flex items-start justify-start">
+													<p className="text-foreground-muted">
+														Published on{" "}
+														<span className="font-semibold">
+															{formatDate(new Date(version.published_on), "${month} ${day}, ${year}")}
+														</span>
+													</p>
+												</div>
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
 					</div>
-					{allProjectVersions?.versions.map((version) => {
-						return (
-							// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-							<div
-								className="w-full flex flex-wrap p-3 rounded-lg cursor-pointer hover:bg-bg-hover"
-								key={version.id}
-								onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-									// @ts-expect-error
-									if (!e.target.closest(".versionFileDownloadButton") && !e.target.closest(".versionPageLink")) {
-										redirectToVersionpage(version.url_slug);
-									}
-								}}
-							>
-								<div className="flex gap-4 w-[40%]">
-									<a
-										href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-										className="versionFileDownloadButton flex h-fit items-center justify-center"
-									>
-										<Button
-											className="h-fit w-fit p-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground font-semibold gap-2"
-											size={"icon"}
-											tabIndex={-1}
-										>
-											<DownloadIcon className="w-5 h-5" />
-										</Button>
-									</a>
-									<div className="h-full flex flex-col items-start justify-center">
-										<Link
-											to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
-											className="versionPageLink"
-										>
-											<p className="leading-snug text-lg font-semibold text-foreground-muted">
-												{version.version_title}
-											</p>
-										</Link>
-										<div className="w-full flex items-center justify-start gap-x-2 gap-y-1">
-											<ReleaseChannelIndicator release_channel={version.release_channel} labelClassName="text-base" />
-											<p className="text-foreground-muted">{version.version_number}</p>
-										</div>
-									</div>
-								</div>
-								<div className="w-[30%] flex flex-col items-start justify-start text-foreground-muted">
-									<p>{version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}</p>
-									<p>
-										{version.supported_game_versions
-											.map((gameVersion) => CapitalizeAndFormatString(gameVersion))
-											.join(", ")}
-									</p>
-								</div>
-								<div className="w-[30%]">
-									<p className="text-foreground-muted">
-										Published on{" "}
-										<span className="font-semibold">
-											{formatDate(new Date(version.published_on), "${month} ${day}, ${year}")}
-										</span>
-									</p>
-								</div>
-							</div>
-						);
-					})}
-				</div>
-			</div>
-		</ContentWrapperCard>
+				</ContentWrapperCard>
+			) : null}
+		</div>
 	);
 };

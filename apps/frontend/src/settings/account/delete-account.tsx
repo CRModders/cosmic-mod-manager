@@ -2,7 +2,7 @@ import { TrashIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FormErrorMessage } from "@/components/ui/form-message";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { DialogTrigger } from "@radix-ui/react-dialog";
@@ -22,9 +22,9 @@ const DeleteAccountSection = () => {
 		const response = await useFetch("/api/user/send-account-deletion-email", {
 			method: "POST",
 		});
+		setLoading(false);
 		const res = await response.json();
 
-		setLoading(false);
 		if (res?.success === true) {
 			setDialogOpen(false);
 			toast({
@@ -85,14 +85,7 @@ const DeleteAccountSection = () => {
 							</Button>
 						</DialogFooter>
 
-						{loading === true && (
-							<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-								<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-									<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background opacity-60" />
-									<Spinner size="1.5rem" />
-								</div>
-							</div>
-						)}
+						{loading === true && <AbsolutePositionedSpinner />}
 					</div>
 				</DialogContent>
 			</Dialog>

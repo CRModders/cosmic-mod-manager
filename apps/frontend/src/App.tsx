@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar/navbar";
 import { BrandIcon } from "@/components/icons";
+import ScrollToAnchor from "@/components/scroll-into-view";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import "@/src/globals.css";
@@ -21,6 +22,7 @@ export default function RootLayout() {
 				<Outlet />
 			</main>
 			<Toaster />
+			<ScrollToAnchor />
 		</Providers>
 	);
 }

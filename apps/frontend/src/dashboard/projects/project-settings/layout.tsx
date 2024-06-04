@@ -17,7 +17,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -71,7 +71,7 @@ export function ProjectSettingsLayoutContent({
 				<SidePanel>
 					{fetchingProjectData === true || projectData === undefined ? (
 						<div className="w-full min-h-[50vh] flex items-center justify-center">
-							<Spinner size="2rem" />
+							<CubeLoader />
 						</div>
 					) : (
 						<>

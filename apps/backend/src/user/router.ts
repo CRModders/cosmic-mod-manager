@@ -22,11 +22,14 @@ userRouter.get("/linked-auth-providers", async (c) => {
 	try {
 		const [user] = await getUserSession(c);
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated request",
-				data: [],
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated request",
+					data: [],
+				},
+				403,
+			);
 		}
 
 		const linkedProviders = await prisma.account.findMany({
@@ -49,11 +52,14 @@ userRouter.get("/linked-auth-providers", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-			data: [],
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+				data: [],
+			},
+			500,
+		);
 	}
 });
 
@@ -68,45 +74,60 @@ userRouter.post("/edit-profile", async (c) => {
 
 		// make sure the values aren't missing
 		if (!name && !user_name && !avatar_provider) {
-			return c.json({
-				success: false,
-				message: "Invalid form data",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid form data",
+				},
+				400,
+			);
 		}
 
 		// check if the username is of valid format
 		if (isValidUsername(user_name || "") !== true) {
 			const error = isValidUsername(user_name || "");
-			return c.json({
-				success: false,
-				message: error.toString(),
-			});
+			return c.json(
+				{
+					success: false,
+					message: error.toString(),
+				},
+				400,
+			);
 		}
 
 		// check if the name is of valid format
 		if (isValidName(name || "") !== true) {
 			const error = isValidName(name || "");
-			return c.json({
-				success: false,
-				message: error.toString(),
-			});
+			return c.json(
+				{
+					success: false,
+					message: error.toString(),
+				},
+				400,
+			);
 		}
 		// Get the current logged in user from the cookie data
 		const [user] = await getUserSession(c);
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated request",
+				},
+				403,
+			);
 		}
 
 		// If the username has changed check if it's available or not
 		const userNameAvailable = user_name === user?.user_name ? true : await isUsernameAvailable(user_name);
 		if (userNameAvailable !== true) {
-			return c.json({
-				success: false,
-				message: "This user name is not available",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "This user name is not available",
+				},
+				400,
+			);
 		}
 
 		// If the avatar provider has changed, set the avatar image to the new image
@@ -150,10 +171,13 @@ userRouter.post("/edit-profile", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -165,28 +189,37 @@ userRouter.post("/add-new-password", async (c) => {
 
 		if (isValidPassword(new_password) !== true) {
 			const error = isValidPassword(new_password);
-			return c.json({
-				success: false,
-				message: `Invalid password | ${error}`,
-			});
+			return c.json(
+				{
+					success: false,
+					message: `Invalid password | ${error}`,
+				},
+				400,
+			);
 		}
 
 		const [user] = await getUserSession(c);
 
 		// Return in case of there's no valid logged in user
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated request",
+				},
+				403,
+			);
 		}
 
 		// Return if the user already has a password
 		if (user?.password) {
-			return c.json({
-				success: false,
-				message: "Your account already has a password",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Your account already has a password",
+				},
+				400,
+			);
 		}
 
 		const hashedPassword = await hashPassword(new_password);
@@ -218,10 +251,13 @@ userRouter.post("/add-new-password", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -279,37 +315,49 @@ userRouter.post("/remove-account-password", async (c) => {
 		const entered_password = data?.entered_password;
 
 		if (!password) {
-			return c.json({
-				success: false,
-				message: "Invalid password",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid password",
+				},
+				400,
+			);
 		}
 
 		const [user] = await getUserSession(c);
 
 		// Return in case of there's no valid logged in user
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated request",
+				},
+				403,
+			);
 		}
 
 		// Return if the user doesn't have a password
 		if (!user?.password) {
-			return c.json({
-				success: false,
-				message: "Your account does not have a password",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Your account does not have a password",
+				},
+				400,
+			);
 		}
 
 		// Match if the user entered correct password
 		const isCorrectPassword = await matchPassword(entered_password, user.password);
 		if (isCorrectPassword !== true) {
-			return c.json({
-				success: false,
-				message: "Incorrect password",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Incorrect password",
+				},
+				400,
+			);
 		}
 
 		await prisma.user.update({
@@ -328,10 +376,13 @@ userRouter.post("/remove-account-password", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -342,10 +393,13 @@ userRouter.post("/confirm-new-password", async (c) => {
 		const token = body?.token;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 
 		const verificationRequestData: {
@@ -381,31 +435,43 @@ userRouter.post("/confirm-new-password", async (c) => {
 			verificationRequestData.password = data.user.password;
 			verificationRequestData.unverified_new_password = data.user.unverified_new_password;
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!verificationRequestData?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!isVerificationTokenValid(verificationRequestData?.date_created, addNewPasswordVerificationTokenValidity)) {
-			return c.json({
-				success: false,
-				message: "Expired token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Expired token",
+				},
+				400,
+			);
 		}
 
 		if (verificationRequestData?.password) {
-			return c.json({
-				success: false,
-				message: "You have already added a password.",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "You have already added a password.",
+				},
+				400,
+			);
 		}
 
 		await prisma.user.update({
@@ -424,10 +490,13 @@ userRouter.post("/confirm-new-password", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -438,10 +507,13 @@ userRouter.post("/discard-new-password", async (c) => {
 		const token = body?.token;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 
 		let res: VerificationRequest;
@@ -454,17 +526,23 @@ userRouter.post("/discard-new-password", async (c) => {
 				},
 			});
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 
 		if (!res?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 
 		return c.json({
@@ -473,10 +551,13 @@ userRouter.post("/discard-new-password", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -487,10 +568,13 @@ userRouter.post("/send-password-change-email", async (c) => {
 		const email = body?.email;
 
 		if (!email) {
-			return c.json({
-				success: false,
-				message: "Missing email",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing email",
+				},
+				400,
+			);
 		}
 
 		const userData = await prisma.user.findUnique({
@@ -517,15 +601,18 @@ userRouter.post("/send-password-change-email", async (c) => {
 
 		return c.json({
 			success: true,
-			message: emailSendRes?.message,
+			message: "You should receive a password change link shortly if you entered the correct email.",
 		});
 	} catch (error) {
 		console.error(error);
 
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -537,10 +624,13 @@ userRouter.post("/change-account-password", async (c) => {
 		const newPassword = body?.newPassword;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 
 		if (isValidPassword(newPassword) !== true) {
@@ -560,23 +650,32 @@ userRouter.post("/change-account-password", async (c) => {
 				},
 			});
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 		if (!verificationRequestData?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!isVerificationTokenValid(verificationRequestData?.date_created, changePasswordConfirmationTokenValidity)) {
-			return c.json({
-				success: false,
-				message: "Expired token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Expired token",
+				},
+				400,
+			);
 		}
 
 		const hashedPassword = await hashPassword(newPassword);
@@ -595,10 +694,13 @@ userRouter.post("/change-account-password", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -609,10 +711,13 @@ userRouter.post("/discard-change-password-request", async (c) => {
 		const token = body?.token;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 
 		let res: VerificationRequest;
@@ -625,17 +730,23 @@ userRouter.post("/discard-change-password-request", async (c) => {
 				},
 			});
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!res?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		return c.json({
@@ -644,10 +755,13 @@ userRouter.post("/discard-change-password-request", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -658,19 +772,25 @@ userRouter.post("/remove-auth-provider", async (c) => {
 		const provider_name = await body?.provider_name;
 
 		if (!provider_name) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 
 		const [user] = await getUserSession(c);
 
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 
 		const existingProviders = await prisma.account.findMany({
@@ -680,17 +800,23 @@ userRouter.post("/remove-auth-provider", async (c) => {
 		});
 
 		if (!existingProviders?.length) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 
 		if (existingProviders.length === 1) {
-			return c.json({
-				success: false,
-				message: "You can't unlink the only remaining auth provider",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "You can't unlink the only remaining auth provider",
+				},
+				400,
+			);
 		}
 
 		const targetProvider = existingProviders
@@ -702,10 +828,13 @@ userRouter.post("/remove-auth-provider", async (c) => {
 			?.at(0);
 
 		if (!targetProvider) {
-			return c.json({
-				success: false,
-				message: "Invalid request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid request",
+				},
+				400,
+			);
 		}
 		await prisma.account.delete({
 			where: {
@@ -720,10 +849,13 @@ userRouter.post("/remove-auth-provider", async (c) => {
 	} catch (error) {
 		console.error(error);
 
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -733,9 +865,12 @@ userRouter.get("/has-password", async (c) => {
 		const [user] = await getUserSession(c);
 
 		if (!user?.id) {
-			return c.json({
-				message: "Unauthenticated request",
-			});
+			return c.json(
+				{
+					message: "Unauthenticated request",
+				},
+				403,
+			);
 		}
 
 		return c.json({
@@ -755,10 +890,13 @@ userRouter.post("/send-account-deletion-email", async (c) => {
 		const [user] = await getUserSession(c);
 
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated request",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated request",
+				},
+				403,
+			);
 		}
 
 		const emailSendRes = await sendAccountDeletionConfirmationEmail(user);
@@ -775,10 +913,13 @@ userRouter.post("/send-account-deletion-email", async (c) => {
 		});
 	} catch (error) {
 		console.error(error);
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -789,19 +930,25 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
 		const token = body?.token;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 
 		const [user] = await getUserSession(c);
 
 		if (!user?.id) {
-			return c.json({
-				success: false,
-				message: "Unauthenticated user",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Unauthenticated user",
+				},
+				403,
+			);
 		}
 		let verificationActionData: VerificationRequest;
 
@@ -813,24 +960,33 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
 				},
 			});
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!verificationActionData?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!isVerificationTokenValid(verificationActionData?.date_created, deleteAccountVerificationTokenValidity)) {
-			return c.json({
-				success: false,
-				message: "Expired token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Expired token",
+				},
+				400,
+			);
 		}
 
 		const userData = await prisma.user.delete({
@@ -855,10 +1011,13 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
 	} catch (error) {
 		console.error(error);
 
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 
@@ -869,10 +1028,13 @@ userRouter.post("/discard-user-account-deletion", async (c) => {
 		const token = body?.token;
 
 		if (!token) {
-			return c.json({
-				success: false,
-				message: "Missing confirmation token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Missing confirmation token",
+				},
+				400,
+			);
 		}
 		let res: VerificationRequest;
 
@@ -884,17 +1046,23 @@ userRouter.post("/discard-user-account-deletion", async (c) => {
 				},
 			});
 		} catch (error) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		if (!res?.token) {
-			return c.json({
-				success: false,
-				message: "Invalid token",
-			});
+			return c.json(
+				{
+					success: false,
+					message: "Invalid token",
+				},
+				400,
+			);
 		}
 
 		return c.json({
@@ -904,10 +1072,13 @@ userRouter.post("/discard-user-account-deletion", async (c) => {
 	} catch (error) {
 		console.error(error);
 
-		return c.json({
-			success: false,
-			message: "Internal server error",
-		});
+		return c.json(
+			{
+				success: false,
+				message: "Internal server error",
+			},
+			500,
+		);
 	}
 });
 

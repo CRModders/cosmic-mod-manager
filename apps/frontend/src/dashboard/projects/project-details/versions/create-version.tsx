@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
@@ -80,8 +80,8 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 			method: "POST",
 			body: formData,
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (!response.ok) {
 			return toast({
@@ -152,7 +152,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 							className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
 							onClick={createProjectVersion}
 						>
-							{loading === true ? <Spinner className="w-5 h-5" /> : <PlusIcon className="w-5 h-5" />}
+							{loading === true ? <CubeLoader size="xs" /> : <PlusIcon className="w-5 h-5" />}
 							<span className="text-base font-semibold">Create</span>
 						</Button>
 						<Link to={`/${projectType}/${projectUrlSlug}/versions`}>

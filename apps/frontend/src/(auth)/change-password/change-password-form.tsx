@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { sleep } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,8 +67,8 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 			method: "POST",
 			body: JSON.stringify({ email: values?.email }),
 		});
-		const result = await response.json();
 		setLoading(false);
+		const result = await response.json();
 
 		if (result?.success !== true) {
 			return setFormError(result?.message);
@@ -139,14 +139,7 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 					Continue
 				</Button>
 			</form>
-			{loading === true && (
-				<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
-					<div className="w-full h-full flex items-center justify-center relative rounded-xl">
-						<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-background opacity-60" />
-						<Spinner size="1.5rem" />
-					</div>
-				</div>
-			)}
+			{loading === true && <AbsolutePositionedSpinner />}
 		</Form>
 	);
 };

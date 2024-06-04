@@ -34,7 +34,7 @@
     --bg-hover-dark: var(--tint-hue), 5%, 15%;
     --danger-bg-dark: 0, 84%, 60%;
     --danger-text-dark: 0, 91%, 71%;
-    --success-bg-dark: 0, 72%, 51%;
+    --success-bg-dark: 160, 84%, 39%;
     --success-text-dark: 158, 64%, 52%;
     --shadow-dark: var(--tint-hue), 10%, 4%;
     --border-dark: var(--tint-hue), 5%, 26%;

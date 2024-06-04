@@ -405,7 +405,7 @@ versionRouter.post("/:versionSlug/set-featured", async (c) => {
 			},
 		});
 
-		return c.json({ message: "Version added to featured list" });
+		return c.json({ message: `Version ${is_featured === true ? "added to" : "removed from"} featured list` });
 	} catch (error) {
 		console.error(error);
 		return c.json(

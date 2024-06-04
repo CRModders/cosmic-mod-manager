@@ -35,14 +35,19 @@ export async function GetUserData({
 
 	// The updated_avatar_image will only be defined when the avatar_image url the avatar_image_provider has changed
 	if (updated_avatar_image) {
-		const user = await prisma.user.update({
-			where: {
-				id: id,
-			},
-			data: {
-				avatar_image: updated_avatar_image,
-			},
-		});
+		const user = await prisma.user
+			.update({
+				where: {
+					id: id,
+				},
+				data: {
+					avatar_image: updated_avatar_image,
+				},
+			})
+			.catch((error) => {
+				console.error(error);
+				throw new Error("Database error");
+			});
 
 		return {
 			success: true,
@@ -50,11 +55,16 @@ export async function GetUserData({
 		};
 	}
 
-	const user = await prisma.user.findUnique({
-		where: {
-			id: id,
-		},
-	});
+	const user = await prisma.user
+		.findUnique({
+			where: {
+				id: id,
+			},
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	return {
 		success: true,
@@ -63,20 +73,25 @@ export async function GetUserData({
 }
 
 export async function CreateNewProviderAccout(user: User, profile: Profile): Promise<boolean> {
-	const result = await prisma.account.create({
-		data: {
-			user_id: user?.id,
-			provider: profile?.providerName,
-			provider_account_id: `${profile?.providerAccountId}`,
-			provider_account_email: profile?.email,
-			avatar_image: profile?.avatarImage,
-			access_token: profile.accessToken,
-			refresh_token: profile.refreshToken,
-			token_type: profile.tokenType,
-			auth_type: profile.authType,
-			scope: profile.scope,
-		},
-	});
+	const result = await prisma.account
+		.create({
+			data: {
+				user_id: user?.id,
+				provider: profile?.providerName,
+				provider_account_id: `${profile?.providerAccountId}`,
+				provider_account_email: profile?.email,
+				avatar_image: profile?.avatarImage,
+				access_token: profile.accessToken,
+				refresh_token: profile.refreshToken,
+				token_type: profile.tokenType,
+				auth_type: profile.authType,
+				scope: profile.scope,
+			},
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	if (result?.id) return true;
 	return false;
@@ -85,16 +100,21 @@ export async function CreateNewProviderAccout(user: User, profile: Profile): Pro
 export async function CreateNewUser(profile: Profile): Promise<AuthenticationResult> {
 	const userName = generateRandomCode(24);
 
-	const newUser = await prisma.user.create({
-		data: {
-			name: profile?.name || "",
-			user_name: userName,
-			email: profile.email,
-			email_verified: new Date(),
-			avatar_image: profile?.avatarImage || null,
-			avatar_image_provider: profile?.providerName || null,
-		},
-	});
+	const newUser = await prisma.user
+		.create({
+			data: {
+				name: profile?.name || "",
+				user_name: userName,
+				email: profile.email,
+				email_verified: new Date(),
+				avatar_image: profile?.avatarImage || null,
+				avatar_image_provider: profile?.providerName || null,
+			},
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	await CreateNewProviderAccout(newUser, profile);
 
@@ -106,12 +126,17 @@ export async function CreateNewUser(profile: Profile): Promise<AuthenticationRes
 }
 
 export async function LinkProviderAccount(profile: Profile, userSession: User): Promise<AuthenticationResult> {
-	const existingAccountWithSameAuthProvider = await prisma.account.findFirst({
-		where: {
-			provider_account_id: `${profile.providerAccountId}`,
-			provider: profile.providerName,
-		},
-	});
+	const existingAccountWithSameAuthProvider = await prisma.account
+		.findFirst({
+			where: {
+				provider_account_id: `${profile.providerAccountId}`,
+				provider: profile.providerName,
+			},
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	if (existingAccountWithSameAuthProvider?.id) {
 		throw new Error(
@@ -142,37 +167,47 @@ export default async function authenticateUser(
 	}
 
 	// Check if there's already an Auth Account with that email, if yes that means the user alerady exists so log them in
-	const existingAuthAccount = await prisma.account.findFirst({
-		where: {
-			provider_account_id: `${profile?.providerAccountId}`,
-			provider: profile.providerName,
-		},
-		select: {
-			id: true,
-			user_id: true,
-			user: {
-				select: {
-					avatar_image_provider: true,
+	const existingAuthAccount = await prisma.account
+		.findFirst({
+			where: {
+				provider_account_id: `${profile?.providerAccountId}`,
+				provider: profile.providerName,
+			},
+			select: {
+				id: true,
+				user_id: true,
+				user: {
+					select: {
+						avatar_image_provider: true,
+					},
 				},
 			},
-		},
-	});
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	if (existingAuthAccount?.id) {
-		await prisma.account.update({
-			where: {
-				id: existingAuthAccount.id,
-			},
-			data: {
-				provider_account_id: `${profile?.providerAccountId}`,
-				avatar_image: profile?.avatarImage,
-				access_token: profile.accessToken,
-				refresh_token: profile.refreshToken,
-				token_type: profile.tokenType,
-				auth_type: profile.authType,
-				scope: profile.scope,
-			},
-		});
+		await prisma.account
+			.update({
+				where: {
+					id: existingAuthAccount.id,
+				},
+				data: {
+					provider_account_id: `${profile?.providerAccountId}`,
+					avatar_image: profile?.avatarImage,
+					access_token: profile.accessToken,
+					refresh_token: profile.refreshToken,
+					token_type: profile.tokenType,
+					auth_type: profile.authType,
+					scope: profile.scope,
+				},
+			})
+			.catch((error) => {
+				console.error(error);
+				throw new Error("Database error");
+			});
 
 		const updated_avatar_image =
 			existingAuthAccount?.user?.avatar_image_provider === profile.providerName ? profile?.avatarImage : null;
@@ -183,14 +218,19 @@ export default async function authenticateUser(
 	}
 
 	// Check if there's any account with that email, if yes means this auth provider is not linked with that account, so just return an error
-	const existingUser = await prisma.user.findUnique({
-		where: {
-			email: profile?.email,
-		},
-		select: {
-			email: true,
-		},
-	});
+	const existingUser = await prisma.user
+		.findUnique({
+			where: {
+				email: profile?.email,
+			},
+			select: {
+				email: true,
+			},
+		})
+		.catch((error) => {
+			console.error(error);
+			throw new Error("Database error");
+		});
 
 	if (existingUser?.email) {
 		throw new Error(
