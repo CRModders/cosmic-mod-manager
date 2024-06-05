@@ -1,3 +1,4 @@
+import { constructProjectPageUrl } from "@/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@/types";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -70,25 +71,27 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 		setCurrProjectSlug(slug);
 	};
 
+	const redirectToCorrectProjectUrl = () => {
+		if (projectData?.id) {
+			const constructedUrl = constructProjectPageUrl(projectData.type, projectData.url_slug);
+
+			if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
+				navigate(constructedUrl);
+			}
+		}
+	};
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const fetches = [fetchProjectData(), fetchFeaturedProjectVersions(), fetchAllProjectVersions()];
 		Promise.all(fetches);
 	}, []);
 
+	// *
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (projectData?.id && window.location.pathname.includes(projectData?.id)) {
-			navigate(window.location.pathname.replace(projectData?.id, projectData?.url_slug));
-		}
-	}, [projectData]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (projectUrlSlug && currProjectSlug !== projectUrlSlug) {
-			navigate(window.location.pathname.replace(projectUrlSlug, currProjectSlug));
-		}
-	}, [currProjectSlug]);
+		redirectToCorrectProjectUrl();
+	}, [projectData, currProjectSlug]);
 
 	return (
 		<Projectcontext.Provider

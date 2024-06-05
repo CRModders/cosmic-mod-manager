@@ -112,7 +112,10 @@ export const GetProjectLoader = (loader: string) => {
 export const GetProjectLoadersList = (loaders_list: string[]) => {
 	const list: Loaders[] = [];
 	for (const loader of loaders_list) {
-		list.push(GetProjectLoader(loader));
+		const loaderName = GetProjectLoader(loader);
+		if (!list.includes(loaderName)) {
+			list.push(loaderName);
+		}
 	}
 
 	return list;

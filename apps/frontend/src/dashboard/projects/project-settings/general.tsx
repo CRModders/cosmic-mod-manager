@@ -39,18 +39,15 @@ const GeneralProjectSettings = () => {
 	const saveProjectData = async () => {
 		setLoading(true);
 
-		const response = await useFetch(
-			`/api/project/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}/update`,
-			{
-				method: "POST",
-				body: JSON.stringify({
-					name: projectName,
-					url_slug: projectUrl,
-					summary: projectSummary,
-					visibility: visibility,
-				}),
-			},
-		);
+		const response = await useFetch(`/api/project/${projectData?.url_slug}/update`, {
+			method: "POST",
+			body: JSON.stringify({
+				name: projectName,
+				url_slug: projectUrl,
+				summary: projectSummary,
+				visibility: visibility,
+			}),
+		});
 		setLoading(false);
 		const result = await response.json();
 		toast({
@@ -160,7 +157,7 @@ const GeneralProjectSettings = () => {
 
 						<div className="w-full flex flex-col gap-1">
 							<p className="font-semibold text-lg">Visibility</p>
-							<div className="w-full flex gap-6 items-center justify-between">
+							<div className="w-full flex flex-wrap lg:flex-nowrap gap-6 items-center justify-between">
 								<div>
 									<p className=" text-foreground-muted">
 										Listed and archived projects are visible in search. Unlisted projects are published, but not visible
@@ -174,7 +171,7 @@ const GeneralProjectSettings = () => {
 										setProjectVisibility(value as ProjectVisibility);
 									}}
 								>
-									<SelectTrigger className="w-fit min-w-[24ch]">
+									<SelectTrigger className="w-fit max-w-full min-w-[24ch]">
 										<SelectValue placeholder="Visibility" />
 									</SelectTrigger>
 									<SelectContent>
@@ -274,7 +271,7 @@ const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: strin
 							}}
 						/>
 					</div>
-					<DialogFooter className="w-full flex items-center justify-end gap-2">
+					<DialogFooter className="w-full flex flex-row flex-wrap-reverse items-center justify-end gap-2">
 						<DialogClose asChild>
 							<Button className="gap-2 text-foreground-muted" variant={"secondary"}>
 								<Cross2Icon />

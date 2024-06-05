@@ -9,6 +9,7 @@ import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Projectcontext } from "@/src/providers/project-context";
 import { PanelContent, PanelLayout, SidePanel } from "@/src/settings/panel";
+import type { ProjectDataType, ProjectVersionsList } from "@/types";
 import {
 	BookmarkIcon,
 	CalendarIcon,
@@ -33,7 +34,6 @@ const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${am
 export default function ProjectDetailsLayout() {
 	const { projectData, fetchingProjectData, featuredProjectVersions } = useContext(Projectcontext);
 	const { session } = useContext(AuthContext);
-	const navigate = useNavigate();
 
 	if (projectData === null) {
 		return <NotFoundPage />;
@@ -115,181 +115,12 @@ export default function ProjectDetailsLayout() {
 								</div>
 							</div>
 						</SidePanel>
-						<SidePanel>
-							<div className="w-full flex flex-col gap-1 p-2">
-								{projectData?.external_links?.issue_tracker_link ||
-								projectData?.external_links?.project_source_link ||
-								projectData?.external_links?.project_wiki_link ||
-								projectData?.external_links?.discord_invite_link ? (
-									<div className="w-full flex flex-col gap-2">
-										<h2 className="text-lg font-semibold text-foreground">External resources</h2>
-										<div className="w-full flex gap-x-3 gap-y-2 flex-wrap">
-											{projectData?.external_links?.issue_tracker_link ? (
-												<ExternalLink
-													url={projectData?.external_links?.issue_tracker_link}
-													label="Issues"
-													icon={<ExclamationTriangleIcon className="w-4 h-4" />}
-												/>
-											) : null}
 
-											{projectData?.external_links?.project_source_link ? (
-												<ExternalLink
-													url={projectData?.external_links?.project_source_link}
-													label="Source"
-													icon={<CodeIcon className="w-5 h-5" />}
-												/>
-											) : null}
-
-											{projectData?.external_links?.project_wiki_link ? (
-												<ExternalLink
-													url={projectData?.external_links?.project_wiki_link}
-													label="Wiki"
-													icon={<BookIcon className="w-4 h-4" />}
-												/>
-											) : null}
-
-											{projectData?.external_links?.project_wiki_link ? (
-												<ExternalLink
-													url={projectData?.external_links?.project_wiki_link}
-													label="Discord"
-													icon={
-														<DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />
-													}
-												/>
-											) : null}
-										</div>
-										<span className="w-full h-[1px] my-2 bg-border" />
-									</div>
-								) : null}
-
-								{featuredProjectVersions?.versions?.length ? (
-									<div className="w-full flex flex-col">
-										<div className="w-full flex items-center justify-between flex-wrap mb-3">
-											<h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
-											<Link
-												to={`/${createURLSafeSlug(projectData?.type).value}/${
-													projectData?.url_slug
-												}/versions#all-versions`}
-												className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
-											>
-												<span>See all</span>
-												<ChevronRightIcon size="1rem" />
-											</Link>
-										</div>
-										{featuredProjectVersions?.versions.map((version) => {
-											return (
-												// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-												<div
-													key={version.id}
-													className="w-full flex items-start justify-start p-4 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
-													onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-														if (
-															// @ts-expect-error
-															!e.target.closest(".versionFileDownloadLink") &&
-															// @ts-expect-error
-															!e.target.closest(".versionPageLink")
-														) {
-															const link = `/${createURLSafeSlug(projectData?.type || "").value}/${
-																projectData?.url_slug
-															}/version/${version.url_slug}#project-page-nav`;
-															if (window.location.pathname !== link) {
-																window.scrollTo({ top: 0 });
-																navigate(link);
-															}
-														}
-													}}
-												>
-													<a
-														href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-														className="versionFileDownloadLink"
-													>
-														<Button
-															tabIndex={-1}
-															size={"icon"}
-															className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground h-fit w-fit px-2.5 py-2.5"
-														>
-															<DownloadIcon className="w-5 h-5" />
-														</Button>
-													</a>
-
-													<div className="flex w-fit h-full grow flex-col gap-1 select-text">
-														<Link
-															to={`/${createURLSafeSlug(projectData?.type || "").value}/${
-																projectData?.url_slug
-															}/version/${version.url_slug}#project-page-nav`}
-															className="versionPageLink w-fit"
-														>
-															<p className="text-lg leading-none font-semibold text-foreground-muted">
-																{version.version_title}
-															</p>
-														</Link>
-														<div className="flex flex-wrap gap-x-2 gap-1">
-															<p className="text-foreground-muted leading-none">
-																{version.supported_loaders
-																	.map((loader) => CapitalizeAndFormatString(loader))
-																	.join(", ")}
-															</p>
-															<p className="text-foreground-muted leading-none">
-																{version.supported_game_versions
-																	.slice(0, Math.min(5, version.supported_game_versions.length))
-																	.map((game_version) => CapitalizeAndFormatString(game_version))
-																	.join(", ")}
-																{version.supported_game_versions.length > 5 ? (
-																	<span> and {version.supported_game_versions.length - 5} more</span>
-																) : null}
-															</p>
-														</div>
-														<ReleaseChannelIndicator release_channel={version.release_channel} />
-													</div>
-												</div>
-											);
-										})}
-										<span className="w-full h-[1px] my-2 bg-border" />
-									</div>
-								) : null}
-								<h2 className="text-lg font-semibold text-foreground">Project members</h2>
-								<div className="w-full flex items-center justify-center gap-2 flex-col">
-									{projectData?.members?.map((member) => {
-										return (
-											<React.Fragment key={member.user.user_name}>
-												<ProjectMember
-													username={member.user.user_name}
-													role={member.role}
-													role_title={member.role_title}
-													avatar_image={member.user.avatar_image || ""}
-												/>
-											</React.Fragment>
-										);
-									})}
-								</div>
-
-								<span className="w-full h-[1px] my-2 bg-border" />
-
-								<h2 className="text-lg font-semibold text-foreground">Technical information</h2>
-								<div className="w-full grid grid-cols-2">
-									<span className="font-semibold text-foreground-muted">License</span>
-									<span className="text-foreground-muted">Unknown</span>
-								</div>
-								<div className="grid grid-cols-2">
-									<span className="font-semibold text-foreground-muted">Client side</span>
-									<span className="text-foreground-muted">Unknown</span>
-								</div>
-								<div className="grid grid-cols-2">
-									<span className="font-semibold text-foreground-muted">Server side</span>
-									<span className="text-foreground-muted">Unknown</span>
-								</div>
-								<div className="grid grid-cols-2">
-									<span className="font-semibold text-foreground-muted">Project ID</span>
-									<div className="w-fit flex items-center justify-start gap-2 rounded pl-2 pr-1">
-										<CopyBtn
-											text={projectData.id}
-											label={`...${projectData.id.slice(projectData.id.length - 10)}`}
-											labelClassName="text-foreground-muted"
-										/>
-									</div>
-								</div>
-							</div>
-						</SidePanel>
+						<AdditionalProjectDetailsCard
+							className="hidden lg:flex"
+							projectData={projectData}
+							featuredProjectVersions={featuredProjectVersions}
+						/>
 					</div>
 					<PanelContent>
 						<PublishingChecklist />
@@ -299,6 +130,11 @@ export default function ProjectDetailsLayout() {
 							members_id_list={projectData?.members?.map((member) => member.user.id) || []}
 						/>
 						<Outlet />
+						<AdditionalProjectDetailsCard
+							className="flex lg:hidden"
+							projectData={projectData}
+							featuredProjectVersions={featuredProjectVersions}
+						/>
 					</PanelContent>
 				</PanelLayout>
 			</div>
@@ -340,6 +176,190 @@ export const ProjectMember = ({
 	);
 };
 
+const AdditionalProjectDetailsCard = ({
+	className,
+	projectData,
+	featuredProjectVersions,
+}: {
+	className: string;
+	projectData: ProjectDataType;
+	featuredProjectVersions: ProjectVersionsList | null | undefined;
+}) => {
+	const navigate = useNavigate();
+
+	return (
+		<SidePanel className={className}>
+			<div className="w-full flex flex-col gap-1 p-2">
+				{projectData?.external_links?.issue_tracker_link ||
+				projectData?.external_links?.project_source_link ||
+				projectData?.external_links?.project_wiki_link ||
+				projectData?.external_links?.discord_invite_link ? (
+					<div className="w-full flex flex-col gap-2">
+						<h2 className="text-lg font-semibold text-foreground">External resources</h2>
+						<div className="w-full flex gap-x-3 gap-y-2 flex-wrap">
+							{projectData?.external_links?.issue_tracker_link ? (
+								<ExternalLink
+									url={projectData?.external_links?.issue_tracker_link}
+									label="Issues"
+									icon={<ExclamationTriangleIcon className="w-4 h-4" />}
+								/>
+							) : null}
+
+							{projectData?.external_links?.project_source_link ? (
+								<ExternalLink
+									url={projectData?.external_links?.project_source_link}
+									label="Source"
+									icon={<CodeIcon className="w-5 h-5" />}
+								/>
+							) : null}
+
+							{projectData?.external_links?.project_wiki_link ? (
+								<ExternalLink
+									url={projectData?.external_links?.project_wiki_link}
+									label="Wiki"
+									icon={<BookIcon className="w-4 h-4" />}
+								/>
+							) : null}
+
+							{projectData?.external_links?.discord_invite_link ? (
+								<ExternalLink
+									url={projectData?.external_links?.discord_invite_link}
+									label="Discord"
+									icon={<DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />}
+								/>
+							) : null}
+						</div>
+						<span className="w-full h-[1px] my-2 bg-border" />
+					</div>
+				) : null}
+
+				{featuredProjectVersions?.versions?.length ? (
+					<div className="w-full flex flex-col">
+						<div className="w-full flex items-center justify-between flex-wrap mb-3">
+							<h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
+							<Link
+								to={`/${createURLSafeSlug(projectData?.type).value}/${projectData?.url_slug}/versions#all-versions`}
+								className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
+							>
+								<span>See all</span>
+								<ChevronRightIcon size="1rem" />
+							</Link>
+						</div>
+						{featuredProjectVersions?.versions.map((version) => {
+							return (
+								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+								<div
+									key={version.id}
+									className="w-full flex items-start justify-start p-4 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+									onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+										if (
+											// @ts-expect-error
+											!e.target.closest(".versionFileDownloadLink") &&
+											// @ts-expect-error
+											!e.target.closest(".versionPageLink")
+										) {
+											const link = `/${createURLSafeSlug(projectData?.type || "").value}/${
+												projectData?.url_slug
+											}/version/${version.url_slug}#project-page-nav`;
+											if (window.location.pathname !== link) {
+												window.scrollTo({ top: 0 });
+												navigate(link);
+											}
+										}
+									}}
+								>
+									<a
+										href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+										className="versionFileDownloadLink"
+									>
+										<Button
+											tabIndex={-1}
+											size={"icon"}
+											className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground h-fit w-fit px-1.5 py-1.5"
+										>
+											<DownloadIcon className="w-5 h-5" />
+										</Button>
+									</a>
+
+									<div className="flex w-fit h-full grow flex-col gap-1 select-text">
+										<Link
+											to={`/${createURLSafeSlug(projectData?.type || "").value}/${
+												projectData?.url_slug
+											}/version/${version.url_slug}#project-page-nav`}
+											className="versionPageLink w-fit"
+										>
+											<p className="text-lg leading-none font-semibold text-foreground-muted">
+												{version.version_title}
+											</p>
+										</Link>
+										<div className="flex flex-wrap gap-x-2 gap-1">
+											<p className="text-foreground-muted leading-none">
+												{version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
+											</p>
+											<p className="text-foreground-muted leading-none">
+												{version.supported_game_versions
+													.slice(0, Math.min(5, version.supported_game_versions.length))
+													.map((game_version) => CapitalizeAndFormatString(game_version))
+													.join(", ")}
+												{version.supported_game_versions.length > 5 ? (
+													<span> and {version.supported_game_versions.length - 5} more</span>
+												) : null}
+											</p>
+										</div>
+										<ReleaseChannelIndicator release_channel={version.release_channel} />
+									</div>
+								</div>
+							);
+						})}
+						<span className="w-full h-[1px] my-2 bg-border" />
+					</div>
+				) : null}
+				<h2 className="text-lg font-semibold text-foreground">Project members</h2>
+				<div className="w-full flex items-center justify-center gap-2 flex-col">
+					{projectData?.members?.map((member) => {
+						return (
+							<React.Fragment key={member.user.user_name}>
+								<ProjectMember
+									username={member.user.user_name}
+									role={member.role}
+									role_title={member.role_title}
+									avatar_image={member.user.avatar_image || ""}
+								/>
+							</React.Fragment>
+						);
+					})}
+				</div>
+
+				<span className="w-full h-[1px] my-2 bg-border" />
+
+				<h2 className="text-lg font-semibold text-foreground">Technical information</h2>
+				<div className="w-full grid grid-cols-2">
+					<span className="font-semibold text-foreground-muted">License</span>
+					<span className="text-foreground-muted">Unknown</span>
+				</div>
+				<div className="grid grid-cols-2">
+					<span className="font-semibold text-foreground-muted">Client side</span>
+					<span className="text-foreground-muted">Unknown</span>
+				</div>
+				<div className="grid grid-cols-2">
+					<span className="font-semibold text-foreground-muted">Server side</span>
+					<span className="text-foreground-muted">Unknown</span>
+				</div>
+				<div className="grid grid-cols-2">
+					<span className="font-semibold text-foreground-muted">Project ID</span>
+					<div className="w-fit flex items-center justify-start gap-2 rounded pl-2 pr-1">
+						<CopyBtn
+							text={projectData.id}
+							label={`...${projectData.id.slice(projectData.id.length - 10)}`}
+							labelClassName="text-foreground-muted"
+						/>
+					</div>
+				</div>
+			</div>
+		</SidePanel>
+	);
+};
+
 const ProjectDetailsNav = ({
 	baseHref,
 	user_id,
@@ -368,7 +388,7 @@ const ProjectDetailsNav = ({
 
 	return (
 		<nav
-			className="w-full flex flex-wrap items-center justify-betweens bg-background-shallow py-2 px-6 rounded-lg"
+			className="w-full flex flex-wrap items-center justify-betweens bg-background-shallow py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border-hicontrast/25 dark:border-border"
 			id="project-page-nav"
 		>
 			<ul className="w-fit grow flex flex-wrap gap-x-4">
@@ -381,7 +401,7 @@ const ProjectDetailsNav = ({
 								to={link.href}
 								className="routerNavLink flex flex-col relative"
 							>
-								<span className="navLinkText py-2 px-2 flex items-center justify-center">{link.label}</span>
+								<span className="navLinkText py-0.5 flex items-center justify-center">{link.label}</span>
 								<span className="activityIndicator" />
 							</RouterNavLink>
 						</li>

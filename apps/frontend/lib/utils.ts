@@ -25,3 +25,18 @@ export const redirectToMessagePage = (
 		linkLabel || "",
 	)}`;
 };
+
+export const constructProjectPageUrl = (type: string, projectUrlSlug: string) => {
+	const pathnameFragments = window.location.href.replace(window.location.origin, "").split("/"); // ? Example pathname => /mod/sodium/version/0.1.1?param=param_value
+	if (type.toLowerCase()) pathnameFragments[1] = type.toLowerCase();
+	if (projectUrlSlug) pathnameFragments[2] = projectUrlSlug;
+
+	return pathnameFragments.join("/");
+};
+
+export const constructVersionPageUrl = (versionUrlSlug: string) => {
+	const pathnameFragments = window.location.href.replace(window.location.origin, "").split("/");
+	if (versionUrlSlug) pathnameFragments[4] = versionUrlSlug;
+
+	return pathnameFragments.join("/");
+};

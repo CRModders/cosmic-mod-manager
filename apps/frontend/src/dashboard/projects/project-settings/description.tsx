@@ -1,4 +1,5 @@
 import { SaveIcon } from "@/components/icons";
+import MarkdownEditor from "@/components/markdown-editor";
 import { Button } from "@/components/ui/button";
 import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,32 +48,39 @@ const ProjectDescriptSettingsPage = () => {
 	}
 
 	return (
-		<ContentWrapperCard className="items-start relative">
-			<h2 className=" text-xl font-semibold">Description</h2>
+		<div className="w-full flex flex-col gap-4">
+			<ContentWrapperCard>
+				<MarkdownEditor />
+			</ContentWrapperCard>
 
-			<Textarea
-				placeholder="Project description..."
-				maxLength={maxProjectDescriptionLength}
-				className="resize-none w-full text-base h-96 dark:text-foreground font-mono"
-				value={description}
-				onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-					setDescription(e.target.value);
-				}}
-			/>
+			<ContentWrapperCard className="items-start relative">
+				<h2 className=" text-xl font-semibold">Description</h2>
 
-			<div className="w-full flex items-center justify-end">
-				<Button
-					className=" bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground gap-2"
-					onClick={updateProjectDescription}
-					disabled={loading || projectData?.description === description}
-				>
-					<SaveIcon size="1.25rem" />
-					<span>Save changes</span>
-				</Button>
-			</div>
+				<Textarea
+					placeholder="Project description..."
+					maxLength={maxProjectDescriptionLength}
+					className="resize-y w-full text-base h-full min-h-96 dark:text-foreground font-mono"
+					value={description}
+					spellCheck={false}
+					onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+						setDescription(e.target.value);
+					}}
+				/>
 
-			{loading && <AbsolutePositionedSpinner />}
-		</ContentWrapperCard>
+				<div className="w-full flex items-center justify-end">
+					<Button
+						className=" bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground gap-2"
+						onClick={updateProjectDescription}
+						disabled={loading || projectData?.description === description}
+					>
+						<SaveIcon size="1.25rem" />
+						<span>Save changes</span>
+					</Button>
+				</div>
+
+				{loading && <AbsolutePositionedSpinner />}
+			</ContentWrapperCard>
+		</div>
 	);
 };
 

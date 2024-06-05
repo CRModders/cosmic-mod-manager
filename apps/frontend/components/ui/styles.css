@@ -23,6 +23,12 @@
     place-items: center;
 }
 
+@keyframes fade-in {
+    100%{
+        opacity: 1;
+    }
+}
+
 .cube-wrapper {
     transform-style: preserve-3d;
     animation: bouncing var(--animation-duration) infinite;

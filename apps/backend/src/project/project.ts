@@ -220,11 +220,19 @@ projectRouter.post("/:projectSlug/update", async (c) => {
 		const body = await c.req.json();
 		const visibility = body?.visibility;
 		const name = isValidString(body?.name, maxNameLength, 1, true).value;
-		const url_slug = isValidString(body?.url, maxNameLength, 1, true).value;
+		const url_slug = isValidString(body?.url_slug, maxNameLength, 1, true).value;
 		const summary = isValidString(body?.summary, maxProjectSummaryLength, 1, true).value;
 
 		const currUrlSlug = c.req.param("projectSlug");
 		const urlSafeUrlSlug = createURLSafeSlug(url_slug);
+
+		console.log({
+			currUrlSlug,
+			name,
+			url_slug: urlSafeUrlSlug.value,
+			visibility: body?.visibility,
+			summary,
+		});
 
 		if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
 			return c.json(
@@ -295,7 +303,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
 			},
 		});
 
-		if (existingProjectWithSameUrlSlug?.id) {
+		if (existingProjectWithSameUrlSlug?.id && existingProjectWithSameUrlSlug.id !== project.id) {
 			return c.json(
 				{
 					message: "That url slug is already taken",

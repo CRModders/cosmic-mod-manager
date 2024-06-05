@@ -19,7 +19,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
 		<div className="w-full flex flex-col gap-4 items-start justify-center">
 			{isAProjectMember === true && (
 				<ContentWrapperCard>
-					<div className="w-full flex gap-4 items-center justify-start">
+					<div className="w-full flex flex-wrap gap-4 items-center justify-start">
 						<Link to={`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}/version/create`}>
 							<Button className="dark:text-foreground gap-2 bg-accent-bg hover:bg-accent-bg/85" tabIndex={-1}>
 								<UploadIcon strokeWidth={2} className="w-4 h-4" />
@@ -52,14 +52,18 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 						<Table>
 							<TableHeader className="align-top pb-4 h-16">
 								<TableRow className="border-none">
-									<TableHead className="overflow-hidden w-[5%] font-semibold text-foreground text-lg"> </TableHead>
-									<TableHead className="overflow-hidden w-[35%] font-semibold text-foreground text-lg">
+									<TableHead className="overflow-hidden min-w-16 w-[5%] font-semibold text-foreground text-lg">
+										{" "}
+									</TableHead>
+									<TableHead className="overflow-hidden min-w-48 w-[35%] font-semibold text-foreground text-lg">
 										Version
 									</TableHead>
-									<TableHead className="overflow-hidden w-[35%] font-semibold text-foreground text-lg">
+									<TableHead className="overflow-hidden min-w-36 w-[35%] font-semibold text-foreground text-lg">
 										Supports
 									</TableHead>
-									<TableHead className="overflow-hidden w-[25%] font-semibold text-foreground text-lg">Stats</TableHead>
+									<TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg">
+										Stats
+									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>

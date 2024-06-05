@@ -17,7 +17,7 @@ const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWi
 		<ol
 			ref={ref}
 			className={cn(
-				"flex flex-wrap items-center gap-1.5 break-words text-sm text-zinc-500 sm:gap-2.5 dark:text-zinc-400",
+				"flex flex-wrap items-center gap-0.5 break-words text-sm text-zinc-500 sm:gap-1.5 dark:text-zinc-400",
 				className,
 			)}
 			{...props}
@@ -39,7 +39,13 @@ const BreadcrumbLink = ({
 	children,
 }: { className?: string; href: string; children: React.ReactNode }) => {
 	return (
-		<Link className={cn("text-foreground-muted transition-colors hover:text-foreground", className)} to={href}>
+		<Link
+			className={cn(
+				"transition-colors text-accent-foreground/90 hover:text-accent-foreground underline-offset-[0.15em] hover:underline",
+				className,
+			)}
+			to={href}
+		>
 			{children}
 		</Link>
 	);

@@ -28,6 +28,8 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "dotenv": "^16.4.5",
+    "highlight.js": "^11.9.0",
+    "markdown-it": "^14.1.0",
     "react": "^18.2.0",
     "react-cookie": "^7.1.4",
     "react-dom": "^18.2.0",
@@ -37,9 +39,12 @@
     "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "xss": "^1.0.15",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/highlightjs": "^9.12.6",
+    "@types/markdown-it": "^14.1.1",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-helmet": "^6.1.11",

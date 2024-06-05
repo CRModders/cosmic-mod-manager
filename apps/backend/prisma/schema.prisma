@@ -28,7 +28,7 @@ enum Providers {
 }
 
 model Account {
-    id                     String  @id @default(uuid())
+    id                     String  @id @default(cuid())
     user_id                String
     provider               String
     provider_account_id    String
@@ -44,9 +44,9 @@ model Account {
 }
 
 model User {
-    id                      String    @id @default(uuid())
+    id                      String    @id @default(cuid())
     name                    String?   @db.VarChar(48)
-    user_name               String?   @unique @default(uuid()) @db.VarChar(48)
+    user_name               String?   @unique @default(cuid()) @db.VarChar(48)
     email                   String    @unique @db.VarChar(256)
     password                String?   @db.VarChar(256)
     unverified_new_password String?   @db.VarChar(256)
@@ -64,7 +64,7 @@ model User {
 }
 
 model Session {
-    id            String    @id @default(uuid())
+    id            String    @id @default(cuid())
     user_id       String
     session_token String    @unique @db.VarChar(48)
     created_on    DateTime?
@@ -80,17 +80,17 @@ model Session {
 }
 
 model DeletedUser {
-    id            String   @id @default(uuid())
+    id            String   @id @default(cuid())
     user_name     String   @unique @db.VarChar(48)
     email         String   @unique @db.VarChar(256)
     deletion_time DateTime
 }
 
 model VerificationRequest {
-    id           String                      @id @default(uuid())
+    id           String                      @id @default(cuid())
     user_id      String
     action       UserVerificationActionTypes
-    token        String                      @unique @default(uuid()) @db.VarChar(128)
+    token        String                      @unique @default(cuid()) @db.VarChar(128)
     date_created DateTime                    @default(now())
 
     user User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -98,14 +98,14 @@ model VerificationRequest {
 
 // Project and organisation models
 model Organisation {
-    id         String               @id @default(uuid())
+    id         String               @id @default(cuid())
     created_on DateTime             @default(now())
     members    OrganisationMember[] @relation(name: "Organisation")
     projects   Project[]            @relation(name: "Project Organisation")
 }
 
 model Project {
-    id              String                @id @default(uuid())
+    id              String                @id @default(cuid())
     org_id          String?
     name            String
     url_slug        String                @unique
@@ -125,7 +125,7 @@ model Project {
 }
 
 model ProjectVersion {
-    id                      String                 @id @default(uuid())
+    id                      String                 @id @default(cuid())
     project_id              String
     publisher_id            String
     version_number          String
@@ -144,7 +144,7 @@ model ProjectVersion {
 }
 
 model VersionFile {
-    id         String         @id @default(uuid())
+    id         String         @id @default(cuid())
     file_name  String
     file_size  String
     file_type  String
@@ -155,7 +155,7 @@ model VersionFile {
 }
 
 model ProjectExternalLinks {
-    id                  String  @id @default(uuid())
+    id                  String  @id @default(cuid())
     project_id          String  @unique
     issue_tracker_link  String?
     project_source_link String?
@@ -165,7 +165,7 @@ model ProjectExternalLinks {
 }
 
 model ProjectMember {
-    id                 String             @id @default(uuid())
+    id                 String             @id @default(cuid())
     user_id            String
     project_id         String
     role               UserRolesInProject @default(MEMBER)
@@ -176,7 +176,7 @@ model ProjectMember {
 }
 
 model OrganisationMember {
-    id           String                  @id @default(uuid())
+    id           String                  @id @default(cuid())
     user_id      String
     org_id       String
     role         UserRolesInOrganisation @default(MEMBER)

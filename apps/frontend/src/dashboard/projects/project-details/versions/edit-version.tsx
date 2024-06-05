@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CubeLoader } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
@@ -106,7 +107,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			title: result?.message,
 		});
 
-		navigate(`/${projectType}/${projectUrlSlug}/version/${result?.data?.url_slug}`);
+		navigate(constructVersionPageUrl(result?.data?.url_slug || ""));
 	};
 
 	const fetchVersiondata = async () => {
@@ -133,8 +134,11 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (versionData?.versions[0].url_slug && !window.location.pathname.includes(versionData?.versions[0].url_slug)) {
-			navigate(window.location.pathname.replace(versionData?.versions[0].id, versionData?.versions[0].url_slug));
+		if (versionData?.versions[0].url_slug) {
+			const constructedUrl = constructVersionPageUrl(versionData.versions[0].url_slug);
+			if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
+				navigate(constructedUrl);
+			}
 		}
 		if (versionData?.id) {
 			const versionDetails = versionData?.versions[0];
@@ -142,7 +146,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			setChangelog(versionDetails.changelog);
 			setVersionNumber(versionDetails.version_number);
 			setReleaseChannel(CapitalizeAndFormatString(versionDetails.release_channel) as ReleaseChannels);
-			setLoaders(versionDetails.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)));
+			setLoaders(versionDetails.supported_loaders);
 			setSupportedGameVersions(versionDetails.supported_game_versions);
 		}
 	}, [versionData]);
@@ -224,8 +228,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 				</div>
 			</ContentWrapperCard>
 
-			<div className="w-full flex flex-wrap gap-4">
-				<div className="w-fit grow flex flex-col gap-4">
+			<div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
+				<div className="w-full flex flex-col gap-4">
 					<ContentWrapperCard>
 						<div className="w-full flex flex-col items-start justify-center gap-1">
 							<Label htmlFor="version-changelog-textarea" className="font-semibold text-lg">
@@ -236,6 +240,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 								maxLength={maxChangelogLength}
 								className="resize-none w-full text-base h-96 dark:text-foreground font-mono"
 								id="version-changelog-textarea"
+								spellCheck={false}
 								value={changelog}
 								onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
 									setChangelog(e.target.value);
@@ -247,7 +252,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					{/* // TODO: Add dependency thing */}
 					{/* <ContentWrapperCard>2</ContentWrapperCard> */}
 				</div>
-				<ContentWrapperCard className="w-full h-fit lg:w-68 xl:w-72">
+
+				<ContentWrapperCard className="w-full h-fit">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="font-semibold text-2xl">Metadata</p>
 					</div>
@@ -321,8 +327,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 				</ContentWrapperCard>
 			</div>
 
-			<div className="w-full flex flex-wrap gap-4">
-				<ContentWrapperCard className="w-fit grow">
+			<div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
+				<ContentWrapperCard className="w-full grow">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="font-semibold text-2xl">Files</p>
 					</div>
@@ -357,7 +363,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
                     </div> */}
 				</ContentWrapperCard>
-				<div className="w-full h-fit lg:w-68 xl:w-72" />
+				<div className="w-full h-fit" />
 			</div>
 		</div>
 	);
