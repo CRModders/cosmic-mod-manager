@@ -414,85 +414,85 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 				</div>
 			</div>
 
-			<div className="w-full flex items-center justify-center mt-2">
+			<div className="w-full flex gap-2 items-start justify-center mt-2">
 				{/* Editor area */}
-				{previewOn === false ? (
-					<div className="w-full flex flex-col items-center justify-center gap-2">
-						<Textarea
-							placeholder={placeholder}
-							className={cn(
-								"w-full resize-y min-h-[16rem] h-[32rem] text-base font-mono rounded-lg",
-								wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
-							)}
-							ref={editorTextarea}
-							value={editorValue}
-							onResizeCapture={(e) => console.log(e)}
-							onChange={(e) => {
-								setEditorValue(e.target.value);
-							}}
-							onKeyDown={(e) => {
-								if (e.key === "Escape") return editorTextarea.current?.blur();
+				<div className={cn("w-full flex flex-col items-center justify-center gap-2", previewOn === true && "hidden")}>
+					<Textarea
+						placeholder={placeholder}
+						className={cn(
+							"w-full resize-y min-h-[16rem] h-[32rem] text-base font-mono rounded-lg",
+							wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
+						)}
+						ref={editorTextarea}
+						value={editorValue}
+						onResizeCapture={(e) => console.log(e)}
+						onChange={(e) => {
+							setEditorValue(e.target.value);
+						}}
+						onKeyDown={(e) => {
+							if (e.key === "Escape") return editorTextarea.current?.blur();
 
-								if (e.key === "Tab") {
+							if (e.key === "Tab") {
+								e.preventDefault();
+
+								if (e.shiftKey === true) {
+									toggleTextAtCursorsLine("  ", true, "DELETE_FRAGMENT");
+								} else {
+									toggleTextAtCursorsLine("  ", true, "ADD_FRAGMENT");
+								}
+							}
+
+							if (e.altKey) {
+								e.preventDefault();
+								if (e.key === "z") setWordWrap((prev) => !prev);
+								else if (e.key === "b") Bold();
+								else if (e.key === "i") Italic();
+								else if (e.key === "u") Underline();
+								else if (e.key === "c") CodeBlock();
+								else if (e.key === "s") Spoiler();
+								else if (e.key === "q") Quote();
+								else if (e.key === "l") UnorderedList();
+							}
+
+							if (e.ctrlKey) {
+								if (e.key === "b") Bold();
+								if (e.key === "i") Italic();
+								if (e.key === "u") {
 									e.preventDefault();
-
-									if (e.shiftKey === true) {
-										toggleTextAtCursorsLine("  ", true, "DELETE_FRAGMENT");
-									} else {
-										toggleTextAtCursorsLine("  ", true, "ADD_FRAGMENT");
-									}
+									Underline();
 								}
+							}
+						}}
+						spellCheck={false}
+					/>
 
-								if (e.altKey) {
-									e.preventDefault();
-									if (e.key === "z") setWordWrap((prev) => !prev);
-									else if (e.key === "b") Bold();
-									else if (e.key === "i") Italic();
-									else if (e.key === "u") Underline();
-									else if (e.key === "c") CodeBlock();
-									else if (e.key === "s") Spoiler();
-									else if (e.key === "q") Quote();
-									else if (e.key === "l") UnorderedList();
-								}
-
-								if (e.ctrlKey) {
-									if (e.key === "b") Bold();
-									if (e.key === "i") Italic();
-									if (e.key === "u") {
-										e.preventDefault();
-										Underline();
-									}
-								}
-							}}
-							spellCheck={false}
-						/>
-
-						<div className="w-full flex items-center justify-start text-foreground-muted gap-2 mt-2">
-							<InfoCircledIcon className="w-4 h-4" />
-							<p>
-								You can use{" "}
-								<a
-									href="https://www.markdownguide.org/basic-syntax/"
-									className=" text-blue-600 dark:text-blue-400 hover:brightness-110"
-								>
-									Markdown format
-								</a>{" "}
-								here.
-							</p>
-						</div>
-
-						<div className="w-full flex items-center justify-start">
-							<KeyboardShortcutsDialog open={keyboardShortcutsModalOpen} setOpen={setKeyboardShortcutsModalOpen}>
-								<div className="w-full flex gap-2 items-center justify-start markdown-body">
-									<InfoCircledIcon className="w-4 h-4" />
-									<p className="cursor-pointer text-base">
-										<kbd>ctrl</kbd> + <kbd>/</kbd> to view keyboard shortcuts
-									</p>
-								</div>
-							</KeyboardShortcutsDialog>
-						</div>
+					<div className="w-full flex items-center justify-start text-foreground-muted gap-2 mt-2">
+						<InfoCircledIcon className="w-4 h-4" />
+						<p>
+							You can use{" "}
+							<a
+								href="https://www.markdownguide.org/basic-syntax/"
+								className=" text-blue-600 dark:text-blue-400 hover:brightness-110"
+							>
+								Markdown format
+							</a>{" "}
+							here.
+						</p>
 					</div>
-				) : (
+
+					<div className="w-full flex items-center justify-start">
+						<KeyboardShortcutsDialog open={keyboardShortcutsModalOpen} setOpen={setKeyboardShortcutsModalOpen}>
+							<div className="w-full flex gap-2 items-center justify-start markdown-body">
+								<InfoCircledIcon className="w-4 h-4" />
+								<p className="cursor-pointer text-base">
+									<kbd>ctrl</kbd> + <kbd>/</kbd> to view keyboard shortcuts
+								</p>
+							</div>
+						</KeyboardShortcutsDialog>
+					</div>
+				</div>
+
+				{previewOn && (
 					<div
 						className={cn(
 							"w-full flex items-center justify-center border-2 dark:border border-border-hicontrast/50 dark:border-border rounded-lg p-4",
