@@ -3,7 +3,6 @@ import { SuspenseFallback } from "@/components/ui/spinner";
 import SignInCallbackPage from "@/src/(auth)/callbacks/signin";
 import ChangePasswordPageLayout from "@/src/(auth)/change-password/layout";
 import LoginPageLayout from "@/src/(auth)/login/layout";
-import LoginPage from "@/src/(auth)/login/page";
 import SignupPageLayout from "@/src/(auth)/signup/layout";
 import MessagePage from "@/src/Message";
 import "@/src/globals.css";
@@ -20,6 +19,7 @@ import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/lay
 
 const RootLayout = lazy(() => import("@/src/App"));
 const SignupPage = lazy(() => import("@/src/(auth)/signup/page"));
+const LoginPage = lazy(() => import("@/src/(auth)/login/page"));
 const VerifyActionPage = lazy(() => import("@/src/(auth)/verify-action/page"));
 const ChangePasswordPage = lazy(() => import("@/src/(auth)/change-password/page"));
 const Notifications = lazy(() => import("@/src/dashboard/notifications"));
