@@ -1,4 +1,5 @@
 import { ChevronRightIcon, SaveIcon } from "@/components/icons";
+import MarkdownEditor from "@/components/markdown-editor";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -24,10 +25,8 @@ import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-
 import { GameVersions } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import { ReleaseChannels, getProjectLoaders } from "@root/types";
-import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-const MarkdownEditor = lazy(() => import("@/components/markdown-editor"));
 
 const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const { projectUrlSlug, versionUrlSlug } = useParams();

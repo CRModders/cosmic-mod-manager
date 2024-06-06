@@ -1,5 +1,6 @@
 import CopyBtn from "@/components/copy-btn";
 import { ChevronRightIcon, EditIcon, FlagIcon, TrashIcon } from "@/components/icons";
+import MarkdownRenderBox from "@/components/md-render-box";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import {
 	Breadcrumb,
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
+import { CubeLoader } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { cn, constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
@@ -23,11 +24,9 @@ import type { ProjectVersionData } from "@/types";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { DownloadIcon, FileIcon, StarIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, formatDate, parseFileSize } from "@root/lib/utils";
-import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../layout";
-
-const MarkdownRenderBox = lazy(() => import("@/components/md-render-box"));
 
 export default function ProjectVersionPage({ projectType }: { projectType: string }) {
 	const { projectUrlSlug, versionUrlSlug } = useParams();
@@ -205,9 +204,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 					{versionData?.versions[0]?.changelog?.length ? (
 						<ContentWrapperCard className="w-full items-start flex-wrap">
 							<h1 className="text-foreground font-semibold text-2xl">Changelog</h1>
-							<Suspense fallback={<SuspenseFallback />}>
-								<MarkdownRenderBox text={versionData?.versions[0]?.changelog} />
-							</Suspense>
+							<MarkdownRenderBox text={versionData?.versions[0]?.changelog} />
 						</ContentWrapperCard>
 					) : null}
 
