@@ -73,3 +73,5 @@ export const SignInCallbackPage = () => {
 		</div>
 	);
 };
+
+export default SignInCallbackPage;

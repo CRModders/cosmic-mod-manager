@@ -722,7 +722,7 @@ const KeyboardShortcutsDialog = ({
 	children,
 }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>>; children: React.ReactNode }) => {
 	const shortcutsString =
-		"|  Action               |  Shortcut                                                                 |\n|-----------------------|---------------------------------------------------------------------------|\n|  Bold                 |  <kbd>ctrl</kbd> + <kbd>b</kbd> or <kbd>alt</kbd> + <kbd>b</kbd>          |\n|  Italic               |  <kbd>ctrl</kbd> + <kbd>i</kbd> or <kbd>alt</kbd> + <kbd>i</kbd>          |\n|  Underline            |  <kbd>ctrl</kbd> + <kbd>u</kbd> or <kbd>alt</kbd> + <kbd>u</kbd>          |\n|  Code                 |  <kbd>alt</kbd> + <kbd>c</kbd>                                            |\n|  Spoiler              |  <kbd>alt</kbd> + <kbd>s</kbd>                                            |\n|  Quote                |  <kbd>alt</kbd> + <kbd>q</kbd>                                            |\n|  Bulleted list        |  <kbd>alt</kbd> + <kbd>l</kbd>                                            |";
+		"|  Action  |  Shortcut  |\n|---|---|\n|  Bold  |  <kbd>ctrl</kbd> <kbd>b</kbd> or <kbd>alt</kbd> <kbd>b</kbd>  |\n|  Italic  |  <kbd>ctrl</kbd> <kbd>i</kbd> or <kbd>alt</kbd> <kbd>i</kbd>  |\n|  Underline  |  <kbd>ctrl</kbd> <kbd>u</kbd> or <kbd>alt</kbd> <kbd>u</kbd>  |\n|  Code  |  <kbd>alt</kbd> <kbd>c</kbd>  |\n|  Spoiler  |  <kbd>alt</kbd> <kbd>s</kbd>  |\n|  Quote  |  <kbd>alt</kbd> <kbd>q</kbd>  |\n|  Bulleted list  |  <kbd>alt</kbd> <kbd>l</kbd>  |";
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>

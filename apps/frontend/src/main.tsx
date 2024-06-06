@@ -1,39 +1,44 @@
 import RedrectTo from "@/components/redirect-to";
-import RootLayout, { HomePage } from "@/src/App";
-import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/layout";
+import { DotsLoader } from "@/components/ui/spinner";
 import "@/src/globals.css";
-import NotFoundPage from "@/src/not-found";
+import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import { SignInCallbackPage } from "./(auth)/callbacks/signin";
-import ChangePasswordPageLayout from "./(auth)/change-password/layout";
-import ChangePasswordPage from "./(auth)/change-password/page";
-import LoginPageLayout from "./(auth)/login/layout";
-import LoginPage from "./(auth)/login/page";
-import SignupPageLayout from "./(auth)/signup/layout";
-import SignupPage from "./(auth)/signup/page";
-import VerifyActionPage from "./(auth)/verify-action/page";
-import MessagePage from "./Message";
-import DashboardPageLayout from "./dashboard/layout";
-import Notifications from "./dashboard/notifications";
-import Overview from "./dashboard/overview";
-import DashboardPage from "./dashboard/page";
-import ProjectDescription from "./dashboard/projects/project-details/description";
-import ProjectDetailsLayout from "./dashboard/projects/project-details/layout";
-import CreateVersionPage from "./dashboard/projects/project-details/versions/create-version";
-import EditVersionPage from "./dashboard/projects/project-details/versions/edit-version";
-import VersionListPage from "./dashboard/projects/project-details/versions/page";
-import ProjectVersionPage from "./dashboard/projects/project-details/versions/version-page";
-import ProjectDescriptSettingsPage from "./dashboard/projects/project-settings/description";
-import GeneralProjectSettings from "./dashboard/projects/project-settings/general";
-import ProjectLinksSettings from "./dashboard/projects/project-settings/links";
-import Projects from "./dashboard/projects/projects";
-import ReportsPage from "./dashboard/reports";
-import { ProjectContextProvider } from "./providers/project-context";
-import AccountSettingsPage from "./settings/account/page";
-import SettingsPageLayout from "./settings/layout";
-import SettingsPage from "./settings/page";
-import Sessions from "./settings/session/page";
+
+const SignInCallbackPage = lazy(() => import("@/src/(auth)/callbacks/signin"));
+const ChangePasswordPageLayout = lazy(() => import("@/src/(auth)/change-password/layout"));
+const ChangePasswordPage = lazy(() => import("@/src/(auth)/change-password/page"));
+const LoginPageLayout = lazy(() => import("@/src/(auth)/login/layout"));
+const LoginPage = lazy(() => import("@/src/(auth)/login/page"));
+const SignupPageLayout = lazy(() => import("@/src/(auth)/signup/layout"));
+const SignupPage = lazy(() => import("@/src/(auth)/signup/page"));
+const VerifyActionPage = lazy(() => import("@/src/(auth)/verify-action/page"));
+const MessagePage = lazy(() => import("@/src/Message"));
+const DashboardPageLayout = lazy(() => import("@/src/dashboard/layout"));
+const Notifications = lazy(() => import("@/src/dashboard/notifications"));
+const Overview = lazy(() => import("@/src/dashboard/overview"));
+const DashboardPage = lazy(() => import("@/src/dashboard/page"));
+const ProjectDescription = lazy(() => import("@/src/dashboard/projects/project-details/description"));
+const ProjectDetailsLayout = lazy(() => import("@/src/dashboard/projects/project-details/layout"));
+const CreateVersionPage = lazy(() => import("@/src/dashboard/projects/project-details/versions/create-version"));
+const EditVersionPage = lazy(() => import("@/src/dashboard/projects/project-details/versions/edit-version"));
+const VersionListPage = lazy(() => import("@/src/dashboard/projects/project-details/versions/page"));
+const ProjectVersionPage = lazy(() => import("@/src/dashboard/projects/project-details/versions/version-page"));
+const ProjectDescriptSettingsPage = lazy(() => import("@/src/dashboard/projects/project-settings/description"));
+const GeneralProjectSettings = lazy(() => import("@/src/dashboard/projects/project-settings/general"));
+const ProjectSettingsLayout = lazy(() => import("@/src/dashboard/projects/project-settings/layout"));
+const ProjectLinksSettings = lazy(() => import("@/src/dashboard/projects/project-settings/links"));
+const Projects = lazy(() => import("@/src/dashboard/projects/projects"));
+const ReportsPage = lazy(() => import("@/src/dashboard/reports"));
+const NotFoundPage = lazy(() => import("@/src/not-found"));
+const AccountSettingsPage = lazy(() => import("@/src/settings/account/page"));
+const SettingsPageLayout = lazy(() => import("@/src/settings/layout"));
+const SettingsPage = lazy(() => import("@/src/settings/page"));
+
+const RootLayout = lazy(() => import("@/src/App"));
+const HomePage = lazy(() => import("@/src/home"));
+const Sessions = lazy(() => import("@/src/settings/session/page"));
+const ProjectContextProvider = lazy(() => import("@/src/providers/project-context"));
 
 const projectRoute = (project_type: string) => {
 	return {
@@ -42,19 +47,29 @@ const projectRoute = (project_type: string) => {
 		children: [
 			{
 				path: "",
-				element: <NotFoundPage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<NotFoundPage />
+					</Suspense>
+				),
 			},
 			{
 				path: ":projectUrlSlug",
 				element: (
-					<ProjectContextProvider>
-						<Outlet />
-					</ProjectContextProvider>
+					<Suspense fallback={<SuspenseFallback />}>
+						<ProjectContextProvider>
+							<Outlet />
+						</ProjectContextProvider>
+					</Suspense>
 				),
 				children: [
 					{
 						path: "",
-						element: <ProjectDetailsLayout />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<ProjectDetailsLayout />
+							</Suspense>
+						),
 						children: [
 							{
 								path: "",
@@ -62,7 +77,11 @@ const projectRoute = (project_type: string) => {
 							},
 							{
 								path: "description",
-								element: <ProjectDescription />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<ProjectDescription />
+									</Suspense>
+								),
 							},
 							{
 								path: "gallery",
@@ -74,7 +93,11 @@ const projectRoute = (project_type: string) => {
 							},
 							{
 								path: "versions",
-								element: <VersionListPage projectType={project_type} />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<VersionListPage projectType={project_type} />
+									</Suspense>
+								),
 							},
 							{
 								path: "version",
@@ -82,7 +105,11 @@ const projectRoute = (project_type: string) => {
 								children: [
 									{
 										path: "create",
-										element: <CreateVersionPage projectType={project_type} />,
+										element: (
+											<Suspense fallback={<SuspenseFallback />}>
+												<CreateVersionPage projectType={project_type} />
+											</Suspense>
+										),
 									},
 									{
 										path: ":versionUrlSlug",
@@ -90,11 +117,19 @@ const projectRoute = (project_type: string) => {
 										children: [
 											{
 												path: "",
-												element: <ProjectVersionPage projectType={project_type} />,
+												element: (
+													<Suspense fallback={<SuspenseFallback />}>
+														<ProjectVersionPage projectType={project_type} />
+													</Suspense>
+												),
 											},
 											{
 												path: "edit",
-												element: <EditVersionPage projectType={project_type} />,
+												element: (
+													<Suspense fallback={<SuspenseFallback />}>
+														<EditVersionPage projectType={project_type} />
+													</Suspense>
+												),
 											},
 										],
 									},
@@ -104,23 +139,43 @@ const projectRoute = (project_type: string) => {
 					},
 					{
 						path: "settings",
-						element: <ProjectSettingsLayout projectType={project_type} />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<ProjectSettingsLayout projectType={project_type} />
+							</Suspense>
+						),
 						children: [
 							{
 								path: "",
-								element: <RedrectTo destinationUrl="general" />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<RedrectTo destinationUrl="general" />
+									</Suspense>
+								),
 							},
 							{
 								path: "general",
-								element: <GeneralProjectSettings />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<GeneralProjectSettings />
+									</Suspense>
+								),
 							},
 							{
 								path: "description",
-								element: <ProjectDescriptSettingsPage />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<ProjectDescriptSettingsPage />
+									</Suspense>
+								),
 							},
 							{
 								path: "links",
-								element: <ProjectLinksSettings />,
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<ProjectLinksSettings />
+									</Suspense>
+								),
 							},
 						],
 					},
@@ -144,109 +199,209 @@ const getProjectPageRoutes = () => {
 	return list;
 };
 
+const SuspenseFallback = () => {
+	return (
+		<div className="w-full flex items-center justify-center py-12">
+			<DotsLoader />
+		</div>
+	);
+};
+
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <RootLayout />,
+		element: (
+			<Suspense fallback={<SuspenseFallback />}>
+				<RootLayout />
+			</Suspense>
+		),
 		children: [
 			{
 				path: "",
-				element: <HomePage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<HomePage />
+					</Suspense>
+				),
 			},
 			{
 				path: "login",
-				element: <LoginPageLayout />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<LoginPageLayout />
+					</Suspense>
+				),
 				children: [
 					{
 						path: "",
-						element: <LoginPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<LoginPage />
+							</Suspense>
+						),
 					},
 				],
 			},
 			{
 				path: "signup",
-				element: <SignupPageLayout />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<SignupPageLayout />
+					</Suspense>
+				),
 				children: [
 					{
 						path: "",
-						element: <SignupPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<SignupPage />
+							</Suspense>
+						),
 					},
 				],
 			},
 			{
 				path: "change-password",
-				element: <ChangePasswordPageLayout />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<ChangePasswordPageLayout />
+					</Suspense>
+				),
 				children: [
 					{
 						path: "",
-						element: <ChangePasswordPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<ChangePasswordPage />
+							</Suspense>
+						),
 					},
 				],
 			},
 			{
 				path: "settings",
-				element: <SettingsPageLayout />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<SettingsPageLayout />
+					</Suspense>
+				),
 				children: [
 					{
 						path: "",
-						element: <SettingsPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<SettingsPage />
+							</Suspense>
+						),
 					},
 					{
 						path: "account",
-						element: <AccountSettingsPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<AccountSettingsPage />
+							</Suspense>
+						),
 					},
 					{
 						path: "sessions",
-						element: <Sessions />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<Sessions />
+							</Suspense>
+						),
 					},
 				],
 			},
 			{
 				path: "dashboard",
-				element: <DashboardPageLayout />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<DashboardPageLayout />
+					</Suspense>
+				),
 				children: [
 					{
 						path: "",
-						element: <DashboardPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<DashboardPage />
+							</Suspense>
+						),
 					},
 					{
 						path: "overview",
-						element: <Overview />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<Overview />
+							</Suspense>
+						),
 					},
 					{
 						path: "notifications",
-						element: <Notifications />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<Notifications />
+							</Suspense>
+						),
 					},
 					{
 						path: "reports",
-						element: <ReportsPage />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<ReportsPage />
+							</Suspense>
+						),
 					},
 					{
 						path: "projects",
-						element: <Projects />,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<Projects />
+							</Suspense>
+						),
 					},
 					{
 						path: "*",
-						element: <p>DASHBOARD_PAGE</p>,
+						element: (
+							<Suspense fallback={<SuspenseFallback />}>
+								<p>DASHBOARD_PAGE</p>
+							</Suspense>
+						),
 					},
 				],
 			},
 			...getProjectPageRoutes(),
 			{
 				path: "auth/callback/:authProvider",
-				element: <SignInCallbackPage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<SignInCallbackPage />
+					</Suspense>
+				),
 			},
 			{
 				path: "verify-action",
-				element: <VerifyActionPage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<VerifyActionPage />
+					</Suspense>
+				),
 			},
 			{
 				path: "message",
-				element: <MessagePage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<MessagePage />
+					</Suspense>
+				),
 			},
 			{
 				path: "*",
-				element: <NotFoundPage />,
+				element: (
+					<Suspense fallback={<SuspenseFallback />}>
+						<NotFoundPage />
+					</Suspense>
+				),
 			},
 		],
 	},

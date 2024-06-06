@@ -93,3 +93,7 @@ export const AbsolutePositionedSpinner = ({ size }: { size?: CubeLoaderSize }) =
 		</div>
 	);
 };
+
+export const DotsLoader = ({ className }: { className?: string }) => {
+	return <div className={cn("dots-loader w-10", className)} />;
+};

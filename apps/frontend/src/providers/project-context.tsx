@@ -110,3 +110,5 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 		</Projectcontext.Provider>
 	);
 };
+
+export default ProjectContextProvider;
