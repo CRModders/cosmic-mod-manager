@@ -1543,3 +1543,24 @@ export const StrikethroughIcon: React.FC<IconSvgProps> = ({ size, width, height,
 		</svg>
 	);
 };
+
+export const UnderlineIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M6 4v6a6 6 0 0 0 12 0V4" />
+			<line x1="4" x2="20" y1="20" y2="20" />
+		</svg>
+	);
+};

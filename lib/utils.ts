@@ -166,8 +166,8 @@ export function CapitalizeAndFormatString(str: string) {
 }
 
 export function isValidUrl(url: string) {
-    const regex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?(\?[;&a-z\d%_.~+=-]*)?(#[\w-]*)?$/;
-    return regex.test(url);
+    const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    return !!regex.exec(url);
 }
 
 export function isValidString(str: string | undefined | null,  maxLength: number, minLength = 1, noTrailingSpaces = true) {

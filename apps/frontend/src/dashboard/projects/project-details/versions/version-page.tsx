@@ -1,7 +1,7 @@
 import CopyBtn from "@/components/copy-btn";
 import { ChevronRightIcon, EditIcon, FlagIcon, TrashIcon } from "@/components/icons";
+import MarkdownRenderBox from "@/components/md-render-box";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
-import TextBox from "@/components/text-box";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -204,7 +204,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 					{versionData?.versions[0]?.changelog?.length ? (
 						<ContentWrapperCard className="w-full items-start flex-wrap">
 							<h1 className="text-foreground font-semibold text-2xl">Changelog</h1>
-							<TextBox text={versionData?.versions[0]?.changelog} />
+							<MarkdownRenderBox text={versionData?.versions[0]?.changelog} />
 						</ContentWrapperCard>
 					) : null}
 
@@ -220,7 +220,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 											versionFile.is_primary === true && "bg-bg-hover",
 										)}
 									>
-										<div className="flex gap-x-4 flex-wrap">
+										<div className="flex items-center gap-x-4 flex-wrap">
 											<div className="flex items-center justify-center gap-2">
 												<FileIcon className="w-5 h-5 text-foreground-muted" />
 												<p className="w-fit text-lg font-semibold text-foreground-muted mr-2">

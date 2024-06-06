@@ -1,4 +1,5 @@
 import { ChevronRightIcon, SaveIcon } from "@/components/icons";
+import MarkdownEditor from "@/components/markdown-editor";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CubeLoader } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
@@ -22,7 +22,7 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import type { ProjectVersionData } from "@/types";
 import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
-import { GameVersions, maxChangelogLength } from "@root/config";
+import { GameVersions } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import { ReleaseChannels, getProjectLoaders } from "@root/types";
 import { useContext, useEffect, useState } from "react";
@@ -107,7 +107,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			title: result?.message,
 		});
 
-		navigate(constructVersionPageUrl(result?.data?.url_slug || ""));
+		navigate(`/${projectType}/${projectData?.url_slug}/version/${result?.data?.url_slug}`);
 	};
 
 	const fetchVersiondata = async () => {
@@ -232,21 +232,49 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 				<div className="w-full flex flex-col gap-4">
 					<ContentWrapperCard>
 						<div className="w-full flex flex-col items-start justify-center gap-1">
-							<Label htmlFor="version-changelog-textarea" className="font-semibold text-lg">
-								Changelog
-							</Label>
-							<Textarea
+							<Label className="font-semibold text-lg">Changelog</Label>
+							<MarkdownEditor
+								editorValue={changelog}
+								setEditorValue={setChangelog}
 								placeholder="Version changelog..."
-								maxLength={maxChangelogLength}
-								className="resize-none w-full text-base h-96 dark:text-foreground font-mono"
-								id="version-changelog-textarea"
-								spellCheck={false}
-								value={changelog}
-								onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-									setChangelog(e.target.value);
-								}}
 							/>
 						</div>
+					</ContentWrapperCard>
+
+					<ContentWrapperCard className="w-full h-fit">
+						<div className="w-full flex flex-col items-start justify-center gap-1">
+							<p className="font-semibold text-2xl">Files</p>
+						</div>
+
+						{versionData?.versions[0].files[0].id &&
+							versionData?.versions[0].files.map((file) => {
+								return (
+									<div
+										key={file.id}
+										className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
+									>
+										<div className="flex flex-wrap gap-x-3 gap-y-1 items-center justify-center">
+											<FileIcon className="w-5 h-5 text-foreground-muted" />
+											<p className="text-lg font-semibold text-foreground-muted mr-2">{file.file_name}</p>
+											<p className="text-base text-foreground-muted">{parseFileSize(file.file_size)}</p>
+											{file.is_primary && <p className="italic text-foreground-muted">Primary</p>}
+										</div>
+
+										{file.is_primary !== true && (
+											<Label htmlFor="version-main-file-input">
+												<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
+													Replace file
+												</p>
+											</Label>
+										)}
+									</div>
+								);
+							})}
+
+						{/* // TODO: ADD Additional file uploads */}
+						{/* <div>
+
+                    </div> */}
 					</ContentWrapperCard>
 
 					{/* // TODO: Add dependency thing */}
@@ -325,45 +353,6 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 						/>
 					</div>
 				</ContentWrapperCard>
-			</div>
-
-			<div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
-				<ContentWrapperCard className="w-full grow">
-					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="font-semibold text-2xl">Files</p>
-					</div>
-
-					{versionData?.versions[0].files[0].id &&
-						versionData?.versions[0].files.map((file) => {
-							return (
-								<div
-									key={file.id}
-									className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
-								>
-									<div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
-										<FileIcon className="w-5 h-5 text-foreground-muted" />
-										<p className="text-lg font-semibold text-foreground-muted mr-2">{file.file_name}</p>
-										<p className="text-base text-foreground-muted">{parseFileSize(file.file_size)}</p>
-										{file.is_primary && <p className="italic text-foreground-muted">Primary</p>}
-									</div>
-
-									{file.is_primary !== true && (
-										<Label htmlFor="version-main-file-input">
-											<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
-												Replace file
-											</p>
-										</Label>
-									)}
-								</div>
-							);
-						})}
-
-					{/* // TODO: ADD Additional file uploads */}
-					{/* <div>
-
-                    </div> */}
-				</ContentWrapperCard>
-				<div className="w-full h-fit" />
 			</div>
 		</div>
 	);

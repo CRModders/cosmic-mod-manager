@@ -51,8 +51,12 @@
     @apply pl-10;
 }
 
-.markdown-body li {
+.markdown-body ul li {
     @apply list-disc;
+}
+
+.markdown-body ol li {
+    @apply list-decimal;
 }
 
 .markdown-body h1 {
@@ -73,13 +77,13 @@
 }
 
 .markdown-body a {
-    @apply text-blue-500 dark:text-blue-400 cursor-pointer;
+    @apply text-blue-500 dark:text-blue-400/85 cursor-pointer transition-[filter] w-auto h-auto box-border inline-block underline;
 }
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
     text-decoration: none;
-    @apply brightness-125;
+    @apply text-blue-500/85 dark:text-blue-400;
 }
 
 .markdown-body a:active {
@@ -88,7 +92,7 @@
 }
 
 .markdown-body img {
-    @apply max-w-full w-full h-auto;
+    @apply max-w-full w-auto h-auto;
 }
 
 html:not(.dark).markdown-body img[src$='#gh-dark-mode-only'] {
@@ -142,7 +146,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
     @apply border-b-[0.1rem] border-border;
 }
 
-.markdown-body table kbd {
+.markdown-body kbd {
     @apply bg-zinc-300 dark:bg-zinc-700 text-foreground shadow-inner shadow-foreground/10 px-2 pt-1 pb-0.5 rounded leading-none text-sm;
 }
 

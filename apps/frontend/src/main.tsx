@@ -1,4 +1,3 @@
-import MarkdownEditor from "@/components/markdown-editor";
 import RedrectTo from "@/components/redirect-to";
 import RootLayout, { HomePage } from "@/src/App";
 import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/layout";
@@ -34,7 +33,6 @@ import { ProjectContextProvider } from "./providers/project-context";
 import AccountSettingsPage from "./settings/account/page";
 import SettingsPageLayout from "./settings/layout";
 import SettingsPage from "./settings/page";
-import { ContentWrapperCard } from "./settings/panel";
 import Sessions from "./settings/session/page";
 
 const projectRoute = (project_type: string) => {
@@ -164,16 +162,6 @@ const router = createBrowserRouter([
 						element: <LoginPage />,
 					},
 				],
-			},
-			{
-				path: "markdown-editor",
-				element: (
-					<div className="w-full flex items-center justify-center mt-12">
-						<ContentWrapperCard>
-							<MarkdownEditor />
-						</ContentWrapperCard>
-					</div>
-				),
 			},
 			{
 				path: "signup",
