@@ -63,3 +63,5 @@ export const renderHighlightedString = (string: string) =>
 			},
 		}).render(string),
 	);
+
+export default renderHighlightedString;

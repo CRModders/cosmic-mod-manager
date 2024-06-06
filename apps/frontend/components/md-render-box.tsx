@@ -1,5 +1,5 @@
 import "@/components/highlightjs.css";
-import { renderHighlightedString } from "./render-md";
+import renderHighlightedString from "./render-md";
 
 const MarkdownRenderBox = ({ text }: { text: string }) => {
 	return (

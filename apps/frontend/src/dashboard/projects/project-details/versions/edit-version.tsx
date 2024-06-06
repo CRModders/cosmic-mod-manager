@@ -1,5 +1,4 @@
 import { ChevronRightIcon, SaveIcon } from "@/components/icons";
-import MarkdownEditor from "@/components/markdown-editor";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CubeLoader } from "@/components/ui/spinner";
+import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
@@ -25,8 +24,10 @@ import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-
 import { GameVersions } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import { ReleaseChannels, getProjectLoaders } from "@root/types";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
+const MarkdownEditor = lazy(() => import("@/components/markdown-editor"));
 
 const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const { projectUrlSlug, versionUrlSlug } = useParams();
@@ -233,11 +234,13 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<ContentWrapperCard>
 						<div className="w-full flex flex-col items-start justify-center gap-1">
 							<Label className="font-semibold text-lg">Changelog</Label>
-							<MarkdownEditor
-								editorValue={changelog}
-								setEditorValue={setChangelog}
-								placeholder="Version changelog..."
-							/>
+							<Suspense fallback={<SuspenseFallback />}>
+								<MarkdownEditor
+									editorValue={changelog}
+									setEditorValue={setChangelog}
+									placeholder="Version changelog..."
+								/>
+							</Suspense>
 						</div>
 					</ContentWrapperCard>
 

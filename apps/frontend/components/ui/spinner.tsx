@@ -97,3 +97,11 @@ export const AbsolutePositionedSpinner = ({ size }: { size?: CubeLoaderSize }) =
 export const DotsLoader = ({ className }: { className?: string }) => {
 	return <div className={cn("dots-loader w-10", className)} />;
 };
+
+export const SuspenseFallback = () => {
+	return (
+		<div className="w-full flex items-center justify-center py-12">
+			<DotsLoader />
+		</div>
+	);
+};

@@ -1,7 +1,8 @@
-import MarkdownRenderBox from "@/components/md-render-box";
+import { SuspenseFallback } from "@/components/ui/spinner";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import { useContext } from "react";
+import { Suspense, lazy, useContext } from "react";
+const MarkdownRenderBox = lazy(() => import("@/components/md-render-box"));
 
 const ProjectDescription = () => {
 	const { projectData } = useContext(Projectcontext);
@@ -10,7 +11,9 @@ const ProjectDescription = () => {
 		<>
 			{projectData?.description && (
 				<ContentWrapperCard className="items-start flex-wrap">
-					<MarkdownRenderBox text={projectData.description} />
+					<Suspense fallback={<SuspenseFallback />}>
+						<MarkdownRenderBox text={projectData.description} />
+					</Suspense>
 				</ContentWrapperCard>
 			)}
 		</>

@@ -1,12 +1,13 @@
 import { SaveIcon } from "@/components/icons";
-import MarkdownEditor from "@/components/markdown-editor";
 import { Button } from "@/components/ui/button";
-import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
+
+const MarkdownEditor = lazy(() => import("@/components/markdown-editor"));
 
 const ProjectDescriptSettingsPage = () => {
 	const [loading, setLoading] = useState(false);
@@ -49,7 +50,9 @@ const ProjectDescriptSettingsPage = () => {
 		<ContentWrapperCard className="items-start relative">
 			<h2 className=" text-xl font-semibold">Description</h2>
 
-			<MarkdownEditor editorValue={description} setEditorValue={setDescription} placeholder="Project description" />
+			<Suspense fallback={<SuspenseFallback />}>
+				<MarkdownEditor editorValue={description} setEditorValue={setDescription} placeholder="Project description" />
+			</Suspense>
 
 			<div className="w-full flex items-center justify-end">
 				<Button
