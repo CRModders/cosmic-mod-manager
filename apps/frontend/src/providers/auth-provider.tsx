@@ -1,6 +1,5 @@
 import type { LocalUserSession, OAuthCallbackHandlerResult } from "@root/types";
 import { createContext, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import useFetch from "../hooks/fetch";
 
 type AuthContextType = {
@@ -25,7 +24,6 @@ export const AuthContext = createContext<AuthContextType>({
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [session, setSession] = useState<LocalUserSession | null | undefined>(undefined);
-	const [cookies] = useCookies();
 
 	const setNewSession = (newSession: Partial<LocalUserSession>) => {
 		if (session && newSession) {
@@ -60,17 +58,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			setSession(null);
 		}
 
-		setSession(data?.session as LocalUserSession);
+		setSession((data?.session as LocalUserSession) || null);
 	};
 
 	const initialiseAuthContext = async () => {
-		const existingSession = cookies["auth-session"] as LocalUserSession | undefined;
-		if (existingSession?.user_id) {
-			setSession(existingSession);
-			await validateSession();
-		} else {
-			setSession(null);
-		}
+		await validateSession();
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

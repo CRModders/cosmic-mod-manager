@@ -25,6 +25,10 @@ export const LoginButton = ({
 const NavButton = () => {
 	const { session, logout: _logout } = useContext(AuthContext);
 
+	if (session === undefined) {
+		return <CubeLoader size="sm" />;
+	}
+
 	if (!session?.user_id) {
 		return (
 			<Link to={"/login"}>

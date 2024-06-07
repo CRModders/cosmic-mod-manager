@@ -37,7 +37,7 @@ const signinAndCreateUserSession = async (
 ) => {
 	const userAgent = c.req.header("user-agent");
 	let ip_addr =
-		c.req.header("x-forwarded-for").split(", ")[0] ||
+		c.req.header("x-forwarded-for")?.split(", ")?.[0] ||
 		c.req.header("x-forwarded-for") ||
 		(c.env.ip as string as IpAddressType);
 	if (typeof ip_addr !== "string") {
@@ -64,6 +64,7 @@ const signinAndCreateUserSession = async (
 	setCookie(c, "auth-session", JSON.stringify(session), {
 		maxAge: userSessionValidity,
 		secure: secureCookie,
+		httpOnly: secureCookie,
 		domain: process.env.COOKIE_ACCESS_DOMAIN,
 	});
 
@@ -217,6 +218,7 @@ authRouter.get("/session/validate", async (c) => {
 	setCookie(c, "auth-session", JSON.stringify(user), {
 		maxAge: userSessionValidity,
 		secure: secureCookie,
+		httpOnly: secureCookie,
 		domain: process.env.COOKIE_ACCESS_DOMAIN,
 	});
 

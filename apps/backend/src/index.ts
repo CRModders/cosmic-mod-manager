@@ -16,7 +16,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.use(
 	"*",
 	cors({
-		origin: ["http://localhost:3000", "https://crmm-preview.vercel.app", "https://preview.crmm.tech"],
+		origin: ["http://localhost:3000", "https://preview.crmm.tech"],
 		credentials: true,
 	}),
 );
