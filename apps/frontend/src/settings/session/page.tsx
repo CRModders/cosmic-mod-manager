@@ -70,11 +70,9 @@ const Sessions = () => {
 							</div>
 							<div className="w-full flex flex-col items-center justify-center text-foreground-muted">
 								<p className="w-full text-left">
-									These devices are currently logged into your account; you can revoke any session at any time
-								</p>
-								<p className="w-full text-left">
-									If you see something you don't recognize, immediately revoke the session and change the password of
-									the provider account which was used to create that session.{" "}
+									These devices are currently logged into your account, you can revoke any session at any time. If you
+									see something you don't recognize, immediately revoke the session and change the password of the
+									associated auth provider.
 								</p>
 							</div>
 

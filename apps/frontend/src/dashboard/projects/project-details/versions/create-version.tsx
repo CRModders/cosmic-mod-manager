@@ -1,4 +1,5 @@
 import { ChevronRightIcon } from "@/components/icons";
+import MarkdownEditor from "@/components/markdown-editor";
 import RedrectTo from "@/components/redirect-to";
 import {
 	Breadcrumb,
@@ -14,14 +15,13 @@ import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CubeLoader } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import { Cross1Icon, FileIcon, PlusIcon } from "@radix-ui/react-icons";
-import { GameVersions, maxChangelogLength, maxFileSize } from "@root/config";
+import { GameVersions, maxFileSize } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import { ReleaseChannels, getProjectLoaders } from "@root/types";
 import { useContext, useEffect, useState } from "react";
@@ -165,30 +165,68 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 				</div>
 			</ContentWrapperCard>
 
-			<div className="w-full flex flex-wrap gap-4">
-				<div className="w-fit grow flex flex-col gap-4">
+			<div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
+				<div className="w-full flex flex-col gap-4">
 					<ContentWrapperCard>
 						<div className="w-full flex flex-col items-start justify-center gap-1">
 							<Label htmlFor="version-changelog-textarea" className="font-semibold text-lg">
 								Changelog
 							</Label>
-							<Textarea
+							<MarkdownEditor
 								placeholder="Version changelog..."
-								maxLength={maxChangelogLength}
-								className="resize-none w-full text-base h-96 dark:text-foreground font-mono"
-								id="version-changelog-textarea"
-								value={changelog}
-								onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-									setChangelog(e.target.value);
-								}}
+								editorValue={changelog}
+								setEditorValue={setChangelog}
 							/>
 						</div>
 					</ContentWrapperCard>
 
 					{/* // TODO: Add dependency thing */}
 					{/* <ContentWrapperCard>2</ContentWrapperCard> */}
+
+					<ContentWrapperCard className="w-full">
+						<div className="w-full flex flex-col items-start justify-center gap-1">
+							<p className="font-semibold text-2xl">Files</p>
+						</div>
+
+						<div className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover">
+							<div className="flex gap-3 items-center">
+								<FileIcon className="w-5 h-5 text-foreground-muted" />
+								{versionFile ? (
+									<>
+										<p className="text-lg font-semibold text-foreground-muted mr-2">{versionFile.name}</p>
+										<p className="text-base text-foreground-muted">{parseFileSize(versionFile.size)}</p>
+									</>
+								) : (
+									<p>No file choosen</p>
+								)}
+							</div>
+
+							<Label htmlFor="version-main-file-input">
+								<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
+									Choose file
+								</p>
+							</Label>
+							<Input
+								type="file"
+								id="version-main-file-input"
+								className="hidden"
+								onChange={(e) => {
+									const file = e.target.files?.[0];
+									if (file) {
+										setversionFile(file);
+									}
+								}}
+							/>
+						</div>
+
+						{/* // TODO: ADD Additional file uploads */}
+						{/* <div>
+
+                    </div> */}
+					</ContentWrapperCard>
 				</div>
-				<ContentWrapperCard className="w-full h-fit lg:w-68 xl:w-72">
+
+				<ContentWrapperCard className="w-full h-fit">
 					<div className="w-full flex flex-col items-start justify-center gap-1">
 						<p className="font-semibold text-2xl">Metadata</p>
 					</div>
@@ -257,51 +295,6 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 						/>
 					</div>
 				</ContentWrapperCard>
-			</div>
-
-			<div className="w-full flex flex-wrap gap-4">
-				<ContentWrapperCard className="w-fit grow">
-					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="font-semibold text-2xl">Files</p>
-					</div>
-
-					<div className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover">
-						<div className="flex gap-3 items-center">
-							<FileIcon className="w-5 h-5 text-foreground-muted" />
-							{versionFile ? (
-								<>
-									<p className="text-lg font-semibold text-foreground-muted mr-2">{versionFile.name}</p>
-									<p className="text-base text-foreground-muted">{parseFileSize(versionFile.size)}</p>
-								</>
-							) : (
-								<p>No file choosen</p>
-							)}
-						</div>
-
-						<Label htmlFor="version-main-file-input">
-							<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
-								Choose file
-							</p>
-						</Label>
-						<Input
-							type="file"
-							id="version-main-file-input"
-							className="hidden"
-							onChange={(e) => {
-								const file = e.target.files?.[0];
-								if (file) {
-									setversionFile(file);
-								}
-							}}
-						/>
-					</div>
-
-					{/* // TODO: ADD Additional file uploads */}
-					{/* <div>
-
-                    </div> */}
-				</ContentWrapperCard>
-				<div className="w-full h-fit lg:w-68 xl:w-72" />
 			</div>
 		</div>
 	);

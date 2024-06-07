@@ -3,9 +3,8 @@ import useMultiSelect from "@/src/hooks/use-multi-select";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString } from "@root/lib/utils";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "./input";
-import { ScrollArea } from "./scroll-area";
 import "./styles.css";
 
 type Props = {
@@ -17,6 +16,7 @@ type Props = {
 };
 
 export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, options, setSelectedValues }: Props) {
+	const listScrollContainer = useRef<HTMLDivElement>(null);
 	const { visibleList, searchTerm, setSearchTerm, selectedItems, setSelectedItems } = useMultiSelect({
 		options,
 	});
@@ -60,6 +60,16 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 			setFocusedListItemIndex(Math.max(0, visibleList.length - 1));
 		}
 	}, [visibleList]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const listItem = document.querySelector(
+			`#multiselect-option-item-${focusedListItemIndex}-${input_id}`,
+		) as HTMLElement;
+		if (listItem && listScrollContainer.current && !isElementVisible(listItem, listScrollContainer.current)) {
+			listItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+		}
+	}, [focusedListItemIndex]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -119,33 +129,42 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 					htmlFor={input_id}
 					className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] py-2 rounded-lg rounded-tl-none rounded-tr-none bg-background border border-border-hicontrast border-t-0"
 				>
-					<ScrollArea className="max-h-72 overflow-auto">
-						<div className="w-full">
-							{visibleList.map((item, index) => {
-								return (
-									// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-									<p
-										key={item}
-										className={cn(
-											"w-full text-sm flex items-center justify-start px-4 py-2 text-foreground-muted font-semibold",
-											index === focusedListItemIndex && "bg-background-shallow text-foreground",
-										)}
-										onMouseEnter={() => {
-											setFocusedListItemIndex(index);
-										}}
-										onClick={() => {
-											const currentFocusedItem = visibleList[focusedListItemIndex];
-											currentFocusedItem && AddItemToSelectedList(currentFocusedItem);
-										}}
-									>
-										{CapitalizeAndFormatString(item)}
-									</p>
-								);
-							})}
-						</div>
-					</ScrollArea>
+					<div className="w-ful max-h-[18rem] overflow-auto" ref={listScrollContainer}>
+						{visibleList.map((item, index) => {
+							return (
+								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+								<p
+									key={item}
+									className={cn(
+										"w-full text-sm flex items-center justify-start px-4 py-2 text-foreground-muted font-semibold",
+										index === focusedListItemIndex && "bg-background-shallow text-foreground",
+									)}
+									id={`multiselect-option-item-${index}-${input_id}`}
+									onMouseEnter={() => {
+										setFocusedListItemIndex(index);
+									}}
+									onClick={() => {
+										const currentFocusedItem = visibleList[focusedListItemIndex];
+										currentFocusedItem && AddItemToSelectedList(currentFocusedItem);
+									}}
+								>
+									{CapitalizeAndFormatString(item)}
+								</p>
+							);
+						})}
+					</div>
 				</label>
 			</div>
 		</div>
 	);
 }
+
+const isElementVisible = (element: HTMLElement, container: HTMLDivElement) => {
+	const eleTop = element.offsetTop;
+	const eleBottom = eleTop + element.clientHeight;
+
+	const containerTop = container.scrollTop;
+	const containerBottom = containerTop + container.clientHeight;
+
+	return eleTop > containerTop && eleBottom < containerBottom;
+};

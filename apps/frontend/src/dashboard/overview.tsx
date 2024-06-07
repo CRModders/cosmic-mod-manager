@@ -86,13 +86,6 @@ const Overview = () => {
 								<span className="text-foreground-muted">from 4 projects</span>
 							</div>
 						</div>
-
-						<div className="w-fit grow shrink flex flex-wrap items-center justify-center px-5 py-4 rounded-lg bg-bg-hover">
-							<div className="w-full flex flex-col gap-2">
-								<h2 className="text-foreground-muted font-semibold text-lg">Current balance</h2>
-								<span className="text-foreground font-semibold text-4xl">$643</span>
-							</div>
-						</div>
 					</div>
 				</ContentWrapperCard>
 			</div>
