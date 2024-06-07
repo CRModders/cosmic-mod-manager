@@ -152,7 +152,7 @@ export const ProjectMember = ({
 		<Link
 			to={`/user/${username}`}
 			role="link"
-			className="w-full flex items-center justify-start gap-3 hover:bg-background-shallow rounded-lg"
+			className="w-full p-1 flex items-center justify-start gap-3 hover:bg-background-shallow rounded-lg"
 		>
 			<div className="flex shrink-0 items-center justify-center rounded-full bg-background-shallow h-14 w-14">
 				{avatar_image ? (
@@ -161,16 +161,16 @@ export const ProjectMember = ({
 					<PersonIcon size="45%" className="text-foreground-muted" />
 				)}
 			</div>
-			<div className="flex flex-col items-start justify-center">
+			<div className="w-full flex flex-col items-start justify-start overflow-hidden">
 				<div className="flex items-center justify-center gap-2">
-					<h2 className="text-base font-semibold text-foreground-muted leading-tight">{username}</h2>
+					<h2 className="text-sm font-semibold text-foreground-muted leading-tight">{username}</h2>
 					{role === "OWNER" && (
 						<TooltipWrapper text="Project owner">
 							<CrownIcon size="1rem" className="text-orange-500 dark:text-orange-400" />
 						</TooltipWrapper>
 					)}
 				</div>
-				<p className="text-foreground-muted">{role_title}</p>
+				<p className="text-foreground-muted text-sm">{role_title}</p>
 			</div>
 		</Link>
 	);
@@ -430,7 +430,7 @@ const TooltipWrapper = ({ children, text }: { text: string; children: React.Reac
 		<TooltipProvider>
 			<Tooltip>
 				<TooltipTrigger>{children}</TooltipTrigger>
-				<TooltipContent className="text-base">{text}</TooltipContent>
+				<TooltipContent className="text-sm">{text}</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);

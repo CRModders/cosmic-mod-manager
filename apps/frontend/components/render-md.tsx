@@ -40,6 +40,7 @@ hljs.registerLanguage("properties", properties);
 /* ALIASES */
 // Scripting
 hljs.registerAliases(["js"], { languageName: "javascript" });
+hljs.registerAliases(["ts"], { languageName: "typescript" });
 hljs.registerAliases(["py"], { languageName: "python" });
 // Coding
 hljs.registerAliases(["kt"], { languageName: "kotlin" });
