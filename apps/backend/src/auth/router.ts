@@ -64,6 +64,7 @@ const signinAndCreateUserSession = async (
 	setCookie(c, "auth-session", JSON.stringify(session), {
 		maxAge: userSessionValidity,
 		secure: secureCookie,
+		domain: process.env.COOKIE_ACCESS_DOMAIN,
 	});
 
 	return c.json({
@@ -216,6 +217,7 @@ authRouter.get("/session/validate", async (c) => {
 	setCookie(c, "auth-session", JSON.stringify(user), {
 		maxAge: userSessionValidity,
 		secure: secureCookie,
+		domain: process.env.COOKIE_ACCESS_DOMAIN,
 	});
 
 	return c.json({ isValid: isValid, session: user });

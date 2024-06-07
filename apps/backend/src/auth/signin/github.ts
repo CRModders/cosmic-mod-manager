@@ -17,6 +17,7 @@ export default async function githubSigninHandler(c: Context<Env, "/signin/githu
 
 	setCookie(c, "oauth-req-state", state, {
 		secure: secureCookie,
+		domain: process.env.COOKIE_ACCESS_DOMAIN,
 	});
 
 	return c.json({ signinUrl });
