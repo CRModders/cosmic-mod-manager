@@ -36,7 +36,10 @@ const signinAndCreateUserSession = async (
 	responseMsg?: string,
 ) => {
 	const userAgent = c.req.header("user-agent");
-	let ip_addr = c.req.header("x-forwarded-for") || (c.env.ip as string as IpAddressType);
+	let ip_addr =
+		c.req.header("x-forwarded-for").split(", ")[0] ||
+		c.req.header("x-forwarded-for") ||
+		(c.env.ip as string as IpAddressType);
 	if (typeof ip_addr !== "string") {
 		ip_addr = ip_addr?.address || null;
 	}
