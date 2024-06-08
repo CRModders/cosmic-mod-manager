@@ -232,22 +232,14 @@ userRouter.post("/add-new-password", async (c) => {
 			},
 		});
 
-		const result = await sendNewPasswordVerificationEmail({
+		await sendNewPasswordVerificationEmail({
 			user_id: user.id,
 			email: user.email,
 			name: user.name,
 		});
-
-		if (result?.success !== true) {
-			return c.json({
-				success: false,
-				message: result?.message,
-			});
-		}
-
 		return c.json({
 			success: true,
-			message: "Confirmation email sent",
+			message: "You should receive a confirmation email shortly",
 		});
 	} catch (error) {
 		console.error(error);
@@ -590,14 +582,7 @@ userRouter.post("/send-password-change-email", async (c) => {
 			});
 		}
 
-		const emailSendRes = await sendPasswordChangeEmail(userData);
-
-		if (emailSendRes?.success !== true) {
-			return c.json({
-				success: false,
-				message: emailSendRes?.message,
-			});
-		}
+		await sendPasswordChangeEmail(userData);
 
 		return c.json({
 			success: true,
@@ -899,17 +884,11 @@ userRouter.post("/send-account-deletion-email", async (c) => {
 			);
 		}
 
-		const emailSendRes = await sendAccountDeletionConfirmationEmail(user);
-		if (emailSendRes?.success !== true) {
-			return c.json({
-				success: false,
-				message: emailSendRes?.message,
-			});
-		}
+		sendAccountDeletionConfirmationEmail(user);
 
 		return c.json({
 			success: true,
-			message: emailSendRes?.message,
+			message: "You should receive a confirmation email shortly",
 		});
 	} catch (error) {
 		console.error(error);

@@ -1,5 +1,5 @@
 import CopyBtn from "@/components/copy-btn";
-import { ChevronRightIcon, EditIcon, FlagIcon, TrashIcon } from "@/components/icons";
+import { ChevronRightIcon, DownloadIcon, EditIcon, FlagIcon, TrashIcon } from "@/components/icons";
 import MarkdownRenderBox from "@/components/md-render-box";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import {
@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { CubeLoader } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
+import { FormatVersionsList } from "@/lib/semver";
 import { cn, constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
@@ -22,7 +23,7 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import type { ProjectVersionData } from "@/types";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { DownloadIcon, FileIcon, StarIcon } from "@radix-ui/react-icons";
+import { FileIcon, StarIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, formatDate, parseFileSize } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -139,11 +140,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 							versionData?.versions[0].files[0].file_url,
 						)}`}
 					>
-						<Button
-							className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground font-semibold gap-2"
-							tabIndex={-1}
-						>
-							<DownloadIcon className="w-4 h-4" />
+						<Button className="font-semibold gap-2" tabIndex={-1}>
+							<DownloadIcon size="1.15rem" />
 							<p>Download</p>
 						</Button>
 					</a>
@@ -172,7 +170,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 								<DialogContent>
 									<DialogHeader>
 										<DialogTitle className="font-semibold text-foreground-muted text-lg">
-											Delete version {versionData?.versions[0].version_title}
+											Delete version{" "}
+											<span className="italic font-normal">{versionData?.versions[0].version_title}</span>
 										</DialogTitle>
 									</DialogHeader>
 									<p className="text-foreground-muted">
@@ -234,8 +233,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 										</div>
 
 										<Link to={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
-											<Button className=" bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground gap-2" tabIndex={-1}>
-												<DownloadIcon className="w-5 h-5" />
+											<Button className="gap-2" tabIndex={-1}>
+												<DownloadIcon size="1.15rem" />
 												<span>Download</span>
 											</Button>
 										</Link>
@@ -276,8 +275,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 							{
 								label: "Game versions",
 								element: (
-									<p className="text-foreground-muted leading-none text-base px-1">
-										{versionData.versions[0].supported_game_versions.join(", ")}
+									<p className="text-foreground-muted leading-tight text-pretty text-base px-1">
+										{FormatVersionsList(versionData.versions[0].supported_game_versions)}
 									</p>
 								),
 							},

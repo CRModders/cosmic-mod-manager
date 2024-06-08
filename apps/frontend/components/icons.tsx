@@ -1564,3 +1564,61 @@ export const UnderlineIcon: React.FC<IconSvgProps> = ({ size, width, height, ...
 		</svg>
 	);
 };
+
+export const DownloadIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+			<polyline points="7 10 12 15 17 10" />
+			<line x1="12" x2="12" y1="15" y2="3" />
+		</svg>
+	);
+};
+
+export const LeftArrowIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			strokeWidth="2"
+			stroke="currentColor"
+			aria-hidden="true"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+		</svg>
+	);
+};
+
+export const RightArrowIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			strokeWidth="2"
+			stroke="currentColor"
+			aria-hidden="true"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+		</svg>
+	);
+};

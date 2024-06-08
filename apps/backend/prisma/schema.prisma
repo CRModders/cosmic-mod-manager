@@ -116,7 +116,7 @@ model Project {
     summary         String?               @db.VarChar(324)
     description     String?               @db.VarChar(65256)
     created_on      DateTime              @default(now())
-    updated_on      DateTime              @default(now()) @updatedAt
+    updated_on      DateTime              @default(now())
     total_downloads Int                   @default(0)
     external_links  ProjectExternalLinks? @relation(name: "project_external_links")
     members         ProjectMember[]       @relation(name: "Project")

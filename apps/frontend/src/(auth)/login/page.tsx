@@ -154,11 +154,7 @@ const LoginPage = () => {
 
 					{formError && <FormErrorMessage text={formError} />}
 
-					<Button
-						type="submit"
-						aria-label="Login"
-						className="w-full bg-accent-bg hover:bg-accent-bg/90 text-[hsla(var(--foreground-dark))]  font-semibold text-md"
-					>
+					<Button type="submit" aria-label="Login" className="w-full font-semibold text-md">
 						Login
 					</Button>
 				</form>

@@ -15,21 +15,21 @@ export default defineConfig({
 		"process.env": process.env,
 	},
 	server: {
-		// proxy: {
-		// 	"/api": {
-		// 		target: "http://localhost:5500",
-		// 		changeOrigin: true,
-		// 	},
-		// },
+		proxy: {
+			"/api": {
+				target: "http://localhost:5500",
+				changeOrigin: true,
+			},
+		},
 		port: 3000,
 	},
 	preview: {
-		// proxy: {
-		// 	"/api": {
-		// 		target: "http://localhost:5500",
-		// 		changeOrigin: true,
-		// 	},
-		// },
+		proxy: {
+			"/api": {
+				target: "http://localhost:5500",
+				changeOrigin: true,
+			},
+		},
 		port: 3000,
 	},
 });

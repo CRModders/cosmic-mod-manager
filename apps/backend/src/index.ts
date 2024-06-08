@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 import authRouter from "./auth/router";
 import cdnRouter from "./cdn/router";
 import projectRouter from "./project/project";
-import userRouter from "./user/router";
+import userRouter from "./user/user";
 
 type Bindings = {
 	ip: SocketAddress;

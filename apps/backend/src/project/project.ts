@@ -180,7 +180,10 @@ projectRouter.get("/:projectSlug", async (c) => {
 			return c.json({ message: "Not found" }, 404);
 		}
 
-		const UsersProjectMembership = GetUsersProjectMembership(user?.id, projectData.members);
+		const UsersProjectMembership = GetUsersProjectMembership(
+			user?.id,
+			projectData.members.map((member) => member.user.id),
+		);
 
 		if (
 			projectData.visibility === ProjectVisibility.PUBLIC ||

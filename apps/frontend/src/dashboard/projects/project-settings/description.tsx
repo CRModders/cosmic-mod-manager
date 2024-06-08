@@ -52,7 +52,7 @@ const ProjectDescriptSettingsPage = () => {
 
 			<div className="w-full flex items-center justify-end">
 				<Button
-					className=" bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground gap-2"
+					className="gap-2"
 					onClick={updateProjectDescription}
 					disabled={loading || projectData?.description === description}
 				>

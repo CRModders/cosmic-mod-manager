@@ -23,9 +23,8 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 	const [focusedListItemIndex, setFocusedListItemIndex] = useState<number>(0);
 
 	const changeFocusedItem = (indexShift = 1) => {
-		if (focusedListItemIndex + indexShift > visibleList.length - 1) setFocusedListItemIndex(0);
-		else if (focusedListItemIndex + indexShift < 0) setFocusedListItemIndex(visibleList.length - 1);
-		else setFocusedListItemIndex((prev) => prev + indexShift);
+		if (focusedListItemIndex + indexShift < visibleList.length && focusedListItemIndex + indexShift >= 0)
+			setFocusedListItemIndex((prev) => prev + indexShift);
 	};
 
 	const AddItemToSelectedList = (item: string) => {
@@ -67,7 +66,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
 			`#multiselect-option-item-${focusedListItemIndex}-${input_id}`,
 		) as HTMLElement;
 		if (listItem && listScrollContainer.current && !isElementVisible(listItem, listScrollContainer.current)) {
-			listItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			listItem.scrollIntoView({ behavior: "auto", block: "nearest" });
 		}
 	}, [focusedListItemIndex]);
 

@@ -12,21 +12,14 @@ export default function NotFoundPage() {
 			</Helmet>
 			<div className="w-full min-h-[100vh] flex flex-col items-center justify-center gap-4">
 				<div className="headings">
-					<p
-						className={`${title({
-							size: "lg",
-						})} w-full flex items-center justify-center text-center`}
-					>
-						404
-					</p>
-					<h1 className={`${title()} w-full flex items-center justify-center text-center`}>Page not found.</h1>
+					<h1 className={`${title()} w-full flex items-center justify-center text-center`}>404 | Page not found.</h1>
 				</div>
-				<p className="text-xl text-[var(--regular-secondary-text)] max-w-xl flex items-center justify-center text-center">
+				<p className="text-xl text-foreground-muted max-w-xl flex items-center justify-center text-center">
 					Sorry, we couldn't find the page you're looking for.
 				</p>
 
-				<Link to="/">
-					<Button className="mt-4 rounded-lg py-6" size="lg" aria-label="Go to home page">
+				<Link to="/" className="mt-4">
+					<Button className="rounded-lg py-6" variant={"link"} size="lg" aria-label="Go to home page">
 						<span className="px-8 text-xl">Home</span>
 					</Button>
 				</Link>

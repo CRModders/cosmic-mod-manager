@@ -134,7 +134,7 @@ const ProjectLinksSettings = () => {
 			</div>
 			<div className="w-full flex items-center justify-end mt-4">
 				<Button
-					className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
+					className="gap-2"
 					onClick={updateProjectLinks}
 					disabled={
 						loading ||

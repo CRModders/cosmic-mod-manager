@@ -118,11 +118,7 @@ export default function HomePage() {
 				</div>
 
 				<div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
-					<Button
-						className="bg-accent-bg dark:bg-accent-bg hover:bg-accent-bg/80 dark:hover:bg-accent-bg/80"
-						size="lg"
-						aria-label="Explore mods"
-					>
+					<Button size="lg" aria-label="Explore mods">
 						<p className="text-[hsl(var(--foreground-dark))] dark:text-[hsl(var(--foreground-dark))] font-semibold text-base sm:text-md duration-0 dark:duration-0">
 							Explore mods
 						</p>

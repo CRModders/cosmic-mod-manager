@@ -131,11 +131,7 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 
 				{formError && <FormErrorMessage text={formError} />}
 
-				<Button
-					type="submit"
-					aria-label="Continue"
-					className="w-full bg-accent-bg hover:bg-accent-bg/80 text-[hsla(var(--foreground-dark))] text-md"
-				>
+				<Button type="submit" aria-label="Continue" className="w-full text-md">
 					Continue
 				</Button>
 			</form>

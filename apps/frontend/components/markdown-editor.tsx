@@ -430,9 +430,10 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 							setEditorValue(e.target.value);
 						}}
 						onKeyDown={(e) => {
-							if (e.key === "Escape") return editorTextarea.current?.blur();
+							const pressedKey = e.key.toLowerCase();
+							if (pressedKey === "escape") return editorTextarea.current?.blur();
 
-							if (e.key === "Tab") {
+							if (pressedKey === "tab") {
 								e.preventDefault();
 
 								if (e.shiftKey === true) {
@@ -442,22 +443,25 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 								}
 							}
 
+							if (e.shiftKey) return;
+
 							if (e.altKey) {
 								e.preventDefault();
-								if (e.key === "z") setWordWrap((prev) => !prev);
-								else if (e.key === "b") Bold();
-								else if (e.key === "i") Italic();
-								else if (e.key === "u") Underline();
-								else if (e.key === "c") CodeBlock();
-								else if (e.key === "s") Spoiler();
-								else if (e.key === "q") Quote();
-								else if (e.key === "l") UnorderedList();
+
+								if (pressedKey === "z") setWordWrap((prev) => !prev);
+								else if (pressedKey === "b") Bold();
+								else if (pressedKey === "i") Italic();
+								else if (pressedKey === "u") Underline();
+								else if (pressedKey === "c") CodeBlock();
+								else if (pressedKey === "s") Spoiler();
+								else if (pressedKey === "q") Quote();
+								else if (pressedKey === "l") UnorderedList();
 							}
 
 							if (e.ctrlKey) {
-								if (e.key === "b") Bold();
-								if (e.key === "i") Italic();
-								if (e.key === "u") {
+								if (pressedKey === "b") Bold();
+								if (pressedKey === "i") Italic();
+								if (pressedKey === "u") {
 									e.preventDefault();
 									Underline();
 								}
@@ -545,7 +549,7 @@ const EditorModal = ({
 						</DialogClose>
 
 						<Button
-							className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground gap-2"
+							className="gap-2"
 							onClick={() => {
 								insertFragmentFunc();
 								setModalOpen(false);

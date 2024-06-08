@@ -1,10 +1,4 @@
-import {
-	Loaders,
-	ProjectVisibility,
-	VersionReleaseChannels,
-	ProjectType as db_ProjectType,
-	type ProjectMember,
-} from "@prisma/client";
+import { Loaders, ProjectVisibility, VersionReleaseChannels, ProjectType as db_ProjectType } from "@prisma/client";
 import { ReleaseChannels, ProjectType as ts_ProjectType } from "@root/types";
 
 export const shuffleCharacters = (str: string) => {
@@ -70,13 +64,13 @@ export const GetProjectTypeType = (project_type: string): db_ProjectType => {
 
 export const GetUsersProjectMembership = (
 	currUserId: string | undefined | null,
-	membersList: Partial<ProjectMember>[],
-) => {
+	membersIdList: string[],
+): boolean | null => {
 	if (!currUserId) return null;
 
-	for (const member of membersList) {
-		if (member?.id && member.user_id === currUserId) {
-			return member;
+	for (const memberId of membersIdList) {
+		if (memberId && memberId === currUserId) {
+			return true;
 		}
 	}
 

@@ -9,7 +9,7 @@
     --tint-hue: 220;
 
     /* Light mode color scheme */
-    --accent-bg-light: 350, 89%, 60%;
+    --accent-bg-light: 350, 80%, 55%;
     --accent-foreground-light: 347, 77%, 50%;
     --background-light: 0, 0%, 98%;
     --background-shallow-light: var(--tint-hue), 6%, 90%;

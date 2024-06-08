@@ -24,7 +24,7 @@ const useMultiSelect = ({ options }: Props) => {
 
 		if (searchTerm) {
 			const matchingOptions = [];
-			for (const option of options) {
+			for (const option of listWithoutSelectedItems) {
 				if (option.toLowerCase().includes(searchTerm.toLowerCase())) {
 					matchingOptions.push(option);
 				}

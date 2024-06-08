@@ -1,9 +1,18 @@
 import CopyBtn from "@/components/copy-btn";
-import { BookIcon, ChevronRightIcon, CrownIcon, DiscordIcon, GearIcon, PersonIcon } from "@/components/icons";
+import {
+	BookIcon,
+	ChevronRightIcon,
+	CrownIcon,
+	DiscordIcon,
+	DownloadIcon,
+	GearIcon,
+	PersonIcon,
+} from "@/components/icons";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { CubeLoader } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FormatVersionsList } from "@/lib/semver";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -16,7 +25,6 @@ import {
 	CodeIcon,
 	CubeIcon,
 	DotsHorizontalIcon,
-	DownloadIcon,
 	ExclamationTriangleIcon,
 	HeartIcon,
 	UpdateIcon,
@@ -152,9 +160,9 @@ export const ProjectMember = ({
 		<Link
 			to={`/user/${username}`}
 			role="link"
-			className="w-full p-1 flex items-center justify-start gap-3 hover:bg-background-shallow rounded-lg"
+			className="w-full p-1 flex items-center justify-start gap-2 hover:bg-background-shallow rounded-lg"
 		>
-			<div className="flex shrink-0 items-center justify-center rounded-full bg-background-shallow h-14 w-14">
+			<div className="flex shrink-0 items-center justify-center rounded-full bg-background-shallow h-12 w-12">
 				{avatar_image ? (
 					<img src={avatar_image} alt={username} className="w-[100%] p-1 aspect-square rounded-full" />
 				) : (
@@ -272,12 +280,8 @@ const AdditionalProjectDetailsCard = ({
 										href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 										className="versionFileDownloadLink"
 									>
-										<Button
-											tabIndex={-1}
-											size={"icon"}
-											className="bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground h-fit w-fit px-1.5 py-1.5"
-										>
-											<DownloadIcon className="w-5 h-5" />
+										<Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2">
+											<DownloadIcon size="1.15rem" />
 										</Button>
 									</a>
 
@@ -288,7 +292,7 @@ const AdditionalProjectDetailsCard = ({
 											}/version/${version.url_slug}#project-page-nav`}
 											className="versionPageLink w-fit"
 										>
-											<p className="text-lg leading-none font-semibold text-foreground-muted">
+											<p className="text-lg leading-tight font-semibold text-foreground-muted">
 												{version.version_title}
 											</p>
 										</Link>
@@ -297,13 +301,7 @@ const AdditionalProjectDetailsCard = ({
 												{version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
 											</p>
 											<p className="text-foreground-muted leading-none">
-												{version.supported_game_versions
-													.slice(0, Math.min(5, version.supported_game_versions.length))
-													.map((game_version) => CapitalizeAndFormatString(game_version))
-													.join(", ")}
-												{version.supported_game_versions.length > 5 ? (
-													<span> and {version.supported_game_versions.length - 5} more</span>
-												) : null}
+												{FormatVersionsList(version.supported_game_versions)}
 											</p>
 										</div>
 										<ReleaseChannelIndicator release_channel={version.release_channel} />

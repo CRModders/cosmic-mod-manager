@@ -194,7 +194,7 @@ const GeneralProjectSettings = () => {
 
 						<div className="w-full flex items-center justify-end mt-4 mb-2">
 							<Button
-								className="gap-2 px-6 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
+								className="gap-2 px-6"
 								disabled={
 									projectName === projectData?.name &&
 									projectUrl === projectData?.url_slug &&

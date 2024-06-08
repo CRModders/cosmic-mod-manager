@@ -76,14 +76,19 @@ versionRouter.get("/", async (c) => {
 		if (!project?.id) {
 			return c.json({}, 404);
 		}
+
 		const { members, ...projectVersionData } = project;
 		if (project?.visibility === ProjectVisibility.PUBLIC || project?.visibility === ProjectVisibility.UNLISTED) {
 			return c.json({ data: projectVersionData });
 		}
 
 		const [user] = await getUserSession(c);
-		const UsersProjectMembership = GetUsersProjectMembership(user?.id, project.members);
-		if (UsersProjectMembership && UsersProjectMembership.user_id === user?.id) {
+		const UsersProjectMembership = GetUsersProjectMembership(
+			user?.id,
+			project.members.map((member) => member.user_id),
+		);
+
+		if (UsersProjectMembership) {
 			return c.json({ data: projectVersionData });
 		}
 
@@ -161,12 +166,15 @@ versionRouter.get("/:versionSlug", async (c) => {
 			},
 		});
 
-		if (!project?.id || !project?.versions?.[0].id) {
+		if (!project || !project?.versions?.[0].id) {
 			return c.json({ message: "Not found" }, 404);
 		}
 
 		const [user] = await getUserSession(c);
-		const UsersProjectMembership = GetUsersProjectMembership(user?.id, project.members);
+		const UsersProjectMembership = GetUsersProjectMembership(
+			user?.id,
+			project.members.map((member) => member.user_id),
+		);
 
 		if (
 			project.visibility === ProjectVisibility.PUBLIC ||
@@ -175,7 +183,6 @@ versionRouter.get("/:versionSlug", async (c) => {
 		) {
 			return c.json({ message: "", data: project });
 		}
-
 		return c.json({ message: "Not found", data: null }, 404);
 	} catch (error) {
 		console.error(error);
@@ -478,7 +485,10 @@ versionRouter.post("/create", async (c) => {
 			return c.json({ message: "Not found" }, 404);
 		}
 
-		const UsersProjectMembership = GetUsersProjectMembership(user.id, project.members);
+		const UsersProjectMembership = GetUsersProjectMembership(
+			user.id,
+			project.members.map((member) => member.user_id),
+		);
 		if (!UsersProjectMembership) {
 			return c.json(
 				{
@@ -488,32 +498,22 @@ versionRouter.post("/create", async (c) => {
 			);
 		}
 
-		const existingVersionWithSameVersionNumber = await prisma.project.findUnique({
+		const existingVersionWithSameUrlSlug = await prisma.projectVersion.findFirst({
 			where: {
-				url_slug: projectSlugUrl,
-			},
-			select: {
-				id: true,
-				versions: {
-					where: {
-						version_number: versionNumber,
-					},
-				},
+				project_id: project.id,
+				url_slug: versionNumber,
 			},
 		});
 
 		let newVersionUrlSlug = versionNumber;
-		for (const version of existingVersionWithSameVersionNumber.versions) {
-			if (version.url_slug === newVersionUrlSlug) {
-				newVersionUrlSlug = null;
-				break;
-			}
+		if (existingVersionWithSameUrlSlug?.url_slug) {
+			newVersionUrlSlug = null;
 		}
 
 		const newProjectVersion = await prisma.projectVersion.create({
 			data: {
-				project_id: existingVersionWithSameVersionNumber.id,
-				publisher_id: UsersProjectMembership.id,
+				project_id: project.id,
+				publisher_id: user.id,
 				version_number: versionNumber,
 				version_title: versionName,
 				changelog: changelog || "",
@@ -524,15 +524,18 @@ versionRouter.post("/create", async (c) => {
 			},
 		});
 
+		// If the versionNumber as url slug is not available use the version id
+		newVersionUrlSlug = newVersionUrlSlug || newProjectVersion.id;
+
 		const fileUrl = await saveProjectVersionFile({
 			fileName: primaryVersionFile.name,
 			userId: user.id,
-			projectId: existingVersionWithSameVersionNumber.id,
-			versionUrlSlug: newVersionUrlSlug || newProjectVersion.id,
+			projectId: project.id,
+			versionUrlSlug: newVersionUrlSlug,
 			file: primaryVersionFile,
 		});
 
-		const versionPrimaryFile = await prisma.versionFile.create({
+		await prisma.versionFile.create({
 			data: {
 				file_name: primaryVersionFile.name,
 				file_size: primaryVersionFile.size.toString(),
@@ -554,9 +557,18 @@ versionRouter.post("/create", async (c) => {
 			});
 		}
 
+		prisma.project.update({
+			where: {
+				id: project.id,
+			},
+			data: {
+				updated_on: new Date(),
+			},
+		});
+
 		return c.json({
-			message: "Created new version",
-			newVersionUrlSlug: newProjectVersion.url_slug || newProjectVersion.id,
+			message: "Successfully created new version",
+			newVersionUrlSlug: newVersionUrlSlug,
 		});
 	} catch (error) {
 		console.error(error);

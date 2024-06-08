@@ -196,11 +196,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					/>
 
 					<div className="flex flex-wrap gap-4 items-center justify-start">
-						<Button
-							className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
-							onClick={updateProjectVersion}
-							disabled={loading}
-						>
+						<Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
 							{loading === true ? <CubeLoader size="xs" /> : <SaveIcon className="w-4 h-4" />}
 							<span className="text-base font-semibold">Save</span>
 						</Button>
@@ -286,13 +282,12 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 						<p className="font-semibold text-2xl">Metadata</p>
 					</div>
 
-					{/* // TODO: Add release channels support */}
 					<div className="w-full flex flex-col">
 						<Label htmlFor="version-release-channel-selector" className="font-semibold text-foreground text-lg">
 							Release channel
 						</Label>
 						<Select
-							defaultValue={releaseChannel}
+							defaultValue={versionData?.versions[0].release_channel || releaseChannel}
 							onValueChange={(value) => {
 								setReleaseChannel(value as ReleaseChannels);
 							}}

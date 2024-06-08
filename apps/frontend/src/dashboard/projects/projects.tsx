@@ -63,7 +63,7 @@ const Projects = () => {
 					</h1>
 
 					<CreateProjectForm fetchProjects={fetchProjects}>
-						<Button className="flex items-center justify-center gap-2 bg-accent-bg hover:bg-accent-bg/80 dark:text-foreground">
+						<Button className="flex items-center justify-center gap-2">
 							<PlusIcon className="w-5 h-5" />
 							<span className="font-semibold text-base">Create a project</span>
 						</Button>

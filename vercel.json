@@ -6,6 +6,10 @@
     "buildCommand": "bun run build",
     "rewrites": [
         {
+            "source": "/api/:match*",
+            "destination": "http://api.crmm.tech/api/:match*"
+        },
+        {
             "source": "/(.*)",
             "destination": "/"
         }

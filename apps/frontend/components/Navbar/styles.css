@@ -7,7 +7,7 @@
 }
 
 .navLinkText {
-    @apply font-semibold text-foreground-muted hover:text-foreground/85 dark:hover:text-foreground/90;
+    @apply font-semibold text-foreground/75 hover:text-foreground;
 }
 
 .active .navLinkText {

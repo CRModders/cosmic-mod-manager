@@ -147,11 +147,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 					/>
 
 					<div className="flex gap-4 items-center justify-start">
-						<Button
-							disabled={loading}
-							className="gap-2 bg-accent-bg hover:bg-accent-bg/85 dark:text-foreground"
-							onClick={createProjectVersion}
-						>
+						<Button disabled={loading} className="gap-2" onClick={createProjectVersion}>
 							{loading === true ? <CubeLoader size="xs" /> : <PlusIcon className="w-5 h-5" />}
 							<span className="text-base font-semibold">Create</span>
 						</Button>
