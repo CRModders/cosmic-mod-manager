@@ -191,7 +191,7 @@ export const Capitalize = (str: string) => {
     return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
 
-export const GetProjectVisibility = (visibility) => {
+export const GetProjectVisibility = (visibility: string) => {
     for (const validVisibilityOption of ProjectVisibilityOptions) {
         if (validVisibilityOption === visibility) {
             return validVisibilityOption;
@@ -259,6 +259,6 @@ export const GetProjectLoadersList = (loaders_list: string[]) => {
     return list;
 };
 
-export const GetSupportedGameVersions = (list: string[]) => {
+// export const GetSupportedGameVersions = (list: string[]) => {
 
-}
+// }
