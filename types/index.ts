@@ -1,8 +1,8 @@
 export enum AuthProvidersEnum {
-	GOOGLE = "google",
-	GITHUB = "github",
-	DISCORD = "discord",
-	GITLAB = "gitlab",
+    GOOGLE = "google",
+    GITHUB = "github",
+    DISCORD = "discord",
+    GITLAB = "gitlab",
 }
 
 export type AuthProviderType = "google" | "github" | "discord" | "gitlab" | "credential";
@@ -12,8 +12,23 @@ export enum ProjectType {
     MODPACK = "MODPACK",
     SHADER = "SHADER",
     RESOURCE_PACK = "RESOURCE_PACK",
-    DATA_PACK = "DATA_PACK",
+    DATAPACK = "DATAPACK",
     PLUGIN = "PLUGIN",
+}
+
+export enum LoaderSupportedFields {
+    CLIENT_AND_SERVER = "CLIENT_AND_SERVER",
+    SERVER_ONLY = "SERVER_ONLY",
+    SINGLEPLAYER = "SINGLEPLAYER",
+    CLIENT_ONLY = "CLIENT_ONLY",
+    GAME_VERSIONS = "GAME_VERSIONS"
+}
+
+export enum TagHeaderTypes {
+    RESOLUTION = "RESOLUTION",
+    FEATURE = "FEATURE",
+    CATEGORY = "CATEGORY",
+    PERFORMANCE_IMPACT = "PERFORMANCE_IMPACT"
 }
 
 export enum ReleaseChannels {
@@ -39,6 +54,17 @@ export enum ProjectStatuses {
     UNKNOWN = "UNKNOWN",
 }
 
+export enum UserRolesInProject {
+    MEMBER = "MEMBER",
+    OWNER = "OWNER"
+}
+
+export enum UserROlesInOrganisation {
+    OWNER = "OWNER",
+    MODERATOR = "MODERATOR",
+    MEMBER = "MEMBER",
+}
+
 export interface LocalUserSession {
     user_id: string;
     email: string;
@@ -55,39 +81,6 @@ export interface OAuthCallbackHandlerResult {
     message: string;
     success: boolean;
     user?: LocalUserSession
-}
-
-export const modLoaders = {
-    FABRIC: "FABRIC",
-    QUILT: "QUILT",
-    PUZZLE_LOADER: "PUZZLE_LOADER"
-}
-
-export const modpackLoaders = {};
-
-export const shaderLoaders = {};
-
-export const pluginLoaders = {};
-
-export const dataPackLoaders = {};
-
-export const getProjectLoaders  = (project_type: string) => {
-    switch(project_type){
-        case ProjectType.MOD:
-            return modLoaders;
-        case ProjectType.MODPACK:
-            return modpackLoaders;
-        case ProjectType.DATA_PACK:
-            return dataPackLoaders;
-        case ProjectType.RESOURCE_PACK:
-            return {};
-        case ProjectType.PLUGIN:
-            return pluginLoaders;
-        case ProjectType.SHADER:
-            return shaderLoaders;
-        default:
-            return {};
-    }
 }
 
 export const time_past_phrases = {

@@ -20,7 +20,7 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import { Cross2Icon, CubeIcon, UploadIcon } from "@radix-ui/react-icons";
 import { maxProjectSummaryLength } from "@root/config";
-import { CapitalizeAndFormatString, createURLSafeSlug, getProjectVisibilityType } from "@root/lib/utils";
+import { CapitalizeAndFormatString, GetProjectVisibility, createURLSafeSlug } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -66,7 +66,7 @@ const GeneralProjectSettings = () => {
 			setProjectName(projectData?.name);
 			setProjectUrl(projectData?.url_slug);
 			setProjectSummary(projectData?.summary);
-			setProjectVisibility(getProjectVisibilityType(projectData?.visibility));
+			setProjectVisibility(GetProjectVisibility(projectData?.visibility));
 		}
 	}, [projectData]);
 
@@ -125,7 +125,7 @@ const GeneralProjectSettings = () => {
 
 							<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
 								<label htmlFor="settings-project-url-input" className="text-foreground/50 text-base cursor-text">
-									/{createURLSafeSlug(projectData?.type || "").value}/
+									/{createURLSafeSlug(projectData?.type[0] || "").value}/
 								</label>
 								<Input
 									id="settings-project-url-input"
@@ -199,7 +199,7 @@ const GeneralProjectSettings = () => {
 									projectName === projectData?.name &&
 									projectUrl === projectData?.url_slug &&
 									projectSummary === projectData?.summary &&
-									visibility === getProjectVisibilityType(projectData?.visibility)
+									visibility === GetProjectVisibility(projectData?.visibility)
 								}
 								onClick={saveProjectData}
 							>

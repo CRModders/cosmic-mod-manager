@@ -73,7 +73,7 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 
 	const redirectToCorrectProjectUrl = () => {
 		if (projectData?.id) {
-			const constructedUrl = constructProjectPageUrl(projectData.type, projectData.url_slug);
+			const constructedUrl = constructProjectPageUrl(projectData.type[0], projectData.url_slug);
 
 			if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
 				navigate(constructedUrl);

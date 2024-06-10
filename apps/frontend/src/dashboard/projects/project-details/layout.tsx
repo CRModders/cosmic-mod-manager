@@ -10,9 +10,10 @@ import {
 } from "@/components/icons";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
-import { CubeLoader } from "@/components/ui/spinner";
+import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
+import { FormatProjectTypes } from "@/lib/utils";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -31,7 +32,7 @@ import {
 } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, timeSince } from "@root/lib/utils";
 import { time_past_phrases } from "@root/types";
-import React, { useContext } from "react";
+import React, { Suspense, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
@@ -58,7 +59,7 @@ export default function ProjectDetailsLayout() {
 	return (
 		<>
 			<Helmet>
-				<title>{`${projectData?.name} - ${projectData?.type} | CRMM`}</title>
+				<title>{`${projectData?.name} - ${CapitalizeAndFormatString(projectData?.type[0])} | CRMM`}</title>
 				<meta name="description" content={projectData?.summary} />
 			</Helmet>
 			<div className="w-full pb-32">
@@ -70,10 +71,13 @@ export default function ProjectDetailsLayout() {
 									<CubeIcon className="w-20 h-20 text-foreground-muted" />
 								</div>
 								<h1 className="text-2xl font-semibold text-foreground">{projectData?.name}</h1>
-								<div className="flex items-center justify-start gap-2 text-foreground-muted">
-									<CubeIcon className="w-4 h-4" />
-									<span>Mod</span>
-								</div>
+								<Link
+									to={`/${createURLSafeSlug(projectData.type[0]).value}s`}
+									className=" w-fit flex items-start justify-start gap-2 text-foreground-muted hover:underline hover:underline-offset-2"
+								>
+									<CubeIcon className="w-4 h-4 mt-0.5" />
+									<span className="leading-tight">{FormatProjectTypes(projectData.type)}</span>
+								</Link>
 								<p className="text-foreground-muted">{projectData?.summary}</p>
 								<span className="w-full h-[1px] my-2 bg-border" />
 
@@ -131,9 +135,11 @@ export default function ProjectDetailsLayout() {
 						/>
 					</div>
 					<PanelContent>
-						<PublishingChecklist />
+						<Suspense fallback={<SuspenseFallback />}>
+							<PublishingChecklist />
+						</Suspense>
 						<ProjectDetailsNav
-							baseHref={`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}`}
+							baseHref={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`}
 							user_id={session?.user_id}
 							members_id_list={projectData?.members?.map((member) => member.user.id) || []}
 						/>
@@ -246,7 +252,7 @@ const AdditionalProjectDetailsCard = ({
 						<div className="w-full flex items-center justify-between flex-wrap mb-3">
 							<h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
 							<Link
-								to={`/${createURLSafeSlug(projectData?.type).value}/${projectData?.url_slug}/versions#all-versions`}
+								to={`/${createURLSafeSlug(projectData?.type[0]).value}/${projectData?.url_slug}/versions#all-versions`}
 								className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
 							>
 								<span>See all</span>
@@ -266,7 +272,7 @@ const AdditionalProjectDetailsCard = ({
 											// @ts-expect-error
 											!e.target.closest(".versionPageLink")
 										) {
-											const link = `/${createURLSafeSlug(projectData?.type || "").value}/${
+											const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${
 												projectData?.url_slug
 											}/version/${version.url_slug}#project-page-nav`;
 											if (window.location.pathname !== link) {
@@ -287,7 +293,7 @@ const AdditionalProjectDetailsCard = ({
 
 									<div className="flex w-fit h-full grow flex-col gap-1 select-text">
 										<Link
-											to={`/${createURLSafeSlug(projectData?.type || "").value}/${
+											to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
 												projectData?.url_slug
 											}/version/${version.url_slug}#project-page-nav`}
 											className="versionPageLink w-fit"

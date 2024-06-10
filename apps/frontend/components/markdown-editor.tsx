@@ -40,6 +40,7 @@ const IconButton = ({
 	children,
 	tooltipContent,
 	disabled,
+	onClick,
 	...props
 }: {
 	children: React.ReactNode;
@@ -56,6 +57,7 @@ const IconButton = ({
 						tabIndex={disabled ? -1 : 0}
 						disabled={disabled}
 						className="w-8 h-8 bg-zinc-300/65 dark:bg-zinc-700 text-foreground-muted hover:text-foreground dark:hover:text-foreground-muted hover:bg-zinc-300 dark:hover:bg-zinc-700/65"
+						onClick={onClick}
 						{...props}
 					>
 						{children}

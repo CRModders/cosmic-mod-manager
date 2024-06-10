@@ -1,4 +1,5 @@
-import { ProjectVisibility, TypeTimePastPhrases } from "@root/types";
+import { Loaders, ProjectTypes, ProjectVisibilityOptions, ReleaseChannelsList } from "@root/config/project";
+import { ProjectVisibility, ReleaseChannels, TypeTimePastPhrases } from "@root/types";
 
 export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
     try {
@@ -99,27 +100,9 @@ export const formatDate = (
     }
 };
 
-
-export const getProjectVisibilityType = (visibility: string): ProjectVisibility => {
-    switch (visibility) {
-        case ProjectVisibility.PUBLIC:
-            return ProjectVisibility.PUBLIC;
-        case ProjectVisibility.PRIVATE:
-            return ProjectVisibility.PRIVATE;
-        case ProjectVisibility.ARCHIVED:
-            return ProjectVisibility.ARCHIVED;
-        case ProjectVisibility.LISTED:
-            return ProjectVisibility.LISTED;
-        case ProjectVisibility.UNLISTED:
-            return ProjectVisibility.UNLISTED;
-        default:
-            return ProjectVisibility.PUBLIC;
-    }
-};
-
-const allowedURLCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`!@$()-_.,"';
-
 export function createURLSafeSlug(slug: string) {
+    const allowedURLCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`!@$()-_.,"';
+
     const result = {
         validInput: false,
         value: "",
@@ -159,7 +142,7 @@ export function parseFileSize(size: number): string {
     }
 }
 
-export function CapitalizeAndFormatString(str: string) {
+export function CapitalizeAndFormatString(str: string | null | undefined) {
     if (!str) return str;
 
     return `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`.replaceAll("_", " ");
@@ -170,7 +153,7 @@ export function isValidUrl(url: string) {
     return !!regex.exec(url);
 }
 
-export function isValidString(str: string | undefined | null,  maxLength: number, minLength = 1, noTrailingSpaces = true) {
+export function isValidString(str: string | undefined | null, maxLength: number, minLength = 1, noTrailingSpaces = true) {
     const value = (noTrailingSpaces ? str?.trim() : str) || "";
     if (value.length > minLength && value.length <= maxLength) {
         return {
@@ -184,3 +167,98 @@ export function isValidString(str: string | undefined | null,  maxLength: number
         value: value
     }
 };
+
+export const shuffleCharacters = (str: string) => {
+    const characters = str.split("");
+    for (let i = characters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [characters[i], characters[j]] = [characters[j], characters[i]];
+    }
+    return characters.join("");
+};
+
+export const generateRandomCode = (length = 32) => {
+    let result = shuffleCharacters(crypto.randomUUID().replaceAll("-", ""));
+    while (result.length < length) {
+        result += shuffleCharacters(crypto.randomUUID().replaceAll("-", ""));
+    }
+
+    return shuffleCharacters(result.slice(0, length));
+};
+
+export const Capitalize = (str: string) => {
+    if (!str) return str;
+    return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+export const GetProjectVisibility = (visibility) => {
+    for (const validVisibilityOption of ProjectVisibilityOptions) {
+        if (validVisibilityOption === visibility) {
+            return validVisibilityOption;
+        }
+    }
+
+    return ProjectVisibility.PUBLIC;
+};
+
+export const GetProjectType = (project_type: string) => {
+    for (const validProjectType of ProjectTypes) {
+        if (validProjectType === project_type) {
+            return validProjectType
+        }
+    }
+
+    return "PROJECT";
+};
+
+export const GetUsersProjectMembership = (
+    currUserId: string | undefined | null,
+    membersIdList: string[],
+): boolean | null => {
+    if (!currUserId) return null;
+
+    for (const memberId of membersIdList) {
+        if (memberId && memberId === currUserId) {
+            return true;
+        }
+    }
+
+    return null;
+};
+
+export const GetProjectVersionReleaseChannel = (releaseChannel: string) => {
+
+    for (const validReleaseChannel of ReleaseChannelsList) {
+        if (releaseChannel === validReleaseChannel) {
+            return validReleaseChannel;
+        }
+    }
+
+    return ReleaseChannels.RELEASE;
+};
+
+export const GetProjectLoader = (loader: string) => {
+    for (const validLoader of Loaders) {
+        if (validLoader.name === loader) {
+            return validLoader.name;
+        }
+    }
+
+    return null;
+};
+
+export const GetProjectLoadersList = (loaders_list: string[]) => {
+    const list: (string | null)[] = [];
+    for (const loader of loaders_list) {
+        const loaderName = GetProjectLoader(loader);
+        if (loaderName && !list.includes(loaderName)) {
+            list.push(loaderName);
+        }
+    }
+
+    return list;
+};
+
+export const GetSupportedGameVersions = (list: string[]) => {
+
+}

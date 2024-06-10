@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CubeLoader } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { PlusIcon } from "@radix-ui/react-icons";
-import type { ProjectStatuses, ProjectType, ProjectVisibility } from "@root/types";
+import type { ProjectStatuses, ProjectVisibility } from "@root/types";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { ContentWrapperCard } from "../../settings/panel";
@@ -14,7 +14,7 @@ export type ProjectData = {
 	name: string;
 	org_id?: string;
 	url_slug: string;
-	type: ProjectType;
+	type: string[];
 	status: ProjectStatuses;
 	visibility: ProjectVisibility;
 };
@@ -29,19 +29,7 @@ const Projects = () => {
 		const res = await useFetch("/api/project/get-all-projects");
 		setLoading(false);
 		const result = await res.json();
-
-		const projects: ProjectData[] = [];
-		for (const project of result?.projects || []) {
-			const projectType = `${project.type}`.toLowerCase();
-			const projectStatus = `${project.status}`.toLowerCase();
-			projects.push({
-				...project,
-				type: `${projectType[0].toUpperCase()}${projectType.slice(1)}`,
-				status: `${projectStatus[0].toUpperCase()}${projectStatus.slice(1)}`,
-			} as ProjectData);
-		}
-
-		setProjectsList(projects);
+		setProjectsList(result?.projects || []);
 	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

@@ -22,9 +22,9 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
 import type { ProjectVersionData } from "@/types";
 import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
-import { GameVersions } from "@root/config";
+import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
-import { ReleaseChannels, getProjectLoaders } from "@root/types";
+import { ReleaseChannels } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -296,13 +296,13 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 								<SelectValue placeholder="Theme" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value={ReleaseChannels.RELEASE}>
-									{CapitalizeAndFormatString(ReleaseChannels.RELEASE)}
-								</SelectItem>
-								<SelectItem value={ReleaseChannels.BETA}>{CapitalizeAndFormatString(ReleaseChannels.BETA)}</SelectItem>
-								<SelectItem value={ReleaseChannels.ALPHA}>
-									{CapitalizeAndFormatString(ReleaseChannels.ALPHA)}
-								</SelectItem>
+								{ReleaseChannelsList.map((channel) => {
+									return (
+										<SelectItem key={channel} value={channel}>
+											{CapitalizeAndFormatString(channel)}
+										</SelectItem>
+									);
+								})}
 							</SelectContent>
 						</Select>
 					</div>
@@ -330,7 +330,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Loaders</Label>
 						<MultiSelectInput
-							options={Object.values(getProjectLoaders(projectData?.type || ""))}
+							options={Loaders.map((loader) => loader.name)}
 							inputPlaceholder="Choose loaders.."
 							input_id={"supported-loaders-filter-input"}
 							initialSelected={loaders?.map((val) => val)}
@@ -340,7 +340,13 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="w-full flex flex-col">
 						<Label className="font-semibold text-foreground text-lg">Game versions</Label>
 						<MultiSelectInput
-							options={GameVersions}
+							options={(() => {
+								const list = [];
+								for (const version of GameVersions) {
+									if (version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
+								}
+								return list;
+							})()}
 							inputPlaceholder="Choose versions.."
 							input_id={"supported-game-version-filter-input"}
 							initialSelected={supportedGameVersions?.map((val) => val)}

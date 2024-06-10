@@ -22,7 +22,9 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
 			{isAProjectMember === true && (
 				<ContentWrapperCard>
 					<div className="w-full flex flex-wrap gap-4 items-center justify-start">
-						<Link to={`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}/version/create`}>
+						<Link
+							to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}/version/create`}
+						>
 							<Button className="gap-2" tabIndex={-1}>
 								<UploadIcon strokeWidth={2} className="w-4 h-4" />
 								<span className="font-semibold">Upload a version</span>
@@ -45,7 +47,7 @@ export default VersionListPage;
 const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: string; projectUrlSlug: string }) => {
 	const [urlSearchParams] = useSearchParams();
 	const { allProjectVersions } = useContext(Projectcontext);
-	const perPageLimit = 2;
+	const perPageLimit = 20;
 	const pagesCount = Math.ceil((allProjectVersions?.versions.length || 0) / perPageLimit);
 	const [activePage, setActivePage] = useState(1);
 	const navigate = useNavigate();

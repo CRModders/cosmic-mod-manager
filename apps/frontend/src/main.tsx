@@ -9,6 +9,7 @@ import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import ProjectContextProvider from "@/src/providers/project-context";
 import SettingsPageLayout from "@/src/settings/layout";
+import { ProjectTypes } from "@root/config/project";
 import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -16,6 +17,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import DashboardPageLayout from "@/src/dashboard/layout";
 import ProjectDetailsLayout from "@/src/dashboard/projects/project-details/layout";
 import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/layout";
+import { createURLSafeSlug } from "@root/lib/utils";
 
 const RootLayout = lazy(() => import("@/src/App"));
 const SignupPage = lazy(() => import("@/src/(auth)/signup/page"));
@@ -37,6 +39,7 @@ const Projects = lazy(() => import("@/src/dashboard/projects/projects"));
 const ReportsPage = lazy(() => import("@/src/dashboard/reports"));
 const AccountSettingsPage = lazy(() => import("@/src/settings/account/page"));
 const SettingsPage = lazy(() => import("@/src/settings/page"));
+const TagsSettingsPage = lazy(() => import("./dashboard/projects/project-settings/tags"));
 const HomePage = lazy(() => import("@/src/home"));
 const Sessions = lazy(() => import("@/src/settings/session/page"));
 
@@ -144,6 +147,14 @@ const projectRoute = (project_type: string) => {
 								),
 							},
 							{
+								path: "tags",
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<TagsSettingsPage />
+									</Suspense>
+								),
+							},
+							{
 								path: "description",
 								element: (
 									<Suspense fallback={<SuspenseFallback />}>
@@ -168,13 +179,13 @@ const projectRoute = (project_type: string) => {
 };
 
 const getProjectPageRoutes = () => {
-	const projectTypes = ["mod", "modpack", "resource-pack", "data-pack", "plugin", "shader", "project"];
+	const routePaths = ["project", ...ProjectTypes.map((project_type) => createURLSafeSlug(project_type).value)];
 
 	const projectRouteType = projectRoute("a");
 
 	const list: (typeof projectRouteType)[] = [];
 
-	for (const project_type of projectTypes) {
+	for (const project_type of routePaths) {
 		list.push(projectRoute(project_type));
 	}
 

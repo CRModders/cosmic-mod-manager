@@ -17,7 +17,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CubeLoader } from "@/components/ui/spinner";
+import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -25,7 +25,7 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { PanelContent, PanelLayout, SidePanel, SidepanelLink } from "@/src/settings/panel";
 import { CubeIcon } from "@radix-ui/react-icons";
 import { createURLSafeSlug } from "@root/lib/utils";
-import React, { useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
@@ -41,7 +41,7 @@ export function ProjectSettingsLayoutContent({
 
 	useEffect(() => {
 		if (projectData?.url_slug) {
-			setBaseUrl(`/${createURLSafeSlug(projectData?.type || "").value}/${projectData?.url_slug}`);
+			setBaseUrl(`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`);
 		}
 	}, [projectData]);
 
@@ -83,7 +83,7 @@ export function ProjectSettingsLayoutContent({
 										</BreadcrumbItem>
 										<BreadcrumbSeparator />
 										<BreadcrumbItem>
-											<BreadcrumbLink href={`/${createURLSafeSlug(projectData.type).value}/${projectData.url_slug}`}>
+											<BreadcrumbLink href={`/${createURLSafeSlug(projectData.type[0]).value}/${projectData.url_slug}`}>
 												{projectData?.name}
 											</BreadcrumbLink>
 										</BreadcrumbItem>
@@ -145,7 +145,9 @@ export function ProjectSettingsLayoutContent({
 					)}
 				</SidePanel>
 				<PanelContent>
-					<PublishingChecklist />
+					<Suspense fallback={<SuspenseFallback />}>
+						<PublishingChecklist />
+					</Suspense>
 					<Outlet />
 				</PanelContent>
 			</PanelLayout>

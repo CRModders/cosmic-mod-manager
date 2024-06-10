@@ -2,8 +2,9 @@ import CopyBtn from "@/components/copy-btn";
 import { GearIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { FormatProjectTypes } from "@/lib/utils";
 import { CubeIcon } from "@radix-ui/react-icons";
-import { createURLSafeSlug } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import type { ProjectData } from "./projects";
 
@@ -32,13 +33,13 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 								onClick={(e) => {
 									//@ts-expect-error
 									if (!e.target.closest(".noClickRedirect")) {
-										navigate(`/${createURLSafeSlug(project.type).value}/${project.url_slug}`);
+										navigate(`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`);
 									}
 								}}
 							>
 								<TableCell>
 									<Link
-										to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}`}
+										to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
 										className="noClickRedirect flex w-fit h-full aspect-square p-2 rounded-lg bg-background-shallow"
 									>
 										<CubeIcon className="w-8 h-8 text-foreground-muted" />
@@ -46,7 +47,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 								</TableCell>
 								<TableCell>
 									<Link
-										to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}`}
+										to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
 										className="noClickRedirect"
 									>
 										<Button variant={"link"} className="p-0">
@@ -64,11 +65,11 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 										/>
 									</div>
 								</TableCell>
-								<TableCell>{project.type}</TableCell>
-								<TableCell>{project.status}</TableCell>
+								<TableCell>{FormatProjectTypes(project.type)}</TableCell>
+								<TableCell>{CapitalizeAndFormatString(project.status)}</TableCell>
 								<TableCell className="cursor-default">
 									<Link
-										to={`/${createURLSafeSlug(project.type).value}/${project.url_slug}/settings`}
+										to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}/settings`}
 										className="noClickRedirect flex items-center justify-center h-full w-fit text-foreground-muted"
 									>
 										<GearIcon size="2.25rem" className="hover:bg-background rounded-lg p-2" />

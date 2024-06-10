@@ -109,10 +109,10 @@ model Project {
     org_id          String?
     name            String
     url_slug        String                @unique
-    visibility      ProjectVisibility     @default(PUBLIC)
+    visibility      String                @default("PUBLIC")
     icon            String?
-    status          ProjectStatus         @default(DRAFT)
-    type            ProjectType
+    status          String                @default("DRAFT")
+    type            String[]              @default(["PROJECT"])
     summary         String?               @db.VarChar(324)
     description     String?               @db.VarChar(65256)
     created_on      DateTime              @default(now())
@@ -125,22 +125,22 @@ model Project {
 }
 
 model ProjectVersion {
-    id                      String                 @id @default(cuid())
+    id                      String         @id @default(cuid())
     project_id              String
     publisher_id            String
     version_number          String
     version_title           String
     changelog               String
     url_slug                String
-    is_featured             Boolean                @default(false)
-    published_on            DateTime               @default(now())
-    downloads               Int                    @default(0)
-    release_channel         VersionReleaseChannels @default(RELEASE)
+    is_featured             Boolean        @default(false)
+    published_on            DateTime       @default(now())
+    downloads               Int            @default(0)
+    release_channel         String
     supported_game_versions String[]
-    supported_loaders       Loaders[]
-    publisher               ProjectMember?         @relation(name: "version_publisher", fields: [publisher_id], references: [id], onDelete: Cascade)
-    files                   VersionFile[]          @relation(name: "version_file")
-    project                 Project                @relation(name: "project_version", fields: [project_id], references: [id], onDelete: Cascade)
+    supported_loaders       String[]
+    publisher               ProjectMember? @relation(name: "version_publisher", fields: [publisher_id], references: [id], onDelete: Cascade)
+    files                   VersionFile[]  @relation(name: "version_file")
+    project                 Project        @relation(name: "project_version", fields: [project_id], references: [id], onDelete: Cascade)
 }
 
 model VersionFile {
@@ -165,74 +165,21 @@ model ProjectExternalLinks {
 }
 
 model ProjectMember {
-    id                 String             @id @default(cuid())
+    id                 String           @id @default(cuid())
     user_id            String
     project_id         String
-    role               UserRolesInProject @default(MEMBER)
-    role_title         String?            @default("Member") // A custom title given to that member by the project owner
-    user               User               @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
-    project            Project            @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
-    published_versions ProjectVersion[]   @relation(name: "version_publisher")
+    role               String           @default("MEMBER")
+    role_title         String?          @default("Member") // A custom title given to that member by the project owner
+    user               User             @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
+    project            Project          @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
+    published_versions ProjectVersion[] @relation(name: "version_publisher")
 }
 
 model OrganisationMember {
-    id           String                  @id @default(cuid())
+    id           String       @id @default(cuid())
     user_id      String
     org_id       String
-    role         UserRolesInOrganisation @default(MEMBER)
-    user         User                    @relation(name: "Organisation Member", fields: [user_id], references: [id], onDelete: Cascade)
-    organisation Organisation            @relation(name: "Organisation", fields: [org_id], references: [id], onDelete: Cascade)
-}
-
-enum ProjectStatus {
-    LISTED
-    ARCHIVED
-    DRAFT
-    UNLISTED
-    SCHEDULED
-    UNKNOWN
-}
-
-enum ProjectType {
-    MOD
-    MODPACK
-    SHADER
-    RESOURCE_PACK
-    DATA_PACK
-    PLUGIN
-}
-
-enum UserRolesInProject {
-    MEMBER
-    OWNER
-}
-
-enum UserRolesInOrganisation {
-    OWNER
-    MODERATOR
-    MEMBER
-}
-
-enum ProjectVisibility {
-    PUBLIC
-    PRIVATE
-    UNLISTED
-}
-
-enum VersionReleaseChannels {
-    RELEASE
-    BETA
-    ALPHA
-}
-
-enum Loaders {
-    // Modloaders
-    FABRIC
-    QUILT
-    PUZZLE_LOADER
-
-    // ModpackLoaders
-    // PluginLoaders
-    // ShaderLoaders
-    // DataPackLoaders
+    role         String       @default("MEMBER")
+    user         User         @relation(name: "Organisation Member", fields: [user_id], references: [id], onDelete: Cascade)
+    organisation Organisation @relation(name: "Organisation", fields: [org_id], references: [id], onDelete: Cascade)
 }

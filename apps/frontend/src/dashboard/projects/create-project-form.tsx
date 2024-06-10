@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { maxProjectNameLength, maxProjectSummaryLength, minProjectNameLength } from "@root/config";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
-import { ProjectType, ProjectVisibility } from "@root/types";
+import { ProjectVisibility } from "@root/types";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,14 +35,6 @@ const formSchema = z.object({
 		.min(minProjectNameLength)
 		.max(maxProjectNameLength, `Project url slug can contain only a maximum of ${maxProjectNameLength} characters`),
 	visibility: z.enum([ProjectVisibility.PRIVATE, ProjectVisibility.PUBLIC, ProjectVisibility.UNLISTED]),
-	project_type: z.enum([
-		ProjectType.MOD,
-		ProjectType.MODPACK,
-		ProjectType.SHADER,
-		ProjectType.RESOURCE_PACK,
-		ProjectType.DATA_PACK,
-		ProjectType.PLUGIN,
-	]),
 	summary: z.string().max(maxProjectSummaryLength).optional(),
 });
 
@@ -52,7 +44,6 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const [keepNameAndUrlSynced, setKeepNameAndUrlSynced] = useState<boolean>(true);
-	const [projectType, setProjectType] = useState<string>(ProjectType.MOD.toString());
 	const navigate = useNavigate();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -60,7 +51,6 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 		defaultValues: {
 			name: "",
 			url: "",
-			project_type: ProjectType.MOD,
 			visibility: ProjectVisibility.PUBLIC,
 			summary: "",
 		},
@@ -77,7 +67,6 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 			body: JSON.stringify({
 				name: values.name,
 				url: values.url,
-				project_type: values.project_type,
 				visibility: values.visibility,
 				summary: values.summary,
 			}),
@@ -95,7 +84,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 		setDialogOpen(false);
 		await fetchProjects();
 
-		navigate(`/${result?.data?.projectType}/${result?.data?.projectUrl}`);
+		navigate(`/${createURLSafeSlug(result?.data?.projectType).value}/${result?.data?.projectUrl}`);
 	};
 
 	return (
@@ -169,7 +158,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 																htmlFor="project-url-input"
 																className="whitespace-nowrap text-foreground/50 text-sm cursor-text"
 															>
-																/{createURLSafeSlug(projectType).value}/
+																/project/
 															</label>
 															<Input
 																id="project-url-input"
@@ -182,55 +171,6 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 																}}
 															/>
 														</div>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<div className="w-full flex flex-col items-center justify-center">
-										<FormField
-											control={form.control}
-											name="project_type"
-											render={({ field }) => (
-												<FormItem className="w-full">
-													<FormControl>
-														<>
-															<FormLabel className="w-full flex items-center justify-start text-foreground font-semibold">
-																Project type
-															</FormLabel>
-															<Select
-																value={field.value}
-																onValueChange={(value) => {
-																	setProjectType(value);
-																	field.onChange(value);
-																}}
-															>
-																<SelectTrigger className="w-full">
-																	<SelectValue placeholder="Select project type..." />
-																</SelectTrigger>
-																<SelectContent>
-																	<SelectItem value={ProjectType.MOD}>
-																		{CapitalizeAndFormatString(ProjectType.MOD)}
-																	</SelectItem>
-																	<SelectItem value={ProjectType.MODPACK}>
-																		{CapitalizeAndFormatString(ProjectType.MODPACK)}
-																	</SelectItem>
-																	<SelectItem value={ProjectType.SHADER}>
-																		{CapitalizeAndFormatString(ProjectType.SHADER)}
-																	</SelectItem>
-																	<SelectItem value={ProjectType.RESOURCE_PACK}>
-																		{CapitalizeAndFormatString(ProjectType.RESOURCE_PACK)}
-																	</SelectItem>
-																	<SelectItem value={ProjectType.DATA_PACK}>
-																		{CapitalizeAndFormatString(ProjectType.DATA_PACK)}
-																	</SelectItem>
-																	<SelectItem value={ProjectType.PLUGIN}>
-																		{CapitalizeAndFormatString(ProjectType.PLUGIN)}
-																	</SelectItem>
-																</SelectContent>
-															</Select>
-														</>
 													</FormControl>
 												</FormItem>
 											)}
@@ -307,12 +247,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 										type="submit"
 										aria-label="Continue"
 										className="bg-accent-bg dark:text-foreground hover:bg-accent-bg/80"
-										disabled={
-											!form.getValues().name ||
-											!form.getValues().url ||
-											!form.getValues().summary ||
-											!form.getValues().project_type
-										}
+										disabled={!form.getValues().name || !form.getValues().url || !form.getValues().summary}
 									>
 										<ArrowRightIcon className="w-4 h-4" />
 										<p className="px-2">Continue</p>
