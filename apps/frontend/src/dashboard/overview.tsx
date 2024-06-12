@@ -55,10 +55,7 @@ const Overview = () => {
 					</h1>
 					<div className="w-full flex flex-col">
 						<p>You have no unread notifications.</p>
-						<Button
-							className="w-fit mt-2 flex items-center justify-center gap-2 text-base text-foreground-muted"
-							variant={"secondary"}
-						>
+						<Button className="w-fit mt-2 gap-2" variant={"secondary"}>
 							<HistoryIcon size="1.25rem" />
 							View notification history
 						</Button>

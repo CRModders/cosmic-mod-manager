@@ -54,9 +54,10 @@ const IconButton = ({
 				<TooltipTrigger asChild>
 					<Button
 						size={"icon"}
+						variant={"secondary"}
 						tabIndex={disabled ? -1 : 0}
 						disabled={disabled}
-						className="w-8 h-8 bg-zinc-300/65 dark:bg-zinc-700 text-foreground-muted hover:text-foreground dark:hover:text-foreground-muted hover:bg-zinc-300 dark:hover:bg-zinc-700/65"
+						className="w-8 h-8 text-foreground-muted bg-zinc-300/65 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-700/65"
 						onClick={onClick}
 						{...props}
 					>
@@ -339,6 +340,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 					</IconButton>
 					<Separator />
 					<LinkInsertionModal
+						disabled={previewOn}
 						modalTitle="Insert link"
 						getMarkdownString={(url: string, altText: string, isPreview?: boolean) => {
 							let selectedText = "";
@@ -365,6 +367,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 					</LinkInsertionModal>
 
 					<LinkInsertionModal
+						disabled={previewOn}
 						modalTitle="Insert image"
 						getMarkdownString={(url: string, altText: string, isPreview = false) => {
 							let selectedText = "";
@@ -391,6 +394,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 					</LinkInsertionModal>
 
 					<LinkInsertionModal
+						disabled={previewOn}
 						modalTitle="Insert YouTube video"
 						getMarkdownString={getYoutubeIframe}
 						insertFragmentFunc={(markdownString: string, _url: string, _altText: string) => {
@@ -516,6 +520,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 export default MarkdownEditor;
 
 const EditorModal = ({
+	disabled,
 	title,
 	trigger,
 	children,
@@ -523,6 +528,7 @@ const EditorModal = ({
 	setModalOpen,
 	insertFragmentFunc,
 }: {
+	disabled: boolean;
 	title: string;
 	modalOpen: boolean;
 	setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -531,8 +537,14 @@ const EditorModal = ({
 	insertFragmentFunc: () => void;
 }) => {
 	return (
-		<Dialog open={modalOpen} onOpenChange={setModalOpen}>
-			<DialogTrigger asChild>
+		<Dialog
+			open={modalOpen}
+			onOpenChange={(open: boolean) => {
+				if (disabled) return;
+				setModalOpen(open);
+			}}
+		>
+			<DialogTrigger asChild disabled={disabled}>
 				<div className="flex items-center justify-center">{trigger}</div>
 			</DialogTrigger>
 			<DialogContent className="">
@@ -546,7 +558,7 @@ const EditorModal = ({
 						<DialogClose asChild>
 							<Button className="gap-2" variant={"secondary"}>
 								<Cross2Icon className="w-4 h-4" />
-								<span>Cancel</span>
+								Cancel
 							</Button>
 						</DialogClose>
 
@@ -558,7 +570,7 @@ const EditorModal = ({
 							}}
 						>
 							<PlusIcon className="w-5 h-5" />
-							<span>Insert</span>
+							Insert
 						</Button>
 					</div>
 				</DialogFooter>
@@ -569,6 +581,7 @@ const EditorModal = ({
 
 const LinkInsertionModal = ({
 	modalTitle,
+	disabled,
 	insertFragmentFunc,
 	getMarkdownString,
 	altTextInputLabel,
@@ -580,6 +593,7 @@ const LinkInsertionModal = ({
 	children,
 }: {
 	modalTitle: string;
+	disabled: boolean;
 	altTextInputLabel: string;
 	altTextInputPlaceholder: string;
 	isAltTextRequired: boolean;
@@ -615,6 +629,7 @@ const LinkInsertionModal = ({
 	return (
 		<EditorModal
 			modalOpen={modalOpen}
+			disabled={disabled}
 			setModalOpen={setModalOpen}
 			title={modalTitle}
 			insertFragmentFunc={() => {

@@ -81,7 +81,7 @@ const AddPasswordConfirmAction = ({ code }: { code: string }) => {
 						}}
 						name="Cancel"
 					>
-						<Button type="submit" variant="outline" aria-label="Cancel">
+						<Button type="submit" variant="secondary" aria-label="Cancel">
 							Cancel
 						</Button>
 					</form>

@@ -1,7 +1,7 @@
+import { PlusIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { CubeLoader } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
-import { PlusIcon } from "@radix-ui/react-icons";
 import type { ProjectStatuses, ProjectVisibility } from "@root/types";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -51,9 +51,9 @@ const Projects = () => {
 					</h1>
 
 					<CreateProjectForm fetchProjects={fetchProjects}>
-						<Button className="flex items-center justify-center gap-2">
+						<Button className="gap-2">
 							<PlusIcon className="w-5 h-5" />
-							<span className="font-semibold text-base">Create a project</span>
+							Create a project
 						</Button>
 					</CreateProjectForm>
 				</div>

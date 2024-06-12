@@ -1,4 +1,4 @@
-import { SaveIcon, TrashIcon } from "@/components/icons";
+import { SaveIcon, TrashIcon, UploadIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -18,7 +18,7 @@ import { toast, useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import { Cross2Icon, CubeIcon, UploadIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, CubeIcon } from "@radix-ui/react-icons";
 import { maxProjectSummaryLength } from "@root/config";
 import { CapitalizeAndFormatString, GetProjectVisibility, createURLSafeSlug } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
@@ -91,11 +91,11 @@ const GeneralProjectSettings = () => {
 									<CubeIcon className="w-20 h-20 text-foreground-muted" />
 								</span>
 								<div className="flex flex-col items-start justify-center gap-2">
-									<Button variant={"secondary"} className="gap-2 text-foreground-muted">
+									<Button variant={"secondary"} className="gap-2">
 										<UploadIcon className="w-4 h-4" />
 										Upload icon
 									</Button>
-									<Button variant={"secondary"} className="gap-2 text-foreground-muted">
+									<Button variant={"secondary"} className="gap-2">
 										<TrashIcon className="w-4 h-4" />
 										Remove icon
 									</Button>
@@ -194,7 +194,7 @@ const GeneralProjectSettings = () => {
 
 						<div className="w-full flex items-center justify-end mt-4 mb-2">
 							<Button
-								className="gap-2 px-6"
+								className="gap-2"
 								disabled={
 									projectName === projectData?.name &&
 									projectUrl === projectData?.url_slug &&
@@ -204,7 +204,7 @@ const GeneralProjectSettings = () => {
 								onClick={saveProjectData}
 							>
 								<SaveIcon size="1rem" />
-								<span>Save changes</span>
+								Save changes
 							</Button>
 						</div>
 					</ContentWrapperCard>
@@ -245,9 +245,9 @@ const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: strin
 			</p>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogTrigger asChild>
-					<Button className=" bg-danger-bg hover:bg-danger-bg/85 gap-2 dark:text-foreground">
+					<Button className="gap-2" variant={"destructive"}>
 						<TrashIcon size="1.15rem" />
-						<span>Delete project</span>
+						Delete project
 					</Button>
 				</DialogTrigger>
 				<DialogContent>
@@ -273,19 +273,20 @@ const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: strin
 					</div>
 					<DialogFooter className="w-full flex flex-row flex-wrap-reverse items-center justify-end gap-2">
 						<DialogClose asChild>
-							<Button className="gap-2 text-foreground-muted" variant={"secondary"}>
+							<Button className="gap-2" variant={"secondary"}>
 								<Cross2Icon />
-								<span>Cancel</span>
+								Cancel
 							</Button>
 						</DialogClose>
 
 						<Button
 							onClick={deleteProject}
-							className=" bg-danger-bg hover:bg-danger-bg/85 gap-2 dark:text-foreground"
+							variant={"destructive"}
+							className="gap-2"
 							disabled={projectName !== inputValue || loading}
 						>
 							<TrashIcon size="1.15rem" />
-							<span>Delete project</span>
+							Delete project
 						</Button>
 					</DialogFooter>
 

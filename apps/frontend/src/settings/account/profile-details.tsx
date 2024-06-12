@@ -19,7 +19,7 @@ const EditProfileDialog = ({ name, username, linkedProviders, setNewSession, cur
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>
-				<Button className="flex gap-2 items-center justify-center" variant="outline" aria-label="Edit profile">
+				<Button className="gap-2" variant="outline" aria-label="Edit profile">
 					<EditIcon size="1rem" className="text-foreground-muted" />
 					<p className="pr-1">Edit</p>
 				</Button>
@@ -291,14 +291,13 @@ const EditProfileInfoForm = ({
 
 					<DialogFooter className="w-full mt-4">
 						<div className="w-full flex items-center justify-end gap-2">
-							<DialogClose className="w-fit hover:bg-bg-hover text-foreground-muted rounded-lg" aria-label="Cancel">
-								<p className="text-base px-4 h-10 flex items-center justify-center">Cancel</p>
+							<DialogClose aria-label="Cancel" asChild>
+								<Button variant={"secondary"}>Cancel</Button>
 							</DialogClose>
 
 							<Button
 								type="submit"
 								aria-label="Update profile"
-								className="h-10"
 								disabled={
 									form.getValues().name === name &&
 									form.getValues().username === username &&

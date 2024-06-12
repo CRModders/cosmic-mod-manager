@@ -151,14 +151,14 @@ const RemovePasswordForm = ({ email, children, fetchPageData }: Props) => {
 							<div className="w-full min-h-6">{formError && <FormErrorMessage text={formError} />}</div>
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<DialogClose className="w-fit hover:bg-bg-hover rounded-lg" aria-label="Cancel">
-									<p className="px-4 h-9 flex items-center justify-center text-foreground-muted">Cancel</p>
+								<DialogClose aria-label="Cancel">
+									<Button variant={"secondary"}>Cancel</Button>
 								</DialogClose>
 
 								<Button
 									type="submit"
+									variant={"destructive"}
 									aria-label="Remove password"
-									className="bg-danger-bg text-[hsla(var(--foreground-dark))] dark:text-foreground hover:bg-danger-bg/90"
 									disabled={!form.getValues().password}
 								>
 									<TrashIcon className="h-4 w-4" />

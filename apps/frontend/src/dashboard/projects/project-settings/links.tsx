@@ -145,7 +145,7 @@ const ProjectLinksSettings = () => {
 					}
 				>
 					<SaveIcon className="w-4 h-4" />
-					<span>Save changes</span>
+					Save changes
 				</Button>
 			</div>
 			{loading && <AbsolutePositionedSpinner />}

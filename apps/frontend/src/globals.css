@@ -16,23 +16,24 @@
     --foreground-light: var(--tint-hue), 6%, 10%;
     --foreground-muted-light: var(--foreground-light), 0.75;
     --bg-hover-light: var(--tint-hue), 4%, 90%;
-    --danger-bg-light: 0, 74%, 42%;
-    --danger-text-light: 0, 74%, 42%;
+    --danger-bg-light: 0, 72%, 51%;
+    --danger-text-light: 0, 72%, 51%;
     --success-bg-light: 161, 94%, 30%;
     --success-text-light: 163, 94%, 24%;
     --shadow-light: var(--tint-hue), 6%, 90%;
-    --border-light: var(--tint-hue), 6%, 90%;
+    /* --border-light: var(--tint-hue), 6%, 90%; */
+    --border-light: var(--tint-hue), 5%, 84%;
     --border-hicontrast-light: var(--tint-hue), 5%, 65%;
 
     /* Dark mode color scheme */
-    --accent-bg-dark: 350, 89%, 60%;
+    --accent-bg-dark: 350, 100%, 65%;
     --accent-foreground-dark: 351, 95%, 71%;
     --background-dark: var(--tint-hue), 6%, 10%;
     --background-shallow-dark: var(--tint-hue), 4%, 16%;
     --foreground-dark: 0, 0%, 98%;
     --foreground-muted-dark: var(--foreground-dark), 0.8;
     --bg-hover-dark: var(--tint-hue), 5%, 15%;
-    --danger-bg-dark: 0, 84%, 60%;
+    --danger-bg-dark: 0, 95%, 65%;
     --danger-text-dark: 0, 91%, 71%;
     --success-bg-dark: 160, 84%, 39%;
     --success-text-dark: 158, 64%, 52%;

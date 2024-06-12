@@ -3,7 +3,6 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTr
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -105,159 +104,157 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
 					<DialogTitle className="text-foreground-muted font-semibold">Create a project</DialogTitle>
 				</DialogHeader>
 
-				<ScrollArea className="max-h-[80vh] h-full">
-					<div className="w-full flex flex-col items-center justify-center">
-						<Form {...form}>
-							<form
-								onSubmit={form.handleSubmit(handleSubmit)}
-								className="w-full flex flex-col items-center justify-center"
-							>
-								<div className="w-full flex flex-col items-center justify-center gap-4">
-									<div className="w-full flex flex-col items-center justify-center">
-										<FormField
-											control={form.control}
-											name="name"
-											render={({ field }) => (
-												<FormItem className="w-full">
-													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground font-semibold">Name</span>
-														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
-													</FormLabel>
-													<FormControl>
+				<div className="w-full flex flex-col items-center justify-center">
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(handleSubmit)}
+							className="w-full flex flex-col items-center justify-center"
+						>
+							<div className="w-full flex flex-col items-center justify-center gap-4">
+								<div className="w-full flex flex-col items-center justify-center">
+									<FormField
+										control={form.control}
+										name="name"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
+													<span className="text-foreground font-semibold">Name</span>
+													<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
+												</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter project name..."
+														type="text"
+														{...field}
+														onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
+															field.onChange(val);
+															const generatedSlug = createURLSafeSlug(form.getValues().name).value;
+															if (keepNameAndUrlSynced === true) {
+																form.setValue("url", generatedSlug);
+															}
+														}}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<div className="w-full flex flex-col items-center justify-center">
+									<FormField
+										control={form.control}
+										name="url"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
+													<span className="text-foreground font-semibold">URL</span>
+													<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
+												</FormLabel>
+												<FormControl>
+													<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
+														<label
+															htmlFor="project-url-input"
+															className="whitespace-nowrap text-foreground/50 text-sm cursor-text"
+														>
+															/project/
+														</label>
 														<Input
-															placeholder="Enter project name..."
+															id="project-url-input"
 															type="text"
+															className="px-0 border-none bg-transparent"
 															{...field}
 															onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
 																field.onChange(val);
-																const generatedSlug = createURLSafeSlug(form.getValues().name).value;
-																if (keepNameAndUrlSynced === true) {
-																	form.setValue("url", generatedSlug);
-																}
+																setKeepNameAndUrlSynced(false);
 															}}
 														/>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<div className="w-full flex flex-col items-center justify-center">
-										<FormField
-											control={form.control}
-											name="url"
-											render={({ field }) => (
-												<FormItem className="w-full">
-													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground font-semibold">URL</span>
-														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
-													</FormLabel>
-													<FormControl>
-														<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
-															<label
-																htmlFor="project-url-input"
-																className="whitespace-nowrap text-foreground/50 text-sm cursor-text"
-															>
-																/project/
-															</label>
-															<Input
-																id="project-url-input"
-																type="text"
-																className="px-0 border-none bg-transparent"
-																{...field}
-																onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
-																	field.onChange(val);
-																	setKeepNameAndUrlSynced(false);
-																}}
-															/>
-														</div>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<div className="w-full flex flex-col items-center justify-center">
-										<FormField
-											control={form.control}
-											name="visibility"
-											render={({ field }) => (
-												<FormItem className="w-full">
-													<FormControl>
-														<>
-															<FormLabel className="w-full flex items-center justify-start text-foreground font-semibold">
-																Visibility
-															</FormLabel>
-															<Select value={field.value} onValueChange={field.onChange}>
-																<SelectTrigger className="w-full">
-																	<SelectValue placeholder="Project visibility..." />
-																</SelectTrigger>
-																<SelectContent>
-																	<SelectItem value={ProjectVisibility.PRIVATE}>
-																		{CapitalizeAndFormatString(ProjectVisibility.PRIVATE)}
-																	</SelectItem>
-																	<SelectItem value={ProjectVisibility.PUBLIC}>
-																		{CapitalizeAndFormatString(ProjectVisibility.PUBLIC)}
-																	</SelectItem>
-																	<SelectItem value={ProjectVisibility.UNLISTED}>
-																		{CapitalizeAndFormatString(ProjectVisibility.UNLISTED)}
-																	</SelectItem>
-																</SelectContent>
-															</Select>
-														</>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
-
-									<div className="w-full flex flex-col items-center justify-center">
-										<FormField
-											control={form.control}
-											name="summary"
-											render={({ field }) => (
-												<FormItem className="w-full">
-													<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground font-semibold">Summary</span>
-														<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
-													</FormLabel>
-													<FormControl>
-														<Textarea
-															placeholder="Enter project summary..."
-															cols={8}
-															maxLength={maxProjectSummaryLength}
-															className="resize-none"
-															{...field}
-														/>
-													</FormControl>
-												</FormItem>
-											)}
-										/>
-									</div>
+													</div>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
 								</div>
 
-								<div className="w-full min-h-6 my-4">{formError && <FormErrorMessage text={formError} />}</div>
-
-								<div className="w-full flex items-center justify-end gap-2">
-									<DialogClose className="w-fit hover:bg-bg-hover rounded-lg" aria-label="Cancel">
-										<p className="px-4 h-9 flex items-center justify-center text-foreground-muted">Cancel</p>
-									</DialogClose>
-
-									<Button
-										type="submit"
-										aria-label="Continue"
-										className="bg-accent-bg dark:text-foreground hover:bg-accent-bg/80"
-										disabled={!form.getValues().name || !form.getValues().url || !form.getValues().summary}
-									>
-										<ArrowRightIcon className="w-4 h-4" />
-										<p className="px-2">Continue</p>
-									</Button>
+								<div className="w-full flex flex-col items-center justify-center">
+									<FormField
+										control={form.control}
+										name="visibility"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormControl>
+													<>
+														<FormLabel className="w-full flex items-center justify-start text-foreground font-semibold">
+															Visibility
+														</FormLabel>
+														<Select value={field.value} onValueChange={field.onChange}>
+															<SelectTrigger className="w-full">
+																<SelectValue placeholder="Project visibility..." />
+															</SelectTrigger>
+															<SelectContent>
+																<SelectItem value={ProjectVisibility.PRIVATE}>
+																	{CapitalizeAndFormatString(ProjectVisibility.PRIVATE)}
+																</SelectItem>
+																<SelectItem value={ProjectVisibility.PUBLIC}>
+																	{CapitalizeAndFormatString(ProjectVisibility.PUBLIC)}
+																</SelectItem>
+																<SelectItem value={ProjectVisibility.UNLISTED}>
+																	{CapitalizeAndFormatString(ProjectVisibility.UNLISTED)}
+																</SelectItem>
+															</SelectContent>
+														</Select>
+													</>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
 								</div>
-							</form>
-							{loading === true && <AbsolutePositionedSpinner />}
-						</Form>
-					</div>
-				</ScrollArea>
+
+								<div className="w-full flex flex-col items-center justify-center">
+									<FormField
+										control={form.control}
+										name="summary"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel className="w-full flex items-end justify-between text-left gap-12 min-h-4">
+													<span className="text-foreground font-semibold">Summary</span>
+													<FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
+												</FormLabel>
+												<FormControl>
+													<Textarea
+														placeholder="Enter project summary..."
+														cols={8}
+														maxLength={maxProjectSummaryLength}
+														className="resize-none"
+														{...field}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+								</div>
+							</div>
+
+							<div className="w-full min-h-6 my-4">{formError && <FormErrorMessage text={formError} />}</div>
+
+							<div className="w-full flex items-center justify-end gap-2">
+								<DialogClose aria-label="Cancel" asChild>
+									<Button variant={"secondary"}>Cancel</Button>
+								</DialogClose>
+
+								<Button
+									type="submit"
+									aria-label="Continue"
+									className="gap-2"
+									disabled={!form.getValues().name || !form.getValues().url || !form.getValues().summary}
+								>
+									<ArrowRightIcon className="w-5 h-5" />
+									Continue
+								</Button>
+							</div>
+						</form>
+						{loading === true && <AbsolutePositionedSpinner />}
+					</Form>
+				</div>
 			</DialogContent>
 		</Dialog>
 	);

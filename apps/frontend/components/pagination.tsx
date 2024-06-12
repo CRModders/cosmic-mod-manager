@@ -10,15 +10,19 @@ import {
 import { LeftArrowIcon, RightArrowIcon } from "./icons";
 import { Button } from "./ui/button";
 
-const generateLinkHref = (page: number) => {
-	const currUrl = new URL(window.location.href);
-	if (page === 1) currUrl.searchParams.delete("page");
-	else currUrl.searchParams.set("page", page.toString());
+export default function PaginatedNavigation({
+	pagesCount,
+	activePage,
+	searchParamKey = "page",
+}: { pagesCount: number; activePage: number; searchParamKey?: string }) {
+	const generateLinkHref = (page: number) => {
+		const currUrl = new URL(window.location.href);
+		if (page === 1) currUrl.searchParams.delete(searchParamKey);
+		else currUrl.searchParams.set(searchParamKey, page.toString());
 
-	return currUrl.toString().replace(window.location.origin, "");
-};
+		return currUrl.toString().replace(window.location.origin, "");
+	};
 
-export default function PaginatedNavigation({ pagesCount, activePage }: { pagesCount: number; activePage: number }) {
 	const pages = (() => {
 		const list: number[] = new Array(pagesCount);
 		for (let i = 0; i < pagesCount; i++) {
@@ -26,7 +30,6 @@ export default function PaginatedNavigation({ pagesCount, activePage }: { pagesC
 		}
 		return list;
 	})();
-
 	return (
 		<Pagination>
 			<PaginationContent>

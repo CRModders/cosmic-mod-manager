@@ -117,9 +117,9 @@ const AddPasswordForm = ({ email }: Props) => {
 			}}
 		>
 			<DialogTrigger asChild>
-				<Button className="flex items-center justify-center gap-2" variant="outline">
+				<Button className="gap-2" variant="outline">
 					<KeyIcon size="1.1rem" />
-					<p>Add password</p>
+					Add password
 				</Button>
 			</DialogTrigger>
 
@@ -225,8 +225,8 @@ const AddPasswordForm = ({ email }: Props) => {
 							{formError && <FormErrorMessage text={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<DialogClose className="w-fit hover:bg-bg-hover rounded-lg" aria-label="Cancel">
-									<p className="px-4 h-9 flex items-center justify-center">Cancel</p>
+								<DialogClose aria-label="Cancel" asChild>
+									<Button variant={"secondary"}>Cancel</Button>
 								</DialogClose>
 
 								<Button
@@ -234,7 +234,7 @@ const AddPasswordForm = ({ email }: Props) => {
 									aria-label="Add password"
 									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
 								>
-									<p className="px-4">Add password</p>
+									Add password
 								</Button>
 							</div>
 						</form>

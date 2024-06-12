@@ -47,7 +47,7 @@ const ProjectDescriptSettingsPage = () => {
 
 	return (
 		<ContentWrapperCard className="items-start relative">
-			<h2 className=" text-xl font-semibold">Description</h2>
+			<h2 className="text-2xl font-semibold">Description</h2>
 			<MarkdownEditor editorValue={description} setEditorValue={setDescription} placeholder="Project description" />
 
 			<div className="w-full flex items-center justify-end">
@@ -57,7 +57,7 @@ const ProjectDescriptSettingsPage = () => {
 					disabled={loading || projectData?.description === description}
 				>
 					<SaveIcon size="1.25rem" />
-					<span>Save changes</span>
+					Save changes
 				</Button>
 			</div>
 

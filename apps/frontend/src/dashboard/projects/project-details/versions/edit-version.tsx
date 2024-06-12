@@ -198,7 +198,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="flex flex-wrap gap-4 items-center justify-start">
 						<Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
 							{loading === true ? <CubeLoader size="xs" /> : <SaveIcon className="w-4 h-4" />}
-							<span className="text-base font-semibold">Save</span>
+							Save
 						</Button>
 
 						<Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
@@ -209,15 +209,14 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 							) : (
 								<StarIcon className="w-4 h-4" />
 							)}
-							<span className="text-base font-semibold text-foreground-muted">
-								{versionData?.versions[0].is_featured === true ? "Unfeature version" : "Feature version"}
-							</span>
+
+							{versionData?.versions[0].is_featured === true ? "Unfeature version" : "Feature version"}
 						</Button>
 
 						<Link to={`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`}>
-							<Button className="gap-2" variant={"secondary"} disabled={loading}>
+							<Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
 								<Cross1Icon />
-								<span>Discard changes</span>
+								Discard changes
 							</Button>
 						</Link>
 					</div>

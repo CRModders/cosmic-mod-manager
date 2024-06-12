@@ -252,8 +252,8 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 							{formError && <FormErrorMessage text={formError} />}
 
 							<div className="w-full flex items-center justify-end gap-2">
-								<Button variant="outline" type="button" onClick={cancelAction}>
-									<p className="px-4 h-9 flex items-center justify-center">Cancel</p>
+								<Button variant="secondary" type="button" onClick={cancelAction}>
+									Cancel
 								</Button>
 
 								<Button
@@ -261,7 +261,7 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 									aria-label="Change password"
 									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
 								>
-									<p className="px-4">Change password</p>
+									Change password
 								</Button>
 							</div>
 						</form>

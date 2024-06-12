@@ -415,11 +415,7 @@ const ProjectDetailsNav = ({
 
 			{isProjectMember === true && (
 				<Link to={`${baseHref}/settings`}>
-					<Button
-						className="gap-2 hover:bg-background hover:text-foreground-muted text-foreground"
-						variant={"ghost"}
-						tabIndex={-1}
-					>
+					<Button className="gap-2 hover:bg-background" variant={"ghost"} tabIndex={-1}>
 						<GearIcon size="1.25rem" />
 						Settings
 					</Button>
@@ -442,10 +438,10 @@ const TooltipWrapper = ({ children, text }: { text: string; children: React.Reac
 
 const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
 	return (
-		<Link to={url} className="flex items-center justify-center">
-			<Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-1 text-foreground-muted">
+		<Link to={url} className="flex items-center justify-center" target="_blank" referrerPolicy="no-referrer">
+			<Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-1">
 				{icon}
-				<span>{label}</span>
+				{label}
 			</Button>
 		</Link>
 	);

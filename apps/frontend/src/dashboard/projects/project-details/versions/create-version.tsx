@@ -150,12 +150,12 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 					<div className="flex gap-4 items-center justify-start">
 						<Button disabled={loading} className="gap-2" onClick={createProjectVersion}>
 							{loading === true ? <CubeLoader size="xs" /> : <PlusIcon className="w-5 h-5" />}
-							<span className="text-base font-semibold">Create</span>
+							Create
 						</Button>
 						<Link to={`/${projectType}/${projectUrlSlug}/versions`}>
-							<Button className="gap-2" variant={"secondary"} disabled={loading}>
+							<Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
 								<Cross1Icon />
-								<span>Cancel</span>
+								Cancel
 							</Button>
 						</Link>
 					</div>

@@ -9,7 +9,7 @@ const CTAButton = () => {
 
 	if (session === undefined) {
 		return (
-			<Button className="" size="lg" variant="outline" aria-label="Explore mods">
+			<Button className="" size="lg" variant="outline" aria-label="Loading...">
 				<CubeLoader size="sm" />
 			</Button>
 		);
@@ -19,14 +19,14 @@ const CTAButton = () => {
 		<>
 			{session?.user_id ? (
 				<Link to={"/dashboard/projects"}>
-					<Button className="" size="lg" variant="outline" aria-label="Explore mods">
-						<p className="font-semibold text-base sm:text-md duration-0 dark:duration-0">Dashboard</p>
+					<Button className="" size="lg" variant="outline" aria-label="Dashboard">
+						Dashboard
 					</Button>
 				</Link>
 			) : (
 				<Link to={"/login"}>
-					<Button className="" size="lg" variant="outline" aria-label="Explore mods">
-						<p className="font-semibold text-base sm:text-md duration-0 dark:duration-0">Log In</p>
+					<Button className="" size="lg" variant="outline" aria-label="LogIn">
+						Log In
 					</Button>
 				</Link>
 			)}

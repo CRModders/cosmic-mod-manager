@@ -19,8 +19,8 @@ export default function NotFoundPage() {
 				</p>
 
 				<Link to="/" className="mt-4">
-					<Button className="rounded-lg py-6" variant={"link"} size="lg" aria-label="Go to home page">
-						<span className="px-8 text-xl">Home</span>
+					<Button className="text-foreground" variant={"link"} aria-label="Go to home page">
+						<span className="text-xl">Home</span>
 					</Button>
 				</Link>
 			</div>

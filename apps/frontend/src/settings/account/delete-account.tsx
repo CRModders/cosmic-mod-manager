@@ -55,7 +55,7 @@ const DeleteAccountSection = () => {
 				}}
 			>
 				<DialogTrigger asChild>
-					<Button className="flex items-center justify-center gap-2 bg-danger-bg hover:bg-danger-bg/85 text-[hsla(var(--foreground-dark))]">
+					<Button className="gap-2" variant={"destructive"}>
 						<TrashIcon size="1rem" />
 						Delete account
 					</Button>
@@ -73,13 +73,10 @@ const DeleteAccountSection = () => {
 
 						<DialogFooter className="w-full flex flex-row flex-wrap items-center justify-end gap-2 mt-4">
 							<DialogClose asChild>
-								<Button variant="ghost">Cancel</Button>
+								<Button variant="secondary">Cancel</Button>
 							</DialogClose>
 
-							<Button
-								className="flex items-center justify-center gap-2 bg-danger-bg hover:bg-danger-bg/85 text-[hsla(var(--foreground-dark))]"
-								onClick={handleDeleteClick}
-							>
+							<Button className="gap-2" onClick={handleDeleteClick} variant={"destructive"}>
 								<TrashIcon size="1rem" />
 								Delete
 							</Button>

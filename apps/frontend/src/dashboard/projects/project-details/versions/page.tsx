@@ -26,8 +26,8 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
 							to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}/version/create`}
 						>
 							<Button className="gap-2" tabIndex={-1}>
-								<UploadIcon strokeWidth={2} className="w-4 h-4" />
-								<span className="font-semibold">Upload a version</span>
+								<UploadIcon className="w-4 h-4" />
+								Upload a version
 							</Button>
 						</Link>
 						<div className="text-foreground-muted flex gap-2 items-center justify-start">
@@ -45,6 +45,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
 export default VersionListPage;
 
 const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: string; projectUrlSlug: string }) => {
+	const pageSearchParamKey = "page";
 	const [urlSearchParams] = useSearchParams();
 	const { allProjectVersions } = useContext(Projectcontext);
 	const perPageLimit = 20;
@@ -54,12 +55,12 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 
 	const Pagination =
 		(allProjectVersions?.versions?.length || 0) > perPageLimit ? (
-			<PaginatedNavigation pagesCount={pagesCount} activePage={activePage} />
+			<PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
 		) : null;
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const page = urlSearchParams.get("page");
+		const page = urlSearchParams.get(pageSearchParamKey);
 		if (page) setActivePage(Number.parseInt(page) > pagesCount ? 1 : Number.parseInt(page));
 		else setActivePage(1);
 	}, [urlSearchParams]);
@@ -108,7 +109,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 															href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 															className="noClickRedirect flex h-fit items-center justify-center"
 														>
-															<Button className="h-fit w-fit p-2 font-semibold gap-2" size={"icon"} tabIndex={-1}>
+															<Button className="h-fit w-fit p-2 gap-2" size={"icon"} tabIndex={-1}>
 																<DownloadIcon size="1.15rem" />
 															</Button>
 														</a>

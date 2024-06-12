@@ -16,8 +16,8 @@ export const LoginButton = ({
 	btnVariant?: "destructive" | "outline" | "secondary" | "ghost" | "link";
 }) => {
 	return (
-		<Button className={cn("px-6", btnClassName)} size="lg" variant={btnVariant} aria-label="Explore mods">
-			<p className="font-semibold text-base sm:text-md duration-0 dark:duration-0">Log In</p>
+		<Button className={cn("px-6", btnClassName)} size="lg" variant={btnVariant} aria-label="Login">
+			Log In
 		</Button>
 	);
 };

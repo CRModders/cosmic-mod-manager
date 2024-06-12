@@ -39,27 +39,19 @@ const AuthProviders = () => {
 			{authProvidersList?.map((provider) => {
 				return (
 					<React.Fragment key={provider.name}>
-						<form
-							onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-								e.preventDefault();
+						<Button
+							onClick={async () => {
 								setLoading(true);
 								const signinUrl = await getSignInUrl(provider.name.toLowerCase() as AuthProviderType);
 								window.location.href = signinUrl;
 							}}
-							className="w-full flex items-center justify-center gap-4"
-							name={provider.name}
+							aria-label={`Continue using ${provider.name}`}
+							className="w-full"
+							variant="secondary"
 						>
-							<Button
-								type="submit"
-								// size="md"
-								aria-label={`Continue using ${provider.name}`}
-								className="w-full py-4 flex items-center justify-center bg-background-shallow/65 dark:bg-background-shallow hover:bg-background-shallow dark:hover:bg-background-shallow/75"
-								variant="secondary"
-							>
-								<i className="w-8 flex items-center justify-start">{provider.icon}</i>
-								<p className="text-foreground-muted font-semibold text-md">{provider.name}</p>
-							</Button>
-						</form>
+							<i className="w-8 flex items-center justify-start">{provider.icon}</i>
+							{provider.name}
+						</Button>
 					</React.Fragment>
 				);
 			})}

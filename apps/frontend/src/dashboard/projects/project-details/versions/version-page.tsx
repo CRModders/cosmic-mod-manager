@@ -140,23 +140,23 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 							versionData?.versions[0].files[0].file_url,
 						)}`}
 					>
-						<Button className="font-semibold gap-2" tabIndex={-1}>
+						<Button className="gap-2" tabIndex={-1}>
 							<DownloadIcon size="1.15rem" />
-							<p>Download</p>
+							Download
 						</Button>
 					</a>
 
-					<Button variant={"secondary"} className="gap-2 text-foreground-muted">
+					<Button variant={"secondary"} className="gap-2">
 						<FlagIcon size="1rem" />
-						<p>Report</p>
+						Report
 					</Button>
 
 					{isAProjectMember === true && (
 						<>
 							<Link to={`/${projectType}/${projectUrlSlug}/version/${versionData?.versions[0].url_slug}/edit`}>
-								<Button variant={"secondary"} className="text-foreground-muted gap-2" tabIndex={-1}>
+								<Button variant={"secondary"} className="gap-2" tabIndex={-1}>
 									<EditIcon className="w-4 h-4" />
-									<p>Edit</p>
+									Edit
 								</Button>
 							</Link>
 
@@ -183,12 +183,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 										<DialogClose asChild>
 											<Button variant={"secondary"}>Cancel</Button>
 										</DialogClose>
-										<Button
-											className="gap-2 bg-danger-bg dark:text-foreground hover:bg-danger-bg/85"
-											onClick={deleteVersion}
-										>
+										<Button className="gap-2" variant={"destructive"} onClick={deleteVersion}>
 											<TrashIcon size="1.25rem" />
-											<span>Delete</span>
+											Delete
 										</Button>
 									</DialogFooter>
 								</DialogContent>
@@ -235,7 +232,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 										<Link to={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
 											<Button className="gap-2" tabIndex={-1}>
 												<DownloadIcon size="1.15rem" />
-												<span>Download</span>
+												Download
 											</Button>
 										</Link>
 									</div>

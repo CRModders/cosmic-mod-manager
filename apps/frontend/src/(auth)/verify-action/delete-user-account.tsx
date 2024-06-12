@@ -97,7 +97,7 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
 							dontDeleteAccount();
 						}}
 					>
-						<Button type="submit" variant="outline" aria-label="Cancel">
+						<Button type="submit" variant="secondary" aria-label="Cancel">
 							Cancel
 						</Button>
 					</form>
@@ -108,11 +108,7 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
 						}}
 						name="Delete"
 					>
-						<Button
-							type="submit"
-							aria-label="Delete"
-							className="flex items-center justify-center gap-2 bg-danger-bg hover:bg-danger-bg/85 text-[hsla(var(--foreground-dark))]"
-						>
+						<Button type="submit" aria-label="Delete" variant={"destructive"} className="gap-2">
 							<TrashIcon size="1rem" />
 							Delete
 						</Button>

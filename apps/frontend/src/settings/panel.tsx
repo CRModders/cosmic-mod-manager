@@ -12,7 +12,7 @@ type SidePanelProps = {
 
 export const SidePanel = ({ children, className }: SidePanelProps) => {
 	return (
-		<Card className={cn("w-full lg:w-80 px-4 py-4 rounded-lg shadow-none border-2 border-border", className)}>
+		<Card className={cn("w-full lg:w-80 px-4 py-4 rounded-lg shadow-none border border-border", className)}>
 			{children}
 		</Card>
 	);

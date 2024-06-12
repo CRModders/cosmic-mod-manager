@@ -3,7 +3,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
-import { sleep } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
@@ -11,7 +10,6 @@ import { isValidEmail } from "@root/lib/user";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 type Props = {
@@ -22,7 +20,6 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 	const [loading, setLoading] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const [showSuccessPage, setShowSuccessPage] = useState(false);
-	const navigate = useNavigate();
 
 	const formSchema = z.object({
 		email: z
@@ -75,9 +72,6 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 		}
 
 		setShowSuccessPage(true);
-		await sleep(3_000);
-
-		navigate("/", { replace: true });
 	};
 
 	if (showSuccessPage === true) {
@@ -87,7 +81,10 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 					<CheckCircledIcon className="w-8 pl-2 h-6" />
 					<h1 className="leading-tight">Password reset link sent to your email</h1>
 				</div>
-				<p className="text-foreground-muted">Open the link sent to your email and change your password.</p>
+				<p className="text-foreground-muted">
+					You should receive a password change link shortly if you entered the correct email. Open the link sent to your
+					email and change your password.
+				</p>
 			</div>
 		);
 	}
@@ -131,7 +128,7 @@ const ChangePasswordForm = ({ userEmail }: Props) => {
 
 				{formError && <FormErrorMessage text={formError} />}
 
-				<Button type="submit" aria-label="Continue" className="w-full text-md">
+				<Button type="submit" aria-label="Continue" className="w-full">
 					Continue
 				</Button>
 			</form>

@@ -28,7 +28,7 @@ const ManageProviders = ({ linkedProviders, fetchLinkedProviders }: Props) => {
 			</div>
 
 			<ProvidersList linkedProviders={linkedProviders} fetchLinkedProviders={fetchLinkedProviders}>
-				<Button className="flex items-center justify-center gap-2 text-foreground" variant="outline">
+				<Button className="gap-2" variant="outline">
 					<GearIcon size="1rem" />
 					Manage providers
 				</Button>
@@ -151,8 +151,7 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
 
 														<Button
 															type="submit"
-															size="lg"
-															className="py-4 gap-2 flex items-center justify-center text-foreground"
+															className="gap-2"
 															variant="secondary"
 															aria-label="Remove"
 															onClick={() => {
@@ -171,8 +170,7 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
 
 														<Button
 															type="submit"
-															size="lg"
-															className="py-4 gap-2 flex items-center justify-center text-foreground"
+															className="gap-2"
 															variant="secondary"
 															aria-label="Link"
 															onClick={() => {
