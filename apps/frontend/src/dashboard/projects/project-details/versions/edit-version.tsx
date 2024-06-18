@@ -48,6 +48,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const [supportedGameVersions, setSupportedGameVersions] = useState<string[]>([]);
 
 	const toggleVersionFeaturing = async () => {
+		if (loading) return;
 		setLoading(true);
 
 		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/set-featured`, {
@@ -68,6 +69,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	};
 
 	const updateProjectVersion = async () => {
+		if (loading) return;
+
 		if (!versionName) return toast({ title: "Version title is required", variant: "destructive" });
 		if (!versionNumber) return toast({ title: "Version number is required", variant: "destructive" });
 		if (!supportedGameVersions?.length)

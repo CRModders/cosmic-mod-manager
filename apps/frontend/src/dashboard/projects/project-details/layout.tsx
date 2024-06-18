@@ -147,7 +147,7 @@ export default function ProjectDetailsLayout() {
 				</div>
 			)}
 
-			{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
+			{fetchingProjectData ? <AbsolutePositionedSpinner className="fixed" preventScroll={true} /> : null}
 		</>
 	);
 }
@@ -260,7 +260,7 @@ const AdditionalProjectDetailsCard = ({
 								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 								<div
 									key={version.id}
-									className="w-full flex items-start justify-start p-2 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+									className="w-full flex items-start justify-start p-2 pb-2.5 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
 									onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 										if (
 											// @ts-expect-error

@@ -117,7 +117,8 @@ body {
 }
 
 
-body.navmenu-open {
+body.navmenu-open,
+body.no-scrollbar {
     overflow: hidden;
 }
 

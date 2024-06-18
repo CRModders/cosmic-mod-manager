@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 import "./styles.css";
 
 export const Spinner = ({ size = "1.8rem", className }: { size?: string; className?: string }) => {
@@ -83,9 +84,29 @@ export function CubeLoader({ size }: { size?: CubeLoaderSize }) {
 	);
 }
 
-export const AbsolutePositionedSpinner = ({ size }: { size?: CubeLoaderSize }) => {
+export const AbsolutePositionedSpinner = ({
+	size,
+	className,
+	preventScroll = false,
+}: { size?: CubeLoaderSize; className?: string; preventScroll?: boolean }) => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (preventScroll !== true) return;
+
+		document.body.classList.add("no-scrollbar");
+
+		return () => {
+			document.body.classList.remove("no-scrollbar");
+		};
+	}, []);
+
 	return (
-		<div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center">
+		<div
+			className={cn(
+				"absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full h-full rounded-xl flex items-center justify-center",
+				className,
+			)}
+		>
 			<div className="w-full h-full flex items-center justify-center relative rounded-xl">
 				<div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background opacity-60" />
 				<CubeLoader size={size} />

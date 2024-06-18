@@ -207,7 +207,7 @@ const GeneralProjectSettings = () => {
 					<DeleteProjectCard projectName={projectData?.name || ""} projectUrlSlug={projectData?.url_slug || ""} />
 				</>
 			)}
-			{loading || fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
+			{loading ? <AbsolutePositionedSpinner /> : null}
 		</div>
 	);
 };

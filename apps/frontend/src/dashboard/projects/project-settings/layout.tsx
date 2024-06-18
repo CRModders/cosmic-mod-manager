@@ -147,7 +147,7 @@ export function ProjectSettingsLayoutContent({
 					<Outlet />
 				</PanelContent>
 			</PanelLayout>
-			{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
+			{fetchingProjectData ? <AbsolutePositionedSpinner className="fixed" preventScroll={true} /> : null}
 		</div>
 	);
 }

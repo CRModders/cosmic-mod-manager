@@ -52,7 +52,7 @@ const ProjectDescriptSettingsPage = () => {
 					</div>
 				</>
 			)}
-			{loading || fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
+			{loading ? <AbsolutePositionedSpinner /> : null}
 		</ContentWrapperCard>
 	);
 };

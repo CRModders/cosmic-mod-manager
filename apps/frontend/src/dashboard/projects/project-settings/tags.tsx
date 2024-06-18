@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
@@ -161,7 +162,12 @@ const TagsSettingsPage = () => {
 										<Label
 											key={category.name}
 											htmlFor={`${category.name}-${category.project_types}-featured-tag-checkbox`}
-											className="flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer"
+											className={cn(
+												"flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer",
+												!featuredTags.has(category) &&
+													Array.from(featuredTags).length >= maxFeaturedProjectTags &&
+													"cursor-not-allowed",
+											)}
 										>
 											<Checkbox
 												id={`${category.name}-${category.project_types}-featured-tag-checkbox`}
