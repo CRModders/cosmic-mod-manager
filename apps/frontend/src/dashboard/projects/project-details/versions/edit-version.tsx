@@ -33,7 +33,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const [pageInitialized, setPageInitialized] = useState(false);
 	const [versionData, setVersionData] = useState<ProjectVersionData | null | undefined>(undefined);
 
-	const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions } = useContext(Projectcontext);
+	const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions, fetchProjectData } =
+		useContext(Projectcontext);
 	const [loading, setLoading] = useState(false);
 	const isAProjectMember = useIsUseAProjectMember();
 	const navigate = useNavigate();
@@ -102,7 +103,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			});
 		}
 
-		await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions()]);
+		await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), fetchProjectData()]);
 
 		toast({
 			title: result?.message,

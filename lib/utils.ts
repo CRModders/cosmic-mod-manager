@@ -266,8 +266,11 @@ export const GetValidProjectCategories = (projectTypes: string[]) => {
     const validCategories: CategoryType[] = [];
 
     for (const category of Categories) {
-        if (projectTypes.includes(category.project_type)) {
-            validCategories.push(category);
+        for (const type of category.project_types) {
+            if (projectTypes.includes(type)) {
+                validCategories.push(category);
+                break;
+            }
         }
     }
 
@@ -292,7 +295,14 @@ export const GetProjectTagsFromNames = (tagNames: string[], projectTypes: string
     const tagsList = new Set<CategoryType>();
 
     for (const category of Categories) {
-        if (tagNames.includes(category.name) && projectTypes.includes(category.project_type)) tagsList.add(category);
+        if (tagNames.includes(category.name)) {
+            for (const type of category.project_types) {
+                if (projectTypes.includes(type)) {
+                    tagsList.add(category)
+                    break;
+                }
+            }
+        };
     }
 
     return tagsList;

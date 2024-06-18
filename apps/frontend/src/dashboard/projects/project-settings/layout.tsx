@@ -66,7 +66,7 @@ export function ProjectSettingsLayoutContent({
 	}
 
 	return (
-		<div className="w-full pb-32">
+		<div className="w-full pb-32 relative">
 			<PanelLayout>
 				<SidePanel>
 					{projectData === undefined ? null : (
@@ -146,8 +146,8 @@ export function ProjectSettingsLayoutContent({
 					</Suspense>
 					<Outlet />
 				</PanelContent>
-				{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
 			</PanelLayout>
+			{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
 		</div>
 	);
 }

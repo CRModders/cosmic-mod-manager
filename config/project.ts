@@ -36,7 +36,7 @@ export type LoaderType = {
 export type CategoryType = {
     icon: string;
     name: string;
-    project_type: ProjectType;
+    project_types: ProjectType[];
     header: TagHeaderTypes
 }
 
@@ -87,470 +87,464 @@ export const Loaders = [
     },
 ] satisfies LoaderType[];
 
-export const Categories = [
+export const Categories: CategoryType[] = [
     {
         icon: "",
         name: "128x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "16x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "256x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "32x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "48x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "512x+",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "64x",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "8x-",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION
     },
     {
         icon: "",
         name: "adventure",
-        project_type: ProjectType.MOD,
-        header: TagHeaderTypes.CATEGORY
-    },
-    {
-        icon: "",
-        name: "adventure",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN, ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "atmosphere",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "audio",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "blocks",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "bloom",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "cartoon",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "challenging",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "colored-lighting",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "combat",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "combat",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "core-shaders",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "cursed",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "cursed",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "cursed",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "decoration",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "decoration",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "economy",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "entities",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "environment",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "equipment",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "equipment",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "fantasy",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "foliage",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "fonts",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "food",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "game-mechanics",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "gui",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "high",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.PERFORMANCE_IMPACT
     },
     {
         icon: "",
         name: "items",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "kitchen-sink",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "library",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "lightweight",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "locale",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "low",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.PERFORMANCE_IMPACT
     },
     {
         icon: "",
         name: "magic",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "magic",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "management",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "medium",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.PERFORMANCE_IMPACT
     },
     {
         icon: "",
         name: "minigame",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "mobs",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "modded",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "models",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "multiplayer",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "optimization",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "optimization",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "path-tracing",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "pbr",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "potato",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.PERFORMANCE_IMPACT
     },
     {
         icon: "",
         name: "quests",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "realistic",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "realistic",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "reflections",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "screenshot",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.PERFORMANCE_IMPACT
     },
     {
         icon: "",
         name: "semi-realistic",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "shadows",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE
     },
     {
         icon: "",
         name: "simplistic",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "social",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "storage",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "technology",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "technology",
-        project_type: ProjectType.MODPACK,
+        project_types: [ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "themed",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "transportation",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "tweaks",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "utility",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "utility",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "vanilla-like",
-        project_type: ProjectType.SHADER,
+        project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "vanilla-like",
-        project_type: ProjectType.RESOURCE_PACK,
+        project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.CATEGORY
     },
     {
         icon: "",
         name: "worldgen",
-        project_type: ProjectType.MOD,
+        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY
     }
-] satisfies CategoryType[];
+];
 
 export const GameVersions = [
     { version: '0.1.36', releaseType: ReleaseChannels.RELEASE },

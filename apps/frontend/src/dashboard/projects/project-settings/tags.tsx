@@ -129,11 +129,11 @@ const TagsSettingsPage = () => {
 								return (
 									<Label
 										key={category.name}
-										htmlFor={`${category.name}-${category.project_type}-checkbox`}
+										htmlFor={`${category.name}-${category.project_types}-checkbox`}
 										className="flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer"
 									>
 										<Checkbox
-											id={`${category.name}-${category.project_type}-checkbox`}
+											id={`${category.name}-${category.project_types}-checkbox`}
 											checked={selectedTags.has(category)}
 											onCheckedChange={(e) => handleTagsSelection(category, !!e)}
 										/>
@@ -160,11 +160,11 @@ const TagsSettingsPage = () => {
 									return (
 										<Label
 											key={category.name}
-											htmlFor={`${category.name}-${category.project_type}-featured-tag-checkbox`}
+											htmlFor={`${category.name}-${category.project_types}-featured-tag-checkbox`}
 											className="flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer"
 										>
 											<Checkbox
-												id={`${category.name}-${category.project_type}-featured-tag-checkbox`}
+												id={`${category.name}-${category.project_types}-featured-tag-checkbox`}
 												checked={featuredTags.has(category)}
 												onCheckedChange={(e) => handleFeaturedTagsSelection(category, !!e)}
 												disabled={
