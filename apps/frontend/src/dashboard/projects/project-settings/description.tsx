@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from "react";
 
 const ProjectDescriptSettingsPage = () => {
 	const [loading, setLoading] = useState(false);
-	const { projectData, fetchingProjectData, fetchProjectData } = useContext(Projectcontext);
+	const { projectData, fetchProjectData } = useContext(Projectcontext);
 	const [description, setDescription] = useState("");
 
 	const updateProjectDescription = async () => {
