@@ -5,9 +5,8 @@
             gradientUnits="userSpaceOnUse" x1="252.872" x2="252.872" y1="91.975" y2="178.255" href="#gradient-5">
         </linearGradient>
         <linearGradient id="gradient-5">
-            <stop stop-color="rgb(244, 63, 94)" offset="0"></stop>
-            <stop stop-color="rgb(225, 29, 72)" offset="0.468"></stop>
-            <stop stop-color="rgb(159, 18, 57)" offset="1"></stop>
+            <stop stop-color="#f54773" offset="0"></stop>
+            <stop stop-color="#e21d52" offset="1"></stop>
         </linearGradient>
         <linearGradient id="gradient-5-1"
             gradientTransform="matrix(0.962739, 0.270435, -2.282381, 8.17965, 644.298995, -2472.513201)"

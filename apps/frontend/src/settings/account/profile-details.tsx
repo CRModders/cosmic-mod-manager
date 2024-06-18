@@ -1,4 +1,4 @@
-import { EditIcon } from "@/components/icons";
+import { EditIcon, SaveIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { AuthProviderData } from "@/types";
@@ -297,6 +297,7 @@ const EditProfileInfoForm = ({
 
 							<Button
 								type="submit"
+								className="gap-2"
 								aria-label="Update profile"
 								disabled={
 									form.getValues().name === name &&
@@ -304,7 +305,8 @@ const EditProfileInfoForm = ({
 									form.getValues().currProfileProvider === currProfileProvider
 								}
 							>
-								<p className="px-4">Update profile</p>
+								<SaveIcon className="w-4 h-4" />
+								Update profile
 							</Button>
 						</div>
 					</DialogFooter>

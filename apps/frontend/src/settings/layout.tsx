@@ -11,12 +11,12 @@ export default function SettingsPageLayout() {
 		{
 			name: "Account",
 			href: `${baseUrlPrefix}/account`,
-			icon: <PersonIcon className="w-4 h-4" />,
+			icon: <PersonIcon className="w-4 h-4" strokeWidth={3} />,
 		},
 		{
 			name: "Sessions",
 			href: `${baseUrlPrefix}/sessions`,
-			icon: <DevicesIcon size="1.15rem" />,
+			icon: <DevicesIcon size="1.15rem" strokeWidth={2.5} />,
 		},
 	];
 

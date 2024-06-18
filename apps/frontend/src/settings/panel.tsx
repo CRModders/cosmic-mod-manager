@@ -38,7 +38,9 @@ type Props = {
 };
 
 export const PanelLayout = ({ children }: Props) => {
-	return <div className="w-full flex flex-wrap items-start justify-start gap-6 mt-4">{children}</div>;
+	return (
+		<div className="w-full flex flex-wrap items-start justify-start gap-x-6 gap-y-4 mt-4 relative">{children}</div>
+	);
 };
 
 type SidePanelLinkProps = {

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast, useToast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
@@ -71,12 +71,8 @@ const GeneralProjectSettings = () => {
 	}, [projectData]);
 
 	return (
-		<div className="w-full flex flex-col items-center justify-center gap-4">
-			{loading === true || projectData === undefined || fetchingProjectData === true ? (
-				<div className="w-full py-8 flex items-center justify-center">
-					<CubeLoader size="lg" />
-				</div>
-			) : (
+		<div className="w-full flex flex-col relative items-center justify-center gap-4">
+			{projectData === undefined ? null : (
 				<>
 					<ContentWrapperCard className="w-full flex flex-col items-start justify-center gap-6">
 						<h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground">
@@ -211,6 +207,7 @@ const GeneralProjectSettings = () => {
 					<DeleteProjectCard projectName={projectData?.name || ""} projectUrlSlug={projectData?.url_slug || ""} />
 				</>
 			)}
+			{loading || fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
 		</div>
 	);
 };

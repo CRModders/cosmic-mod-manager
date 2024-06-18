@@ -14,6 +14,7 @@ import {
     sendNewPasswordVerificationEmail,
     sendPasswordChangeEmail,
 } from "../helpers/send-emails";
+import { deleteAllUserFiles } from "../helpers/storage";
 import { hashPassword, isUsernameAvailable, matchPassword } from "../helpers/user-profile";
 const userRouter = new Hono();
 
@@ -974,6 +975,8 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
             },
         });
 
+        await deleteAllUserFiles(user.id).catch((e) => console.error(e));
+
         await prisma.deletedUser.create({
             data: {
                 user_name: userData.user_name,
@@ -985,7 +988,7 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
         return c.json({
             success: true,
             message:
-                "Successfully deleted your account. Please note that your projects which other projects depend on won't be deleted",
+                "Successfully deleted your account and all the related data.",
         });
     } catch (error) {
         console.error(error);

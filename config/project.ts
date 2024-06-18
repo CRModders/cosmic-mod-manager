@@ -23,6 +23,23 @@ export const ProjectVisibilityOptions = [
     ProjectVisibility.ARCHIVED,
 ];
 
+export type LoaderType = {
+    icon: string;
+    name: String;
+    supported_project_types: ProjectType[];
+    supported_fields: LoaderSupportedFields[];
+    metadata: {
+        [key: string]: string
+    }
+}
+
+export type CategoryType = {
+    icon: string;
+    name: string;
+    project_type: ProjectType;
+    header: TagHeaderTypes
+}
+
 export const Loaders = [
     {
         icon: "",
@@ -68,7 +85,7 @@ export const Loaders = [
         supported_fields: [LoaderSupportedFields.GAME_VERSIONS],
         metadata: {}
     },
-];
+] satisfies LoaderType[];
 
 export const Categories = [
     {
@@ -533,7 +550,7 @@ export const Categories = [
         project_type: ProjectType.MOD,
         header: TagHeaderTypes.CATEGORY
     }
-];
+] satisfies CategoryType[];
 
 export const GameVersions = [
     { version: '0.1.36', releaseType: ReleaseChannels.RELEASE },

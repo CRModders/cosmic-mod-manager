@@ -1,16 +1,19 @@
 import prisma from "@/lib/prisma";
 import {
     maxExternalLinkLength,
+    maxFeaturedProjectTags,
     maxNameLength,
     maxProjectDescriptionLength,
     maxProjectSummaryLength,
     minProjectNameLength
 } from "@root/config";
-import { GetProjectVisibility, GetUsersProjectMembership, createURLSafeSlug, isValidString, isValidUrl } from "@root/lib/utils";
-import { ProjectVisibility, UserRolesInProject } from "@root/types";
+import { GetProjectVisibility, GetUsersProjectMembership, VerifySelectedCategories, createURLSafeSlug, isValidString, isValidUrl } from "@root/lib/utils";
+import { ProjectVisibility, UserRolesInProject, type ProjectDataType } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
+import { deleteAllProjectFiles } from "../helpers/storage";
 import versionRouter from "./version";
+
 const projectRouter = new Hono();
 
 projectRouter.post("/create-new-project", async (c) => {
@@ -151,6 +154,8 @@ projectRouter.get("/:projectSlug", async (c) => {
                 summary: true,
                 description: true,
                 type: true,
+                tags: true,
+                featured_tags: true,
                 updated_on: true,
                 url_slug: true,
                 visibility: true,
@@ -195,21 +200,21 @@ projectRouter.get("/:projectSlug", async (c) => {
                     summary: projectData.summary,
                     description: projectData.description,
                     type: projectData.type,
+                    tags: projectData.tags,
+                    featured_tags: projectData.featured_tags,
                     updated_on: projectData.updated_on,
                     url_slug: projectData.url_slug,
                     visibility: projectData.visibility,
                     external_links: projectData?.external_links,
                     members: projectData.members,
-                },
+                } satisfies ProjectDataType,
             });
         }
 
         return c.json({ message: "Project not found", data: null }, 400);
     } catch (error) {
         console.error(error);
-        return c.json({
-            message: "Internal server error",
-        });
+        return c.json({ message: "Internal server error" }, 500);
     }
 });
 
@@ -223,14 +228,6 @@ projectRouter.post("/:projectSlug/update", async (c) => {
 
         const currUrlSlug = c.req.param("projectSlug");
         const urlSafeUrlSlug = createURLSafeSlug(url_slug.value);
-
-        console.log({
-            currUrlSlug,
-            name,
-            url_slug: urlSafeUrlSlug.value,
-            visibility: body?.visibility,
-            summary,
-        });
 
         if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
             return c.json(
@@ -375,9 +372,11 @@ projectRouter.get("/:projectSlug/delete", async (c) => {
             },
         });
 
+        await deleteAllProjectFiles(user.id, project.id).catch((e) => console.error(e));
+
         return c.json({ message: "Project deleted successfully" });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return c.json({ message: "Internal server error" }, 500);
     }
 });
@@ -526,6 +525,56 @@ projectRouter.post("/:projectSlug/update-external-links", async (c) => {
         );
     }
 });
+
+projectRouter.post("/:projectSlug/update-tags", async (c) => {
+    try {
+        const body = await c.req.json();
+        const projectSlug = c.req.param("projectSlug");
+
+        if (!projectSlug || body?.tags?.length === undefined || body?.featuredTags?.length === undefined) return c.json({ message: "Invalid request" }, 400);
+
+        const [user] = await getUserSession(c);
+        if (!user?.id) return c.json({ message: "Unauthenticated request" }, 400);
+
+        const project = await prisma.project.findUnique({
+            where: {
+                url_slug: projectSlug
+            },
+            select: {
+                id: true,
+                type: true,
+                members: {
+                    where: {
+                        user_id: user.id,
+                        role: UserRolesInProject.OWNER
+                    },
+                    select: {
+                        id: true
+                    }
+                }
+            }
+        });
+
+        if (!project?.members?.[0]?.id) return c.json({ message: "The project doesn't exist or You don't have the permission to update project details" }, 400);
+        const selectedTags = VerifySelectedCategories((body?.tags || []), project.type);
+        const featuredTags = (body?.featuredTags || []).slice(0, maxFeaturedProjectTags).filter((featuredTag) => selectedTags.includes(featuredTag))
+
+        await prisma.project.update({
+            where: {
+                id: project.id
+            },
+            data: {
+                tags: selectedTags,
+                featured_tags: featuredTags
+            }
+        })
+
+        return c.json({ message: "succesfully updated project tags" }, 200)
+    } catch (error) {
+        console.error(error);
+        return c.json({ message: "Intrnal server error" }, 500)
+    }
+})
 
 // * Version router
 projectRouter.route("/:projectSlug/version", versionRouter);

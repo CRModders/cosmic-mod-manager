@@ -21,7 +21,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
 						<TableHead className="overflow-hidden w-[20%]">ID</TableHead>
 						<TableHead className="overflow-hidden w-[20%]">Type</TableHead>
 						<TableHead className="overflow-hidden w-[14%]">Status</TableHead>
-						<TableHead className="overflow-hidden w-[6%]"> </TableHead>
+						<TableHead className="overflow-hidden w-[6%]" />
 					</TableRow>
 				</TableHeader>
 				<TableBody>

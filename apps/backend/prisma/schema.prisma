@@ -113,6 +113,8 @@ model Project {
     icon            String?
     status          String                @default("DRAFT")
     type            String[]              @default(["PROJECT"])
+    tags            String[]
+    featured_tags   String[]
     summary         String?               @db.VarChar(324)
     description     String?               @db.VarChar(65256)
     created_on      DateTime              @default(now())

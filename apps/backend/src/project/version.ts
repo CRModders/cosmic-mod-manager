@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma";
 import { maxChangelogLength, maxFileSize, maxProjectNameLength } from "@root/config";
-import { GetProjectLoadersList, GetProjectVersionReleaseChannel, GetUsersProjectMembership, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import { GetProjectLoadersList, GetProjectVersionReleaseChannel, GetUsersProjectMembership, GetValidProjectCategories, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { InferProjectTypeFromLoaders } from "../helpers/project";
-import { saveProjectVersionFile } from "../helpers/storage";
+import { deleteAllVersionFiles, saveProjectVersionFile } from "../helpers/storage";
 
 const versionRouter = new Hono();
 
@@ -320,102 +320,6 @@ versionRouter.post("/:versionSlug/update", async (c) => {
     }
 });
 
-versionRouter.get("/:versionSlug/delete", async (c) => {
-    try {
-        const projectSlug = c.req.param("projectSlug");
-        const versionSlug = c.req.param("versionSlug");
-
-        if (!projectSlug || !versionSlug) return c.json({ message: "Invalid request" }, 400);
-        const [user] = await getUserSession(c);
-        if (!user?.id) {
-            return c.json(
-                {
-                    message: "Invlid request",
-                },
-                400,
-            );
-        }
-
-        const project = await prisma.project.findUnique({
-            where: {
-                url_slug: projectSlug,
-            },
-            select: {
-                id: true,
-                members: {
-                    where: {
-                        user_id: user?.id,
-                    },
-                    select: {
-                        id: true,
-                        user_id: true,
-                    },
-                },
-                versions: {
-                    where: {
-                        url_slug: versionSlug,
-                    },
-                    select: {
-                        id: true,
-                    },
-                },
-            },
-        });
-
-        if (project.members[0].user_id !== user.id) {
-            return c.json({ message: "You don't have the permission to delete this project version" }, 403);
-        }
-
-        const deletedVersion = await prisma.projectVersion.delete({
-            where: {
-                id: project.versions[0].id,
-            },
-            select: {
-                version_number: true
-            }
-        });
-
-        const projectsNewState = await prisma.project.findUnique({
-            where: {
-                url_slug: projectSlug
-            },
-            select: {
-                versions: {
-                    select: {
-                        supported_loaders: true
-                    }
-                }
-            }
-        })
-
-        const projectLoaders = (() => {
-            const list = [];
-            for (const version of projectsNewState.versions) {
-
-                for (const loader of version.supported_loaders) {
-                    if (!list.includes(loader)) list.push(loader);
-                }
-            }
-            return list;
-        })()
-
-        await prisma.project.update({
-            where: {
-                id: project.id,
-            },
-            data: {
-                updated_on: new Date(),
-                type: InferProjectTypeFromLoaders([...projectLoaders])
-            },
-        });
-
-        return c.json({ message: `Project version ${deletedVersion.version_number} deleted successfully` });
-    } catch (error) {
-        console.error(error);
-        return c.json({ message: "Internal server error" }, 500);
-    }
-});
-
 versionRouter.post("/:versionSlug/set-featured", async (c) => {
     try {
         const projectSlug = c.req.param("projectSlug");
@@ -598,7 +502,7 @@ versionRouter.post("/create", async (c) => {
             fileName: primaryVersionFile.name,
             userId: user.id,
             projectId: project.id,
-            versionUrlSlug: newVersionUrlSlug,
+            versionId: newProjectVersion.id,
             file: primaryVersionFile,
         });
 
@@ -656,6 +560,109 @@ versionRouter.post("/create", async (c) => {
             },
             500,
         );
+    }
+});
+
+versionRouter.get("/:versionSlug/delete", async (c) => {
+    try {
+        const projectSlug = c.req.param("projectSlug");
+        const versionSlug = c.req.param("versionSlug");
+
+        if (!projectSlug || !versionSlug) return c.json({ message: "Invalid request" }, 400);
+        const [user] = await getUserSession(c);
+        if (!user?.id) {
+            return c.json(
+                {
+                    message: "Invlid request",
+                },
+                400,
+            );
+        }
+
+        const project = await prisma.project.findUnique({
+            where: {
+                url_slug: projectSlug,
+            },
+            select: {
+                id: true,
+                members: {
+                    where: {
+                        user_id: user?.id,
+                    },
+                    select: {
+                        id: true,
+                        user_id: true,
+                    },
+                },
+                versions: {
+                    where: {
+                        url_slug: versionSlug,
+                    },
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
+        if (project.members[0].user_id !== user.id) {
+            return c.json({ message: "You don't have the permission to delete this project version" }, 403);
+        }
+
+        const deletedVersion = await prisma.projectVersion.delete({
+            where: {
+                id: project.versions[0].id,
+            },
+            select: {
+                version_number: true
+            }
+        });
+
+        await deleteAllVersionFiles(user.id, project.id, project.versions[0].id).catch((e) => console.error(e));
+
+        const projectsNewState = await prisma.project.findUnique({
+            where: {
+                url_slug: projectSlug
+            },
+            select: {
+                versions: {
+                    select: {
+                        supported_loaders: true
+                    }
+                },
+                tags: true,
+                featured_tags: true
+            }
+        })
+
+        const projectLoaders = new Set<string>();
+        for (const version of projectsNewState.versions) {
+            for (const loader of version.supported_loaders) {
+                projectLoaders.add(loader);
+            }
+        }
+
+        const updatedProjectType = InferProjectTypeFromLoaders([...Array.from(projectLoaders)]);
+        const validProjectTags = GetValidProjectCategories(updatedProjectType).map((tag) => tag.toString());
+        const updatedTags = projectsNewState.tags.filter((tag) => validProjectTags.includes(tag));
+        const featuredTags = projectsNewState.featured_tags.filter((featured_tag) => updatedTags.includes(featured_tag))
+
+        await prisma.project.update({
+            where: {
+                id: project.id,
+            },
+            data: {
+                updated_on: new Date(),
+                type: updatedProjectType,
+                tags: updatedTags,
+                featured_tags: featuredTags
+            },
+        });
+
+        return c.json({ message: `Project version ${deletedVersion.version_number} deleted successfully` });
+    } catch (error) {
+        console.error(error);
+        return c.json({ message: "Internal server error" }, 500);
     }
 });
 

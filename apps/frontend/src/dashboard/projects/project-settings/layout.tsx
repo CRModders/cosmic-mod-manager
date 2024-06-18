@@ -17,7 +17,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -69,11 +69,7 @@ export function ProjectSettingsLayoutContent({
 		<div className="w-full pb-32">
 			<PanelLayout>
 				<SidePanel>
-					{fetchingProjectData === true || projectData === undefined ? (
-						<div className="w-full min-h-[50vh] flex items-center justify-center">
-							<CubeLoader />
-						</div>
-					) : (
+					{projectData === undefined ? null : (
 						<>
 							<div className="w-full px-1">
 								<Breadcrumb>
@@ -150,6 +146,7 @@ export function ProjectSettingsLayoutContent({
 					</Suspense>
 					<Outlet />
 				</PanelContent>
+				{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
 			</PanelLayout>
 		</div>
 	);

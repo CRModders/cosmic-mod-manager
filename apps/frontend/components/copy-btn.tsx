@@ -40,7 +40,7 @@ const CopyBtn = ({ text, label, className, labelClassName, iconClassName }: Prop
 			id={`copy-btn-${text}-${label}`}
 			variant="ghost"
 			aria-label="Copy"
-			className={cn("w-fit h-fit min-h-6 min-w-6 gap-2 shrink-0 flex items-center justify-center", className)}
+			className={cn("w-fit h-fit px-1 min-h-6 min-w-6 gap-2 shrink-0 flex items-center justify-center", className)}
 			onClick={copyText}
 		>
 			{label ? <span className={cn("text-sm text-foreground-muted", labelClassName)}>{label}</span> : null}

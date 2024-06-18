@@ -6,11 +6,14 @@
 
 :root {
     --scrollbar-width: 0.6rem;
-    --tint-hue: 220;
+    --tint-hue: 200;
+    --accent-color-hue: 345;
 
-    /* Light mode color scheme */
-    --accent-bg-light: 350, 80%, 55%;
-    --accent-foreground-light: 347, 77%, 50%;
+    /* LIGHT THEME */
+    --accent-bg-light: var(--accent-color-hue), 77%, 50%;
+    --accent-foreground-light: var(--accent-color-hue), 77%, 50%;
+    /* --accent-bg-light: 271, 81%, 56%;
+    --accent-foreground-light: 271, 81%, 56%; */
     --background-light: 0, 0%, 98%;
     --background-shallow-light: var(--tint-hue), 6%, 90%;
     --foreground-light: var(--tint-hue), 6%, 10%;
@@ -21,13 +24,14 @@
     --success-bg-light: 161, 94%, 30%;
     --success-text-light: 163, 94%, 24%;
     --shadow-light: var(--tint-hue), 6%, 90%;
-    /* --border-light: var(--tint-hue), 6%, 90%; */
     --border-light: var(--tint-hue), 5%, 84%;
     --border-hicontrast-light: var(--tint-hue), 5%, 65%;
 
-    /* Dark mode color scheme */
-    --accent-bg-dark: 350, 100%, 65%;
-    --accent-foreground-dark: 351, 95%, 71%;
+    /* DARK THEME */
+    --accent-bg-dark: var(--accent-color-hue), 85%, 62%;
+    --accent-foreground-dark: var(--accent-color-hue), 95%, 72%;
+    /* --accent-bg-dark: 271, 91%, 65%;
+    --accent-foreground-dark: 270, 95%, 80%; */
     --background-dark: var(--tint-hue), 6%, 10%;
     --background-shallow-dark: var(--tint-hue), 4%, 16%;
     --foreground-dark: 0, 0%, 98%;

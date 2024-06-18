@@ -109,8 +109,8 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 															href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 															className="noClickRedirect flex h-fit items-center justify-center"
 														>
-															<Button className="h-fit w-fit p-2 gap-2" size={"icon"} tabIndex={-1}>
-																<DownloadIcon size="1.15rem" />
+															<Button className="h-fit w-fit p-2 rounded-lg" size={"icon"} tabIndex={-1}>
+																<DownloadIcon size="1.1rem" />
 															</Button>
 														</a>
 													</div>

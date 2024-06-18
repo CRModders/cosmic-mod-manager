@@ -4,6 +4,7 @@ import SignInCallbackPage from "@/src/(auth)/callbacks/signin";
 import ChangePasswordPageLayout from "@/src/(auth)/change-password/layout";
 import LoginPageLayout from "@/src/(auth)/login/layout";
 import SignupPageLayout from "@/src/(auth)/signup/layout";
+import RootLayout from "@/src/App";
 import MessagePage from "@/src/Message";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
@@ -19,7 +20,6 @@ import ProjectDetailsLayout from "@/src/dashboard/projects/project-details/layou
 import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/layout";
 import { createURLSafeSlug } from "@root/lib/utils";
 
-const RootLayout = lazy(() => import("@/src/App"));
 const SignupPage = lazy(() => import("@/src/(auth)/signup/page"));
 const LoginPage = lazy(() => import("@/src/(auth)/login/page"));
 const VerifyActionPage = lazy(() => import("@/src/(auth)/verify-action/page"));
@@ -195,11 +195,7 @@ const getProjectPageRoutes = () => {
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<Suspense fallback={<SuspenseFallback />}>
-				<RootLayout />
-			</Suspense>
-		),
+		element: <RootLayout />,
 		children: [
 			{
 				path: "",

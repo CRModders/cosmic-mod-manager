@@ -1,4 +1,4 @@
-import { Loaders, ProjectTypes, ProjectVisibilityOptions, ReleaseChannelsList } from "@root/config/project";
+import { Categories, CategoryType, Loaders, ProjectTypes, ProjectVisibilityOptions, ReleaseChannelsList } from "@root/config/project";
 import { ProjectVisibility, ReleaseChannels, TypeTimePastPhrases } from "@root/types";
 
 export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
@@ -262,3 +262,38 @@ export const GetProjectLoadersList = (loaders_list: string[]) => {
 // export const GetSupportedGameVersions = (list: string[]) => {
 
 // }
+export const GetValidProjectCategories = (projectTypes: string[]) => {
+    const validCategories: CategoryType[] = [];
+
+    for (const category of Categories) {
+        if (projectTypes.includes(category.project_type)) {
+            validCategories.push(category);
+        }
+    }
+
+    return validCategories;
+}
+
+export const VerifySelectedCategories = (selectedCategories: string[], projectTypes: string[]) => {
+    const allSelectedCategories = new Set(selectedCategories);
+    const allValidCategories = GetValidProjectCategories(projectTypes);
+    const verifiedCategories: string[] = [];
+
+    for (const validCategory of allValidCategories) {
+        if (allSelectedCategories.has(validCategory.name)) {
+            verifiedCategories.push(validCategory.name);
+        }
+    }
+
+    return verifiedCategories;
+}
+
+export const GetProjectTagsFromNames = (tagNames: string[], projectTypes: string[]) => {
+    const tagsList = new Set<CategoryType>();
+
+    for (const category of Categories) {
+        if (tagNames.includes(category.name) && projectTypes.includes(category.project_type)) tagsList.add(category);
+    }
+
+    return tagsList;
+}

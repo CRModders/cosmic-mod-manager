@@ -1,5 +1,5 @@
 import { constructProjectPageUrl } from "@/lib/utils";
-import type { ProjectDataType, ProjectVersionsList } from "@/types";
+import type { ProjectDataType, ProjectVersionsList } from "@root/types";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/fetch";

@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar/navbar";
-import ScrollToAnchor from "@/components/scroll-into-view";
 import { Toaster } from "@/components/ui/toaster";
 import "@/src/globals.css";
 import { Helmet } from "react-helmet";
@@ -18,7 +17,6 @@ export default function RootLayout() {
 				<Outlet />
 			</main>
 			<Toaster />
-			<ScrollToAnchor />
 		</Providers>
 	);
 }

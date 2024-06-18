@@ -431,7 +431,6 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 						)}
 						ref={editorTextarea}
 						value={editorValue}
-						onResizeCapture={(e) => console.log(e)}
 						onChange={(e) => {
 							setEditorValue(e.target.value);
 						}}
@@ -481,6 +480,8 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
 						<p>
 							You can use{" "}
 							<a
+								rel="noreferrer"
+								target="_blank"
 								href="https://www.markdownguide.org/basic-syntax/"
 								className=" text-blue-600 dark:text-blue-400 hover:brightness-110"
 							>

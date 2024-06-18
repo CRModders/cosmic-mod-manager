@@ -10,7 +10,7 @@ import {
 } from "@/components/icons";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
-import { CubeLoader, SuspenseFallback } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, SuspenseFallback } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
 import { FormatProjectTypes } from "@/lib/utils";
@@ -19,7 +19,6 @@ import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Projectcontext } from "@/src/providers/project-context";
 import { PanelContent, PanelLayout, SidePanel } from "@/src/settings/panel";
-import type { ProjectDataType, ProjectVersionsList } from "@/types";
 import {
 	BookmarkIcon,
 	CalendarIcon,
@@ -31,6 +30,7 @@ import {
 	UpdateIcon,
 } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, timeSince } from "@root/lib/utils";
+import type { ProjectDataType, ProjectVersionsList } from "@root/types";
 import { time_past_phrases } from "@root/types";
 import React, { Suspense, useContext } from "react";
 import { Helmet } from "react-helmet";
@@ -48,41 +48,34 @@ export default function ProjectDetailsLayout() {
 		return <NotFoundPage />;
 	}
 
-	if (fetchingProjectData === true || projectData === undefined) {
-		return (
-			<div className="w-full min-h-[50vh] flex items-center justify-center">
-				<CubeLoader size="lg" />
-			</div>
-		);
-	}
-
 	return (
 		<>
 			<Helmet>
 				<title>{`${projectData?.name} - ${CapitalizeAndFormatString(projectData?.type[0])} | CRMM`}</title>
 				<meta name="description" content={projectData?.summary} />
 			</Helmet>
-			<div className="w-full pb-32">
-				<PanelLayout>
-					<div className="w-full lg:w-80 flex items-center justify-center gap-4 flex-col">
-						<SidePanel>
-							<div className="w-full flex flex-col gap-1 p-2">
-								<div className="w-fit p-2 bg-background-shallow rounded-xl">
-									<CubeIcon className="w-20 h-20 text-foreground-muted" />
-								</div>
-								<h1 className="text-2xl font-semibold text-foreground">{projectData?.name}</h1>
-								<Link
-									to={`/${createURLSafeSlug(projectData.type[0]).value}s`}
-									className=" w-fit flex items-start justify-start gap-2 text-foreground-muted hover:underline hover:underline-offset-2"
-								>
-									<CubeIcon className="w-4 h-4 mt-0.5" />
-									<span className="leading-tight">{FormatProjectTypes(projectData.type)}</span>
-								</Link>
-								<p className="text-foreground-muted">{projectData?.summary}</p>
-								<span className="w-full h-[1px] my-2 bg-border" />
+			{projectData === undefined ? null : (
+				<div className="w-full pb-32">
+					<PanelLayout>
+						<div className="w-full lg:w-80 flex items-center justify-center gap-4 flex-col">
+							<SidePanel>
+								<div className="w-full flex flex-col gap-1 p-2">
+									<div className="w-fit p-2 bg-background-shallow rounded-xl">
+										<CubeIcon className="w-20 h-20 text-foreground-muted" />
+									</div>
+									<h1 className="text-2xl font-semibold text-foreground">{projectData?.name}</h1>
+									<Link
+										to={`/${createURLSafeSlug(projectData.type[0]).value}s`}
+										className=" w-fit flex items-start justify-start gap-2 text-foreground-muted hover:underline hover:underline-offset-2"
+									>
+										<CubeIcon className="w-4 h-4 mt-0.5" />
+										<span className="leading-tight">{FormatProjectTypes(projectData.type)}</span>
+									</Link>
+									<p className="text-foreground-muted">{projectData?.summary}</p>
+									<span className="w-full h-[1px] my-2 bg-border" />
 
-								{/* // TODO: TO BE ADDED AFTER IMPLEMENTED */}
-								{/* <div className="text-foreground-muted flex items-center justify-start gap-2">
+									{/* // TODO: TO BE ADDED AFTER IMPLEMENTED */}
+									{/* <div className="text-foreground-muted flex items-center justify-start gap-2">
 											<DownloadIcon className="w-4 h-4" />
 											<p className="flex gap-1 items-end justify-start">
 												<strong className="text-xl text-foreground dark:text-foreground-muted">82.4k</strong>
@@ -97,61 +90,64 @@ export default function ProjectDetailsLayout() {
 											</p>
 										</div> */}
 
-								<div className="flex items-center justify-start gap-2 text-foreground-muted">
-									<CalendarIcon className="w-4 h-4" />
-									<TooltipWrapper text={formatDate(new Date(projectData?.created_on), timestamp_template)}>
-										<p>Created {timeSince(new Date(projectData?.created_on), time_past_phrases)}</p>
-									</TooltipWrapper>
-								</div>
-								<div className="flex items-center justify-start gap-2 text-foreground-muted">
-									<UpdateIcon className="w-4 h-4" />
-									<TooltipWrapper text={formatDate(new Date(projectData?.updated_on), timestamp_template)}>
-										<p>Updated {timeSince(new Date(projectData?.updated_on), time_past_phrases)}</p>
-									</TooltipWrapper>
-								</div>
+									<div className="flex items-center justify-start gap-2 text-foreground-muted">
+										<CalendarIcon className="w-4 h-4" />
+										<TooltipWrapper text={formatDate(new Date(projectData?.created_on), timestamp_template)}>
+											<p>Created {timeSince(new Date(projectData?.created_on), time_past_phrases)}</p>
+										</TooltipWrapper>
+									</div>
+									<div className="flex items-center justify-start gap-2 text-foreground-muted">
+										<UpdateIcon className="w-4 h-4" />
+										<TooltipWrapper text={formatDate(new Date(projectData?.updated_on), timestamp_template)}>
+											<p>Updated {timeSince(new Date(projectData?.updated_on), time_past_phrases)}</p>
+										</TooltipWrapper>
+									</div>
 
-								<span className="w-full h-[1px] my-2 bg-border" />
+									<span className="w-full h-[1px] my-2 bg-border" />
 
-								<div className="w-full flex flex-wrap items-center justify-between gap-2">
-									<Button className="gap-2 grow" variant="secondary">
-										<HeartIcon className="w-4 h-4" />
-										Follow
-									</Button>
-									<Button className="gap-2 grow" variant="secondary">
-										<BookmarkIcon className="w-4 h-4" />
-										Save
-									</Button>
-									<Button className="gap-2" variant="secondary" size="icon">
-										<DotsHorizontalIcon className="w-4 h-4" />
-									</Button>
+									<div className="w-full flex flex-wrap items-center justify-between gap-2">
+										<Button className="gap-2 grow" variant="secondary">
+											<HeartIcon className="w-4 h-4" />
+											Follow
+										</Button>
+										<Button className="gap-2 grow" variant="secondary">
+											<BookmarkIcon className="w-4 h-4" />
+											Save
+										</Button>
+										<Button className="gap-2" variant="secondary" size="icon">
+											<DotsHorizontalIcon className="w-4 h-4" />
+										</Button>
+									</div>
 								</div>
-							</div>
-						</SidePanel>
+							</SidePanel>
 
-						<AdditionalProjectDetailsCard
-							className="hidden lg:flex"
-							projectData={projectData}
-							featuredProjectVersions={featuredProjectVersions}
-						/>
-					</div>
-					<PanelContent>
-						<Suspense fallback={<SuspenseFallback />}>
-							<PublishingChecklist />
-						</Suspense>
-						<ProjectDetailsNav
-							baseHref={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`}
-							user_id={session?.user_id}
-							members_id_list={projectData?.members?.map((member) => member.user.id) || []}
-						/>
-						<Outlet />
-						<AdditionalProjectDetailsCard
-							className="flex lg:hidden"
-							projectData={projectData}
-							featuredProjectVersions={featuredProjectVersions}
-						/>
-					</PanelContent>
-				</PanelLayout>
-			</div>
+							<AdditionalProjectDetailsCard
+								className="hidden lg:flex"
+								projectData={projectData}
+								featuredProjectVersions={featuredProjectVersions}
+							/>
+						</div>
+						<PanelContent>
+							<Suspense fallback={<SuspenseFallback />}>
+								<PublishingChecklist />
+							</Suspense>
+							<ProjectDetailsNav
+								baseHref={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`}
+								user_id={session?.user_id}
+								members_id_list={projectData?.members?.map((member) => member.user.id) || []}
+							/>
+							<Outlet />
+							<AdditionalProjectDetailsCard
+								className="flex lg:hidden"
+								projectData={projectData}
+								featuredProjectVersions={featuredProjectVersions}
+							/>
+						</PanelContent>
+					</PanelLayout>
+				</div>
+			)}
+
+			{fetchingProjectData ? <AbsolutePositionedSpinner /> : null}
 		</>
 	);
 }
@@ -264,7 +260,7 @@ const AdditionalProjectDetailsCard = ({
 								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 								<div
 									key={version.id}
-									className="w-full flex items-start justify-start p-4 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+									className="w-full flex items-start justify-start p-2 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
 									onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 										if (
 											// @ts-expect-error
@@ -286,8 +282,8 @@ const AdditionalProjectDetailsCard = ({
 										href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 										className="versionFileDownloadLink"
 									>
-										<Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2">
-											<DownloadIcon size="1.15rem" />
+										<Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2 rounded-lg">
+											<DownloadIcon size="1.1rem" />
 										</Button>
 									</a>
 
@@ -298,18 +294,13 @@ const AdditionalProjectDetailsCard = ({
 											}/version/${version.url_slug}#project-page-nav`}
 											className="versionPageLink w-fit"
 										>
-											<p className="text-lg leading-tight font-semibold text-foreground-muted">
+											<p className="text-lg leading-none font-semibold text-foreground-muted">
 												{version.version_title}
 											</p>
 										</Link>
-										<div className="flex flex-wrap gap-x-2 gap-1">
-											<p className="text-foreground-muted leading-none">
-												{version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
-											</p>
-											<p className="text-foreground-muted leading-none">
-												{FormatVersionsList(version.supported_game_versions)}
-											</p>
-										</div>
+										<p className="text-foreground-muted leading-none text-pretty">
+											{`${version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
+										</p>
 										<ReleaseChannelIndicator release_channel={version.release_channel} />
 									</div>
 								</div>
@@ -392,7 +383,7 @@ const ProjectDetailsNav = ({
 
 	return (
 		<nav
-			className="w-full flex flex-wrap items-center justify-betweens bg-background-shallow py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border-hicontrast/25 dark:border-border"
+			className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border dark:border-border"
 			id="project-page-nav"
 		>
 			<ul className="w-fit grow flex flex-wrap gap-x-4">
@@ -415,7 +406,7 @@ const ProjectDetailsNav = ({
 
 			{isProjectMember === true && (
 				<Link to={`${baseHref}/settings`}>
-					<Button className="gap-2 hover:bg-background" variant={"ghost"} tabIndex={-1}>
+					<Button className="gap-2" variant={"ghost"} tabIndex={-1}>
 						<GearIcon size="1.25rem" />
 						Settings
 					</Button>

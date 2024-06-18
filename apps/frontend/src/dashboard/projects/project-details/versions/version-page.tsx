@@ -21,10 +21,10 @@ import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import NotFoundPage from "@/src/not-found";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import type { ProjectVersionData } from "@/types";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { FileIcon, StarIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, formatDate, parseFileSize } from "@root/lib/utils";
+import type { ProjectVersionData } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../layout";
@@ -229,12 +229,12 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 											) : null}
 										</div>
 
-										<Link to={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
+										<a href={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
 											<Button className="gap-2" tabIndex={-1}>
 												<DownloadIcon size="1.15rem" />
 												Download
 											</Button>
-										</Link>
+										</a>
 									</div>
 								);
 							})}
@@ -310,7 +310,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 									<div className="w-full flex items-center justify-start">
 										<CopyBtn
 											text={versionData.versions[0].id}
-											label={`...${versionData.versions[0].id.slice(-10)}`}
+											label={`${versionData.versions[0].id.slice(0)}`}
+											className="px-1"
 											labelClassName="text-foreground-muted"
 										/>
 									</div>

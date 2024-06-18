@@ -77,7 +77,7 @@ export default function HomePage() {
 			<section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
 				<BrandIcon size="16rem" className="text-accent-foreground" />
 				<div className="w-full flex flex-col items-center justify-center">
-					<h1 className="font-frijole text-2xl lg:text-4xl text-center text-foreground">Cosmic Reach Mod Manager</h1>
+					<h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">Cosmic Reach Mod Manager</h1>
 
 					<h2 className="h-10 lg:h-14 mb-2 overflow-hidden">
 						<span className="hero_section_showcase flex flex-col items-center justify-center">
@@ -99,17 +99,17 @@ export default function HomePage() {
 
 					<div className="flex flex-col items-center justify-center gap-2">
 						<h2 className="w-full text-center flex flex-wrap items-center justify-center text-xl lg:text-2xl text-foreground-muted">
-							The best place for your
+							The best place for your&nbsp;
 							<a
 								href="https://finalforeach.itch.io/cosmic-reach"
 								target="_blank"
 								rel="noreferrer"
 								aria-label={"Cosmic Reach"}
-								className="text-accent-foreground"
+								className="text-accent-foreground underline-offset-3 hover:underline"
 							>
-								&nbsp;Cosmic Reach&nbsp;
-							</a>{" "}
-							mods.
+								Cosmic Reach
+							</a>
+							&nbsp;mods.
 						</h2>
 						<h2 className="text-xl lg:text-2xl flex text-center text-foreground-muted">
 							Discover, play, and create content, all in one spot.

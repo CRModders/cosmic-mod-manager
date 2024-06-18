@@ -13,23 +13,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CubeLoader } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { ContentWrapperCard } from "@/src/settings/panel";
-import type { ProjectVersionData } from "@/types";
 import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import type { ProjectVersionData } from "@root/types";
 import { ReleaseChannels } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const EditVersionPage = ({ projectType }: { projectType: string }) => {
 	const { projectUrlSlug, versionUrlSlug } = useParams();
+	const [pageInitialized, setPageInitialized] = useState(false);
 	const [versionData, setVersionData] = useState<ProjectVersionData | null | undefined>(undefined);
 
 	const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions } = useContext(Projectcontext);
@@ -140,7 +141,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 				navigate(constructedUrl);
 			}
 		}
-		if (versionData?.id) {
+		if (versionData?.id && pageInitialized === false) {
 			const versionDetails = versionData?.versions[0];
 			setVersionName(versionDetails.version_title);
 			setChangelog(versionDetails.changelog);
@@ -148,6 +149,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			setReleaseChannel(CapitalizeAndFormatString(versionDetails.release_channel) as ReleaseChannels);
 			setLoaders(versionDetails.supported_loaders);
 			setSupportedGameVersions(versionDetails.supported_game_versions);
+
+			setPageInitialized(true);
 		}
 	}, [versionData]);
 
@@ -155,16 +158,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 		return null;
 	}
 
-	if (versionData === undefined) {
-		return (
-			<div className="w-full flex items-center justify-center py-8">
-				<CubeLoader size="lg" />
-			</div>
-		);
-	}
-
 	return (
-		<div className="w-full flex flex-col gap-4 items-start justify-center">
+		<div className="w-full flex flex-col gap-4 items-start justify-center relative">
 			<ContentWrapperCard>
 				<div className="w-full px-1">
 					<Breadcrumb>
@@ -197,14 +192,12 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
 					<div className="flex flex-wrap gap-4 items-center justify-start">
 						<Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
-							{loading === true ? <CubeLoader size="xs" /> : <SaveIcon className="w-4 h-4" />}
+							<SaveIcon className="w-4 h-4" />
 							Save
 						</Button>
 
 						<Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
-							{loading === true ? (
-								<CubeLoader size="xs" />
-							) : versionData?.versions[0].is_featured === true ? (
+							{versionData?.versions[0].is_featured === true ? (
 								<StarFilledIcon className="w-4 h-4" />
 							) : (
 								<StarIcon className="w-4 h-4" />
@@ -354,6 +347,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 					</div>
 				</ContentWrapperCard>
 			</div>
+
+			{loading ? <AbsolutePositionedSpinner /> : null}
 		</div>
 	);
 };

@@ -72,9 +72,16 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
 					href="#gradient-5"
 				/>
 				<linearGradient id="gradient-5">
-					<stop className="text-[#f43f5e] dark:text-[#f43f5e]" stopColor="currentColor" offset="0" />
-					<stop className="text-[#e11d48] dark:text-[#e11d48]" stopColor="currentColor" offset="0.468" />
-					<stop className="text-[#9f1239] dark:text-[#9f1239]" stopColor="currentColor" offset="1" />
+					<stop
+						className="text-[hsl(var(--accent-color-hue),_77%,_50%)] dark:text-[hsla(var(--accent-color-hue),_95%,_71%)]"
+						stopColor="currentColor"
+						offset="0"
+					/>
+					<stop
+						className="text-[hsl(var(--accent-color-hue),_83%,_41%)] dark:text-[hsl(var(--accent-color-hue),_77%,_50%)]"
+						stopColor="currentColor"
+						offset="1"
+					/>
 				</linearGradient>
 				<linearGradient
 					id="gradient-5-1"
@@ -506,7 +513,6 @@ export const DiscordIcon: React.FC<IconSvgProps> = ({ size, width, height, class
 
 export const LogoutIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
-		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 24 24"
@@ -515,13 +521,14 @@ export const LogoutIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 			strokeWidth="2"
 			strokeLinecap="round"
 			strokeLinejoin="round"
+			aria-hidden={true}
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
 			<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
 			<polyline points="16 17 21 12 16 7" />
-			<line x1="21" y1="12" x2="9" y2="12" />
+			<line x1="21" x2="9" y1="12" y2="12" />
 		</svg>
 	);
 };
@@ -602,33 +609,21 @@ export const GitlabIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 
 export const GearIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
 	return (
-		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 256 256"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			aria-hidden={true}
 			width={size || width || DefaultSvgSize}
 			height={size || height || DefaultSvgSize}
 			{...props}
 		>
-			<rect width="256" height="256" fill="none" />
-			<circle
-				cx="128"
-				cy="128"
-				r="40"
-				fill="none"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="16"
-			/>
-			<path
-				d="M130.05,206.11c-1.34,0-2.69,0-4,0L94,224a104.61,104.61,0,0,1-34.11-19.2l-.12-36c-.71-1.12-1.38-2.25-2-3.41L25.9,147.24a99.15,99.15,0,0,1,0-38.46l31.84-18.1c.65-1.15,1.32-2.29,2-3.41l.16-36A104.58,104.58,0,0,1,94,32l32,17.89c1.34,0,2.69,0,4,0L162,32a104.61,104.61,0,0,1,34.11,19.2l.12,36c.71,1.12,1.38,2.25,2,3.41l31.85,18.14a99.15,99.15,0,0,1,0,38.46l-31.84,18.1c-.65,1.15-1.32,2.29-2,3.41l-.16,36A104.58,104.58,0,0,1,162,224Z"
-				fill="none"
-				stroke="currentColor"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				strokeWidth="16"
-			/>
+			<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+			<circle cx="12" cy="12" r="3" />
 		</svg>
 	);
 };
@@ -676,7 +671,7 @@ export const PersonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
-			strokeWidth="3"
+			strokeWidth="2.2"
 			strokeLinecap="round"
 			strokeLinejoin="round"
 			width={size || width || DefaultSvgSize}
@@ -1006,7 +1001,7 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="24"
+				strokeWidth="20"
 			/>
 			<line
 				x1="128"
@@ -1017,7 +1012,7 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="24"
+				strokeWidth="20"
 			/>
 			<path
 				d="M160,176H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H184a16,16,0,0,1,16,16V80"
@@ -1025,7 +1020,7 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="24"
+				strokeWidth="20"
 			/>
 			<line
 				x1="192"
@@ -1036,7 +1031,7 @@ export const DevicesIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pr
 				stroke="currentColor"
 				strokeLinecap="round"
 				strokeLinejoin="round"
-				strokeWidth="24"
+				strokeWidth="20"
 			/>
 		</svg>
 	);
@@ -1638,6 +1633,27 @@ export const PlusIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 		>
 			<path d="M5 12h14" />
 			<path d="M12 5v14" />
+		</svg>
+	);
+};
+
+export const CheckIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+	return (
+		<svg
+			data-v-94bd792d=""
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+			aria-hidden="true"
+			width={size || width || DefaultSvgSize}
+			height={size || height || DefaultSvgSize}
+			{...props}
+		>
+			<path d="M20 6 9 17l-5-5" />
 		</svg>
 	);
 };
