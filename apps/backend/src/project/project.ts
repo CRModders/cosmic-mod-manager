@@ -156,6 +156,8 @@ projectRouter.get("/:projectSlug", async (c) => {
                 type: true,
                 tags: true,
                 featured_tags: true,
+                license: true,
+                license_url: true,
                 updated_on: true,
                 url_slug: true,
                 visibility: true,
@@ -202,6 +204,8 @@ projectRouter.get("/:projectSlug", async (c) => {
                     type: projectData.type,
                     tags: projectData.tags,
                     featured_tags: projectData.featured_tags,
+                    license: projectData.license,
+                    licenseUrl: projectData.license_url,
                     updated_on: projectData.updated_on,
                     url_slug: projectData.url_slug,
                     visibility: projectData.visibility,
@@ -573,6 +577,56 @@ projectRouter.post("/:projectSlug/update-tags", async (c) => {
     } catch (error) {
         console.error(error);
         return c.json({ message: "Intrnal server error" }, 500)
+    }
+})
+
+projectRouter.post("/:projectSlug/update-license", async (c) => {
+    try {
+        const body = await c.req.json();
+        const projectSlug = c.req.param("projectSlug");
+
+        const license = body?.license || "";
+        const licenseUrl = license ? body?.licenseUrl : "";
+
+        if (licenseUrl && !isValidUrl(licenseUrl)) return c.json({ message: "Invalid license url" }, 400);
+
+        const [user] = await getUserSession(c);
+        if (!user?.id) return c.json({ message: "Unauthenticated request" }, 401);
+
+        const project = await prisma.project.findUnique({
+            where: {
+                url_slug: projectSlug
+            },
+            select: {
+                id: true,
+                members: {
+                    where: {
+                        user_id: user.id,
+                        role: UserRolesInProject.OWNER
+                    },
+                    select: {
+                        user_id: true
+                    }
+                }
+            }
+        });
+
+        if (!project?.members?.[0]?.user_id) return c.json({ message: "Project doesn't exist or you don't have to access to edit the project details." });
+
+        await prisma.project.update({
+            where: {
+                id: project.id,
+            },
+            data: {
+                license: license,
+                license_url: licenseUrl
+            }
+        })
+
+        return c.json({ message: "Successfully update license details" });
+    } catch (error) {
+        console.error(error);
+        return c.json({ message: "Internal server error" }, 500)
     }
 })
 

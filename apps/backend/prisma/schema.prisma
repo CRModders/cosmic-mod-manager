@@ -115,6 +115,8 @@ model Project {
     type            String[]              @default(["PROJECT"])
     tags            String[]
     featured_tags   String[]
+    license         String?
+    license_url     String?
     summary         String?               @db.VarChar(324)
     description     String?               @db.VarChar(65256)
     created_on      DateTime              @default(now())

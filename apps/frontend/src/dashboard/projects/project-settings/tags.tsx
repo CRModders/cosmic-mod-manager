@@ -166,7 +166,7 @@ const TagsSettingsPage = () => {
 												"flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer",
 												!featuredTags.has(category) &&
 													Array.from(featuredTags).length >= maxFeaturedProjectTags &&
-													"cursor-not-allowed",
+													"cursor-not-allowed opacity-50 hover:opacity-50",
 											)}
 										>
 											<Checkbox

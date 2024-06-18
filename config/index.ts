@@ -1,6 +1,4 @@
 export const siteTitle = "Cosmic Reach Mod Manager";
-export const serverUrl = "http://localhost:5500";
-export const frontendUrl = "http://localhost:3000";
 
 // Route types
 export const maxNameLength = 32;

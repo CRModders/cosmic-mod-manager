@@ -29,6 +29,8 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../layout";
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 export default function ProjectVersionPage({ projectType }: { projectType: string }) {
 	const { projectUrlSlug, versionUrlSlug } = useParams();
 	const [versionData, setVersionData] = useState<ProjectVersionData | null>(null);
@@ -135,11 +137,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 				</div>
 
 				<div className="flex flex-wrap gap-x-4 gap-y-3">
-					<a
-						href={`${window.location.origin}/api/file/${encodeURIComponent(
-							versionData?.versions[0].files[0].file_url,
-						)}`}
-					>
+					<a href={`${serverUrl}/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
 						<Button className="gap-2" tabIndex={-1}>
 							<DownloadIcon size="1.15rem" />
 							Download
@@ -229,7 +227,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 											) : null}
 										</div>
 
-										<a href={`/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
+										<a href={`${serverUrl}/api/file/${encodeURIComponent(versionData?.versions[0].files[0].file_url)}`}>
 											<Button className="gap-2" tabIndex={-1}>
 												<DownloadIcon size="1.15rem" />
 												Download

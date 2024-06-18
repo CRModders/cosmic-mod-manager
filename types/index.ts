@@ -112,6 +112,8 @@ export type ProjectDataType = {
     type: string[];
     tags: string[];
     featured_tags: string[];
+    license: string;
+    licenseUrl: string;
     updated_on: Date;
     created_on: Date;
     url_slug: string;

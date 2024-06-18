@@ -39,6 +39,7 @@ import PublishingChecklist from "../publishing-checklist";
 import "./../styles.css";
 
 const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}";
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 export default function ProjectDetailsLayout() {
 	const { projectData, fetchingProjectData, featuredProjectVersions } = useContext(Projectcontext);
@@ -279,7 +280,7 @@ const AdditionalProjectDetailsCard = ({
 									}}
 								>
 									<a
-										href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+										href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 										className="versionFileDownloadLink"
 									>
 										<Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2 rounded-lg">
@@ -330,7 +331,22 @@ const AdditionalProjectDetailsCard = ({
 				<h2 className="text-lg font-semibold text-foreground">Technical information</h2>
 				<div className="w-full grid grid-cols-2">
 					<span className="font-semibold text-foreground-muted">License</span>
-					<span className="text-foreground-muted">Unknown</span>
+					{projectData?.license ? (
+						projectData?.licenseUrl ? (
+							<a
+								rel="noreferrer"
+								target="_blank"
+								href={projectData.licenseUrl}
+								className="w-fit text-blue-500 dark:text-blue-400 hover:underline underline-offset-2"
+							>
+								{projectData.license}
+							</a>
+						) : (
+							<span className="text-foreground-muted">{projectData?.license}</span>
+						)
+					) : (
+						<span className="text-foreground-muted">Unknown</span>
+					)}
 				</div>
 				<div className="grid grid-cols-2">
 					<span className="font-semibold text-foreground-muted">Client side</span>

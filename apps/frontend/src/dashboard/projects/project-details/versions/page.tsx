@@ -12,6 +12,8 @@ import { CapitalizeAndFormatString, createURLSafeSlug, formatDate } from "@root/
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const VersionListPage = ({ projectType }: { projectType: string }) => {
 	const isAProjectMember = useIsUseAProjectMember();
 	const { projectData } = useContext(Projectcontext);
@@ -106,7 +108,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 												<TableCell className="align-top">
 													<div className="flex items-start justify-center py-1.5">
 														<a
-															href={`/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+															href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
 															className="noClickRedirect flex h-fit items-center justify-center"
 														>
 															<Button className="h-fit w-fit p-2 rounded-lg" size={"icon"} tabIndex={-1}>

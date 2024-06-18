@@ -150,7 +150,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 			setVersionName(versionDetails.version_title);
 			setChangelog(versionDetails.changelog);
 			setVersionNumber(versionDetails.version_number);
-			setReleaseChannel(CapitalizeAndFormatString(versionDetails.release_channel) as ReleaseChannels);
+			setReleaseChannel(versionDetails.release_channel as ReleaseChannels);
 			setLoaders(versionDetails.supported_loaders);
 			setSupportedGameVersions(versionDetails.supported_game_versions);
 
@@ -283,13 +283,14 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 							Release channel
 						</Label>
 						<Select
-							defaultValue={versionData?.versions[0].release_channel || releaseChannel}
+							value={releaseChannel}
 							onValueChange={(value) => {
+								console.log(value);
 								setReleaseChannel(value as ReleaseChannels);
 							}}
 						>
 							<SelectTrigger className="w-full min-w-[24ch]" id="version-release-channel-selector">
-								<SelectValue placeholder="Theme" />
+								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
 								{ReleaseChannelsList.map((channel) => {

@@ -40,6 +40,12 @@ export type CategoryType = {
     header: TagHeaderTypes
 }
 
+export type LicenseDataType = {
+    name?: string;
+    id: string;
+    requiresOnlyOrLater?: boolean;
+}
+
 export const Loaders = [
     {
         icon: "",
@@ -583,4 +589,75 @@ export const GameVersions = [
     { version: '0.1.3', releaseType: ReleaseChannels.RELEASE },
     { version: '0.1.2', releaseType: ReleaseChannels.RELEASE },
     { version: '0.1.1', releaseType: ReleaseChannels.RELEASE }
+]
+
+export const LicensesList = [
+    { name: 'Custom', id: 'CUSTOM' },
+    {
+        name: 'All Rights Reserved/No License',
+        id: 'All-Rights-Reserved',
+    },
+    { name: 'Apache License 2.0', id: 'Apache-2.0' },
+    {
+        name: 'BSD 2-Clause "Simplified" License',
+        id: 'BSD-2-Clause',
+    },
+    {
+        name: 'BSD 3-Clause "New" or "Revised" License',
+        id: 'BSD-3-Clause',
+    },
+    {
+        name: 'CC Zero (Public Domain equivalent)',
+        id: 'CC0-1.0',
+    },
+    { name: 'CC-BY 4.0', id: 'CC-BY-4.0' },
+    {
+        name: 'CC-BY-SA 4.0',
+        id: 'CC-BY-SA-4.0',
+    },
+    {
+        name: 'CC-BY-NC 4.0',
+        id: 'CC-BY-NC-4.0',
+    },
+    {
+        name: 'CC-BY-NC-SA 4.0',
+        id: 'CC-BY-NC-SA-4.0',
+    },
+    {
+        name: 'CC-BY-ND 4.0',
+        id: 'CC-BY-ND-4.0',
+    },
+    {
+        name: 'CC-BY-NC-ND 4.0',
+        id: 'CC-BY-NC-ND-4.0',
+    },
+    {
+        name: 'GNU Affero General Public License v3',
+        id: 'AGPL-3.0',
+        requiresOnlyOrLater: true,
+    },
+    {
+        name: 'GNU Lesser General Public License v2.1',
+        id: 'LGPL-2.1',
+        requiresOnlyOrLater: true,
+    },
+    {
+        name: 'GNU Lesser General Public License v3',
+        id: 'LGPL-3.0',
+        requiresOnlyOrLater: true,
+    },
+    {
+        name: 'GNU General Public License v2',
+        id: 'GPL-2.0',
+        requiresOnlyOrLater: true,
+    },
+    {
+        name: 'GNU General Public License v3',
+        id: 'GPL-3.0',
+        requiresOnlyOrLater: true,
+    },
+    { name: 'ISC License', id: 'ISC' },
+    { name: 'MIT License', id: 'MIT' },
+    { name: 'Mozilla Public License 2.0', id: 'MPL-2.0' },
+    { name: 'zlib License', id: 'Zlib' },
 ]
