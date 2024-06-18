@@ -78,7 +78,7 @@ const LicenseSettingsPage = () => {
 				isCustomLicense = true;
 			}
 
-			if (isCustomLicense === true) {
+			if (isCustomLicense === true && projectData.license) {
 				form.setValue("customLicense", projectData?.license || "");
 				form.setValue("license", "CUSTOM");
 				setIsCustomLicense(true);
