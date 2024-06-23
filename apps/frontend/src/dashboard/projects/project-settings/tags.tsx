@@ -145,6 +145,9 @@ const TagsSettingsPage = () => {
 								);
 							})}
 						</div>
+						{!GetValidProjectCategories(projectData.type).length && (
+							<p className="w-full flex items-start justify-start">Upload a version first in order to select tags.</p>
+						)}
 					</div>
 
 					<div className="w-full flex flex-col items-start justify-start mt-2">

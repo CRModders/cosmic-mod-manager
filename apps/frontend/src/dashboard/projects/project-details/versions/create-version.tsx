@@ -153,7 +153,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 								<PlusIcon className="w-5 h-5" />
 								Create
 							</Button>
-							<Link to={`/${projectType}/${projectUrlSlug}/versions`}>
+							<Link to={`/${projectType}/${projectUrlSlug}/versions`} className=" rounded-lg">
 								<Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
 									<Cross1Icon />
 									Cancel
@@ -199,7 +199,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 									)}
 								</div>
 
-								<Label htmlFor="version-main-file-input">
+								<Label htmlFor="version-main-file-input" tabIndex={0}>
 									<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
 										Choose file
 									</p>

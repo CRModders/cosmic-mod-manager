@@ -201,28 +201,34 @@ authRouter.post("/signin/credentials", async (c) => {
 
 // Sessions stuff
 authRouter.get("/session/validate", async (c) => {
-    const session = getCookie(c, "auth-session");
-    if (!session) {
-        return c.json({
-            isValid: false,
+    try {
+        const session = getCookie(c, "auth-session");
+        if (!session) {
+            return c.json({
+                isValid: false,
+            });
+        }
+
+        const sessionData = JSON.parse(session) as LocalUserSession;
+        const { isValid, user } = await ValidateUserSession(sessionData);
+
+        if (isValid !== true) {
+            deleteCookie(c, "auth-session");
+        }
+
+        setCookie(c, "auth-session", JSON.stringify(user), {
+            maxAge: userSessionValidity,
+            secure: secureCookie,
+            httpOnly: secureCookie,
+            domain: process.env.COOKIE_ACCESS_DOMAIN,
         });
+
+        return c.json({ isValid: isValid, session: user });
+
+    } catch (error) {
+        console.error(error);
+        return c.json({ message: "Internal server error" }, 500)
     }
-
-    const sessionData = JSON.parse(session) as LocalUserSession;
-    const { isValid, user } = await ValidateUserSession(sessionData);
-
-    if (isValid !== true) {
-        deleteCookie(c, "auth-session");
-    }
-
-    setCookie(c, "auth-session", JSON.stringify(user), {
-        maxAge: userSessionValidity,
-        secure: secureCookie,
-        httpOnly: secureCookie,
-        domain: process.env.COOKIE_ACCESS_DOMAIN,
-    });
-
-    return c.json({ isValid: isValid, session: user });
 });
 
 authRouter.post("/session/logout", async (c) => {

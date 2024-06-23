@@ -8,7 +8,7 @@ import {
     minProjectNameLength
 } from "@root/config";
 import { GetProjectVisibility, GetUsersProjectMembership, VerifySelectedCategories, createURLSafeSlug, isValidString, isValidUrl } from "@root/lib/utils";
-import { ProjectVisibility, UserRolesInProject, type ProjectDataType } from "@root/types";
+import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject, type ProjectDataType } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { deleteAllProjectFiles } from "../helpers/storage";
@@ -173,13 +173,14 @@ projectRouter.get("/:projectSlug", async (c) => {
                         },
                         role: true,
                         role_title: true,
+                        permissions: true,
                     },
                 },
             },
         });
 
         if (!projectData?.id) {
-            return c.json({ message: "Not found" }, 404);
+            return c.json({ message: "Project not found" }, 404);
         }
 
         const UsersProjectMembership = GetUsersProjectMembership(
@@ -234,12 +235,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
         const urlSafeUrlSlug = createURLSafeSlug(url_slug.value);
 
         if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
-            return c.json(
-                {
-                    message: "Missing required data",
-                },
-                400,
-            );
+            return c.json({ message: "Missing required data", }, 400);
         }
 
         if (
@@ -247,22 +243,12 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             !url_slug.isValid ||
             !summary.isValid
         ) {
-            return c.json(
-                {
-                    message: "Length check failed",
-                },
-                400,
-            );
+            return c.json({ message: "Length check failed", }, 400);
         }
 
         const [user] = await getUserSession(c);
         if (!user?.id) {
-            return c.json(
-                {
-                    message: "Unauthenticated request",
-                },
-                403,
-            );
+            return c.json({ message: "Unauthenticated request" }, 403);
         }
 
         const project = await prisma.project.findUnique({
@@ -273,7 +259,17 @@ projectRouter.post("/:projectSlug/update", async (c) => {
                 id: true,
                 members: {
                     where: {
-                        role: "OWNER",
+                        user_id: user.id,
+                        OR: [
+                            {
+                                role: UserRolesInProject.OWNER
+                            },
+                            {
+                                permissions: {
+                                    has: MemberPermissionsInProject.EDIT_DETAILS
+                                }
+                            }
+                        ]
                     },
                     select: {
                         user_id: true,
@@ -282,17 +278,8 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             },
         });
 
-        if (!project?.id) {
-            return c.json({ message: "Not found" }, 404);
-        }
-
-        if (project?.members?.[0]?.user_id && project.members[0].user_id !== user.id) {
-            return c.json(
-                {
-                    message: "You don't have the permission to update the project details",
-                },
-                403,
-            );
+        if (project?.members?.[0]?.user_id) {
+            return c.json({ message: "The project doesn't exist or you don't have the permission to update the project details" }, 403);
         }
 
         const existingProjectWithSameUrlSlug = await prisma.project.findUnique({
@@ -302,12 +289,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
         });
 
         if (existingProjectWithSameUrlSlug?.id && existingProjectWithSameUrlSlug.id !== project.id) {
-            return c.json(
-                {
-                    message: "That url slug is already taken",
-                },
-                400,
-            );
+            return c.json({ message: "That url slug is already taken" }, 400);
         }
 
         await prisma.project.update({
@@ -333,12 +315,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
         });
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                message: "Internal server error",
-            },
-            500,
-        );
+        return c.json({ message: "Internal server error" }, 500);
     }
 });
 
@@ -346,29 +323,28 @@ projectRouter.get("/:projectSlug/delete", async (c) => {
     try {
         const [user] = await getUserSession(c);
         const projectSlug = c.req.param("projectSlug");
-        if (!user?.id || !projectSlug) {
-            return c.json({ message: "Invalid request" }, 400);
-        }
+        if (!user?.id || !projectSlug) return c.json({ message: "Invalid request" }, 400);
 
         const project = await prisma.project.findUnique({
-            where: {
-                url_slug: projectSlug,
-            },
+            where: { url_slug: projectSlug },
             select: {
                 id: true,
                 members: {
                     where: {
                         user_id: user.id,
-                        role: UserRolesInProject.OWNER,
+                        OR: [
+                            { role: UserRolesInProject.OWNER },
+                            { permissions: { has: MemberPermissionsInProject.DELETE_PROJECT } }
+                        ]
                     },
-                    select: {
-                        user_id: true,
-                    },
+                    select: { user_id: true },
                 },
             },
         });
 
-        if (!project?.id) return c.json({ message: "Not found" }, 404);
+        if (!project?.members?.[0]?.user_id) {
+            return c.json({ message: "The project doesn't exist or you don't have the permission to delete the project" }, 400)
+        }
 
         await prisma.project.delete({
             where: {
@@ -401,18 +377,17 @@ projectRouter.post("/:projectSlug/update-description", async (c) => {
         }
 
         const project = await prisma.project.findUnique({
-            where: {
-                url_slug: projectSlug,
-            },
+            where: { url_slug: projectSlug },
             select: {
                 members: {
                     where: {
                         user_id: user.id,
-                        role: UserRolesInProject.OWNER,
+                        OR: [
+                            { role: UserRolesInProject.OWNER },
+                            { permissions: { has: MemberPermissionsInProject.EDIT_DESCRIPTION } }
+                        ]
                     },
-                    select: {
-                        user_id: true,
-                    },
+                    select: { user_id: true },
                 },
                 id: true,
             },
@@ -423,23 +398,14 @@ projectRouter.post("/:projectSlug/update-description", async (c) => {
         }
 
         await prisma.project.update({
-            where: {
-                id: project.id,
-            },
-            data: {
-                description: description,
-            },
+            where: { id: project.id },
+            data: { description: description },
         });
 
         return c.json({ message: "Description updated" });
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                message: "Internal server error",
-            },
-            500,
-        );
+        return c.json({ message: "Internal server error" }, 500);
     }
 });
 

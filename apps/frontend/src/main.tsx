@@ -43,6 +43,7 @@ const TagsSettingsPage = lazy(() => import("./dashboard/projects/project-setting
 const HomePage = lazy(() => import("@/src/home"));
 const Sessions = lazy(() => import("@/src/settings/session/page"));
 const LicensePage = lazy(() => import("@/src/dashboard/projects/project-settings/license"));
+const MembersSettingsPage = lazy(() => import("@/src/dashboard/projects/project-settings/members"));
 
 const projectRoute = (project_type: string) => {
 	return {
@@ -176,6 +177,14 @@ const projectRoute = (project_type: string) => {
 								element: (
 									<Suspense fallback={<SuspenseFallback />}>
 										<ProjectLinksSettings />
+									</Suspense>
+								),
+							},
+							{
+								path: "members",
+								element: (
+									<Suspense fallback={<SuspenseFallback />}>
+										<MembersSettingsPage />
 									</Suspense>
 								),
 							},

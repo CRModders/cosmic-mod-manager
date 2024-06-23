@@ -59,10 +59,23 @@ export enum UserRolesInProject {
     OWNER = "OWNER"
 }
 
-export enum UserROlesInOrganisation {
+export enum UserRolesInOrganisation {
     OWNER = "OWNER",
     MODERATOR = "MODERATOR",
     MEMBER = "MEMBER",
+}
+
+export enum MemberPermissionsInProject {
+    UPLOAD_VERSION = "UPLOAD_VERSION",
+    DELETE_VERSION = "DELETE_VERSION",
+    EDIT_DETAILS = "EDIT_DETAILS",
+    EDIT_DESCRIPTION = "EDIT_DESCRIPTION",
+    MANAGE_INVITES = "MANAGE_INVITES",
+    REMOVE_MEMBER = "REMOVE_MEMBER",
+    EDIT_MEMBER = "EDIT_MEMBER",
+    DELETE_PROJECT = "DELETE_PROJECT",
+    VIEW_ANALYTICS = "VIEW_ANALYTICS",
+    VIEW_REVENUE = "VIEW_REVENUE"
 }
 
 export interface LocalUserSession {
@@ -127,6 +140,7 @@ export type ProjectDataType = {
     members?: {
         role: string;
         role_title: string;
+        permissions: String[];
         user: {
             id: string;
             avatar_image?: string;

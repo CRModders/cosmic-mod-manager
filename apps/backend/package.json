@@ -1,21 +1,21 @@
 {
-	"name": "backend",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-		"dev": "bun run --hot src/index.ts",
-		"start": "bunx prisma generate && bun run src/index.ts"
-	},
-	"dependencies": {
-		"@prisma/client": "^5.14.0",
-		"hono": "^4.3.7",
-		"nodemailer": "^6.9.13",
-		"ua-parser-js": "^1.0.37"
-	},
-	"devDependencies": {
-		"@types/bun": "latest",
-		"@types/nodemailer": "^6.4.15",
-		"prisma": "^5.14.0"
-	}
+  "name": "backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "start": "bunx prisma generate && bun run src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "5.15.1",
+    "hono": "^4.3.7",
+    "nodemailer": "^6.9.13",
+    "ua-parser-js": "^1.0.37"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/nodemailer": "^6.4.15",
+    "prisma": "5.15.1"
+  }
 }

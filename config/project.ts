@@ -1,4 +1,4 @@
-import { LoaderSupportedFields, ProjectType, ProjectVisibility, ReleaseChannels, TagHeaderTypes } from "@root/types";
+import { LoaderSupportedFields, MemberPermissionsInProject, ProjectType, ProjectVisibility, ReleaseChannels, TagHeaderTypes } from "@root/types";
 
 export const ProjectTypes = [
     ProjectType.MOD,
@@ -22,6 +22,19 @@ export const ProjectVisibilityOptions = [
     ProjectVisibility.UNLISTED,
     ProjectVisibility.ARCHIVED,
 ];
+
+export const MemberPermissionsInProjectList = [
+    MemberPermissionsInProject.UPLOAD_VERSION,
+    MemberPermissionsInProject.DELETE_VERSION,
+    MemberPermissionsInProject.EDIT_DETAILS,
+    MemberPermissionsInProject.EDIT_DESCRIPTION,
+    MemberPermissionsInProject.MANAGE_INVITES,
+    MemberPermissionsInProject.REMOVE_MEMBER,
+    MemberPermissionsInProject.EDIT_MEMBER,
+    MemberPermissionsInProject.DELETE_PROJECT,
+    MemberPermissionsInProject.VIEW_ANALYTICS,
+    MemberPermissionsInProject.VIEW_REVENUE,
+]
 
 export type LoaderType = {
     icon: string;
@@ -553,6 +566,7 @@ export const Categories: CategoryType[] = [
 ];
 
 export const GameVersions = [
+    { version: '0.1.37', releaseType: ReleaseChannels.RELEASE },
     { version: '0.1.36', releaseType: ReleaseChannels.RELEASE },
     { version: '0.1.35', releaseType: ReleaseChannels.RELEASE },
     { version: '0.1.34', releaseType: ReleaseChannels.RELEASE },

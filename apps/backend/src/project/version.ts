@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { maxChangelogLength, maxFileSize, maxProjectNameLength } from "@root/config";
 import { GetProjectLoadersList, GetProjectVersionReleaseChannel, GetUsersProjectMembership, GetValidProjectCategories, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
-import { ProjectVisibility } from "@root/types";
+import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { InferProjectTypeFromLoaders } from "../helpers/project";
@@ -442,7 +442,16 @@ versionRouter.post("/create", async (c) => {
                 type: true,
                 members: {
                     where: {
-                        user_id: user.id
+                        user_id: user.id,
+                        OR: [
+                            {
+                                role: UserRolesInProject.OWNER
+                            }, {
+                                permissions: {
+                                    has: MemberPermissionsInProject.UPLOAD_VERSION
+                                }
+                            }
+                        ]
                     },
                     select: {
                         id: true,
@@ -456,17 +465,8 @@ versionRouter.post("/create", async (c) => {
             },
         });
 
-        if (!project?.id) {
-            return c.json({ message: "Not found" }, 404);
-        }
-
         if (!project?.members?.[0]?.id) {
-            return c.json(
-                {
-                    message: "Invalid request",
-                },
-                403,
-            );
+            return c.json({ message: "The project doesn't exist or you don't have the permission to upload versions in this project", }, 400);
         }
 
         const existingVersionWithSameUrlSlug = await prisma.projectVersion.findFirst({
@@ -588,6 +588,16 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
                 members: {
                     where: {
                         user_id: user?.id,
+                        OR: [
+                            {
+                                permissions: {
+                                    has: MemberPermissionsInProject.DELETE_VERSION
+                                }
+                            },
+                            {
+                                role: UserRolesInProject.OWNER
+                            }
+                        ]
                     },
                     select: {
                         id: true,
@@ -605,7 +615,7 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
             },
         });
 
-        if (project.members[0].user_id !== user.id) {
+        if (project?.members?.[0]?.user_id !== user.id) {
             return c.json({ message: "You don't have the permission to delete this project version" }, 403);
         }
 

@@ -210,20 +210,18 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 									<div
 										key={versionFile.id}
 										className={cn(
-											"w-full flex flex-wrap items-center justify-between px-6 py-3 gap-x-4 gap-y-2 rounded-lg border-2 border-border",
+											"w-full flex flex-wrap sm:flex-nowrap items-center justify-between px-6 py-3 gap-x-4 gap-y-2 rounded-lg border-2 border-border",
 											versionFile.is_primary === true && "bg-bg-hover",
 										)}
 									>
 										<div className="flex items-center gap-x-4 flex-wrap">
 											<div className="flex items-center justify-center gap-2">
 												<FileIcon className="w-5 h-5 text-foreground-muted" />
-												<p className="w-fit text-lg font-semibold text-foreground-muted mr-2">
-													{versionFile.file_name}
-												</p>
+												<p className="w-fit font-semibold text-foreground-muted mr-2">{versionFile.file_name}</p>
 											</div>
-											<span className="text-base text-foreground-muted">{parseFileSize(versionFile.file_size)}</span>
+											<span className="text-sm text-foreground-muted">{parseFileSize(versionFile.file_size)}</span>
 											{versionFile.is_primary ? (
-												<span className="text-base text-foreground-muted italic">Primary</span>
+												<span className="text-sm text-foreground-muted italic">Primary</span>
 											) : null}
 										</div>
 

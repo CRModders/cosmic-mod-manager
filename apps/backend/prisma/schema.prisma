@@ -174,6 +174,7 @@ model ProjectMember {
     project_id         String
     role               String           @default("MEMBER")
     role_title         String?          @default("Member") // A custom title given to that member by the project owner
+    permissions        String[]
     user               User             @relation(name: "Project Member", fields: [user_id], references: [id], onDelete: Cascade)
     project            Project          @relation(name: "Project", fields: [project_id], references: [id], onDelete: Cascade)
     published_versions ProjectVersion[] @relation(name: "version_publisher")

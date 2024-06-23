@@ -68,8 +68,8 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
 	}, [urlSearchParams]);
 
 	return (
-		<div className="w-full flex flex-col gap-2 items-center justify-center mt-2" id="all-versions">
-			{Pagination}
+		<div className="w-full flex flex-col gap-2 items-center justify-center" id="all-versions">
+			{Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
 			{allProjectVersions?.versions.length ? (
 				<ContentWrapperCard>
 					<div className="w-full flex flex-col gap-2 items-center justify-center">

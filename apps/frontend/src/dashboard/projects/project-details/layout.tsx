@@ -177,7 +177,7 @@ export const ProjectMember = ({
 					<h2 className="text-sm font-semibold text-foreground-muted leading-tight">{username}</h2>
 					{role === "OWNER" && (
 						<TooltipWrapper text="Project owner">
-							<CrownIcon size="1rem" className="text-orange-500 dark:text-orange-400" />
+							<CrownIcon size="0.85rem" className="text-orange-500 dark:text-orange-400" />
 						</TooltipWrapper>
 					)}
 				</div>
