@@ -44,333 +44,362 @@ const HomePage = lazy(() => import("@/src/home"));
 const Sessions = lazy(() => import("@/src/settings/session/page"));
 const LicensePage = lazy(() => import("@/src/dashboard/projects/project-settings/license"));
 const MembersSettingsPage = lazy(() => import("@/src/dashboard/projects/project-settings/members"));
+const SearchPagesSharedLayout = lazy(() => import("@/src/(search_pages)/layout"));
+const ModsSearchPage = lazy(() => import("@/src/(search_pages)/mods"));
 
 const projectRoute = (project_type: string) => {
-	return {
-		path: project_type,
-		element: <Outlet />,
-		children: [
-			{
-				path: "",
-				element: <NotFoundPage />,
-			},
-			{
-				path: ":projectUrlSlug",
-				element: (
-					<ProjectContextProvider>
-						<Outlet />
-					</ProjectContextProvider>
-				),
-				children: [
-					{
-						path: "",
-						element: <ProjectDetailsLayout />,
-						children: [
-							{
-								path: "",
-								element: <RedrectTo destinationUrl="description" />,
-							},
-							{
-								path: "description",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<ProjectDescription />
-									</Suspense>
-								),
-							},
-							{
-								path: "gallery",
-								element: <p>Project gallery</p>,
-							},
-							{
-								path: "changelog",
-								element: <p>Changelogs</p>,
-							},
-							{
-								path: "versions",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<VersionListPage projectType={project_type} />
-									</Suspense>
-								),
-							},
-							{
-								path: "version",
-								element: <Outlet />,
-								children: [
-									{
-										path: "create",
-										element: (
-											<Suspense fallback={<SuspenseFallback />}>
-												<CreateVersionPage projectType={project_type} />
-											</Suspense>
-										),
-									},
-									{
-										path: ":versionUrlSlug",
-										element: <Outlet />,
-										children: [
-											{
-												path: "",
-												element: (
-													<Suspense fallback={<SuspenseFallback />}>
-														<ProjectVersionPage projectType={project_type} />
-													</Suspense>
-												),
-											},
-											{
-												path: "edit",
-												element: (
-													<Suspense fallback={<SuspenseFallback />}>
-														<EditVersionPage projectType={project_type} />
-													</Suspense>
-												),
-											},
-										],
-									},
-								],
-							},
-						],
-					},
-					{
-						path: "settings",
-						element: <ProjectSettingsLayout projectType={project_type} />,
-						children: [
-							{
-								path: "",
-								element: <RedrectTo destinationUrl="general" />,
-							},
-							{
-								path: "general",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<GeneralProjectSettings />
-									</Suspense>
-								),
-							},
-							{
-								path: "tags",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<TagsSettingsPage />
-									</Suspense>
-								),
-							},
-							{
-								path: "description",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<ProjectDescriptSettingsPage />
-									</Suspense>
-								),
-							},
-							{
-								path: "license",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<LicensePage />
-									</Suspense>
-								),
-							},
-							{
-								path: "links",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<ProjectLinksSettings />
-									</Suspense>
-								),
-							},
-							{
-								path: "members",
-								element: (
-									<Suspense fallback={<SuspenseFallback />}>
-										<MembersSettingsPage />
-									</Suspense>
-								),
-							},
-						],
-					},
-				],
-			},
-		],
-	};
+    return {
+        path: project_type,
+        element: <Outlet />,
+        children: [
+            {
+                path: "",
+                element: <NotFoundPage />,
+            },
+            {
+                path: ":projectUrlSlug",
+                element: (
+                    <ProjectContextProvider>
+                        <Outlet />
+                    </ProjectContextProvider>
+                ),
+                children: [
+                    {
+                        path: "",
+                        element: <ProjectDetailsLayout />,
+                        children: [
+                            {
+                                path: "",
+                                element: <RedrectTo destinationUrl="description" />,
+                            },
+                            {
+                                path: "description",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <ProjectDescription />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "gallery",
+                                element: <p>Project gallery</p>,
+                            },
+                            {
+                                path: "changelog",
+                                element: <p>Changelogs</p>,
+                            },
+                            {
+                                path: "versions",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <VersionListPage projectType={project_type} />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "version",
+                                element: <Outlet />,
+                                children: [
+                                    {
+                                        path: "create",
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <CreateVersionPage projectType={project_type} />
+                                            </Suspense>
+                                        ),
+                                    },
+                                    {
+                                        path: ":versionUrlSlug",
+                                        element: <Outlet />,
+                                        children: [
+                                            {
+                                                path: "",
+                                                element: (
+                                                    <Suspense fallback={<SuspenseFallback />}>
+                                                        <ProjectVersionPage projectType={project_type} />
+                                                    </Suspense>
+                                                ),
+                                            },
+                                            {
+                                                path: "edit",
+                                                element: (
+                                                    <Suspense fallback={<SuspenseFallback />}>
+                                                        <EditVersionPage projectType={project_type} />
+                                                    </Suspense>
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        path: "settings",
+                        element: <ProjectSettingsLayout projectType={project_type} />,
+                        children: [
+                            {
+                                path: "",
+                                element: <RedrectTo destinationUrl="general" />,
+                            },
+                            {
+                                path: "general",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <GeneralProjectSettings />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "tags",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <TagsSettingsPage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "description",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <ProjectDescriptSettingsPage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "license",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <LicensePage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "links",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <ProjectLinksSettings />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "members",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <MembersSettingsPage />
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
 };
 
 const getProjectPageRoutes = () => {
-	const routePaths = ["project", ...ProjectTypes.map((project_type) => createURLSafeSlug(project_type).value)];
+    const routePaths = ["project", ...ProjectTypes.map((project_type) => createURLSafeSlug(project_type).value)];
+    const projectRouteType = projectRoute("a");
+    const list: (typeof projectRouteType)[] = [];
+    for (const project_type of routePaths) {
+        list.push(projectRoute(project_type));
+    }
 
-	const projectRouteType = projectRoute("a");
-
-	const list: (typeof projectRouteType)[] = [];
-
-	for (const project_type of routePaths) {
-		list.push(projectRoute(project_type));
-	}
-
-	return list;
+    return list;
 };
 
+const SearchPageRoutes = () => {
+    return {
+        path: "",
+        element: (
+            <Suspense fallback={<SuspenseFallback />}>
+                <SearchPagesSharedLayout />
+            </Suspense >
+        ),
+        children: [
+            {
+                path: "mods",
+                element: <ModsSearchPage />
+            },
+            {
+                path: "resource-packs",
+                element: <ModsSearchPage />
+            },
+            {
+                path: "modpacks",
+                element: <ModsSearchPage />
+            },
+            {
+                path: "shaders",
+                element: <ModsSearchPage />
+            },
+        ]
+    }
+}
+
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <RootLayout />,
-		children: [
-			{
-				path: "",
-				element: (
-					<Suspense fallback={<SuspenseFallback />}>
-						<HomePage />
-					</Suspense>
-				),
-			},
-			{
-				path: "login",
-				element: <LoginPageLayout />,
-				children: [
-					{
-						path: "",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<LoginPage />
-							</Suspense>
-						),
-					},
-				],
-			},
-			{
-				path: "signup",
-				element: <SignupPageLayout />,
-				children: [
-					{
-						path: "",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<SignupPage />
-							</Suspense>
-						),
-					},
-				],
-			},
-			{
-				path: "change-password",
-				element: <ChangePasswordPageLayout />,
-				children: [
-					{
-						path: "",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<ChangePasswordPage />
-							</Suspense>
-						),
-					},
-				],
-			},
-			{
-				path: "settings",
-				element: <SettingsPageLayout />,
-				children: [
-					{
-						path: "",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<SettingsPage />
-							</Suspense>
-						),
-					},
-					{
-						path: "account",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<AccountSettingsPage />
-							</Suspense>
-						),
-					},
-					{
-						path: "sessions",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<Sessions />
-							</Suspense>
-						),
-					},
-				],
-			},
-			{
-				path: "dashboard",
-				element: <DashboardPageLayout />,
-				children: [
-					{
-						path: "",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<DashboardPage />
-							</Suspense>
-						),
-					},
-					{
-						path: "overview",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<Overview />
-							</Suspense>
-						),
-					},
-					{
-						path: "notifications",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<Notifications />
-							</Suspense>
-						),
-					},
-					{
-						path: "reports",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<ReportsPage />
-							</Suspense>
-						),
-					},
-					{
-						path: "projects",
-						element: (
-							<Suspense fallback={<SuspenseFallback />}>
-								<Projects />
-							</Suspense>
-						),
-					},
-					{
-						path: "*",
-						element: <p>DASHBOARD_PAGE</p>,
-					},
-				],
-			},
-			...getProjectPageRoutes(),
-			{
-				path: "auth/callback/:authProvider",
-				element: <SignInCallbackPage />,
-			},
-			{
-				path: "verify-action",
-				element: (
-					<Suspense fallback={<SuspenseFallback />}>
-						<VerifyActionPage />
-					</Suspense>
-				),
-			},
-			{
-				path: "message",
-				element: <MessagePage />,
-			},
-			{
-				path: "*",
-				element: <NotFoundPage />,
-			},
-		],
-	},
+    {
+        path: "/",
+        element: <RootLayout />,
+        children: [
+            {
+                path: "",
+                element: (
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <HomePage />
+                    </Suspense>
+                ),
+            },
+            SearchPageRoutes(),
+            {
+                path: "login",
+                element: <LoginPageLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <LoginPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: "signup",
+                element: <SignupPageLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <SignupPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: "change-password",
+                element: <ChangePasswordPageLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ChangePasswordPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: "settings",
+                element: <SettingsPageLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <SettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "account",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <AccountSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "sessions",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <Sessions />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: "dashboard",
+                element: <DashboardPageLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <DashboardPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "overview",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <Overview />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "notifications",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <Notifications />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "reports",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ReportsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "projects",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <Projects />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "*",
+                        element: <p>DASHBOARD_PAGE</p>,
+                    },
+                ],
+            },
+            ...getProjectPageRoutes(),
+            {
+                path: "auth/callback/:authProvider",
+                element: <SignInCallbackPage />,
+            },
+            {
+                path: "verify-action",
+                element: (
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <VerifyActionPage />
+                    </Suspense>
+                ),
+            },
+            {
+                path: "message",
+                element: <MessagePage />,
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
+            },
+        ],
+    },
 ]);
 
 ReactDOM.createRoot(
-	// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	document.getElementById("root")!,
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    document.getElementById("root")!,
 ).render(<RouterProvider router={router} />);

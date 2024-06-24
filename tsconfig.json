@@ -5,6 +5,6 @@
                 "./*"
             ]
         },
-        "jsx": "react",
+        "jsx": "react"
     }
 }

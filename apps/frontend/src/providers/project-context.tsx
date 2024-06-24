@@ -1,114 +1,124 @@
 import { constructProjectPageUrl } from "@/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@root/types";
+import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/fetch";
 
 type ProjectContextType = {
-	fetchProjectData: (slug?: string) => Promise<void>;
-	fetchFeaturedProjectVersions: () => Promise<void>;
-	alterProjectSlug: (slug: string) => void;
-	projectData: ProjectDataType | null | undefined;
-	featuredProjectVersions: ProjectVersionsList | undefined | null;
-	allProjectVersions: ProjectVersionsList | undefined | null;
-	fetchAllProjectVersions: () => Promise<void>;
-	fetchingProjectData: boolean;
+    fetchProjectData: (slug?: string) => Promise<void>;
+    fetchFeaturedProjectVersions: () => Promise<void>;
+    alterProjectSlug: (slug: string) => void;
+    projectData: ProjectDataType | null | undefined;
+    featuredProjectVersions: ProjectVersionsList | undefined | null;
+    allProjectVersions: ProjectVersionsList | undefined | null;
+    fetchAllProjectVersions: () => Promise<void>;
+    fetchingProjectData: boolean;
 };
 
 export const Projectcontext = createContext<ProjectContextType>({
-	projectData: undefined,
-	featuredProjectVersions: undefined,
-	allProjectVersions: undefined,
-	fetchProjectData: async (slug?: string) => {
-		slug;
-	},
-	fetchFeaturedProjectVersions: async () => {},
-	fetchAllProjectVersions: async () => {},
-	fetchingProjectData: true,
-	alterProjectSlug: (slug: string) => {
-		slug;
-	},
+    projectData: undefined,
+    featuredProjectVersions: undefined,
+    allProjectVersions: undefined,
+    fetchProjectData: async (slug?: string) => { slug },
+    fetchFeaturedProjectVersions: async () => { },
+    fetchAllProjectVersions: async () => { },
+    fetchingProjectData: true,
+    alterProjectSlug: (slug: string) => { slug },
 });
 
+const getProjectData = async (projectSlug: string) => {
+    try {
+        const response = await useFetch(`/api/project/${projectSlug}`);
+        return await response.json();
+    } catch (err) {
+        console.error(err)
+        return null;
+    }
+}
+
+const getFeaturedProjectVersions = async (projectSlug: string) => {
+    try {
+        const response = await useFetch(`/api/project/${projectSlug}/version?featured=true`);
+        return await response.json();
+    } catch (err) {
+        console.error(err)
+        return null;
+    }
+}
+
+const getAllProjectVersions = async (projectSlug: string) => {
+    try {
+        const response = await useFetch(`/api/project/${projectSlug}/version`);
+        return await response.json();
+    } catch (err) {
+        console.error(err)
+        return null;
+    }
+}
+
 export const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
-	const { projectUrlSlug } = useParams();
-	const [projectData, setProjectData] = useState<ProjectDataType | null | undefined>(undefined);
-	const [featuredProjectVersions, setFeaturedProjectVersions] = useState<ProjectVersionsList | null | undefined>(
-		undefined,
-	);
-	const [allProjectVersions, setAllProjectVersions] = useState<ProjectVersionsList | null | undefined>(undefined);
-	const [fetchingProjectData, setFetchingProjectData] = useState(true);
-	const [currProjectSlug, setCurrProjectSlug] = useState(projectUrlSlug || "");
-	const navigate = useNavigate();
+    const { projectUrlSlug } = useParams();
+    const [fetchingProjectData, setFetchingProjectData] = useState(true);
+    const [currProjectSlug, setCurrProjectSlug] = useState(projectUrlSlug || "");
+    const navigate = useNavigate();
 
-	const fetchProjectData = async (slug?: string) => {
-		slug && alterProjectSlug(slug);
+    const projectData = useQuery({ queryKey: [`${currProjectSlug}-project-data`], queryFn: () => getProjectData(currProjectSlug) });
+    const featuredProjectVersions = useQuery({ queryKey: [`${currProjectSlug}-project-featured-versions`], queryFn: () => getFeaturedProjectVersions(currProjectSlug) });
+    const allProjectVersions = useQuery({ queryKey: [`${currProjectSlug}-project-all-versions`], queryFn: () => getAllProjectVersions(currProjectSlug) });
 
-		setFetchingProjectData(true);
-		const response = await useFetch(`/api/project/${slug || currProjectSlug}`);
-		setFetchingProjectData(false);
-		const result = await response.json();
-		setProjectData(result?.data || null);
-	};
+    const fetchProjectData = async (slug?: string) => {
+        if (slug) setCurrProjectSlug(slug);
+    };
 
-	const fetchFeaturedProjectVersions = async () => {
-		setFetchingProjectData(true);
-		const response = await useFetch(`/api/project/${currProjectSlug}/version?featured=true`);
-		setFetchingProjectData(false);
-		const result = await response.json();
-		setFeaturedProjectVersions(result?.data || null);
-	};
+    const fetchFeaturedProjectVersions = async () => { await featuredProjectVersions.refetch(); };
 
-	const fetchAllProjectVersions = async () => {
-		setFetchingProjectData(true);
-		const response = await useFetch(`/api/project/${currProjectSlug}/version`);
-		setFetchingProjectData(false);
-		const result = await response.json();
-		setAllProjectVersions(result?.data || null);
-	};
+    const fetchAllProjectVersions = async () => {
+        allProjectVersions.isLoading
+    };
 
-	const alterProjectSlug = (slug: string) => {
-		setCurrProjectSlug(slug);
-	};
+    const redirectToCorrectProjectUrl = () => {
+        const data = projectData.data?.data || null;
+        if (data?.id) {
+            const constructedUrl = constructProjectPageUrl(data.type[0], data.url_slug);
 
-	const redirectToCorrectProjectUrl = () => {
-		if (projectData?.id) {
-			const constructedUrl = constructProjectPageUrl(projectData.type[0], projectData.url_slug);
+            if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
+                navigate(constructedUrl);
+            }
+        }
+    };
 
-			if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
-				navigate(constructedUrl);
-			}
-		}
-	};
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        redirectToCorrectProjectUrl();
+    }, [projectData, currProjectSlug]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		const fetches = [fetchProjectData(), fetchFeaturedProjectVersions(), fetchAllProjectVersions()];
-		Promise.all(fetches);
-	}, []);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (currProjectSlug && currProjectSlug !== projectUrlSlug) projectData.refetch();
+    }, [currProjectSlug])
 
-	// *
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		redirectToCorrectProjectUrl();
-	}, [projectData, currProjectSlug]);
+    useEffect(() => {
+        if (projectData.isFetching || featuredProjectVersions.isFetching || allProjectVersions.isFetching) setFetchingProjectData(true);
+        else setFetchingProjectData(false);
+    }, [projectData.isFetching, featuredProjectVersions.isFetching, allProjectVersions.isFetching])
 
-	return (
-		<Projectcontext.Provider
-			value={{
-				projectData: projectData,
-				fetchProjectData: fetchProjectData,
-				fetchingProjectData: fetchingProjectData,
-				alterProjectSlug: alterProjectSlug,
-				featuredProjectVersions: featuredProjectVersions,
-				fetchFeaturedProjectVersions: fetchFeaturedProjectVersions,
-				allProjectVersions: allProjectVersions,
-				fetchAllProjectVersions: fetchAllProjectVersions,
-			}}
-		>
-			{children}
-		</Projectcontext.Provider>
-	);
+    return (
+        <Projectcontext.Provider
+            value={{
+                projectData: projectData.data?.data || undefined,
+                fetchProjectData: fetchProjectData,
+                fetchingProjectData: fetchingProjectData,
+                alterProjectSlug: setCurrProjectSlug,
+                featuredProjectVersions: featuredProjectVersions.data?.data || undefined,
+                fetchFeaturedProjectVersions: fetchFeaturedProjectVersions,
+                allProjectVersions: allProjectVersions.data?.data || undefined,
+                fetchAllProjectVersions: fetchAllProjectVersions,
+            }}
+        >
+            {children}
+        </Projectcontext.Provider>
+    );
 };
 
 export default ProjectContextProvider;

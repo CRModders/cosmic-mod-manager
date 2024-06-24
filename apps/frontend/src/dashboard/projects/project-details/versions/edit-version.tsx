@@ -1,12 +1,12 @@
 import { ChevronRightIcon, SaveIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
 import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,337 +25,335 @@ import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
 import type { ProjectVersionData } from "@root/types";
 import { ReleaseChannels } from "@root/types";
+import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+
+const getVersionData = async (projectUrlSlug: string, versionUrlSlug: string) => {
+    try {
+        const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}`);
+        return (await response.json())?.data || null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
 const EditVersionPage = ({ projectType }: { projectType: string }) => {
-	const { projectUrlSlug, versionUrlSlug } = useParams();
-	const [pageInitialized, setPageInitialized] = useState(false);
-	const [versionData, setVersionData] = useState<ProjectVersionData | null | undefined>(undefined);
+    const { projectUrlSlug, versionUrlSlug } = useParams();
+    const [pageInitialized, setPageInitialized] = useState(false);
 
-	const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions, fetchProjectData } =
-		useContext(Projectcontext);
-	const [loading, setLoading] = useState(false);
-	const isAProjectMember = useIsUseAProjectMember();
-	const navigate = useNavigate();
+    const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions, fetchProjectData } = useContext(Projectcontext);
+    const [loading, setLoading] = useState(false);
+    const isAProjectMember = useIsUseAProjectMember();
+    const navigate = useNavigate();
 
-	// Formdata
-	const [versionName, setVersionName] = useState("");
-	const [changelog, setChangelog] = useState("");
-	const [versionNumber, setVersionNumber] = useState("");
-	const [releaseChannel, setReleaseChannel] = useState<ReleaseChannels>(ReleaseChannels.RELEASE);
-	const [loaders, setLoaders] = useState<string[]>([]);
-	const [supportedGameVersions, setSupportedGameVersions] = useState<string[]>([]);
+    const versionData = useQuery<ProjectVersionData>({ queryKey: [`version-${versionUrlSlug}-data`], queryFn: () => getVersionData(projectUrlSlug || "", versionUrlSlug || "") })
 
-	const toggleVersionFeaturing = async () => {
-		if (loading) return;
-		setLoading(true);
+    // Formdata
+    const [versionName, setVersionName] = useState("");
+    const [changelog, setChangelog] = useState("");
+    const [versionNumber, setVersionNumber] = useState("");
+    const [releaseChannel, setReleaseChannel] = useState<ReleaseChannels>(ReleaseChannels.RELEASE);
+    const [loaders, setLoaders] = useState<string[]>([]);
+    const [supportedGameVersions, setSupportedGameVersions] = useState<string[]>([]);
 
-		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/set-featured`, {
-			method: "POST",
-			body: JSON.stringify({
-				is_featured: !(versionData?.versions[0].is_featured === true),
-			}),
-		});
-		setLoading(false);
-		const result = await response.json();
+    const toggleVersionFeaturing = async () => {
+        if (loading) return;
+        setLoading(true);
 
-		if (!response.ok) {
-			return toast({ title: result?.message, variant: "destructive" });
-		}
+        const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/set-featured`, {
+            method: "POST",
+            body: JSON.stringify({
+                is_featured: !(versionData.data?.versions[0].is_featured === true),
+            }),
+        });
+        setLoading(false);
+        const result = await response.json();
 
-		toast({ title: result?.message });
-		await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), fetchVersiondata()]);
-	};
+        if (!response.ok) {
+            return toast({ title: result?.message, variant: "destructive" });
+        }
 
-	const updateProjectVersion = async () => {
-		if (loading) return;
+        toast({ title: result?.message });
+        await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), versionData.refetch()]);
+    };
 
-		if (!versionName) return toast({ title: "Version title is required", variant: "destructive" });
-		if (!versionNumber) return toast({ title: "Version number is required", variant: "destructive" });
-		if (!supportedGameVersions?.length)
-			return toast({ title: "Supported game versions is required", variant: "destructive" });
+    const updateProjectVersion = async () => {
+        if (loading) return;
 
-		if (createURLSafeSlug(versionNumber).value !== versionNumber) {
-			return toast({
-				title: "Version number should be a url safe string",
-				variant: "destructive",
-			});
-		}
+        if (!versionName) return toast({ title: "Version title is required", variant: "destructive" });
+        if (!versionNumber) return toast({ title: "Version number is required", variant: "destructive" });
+        if (!supportedGameVersions?.length)
+            return toast({ title: "Supported game versions is required", variant: "destructive" });
 
-		setLoading(true);
-		const formData = new FormData();
-		formData.append("versionName", versionName);
-		formData.append("changelog", changelog);
-		formData.append("versionNumber", versionNumber);
-		formData.append("releaseChannel", releaseChannel);
-		formData.append("loaders", JSON.stringify(loaders));
-		formData.append("supportedGameVersions", JSON.stringify(supportedGameVersions));
+        if (createURLSafeSlug(versionNumber).value !== versionNumber) {
+            return toast({
+                title: "Version number should be a url safe string",
+                variant: "destructive",
+            });
+        }
 
-		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/update`, {
-			method: "POST",
-			body: formData,
-		});
-		setLoading(false);
-		const result = await response.json();
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("versionName", versionName);
+        formData.append("changelog", changelog);
+        formData.append("versionNumber", versionNumber);
+        formData.append("releaseChannel", releaseChannel);
+        formData.append("loaders", JSON.stringify(loaders));
+        formData.append("supportedGameVersions", JSON.stringify(supportedGameVersions));
 
-		if (!response.ok) {
-			return toast({
-				title: result?.message,
-				variant: "destructive",
-			});
-		}
+        const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}/update`, {
+            method: "POST",
+            body: formData,
+        });
+        setLoading(false);
+        const result = await response.json();
 
-		await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), fetchProjectData()]);
+        if (!response.ok) {
+            return toast({
+                title: result?.message,
+                variant: "destructive",
+            });
+        }
 
-		toast({
-			title: result?.message,
-		});
+        await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions(), fetchProjectData()]);
+        toast({
+            title: result?.message,
+        });
+        navigate(`/${projectType}/${projectData?.url_slug}/version/${result?.data?.url_slug}`);
+    };
 
-		navigate(`/${projectType}/${projectData?.url_slug}/version/${result?.data?.url_slug}`);
-	};
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (isAProjectMember === false) {
+            return navigate(`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`, { replace: true });
+        }
+    }, [isAProjectMember]);
 
-	const fetchVersiondata = async () => {
-		setLoading(true);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (versionData.data?.versions[0].url_slug) {
+            const constructedUrl = constructVersionPageUrl(versionData.data.versions[0].url_slug);
+            if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
+                navigate(constructedUrl);
+            }
+        }
 
-		const response = await useFetch(`/api/project/${projectUrlSlug}/version/${versionUrlSlug}`);
-		setLoading(false);
-		const result = await response.json();
-		const data = result?.data as ProjectVersionData;
-		setVersionData(data || null);
-	};
+        if (versionData.data?.id && pageInitialized === false) {
+            const versionDetails = versionData?.data.versions[0];
+            setVersionName(versionDetails.version_title);
+            setChangelog(versionDetails.changelog);
+            setVersionNumber(versionDetails.version_number);
+            setReleaseChannel(versionDetails.release_channel as ReleaseChannels);
+            setLoaders(versionDetails.supported_loaders);
+            setSupportedGameVersions(versionDetails.supported_game_versions);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		fetchVersiondata();
-	}, [versionUrlSlug]);
+            setPageInitialized(true);
+        }
+    }, [versionData]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (isAProjectMember === false) {
-			return navigate(`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`, { replace: true });
-		}
-	}, [isAProjectMember]);
+    useEffect(() => {
+        setLoading(versionData.isLoading);
+    }, [versionData.isLoading])
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		if (versionData?.versions[0].url_slug) {
-			const constructedUrl = constructVersionPageUrl(versionData.versions[0].url_slug);
-			if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
-				navigate(constructedUrl);
-			}
-		}
-		if (versionData?.id && pageInitialized === false) {
-			const versionDetails = versionData?.versions[0];
-			setVersionName(versionDetails.version_title);
-			setChangelog(versionDetails.changelog);
-			setVersionNumber(versionDetails.version_number);
-			setReleaseChannel(versionDetails.release_channel as ReleaseChannels);
-			setLoaders(versionDetails.supported_loaders);
-			setSupportedGameVersions(versionDetails.supported_game_versions);
+    if (isAProjectMember === false) {
+        return null;
+    }
 
-			setPageInitialized(true);
-		}
-	}, [versionData]);
+    return (
+        <div className="w-full flex flex-col gap-4 items-start justify-center relative">
+            <ContentWrapperCard>
+                <div className="w-full px-1">
+                    <Breadcrumb>
+                        <BreadcrumbList className="flex items-center">
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className=" text-base">
+                                    Versions
+                                </BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator className="flex items-center justify-center">
+                                <ChevronRightIcon size="1rem" className=" text-foreground" />
+                            </BreadcrumbSeparator>
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>{versionName}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
 
-	if (isAProjectMember === undefined) {
-		return null;
-	}
+                <div className="w-full flex flex-col gap-4">
+                    <Input
+                        type="text"
+                        className="w-full text-lg py-2 px-4 h-12"
+                        placeholder="Enter the version title..."
+                        value={versionName}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setVersionName(e.target.value || "");
+                        }}
+                    />
 
-	return (
-		<div className="w-full flex flex-col gap-4 items-start justify-center relative">
-			<ContentWrapperCard>
-				<div className="w-full px-1">
-					<Breadcrumb>
-						<BreadcrumbList className="flex items-center">
-							<BreadcrumbItem>
-								<BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className=" text-base">
-									Versions
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator className="flex items-center justify-center">
-								<ChevronRightIcon size="1rem" className=" text-foreground" />
-							</BreadcrumbSeparator>
-							<BreadcrumbItem>
-								<BreadcrumbPage>{versionName}</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-				</div>
+                    <div className="flex flex-wrap gap-4 items-center justify-start">
+                        <Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
+                            <SaveIcon className="w-4 h-4" />
+                            Save
+                        </Button>
 
-				<div className="w-full flex flex-col gap-4">
-					<Input
-						type="text"
-						className="w-full text-lg py-2 px-4 h-12"
-						placeholder="Enter the version title..."
-						value={versionName}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							setVersionName(e.target.value || "");
-						}}
-					/>
+                        <Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
+                            {versionData.data?.versions[0].is_featured === true ? (
+                                <StarFilledIcon className="w-4 h-4" />
+                            ) : (
+                                <StarIcon className="w-4 h-4" />
+                            )}
 
-					<div className="flex flex-wrap gap-4 items-center justify-start">
-						<Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
-							<SaveIcon className="w-4 h-4" />
-							Save
-						</Button>
+                            {versionData.data?.versions[0].is_featured === true ? "Unfeature version" : "Feature version"}
+                        </Button>
 
-						<Button disabled={loading} className="gap-2" variant={"secondary"} onClick={toggleVersionFeaturing}>
-							{versionData?.versions[0].is_featured === true ? (
-								<StarFilledIcon className="w-4 h-4" />
-							) : (
-								<StarIcon className="w-4 h-4" />
-							)}
+                        <Link to={`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`} className="rounded-lg">
+                            <Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
+                                <Cross1Icon />
+                                Cancel
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </ContentWrapperCard>
 
-							{versionData?.versions[0].is_featured === true ? "Unfeature version" : "Feature version"}
-						</Button>
+            <div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
+                <div className="w-full flex flex-col gap-4">
+                    <ContentWrapperCard>
+                        <div className="w-full flex flex-col items-start justify-center gap-1">
+                            <Label className="font-semibold text-lg">Changelog</Label>
+                            <MarkdownEditor
+                                editorValue={changelog}
+                                setEditorValue={setChangelog}
+                                placeholder="Version changelog..."
+                            />
+                        </div>
+                    </ContentWrapperCard>
 
-						<Link to={`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`}>
-							<Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
-								<Cross1Icon />
-								Discard changes
-							</Button>
-						</Link>
-					</div>
-				</div>
-			</ContentWrapperCard>
+                    <ContentWrapperCard className="w-full h-fit">
+                        <div className="w-full flex flex-col items-start justify-center gap-1">
+                            <p className="font-semibold text-2xl">Files</p>
+                        </div>
 
-			<div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
-				<div className="w-full flex flex-col gap-4">
-					<ContentWrapperCard>
-						<div className="w-full flex flex-col items-start justify-center gap-1">
-							<Label className="font-semibold text-lg">Changelog</Label>
-							<MarkdownEditor
-								editorValue={changelog}
-								setEditorValue={setChangelog}
-								placeholder="Version changelog..."
-							/>
-						</div>
-					</ContentWrapperCard>
+                        {versionData.data?.versions[0].files[0].id &&
+                            versionData.data?.versions[0].files.map((file) => {
+                                return (
+                                    <div
+                                        key={file.id}
+                                        className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
+                                    >
+                                        <div className="flex flex-wrap gap-x-3 gap-y-1 items-center justify-center">
+                                            <FileIcon className="w-5 h-5 text-foreground-muted" />
+                                            <p className="text-lg font-semibold text-foreground-muted mr-2">{file.file_name}</p>
+                                            <p className="text-base text-foreground-muted">{parseFileSize(file.file_size)}</p>
+                                            {file.is_primary && <p className="italic text-foreground-muted">Primary</p>}
+                                        </div>
 
-					<ContentWrapperCard className="w-full h-fit">
-						<div className="w-full flex flex-col items-start justify-center gap-1">
-							<p className="font-semibold text-2xl">Files</p>
-						</div>
+                                        {file.is_primary !== true && (
+                                            <Label htmlFor="version-main-file-input">
+                                                <p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
+                                                    Replace file
+                                                </p>
+                                            </Label>
+                                        )}
+                                    </div>
+                                );
+                            })}
 
-						{versionData?.versions[0].files[0].id &&
-							versionData?.versions[0].files.map((file) => {
-								return (
-									<div
-										key={file.id}
-										className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
-									>
-										<div className="flex flex-wrap gap-x-3 gap-y-1 items-center justify-center">
-											<FileIcon className="w-5 h-5 text-foreground-muted" />
-											<p className="text-lg font-semibold text-foreground-muted mr-2">{file.file_name}</p>
-											<p className="text-base text-foreground-muted">{parseFileSize(file.file_size)}</p>
-											{file.is_primary && <p className="italic text-foreground-muted">Primary</p>}
-										</div>
+                        {/* // TODO: ADD Additional file uploads */}
 
-										{file.is_primary !== true && (
-											<Label htmlFor="version-main-file-input">
-												<p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
-													Replace file
-												</p>
-											</Label>
-										)}
-									</div>
-								);
-							})}
+                    </ContentWrapperCard>
 
-						{/* // TODO: ADD Additional file uploads */}
-						{/* <div>
+                    {/* // TODO: Add dependency thing */}
+                    {/* <ContentWrapperCard>2</ContentWrapperCard> */}
+                </div>
 
-                    </div> */}
-					</ContentWrapperCard>
+                <ContentWrapperCard className="w-full h-fit">
+                    <div className="w-full flex flex-col items-start justify-center gap-1">
+                        <p className="font-semibold text-2xl">Metadata</p>
+                    </div>
 
-					{/* // TODO: Add dependency thing */}
-					{/* <ContentWrapperCard>2</ContentWrapperCard> */}
-				</div>
+                    <div className="w-full flex flex-col">
+                        <Label htmlFor="version-release-channel-selector" className="font-semibold text-foreground text-lg">
+                            Release channel
+                        </Label>
+                        <Select
+                            value={releaseChannel}
+                            onValueChange={(value) => {
+                                console.log(value);
+                                setReleaseChannel(value as ReleaseChannels);
+                            }}
+                        >
+                            <SelectTrigger className="w-full min-w-[24ch]" id="version-release-channel-selector">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {ReleaseChannelsList.map((channel) => {
+                                    return (
+                                        <SelectItem key={channel} value={channel}>
+                                            {CapitalizeAndFormatString(channel)}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-				<ContentWrapperCard className="w-full h-fit">
-					<div className="w-full flex flex-col items-start justify-center gap-1">
-						<p className="font-semibold text-2xl">Metadata</p>
-					</div>
+                    <div className="w-full flex flex-col">
+                        <Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
+                            Version number
+                        </Label>
+                        <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
+                            <label htmlFor="version-number-input" className="text-foreground/50 text-base cursor-text pr-2">
+                                #
+                            </label>
+                            <Input
+                                id="version-number-input"
+                                type="text"
+                                className="px-0 border-none bg-transparent text-base dark:text-foreground-muted"
+                                value={versionNumber}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setVersionNumber(e.target.value);
+                                }}
+                            />
+                        </div>
+                    </div>
 
-					<div className="w-full flex flex-col">
-						<Label htmlFor="version-release-channel-selector" className="font-semibold text-foreground text-lg">
-							Release channel
-						</Label>
-						<Select
-							value={releaseChannel}
-							onValueChange={(value) => {
-								console.log(value);
-								setReleaseChannel(value as ReleaseChannels);
-							}}
-						>
-							<SelectTrigger className="w-full min-w-[24ch]" id="version-release-channel-selector">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								{ReleaseChannelsList.map((channel) => {
-									return (
-										<SelectItem key={channel} value={channel}>
-											{CapitalizeAndFormatString(channel)}
-										</SelectItem>
-									);
-								})}
-							</SelectContent>
-						</Select>
-					</div>
+                    <div className="w-full flex flex-col">
+                        <Label className="font-semibold text-foreground text-lg">Loaders</Label>
+                        <MultiSelectInput
+                            options={Loaders.map((loader) => loader.name)}
+                            inputPlaceholder="Choose loaders.."
+                            input_id={"supported-loaders-filter-input"}
+                            initialSelected={loaders?.map((val) => val)}
+                            setSelectedValues={setLoaders}
+                        />
+                    </div>
+                    <div className="w-full flex flex-col">
+                        <Label className="font-semibold text-foreground text-lg">Game versions</Label>
+                        <MultiSelectInput
+                            options={(() => {
+                                const list = [];
+                                for (const version of GameVersions) {
+                                    if (version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
+                                }
+                                return list;
+                            })()}
+                            inputPlaceholder="Choose versions.."
+                            input_id={"supported-game-version-filter-input"}
+                            initialSelected={supportedGameVersions?.map((val) => val)}
+                            setSelectedValues={setSupportedGameVersions}
+                        />
+                    </div>
+                </ContentWrapperCard>
+            </div>
 
-					<div className="w-full flex flex-col">
-						<Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
-							Version number
-						</Label>
-						<div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
-							<label htmlFor="version-number-input" className="text-foreground/50 text-base cursor-text pr-2">
-								#
-							</label>
-							<Input
-								id="version-number-input"
-								type="text"
-								className="px-0 border-none bg-transparent text-base dark:text-foreground-muted"
-								value={versionNumber}
-								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-									setVersionNumber(e.target.value);
-								}}
-							/>
-						</div>
-					</div>
-
-					<div className="w-full flex flex-col">
-						<Label className="font-semibold text-foreground text-lg">Loaders</Label>
-						<MultiSelectInput
-							options={Loaders.map((loader) => loader.name)}
-							inputPlaceholder="Choose loaders.."
-							input_id={"supported-loaders-filter-input"}
-							initialSelected={loaders?.map((val) => val)}
-							setSelectedValues={setLoaders}
-						/>
-					</div>
-					<div className="w-full flex flex-col">
-						<Label className="font-semibold text-foreground text-lg">Game versions</Label>
-						<MultiSelectInput
-							options={(() => {
-								const list = [];
-								for (const version of GameVersions) {
-									if (version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
-								}
-								return list;
-							})()}
-							inputPlaceholder="Choose versions.."
-							input_id={"supported-game-version-filter-input"}
-							initialSelected={supportedGameVersions?.map((val) => val)}
-							setSelectedValues={setSupportedGameVersions}
-						/>
-					</div>
-				</ContentWrapperCard>
-			</div>
-
-			{loading ? <AbsolutePositionedSpinner /> : null}
-		</div>
-	);
+            {loading ? <AbsolutePositionedSpinner /> : null}
+        </div>
+    );
 };
 
 export default EditVersionPage;

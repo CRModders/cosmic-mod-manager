@@ -8,7 +8,7 @@ import {
     minProjectNameLength
 } from "@root/config";
 import { GetProjectVisibility, GetUsersProjectMembership, VerifySelectedCategories, createURLSafeSlug, isValidString, isValidUrl } from "@root/lib/utils";
-import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject, type ProjectDataType } from "@root/types";
+import { MemberPermissionsInProject, type ProjectDataType, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { deleteAllProjectFiles } from "../helpers/storage";
@@ -368,7 +368,7 @@ projectRouter.post("/:projectSlug/update-description", async (c) => {
         const description = body?.description;
 
         if (!projectSlug || !description || description.length > maxProjectDescriptionLength) {
-            return c.json({ message: "Invalid request" }, 400);
+            return c.json({ message: "Project description is required" }, 400);
         }
 
         const [user] = await getUserSession(c);

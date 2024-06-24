@@ -1,7 +1,7 @@
 {
   "name": "crmm",
   "devDependencies": {
-    "@biomejs/biome": "^1.8.0",
+    "@biomejs/biome": "1.8.2",
     "@types/semver": "^7.5.8",
     "turbo": "latest"
   },
@@ -17,5 +17,8 @@
   ],
   "dependencies": {
     "semver": "^7.6.2"
-  }
+  },
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }

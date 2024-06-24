@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { UserVerificationActionTypes, type Account, type VerificationRequest } from "@prisma/client";
+import { type Account, UserVerificationActionTypes, type VerificationRequest } from "@prisma/client";
 import {
     addNewPasswordVerificationTokenValidity,
     changePasswordConfirmationTokenValidity,
