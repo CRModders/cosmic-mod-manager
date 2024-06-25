@@ -9,6 +9,7 @@ import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import type { AuthProviderType, LocalUserSession } from "@root/types";
+import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import SessionListPageWrapper from "./page-wrapper";
@@ -27,26 +28,24 @@ type UserSession = {
 	provider: AuthProviderType;
 };
 
+const getLoggedInSessions   = async () => {
+    try {
+      		const response = await useFetch("/api/auth/session/get-logged-in-sessions");
+		return (await response.json())?.data || [];
+    } catch (err) {
+        console.log(err);
+        return [];
+    }
+}
+
 const Sessions = () => {
 	const [showWarning, setShowWarning] = useState<boolean>(true);
-	const [loggedInSessions, setLoggedInSessions] = useState<UserSession[]>([]);
-	const [loading, setLoading] = useState(false);
 	const { session: userSession } = useContext(AuthContext);
 
+	const loggedInSessions = useQuery<UserSession[]>({queryKey: ["Logged-in-user-sessions"], queryFn: () => getLoggedInSessions()})
 	const fetchLoggedInSessions = async () => {
-		if (loading) return;
-		setLoading(true);
-
-		const response = await useFetch("/api/auth/session/get-logged-in-sessions");
-		setLoading(false);
-		const result = await response.json();
-		setLoggedInSessions(result?.data || []);
-	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		fetchLoggedInSessions();
-	}, []);
+        await loggedInSessions.refetch();
+	}
 
 	useEffect(() => {
 		if (userSession === null) {
@@ -77,14 +76,14 @@ const Sessions = () => {
 							</div>
 
 							<div className="w-full relative flex flex-col items-center justify-center gap-4 mt-4 min-h-24">
-								{userSession && (
+								{userSession && loggedInSessions.data && (
 									<SessionsList
-										loggedInSessions={loggedInSessions}
+										loggedInSessions={loggedInSessions.data}
 										userSession={userSession}
 										fetchLoggedInSessions={fetchLoggedInSessions}
 									/>
 								)}
-								{(userSession === undefined || loading === true) && <AbsolutePositionedSpinner />}
+								{(userSession === undefined ||loggedInSessions.isLoading === true) && <AbsolutePositionedSpinner />}
 							</div>
 						</SessionListPageWrapper>
 					</CardContent>

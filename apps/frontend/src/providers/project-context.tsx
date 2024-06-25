@@ -72,10 +72,7 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
     };
 
     const fetchFeaturedProjectVersions = async () => { await featuredProjectVersions.refetch(); };
-
-    const fetchAllProjectVersions = async () => {
-        allProjectVersions.isLoading
-    };
+    const fetchAllProjectVersions = async () => { await allProjectVersions.refetch(); };
 
     const redirectToCorrectProjectUrl = () => {
         const data = projectData.data?.data || null;
