@@ -8,6 +8,8 @@ import HamMenu, { MobileNav } from "./mobile-menu";
 import NavButton from "./nav-button";
 import { MenuProfileLinks } from "./profile-dropdown";
 import "./styles.css";
+import { ProjectTypes } from "@root/config/project";
+import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
 import ThemeSwitch from "./theme-switcher";
 
 const Navbar = () => {
@@ -17,24 +19,13 @@ const Navbar = () => {
         setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
     };
 
-    const NavLinks = [
-        {
-            label: "Mods",
-            href: "/mods",
-        },
-        {
-            label: "Resource Packs",
-            href: "/resource-packs",
-        },
-        {
-            label: "Modpacks",
-            href: "/modpacks",
-        },
-        {
-            label: "Shaders",
-            href: "/shaders",
-        },
-    ];
+    const NavLinks = ProjectTypes.map((projectType) => {
+        return {
+            label: `${CapitalizeAndFormatString(projectType)}s`,
+            href: `/${createURLSafeSlug(projectType).value}s`
+        }
+    })
+
 
     useEffect(() => {
         if (isNavMenuOpen === true) {
@@ -65,12 +56,12 @@ const Navbar = () => {
                             </span>
                         </Link>
 
-                        <ul className="hidden lg:flex items-center justify-center gap-4">
+                        <ul className="hidden lg:flex items-center justify-center gap-3">
                             {NavLinks.map((link) => {
                                 return (
                                     <li key={link.href} className="flex items-center justify-center">
                                         <Navlink href={link.href} label={link.label}>
-                                            <span className="navLinkText navItemHeight px-2 flex items-center justify-center">
+                                            <span className="navLinkText navItemHeight px-2 flex items-center justify-center text-base">
                                                 {link.label}
                                             </span>
                                         </Navlink>

@@ -1,3 +1,4 @@
+import { ContentWrapperCard } from "@/components/panel-layout";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CubeLoader } from "@/components/ui/spinner";
@@ -6,7 +7,6 @@ import { AuthContext } from "@/src/providers/auth-provider";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { ContentWrapperCard } from "../panel";
 import DeleteAccountSection from "./delete-account";
 import ManageProviders from "./manage-providers";
 import PasswordSection from "./password";
@@ -37,7 +37,7 @@ const AccountSettingsPage = () => {
     const { session, setNewSession } = useContext(AuthContext);
 
     const linkedProviders = useQuery({ queryKey: ["linked-auth-providers-list"], queryFn: () => getLinkedProviders() })
-    const hasAPassword = useQuery({ queryKey: ["linked-auth-providers-list"], queryFn: () => getToKnowIfUserHasAPAssword() })
+    const hasAPassword = useQuery({ queryKey: ["user-has-a-password"], queryFn: () => getToKnowIfUserHasAPAssword() })
 
     const fetchPageData = async () => {
         await Promise.all([linkedProviders.refetch(), hasAPassword.refetch()]);

@@ -263,18 +263,18 @@ export const GetProjectLoadersList = (loaders_list: string[]) => {
 
 // }
 export const GetValidProjectCategories = (projectTypes: string[]) => {
-    const validCategories: CategoryType[] = [];
+    const validCategories = new Set<CategoryType>();
 
     for (const category of Categories) {
         for (const type of category.project_types) {
             if (projectTypes.includes(type)) {
-                validCategories.push(category);
+                validCategories.add(category);
                 break;
             }
         }
     }
 
-    return validCategories;
+    return Array.from(validCategories);
 }
 
 export const VerifySelectedCategories = (selectedCategories: string[], projectTypes: string[]) => {

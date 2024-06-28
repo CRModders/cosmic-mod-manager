@@ -44,8 +44,7 @@ const HomePage = lazy(() => import("@/src/home"));
 const Sessions = lazy(() => import("@/src/settings/session/page"));
 const LicensePage = lazy(() => import("@/src/dashboard/projects/project-settings/license"));
 const MembersSettingsPage = lazy(() => import("@/src/dashboard/projects/project-settings/members"));
-const SearchPagesSharedLayout = lazy(() => import("@/src/(search_pages)/layout"));
-const ModsSearchPage = lazy(() => import("@/src/(search_pages)/mods"));
+const SearchPage = lazy(() => import("@/src/search-page/search"));
 
 const projectRoute = (project_type: string) => {
     return {
@@ -209,33 +208,20 @@ const getProjectPageRoutes = () => {
     return list;
 };
 
-const SearchPageRoutes = () => {
-    return {
-        path: "",
-        element: (
-            <Suspense fallback={<SuspenseFallback />}>
-                <SearchPagesSharedLayout />
-            </Suspense >
-        ),
-        children: [
-            {
-                path: "mods",
-                element: <ModsSearchPage />
-            },
-            {
-                path: "resource-packs",
-                element: <ModsSearchPage />
-            },
-            {
-                path: "modpacks",
-                element: <ModsSearchPage />
-            },
-            {
-                path: "shaders",
-                element: <ModsSearchPage />
-            },
-        ]
+const getSearchPageRoutes = () => {
+    const routes = [];
+    for (const project_type of ProjectTypes) {
+        routes.push({
+            path: `${createURLSafeSlug(project_type).value}s`,
+            element: (
+                <Suspense fallback={<SuspenseFallback />}>
+                    <SearchPage projectType={project_type} />
+                </Suspense >
+            )
+        })
     }
+
+    return routes;
 }
 
 const router = createBrowserRouter([
@@ -251,7 +237,7 @@ const router = createBrowserRouter([
                     </Suspense>
                 ),
             },
-            SearchPageRoutes(),
+            ...getSearchPageRoutes(),
             {
                 path: "login",
                 element: <LoginPageLayout />,

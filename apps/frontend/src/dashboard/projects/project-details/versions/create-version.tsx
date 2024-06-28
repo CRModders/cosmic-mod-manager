@@ -1,5 +1,6 @@
 import { ChevronRightIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import RedrectTo from "@/components/redirect-to";
 import {
     Breadcrumb,
@@ -19,7 +20,6 @@ import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
-import { ContentWrapperCard } from "@/src/settings/panel";
 import { Cross1Icon, FileIcon, PlusIcon } from "@radix-ui/react-icons";
 import { maxFileSize } from "@root/config";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";

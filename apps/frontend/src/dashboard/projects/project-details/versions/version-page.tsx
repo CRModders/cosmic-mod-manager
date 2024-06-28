@@ -1,6 +1,7 @@
 import CopyBtn from "@/components/copy-btn";
 import { ChevronRightIcon, DownloadIcon, EditIcon, FlagIcon, TrashIcon } from "@/components/icons";
 import MarkdownRenderBox from "@/components/md-render-box";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import {
     Breadcrumb,
@@ -20,7 +21,6 @@ import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import NotFoundPage from "@/src/not-found";
 import { Projectcontext } from "@/src/providers/project-context";
-import { ContentWrapperCard } from "@/src/settings/panel";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { FileIcon, StarIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, formatDate, parseFileSize } from "@root/lib/utils";
@@ -41,7 +41,7 @@ const getVersionData = async (projectUrlSlug: string, versionUrlSlug: string) =>
         console.error(err);
         return null;
     }
-}
+};
 
 export default function ProjectVersionPage({ projectType }: { projectType: string }) {
     const { projectUrlSlug, versionUrlSlug } = useParams();
@@ -51,7 +51,10 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const versionData = useQuery<ProjectVersionData>({ queryKey: [`version-${versionUrlSlug}-data`], queryFn: () => getVersionData(projectUrlSlug || "", versionUrlSlug || "") });
+    const versionData = useQuery<ProjectVersionData>({
+        queryKey: [`version-${versionUrlSlug}-data`],
+        queryFn: () => getVersionData(projectUrlSlug || "", versionUrlSlug || ""),
+    });
 
     const deleteVersion = async () => {
         setLoading(true);
@@ -92,7 +95,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 
     useEffect(() => {
         setLoading(versionData.isLoading);
-    }, [versionData.isLoading])
+    }, [versionData.isLoading]);
 
     if (loading === true) {
         return (
@@ -113,16 +116,14 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
 
-            {!versionData.data ?
-                null
-                :
+            {!versionData.data ? null : (
                 <>
-                    <ContentWrapperCard className="items-start p-6 gap-4">
+                    <ContentWrapperCard className="items-start gap-4">
                         <div className="w-full">
                             <Breadcrumb>
                                 <BreadcrumbList className="flex items-center">
                                     <BreadcrumbItem>
-                                        <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className="text-lg">
+                                        <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className="text-base">
                                             Versions
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
@@ -130,7 +131,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                         <ChevronRightIcon size="1rem" className=" text-foreground" />
                                     </BreadcrumbSeparator>
                                     <BreadcrumbItem>
-                                        <BreadcrumbPage className="text-lg">{versionData.data?.versions[0].version_title}</BreadcrumbPage>
+                                        <BreadcrumbPage className="text-base">{versionData.data?.versions[0].version_title}</BreadcrumbPage >
                                     </BreadcrumbItem>
                                 </BreadcrumbList>
                             </Breadcrumb>
@@ -148,7 +149,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         </div>
 
                         <div className="flex flex-wrap gap-x-4 gap-y-3">
-                            <a href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url || "")}`}>
+                            <a
+                                href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url || "")}`}
+                            >
                                 <Button className="gap-2" tabIndex={-1}>
                                     <DownloadIcon size="1.15rem" />
                                     Download
@@ -236,7 +239,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                                     ) : null}
                                                 </div>
 
-                                                <a href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url)}`}>
+                                                <a
+                                                    href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url)}`}
+                                                >
                                                     <Button className="gap-2" tabIndex={-1}>
                                                         <DownloadIcon size="1.15rem" />
                                                         Download
@@ -256,7 +261,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                 {[
                                     {
                                         label: "Release channel",
-                                        element: <ReleaseChannelIndicator release_channel={versionData.data?.versions[0].release_channel || ""} />,
+                                        element: (
+                                            <ReleaseChannelIndicator release_channel={versionData.data?.versions[0].release_channel || ""} />
+                                        ),
                                     },
                                     {
                                         label: "Version number",
@@ -336,14 +343,13 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         </ContentWrapperCard>
                     </div>
                 </>
-            }
+            )}
 
-            {
-                loading || !versionData.data ? <div className="w-full flex items-center justify-center py-4">
+            {loading || !versionData.data ? (
+                <div className="w-full flex items-center justify-center py-4">
                     <CubeLoader size="lg" />
-                </div> : null
-            }
-
+                </div>
+            ) : null}
         </div>
     );
 }

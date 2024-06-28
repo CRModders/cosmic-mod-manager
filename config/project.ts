@@ -38,7 +38,7 @@ export const MemberPermissionsInProjectList = [
 
 export type LoaderType = {
     icon: string;
-    name: String;
+    name: string;
     supported_project_types: ProjectType[];
     supported_fields: LoaderSupportedFields[];
     metadata: {
@@ -59,7 +59,7 @@ export type LicenseDataType = {
     requiresOnlyOrLater?: boolean;
 }
 
-export const Loaders = [
+export const Loaders: LoaderType[] = [
     {
         icon: "",
         name: "QUILT",
@@ -104,7 +104,7 @@ export const Loaders = [
         supported_fields: [LoaderSupportedFields.GAME_VERSIONS],
         metadata: {}
     },
-] satisfies LoaderType[];
+];
 
 export const Categories: CategoryType[] = [
     {

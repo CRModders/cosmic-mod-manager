@@ -1,6 +1,6 @@
 import MarkdownRenderBox from "@/components/md-render-box";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import { Projectcontext } from "@/src/providers/project-context";
-import { ContentWrapperCard } from "@/src/settings/panel";
 import { useContext } from "react";
 
 const ProjectDescription = () => {

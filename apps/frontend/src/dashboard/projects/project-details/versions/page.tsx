@@ -1,12 +1,12 @@
 import { DownloadIcon, UploadIcon } from "@/components/icons";
 import PaginatedNavigation from "@/components/pagination";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatVersionsList } from "@/lib/semver";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
-import { ContentWrapperCard } from "@/src/settings/panel";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, createURLSafeSlug, formatDate } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
@@ -71,25 +71,23 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
         <div className="w-full flex flex-col gap-2 items-center justify-center" id="all-versions">
             {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
             {allProjectVersions?.versions.length ? (
-                <ContentWrapperCard>
+                <ContentWrapperCard className="p-0 pt-2 overflow-hidden">
                     <div className="w-full flex flex-col gap-2 items-center justify-center">
                         <Table>
-                            <TableHeader className="align-top pb-4 h-16">
-                                <TableRow className="border-none">
-                                    <TableHead className="overflow-hidden min-w-16 w-[5%] font-semibold text-foreground text-lg">
-                                        {" "}
-                                    </TableHead>
-                                    <TableHead className="overflow-hidden min-w-48 w-[35%] font-semibold text-foreground text-lg">
+                            <TableHeader>
+                                <TableRow className="border-border/35 dark:border-border/35">
+                                    <TableHead className="overflow-hidden w-20 font-semibold text-foreground text-lg h-16" />
+                                    <TableHead className="overflow-hidden min-w-48 w-[35%] font-semibold text-foreground text-lg h-16">
                                         Version
                                     </TableHead>
-                                    <TableHead className="overflow-hidden min-w-36 w-[35%] font-semibold text-foreground text-lg">
+                                    <TableHead className="overflow-hidden min-w-36 w-[35%] font-semibold text-foreground text-lg h-16">
                                         Supports
                                     </TableHead>
-                                    <TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg">
+                                    <TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg h-16">
                                         Stats
                                     </TableHead>
-                                </TableRow>
-                            </TableHeader>
+                                </TableRow >
+                            </TableHeader   >
                             <TableBody>
                                 {allProjectVersions?.versions
                                     .slice((activePage - 1) * perPageLimit, activePage * perPageLimit)
@@ -97,7 +95,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                         return (
                                             <TableRow
                                                 key={version.id}
-                                                className="cursor-pointer hover:bg-bg-hover"
+                                                className="cursor-pointer hover:bg-bg-hover border-border/35"
                                                 onClick={(e) => {
                                                     // @ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
@@ -106,7 +104,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                 }}
                                             >
                                                 <TableCell className="align-top">
-                                                    <div className="flex items-start justify-center py-1.5">
+                                                    <div className="flex items-start ml-4 lg:ml-6 justify-start py-1.5">
                                                         <a
                                                             href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
                                                             className="noClickRedirect flex h-fit items-center justify-center"
@@ -145,7 +143,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">
-                                                    <div className="flex items-start justify-start">
+                                                    <div className="flex items-start justify-start mr-4">
                                                         <p className="text-foreground-muted">
                                                             Published on{" "}
                                                             <span className="font-semibold">
@@ -158,11 +156,12 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                         );
                                     })}
                             </TableBody>
-                        </Table>
+                        </Table  >
                     </div>
-                </ContentWrapperCard>
-            ) : null}
+                </ContentWrapperCard >
+            ) : null
+            }
             {Pagination ? <div className="w-full flex items-center justify-center mt-2">{Pagination}</div> : null}
-        </div>
+        </div >
     );
 };

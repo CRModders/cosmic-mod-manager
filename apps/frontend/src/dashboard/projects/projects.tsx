@@ -1,11 +1,11 @@
 import { PlusIcon } from "@/components/icons";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
 import { CubeLoader } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import type { ProjectStatuses, ProjectVisibility } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
-import { ContentWrapperCard } from "../../settings/panel";
 import CreateProjectForm from "./create-project-form";
 import ProjectListTable from "./projects-list";
 
@@ -43,8 +43,8 @@ const Projects = () => {
                 <meta name="description" content="Your projects on crmm." />
             </Helmet>
 
-            <ContentWrapperCard>
-                <div className="w-full flex items-center justify-between">
+            <ContentWrapperCard className="p-0">
+                <div className="w-full flex items-center justify-between p-4">
                     <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
                         Projects
                     </h1>
@@ -56,7 +56,7 @@ const Projects = () => {
                         </Button>
                     </CreateProjectForm>
                 </div>
-                <div className="w-full flex relative">
+                <div className="w-full flex relative rounded-lg overflow-hidden">
                     {projectsList === null || projectsList.isLoading === true ? (
                         <div className="w-full flex items-center justify-center my-4">
                             <CubeLoader />
@@ -71,7 +71,7 @@ const Projects = () => {
                         </div>
                     )}
                 </div>
-            </ContentWrapperCard>
+            </ContentWrapperCard >
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import { ChevronRightIcon, SaveIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
+import { ContentWrapperCard } from "@/components/panel-layout";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -19,7 +20,6 @@ import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
-import { ContentWrapperCard } from "@/src/settings/panel";
 import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
@@ -165,11 +165,11 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
     return (
         <div className="w-full flex flex-col gap-4 items-start justify-center relative">
             <ContentWrapperCard>
-                <div className="w-full px-1">
+                <div className="w-full">
                     <Breadcrumb>
                         <BreadcrumbList className="flex items-center">
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className=" text-base">
+                                <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className="text-base">
                                     Versions
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
@@ -177,7 +177,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                                 <ChevronRightIcon size="1rem" className=" text-foreground" />
                             </BreadcrumbSeparator>
                             <BreadcrumbItem>
-                                <BreadcrumbPage>{versionName}</BreadcrumbPage>
+                                <BreadcrumbPage className="text-base">{versionName}</BreadcrumbPage >
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

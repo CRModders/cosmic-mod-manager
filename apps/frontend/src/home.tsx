@@ -70,7 +70,7 @@ const featuredSectionContentData = [
 
 export default function HomePage() {
     // The animation keyframes in "@/app/globals.css" need to be updated according to the number of items in the list
-    const showcaseItems = ["Mods", "Resource Packs", "Modpacks", "Shaders", "Mods"];
+    const showcaseItems = ["Mods", "Plugins", "Resource Packs", "Modpacks", "Shaders", "Mods"];
 
     return (
         <main className="w-full h-fit flex flex-col items-center justify-start pb-8">
@@ -89,6 +89,8 @@ export default function HomePage() {
                                             index
                                             }`}
                                         className="flex font-bold items-center justify-center h-10 lg:h-14 text-2xl lg:text-4xl bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-bg via-accent-bg leading-loose"
+                                        // @ts-ignore
+                                        style={{ "--index": index + 1 }}
                                     >
                                         {item}
                                     </strong>

@@ -15,10 +15,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { FormatVersionsList } from "@/lib/semver";
 import { FormatProjectTypes } from "@/lib/utils";
 import "@/src/globals.css";
+import { PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Projectcontext } from "@/src/providers/project-context";
-import { PanelContent, PanelLayout, SidePanel } from "@/src/settings/panel";
 import {
     BookmarkIcon,
     CalendarIcon,
@@ -397,7 +397,7 @@ const ProjectDetailsNav = ({
 
     return (
         <nav
-            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border dark:border-border"
+            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border/75"
             id="project-page-nav"
         >
             <ul className="w-fit grow flex flex-wrap gap-x-4">
