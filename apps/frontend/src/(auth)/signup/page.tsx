@@ -3,11 +3,9 @@ import "@/src/globals.css";
 import { Link } from "react-router-dom";
 import AuthProviders from "../oauth-providers";
 
-
 const SignupPage = () => {
     return (
         <FormCard header="Sign Up" footer={<SignupPageFooter />}>
-
             <div className="w-full flex items-start justify-center flex-col">
                 <p className="text-sm flex items-center justify-start mx-1 my-2 text-foreground-muted">
                     Signup using any of the auth providers:
@@ -16,19 +14,15 @@ const SignupPage = () => {
                     <AuthProviders />
                 </div>
             </div>
-
         </FormCard>
     );
 };
 
 const SignupPageFooter = () => {
     return (
-
         <div className="w-full flex flex-col items-center justify-center gap-1 mt-4 text-sm">
             <p className="text-center text-foreground">
-                <span className="text-foreground-muted">
-                    Already have an account?&nbsp;
-                </span>
+                <span className="text-foreground-muted">Already have an account?&nbsp;</span>
                 <Link
                     to="/login"
                     aria-label="Sign up"
@@ -38,8 +32,7 @@ const SignupPageFooter = () => {
                 </Link>
             </p>
         </div>
-    )
-}
+    );
+};
 
 export default SignupPage;
-

@@ -23,6 +23,7 @@ import { maxProjectSummaryLength } from "@root/config";
 import { CapitalizeAndFormatString, GetProjectVisibility, createURLSafeSlug } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 
 const GeneralProjectSettings = () => {
@@ -67,6 +68,8 @@ const GeneralProjectSettings = () => {
             setProjectUrl(projectData?.url_slug);
             setProjectSummary(projectData?.summary);
             setProjectVisibility(GetProjectVisibility(projectData?.visibility));
+
+            console.log("resetting data");
         }
     }, [projectData]);
 
@@ -74,6 +77,11 @@ const GeneralProjectSettings = () => {
         <div className="w-full flex flex-col relative items-center justify-center gap-4">
             {projectData === undefined ? null : (
                 <>
+                    <Helmet>
+                        <title>Settings - {projectData?.name} | CRMM</title>
+                        <meta name="description" content="Your projects on crmm." />
+                    </Helmet>
+
                     <ContentWrapperCard className="w-full flex flex-col items-start justify-center gap-6">
                         <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground">
                             Project information
@@ -83,7 +91,6 @@ const GeneralProjectSettings = () => {
                             <p className="text-xl font-semibold text-foreground p-1">Icon</p>
                             <div className="flex gap-4">
                                 <span className="p-2 flex items-center justify-center rounded-lg bg-background-shallow">
-                                    { }
                                     <CubeIcon className="w-20 h-20 text-foreground-muted" />
                                 </span>
                                 <div className="flex flex-col items-start justify-center gap-2">
@@ -119,8 +126,11 @@ const GeneralProjectSettings = () => {
                                 URL
                             </Label>
 
-                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
-                                <label htmlFor="settings-project-url-input" className="text-foreground/50 text-base cursor-text">
+                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-[#00000000] dark:focus-within:bg-[#00000000] focus-within:border-border-hicontrast transition-colors">
+                                <label
+                                    htmlFor="settings-project-url-input"
+                                    className="text-foreground/50 text-base cursor-text"
+                                >
                                     /{createURLSafeSlug(projectData?.type[0] || "").value}/
                                 </label>
                                 <Input
@@ -156,8 +166,9 @@ const GeneralProjectSettings = () => {
                             <div className="w-full flex flex-wrap lg:flex-nowrap gap-6 items-center justify-between">
                                 <div>
                                     <p className=" text-foreground-muted">
-                                        Listed and archived projects are visible in search. Unlisted projects are published, but not visible
-                                        in search or on user profiles. Private projects are only accessible by members of the project.
+                                        Listed and archived projects are visible in search. Unlisted projects are
+                                        published, but not visible in search or on user profiles. Private projects are
+                                        only accessible by members of the project.
                                     </p>
                                 </div>
 
@@ -204,7 +215,10 @@ const GeneralProjectSettings = () => {
                             </Button>
                         </div>
                     </ContentWrapperCard>
-                    <DeleteProjectCard projectName={projectData?.name || ""} projectUrlSlug={projectData?.url_slug || ""} />
+                    <DeleteProjectCard
+                        projectName={projectData?.name || ""}
+                        projectUrlSlug={projectData?.url_slug || ""}
+                    />
                 </>
             )}
             {loading ? <AbsolutePositionedSpinner /> : null}
@@ -234,31 +248,34 @@ const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: strin
     };
 
     return (
-        <ContentWrapperCard className="items-start">
+        <ContentWrapperCard className="items-start gap-2">
             <h2 className="font-semibold text-foreground text-2xl">Delete project</h2>
             <p className="text-foreground-muted">
                 Removes your project from our servers and search. Clicking on this will delete your project, so be extra
                 careful!
             </p>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                    <Button className="gap-2" variant={"destructive"}>
-                        <TrashIcon size="1.15rem" />
-                        Delete project
-                    </Button>
-                </DialogTrigger>
+                <div className="w-full flex items-center justify-end">
+                    <DialogTrigger asChild>
+                        <Button className="gap-2" variant={"destructive"}>
+                            <TrashIcon size="1.15rem" />
+                            Delete project
+                        </Button>
+                    </DialogTrigger>
+                </div>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Are you sure you want to delete this project?</DialogTitle>
                     </DialogHeader>
                     <p className="text-foreground-muted">
-                        If you proceed, all versions and any attached data will be removed from our servers. This may break other
-                        projects, so be careful.
+                        If you proceed, all versions and any attached data will be removed from our servers. This may
+                        break other projects, so be careful.
                     </p>
 
                     <div className="w-full flex flex-col items-start justify-center gap-1">
                         <p className="text-foreground font-semibold">
-                            To verify, type <span className="font-medium italic text-foreground-muted">{projectName}</span> below:
+                            To verify, type{" "}
+                            <span className="font-medium italic text-foreground-muted">{projectName}</span> below:
                         </p>
                         <Input
                             type="text"

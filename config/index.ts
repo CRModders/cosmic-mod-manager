@@ -15,7 +15,7 @@ export const maxProjectDescriptionLength = 65256;
 export const maxChangelogLength = 65256;
 export const maxExternalLinkLength = 256;
 export const maxFeaturedProjectTags = 3;
-export const maxFileSize = 33554432;  // 32 MiB
+export const maxFileSize = 33554432; // 32 MiB
 
 export const passwordHashingSaltRounds = 8;
 export const addNewPasswordVerificationTokenValidity = 24 * 60 * 60; // A day

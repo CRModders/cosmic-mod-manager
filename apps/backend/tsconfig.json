@@ -1,11 +1,11 @@
 {
-	"compilerOptions": {
-		"strict": false,
-		"jsx": "react-jsx",
-		"jsxImportSource": "hono/jsx",
-		"paths": {
-			"@/*": ["./*"],
-			"@root/*": ["./../../*"]
-		}
-	}
+    "compilerOptions": {
+        "strict": false,
+        "jsx": "react-jsx",
+        "jsxImportSource": "hono/jsx",
+        "paths": {
+            "@/*": ["./*"],
+            "@root/*": ["./../../*"]
+        }
+    }
 }

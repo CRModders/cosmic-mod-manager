@@ -123,7 +123,10 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                         <Breadcrumb>
                             <BreadcrumbList className="flex items-center">
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className=" text-base">
+                                    <BreadcrumbLink
+                                        href={`/${projectType}/${projectUrlSlug}/versions`}
+                                        className=" text-base"
+                                    >
                                         Versions
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
@@ -191,8 +194,12 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                                     <FileIcon className="w-5 h-5 text-foreground-muted" />
                                     {versionFile ? (
                                         <>
-                                            <p className="text-lg font-semibold text-foreground-muted mr-2">{versionFile.name}</p>
-                                            <p className="text-base text-foreground-muted">{parseFileSize(versionFile.size)}</p>
+                                            <p className="text-lg font-semibold text-foreground-muted mr-2">
+                                                {versionFile.name}
+                                            </p>
+                                            <p className="text-base text-foreground-muted">
+                                                {parseFileSize(versionFile.size)}
+                                            </p>
                                         </>
                                     ) : (
                                         <p>No file choosen</p>
@@ -230,7 +237,10 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                         </div>
 
                         <div className="w-full flex flex-col">
-                            <Label htmlFor="version-release-channel-selector" className="font-semibold text-foreground text-lg">
+                            <Label
+                                htmlFor="version-release-channel-selector"
+                                className="font-semibold text-foreground text-lg"
+                            >
                                 Release channel
                             </Label>
                             <Select
@@ -258,8 +268,11 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             <Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
                                 Version number
                             </Label>
-                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
-                                <label htmlFor="version-number-input" className="text-foreground/50 text-base cursor-text pr-2">
+                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
+                                <label
+                                    htmlFor="version-number-input"
+                                    className="text-foreground/50 text-base cursor-text pr-2"
+                                >
                                     #
                                 </label>
                                 <Input

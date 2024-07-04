@@ -216,13 +216,13 @@ const getSearchPageRoutes = () => {
             element: (
                 <Suspense fallback={<SuspenseFallback />}>
                     <SearchPage projectType={project_type} />
-                </Suspense >
-            )
-        })
+                </Suspense>
+            ),
+        });
     }
 
     return routes;
-}
+};
 
 const router = createBrowserRouter([
     {

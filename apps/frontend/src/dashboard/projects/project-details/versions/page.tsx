@@ -10,6 +10,7 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, createURLSafeSlug, formatDate } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -20,27 +21,34 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
     const { projectUrlSlug } = useParams();
 
     return (
-        <div className="w-full flex flex-col gap-4 items-start justify-center">
-            {isAProjectMember !== false && (
-                <ContentWrapperCard>
-                    <div className="w-full flex flex-wrap gap-4 items-center justify-start">
-                        <Link
-                            to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}/version/create`}
-                        >
-                            <Button className="gap-2" tabIndex={-1}>
-                                <UploadIcon className="w-4 h-4" />
-                                Upload a version
-                            </Button>
-                        </Link>
-                        <div className="text-foreground-muted flex gap-2 items-center justify-start">
-                            <InfoCircledIcon className="w-4 h-4" /> <p>Click to choose a file or drag one onto this input</p>
+        <>
+            <Helmet>
+                <title>{`Versions - ${projectData?.name} | CRMM`}</title>
+                <meta name="description" content={projectData?.summary} />
+            </Helmet>
+            <div className="w-full flex flex-col gap-4 items-start justify-center">
+                {isAProjectMember !== false && (
+                    <ContentWrapperCard>
+                        <div className="w-full flex flex-wrap gap-4 items-center justify-start">
+                            <Link
+                                to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}/version/create`}
+                            >
+                                <Button className="gap-2" tabIndex={-1}>
+                                    <UploadIcon className="w-4 h-4" />
+                                    Upload a version
+                                </Button>
+                            </Link>
+                            <div className="text-foreground-muted flex gap-2 items-center justify-start">
+                                <InfoCircledIcon className="w-4 h-4" />{" "}
+                                <p>Click to choose a file or drag one onto this input</p>
+                            </div>
                         </div>
-                    </div>
-                </ContentWrapperCard>
-            )}
+                    </ContentWrapperCard>
+                )}
 
-            <AllProjectVersionsList projectUrlSlug={projectUrlSlug || ""} projectType={projectType} />
-        </div>
+                <AllProjectVersionsList projectUrlSlug={projectUrlSlug || ""} projectType={projectType} />
+            </div>
+        </>
     );
 };
 
@@ -86,8 +94,8 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                     <TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg h-16">
                                         Stats
                                     </TableHead>
-                                </TableRow >
-                            </TableHeader   >
+                                </TableRow>
+                            </TableHeader>
                             <TableBody>
                                 {allProjectVersions?.versions
                                     .slice((activePage - 1) * perPageLimit, activePage * perPageLimit)
@@ -95,11 +103,13 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                         return (
                                             <TableRow
                                                 key={version.id}
-                                                className="cursor-pointer hover:bg-bg-hover border-border/35"
+                                                className="cursor-pointer hover:bg-bg-hover/50 dark:hover:bg-bg-hover/75 border-border/35"
                                                 onClick={(e) => {
                                                     // @ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
-                                                        navigate(`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`);
+                                                        navigate(
+                                                            `/${projectType}/${projectUrlSlug}/version/${version.url_slug}`,
+                                                        );
                                                     }
                                                 }}
                                             >
@@ -109,7 +119,11 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                             href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
                                                             className="noClickRedirect flex h-fit items-center justify-center"
                                                         >
-                                                            <Button className="h-fit w-fit p-2 rounded-lg" size={"icon"} tabIndex={-1}>
+                                                            <Button
+                                                                className="h-fit w-fit p-2 rounded-lg"
+                                                                size={"icon"}
+                                                                tabIndex={-1}
+                                                            >
                                                                 <DownloadIcon size="1.1rem" />
                                                             </Button>
                                                         </a>
@@ -130,14 +144,18 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                                 release_channel={version.release_channel}
                                                                 labelClassName="text-base"
                                                             />
-                                                            <p className="text-foreground-muted">{version.version_number}</p>
+                                                            <p className="text-foreground-muted">
+                                                                {version.version_number}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">
                                                     <div className="flex flex-col items-start justify-start">
                                                         <p>
-                                                            {version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
+                                                            {version.supported_loaders
+                                                                .map((loader) => CapitalizeAndFormatString(loader))
+                                                                .join(", ")}
                                                         </p>
                                                         <p>{FormatVersionsList(version.supported_game_versions)}</p>
                                                     </div>
@@ -147,7 +165,10 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                         <p className="text-foreground-muted">
                                                             Published on{" "}
                                                             <span className="font-semibold">
-                                                                {formatDate(new Date(version.published_on), "${month} ${day}, ${year}")}
+                                                                {formatDate(
+                                                                    new Date(version.published_on),
+                                                                    "${month} ${day}, ${year}",
+                                                                )}
                                                             </span>
                                                         </p>
                                                     </div>
@@ -156,12 +177,11 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                         );
                                     })}
                             </TableBody>
-                        </Table  >
+                        </Table>
                     </div>
-                </ContentWrapperCard >
-            ) : null
-            }
+                </ContentWrapperCard>
+            ) : null}
             {Pagination ? <div className="w-full flex items-center justify-center mt-2">{Pagination}</div> : null}
-        </div >
+        </div>
     );
 };

@@ -27,7 +27,7 @@ const getProjectsList = async () => {
         console.error(err);
         return [];
     }
-}
+};
 
 const Projects = () => {
     const projectsList = useQuery({ queryKey: ["dashboard-user-projects-list"], queryFn: () => getProjectsList() });
@@ -64,14 +64,14 @@ const Projects = () => {
                     ) : projectsList.data?.length > 0 ? (
                         <ProjectListTable projectsList={projectsList.data} />
                     ) : (
-                        <div className="w-full">
+                        <div className="w-full p-4 pt-0">
                             <p className="text-foreground-muted">
                                 You don't have any projects. Click the button above to create one.
                             </p>
                         </div>
                     )}
                 </div>
-            </ContentWrapperCard >
+            </ContentWrapperCard>
         </div>
     );
 };

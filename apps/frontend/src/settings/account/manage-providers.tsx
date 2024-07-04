@@ -20,7 +20,6 @@ type Props = {
 };
 
 const ManageProviders = ({ linkedProviders, fetchLinkedProviders }: Props) => {
-
     return (
         <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between gap-x-32 gap-y-2">
             <div className="flex shrink flex-col items-start justify-center">
@@ -54,7 +53,9 @@ const ProviderEmailInfoTooltip = ({
     return (
         <TooltipProvider delayDuration={100}>
             <Tooltip>
-                <TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">{email}</TooltipTrigger>
+                <TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">
+                    {email}
+                </TooltipTrigger>
                 <TooltipContent>
                     <p className="text-sm sm:text-base">
                         {provider_email_tooltip.replace("${0}", provider ? provider : "provider")}
@@ -136,7 +137,8 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
                                                     <>
                                                         {linkedProviders.map((linkedProvider) => {
                                                             if (
-                                                                linkedProvider.provider === provider.name.toLowerCase() &&
+                                                                linkedProvider.provider ===
+                                                                    provider.name.toLowerCase() &&
                                                                 linkedProvider?.provider_account_email
                                                             ) {
                                                                 return (
@@ -165,7 +167,10 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <p className="text-base text-foreground-muted" key={provider?.name}>
+                                                        <p
+                                                            className="text-base text-foreground-muted"
+                                                            key={provider?.name}
+                                                        >
                                                             Link {provider?.name} provider
                                                         </p>
 

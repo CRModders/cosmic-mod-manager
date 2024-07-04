@@ -31,9 +31,7 @@ export default function ThemeSwitch({
     const setInitialTheme = () => {
         if (theme !== "system") return;
 
-        const prefersDarkTheme = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-        ).matches;
+        const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
         if (prefersDarkTheme) {
             setTheme("dark");
@@ -46,7 +44,7 @@ export default function ThemeSwitch({
     useEffect(() => {
         try {
             setInitialTheme();
-        } catch (error) { }
+        } catch (error) {}
     }, []);
 
     return (
@@ -66,11 +64,17 @@ export default function ThemeSwitch({
                         iconWrapperClassName,
                     )}
                 >
-                    <div className="sun_icon_wrapper w-full aspect-square flex items-center justify-center" data-hide-on-theme="light">
+                    <div
+                        className="sun_icon_wrapper w-full aspect-square flex items-center justify-center"
+                        data-hide-on-theme="light"
+                    >
                         <SunIcon size={iconSize} className={iconClassName} />
                     </div>
 
-                    <div className="moon_icon_wrapper w-full aspect-square flex items-center justify-center" data-hide-on-theme="dark">
+                    <div
+                        className="moon_icon_wrapper w-full aspect-square flex items-center justify-center"
+                        data-hide-on-theme="dark"
+                    >
                         <MoonIcon size={iconSize} className={iconClassName} />
                     </div>
                 </div>

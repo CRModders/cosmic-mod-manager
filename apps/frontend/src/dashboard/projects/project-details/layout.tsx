@@ -29,7 +29,13 @@ import {
     HeartIcon,
     UpdateIcon,
 } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, timeSince } from "@root/lib/utils";
+import {
+    CapitalizeAndFormatString,
+    createURLSafeSlug,
+    formatDate,
+    isLoaderVisibleInVersionList,
+    timeSince,
+} from "@root/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@root/types";
 import { time_past_phrases } from "@root/types";
 import React, { Suspense, useContext } from "react";
@@ -52,7 +58,7 @@ export default function ProjectDetailsLayout() {
     return (
         <>
             <Helmet>
-                <title>{`${projectData?.name} - ${CapitalizeAndFormatString(projectData?.type[0])} | CRMM`}</title>
+                <title>{`${projectData?.name} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
             {projectData === undefined ? null : (
@@ -93,14 +99,24 @@ export default function ProjectDetailsLayout() {
 
                                     <div className="flex items-center justify-start gap-2 text-foreground-muted">
                                         <CalendarIcon className="w-4 h-4" />
-                                        <TooltipWrapper text={formatDate(new Date(projectData?.created_on), timestamp_template)}>
-                                            <p>Created {timeSince(new Date(projectData?.created_on), time_past_phrases)}</p>
+                                        <TooltipWrapper
+                                            text={formatDate(new Date(projectData?.created_on), timestamp_template)}
+                                        >
+                                            <p>
+                                                Created{" "}
+                                                {timeSince(new Date(projectData?.created_on), time_past_phrases)}
+                                            </p>
                                         </TooltipWrapper>
                                     </div>
                                     <div className="flex items-center justify-start gap-2 text-foreground-muted">
                                         <UpdateIcon className="w-4 h-4" />
-                                        <TooltipWrapper text={formatDate(new Date(projectData?.updated_on), timestamp_template)}>
-                                            <p>Updated {timeSince(new Date(projectData?.updated_on), time_past_phrases)}</p>
+                                        <TooltipWrapper
+                                            text={formatDate(new Date(projectData?.updated_on), timestamp_template)}
+                                        >
+                                            <p>
+                                                Updated{" "}
+                                                {timeSince(new Date(projectData?.updated_on), time_past_phrases)}
+                                            </p>
                                         </TooltipWrapper>
                                     </div>
 
@@ -148,7 +164,9 @@ export default function ProjectDetailsLayout() {
                 </div>
             )}
 
-            {fetchingProjectData ? <AbsolutePositionedSpinner size="lg" className="fixed" preventScroll={true} /> : null}
+            {fetchingProjectData ? (
+                <AbsolutePositionedSpinner size="lg" className="fixed" preventScroll={true} />
+            ) : null}
         </>
     );
 }
@@ -202,9 +220,9 @@ const AdditionalProjectDetailsCard = ({
         <SidePanel className={className}>
             <div className="w-full flex flex-col gap-1 p-2">
                 {projectData?.external_links?.issue_tracker_link ||
-                    projectData?.external_links?.project_source_link ||
-                    projectData?.external_links?.project_wiki_link ||
-                    projectData?.external_links?.discord_invite_link ? (
+                projectData?.external_links?.project_source_link ||
+                projectData?.external_links?.project_wiki_link ||
+                projectData?.external_links?.discord_invite_link ? (
                     <div className="w-full flex flex-col gap-2">
                         <h2 className="text-lg font-semibold text-foreground">External resources</h2>
                         <div className="w-full flex gap-x-3 gap-y-2 flex-wrap">
@@ -236,7 +254,9 @@ const AdditionalProjectDetailsCard = ({
                                 <ExternalLink
                                     url={projectData?.external_links?.discord_invite_link}
                                     label="Discord"
-                                    icon={<DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />}
+                                    icon={
+                                        <DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />
+                                    }
                                 />
                             ) : null}
                         </div>
@@ -269,8 +289,9 @@ const AdditionalProjectDetailsCard = ({
                                             // @ts-expect-error
                                             !e.target.closest(".versionPageLink")
                                         ) {
-                                            const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug
-                                                }/version/${version.url_slug}`;
+                                            const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${
+                                                projectData?.url_slug
+                                            }/version/${version.url_slug}`;
                                             if (window.location.pathname !== link) {
                                                 window.scrollTo({ top: 0 });
                                                 navigate(link);
@@ -289,8 +310,9 @@ const AdditionalProjectDetailsCard = ({
 
                                     <div className="flex w-fit h-full grow flex-col gap-1 select-text">
                                         <Link
-                                            to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug
-                                                }/version/${version.url_slug}`}
+                                            to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
+                                                projectData?.url_slug
+                                            }/version/${version.url_slug}`}
                                             className="versionPageLink w-fit"
                                         >
                                             <p className="text-lg leading-none font-semibold text-foreground-muted">
@@ -298,7 +320,7 @@ const AdditionalProjectDetailsCard = ({
                                             </p>
                                         </Link>
                                         <p className="text-foreground-muted leading-none text-pretty">
-                                            {`${version.supported_loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
+                                            {`${version.supported_loaders.map((loader) => (isLoaderVisibleInVersionList(loader) ? CapitalizeAndFormatString(loader) : null)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
                                         </p>
                                         <ReleaseChannelIndicator release_channel={version.release_channel} />
                                     </div>
@@ -410,7 +432,9 @@ const ProjectDetailsNav = ({
                                 to={link.href}
                                 className="routerNavLink flex flex-col relative"
                             >
-                                <span className="navLinkText py-0.5 flex items-center justify-center">{link.label}</span>
+                                <span className="navLinkText py-0.5 flex items-center justify-center">
+                                    {link.label}
+                                </span>
                                 <span className="activityIndicator" />
                             </RouterNavLink>
                         </li>

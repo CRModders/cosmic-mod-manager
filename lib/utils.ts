@@ -1,5 +1,12 @@
-import { Categories, CategoryType, Loaders, ProjectTypes, ProjectVisibilityOptions, ReleaseChannelsList } from "@root/config/project";
-import { ProjectVisibility, ReleaseChannels, TypeTimePastPhrases } from "@root/types";
+import {
+    Categories,
+    type CategoryType,
+    Loaders,
+    ProjectTypes,
+    ProjectVisibilityOptions,
+    ReleaseChannelsList,
+} from "@root/config/project";
+import { ProjectVisibility, ReleaseChannels, type TypeTimePastPhrases } from "@root/types";
 
 export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
     try {
@@ -22,30 +29,20 @@ export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases):
                 : timePastPhrases.minutes_ago.replace("${0}", `${minutes}`);
         }
         if (hours < 24) {
-            return hours === 1
-                ? timePastPhrases.hour_ago
-                : timePastPhrases.hours_ago.replace("${0}", `${hours}`);
+            return hours === 1 ? timePastPhrases.hour_ago : timePastPhrases.hours_ago.replace("${0}", `${hours}`);
         }
         if (days < 7) {
-            return days === 1
-                ? timePastPhrases.day_ago
-                : timePastPhrases.days_ago.replace("${0}", `${days}`);
+            return days === 1 ? timePastPhrases.day_ago : timePastPhrases.days_ago.replace("${0}", `${days}`);
         }
         if (weeks < 4) {
-            return weeks === 1
-                ? timePastPhrases.week_ago
-                : timePastPhrases.weeks_ago.replace("${0}", `${weeks}`);
+            return weeks === 1 ? timePastPhrases.week_ago : timePastPhrases.weeks_ago.replace("${0}", `${weeks}`);
         }
         if (months < 12) {
-            return months === 1
-                ? timePastPhrases.month_ago
-                : timePastPhrases.months_ago.replace("${0}", `${months}`);
+            return months === 1 ? timePastPhrases.month_ago : timePastPhrases.months_ago.replace("${0}", `${months}`);
         }
-        return years === 1
-            ? timePastPhrases.year_ago
-            : timePastPhrases.years_ago.replace("${0}", `${years}`);
+        return years === 1 ? timePastPhrases.year_ago : timePastPhrases.years_ago.replace("${0}", `${years}`);
     } catch (error) {
-        console.error(error)
+        console.error(error);
         return "";
     }
 };
@@ -95,7 +92,7 @@ export const formatDate = (
             .replace("${minutes}", `${formattedMinutes}`)
             .replace("${amPm}", `${amPm}`);
     } catch (error) {
-        console.error(error)
+        console.error(error);
         return "";
     }
 };
@@ -121,25 +118,23 @@ const fileSizeSuffixes = {
     bytes: "bytes",
     kib: "KiB",
     mib: "MiB",
-    gib: "GiB"
-}
+    gib: "GiB",
+};
 
 export function parseFileSize(size: number): string {
     if (!size) {
-        return `0 ${fileSizeSuffixes.bytes}`
+        return `0 ${fileSizeSuffixes.bytes}`;
     }
-    else if (size >= 0 && size < 1024) {
-        return `${size} ${fileSizeSuffixes.bytes}`
+    if (size >= 0 && size < 1024) {
+        return `${size} ${fileSizeSuffixes.bytes}`;
     }
-    else if (size >= 1024 && size < 1024_000) {
-        return `${(size / 1024).toFixed(1)} ${fileSizeSuffixes.kib}`
+    if (size >= 1024 && size < 1024_000) {
+        return `${(size / 1024).toFixed(1)} ${fileSizeSuffixes.kib}`;
     }
-    else if (size >= 1024_000 && size < 1048576000) {
-        return `${(size / (1024 * 1024)).toFixed(2)} ${fileSizeSuffixes.mib}`
+    if (size >= 1024_000 && size < 1048576000) {
+        return `${(size / (1024 * 1024)).toFixed(2)} ${fileSizeSuffixes.mib}`;
     }
-    else {
-        return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`
-    }
+    return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`;
 }
 
 export function CapitalizeAndFormatString(str: string | null | undefined) {
@@ -149,24 +144,30 @@ export function CapitalizeAndFormatString(str: string | null | undefined) {
 }
 
 export function isValidUrl(url: string) {
-    const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    const regex =
+        /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
     return !!regex.exec(url);
 }
 
-export function isValidString(str: string | undefined | null, maxLength: number, minLength = 1, noTrailingSpaces = true) {
+export function isValidString(
+    str: string | undefined | null,
+    maxLength: number,
+    minLength = 1,
+    noTrailingSpaces = true,
+) {
     const value = (noTrailingSpaces ? str?.trim() : str) || "";
     if (value.length > minLength && value.length <= maxLength) {
         return {
             isValid: true,
-            value: value
-        }
+            value: value,
+        };
     }
 
     return {
         isValid: false,
-        value: value
-    }
-};
+        value: value,
+    };
+}
 
 export const shuffleCharacters = (str: string) => {
     const characters = str.split("");
@@ -204,7 +205,7 @@ export const GetProjectVisibility = (visibility: string) => {
 export const GetProjectType = (project_type: string) => {
     for (const validProjectType of ProjectTypes) {
         if (validProjectType === project_type) {
-            return validProjectType
+            return validProjectType;
         }
     }
 
@@ -227,7 +228,6 @@ export const GetUsersProjectMembership = (
 };
 
 export const GetProjectVersionReleaseChannel = (releaseChannel: string) => {
-
     for (const validReleaseChannel of ReleaseChannelsList) {
         if (releaseChannel === validReleaseChannel) {
             return validReleaseChannel;
@@ -275,7 +275,7 @@ export const GetValidProjectCategories = (projectTypes: string[]) => {
     }
 
     return Array.from(validCategories);
-}
+};
 
 export const VerifySelectedCategories = (selectedCategories: string[], projectTypes: string[]) => {
     const allSelectedCategories = new Set(selectedCategories);
@@ -289,7 +289,7 @@ export const VerifySelectedCategories = (selectedCategories: string[], projectTy
     }
 
     return verifiedCategories;
-}
+};
 
 export const GetProjectTagsFromNames = (tagNames: string[], projectTypes: string[]) => {
     const tagsList = new Set<CategoryType>();
@@ -298,12 +298,23 @@ export const GetProjectTagsFromNames = (tagNames: string[], projectTypes: string
         if (tagNames.includes(category.name)) {
             for (const type of category.project_types) {
                 if (projectTypes.includes(type)) {
-                    tagsList.add(category)
+                    tagsList.add(category);
                     break;
                 }
             }
-        };
+        }
     }
 
     return tagsList;
-}
+};
+
+export const isLoaderVisibleInVersionList = (loaderName: string) => {
+    for (const loader of Loaders) {
+        if (loader.name === loaderName) {
+            if (loader.metadata.visible_in_version_list === false) return false;
+            return true;
+        }
+    }
+
+    return false;
+};

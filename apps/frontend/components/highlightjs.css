@@ -73,7 +73,11 @@
 
 
 .markdown-body blockquote {
-    @apply mx-10 px-4 border-l-[0.25em] border-border-hicontrast
+    @apply ml-6 px-4 border-l-[0.25em] border-border-hicontrast;
+}
+
+.markdown-body blockquote blockquote {
+    @apply ml-4 px-4 border-l-[0.25em] border-border-hicontrast;
 }
 
 .markdown-body a {
@@ -104,7 +108,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body pre {
-    @apply mt-4 p-4 border-[0.15rem] border-background-shallow bg-background-shallow/50 dark:bg-background-shallow rounded-lg overflow-x-auto;
+    @apply mt-4 p-4 bg-background-shallow/50 dark:bg-background-shallow rounded-lg overflow-x-auto;
 }
 
 .markdown-body pre code {
@@ -112,7 +116,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body code {
-    @apply max-w-full py-1 px-2 text-[90%] rounded-lg bg-background-shallow;
+    @apply max-w-full py-1 px-2 text-[90%] rounded-lg bg-background-shallow/50 dark:bg-background-shallow font-mono;
 }
 
 .markdown-body hr {
@@ -190,10 +194,10 @@ code.hljs {
 }
 
 /*
-  
+
   Atom One Light by Daniel Gamage
   Original One Light Syntax theme from https://github.com/atom/one-light-syntax
-  
+
   base:    #fafafa
   mono-1:  #383a42
   mono-2:  #686b77
@@ -206,7 +210,7 @@ code.hljs {
   hue-5-2: #c91243
   hue-6:   #986801
   hue-6-2: #c18401
-  
+
   */
 .hljs {
     color: #383a42;
@@ -297,10 +301,10 @@ code.hljs {
 }
 
 /*
-  
+
   Atom One Dark by Daniel Gamage
   Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
-  
+
   base:    #282c34
   mono-1:  #abb2bf
   mono-2:  #818896
@@ -313,7 +317,7 @@ code.hljs {
   hue-5-2: #be5046
   hue-6:   #d19a66
   hue-6-2: #e6c07b
-  
+
   */
 .dark .hljs {
     color: #abb2bf;

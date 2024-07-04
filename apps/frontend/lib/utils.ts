@@ -44,7 +44,7 @@ export const constructVersionPageUrl = (versionUrlSlug: string) => {
 
 export const FormatProjectTypes = (types: string[]) => {
     if (types.length === 1) return CapitalizeAndFormatString(types[0]);
-    if (types.length === 2) return `${CapitalizeAndFormatString(types[0])} and ${CapitalizeAndFormatString(types[1])}`
+    if (types.length === 2) return `${CapitalizeAndFormatString(types[0])} and ${CapitalizeAndFormatString(types[1])}`;
 
     let str = "";
     for (const type of types.slice(0, -2)) {
@@ -54,5 +54,3 @@ export const FormatProjectTypes = (types: string[]) => {
     str += `${CapitalizeAndFormatString(types.at(-2))} and ${CapitalizeAndFormatString(types.at(-1))}`;
     return str;
 };
-
-

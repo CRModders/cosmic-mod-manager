@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
         "paths": {
-            "@root/*": [
-                "./*"
-            ]
+            "@root/*": ["./*"]
         },
         "jsx": "react"
     }

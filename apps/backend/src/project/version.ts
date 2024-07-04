@@ -1,6 +1,13 @@
 import prisma from "@/lib/prisma";
 import { maxChangelogLength, maxFileSize, maxProjectNameLength } from "@root/config";
-import { GetProjectLoadersList, GetProjectVersionReleaseChannel, GetUsersProjectMembership, GetValidProjectCategories, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import {
+    GetProjectLoadersList,
+    GetProjectVersionReleaseChannel,
+    GetUsersProjectMembership,
+    GetValidProjectCategories,
+    createURLSafeSlug,
+    parseFileSize,
+} from "@root/lib/utils";
 import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
@@ -245,7 +252,7 @@ versionRouter.post("/:versionSlug/update", async (c) => {
                     },
                     select: {
                         id: true,
-                        supported_loaders: true
+                        supported_loaders: true,
                     },
                 },
             },
@@ -292,14 +299,14 @@ versionRouter.post("/:versionSlug/update", async (c) => {
                 }
             }
             return list;
-        })()
+        })();
 
         await prisma.project.update({
             where: {
                 id: project.id,
             },
             data: {
-                type: InferProjectTypeFromLoaders([...projectVersion.supported_loaders, ...previousVersionLoaders])
+                type: InferProjectTypeFromLoaders([...projectVersion.supported_loaders, ...previousVersionLoaders]),
             },
         });
 
@@ -445,28 +452,35 @@ versionRouter.post("/create", async (c) => {
                         user_id: user.id,
                         OR: [
                             {
-                                role: UserRolesInProject.OWNER
-                            }, {
+                                role: UserRolesInProject.OWNER,
+                            },
+                            {
                                 permissions: {
-                                    has: MemberPermissionsInProject.UPLOAD_VERSION
-                                }
-                            }
-                        ]
+                                    has: MemberPermissionsInProject.UPLOAD_VERSION,
+                                },
+                            },
+                        ],
                     },
                     select: {
                         id: true,
-                    }
+                    },
                 },
                 versions: {
                     select: {
-                        supported_loaders: true
-                    }
-                }
+                        supported_loaders: true,
+                    },
+                },
             },
         });
 
         if (!project?.members?.[0]?.id) {
-            return c.json({ message: "The project doesn't exist or you don't have the permission to upload versions in this project", }, 400);
+            return c.json(
+                {
+                    message:
+                        "The project doesn't exist or you don't have the permission to upload versions in this project",
+                },
+                400,
+            );
         }
 
         const existingVersionWithSameUrlSlug = await prisma.projectVersion.findFirst({
@@ -536,7 +550,7 @@ versionRouter.post("/create", async (c) => {
                 }
             }
             return list;
-        })()
+        })();
 
         await prisma.project.update({
             where: {
@@ -544,7 +558,7 @@ versionRouter.post("/create", async (c) => {
             },
             data: {
                 updated_on: new Date(),
-                type: InferProjectTypeFromLoaders([...newProjectVersion.supported_loaders, ...previousVersionLoaders])
+                type: InferProjectTypeFromLoaders([...newProjectVersion.supported_loaders, ...previousVersionLoaders]),
             },
         });
 
@@ -591,13 +605,13 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
                         OR: [
                             {
                                 permissions: {
-                                    has: MemberPermissionsInProject.DELETE_VERSION
-                                }
+                                    has: MemberPermissionsInProject.DELETE_VERSION,
+                                },
                             },
                             {
-                                role: UserRolesInProject.OWNER
-                            }
-                        ]
+                                role: UserRolesInProject.OWNER,
+                            },
+                        ],
                     },
                     select: {
                         id: true,
@@ -624,26 +638,26 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
                 id: project.versions[0].id,
             },
             select: {
-                version_number: true
-            }
+                version_number: true,
+            },
         });
 
         await deleteAllVersionFiles(user.id, project.id, project.versions[0].id).catch((e) => console.error(e));
 
         const projectsNewState = await prisma.project.findUnique({
             where: {
-                url_slug: projectSlug
+                url_slug: projectSlug,
             },
             select: {
                 versions: {
                     select: {
-                        supported_loaders: true
-                    }
+                        supported_loaders: true,
+                    },
                 },
                 tags: true,
-                featured_tags: true
-            }
-        })
+                featured_tags: true,
+            },
+        });
 
         const projectLoaders = new Set<string>();
         for (const version of projectsNewState.versions) {
@@ -655,7 +669,9 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
         const updatedProjectType = InferProjectTypeFromLoaders([...Array.from(projectLoaders)]);
         const validProjectTags = GetValidProjectCategories(updatedProjectType).map((tag) => tag.toString());
         const updatedTags = projectsNewState.tags.filter((tag) => validProjectTags.includes(tag));
-        const featuredTags = projectsNewState.featured_tags.filter((featured_tag) => updatedTags.includes(featured_tag))
+        const featuredTags = projectsNewState.featured_tags.filter((featured_tag) =>
+            updatedTags.includes(featured_tag),
+        );
 
         await prisma.project.update({
             where: {
@@ -665,7 +681,7 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
                 updated_on: new Date(),
                 type: updatedProjectType,
                 tags: updatedTags,
-                featured_tags: featuredTags
+                featured_tags: featuredTags,
             },
         });
 

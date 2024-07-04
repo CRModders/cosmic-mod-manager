@@ -23,7 +23,11 @@ export const FormatVersionsList = (list: string[]): string => {
     const groupedVersionsList: string[][] = [];
 
     for (let i = 0; i < list.length; null) {
-        const continuousVersions = GetContinuousItems<string>(sortedList, GameVersions.map((version) => version.version), i);
+        const continuousVersions = GetContinuousItems<string>(
+            sortedList,
+            GameVersions.map((version) => version.version),
+            i,
+        );
         groupedVersionsList.push(continuousVersions);
         i += continuousVersions.length;
     }

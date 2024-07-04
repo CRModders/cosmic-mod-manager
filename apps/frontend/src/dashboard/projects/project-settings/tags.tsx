@@ -12,6 +12,7 @@ import { maxFeaturedProjectTags } from "@root/config";
 import type { CategoryType } from "@root/config/project";
 import { CapitalizeAndFormatString, GetProjectTagsFromNames, GetValidProjectCategories } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 
 const TagsSettingsPage = () => {
     const [loading, setLoading] = useState(false);
@@ -72,7 +73,6 @@ const TagsSettingsPage = () => {
                 title: result?.message || "Something went wrong",
             });
         }
-
         await fetchProjectData();
     };
 
@@ -112,10 +112,16 @@ const TagsSettingsPage = () => {
         <ContentWrapperCard className="relative">
             {!projectData ? null : (
                 <>
+                    <Helmet>
+                        <title>Tag settings - {projectData?.name} | CRMM</title>
+                        <meta name="description" content="Your projects on crmm." />
+                    </Helmet>
+
                     <div className="w-full flex flex-col items-start justify-start gap-1">
                         <h2 className="text-2xl font-semibold">Tags</h2>
                         <p className=" text-foreground-muted">
-                            Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.
+                            Accurate tagging is important to help people find your mod. Make sure to select all tags
+                            that apply.
                         </p>
                     </div>
 
@@ -146,7 +152,9 @@ const TagsSettingsPage = () => {
                             })}
                         </div>
                         {!GetValidProjectCategories(projectData.type).length && (
-                            <p className="w-full flex items-start justify-start">Upload a version first in order to select tags.</p>
+                            <p className="w-full flex items-start justify-start">
+                                Upload a version first in order to select tags.
+                            </p>
                         )}
                     </div>
 
@@ -168,8 +176,8 @@ const TagsSettingsPage = () => {
                                             className={cn(
                                                 "flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer",
                                                 !featuredTags.has(category) &&
-                                                Array.from(featuredTags).length >= maxFeaturedProjectTags &&
-                                                "cursor-not-allowed opacity-50 hover:opacity-50",
+                                                    Array.from(featuredTags).length >= maxFeaturedProjectTags &&
+                                                    "cursor-not-allowed opacity-50 hover:opacity-50",
                                             )}
                                         >
                                             <Checkbox
@@ -177,7 +185,8 @@ const TagsSettingsPage = () => {
                                                 checked={featuredTags.has(category)}
                                                 onCheckedChange={(e) => handleFeaturedTagsSelection(category, !!e)}
                                                 disabled={
-                                                    !featuredTags.has(category) && Array.from(featuredTags).length >= maxFeaturedProjectTags
+                                                    !featuredTags.has(category) &&
+                                                    Array.from(featuredTags).length >= maxFeaturedProjectTags
                                                 }
                                             />
                                             <span className="text-foreground-muted">

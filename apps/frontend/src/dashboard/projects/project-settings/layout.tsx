@@ -79,7 +79,9 @@ export function ProjectSettingsLayoutContent({
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
-                                            <BreadcrumbLink href={`/${createURLSafeSlug(projectData.type[0]).value}/${projectData.url_slug}`}>
+                                            <BreadcrumbLink
+                                                href={`/${createURLSafeSlug(projectData.type[0]).value}/${projectData.url_slug}`}
+                                            >
                                                 {projectData?.name}
                                             </BreadcrumbLink>
                                         </BreadcrumbItem>
@@ -97,17 +99,25 @@ export function ProjectSettingsLayoutContent({
                                 </span>
                                 <div className="flex flex-col items-start justify-center">
                                     <h2 className="text-lg text-foreground font-semibold">{projectData?.name}</h2>
-                                    <p className="capitalize text-foreground-muted font-semibold">{projectData?.status?.toLowerCase()}</p>
+                                    <p className="capitalize text-foreground-muted font-semibold">
+                                        {projectData?.status?.toLowerCase()}
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="w-full mt-6">
-                                <h1 className="w-full px-1 text-2xl font-semibold mb-2 text-foreground">Project settings</h1>
+                                <h1 className="w-full px-1 text-2xl font-semibold mb-2 text-foreground">
+                                    Project settings
+                                </h1>
                                 <ul className="w-full flex flex-col items-start justify-center gap-1">
                                     {SidePanelLinks?.map((link) => {
                                         return (
                                             <React.Fragment key={link.href}>
-                                                <SidepanelLink href={`${baseUrl}/${link.href}`} label={link.name} icon={link.icon} />
+                                                <SidepanelLink
+                                                    href={`${baseUrl}/${link.href}`}
+                                                    label={link.name}
+                                                    icon={link.icon}
+                                                />
                                             </React.Fragment>
                                         );
                                     })}
@@ -119,7 +129,11 @@ export function ProjectSettingsLayoutContent({
                                     {viewPageLinks?.map((link) => {
                                         return (
                                             <React.Fragment key={link.href}>
-                                                <SidepanelLink href={`${baseUrl}/${link.href}`} label={link.name} icon={link.icon} />
+                                                <SidepanelLink
+                                                    href={`${baseUrl}/${link.href}`}
+                                                    label={link.name}
+                                                    icon={link.icon}
+                                                />
                                             </React.Fragment>
                                         );
                                     })}
@@ -131,7 +145,11 @@ export function ProjectSettingsLayoutContent({
                                     {UploadPageLinks?.map((link) => {
                                         return (
                                             <React.Fragment key={link.href}>
-                                                <SidepanelLink href={`${baseUrl}/${link.href}`} label={link.name} icon={link.icon} />
+                                                <SidepanelLink
+                                                    href={`${baseUrl}/${link.href}`}
+                                                    label={link.name}
+                                                    icon={link.icon}
+                                                />
                                             </React.Fragment>
                                         );
                                     })}
@@ -211,7 +229,7 @@ export default function ProjectSettingsLayout({ projectType }: { projectType: st
     return (
         <>
             <Helmet>
-                <title>Project settings | CRMM</title>
+                <title>Settings - {projectUrlSlug} | CRMM</title>
                 <meta name="description" content="Your projects on crmm." />
             </Helmet>
             <ProjectSettingsLayoutContent projectUrlSlug={projectUrlSlug || ""} projectType={projectType || ""} />

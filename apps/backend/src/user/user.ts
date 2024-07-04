@@ -987,8 +987,7 @@ userRouter.post("/confirm-user-account-deletion", async (c) => {
 
         return c.json({
             success: true,
-            message:
-                "Successfully deleted your account and all the related data.",
+            message: "Successfully deleted your account and all the related data.",
         });
     } catch (error) {
         console.error(error);

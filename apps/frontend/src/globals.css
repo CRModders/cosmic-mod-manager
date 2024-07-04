@@ -6,7 +6,7 @@
 
 :root {
     --scrollbar-width: 0.6rem;
-    --tint-hue: 200;
+    --tint-hue: 220;
     --accent-color-hue: 345;
 
     /* LIGHT THEME */
@@ -87,6 +87,10 @@ html {
 * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+a{
+    @apply rounded-lg;
 }
 
 body {

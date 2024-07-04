@@ -15,8 +15,8 @@ export const generateProjectVersionStorageUrl = (userId: string, projectId: stri
 };
 
 export const createFilePathSafeString = (str: string) => {
-    return str.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
-}
+    return str.replace(/[^a-z0-9.-]/gi, "_").toLowerCase();
+};
 
 export const generateProjectVersionFileStorageUrl = (
     userId: string,
@@ -35,7 +35,7 @@ const storeFile = async (path: string, file: File) => {
 
 const deleteDirectory = async (path: string) => {
     await nodefs.rm(path, { recursive: true });
-}
+};
 
 export const saveProjectVersionFile = async ({
     fileName,
@@ -59,12 +59,12 @@ export const saveProjectVersionFile = async ({
 
 export const deleteAllUserFiles = async (userId: string) => {
     await deleteDirectory(`${uploadsDir}/${generateUserStorageUrl(userId)}`);
-}
+};
 
 export const deleteAllProjectFiles = async (userId: string, projectId: string) => {
     await deleteDirectory(`${uploadsDir}/${generateProjectStorageUrl(userId, projectId)}`);
-}
+};
 
 export const deleteAllVersionFiles = async (userId: string, projectId: string, versionId: string) => {
     await deleteDirectory(`${uploadsDir}/${generateProjectVersionStorageUrl(userId, projectId, versionId)}`);
-}
+};

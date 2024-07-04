@@ -5,23 +5,23 @@ import AuthProvider from "./auth-provider";
 import ThemeProvider from "./theme-provider";
 
 const reactQueryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnWindowFocus: false,
-		},
-	},
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
 });
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
-	return (
-		<QueryClientProvider client={reactQueryClient}>
-			<CookiesProvider>
-				<AuthProvider>
-					<ThemeProvider>{children}</ThemeProvider>
-				</AuthProvider>
-			</CookiesProvider>
-		</QueryClientProvider>
-	);
+    return (
+        <QueryClientProvider client={reactQueryClient}>
+            <CookiesProvider>
+                <AuthProvider>
+                    <ThemeProvider>{children}</ThemeProvider>
+                </AuthProvider>
+            </CookiesProvider>
+        </QueryClientProvider>
+    );
 };
 
 export default Providers;

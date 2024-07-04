@@ -26,7 +26,10 @@ type PanelContentProps = {
 export const PanelContent = ({ children, className }: PanelContentProps) => {
     return (
         <section
-            className={cn("grow max-w-full flex flex-col gap-4 items-center justify-center rounded-lg lg:w-64", className)}
+            className={cn(
+                "grow max-w-full flex flex-col gap-4 items-center justify-center rounded-lg lg:w-64",
+                className,
+            )}
         >
             {children}
         </section>

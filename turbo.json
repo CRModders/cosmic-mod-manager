@@ -1,21 +1,13 @@
 {
     "$schema": "https://turbo.build/schema.json",
-    "globalDependencies": [
-        "**/.env.*local"
-    ],
+    "globalDependencies": ["**/.env.*local"],
     "tasks": {
         "build": {
-            "dependsOn": [
-                "^build"
-            ],
-            "outputs": [
-                "dist/**"
-            ]
+            "dependsOn": ["^build"],
+            "outputs": ["dist/**"]
         },
         "lint": {
-            "dependsOn": [
-                "^lint"
-            ]
+            "dependsOn": ["^lint"]
         },
         "dev": {
             "cache": true,

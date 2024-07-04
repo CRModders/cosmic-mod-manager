@@ -77,7 +77,9 @@ export default function HomePage() {
             <section className="w-full min-h-[100vh] flex flex-col items-center justify-center container py-12">
                 <BrandIcon size="16rem" className="text-accent-foreground" />
                 <div className="w-full flex flex-col items-center justify-center">
-                    <h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">Cosmic Reach Mod Manager</h1>
+                    <h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">
+                        Cosmic Reach Mod Manager
+                    </h1>
 
                     <h2 className="h-10 lg:h-14 mb-2 overflow-hidden">
                         <span className="hero_section_showcase flex flex-col items-center justify-center">
@@ -87,7 +89,7 @@ export default function HomePage() {
                                         key={`${item}${
                                             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                             index
-                                            }`}
+                                        }`}
                                         className="flex font-bold items-center justify-center h-10 lg:h-14 text-2xl lg:text-4xl bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-bg via-accent-bg leading-loose"
                                         // @ts-ignore
                                         style={{ "--index": index + 1 }}
@@ -143,12 +145,18 @@ export default function HomePage() {
                                     key={item.url}
                                     aria-label={item.name}
                                 >
-                                    <div className="h-16 w-16 bg-bg-hover rounded-lg flex items-center justify-center"> </div>
+                                    <div className="h-16 w-16 bg-bg-hover rounded-lg flex items-center justify-center">
+                                        {" "}
+                                    </div>
                                     <div className="flex flex-col items-start justify-start mr-4 max-h-24">
-                                        <h3 className={`${styles.item_name} text-lg sm:text-xl text-foreground-muted font-semibold`}>
+                                        <h3
+                                            className={`${styles.item_name} text-lg sm:text-xl text-foreground-muted font-semibold`}
+                                        >
                                             {item.name}
                                         </h3>
-                                        <p className={`${styles.item_description} text-foreground-muted`}>{item.description}</p>
+                                        <p className={`${styles.item_description} text-foreground-muted`}>
+                                            {item.description}
+                                        </p>
                                     </div>
                                 </Link>
                             );

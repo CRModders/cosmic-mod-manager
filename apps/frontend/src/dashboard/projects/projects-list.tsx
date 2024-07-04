@@ -22,23 +22,23 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                         <TableHead className="overflow-hidden w-[30%]">Name</TableHead>
                         <TableHead className="overflow-hidden w-[24%]">
                             <div className="flex">
-                                <span className="text-base opacity-0 select-none">.</span >
+                                <span className="text-base opacity-0 select-none">.</span>
                                 <span>ID</span>
-                            </div >
+                            </div>
                         </TableHead>
                         <TableHead className="overflow-hidden w-[17%]">Type</TableHead>
                         <TableHead className="overflow-hidden w-[13%]">Status</TableHead>
                         <TableHead className="overflow-hidden w-[6%]">
                             <span className="mr-4" />
                         </TableHead>
-                    </TableRow  >
-                </TableHeader  >
+                    </TableRow>
+                </TableHeader>
                 <TableBody>
                     {projectsList.map((project) => {
                         return (
                             <TableRow
                                 key={project.id}
-                                className=" hover:bg-bg-hover cursor-pointer"
+                                className="hover:bg-bg-hover/50 dark:hover:bg-bg-hover/75 cursor-pointer"
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {
@@ -48,6 +48,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                             >
                                 <TableCell>
                                     <Link
+                                        tabIndex={-1}
                                         to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
                                         className="noClickRedirect ml-4 flex w-fit h-full aspect-square p-2 rounded-lg bg-background-shallow"
                                     >
@@ -57,7 +58,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                 <TableCell>
                                     <Link
                                         to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
-                                        className="noClickRedirect rounded-lg"
+                                        className="noClickRedirect"
                                     >
                                         <Button variant={"link"} className="p-0" tabIndex={-1}>
                                             {project.name}
@@ -77,14 +78,14 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                 <TableCell>{FormatProjectTypes(project.type)}</TableCell>
                                 <TableCell>{CapitalizeAndFormatString(project.status)}</TableCell>
                                 <TableCell className="cursor-default">
-                                <div className="flex items-center justify-center pr-4">
-                                    <Link
-                                        to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}/settings`}
-                                        className="noClickRedirect rounded-lg flex items-center justify-center h-full w-fit text-foreground-muted"
-                                    >
-                                        <GearIcon size="2.25rem" className="hover:bg-background rounded-lg p-2" />
-                                    </Link>
-                                </div >
+                                    <div className="flex items-center justify-center pr-4">
+                                        <Link
+                                            to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}/settings`}
+                                            className="noClickRedirect rounded-lg flex items-center justify-center h-full w-fit text-foreground-muted"
+                                        >
+                                            <GearIcon size="2.25rem" className="hover:bg-background rounded-lg p-2" />
+                                        </Link>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         );

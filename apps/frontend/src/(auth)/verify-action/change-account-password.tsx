@@ -17,263 +17,267 @@ import { z } from "zod";
 import SecurityLink from "./session-page-link";
 
 const formSchema = z.object({
-	email: z.string(),
-	newPassword: z
-		.string()
-		.min(minPasswordLength, {
-			message: "Enter your new password",
-		})
-		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} characters`,
-		}),
-	confirmNewPassword: z
-		.string()
-		.min(1, {
-			message: "Re-enter your password",
-		})
-		.max(maxPasswordLength, {
-			message: `Your password can only have a maximum of ${maxPasswordLength} characters`,
-		}),
+    email: z.string(),
+    newPassword: z
+        .string()
+        .min(minPasswordLength, {
+            message: "Enter your new password",
+        })
+        .max(maxPasswordLength, {
+            message: `Your password can only have a maximum of ${maxPasswordLength} characters`,
+        }),
+    confirmNewPassword: z
+        .string()
+        .min(1, {
+            message: "Re-enter your password",
+        })
+        .max(maxPasswordLength, {
+            message: `Your password can only have a maximum of ${maxPasswordLength} characters`,
+        }),
 });
 
 type Props = {
-	code: string;
-	email: string;
+    code: string;
+    email: string;
 };
 
 enum SuccessPage {
-	CANCELLATION_SUCCESS = "CANCELLATION_SUCCESS",
-	CHANGE_SUCCESS = "CHANGE_SUCCESS",
+    CANCELLATION_SUCCESS = "CANCELLATION_SUCCESS",
+    CHANGE_SUCCESS = "CHANGE_SUCCESS",
 }
 
 const ChangeAccountPassword = ({ code, email }: Props) => {
-	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
-	const [formError, setFormError] = useState<string | null>(null);
-	const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(null);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
+    const [showSuccessPage, setShowSuccessPage] = useState<SuccessPage | null>(null);
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			email: email || "",
-			newPassword: "",
-			confirmNewPassword: "",
-		},
-	});
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: email || "",
+            newPassword: "",
+            confirmNewPassword: "",
+        },
+    });
 
-	const checkFormError = () => {
-		const newPassword = form.getValues("newPassword");
+    const checkFormError = () => {
+        const newPassword = form.getValues("newPassword");
 
-		if (isValidPassword(newPassword) !== true) {
-			const error = isValidPassword(newPassword);
-			return setFormError(typeof error === "string" ? error : null);
-		}
+        if (isValidPassword(newPassword) !== true) {
+            const error = isValidPassword(newPassword);
+            return setFormError(typeof error === "string" ? error : null);
+        }
 
-		return setFormError("");
-	};
+        return setFormError("");
+    };
 
-	const cancelAction = async () => {
-		if (loading) return;
+    const cancelAction = async () => {
+        if (loading) return;
 
-		setLoading(true);
+        setLoading(true);
 
-		const response = await useFetch("/api/user/discard-change-password-request", {
-			method: "POST",
-			body: JSON.stringify({ token: code }),
-		});
-		setLoading(false);
-		const result = await response.json();
+        const response = await useFetch("/api/user/discard-change-password-request", {
+            method: "POST",
+            body: JSON.stringify({ token: code }),
+        });
+        setLoading(false);
+        const result = await response.json();
 
-		if (result?.success !== true) {
-			return setFormError(result?.message);
-		}
-		setShowSuccessPage(SuccessPage.CANCELLATION_SUCCESS);
-		await sleep(3_000);
-		navigate("/", { replace: true });
-	};
+        if (result?.success !== true) {
+            return setFormError(result?.message);
+        }
+        setShowSuccessPage(SuccessPage.CANCELLATION_SUCCESS);
+        await sleep(3_000);
+        navigate("/", { replace: true });
+    };
 
-	const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-		if (loading) return;
+    const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (loading) return;
 
-		checkFormError();
-		if (formError) {
-			return;
-		}
+        checkFormError();
+        if (formError) {
+            return;
+        }
 
-		if (values.newPassword !== values.confirmNewPassword) {
-			return setFormError("Passwords do not match");
-		}
+        if (values.newPassword !== values.confirmNewPassword) {
+            return setFormError("Passwords do not match");
+        }
 
-		setLoading(true);
-		const response = await useFetch("/api/user/change-account-password", {
-			method: "POST",
-			body: JSON.stringify({
-				token: code,
-				newPassword: values.newPassword,
-			}),
-		});
-		setLoading(false);
-		const result = await response.json();
+        setLoading(true);
+        const response = await useFetch("/api/user/change-account-password", {
+            method: "POST",
+            body: JSON.stringify({
+                token: code,
+                newPassword: values.newPassword,
+            }),
+        });
+        setLoading(false);
+        const result = await response.json();
 
-		if (result.success === true) {
-			form.reset();
-			setShowSuccessPage(SuccessPage.CHANGE_SUCCESS);
+        if (result.success === true) {
+            form.reset();
+            setShowSuccessPage(SuccessPage.CHANGE_SUCCESS);
 
-			await sleep(3_000);
-			navigate("/", { replace: true });
-		} else {
-			setFormError(result?.message);
-		}
-	};
+            await sleep(3_000);
+            navigate("/", { replace: true });
+        } else {
+            setFormError(result?.message);
+        }
+    };
 
-	if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
-		return (
-			<div className=" w-full max-w-md">
-				<FormSuccessMessage text="Discarded password change" className="text-lg" />
-			</div>
-		);
-	}
+    if (showSuccessPage === SuccessPage.CANCELLATION_SUCCESS) {
+        return (
+            <div className=" w-full max-w-md">
+                <FormSuccessMessage text="Discarded password change" className="text-lg" />
+            </div>
+        );
+    }
 
-	if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
-		return (
-			<div className=" w-full max-w-md">
-				<FormSuccessMessage text="Password changed successfully" className="text-lg" />
-			</div>
-		);
-	}
+    if (showSuccessPage === SuccessPage.CHANGE_SUCCESS) {
+        return (
+            <div className=" w-full max-w-md">
+                <FormSuccessMessage text="Password changed successfully" className="text-lg" />
+            </div>
+        );
+    }
 
-	return (
-		<Card className="max-w-md w-full relative">
-			<CardContent>
-				<CardHeader className="px-0">
-					<CardTitle className="w-full text-left text-foreground-muted font-semibold text-xl">
-						Change password
-					</CardTitle>
-				</CardHeader>
-				<div className="w-full flex flex-col items-center justify-center">
-					<Form {...form}>
-						<form
-							onSubmit={form.handleSubmit(handleSubmit)}
-							name="Change password"
-							className="w-full flex flex-col items-center justify-center gap-6"
-						>
-							<div className="w-full flex flex-col items-center justify-center gap-4">
-								<div className="hidden">
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<>
-												<FormItem className="hidden">
-													<FormControl>
-														<Input
-															{...field}
-															placeholder="********"
-															type="email"
-															name="username"
-															autoComplete="username"
-															className="hidden"
-															readOnly={true}
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-																field.onChange(e);
-																checkFormError();
-															}}
-														/>
-													</FormControl>
-												</FormItem>
-											</>
-										)}
-									/>
-								</div>
+    return (
+        <Card className="max-w-md w-full relative">
+            <CardContent>
+                <CardHeader className="px-0">
+                    <CardTitle className="w-full text-left text-foreground-muted font-semibold text-xl">
+                        Change password
+                    </CardTitle>
+                </CardHeader>
+                <div className="w-full flex flex-col items-center justify-center">
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(handleSubmit)}
+                            name="Change password"
+                            className="w-full flex flex-col items-center justify-center gap-6"
+                        >
+                            <div className="w-full flex flex-col items-center justify-center gap-4">
+                                <div className="hidden">
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <>
+                                                <FormItem className="hidden">
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            placeholder="********"
+                                                            type="email"
+                                                            name="username"
+                                                            autoComplete="username"
+                                                            className="hidden"
+                                                            readOnly={true}
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                field.onChange(e);
+                                                                checkFormError();
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            </>
+                                        )}
+                                    />
+                                </div>
 
-								<div className="w-full flex flex-col items-center justify-center">
-									<FormField
-										control={form.control}
-										name="newPassword"
-										render={({ field }) => (
-											<>
-												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
-														<span className="text-foreground font-semibold">New password</span>
-														<FormMessage className="text-danger-text leading-tight" />
-													</FormLabel>
-													<FormControl>
-														<Input
-															{...field}
-															placeholder="********"
-															type="password"
-															name="password"
-															autoComplete="password"
-															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-																field.onChange(e);
-																checkFormError();
-															}}
-														/>
-													</FormControl>
-												</FormItem>
-											</>
-										)}
-									/>
-								</div>
+                                <div className="w-full flex flex-col items-center justify-center">
+                                    <FormField
+                                        control={form.control}
+                                        name="newPassword"
+                                        render={({ field }) => (
+                                            <>
+                                                <FormItem className="w-full flex flex-col items-center justify-center space-y-1">
+                                                    <FormLabel className="w-full my-1 flex items-end justify-between text-left gap-12 min-h-4">
+                                                        <span className="text-foreground font-semibold">
+                                                            New password
+                                                        </span>
+                                                        <FormMessage className="text-danger-text leading-tight" />
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            placeholder="********"
+                                                            type="password"
+                                                            name="password"
+                                                            autoComplete="password"
+                                                            className="w-full flex items-center justify-center"
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                field.onChange(e);
+                                                                checkFormError();
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            </>
+                                        )}
+                                    />
+                                </div>
 
-								<div className="w-full flex flex-col items-center justify-center">
-									<FormField
-										control={form.control}
-										name="confirmNewPassword"
-										render={({ field }) => (
-											<>
-												<FormItem className="w-full flex flex-col items-center justify-center space-y-1">
-													<FormLabel className="w-full my-1 flex items-end justify-between text-left min-h-4 gap-12">
-														<span className="text-foreground font-semibold">Confirm new password</span>
-														<FormMessage className="text-danger-text leading-tight" />
-													</FormLabel>
-													<FormControl>
-														<Input
-															{...field}
-															placeholder="********"
-															type="password"
-															name="confirm_password"
-															autoComplete="confirm_password"
-															className="w-full flex items-center justify-center"
-															onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-																field.onChange(e);
-																checkFormError();
-															}}
-														/>
-													</FormControl>
-												</FormItem>
-											</>
-										)}
-									/>
-								</div>
-							</div>
+                                <div className="w-full flex flex-col items-center justify-center">
+                                    <FormField
+                                        control={form.control}
+                                        name="confirmNewPassword"
+                                        render={({ field }) => (
+                                            <>
+                                                <FormItem className="w-full flex flex-col items-center justify-center space-y-1">
+                                                    <FormLabel className="w-full my-1 flex items-end justify-between text-left min-h-4 gap-12">
+                                                        <span className="text-foreground font-semibold">
+                                                            Confirm new password
+                                                        </span>
+                                                        <FormMessage className="text-danger-text leading-tight" />
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            placeholder="********"
+                                                            type="password"
+                                                            name="confirm_password"
+                                                            autoComplete="confirm_password"
+                                                            className="w-full flex items-center justify-center"
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                field.onChange(e);
+                                                                checkFormError();
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                            </div>
 
-							{formError && <FormErrorMessage text={formError} />}
+                            {formError && <FormErrorMessage text={formError} />}
 
-							<div className="w-full flex items-center justify-end gap-2">
-								<Button variant="secondary" type="button" onClick={cancelAction}>
-									Cancel
-								</Button>
+                            <div className="w-full flex items-center justify-end gap-2">
+                                <Button variant="secondary" type="button" onClick={cancelAction}>
+                                    Cancel
+                                </Button>
 
-								<Button
-									type="submit"
-									aria-label="Change password"
-									disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
-								>
-									Change password
-								</Button>
-							</div>
-						</form>
-						{loading === true && <AbsolutePositionedSpinner />}
-					</Form>
-				</div>
-				<div className="w-full flex items-center justify-start mt-6">
-					<SecurityLink />
-				</div>
-			</CardContent>
-		</Card>
-	);
+                                <Button
+                                    type="submit"
+                                    aria-label="Change password"
+                                    disabled={!form.getValues().newPassword && !form.getValues().confirmNewPassword}
+                                >
+                                    Change password
+                                </Button>
+                            </div>
+                        </form>
+                        {loading === true && <AbsolutePositionedSpinner />}
+                    </Form>
+                </div>
+                <div className="w-full flex items-center justify-start mt-6">
+                    <SecurityLink />
+                </div>
+            </CardContent>
+        </Card>
+    );
 };
 
 export default ChangeAccountPassword;

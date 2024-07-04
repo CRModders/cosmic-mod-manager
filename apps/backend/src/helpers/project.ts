@@ -1,7 +1,6 @@
 import { Loaders, ProjectTypes } from "@root/config/project";
 import type { ProjectType } from "@root/types";
 
-
 const OrderProjectTypes = (list: ProjectType[]) => {
     const orderedList: ProjectType[] = [];
 
@@ -9,7 +8,7 @@ const OrderProjectTypes = (list: ProjectType[]) => {
         if (list.includes(projectType)) {
             orderedList.push(projectType);
         }
-    };
+    }
 
     return orderedList;
 };
@@ -30,4 +29,4 @@ export const InferProjectTypeFromLoaders = (projectLoaders: string[]) => {
 
     const list = OrderProjectTypes(Array.from(projectTypes));
     return list.length > 0 ? list : ["PROJECT"];
-}
+};

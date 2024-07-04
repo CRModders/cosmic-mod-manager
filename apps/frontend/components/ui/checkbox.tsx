@@ -24,21 +24,31 @@ const Checkbox = React.forwardRef<
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-
-const LabelledCheckBox = ({ checkBoxId, label, checked, onCheckedChange, className }: { checkBoxId: string; label: string; checked: boolean; className?: string; onCheckedChange: (e: CheckboxPrimitive.CheckedState) => void; }) => {
+const LabelledCheckBox = ({
+    checkBoxId,
+    label,
+    checked,
+    onCheckedChange,
+    className,
+}: {
+    checkBoxId: string;
+    label: string | React.ReactNode;
+    checked: boolean;
+    className?: string;
+    onCheckedChange: (e: CheckboxPrimitive.CheckedState) => void;
+}) => {
     return (
         <Label
             htmlFor={checkBoxId}
-            className={cn("flex gap-2 py-1 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer text-foreground-muted", className)}
+            className={cn(
+                "flex gap-[0.7rem] py-[0.3rem] items-center justify-start transition-opacity hover:opacity-85 cursor-pointer text-foreground-muted",
+                className,
+            )}
         >
-            <Checkbox
-                id={checkBoxId}
-                checked={checked}
-                onCheckedChange={onCheckedChange}
-            />
+            <Checkbox id={checkBoxId} checked={checked} onCheckedChange={onCheckedChange} />
             {label}
         </Label>
-    )
-}
+    );
+};
 
 export { Checkbox, LabelledCheckBox };

@@ -28,7 +28,7 @@ export const sendNewPasswordVerificationEmail = async ({
                     action: UserVerificationActionTypes.ADD_PASSWORD,
                 },
             });
-        } catch (error) { }
+        } catch (error) {}
 
         const res = await prisma.verificationRequest.create({
             data: {
@@ -73,7 +73,7 @@ export const sendPasswordChangeEmail = async (user: Partial<User>) => {
                     action: UserVerificationActionTypes.CHANGE_PASSWORD,
                 },
             });
-        } catch (error) { }
+        } catch (error) {}
 
         const res = await prisma.verificationRequest.create({
             data: {
@@ -118,7 +118,7 @@ export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) 
                     action: UserVerificationActionTypes.DELETE_USER_ACCOUNT,
                 },
             });
-        } catch (error) { }
+        } catch (error) {}
 
         const res = await prisma.verificationRequest.create({
             data: {

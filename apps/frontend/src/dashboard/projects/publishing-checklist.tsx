@@ -1,5 +1,5 @@
 const PublishingChecklist = () => {
-	return null;
+    return null;
 };
 
 export default PublishingChecklist;

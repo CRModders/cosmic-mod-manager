@@ -1,5 +1,5 @@
 const AuthPageWrapper = () => {
-	return <div>AuthPageWrapper</div>;
+    return <div>AuthPageWrapper</div>;
 };
 
 export default AuthPageWrapper;

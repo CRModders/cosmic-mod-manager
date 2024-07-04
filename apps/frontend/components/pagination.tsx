@@ -14,7 +14,7 @@ export default function PaginatedNavigation({
     pagesCount,
     activePage,
     searchParamKey = "page",
-    offsetMultiplier = 1
+    offsetMultiplier = 1,
 }: { pagesCount: number; activePage: number; searchParamKey?: string; offsetMultiplier?: number }) {
     const generateLinkHref = (page: number) => {
         const currUrl = new URL(window.location.href);
@@ -71,7 +71,10 @@ export default function PaginatedNavigation({
                         </PaginationItem>
 
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={activePage === pages.at(-1)}>
+                            <PaginationLink
+                                to={generateLinkHref(pages[pagesCount - 1])}
+                                isActive={activePage === pages.at(-1)}
+                            >
                                 {pages.at(-1)?.toString()}
                             </PaginationLink>
                         </PaginationItem>
@@ -103,7 +106,10 @@ export default function PaginatedNavigation({
                         </PaginationItem>
 
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={activePage === pages.at(-1)}>
+                            <PaginationLink
+                                to={generateLinkHref(pages[pagesCount - 1])}
+                                isActive={activePage === pages.at(-1)}
+                            >
                                 {pages.at(-1)?.toString()}
                             </PaginationLink>
                         </PaginationItem>

@@ -51,18 +51,18 @@ hljs.registerAliases(["yml"], { languageName: "yaml" });
 hljs.registerAliases(["html", "htm", "xhtml", "mcui", "fxml"], { languageName: "xml" });
 
 export const renderHighlightedString = (string: string) =>
-	configuredXss.process(
-		md({
-			highlight: (str: string, lang: string) => {
-				if (lang && hljs.getLanguage(lang)) {
-					try {
-						return hljs.highlight(str, { language: lang }).value;
-					} catch (__) {}
-				}
+    configuredXss.process(
+        md({
+            highlight: (str: string, lang: string) => {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(str, { language: lang }).value;
+                    } catch (__) {}
+                }
 
-				return "";
-			},
-		}).render(string),
-	);
+                return "";
+            },
+        }).render(string),
+    );
 
 export default renderHighlightedString;

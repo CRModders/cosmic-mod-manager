@@ -21,20 +21,20 @@ export enum LoaderSupportedFields {
     SERVER_ONLY = "SERVER_ONLY",
     SINGLEPLAYER = "SINGLEPLAYER",
     CLIENT_ONLY = "CLIENT_ONLY",
-    GAME_VERSIONS = "GAME_VERSIONS"
+    GAME_VERSIONS = "GAME_VERSIONS",
 }
 
 export enum TagHeaderTypes {
     RESOLUTION = "RESOLUTION",
     FEATURE = "FEATURE",
     CATEGORY = "CATEGORY",
-    PERFORMANCE_IMPACT = "PERFORMANCE_IMPACT"
+    PERFORMANCE_IMPACT = "PERFORMANCE_IMPACT",
 }
 
 export enum ReleaseChannels {
     RELEASE = "RELEASE",
     BETA = "BETA",
-    ALPHA = "ALPHA"
+    ALPHA = "ALPHA",
 }
 
 export enum ProjectVisibility {
@@ -42,7 +42,7 @@ export enum ProjectVisibility {
     PRIVATE = "PRIVATE",
     LISTED = "LISTED",
     UNLISTED = "UNLISTED",
-    ARCHIVED = "ARCHIVED"
+    ARCHIVED = "ARCHIVED",
 }
 
 export enum ProjectStatuses {
@@ -56,7 +56,7 @@ export enum ProjectStatuses {
 
 export enum UserRolesInProject {
     MEMBER = "MEMBER",
-    OWNER = "OWNER"
+    OWNER = "OWNER",
 }
 
 export enum UserRolesInOrganisation {
@@ -75,7 +75,7 @@ export enum MemberPermissionsInProject {
     EDIT_MEMBER = "EDIT_MEMBER",
     DELETE_PROJECT = "DELETE_PROJECT",
     VIEW_ANALYTICS = "VIEW_ANALYTICS",
-    VIEW_REVENUE = "VIEW_REVENUE"
+    VIEW_REVENUE = "VIEW_REVENUE",
 }
 
 export interface LocalUserSession {
@@ -93,7 +93,7 @@ export interface LocalUserSession {
 export interface OAuthCallbackHandlerResult {
     message: string;
     success: boolean;
-    user?: LocalUserSession
+    user?: LocalUserSession;
 }
 
 export const time_past_phrases = {
@@ -110,10 +110,9 @@ export const time_past_phrases = {
     months_ago: "${0} months ago",
     year_ago: "a year ago",
     years_ago: "${0} years ago",
-}
+};
 
 export type TypeTimePastPhrases = typeof time_past_phrases;
-
 
 export type ProjectDataType = {
     id: string;
@@ -140,7 +139,7 @@ export type ProjectDataType = {
     members?: {
         role: string;
         role_title: string;
-        permissions: String[];
+        permissions: string[];
         user: {
             id: string;
             avatar_image?: string;

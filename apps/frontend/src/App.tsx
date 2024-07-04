@@ -11,12 +11,12 @@ export default function RootLayout() {
             <Helmet>
                 <title>CRMM</title>
                 <meta name="description" content="A hosting platform for cosmic reach mods" />
-            </Helmet >
+            </Helmet>
             <Navbar />
             <main className="flex items-center justify-center container px-4 sm:px-8">
                 <Outlet />
             </main>
             <Toaster />
-        </Providers >
+        </Providers>
     );
 }

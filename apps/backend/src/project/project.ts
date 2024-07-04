@@ -5,9 +5,16 @@ import {
     maxNameLength,
     maxProjectDescriptionLength,
     maxProjectSummaryLength,
-    minProjectNameLength
+    minProjectNameLength,
 } from "@root/config";
-import { GetProjectVisibility, GetUsersProjectMembership, VerifySelectedCategories, createURLSafeSlug, isValidString, isValidUrl } from "@root/lib/utils";
+import {
+    GetProjectVisibility,
+    GetUsersProjectMembership,
+    VerifySelectedCategories,
+    createURLSafeSlug,
+    isValidString,
+    isValidUrl,
+} from "@root/lib/utils";
 import { MemberPermissionsInProject, type ProjectDataType, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
@@ -235,15 +242,11 @@ projectRouter.post("/:projectSlug/update", async (c) => {
         const urlSafeUrlSlug = createURLSafeSlug(url_slug.value);
 
         if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
-            return c.json({ message: "Missing required data", }, 400);
+            return c.json({ message: "Missing required data" }, 400);
         }
 
-        if (
-            !name.isValid ||
-            !url_slug.isValid ||
-            !summary.isValid
-        ) {
-            return c.json({ message: "Length check failed", }, 400);
+        if (!name.isValid || !url_slug.isValid || !summary.isValid) {
+            return c.json({ message: "Length check failed" }, 400);
         }
 
         const [user] = await getUserSession(c);
@@ -262,14 +265,14 @@ projectRouter.post("/:projectSlug/update", async (c) => {
                         user_id: user.id,
                         OR: [
                             {
-                                role: UserRolesInProject.OWNER
+                                role: UserRolesInProject.OWNER,
                             },
                             {
                                 permissions: {
-                                    has: MemberPermissionsInProject.EDIT_DETAILS
-                                }
-                            }
-                        ]
+                                    has: MemberPermissionsInProject.EDIT_DETAILS,
+                                },
+                            },
+                        ],
                     },
                     select: {
                         user_id: true,
@@ -278,8 +281,11 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             },
         });
 
-        if (project?.members?.[0]?.user_id) {
-            return c.json({ message: "The project doesn't exist or you don't have the permission to update the project details" }, 403);
+        if (!project?.members?.[0]?.user_id) {
+            return c.json(
+                { message: "The project doesn't exist or you don't have the permission to update the project details" },
+                403,
+            );
         }
 
         const existingProjectWithSameUrlSlug = await prisma.project.findUnique({
@@ -334,8 +340,8 @@ projectRouter.get("/:projectSlug/delete", async (c) => {
                         user_id: user.id,
                         OR: [
                             { role: UserRolesInProject.OWNER },
-                            { permissions: { has: MemberPermissionsInProject.DELETE_PROJECT } }
-                        ]
+                            { permissions: { has: MemberPermissionsInProject.DELETE_PROJECT } },
+                        ],
                     },
                     select: { user_id: true },
                 },
@@ -343,7 +349,10 @@ projectRouter.get("/:projectSlug/delete", async (c) => {
         });
 
         if (!project?.members?.[0]?.user_id) {
-            return c.json({ message: "The project doesn't exist or you don't have the permission to delete the project" }, 400)
+            return c.json(
+                { message: "The project doesn't exist or you don't have the permission to delete the project" },
+                400,
+            );
         }
 
         await prisma.project.delete({
@@ -384,8 +393,8 @@ projectRouter.post("/:projectSlug/update-description", async (c) => {
                         user_id: user.id,
                         OR: [
                             { role: UserRolesInProject.OWNER },
-                            { permissions: { has: MemberPermissionsInProject.EDIT_DESCRIPTION } }
-                        ]
+                            { permissions: { has: MemberPermissionsInProject.EDIT_DESCRIPTION } },
+                        ],
                     },
                     select: { user_id: true },
                 },
@@ -501,14 +510,15 @@ projectRouter.post("/:projectSlug/update-tags", async (c) => {
         const body = await c.req.json();
         const projectSlug = c.req.param("projectSlug");
 
-        if (!projectSlug || body?.tags?.length === undefined || body?.featuredTags?.length === undefined) return c.json({ message: "Invalid request" }, 400);
+        if (!projectSlug || body?.tags?.length === undefined || body?.featuredTags?.length === undefined)
+            return c.json({ message: "Invalid request" }, 400);
 
         const [user] = await getUserSession(c);
         if (!user?.id) return c.json({ message: "Unauthenticated request" }, 400);
 
         const project = await prisma.project.findUnique({
             where: {
-                url_slug: projectSlug
+                url_slug: projectSlug,
             },
             select: {
                 id: true,
@@ -516,35 +526,41 @@ projectRouter.post("/:projectSlug/update-tags", async (c) => {
                 members: {
                     where: {
                         user_id: user.id,
-                        role: UserRolesInProject.OWNER
+                        role: UserRolesInProject.OWNER,
                     },
                     select: {
-                        id: true
-                    }
-                }
-            }
+                        id: true,
+                    },
+                },
+            },
         });
 
-        if (!project?.members?.[0]?.id) return c.json({ message: "The project doesn't exist or You don't have the permission to update project details" }, 400);
-        const selectedTags = VerifySelectedCategories((body?.tags || []), project.type);
-        const featuredTags = (body?.featuredTags || []).slice(0, maxFeaturedProjectTags).filter((featuredTag) => selectedTags.includes(featuredTag))
+        if (!project?.members?.[0]?.id)
+            return c.json(
+                { message: "The project doesn't exist or You don't have the permission to update project details" },
+                400,
+            );
+        const selectedTags = VerifySelectedCategories(body?.tags || [], project.type);
+        const featuredTags = (body?.featuredTags || [])
+            .slice(0, maxFeaturedProjectTags)
+            .filter((featuredTag) => selectedTags.includes(featuredTag));
 
         await prisma.project.update({
             where: {
-                id: project.id
+                id: project.id,
             },
             data: {
                 tags: selectedTags,
-                featured_tags: featuredTags
-            }
-        })
+                featured_tags: featuredTags,
+            },
+        });
 
-        return c.json({ message: "succesfully updated project tags" }, 200)
+        return c.json({ message: "succesfully updated project tags" }, 200);
     } catch (error) {
         console.error(error);
-        return c.json({ message: "Intrnal server error" }, 500)
+        return c.json({ message: "Intrnal server error" }, 500);
     }
-})
+});
 
 projectRouter.post("/:projectSlug/update-license", async (c) => {
     try {
@@ -561,23 +577,26 @@ projectRouter.post("/:projectSlug/update-license", async (c) => {
 
         const project = await prisma.project.findUnique({
             where: {
-                url_slug: projectSlug
+                url_slug: projectSlug,
             },
             select: {
                 id: true,
                 members: {
                     where: {
                         user_id: user.id,
-                        role: UserRolesInProject.OWNER
+                        role: UserRolesInProject.OWNER,
                     },
                     select: {
-                        user_id: true
-                    }
-                }
-            }
+                        user_id: true,
+                    },
+                },
+            },
         });
 
-        if (!project?.members?.[0]?.user_id) return c.json({ message: "Project doesn't exist or you don't have to access to edit the project details." });
+        if (!project?.members?.[0]?.user_id)
+            return c.json({
+                message: "Project doesn't exist or you don't have to access to edit the project details.",
+            });
 
         await prisma.project.update({
             where: {
@@ -585,16 +604,16 @@ projectRouter.post("/:projectSlug/update-license", async (c) => {
             },
             data: {
                 license: license,
-                license_url: licenseUrl
-            }
-        })
+                license_url: licenseUrl,
+            },
+        });
 
         return c.json({ message: "Successfully update license details" });
     } catch (error) {
         console.error(error);
-        return c.json({ message: "Internal server error" }, 500)
+        return c.json({ message: "Internal server error" }, 500);
     }
-})
+});
 
 // * Version router
 projectRouter.route("/:projectSlug/version", versionRouter);

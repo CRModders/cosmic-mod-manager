@@ -20,10 +20,7 @@ const HamMenu = ({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) => {
             onClick={handleHamMenuClick}
             aria-label="Menu"
         >
-            <div
-                className={`ham_menu_icon ${isNavMenuOpen && "ham_menu_open"
-                    } aspect-square w-full relative`}
-            >
+            <div className={`ham_menu_icon ${isNavMenuOpen && "ham_menu_open"} aspect-square w-full relative`}>
                 <i className="ham_menu_line_1 block absolute top-[33%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]" />
                 <i className="ham_menu_line_2 block absolute top-[50%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]" />
                 <i className="ham_menu_line_3 block absolute top-[67%] left-1/2 h-[0.12rem] w-[50%] bg-current rounded-full translate-y-[-50%] translate-x-[-50%]" />
@@ -44,18 +41,12 @@ type Props = {
     }[];
 };
 
-const MobileNav = ({
-    isNavMenuOpen,
-    toggleNavMenu,
-    children,
-    NavMenuLinks,
-}: Props) => {
+const MobileNav = ({ isNavMenuOpen, toggleNavMenu, children, NavMenuLinks }: Props) => {
     return (
         <>
             {
                 <div
-                    className={`mobile_navmenu w-full absolute top-0 left-0 duration-300 ${isNavMenuOpen && "menu_open"
-                        }`}
+                    className={`mobile_navmenu w-full absolute top-0 left-0 duration-300 ${isNavMenuOpen && "menu_open"}`}
                 >
                     <div className="w-full flex flex-col items-center justify-center row-span-2 relative">
                         <div className="absolute top-0 left-0 w-full h-full bg-background opacity-[0.975] dark:opacity-[0.985] z-[3]" />

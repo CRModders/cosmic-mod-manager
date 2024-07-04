@@ -20,11 +20,15 @@ export const Projectcontext = createContext<ProjectContextType>({
     projectData: undefined,
     featuredProjectVersions: undefined,
     allProjectVersions: undefined,
-    fetchProjectData: async (slug?: string) => { slug },
-    fetchFeaturedProjectVersions: async () => { },
-    fetchAllProjectVersions: async () => { },
+    fetchProjectData: async (slug?: string) => {
+        slug;
+    },
+    fetchFeaturedProjectVersions: async () => {},
+    fetchAllProjectVersions: async () => {},
     fetchingProjectData: true,
-    alterProjectSlug: (slug: string) => { slug },
+    alterProjectSlug: (slug: string) => {
+        slug;
+    },
 });
 
 const getProjectData = async (projectSlug: string) => {
@@ -32,30 +36,30 @@ const getProjectData = async (projectSlug: string) => {
         const response = await useFetch(`/api/project/${projectSlug}`);
         return await response.json();
     } catch (err) {
-        console.error(err)
+        console.error(err);
         return null;
     }
-}
+};
 
 const getFeaturedProjectVersions = async (projectSlug: string) => {
     try {
         const response = await useFetch(`/api/project/${projectSlug}/version?featured=true`);
         return await response.json();
     } catch (err) {
-        console.error(err)
+        console.error(err);
         return null;
     }
-}
+};
 
 const getAllProjectVersions = async (projectSlug: string) => {
     try {
         const response = await useFetch(`/api/project/${projectSlug}/version`);
         return await response.json();
     } catch (err) {
-        console.error(err)
+        console.error(err);
         return null;
     }
-}
+};
 
 export const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { projectUrlSlug } = useParams();
@@ -63,16 +67,33 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
     const [currProjectSlug, setCurrProjectSlug] = useState(projectUrlSlug || "");
     const navigate = useNavigate();
 
-    const projectData = useQuery({ queryKey: [`${currProjectSlug}-project-data`], queryFn: () => getProjectData(currProjectSlug) });
-    const featuredProjectVersions = useQuery({ queryKey: [`${currProjectSlug}-project-featured-versions`], queryFn: () => getFeaturedProjectVersions(currProjectSlug) });
-    const allProjectVersions = useQuery({ queryKey: [`${currProjectSlug}-project-all-versions`], queryFn: () => getAllProjectVersions(currProjectSlug) });
+    const projectData = useQuery({
+        queryKey: [`${currProjectSlug}-project-data`],
+        queryFn: () => getProjectData(currProjectSlug),
+    });
+    const featuredProjectVersions = useQuery({
+        queryKey: [`${currProjectSlug}-project-featured-versions`],
+        queryFn: () => getFeaturedProjectVersions(currProjectSlug),
+    });
+    const allProjectVersions = useQuery({
+        queryKey: [`${currProjectSlug}-project-all-versions`],
+        queryFn: () => getAllProjectVersions(currProjectSlug),
+    });
 
     const fetchProjectData = async (slug?: string) => {
-        if (slug) setCurrProjectSlug(slug);
+        if (slug && currProjectSlug !== slug) {
+            setCurrProjectSlug(slug);
+        } else {
+            await projectData.refetch();
+        }
     };
 
-    const fetchFeaturedProjectVersions = async () => { await featuredProjectVersions.refetch(); };
-    const fetchAllProjectVersions = async () => { await allProjectVersions.refetch(); };
+    const fetchFeaturedProjectVersions = async () => {
+        await featuredProjectVersions.refetch();
+    };
+    const fetchAllProjectVersions = async () => {
+        await allProjectVersions.refetch();
+    };
 
     const redirectToCorrectProjectUrl = () => {
         const data = projectData.data?.data || null;
@@ -92,13 +113,14 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (currProjectSlug && currProjectSlug !== projectUrlSlug) projectData.refetch();
-    }, [currProjectSlug])
+        if (currProjectSlug) projectData.refetch();
+    }, [currProjectSlug]);
 
     useEffect(() => {
-        if (projectData.isFetching || featuredProjectVersions.isFetching || allProjectVersions.isFetching) setFetchingProjectData(true);
+        if (projectData.isFetching || featuredProjectVersions.isFetching || allProjectVersions.isFetching)
+            setFetchingProjectData(true);
         else setFetchingProjectData(false);
-    }, [projectData.isFetching, featuredProjectVersions.isFetching, allProjectVersions.isFetching])
+    }, [projectData.isFetching, featuredProjectVersions.isFetching, allProjectVersions.isFetching]);
 
     return (
         <Projectcontext.Provider

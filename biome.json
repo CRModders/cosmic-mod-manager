@@ -1,13 +1,24 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"files": {
-		"ignore": ["node_modules/*", "dist/*"],
-		"include": ["apps/frontend/*", "apps/backend/*"]
-	},
-
-	"formatter": {
-		"ignore": ["node_modules/*", "dist/*"],
-		"include": ["apps/frontend/*", "apps/backend/*"],
-		"lineWidth": 120
-	}
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "files": {
+        "ignore": [
+            "node_modules/*",
+            "apps/**/node_modules/*",
+            "apps/frontend/.turbo/*",
+            "apps/backend/.turbo/*",
+            "dist/*",
+            "turbo/*"
+        ]
+    },
+    "linter": {
+        "enabled": true
+    },
+    "formatter": {
+        "lineWidth": 120,
+        "indentWidth": 4,
+        "indentStyle": "space"
+    },
+    "organizeImports": {
+        "enabled": true
+    }
 }

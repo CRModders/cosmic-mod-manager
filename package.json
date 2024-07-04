@@ -12,13 +12,9 @@
     "dev": "turbo dev",
     "lint": "turbo lint"
   },
-  "workspaces": [
-    "apps/*"
-  ],
+  "workspaces": ["apps/*"],
   "dependencies": {
     "semver": "^7.6.2"
   },
-  "trustedDependencies": [
-    "@biomejs/biome"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "@prisma/client"]
 }

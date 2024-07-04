@@ -111,7 +111,7 @@ export async function ValidateUserSession(sessionData: LocalUserSession): Promis
                 },
             };
         }
-    } catch (error) { }
+    } catch (error) {}
 
     return {
         isValid: false,

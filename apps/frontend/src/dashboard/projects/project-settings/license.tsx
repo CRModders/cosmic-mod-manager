@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LicensesList } from "@root/config/project";
 import { CapitalizeAndFormatString, isValidUrl } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -90,111 +91,128 @@ const LicenseSettingsPage = () => {
     }, [projectData]);
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="relative">
-                <ContentWrapperCard>
-                    <h2 className="text-2xl font-semibold">License</h2>
-                    <div className="w-full flex flex-col xl:flex-row items-start justify-between gap-4">
-                        <p className="text-foreground-muted text-pretty">
-                            It is very important to choose a proper license for your{" "}
-                            {CapitalizeAndFormatString(projectData?.type[0])?.toLowerCase()}. You may choose one from our list or
-                            provide a custom license. You may also provide a custom URL to your chosen license; otherwise, the license
-                            text will be displayed.
-                        </p>
+        <>
+            <Helmet>
+                <title>License settings - {projectData?.name} | CRMM</title>
+                <meta name="description" content="Your projects on crmm." />
+            </Helmet>
 
-                        <div className="w-full xl:w-[36rem] flex flex-col items-start justify-center gap-4">
-                            <FormField
-                                control={form.control}
-                                name="license"
-                                render={({ field }) => (
-                                    <>
-                                        <FormItem className="w-full flex flex-col items-center justify-center">
-                                            <FormControl>
-                                                <Select
-                                                    name={field.name}
-                                                    disabled={field.disabled}
-                                                    value={field.value}
-                                                    onValueChange={(e) => {
-                                                        field.onChange(e);
-                                                        if (e === "CUSTOM") setIsCustomLicense(true);
-                                                        else setIsCustomLicense(false);
-                                                    }}
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Unknown" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {LicensesList.map((license) => {
-                                                            return (
-                                                                <SelectItem value={license.id} key={license.name}>
-                                                                    {license.name}
-                                                                </SelectItem>
-                                                            );
-                                                        })}
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                        </FormItem>
-                                    </>
-                                )}
-                            />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="relative">
+                    <ContentWrapperCard>
+                        <h2 className="text-2xl font-semibold">License</h2>
+                        <div className="w-full flex flex-col xl:flex-row items-start justify-between gap-4">
+                            <p className="text-foreground-muted text-pretty">
+                                It is very important to choose a proper license for your{" "}
+                                {CapitalizeAndFormatString(projectData?.type[0])?.toLowerCase()}. You may choose one
+                                from our list or provide a custom license. You may also provide a custom URL to your
+                                chosen license; otherwise, the license text will be displayed.
+                            </p>
 
-                            {isCustomLicense ? (
-                                <div className="w-full flex flex-col items-start justify-start gap-4">
-                                    <Label className="flex gap-2 items-center justify-start cursor-pointer">
-                                        <Checkbox
-                                            checked={customLicenseHasSpdxId}
-                                            onCheckedChange={(e) => setCustomLicenseHasSpdxId(e === true)}
-                                        />
-                                        <span className="text-foreground-muted">License doesn't have a SPDX id</span>
-                                    </Label>
-
-                                    <FormField
-                                        control={form.control}
-                                        name="customLicense"
-                                        render={({ field }) => (
-                                            <FormItem className="w-full">
+                            <div className="w-full xl:w-[36rem] flex flex-col items-start justify-center gap-4">
+                                <FormField
+                                    control={form.control}
+                                    name="license"
+                                    render={({ field }) => (
+                                        <>
+                                            <FormItem className="w-full flex flex-col items-center justify-center">
                                                 <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        placeholder={customLicenseHasSpdxId ? "SPDX identifier" : "License name"}
-                                                        className="w-full"
-                                                    />
+                                                    <Select
+                                                        name={field.name}
+                                                        disabled={field.disabled}
+                                                        value={field.value}
+                                                        onValueChange={(e) => {
+                                                            field.onChange(e);
+                                                            if (e === "CUSTOM") setIsCustomLicense(true);
+                                                            else setIsCustomLicense(false);
+                                                        }}
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Unknown" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {LicensesList.map((license) => {
+                                                                return (
+                                                                    <SelectItem value={license.id} key={license.name}>
+                                                                        {license.name}
+                                                                    </SelectItem>
+                                                                );
+                                                            })}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </FormControl>
                                             </FormItem>
-                                        )}
-                                    />
-                                </div>
-                            ) : null}
-                            <FormField
-                                control={form.control}
-                                name="licenseUrl"
-                                render={({ field }) => (
-                                    <FormItem className="w-full">
-                                        <FormControl>
-                                            <Input {...field} placeholder="License URL (optional)" className="w-full" />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
+                                        </>
+                                    )}
+                                />
+
+                                {isCustomLicense ? (
+                                    <div className="w-full flex flex-col items-start justify-start gap-4">
+                                        <Label className="flex gap-2 items-center justify-start cursor-pointer">
+                                            <Checkbox
+                                                checked={customLicenseHasSpdxId}
+                                                onCheckedChange={(e) => setCustomLicenseHasSpdxId(e === true)}
+                                            />
+                                            <span className="text-foreground-muted">
+                                                License doesn't have a SPDX id
+                                            </span>
+                                        </Label>
+
+                                        <FormField
+                                            control={form.control}
+                                            name="customLicense"
+                                            render={({ field }) => (
+                                                <FormItem className="w-full">
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            placeholder={
+                                                                customLicenseHasSpdxId
+                                                                    ? "SPDX identifier"
+                                                                    : "License name"
+                                                            }
+                                                            className="w-full"
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                ) : null}
+                                <FormField
+                                    control={form.control}
+                                    name="licenseUrl"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    placeholder="License URL (optional)"
+                                                    className="w-full"
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="w-full flex items-center justify-end">
-                        <Button
-                            disabled={
-                                projectData?.licenseUrl === form.getValues("licenseUrl") &&
-                                ((isCustomLicense && projectData?.license === form.getValues("customLicense")) ||
-                                    (!isCustomLicense && projectData?.license === form.getValues("license")))
-                            }
-                        >
-                            <SaveIcon className="w-4 h-4" />
-                            Save change
-                        </Button>
-                    </div>
-                </ContentWrapperCard>
-                {loading ? <AbsolutePositionedSpinner /> : null}
-            </form>
-        </Form>
+                        <div className="w-full flex items-center justify-end">
+                            <Button
+                                disabled={
+                                    projectData?.licenseUrl === form.getValues("licenseUrl") &&
+                                    ((isCustomLicense && projectData?.license === form.getValues("customLicense")) ||
+                                        (!isCustomLicense && projectData?.license === form.getValues("license")))
+                                }
+                            >
+                                <SaveIcon className="w-4 h-4" />
+                                Save change
+                            </Button>
+                        </div>
+                    </ContentWrapperCard>
+                    {loading ? <AbsolutePositionedSpinner /> : null}
+                </form>
+            </Form>
+        </>
     );
 };
 

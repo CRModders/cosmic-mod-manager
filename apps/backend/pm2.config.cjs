@@ -1,5 +1,5 @@
 module.exports = {
-	name: "crmm-preview-backend",
-	script: "src/index.ts",
-	interpreter: "bun",
+    name: "crmm-preview-backend",
+    script: "src/index.ts",
+    interpreter: "bun",
 };

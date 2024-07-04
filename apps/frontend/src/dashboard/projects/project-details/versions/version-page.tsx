@@ -112,7 +112,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
     return (
         <div className="w-full flex flex-col gap-4 relative">
             <Helmet>
-                <title>{`${projectData?.name} ${versionData.data?.versions[0].version_number} - ${CapitalizeAndFormatString(projectData?.type[0])} | CRMM`}</title>
+                <title>{`${versionData.data?.versions[0].version_number} - ${projectData?.name} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
 
@@ -123,7 +123,10 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                             <Breadcrumb>
                                 <BreadcrumbList className="flex items-center">
                                     <BreadcrumbItem>
-                                        <BreadcrumbLink href={`/${projectType}/${projectUrlSlug}/versions`} className="text-base">
+                                        <BreadcrumbLink
+                                            href={`/${projectType}/${projectUrlSlug}/versions`}
+                                            className="text-base"
+                                        >
                                             Versions
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
@@ -131,13 +134,17 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                         <ChevronRightIcon size="1rem" className=" text-foreground" />
                                     </BreadcrumbSeparator>
                                     <BreadcrumbItem>
-                                        <BreadcrumbPage className="text-base">{versionData.data?.versions[0].version_title}</BreadcrumbPage >
+                                        <BreadcrumbPage className="text-base">
+                                            {versionData.data?.versions[0].version_title}
+                                        </BreadcrumbPage>
                                     </BreadcrumbItem>
                                 </BreadcrumbList>
                             </Breadcrumb>
                         </div>
                         <div className="w-full flex gap-4 items-center justify-start">
-                            <h1 className=" text-foreground font-semibold text-3xl">{versionData.data?.versions[0].version_title}</h1>
+                            <h1 className=" text-foreground font-semibold text-3xl">
+                                {versionData.data?.versions[0].version_title}
+                            </h1>
                             {versionData.data?.versions[0].is_featured && (
                                 <>
                                     <div className="flex items-center justify-center gap-1 text-foreground-muted">
@@ -165,7 +172,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 
                             {isAProjectMember === true && (
                                 <>
-                                    <Link to={`/${projectType}/${projectUrlSlug}/version/${versionData.data?.versions[0].url_slug}/edit`}>
+                                    <Link
+                                        to={`/${projectType}/${projectUrlSlug}/version/${versionData.data?.versions[0].url_slug}/edit`}
+                                    >
                                         <Button variant={"secondary"} className="gap-2" tabIndex={-1}>
                                             <EditIcon className="w-4 h-4" />
                                             Edit
@@ -183,19 +192,27 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                             <DialogHeader>
                                                 <DialogTitle className="font-semibold text-foreground-muted text-lg">
                                                     Delete version{" "}
-                                                    <span className="italic font-normal">{versionData.data?.versions[0].version_title}</span>
+                                                    <span className="italic font-normal">
+                                                        {versionData.data?.versions[0].version_title}
+                                                    </span>
                                                 </DialogTitle>
                                             </DialogHeader>
                                             <p className="text-foreground-muted">
                                                 Are you sure you want to delete version{" "}
-                                                <span className=" font-semibold">{versionData.data?.versions[0].version_title}</span> of project{" "}
-                                                <span className=" font-semibold">{projectData?.name}</span> ?
+                                                <span className=" font-semibold">
+                                                    {versionData.data?.versions[0].version_title}
+                                                </span>{" "}
+                                                of project <span className=" font-semibold">{projectData?.name}</span> ?
                                             </p>
                                             <DialogFooter className="flex flex-row items-center justify-end">
                                                 <DialogClose asChild>
                                                     <Button variant={"secondary"}>Cancel</Button>
                                                 </DialogClose>
-                                                <Button className="gap-2" variant={"destructive"} onClick={deleteVersion}>
+                                                <Button
+                                                    className="gap-2"
+                                                    variant={"destructive"}
+                                                    onClick={deleteVersion}
+                                                >
                                                     <TrashIcon size="1.25rem" />
                                                     Delete
                                                 </Button>
@@ -231,11 +248,17 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                                 <div className="flex items-center gap-x-4 flex-wrap">
                                                     <div className="flex items-center justify-center gap-2">
                                                         <FileIcon className="w-5 h-5 text-foreground-muted" />
-                                                        <p className="w-fit font-semibold text-foreground-muted mr-2">{versionFile.file_name}</p>
+                                                        <p className="w-fit font-semibold text-foreground-muted mr-2">
+                                                            {versionFile.file_name}
+                                                        </p>
                                                     </div>
-                                                    <span className="text-sm text-foreground-muted">{parseFileSize(versionFile.file_size)}</span>
+                                                    <span className="text-sm text-foreground-muted">
+                                                        {parseFileSize(versionFile.file_size)}
+                                                    </span>
                                                     {versionFile.is_primary ? (
-                                                        <span className="text-sm text-foreground-muted italic">Primary</span>
+                                                        <span className="text-sm text-foreground-muted italic">
+                                                            Primary
+                                                        </span>
                                                     ) : null}
                                                 </div>
 
@@ -262,7 +285,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                     {
                                         label: "Release channel",
                                         element: (
-                                            <ReleaseChannelIndicator release_channel={versionData.data?.versions[0].release_channel || ""} />
+                                            <ReleaseChannelIndicator
+                                                release_channel={versionData.data?.versions[0].release_channel || ""}
+                                            />
                                         ),
                                     },
                                     {
@@ -287,7 +312,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                         label: "Game versions",
                                         element: (
                                             <p className="text-foreground-muted leading-tight text-pretty text-base px-1">
-                                                {FormatVersionsList(versionData.data.versions[0].supported_game_versions)}
+                                                {FormatVersionsList(
+                                                    versionData.data.versions[0].supported_game_versions,
+                                                )}
                                             </p>
                                         ),
                                     },

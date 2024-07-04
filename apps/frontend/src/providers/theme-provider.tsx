@@ -2,14 +2,10 @@ import { ThemeOptions, type UseThemeProps } from "@/types";
 import React, { useEffect } from "react";
 
 const MEDIA = "(prefers-color-scheme: dark)";
-export const ThemeContext = React.createContext<UseThemeProps | undefined>(
-    undefined,
-);
+export const ThemeContext = React.createContext<UseThemeProps | undefined>(undefined);
 const themes = [ThemeOptions.DARK, ThemeOptions.LIGHT];
 
-export const ThemeProvider = ({
-    children,
-}: { children: React.ReactNode }): React.ReactNode => {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
     const context = React.useContext(ThemeContext);
 
     // Ignore nested context providers, just passthrough children
@@ -17,13 +13,8 @@ export const ThemeProvider = ({
     return <Theme>{children}</Theme>;
 };
 
-const Theme = ({
-    children,
-    storageKey = "theme",
-}: { children: React.ReactNode; storageKey?: string }) => {
-    const [theme, setThemeState] = React.useState(() =>
-        getTheme(storageKey, ThemeOptions.DARK),
-    );
+const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; storageKey?: string }) => {
+    const [theme, setThemeState] = React.useState(() => getTheme(storageKey, ThemeOptions.DARK));
 
     const applyTheme = React.useCallback((theme: string) => {
         let resolved = theme;
@@ -105,11 +96,7 @@ const Theme = ({
         [theme, setTheme],
     );
 
-    return (
-        <ThemeContext.Provider value={providerValue}>
-            {children}
-        </ThemeContext.Provider>
-    );
+    return <ThemeContext.Provider value={providerValue}>{children}</ThemeContext.Provider>;
 };
 
 // Helpers

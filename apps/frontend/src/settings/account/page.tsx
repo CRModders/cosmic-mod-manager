@@ -12,11 +12,10 @@ import ManageProviders from "./manage-providers";
 import PasswordSection from "./password";
 import EditProfileDialog from "./profile-details";
 
-
 const getLinkedProviders = async () => {
     try {
         const res = await useFetch("/api/user/linked-auth-providers");
-        return (await res.json())?.data || []
+        return (await res.json())?.data || [];
     } catch (err) {
         console.error(err);
         return [];
@@ -28,7 +27,7 @@ const getToKnowIfUserHasAPAssword = async () => {
         const res = await useFetch("/api/user/has-password");
         return (await res.json())?.hasPassword || false;
     } catch (error) {
-        console.error(error)
+        console.error(error);
         return false;
     }
 };
@@ -36,12 +35,12 @@ const getToKnowIfUserHasAPAssword = async () => {
 const AccountSettingsPage = () => {
     const { session, setNewSession } = useContext(AuthContext);
 
-    const linkedProviders = useQuery({ queryKey: ["linked-auth-providers-list"], queryFn: () => getLinkedProviders() })
-    const hasAPassword = useQuery({ queryKey: ["user-has-a-password"], queryFn: () => getToKnowIfUserHasAPAssword() })
+    const linkedProviders = useQuery({ queryKey: ["linked-auth-providers-list"], queryFn: () => getLinkedProviders() });
+    const hasAPassword = useQuery({ queryKey: ["user-has-a-password"], queryFn: () => getToKnowIfUserHasAPAssword() });
 
     const fetchPageData = async () => {
         await Promise.all([linkedProviders.refetch(), hasAPassword.refetch()]);
-    }
+    };
 
     useEffect(() => {
         if (session === null) {
@@ -115,13 +114,19 @@ const AccountSettingsPage = () => {
 
                 <ContentWrapperCard>
                     <div className="w-full flex flex-wrap gap-4 items-center justify-between">
-                        <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">Account security</h2>
+                        <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">
+                            Account security
+                        </h2>
                     </div>
 
                     <div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
                             <p className="text-lg font-semibold text-foreground">Email</p>
-                            <form className="w-full flex items-center justify-start" name="Email" onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+                            <form
+                                className="w-full flex items-center justify-start"
+                                name="Email"
+                                onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}
+                            >
                                 {session?.email && (
                                     <Input
                                         type="email"
@@ -134,9 +139,16 @@ const AccountSettingsPage = () => {
                             </form>
                         </div>
 
-                        <PasswordSection email={session?.email || ""} hasAPassword={hasAPassword.data} fetchPageData={fetchPageData} />
+                        <PasswordSection
+                            email={session?.email || ""}
+                            hasAPassword={hasAPassword.data}
+                            fetchPageData={fetchPageData}
+                        />
 
-                        <ManageProviders linkedProviders={linkedProviders.data} fetchLinkedProviders={getLinkedProviders} />
+                        <ManageProviders
+                            linkedProviders={linkedProviders.data}
+                            fetchLinkedProviders={getLinkedProviders}
+                        />
                     </div>
                 </ContentWrapperCard>
 

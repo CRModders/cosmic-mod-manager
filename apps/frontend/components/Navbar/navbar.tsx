@@ -22,10 +22,9 @@ const Navbar = () => {
     const NavLinks = ProjectTypes.map((projectType) => {
         return {
             label: `${CapitalizeAndFormatString(projectType)}s`,
-            href: `/${createURLSafeSlug(projectType).value}s`
-        }
-    })
-
+            href: `/${createURLSafeSlug(projectType).value}s`,
+        };
+    });
 
     useEffect(() => {
         if (isNavMenuOpen === true) {
@@ -48,10 +47,7 @@ const Navbar = () => {
                             }}
                         >
                             <BrandIcon size="2.2rem" />
-                            <span
-                                className="text-xl font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-bg via-accent-bg drop-shadow-2xl"
-
-                            >
+                            <span className="text-xl font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-bg via-accent-bg drop-shadow-2xl">
                                 CRMM
                             </span>
                         </Link>

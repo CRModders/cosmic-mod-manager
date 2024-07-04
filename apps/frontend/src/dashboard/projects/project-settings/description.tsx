@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { useContext, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 
 const ProjectDescriptSettingsPage = () => {
     const [loading, setLoading] = useState(false);
@@ -41,11 +42,23 @@ const ProjectDescriptSettingsPage = () => {
         <ContentWrapperCard className="items-start relative">
             {projectData === undefined ? null : (
                 <>
+                    <Helmet>
+                        <title>Description settings - {projectData?.name} | CRMM</title>
+                        <meta name="description" content="Your projects on crmm." />
+                    </Helmet>
+
                     <h2 className="text-2xl font-semibold">Description</h2>
-                    <MarkdownEditor editorValue={description} setEditorValue={setDescription} placeholder="Project description" />
+                    <MarkdownEditor
+                        editorValue={description}
+                        setEditorValue={setDescription}
+                        placeholder="Project description"
+                    />
 
                     <div className="w-full flex items-center justify-end">
-                        <Button onClick={updateProjectDescription} disabled={loading || projectData?.description === description}>
+                        <Button
+                            onClick={updateProjectDescription}
+                            disabled={loading || projectData?.description === description}
+                        >
                             <SaveIcon className="w-4 h-4" />
                             Save changes
                         </Button>
