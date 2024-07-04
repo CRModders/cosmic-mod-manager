@@ -7,3 +7,5 @@ apps/*/node_modules
 
 # ENV files
 apps/*/.env
+
+# Meilisearch files
