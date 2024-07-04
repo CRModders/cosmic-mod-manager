@@ -9,3 +9,5 @@ apps/*/node_modules
 apps/*/.env
 
 # Meilisearch files
+data.ms
+dumps
