@@ -53,7 +53,7 @@ export default function ThemeSwitch({
                 type="button"
                 aria-label={label ? label : "Change theme"}
                 className={cn(
-                    "flex items-center overflow-hidden justify-center hover:bg-bg-hover text-foreground rounded-full",
+                    "flex items-center overflow-hidden justify-center hover:bg-background text-foreground rounded-full",
                     className,
                 )}
                 onClick={switchTheme}

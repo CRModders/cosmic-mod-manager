@@ -125,7 +125,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
                     onChange={(e) => {
                         setSearchTerm(e.target.value);
                     }}
-                    className="multi-select-input focus:rounded-bl-none focus:rounded-br-none"
+                    className="multi-select-input focus:rounded-bl-none focus:rounded-br-none border dark:border focus:border-border-hicontrast dark:focus:border-border-hicontrast"
                 />
 
                 <label

@@ -12,7 +12,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
     const navigate = useNavigate();
 
     return (
-        <div className="w-full border-t border-border-hicontrast/50 mt-2">
+        <div className="w-full mt-2">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -38,7 +38,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                         return (
                             <TableRow
                                 key={project.id}
-                                className="hover:bg-bg-hover/50 dark:hover:bg-bg-hover/75 cursor-pointer"
+                                className="cursor-pointer border-none"
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {

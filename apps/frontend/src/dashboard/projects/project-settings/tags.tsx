@@ -1,7 +1,8 @@
+import { CategoryIcon } from "@/components/category-icons";
 import { SaveIcon } from "@/components/icons";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox, LabelledCheckBox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
@@ -134,20 +135,18 @@ const TagsSettingsPage = () => {
                         <div className="w-full grid grid-cols-1 [@media_(min-width:520px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 mt-2 gap-x-2.5">
                             {GetValidProjectCategories(projectData.type).map((category) => {
                                 return (
-                                    <Label
+                                    <LabelledCheckBox
                                         key={category.name}
-                                        htmlFor={`${category.name}-${category.project_types}-checkbox`}
-                                        className="flex gap-2 py-1 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer"
-                                    >
-                                        <Checkbox
-                                            id={`${category.name}-${category.project_types}-checkbox`}
-                                            checked={selectedTags.has(category)}
-                                            onCheckedChange={(e) => handleTagsSelection(category, !!e)}
-                                        />
-                                        <span className="text-foreground-muted">
-                                            {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
-                                        </span>
-                                    </Label>
+                                        checkBoxId={`${category.name}-${category.project_types}-checkbox`}
+                                        checked={selectedTags.has(category)}
+                                        onCheckedChange={(e) => handleTagsSelection(category, !!e)}
+                                        label={
+                                            <span className="flex items-center justify-center gap-1">
+                                                <CategoryIcon name={category.icon} />
+                                                {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
+                                            </span>
+                                        }
+                                    />
                                 );
                             })}
                         </div>
@@ -167,32 +166,26 @@ const TagsSettingsPage = () => {
                                 Select at least one category in order to feature a category.
                             </p>
                         ) : (
-                            <div className="w-full grid grid-cols-1 [@media_(min-width:520px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 mt-2 gap-2.5">
+                            <div className="w-full grid grid-cols-1 [@media_(min-width:520px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 mt-2 gap-x-2.5">
                                 {Array.from(selectedTags).map((category) => {
                                     return (
-                                        <Label
+                                        <LabelledCheckBox
                                             key={category.name}
-                                            htmlFor={`${category.name}-${category.project_types}-featured-tag-checkbox`}
-                                            className={cn(
-                                                "flex gap-2 items-center justify-start transition-opacity hover:opacity-90 cursor-pointer",
+                                            className="w-full"
+                                            checkBoxId={`${category.name}-${category.project_types}-featured-tag-checkbox`}
+                                            checked={featuredTags.has(category)}
+                                            onCheckedChange={(e) => handleFeaturedTagsSelection(category, !!e)}
+                                            disabled={
                                                 !featuredTags.has(category) &&
-                                                    Array.from(featuredTags).length >= maxFeaturedProjectTags &&
-                                                    "cursor-not-allowed opacity-50 hover:opacity-50",
-                                            )}
-                                        >
-                                            <Checkbox
-                                                id={`${category.name}-${category.project_types}-featured-tag-checkbox`}
-                                                checked={featuredTags.has(category)}
-                                                onCheckedChange={(e) => handleFeaturedTagsSelection(category, !!e)}
-                                                disabled={
-                                                    !featuredTags.has(category) &&
-                                                    Array.from(featuredTags).length >= maxFeaturedProjectTags
-                                                }
-                                            />
-                                            <span className="text-foreground-muted">
-                                                {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
-                                            </span>
-                                        </Label>
+                                                Array.from(featuredTags).length >= maxFeaturedProjectTags
+                                            }
+                                            label={
+                                                <span className="flex items-center justify-center gap-1">
+                                                    <CategoryIcon name={category.icon} />
+                                                    {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
+                                                </span>
+                                            }
+                                        />
                                     );
                                 })}
                             </div>

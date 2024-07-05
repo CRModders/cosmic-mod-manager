@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SortOptions } from "@root/lib/sort";
-import ICONS from "@/components/category-icons";
+import { CategoryIcon } from "@/components/category-icons";
 
 export default function SearchPage({ projectType }: { projectType: ProjectType }) {
     const [searchParams] = useSearchParams();
@@ -70,7 +70,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                 navigate(currUrl.href.replace(window.location.origin, ""));
                                             }}
                                             label={
-                                                <span className="flex items-center justify-center gap-1.5">
+                                                <span className="flex items-center justify-center gap-1">
                                                     <CategoryIcon name={category.icon} />
                                                     {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") ||
                                                         ""}
@@ -102,7 +102,13 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
 
                                                 navigate(currUrl.href.replace(window.location.origin, ""));
                                             }}
-                                            label={CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") || ""}
+                                            label={
+                                                <span className="flex items-center justify-center gap-1">
+                                                    <CategoryIcon name={category.icon} />
+                                                    {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") ||
+                                                        ""}
+                                                </span>
+                                            }
                                         />
                                     );
                                 })}
@@ -131,7 +137,13 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                     navigate(currUrl.href.replace(window.location.origin, ""));
                                                 }}
                                                 label={
-                                                    CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") || ""
+                                                    <span className="flex items-center justify-center gap-1">
+                                                        <CategoryIcon name={category.icon} />
+                                                        {CapitalizeAndFormatString(category.name)?.replaceAll(
+                                                            "-",
+                                                            " ",
+                                                        ) || ""}
+                                                    </span>
                                                 }
                                             />
                                         );
@@ -191,7 +203,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                             navigate(currUrl.href.replace(window.location.origin, ""));
                                         }}
                                         label={
-                                            <span className="flex items-center justify-center gap-1.5">
+                                            <span className="flex items-center justify-center gap-1">
                                                 <CategoryIcon name={loader.icon} />
                                                 {CapitalizeAndFormatString(loader.name)?.replaceAll("-", " ") || ""}
                                             </span>
@@ -236,20 +248,6 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
     );
 }
 
-const CategoryIcon = ({ name }: { name: string }) => {
-    console.log(name);
-    // @ts-ignore
-    if (!ICONS[name]) return null;
-    return (
-        <i className="flex items-center justify-center">
-            {
-                // @ts-ignore
-                ICONS[name]
-            }
-        </i>
-    );
-};
-
 type SearchPageContentProps = {
     projectType: string;
     selectedLoaderFilters: Set<string>;
@@ -264,7 +262,7 @@ const SearchPageContent = ({ projectType }: SearchPageContentProps) => {
                 <div className="w-full flex items-center justify-start gap-4 flex-wrap md:flex-nowrap lg:flex-wrap xl:flex-nowrap">
                     <Input
                         placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
-                        className="border border-[#00000000] focus:border-border dark:focus:border-border"
+                        className=""
                     />
 
                     <div className="flex flex-row items-center justify-center gap-2">

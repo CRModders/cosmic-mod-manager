@@ -33,7 +33,7 @@ const getLoggedInSessions = async () => {
         const response = await useFetch("/api/auth/session/get-logged-in-sessions");
         return (await response.json())?.data || [];
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return [];
     }
 };

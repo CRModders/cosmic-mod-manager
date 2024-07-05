@@ -7,50 +7,55 @@
 :root {
     --scrollbar-width: 0.6rem;
     --tint-hue: 220;
+    --bg-saturation: 10%;
     --accent-color-hue: 345;
 
     /* LIGHT THEME */
+    --body-background-light: var(--tint-hue), var(--bg-saturation), 92%;
+
+    --background-light: 0, 0%, 99%;
     --accent-bg-light: var(--accent-color-hue), 77%, 50%;
     --accent-foreground-light: var(--accent-color-hue), 77%, 50%;
-    /* --accent-bg-light: 271, 81%, 56%;
-    --accent-foreground-light: 271, 81%, 56%; */
-    --background-light: 0, 0%, 98%;
-    --background-shallow-light: var(--tint-hue), 6%, 90%;
-    --foreground-light: var(--tint-hue), 6%, 10%;
+    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 90%;
+    --background-shallower-light: var(--tint-hue), var(--bg-saturation), 84%;
+    --foreground-light: var(--tint-hue), var(--bg-saturation), 10%;
     --foreground-muted-light: var(--foreground-light), 0.75;
-    --bg-hover-light: var(--tint-hue), 4%, 90%;
+    --bg-hover-light: var(--tint-hue), var(--bg-saturation), 92%;
     --danger-bg-light: 0, 72%, 51%;
     --danger-text-light: 0, 72%, 51%;
     --success-bg-light: 161, 94%, 30%;
     --success-text-light: 163, 94%, 24%;
-    --shadow-light: var(--tint-hue), 6%, 90%;
-    --border-light: var(--tint-hue), 5%, 84%;
-    --border-hicontrast-light: var(--tint-hue), 5%, 65%;
+    --shadow-light: var(--tint-hue), var(--bg-saturation), 90%;
+    --border-light: var(--tint-hue), var(--bg-saturation), 84%;
+    --border-hicontrast-light: var(--tint-hue), var(--bg-saturation), 65%;
 
     /* DARK THEME */
+    --body-background-dark: var(--tint-hue), var(--bg-saturation), 5%;
+
+    --background-dark: var(--tint-hue), var(--bg-saturation), 11%;
     --accent-bg-dark: var(--accent-color-hue), 85%, 62%;
     --accent-foreground-dark: var(--accent-color-hue), 95%, 72%;
-    /* --accent-bg-dark: 271, 91%, 65%;
-    --accent-foreground-dark: 270, 95%, 80%; */
-    --background-dark: var(--tint-hue), 6%, 10%;
-    --background-shallow-dark: var(--tint-hue), 4%, 16%;
+    --background-shallow-dark: var(--tint-hue), var(--bg-saturation), 16%;
+    --background-shallower-dark: var(--tint-hue), var(--bg-saturation), 26%;
     --foreground-dark: 0, 0%, 98%;
     --foreground-muted-dark: var(--foreground-dark), 0.8;
-    --bg-hover-dark: var(--tint-hue), 5%, 15%;
+    --bg-hover-dark: var(--tint-hue), var(--bg-saturation), 16%;
     --danger-bg-dark: 0, 95%, 65%;
     --danger-text-dark: 0, 91%, 71%;
     --success-bg-dark: 160, 84%, 39%;
     --success-text-dark: 158, 64%, 52%;
-    --shadow-dark: var(--tint-hue), 10%, 4%;
-    --border-dark: var(--tint-hue), 5%, 26%;
-    --border-hicontrast-dark: var(--tint-hue), 4%, 46%;
+    --shadow-dark: var(--tint-hue), var(--bg-saturation), 4%;
+    --border-dark: var(--tint-hue), var(--bg-saturation), 26%;
+    --border-hicontrast-dark: var(--tint-hue), var(--bg-saturation), 46%;
 }
 
 .dark {
+    --body-background: var(--body-background-dark);
     --accent-bg: var(--accent-bg-dark);
     --accent-foreground: var(--accent-foreground-dark);
     --background: var(--background-dark);
     --background-shallow: var(--background-shallow-dark);
+    --background-shallower: var(--background-shallower-dark);
     --foreground: var(--foreground-dark);
     --foreground-muted: var(--foreground-muted-dark);
     --bg-hover: var(--bg-hover-dark);
@@ -64,10 +69,12 @@
 }
 
 .light {
+    --body-background: var(--body-background-light);
     --accent-bg: var(--accent-bg-light);
     --accent-foreground: var(--accent-foreground-light);
     --background: var(--background-light);
     --background-shallow: var(--background-shallow-light);
+    --background-shallower: var(--background-shallower-light);
     --foreground: var(--foreground-light);
     --foreground-muted: var(--foreground-muted-light);
     --bg-hover: var(--bg-hover-light);
@@ -104,15 +111,13 @@ body {
     font-family: "Inter", var(--fallback-fonts);
     scrollbar-gutter: stable;
     scroll-behavior: smooth;
-}
-
-.light body {
-    background-color: #F0F2F3;
+    font-weight: 400;
+    font-size: 1rem;
+    background-color: hsla(var(--body-background));
 }
 
 .dark body {
     color-scheme: dark;
-    background-color: #191A1C;
 }
 
 body.navmenu-open,
@@ -149,6 +154,35 @@ body.subtract-scrollbar-width {
     background-color: #09090b;
 }
 
+.input_box{
+    @apply rounded-lg border-2 border-transparent bg-background-shallow/65 dark:bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
+}
+
+/* Hero sectoin bg */
+
+.hero_section_grid_bg {
+    --line-width: 0.1rem;
+    --bg-size: 2rem;
+    --line-color: hsla(var(--background-light), 0.35);
+
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+    linear-gradient(var(--line-color) var(--line-width), transparent var(--line-width)),
+    linear-gradient(to right, var(--line-color) var(--line-width), transparent var(--line-width)),
+    hsla(var(--body-background));
+    background-size: var(--bg-size) var(--bg-size);
+    background-position: -0.7rem -0.7rem, -0.7rem -0.7rem, 0 0;
+    background-attachment: absolute;
+}
+
+.dark .hero_section_grid_bg {
+    --line-color: hsla(var(--background-shallow), 0.2);
+}
 
 /* Theme switcher styling */
 .sun_icon_wrapper,

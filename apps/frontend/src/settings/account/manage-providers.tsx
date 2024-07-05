@@ -51,18 +51,14 @@ const ProviderEmailInfoTooltip = ({
     provider_email_tooltip,
 }: { email: string; provider?: string; provider_email_tooltip: string }) => {
     return (
-        <TooltipProvider delayDuration={100}>
-            <Tooltip>
-                <TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">
-                    {email}
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p className="text-sm sm:text-base">
-                        {provider_email_tooltip.replace("${0}", provider ? provider : "provider")}
-                    </p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger className="text-sm sm:text-base flex items-center justify-center">{email}</TooltipTrigger>
+            <TooltipContent>
+                <p className="text-sm sm:text-base">
+                    {provider_email_tooltip.replace("${0}", provider ? provider : "provider")}
+                </p>
+            </TooltipContent>
+        </Tooltip>
     );
 };
 

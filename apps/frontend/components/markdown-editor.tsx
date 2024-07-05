@@ -49,26 +49,24 @@ const IconButton = ({
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
 }) => {
     return (
-        <TooltipProvider delayDuration={300}>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button
-                        size={"icon"}
-                        variant={"secondary"}
-                        tabIndex={disabled ? -1 : 0}
-                        disabled={disabled}
-                        className="h-8 w-8 bg-zinc-300/65 text-foreground-muted hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700/65"
-                        onClick={onClick}
-                        {...props}
-                    >
-                        {children}
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent className=" bg-background-shallow text-foreground-muted">
-                    <span className="">{tooltipContent || ""}</span>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button
+                    size={"icon"}
+                    variant={"secondary"}
+                    tabIndex={disabled ? -1 : 0}
+                    disabled={disabled}
+                    className="h-8 w-8 bg-zinc-300/65 text-foreground-muted hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700/65"
+                    onClick={onClick}
+                    {...props}
+                >
+                    {children}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-background-shallow text-foreground-muted">
+                <span className="">{tooltipContent || ""}</span>
+            </TooltipContent>
+        </Tooltip>
     );
 };
 
@@ -450,7 +448,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                     <Textarea
                         placeholder={placeholder}
                         className={cn(
-                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg bg-border/20 font-mono text-base",
+                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground-muted focus:border-border dark:focus:border-border",
                             wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
                         )}
                         ref={editorTextarea}

@@ -3,6 +3,7 @@ import type React from "react";
 import { CookiesProvider } from "react-cookie";
 import AuthProvider from "./auth-provider";
 import ThemeProvider from "./theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const reactQueryClient = new QueryClient({
     defaultOptions: {
@@ -17,7 +18,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         <QueryClientProvider client={reactQueryClient}>
             <CookiesProvider>
                 <AuthProvider>
-                    <ThemeProvider>{children}</ThemeProvider>
+                    <ThemeProvider>
+                        <TooltipProvider delayDuration={400}>{children}</TooltipProvider>
+                    </ThemeProvider>
                 </AuthProvider>
             </CookiesProvider>
         </QueryClientProvider>

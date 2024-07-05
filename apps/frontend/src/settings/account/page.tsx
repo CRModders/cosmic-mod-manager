@@ -147,7 +147,9 @@ const AccountSettingsPage = () => {
 
                         <ManageProviders
                             linkedProviders={linkedProviders.data}
-                            fetchLinkedProviders={getLinkedProviders}
+                            fetchLinkedProviders={async () => {
+                                await linkedProviders.refetch();
+                            }}
                         />
                     </div>
                 </ContentWrapperCard>

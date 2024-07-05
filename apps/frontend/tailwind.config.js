@@ -35,6 +35,7 @@ module.exports = {
                 "accent-foreground": "hsla(var(--accent-foreground))",
                 background: "hsla(var(--background))",
                 "background-shallow": "hsla(var(--background-shallow))",
+                "background-shallower": "hsla(var(--background-shallower))",
                 foreground: "hsla(var(--foreground))",
                 "foreground-muted": "hsla(var(--foreground-muted))",
                 "bg-hover": "hsla(var(--bg-hover))",

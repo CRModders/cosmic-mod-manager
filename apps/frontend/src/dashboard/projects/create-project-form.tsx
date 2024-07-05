@@ -153,17 +153,17 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
                                                     <FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
                                                 </FormLabel>
                                                 <FormControl>
-                                                    <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-[#00000000] dark:focus-within:bg-[#00000000] focus-within:border-border-hicontrast transition-colors">
+                                                    <div className="input_box w-full flex items-center justify-center pl-3 rounded-md overflow-hidden">
                                                         <label
                                                             htmlFor="project-url-input"
-                                                            className="whitespace-nowrap text-foreground/50 text-sm cursor-text"
+                                                            className="whitespace-nowrap text-foreground/65 text-sm cursor-text"
                                                         >
                                                             /project/
                                                         </label>
                                                         <Input
                                                             id="project-url-input"
                                                             type="text"
-                                                            className="px-0 border-none bg-transparent"
+                                                            className="px-0 pl-0.5 border-none bg-transparent dark:bg-transparent rounded-none"
                                                             {...field}
                                                             onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
                                                                 field.onChange(val);

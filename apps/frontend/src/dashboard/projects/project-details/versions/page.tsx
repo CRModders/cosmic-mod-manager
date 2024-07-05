@@ -4,11 +4,12 @@ import { ContentWrapperCard } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, createURLSafeSlug, formatDate } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, parseFileSize } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -27,7 +28,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
             <div className="w-full flex flex-col gap-4 items-start justify-center">
-                {isAProjectMember !== false && (
+                {isAProjectMember === true && (
                     <ContentWrapperCard>
                         <div className="w-full flex flex-wrap gap-4 items-center justify-start">
                             <Link
@@ -79,19 +80,19 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
         <div className="w-full flex flex-col gap-2 items-center justify-center" id="all-versions">
             {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
             {allProjectVersions?.versions.length ? (
-                <ContentWrapperCard className="p-0 pt-2 overflow-hidden">
+                <ContentWrapperCard className="p-0 overflow-hidden">
                     <div className="w-full flex flex-col gap-2 items-center justify-center">
-                        <Table>
+                        <Table className="font-[500]">
                             <TableHeader>
-                                <TableRow className="border-border/35 dark:border-border/35">
-                                    <TableHead className="overflow-hidden w-20 font-semibold text-foreground text-lg h-16" />
-                                    <TableHead className="overflow-hidden min-w-48 w-[35%] font-semibold text-foreground text-lg h-16">
+                                <TableRow className="border-none">
+                                    <TableHead className="overflow-hidden w-20 font-semibold text-foreground text-lg h-14" />
+                                    <TableHead className="overflow-hidden min-w-48 w-[35%] font-semibold text-foreground text-lg h-14">
                                         Version
                                     </TableHead>
-                                    <TableHead className="overflow-hidden min-w-36 w-[35%] font-semibold text-foreground text-lg h-16">
+                                    <TableHead className="overflow-hidden min-w-36 w-[35%] font-semibold text-foreground text-lg h-14">
                                         Supports
                                     </TableHead>
-                                    <TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg h-16">
+                                    <TableHead className="overflow-hidden min-w-36 w-[25%] font-semibold text-foreground text-lg h-14">
                                         Stats
                                     </TableHead>
                                 </TableRow>
@@ -103,7 +104,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                         return (
                                             <TableRow
                                                 key={version.id}
-                                                className="cursor-pointer hover:bg-bg-hover/50 dark:hover:bg-bg-hover/75 border-border/35"
+                                                className="cursor-pointer h-fit border-b-0 border-t-0 border-transparent"
                                                 onClick={(e) => {
                                                     // @ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
@@ -114,45 +115,54 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                 }}
                                             >
                                                 <TableCell className="align-top">
-                                                    <div className="flex items-start ml-4 lg:ml-6 justify-start py-1.5">
-                                                        <a
-                                                            href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                                            className="noClickRedirect flex h-fit items-center justify-center"
-                                                        >
-                                                            <Button
-                                                                className="h-fit w-fit p-2 rounded-lg"
-                                                                size={"icon"}
-                                                                tabIndex={-1}
-                                                            >
-                                                                <DownloadIcon size="1.1rem" />
-                                                            </Button>
-                                                        </a>
+                                                    <div className="flex items-start ml-4 lg:ml-6 justify-start pt-1">
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <a
+                                                                    href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+                                                                    className="noClickRedirect flex h-fit items-center justify-center"
+                                                                >
+                                                                    <Button
+                                                                        className="h-fit w-fit p-2 rounded-lg"
+                                                                        size={"icon"}
+                                                                        tabIndex={-1}
+                                                                    >
+                                                                        <DownloadIcon size="1.15rem" />
+                                                                    </Button>
+                                                                </a>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent className="">
+                                                                <span className="">
+                                                                    {version.files[0].file_name} (
+                                                                    {parseFileSize(version.files[0].file_size)})
+                                                                </span>
+                                                            </TooltipContent>
+                                                        </Tooltip>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">
-                                                    <div className="w-full flex flex-col items-start justify-start">
+                                                    <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted">
                                                         <Link
                                                             to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
                                                             className="noClickRedirect"
                                                         >
-                                                            <p className="leading-snug text-lg font-semibold text-foreground-muted">
+                                                            <p className="text-base font-bold">
                                                                 {version.version_title}
                                                             </p>
                                                         </Link>
-                                                        <div className="w-full flex items-start justify-start gap-x-2 gap-y-1">
+                                                        <div className="w-full flex items-center justify-start gap-x-2 gap-y-1">
                                                             <ReleaseChannelIndicator
                                                                 release_channel={version.release_channel}
-                                                                labelClassName="text-base"
+                                                                labelClassName="leading-normal"
+                                                                className="brightness-[80%] dark:brightness-[95%]"
                                                             />
-                                                            <p className="text-foreground-muted">
-                                                                {version.version_number}
-                                                            </p>
+                                                            <p className="text-base">{version.version_number}</p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="align-top">
+                                                <TableCell className="align-top dark:text-foreground-muted">
                                                     <div className="flex flex-col items-start justify-start">
-                                                        <p>
+                                                        <p className="">
                                                             {version.supported_loaders
                                                                 .map((loader) => CapitalizeAndFormatString(loader))
                                                                 .join(", ")}
@@ -160,11 +170,11 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                         <p>{FormatVersionsList(version.supported_game_versions)}</p>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="align-top">
+                                                <TableCell className="align-top dark:text-foreground-muted">
                                                     <div className="flex items-start justify-start mr-4">
-                                                        <p className="text-foreground-muted">
+                                                        <p>
                                                             Published on{" "}
-                                                            <span className="font-semibold">
+                                                            <span className="font-bold">
                                                                 {formatDate(
                                                                     new Date(version.published_on),
                                                                     "${month} ${day}, ${year}",

@@ -46,7 +46,7 @@ const NavButton = () => {
                     aria-label="Profile icon"
                     className="p-0 m-0 h-fit rounded-full w-fit"
                 >
-                    <div className="flex items-center justify-center navItemHeight aspect-square p-1 hover:bg-bg-hover rounded-full">
+                    <div className="flex items-center justify-center navItemHeight aspect-square p-1 hover:bg-background rounded-full">
                         {session?.avatar_image ? (
                             <img
                                 src={session?.avatar_image}

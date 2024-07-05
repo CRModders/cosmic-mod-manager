@@ -34,6 +34,7 @@ export const Projectcontext = createContext<ProjectContextType>({
 const getProjectData = async (projectSlug: string) => {
     try {
         const response = await useFetch(`/api/project/${projectSlug}`);
+        if (!response.ok) return null;
         return await response.json();
     } catch (err) {
         console.error(err);

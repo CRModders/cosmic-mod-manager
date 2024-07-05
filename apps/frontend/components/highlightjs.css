@@ -137,7 +137,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body table tr:nth-child(2n) {
-    @apply bg-zinc-100 dark:bg-zinc-950/65;
+    @apply bg-zinc-100 dark:bg-zinc-950/25;
 }
 
 .markdown-body table td:not(:last-of-type),

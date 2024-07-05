@@ -68,8 +68,6 @@ const GeneralProjectSettings = () => {
             setProjectUrl(projectData?.url_slug);
             setProjectSummary(projectData?.summary);
             setProjectVisibility(GetProjectVisibility(projectData?.visibility));
-
-            console.log("resetting data");
         }
     }, [projectData]);
 
@@ -126,7 +124,7 @@ const GeneralProjectSettings = () => {
                                 URL
                             </Label>
 
-                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-[#00000000] dark:focus-within:bg-[#00000000] focus-within:border-border-hicontrast transition-colors">
+                            <div className="group input_box w-full flex items-center justify-center pl-3 rounded-md overflow-hidden">
                                 <label
                                     htmlFor="settings-project-url-input"
                                     className="text-foreground/50 text-base cursor-text"
@@ -136,7 +134,7 @@ const GeneralProjectSettings = () => {
                                 <Input
                                     id="settings-project-url-input"
                                     type="text"
-                                    className="px-0 border-none bg-transparent w-full md:w-[32ch] text-base dark:text-foreground-muted"
+                                    className="px-0 pl-0.5 border-none rounded-none bg-transparent dark:bg-transparent w-full md:w-[32ch] text-base dark:text-foreground-muted"
                                     value={projectUrl}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setProjectUrl(createURLSafeSlug(e.target.value).value);

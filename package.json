@@ -1,20 +1,20 @@
 {
-  "name": "crmm",
-  "devDependencies": {
-    "@biomejs/biome": "1.8.2",
-    "@types/semver": "^7.5.8",
-    "turbo": "latest"
-  },
-  "packageManager": "bun@1.1.8",
-  "private": true,
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint"
-  },
-  "workspaces": ["apps/*"],
-  "dependencies": {
-    "semver": "^7.6.2"
-  },
-  "trustedDependencies": ["@biomejs/biome", "@prisma/client"]
+    "name": "crmm",
+    "devDependencies": {
+        "@biomejs/biome": "1.8.2",
+        "@types/semver": "^7.5.8",
+        "turbo": "latest"
+    },
+    "packageManager": "bun@1.1.8",
+    "private": true,
+    "scripts": {
+        "build": "turbo build",
+        "dev": "bunx --bun turbo dev",
+        "lint": "turbo lint"
+    },
+    "workspaces": ["apps/*"],
+    "dependencies": {
+        "semver": "^7.6.2"
+    },
+    "trustedDependencies": ["@biomejs/biome", "@prisma/client"]
 }

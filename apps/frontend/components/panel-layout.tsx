@@ -11,11 +11,7 @@ type SidePanelProps = {
 };
 
 export const SidePanel = ({ children, className }: SidePanelProps) => {
-    return (
-        <Card className={cn("w-full lg:w-80 px-4 py-4 rounded-lg shadow-none border border-border/75", className)}>
-            {children}
-        </Card>
-    );
+    return <Card className={cn("w-full lg:w-80 px-4 py-4 rounded-lg shadow-none", className)}>{children}</Card>;
 };
 
 type PanelContentProps = {
@@ -41,9 +37,7 @@ type Props = {
 };
 
 export const PanelLayout = ({ children }: Props) => {
-    return (
-        <div className="w-full flex flex-wrap items-start justify-start gap-x-4 gap-y-3 mt-4 relative">{children}</div>
-    );
+    return <div className="w-full flex flex-wrap items-start justify-start gap-x-4 gap-y-3 relative">{children}</div>;
 };
 
 type SidePanelLinkProps = {

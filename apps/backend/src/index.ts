@@ -47,6 +47,6 @@ Bun.serve({
     },
 });
 
-setInterval(async () => {
-    await syncMeilisearchWithPostgres();
-}, Number.parseInt(process.env.POSTGRES_SYNC_INTERVAL_MS) || 3_600_000);
+// setInterval(async () => {
+//     await syncMeilisearchWithPostgres();
+// }, Number.parseInt(process.env.POSTGRES_SYNC_INTERVAL_MS) || 3_600_000);

@@ -91,15 +91,13 @@ export const TooltipWrapper = ({
     asChild?: boolean;
 }) => {
     return (
-        <TooltipProvider delayDuration={400}>
-            <Tooltip>
-                <TooltipTrigger asChild={asChild} className={className}>
-                    {children}
-                </TooltipTrigger>
-                <TooltipContent>
-                    <span className="text-sm sm:text-base">{text}</span>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild={asChild} className={className}>
+                {children}
+            </TooltipTrigger>
+            <TooltipContent>
+                <span className="text-sm sm:text-base">{text}</span>
+            </TooltipContent>
+        </Tooltip>
     );
 };

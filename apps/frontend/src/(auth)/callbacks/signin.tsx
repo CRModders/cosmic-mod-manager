@@ -32,7 +32,6 @@ export const SignInCallbackPage = () => {
             method: "POST",
             body: JSON.stringify({ code, localCookieState, urlCallbackState, codeVerifier, codeChallenge }),
         });
-
         const result = await handleOAuthCallback(fetchReq);
 
         if (result?.success !== true) {

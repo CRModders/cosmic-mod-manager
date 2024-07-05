@@ -36,7 +36,7 @@ const Navbar = () => {
 
     return (
         <header className="w-full flex items-start justify-start relative">
-            <div className="w-full flex items-center justify-center z-50 border-b border-border bg-background">
+            <div className="nav_bg w-full flex items-center justify-center z-50">
                 <nav className="container flex flex-wrap items-center justify-between py-3 px-4 sm:px-8">
                     <div className="flex items-center justify-center gap-8">
                         <Link

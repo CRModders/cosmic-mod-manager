@@ -17,6 +17,8 @@ import { CreateUserSession, LogoutUser, ValidateUserSession } from "./session";
 import discordSigninHandler from "./signin/discord";
 import githubSigninHandler from "./signin/github";
 import gitlabSigninHandler from "./signin/gitlab";
+import googleSigninHandler from "./signin/google";
+import googleCallbackHandler from "./callbacks/google";
 
 const authRouter = new Hono();
 
@@ -79,6 +81,7 @@ const signinAndCreateUserSession = async (
 authRouter.get("/signin/github", githubSigninHandler);
 authRouter.get("/signin/discord", discordSigninHandler);
 authRouter.get("/signin/gitlab", gitlabSigninHandler);
+authRouter.get("/signin/google", googleSigninHandler);
 
 authRouter.post("/callback/:provider", async (c) => {
     try {
@@ -94,6 +97,9 @@ authRouter.post("/callback/:provider", async (c) => {
                 break;
             case "gitlab":
                 result = await gitlabCallbackHandler(c);
+                break;
+            case "google":
+                result = await googleCallbackHandler(c);
                 break;
             default:
                 result = {
@@ -121,13 +127,7 @@ authRouter.post("/callback/:provider", async (c) => {
         return await signinAndCreateUserSession(c, result.user, provider, result.status.message);
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                message: "Internal server error!",
-                success: false,
-            },
-            500,
-        );
+        return c.json({ message: "Internal server error!", success: false }, 500);
     }
 });
 
@@ -139,63 +139,31 @@ authRouter.post("/signin/credentials", async (c) => {
         const password = body?.password;
 
         if (!email || !password) {
-            return c.json(
-                {
-                    success: false,
-                    message: "Email and password are required",
-                },
-                400,
-            );
+            return c.json({ success: false, message: "Email and password are required" }, 400);
         }
 
         const userData = await prisma.user.findUnique({
-            where: {
-                email: email,
-            },
+            where: { email: email },
         });
 
         if (!userData?.email) {
-            return c.json(
-                {
-                    success: false,
-                    message: "Incorrect email or password",
-                },
-                400,
-            );
+            return c.json({ success: false, message: "Incorrect email or password" }, 400);
         }
 
         if (!userData?.password) {
-            return c.json(
-                {
-                    success: false,
-                    message: "Incorrect email or password",
-                },
-                400,
-            );
+            return c.json({ success: false, message: "Incorrect email or password" }, 400);
         }
 
         const isCorrectPassword = await matchPassword(password as string, userData?.password);
 
         if (!isCorrectPassword) {
-            return c.json(
-                {
-                    success: false,
-                    message: "Incorrect email or password",
-                },
-                400,
-            );
+            return c.json({ success: false, message: "Incorrect email or password" }, 400);
         }
 
         return await signinAndCreateUserSession(c, userData, "credential");
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                success: false,
-                message: "Internal server error",
-            },
-            500,
-        );
+        return c.json({ success: false, message: "Internal server error" }, 500);
     }
 });
 
@@ -204,9 +172,7 @@ authRouter.get("/session/validate", async (c) => {
     try {
         const session = getCookie(c, "auth-session");
         if (!session) {
-            return c.json({
-                isValid: false,
-            });
+            return c.json({ isValid: false });
         }
 
         const sessionData = JSON.parse(session) as LocalUserSession;
@@ -267,12 +233,7 @@ authRouter.get("/session/get-logged-in-sessions", async (c) => {
         return c.json({ data: sessionsListData });
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                data: [],
-            },
-            500,
-        );
+        return c.json({ data: [] }, 500);
     }
 });
 
@@ -282,13 +243,7 @@ authRouter.post("/session/revoke-session", async (c) => {
         const targetSessionId = body?.sessionId;
 
         if (!targetSessionId) {
-            return c.json(
-                {
-                    success: false,
-                    message: "Missing session id",
-                },
-                400,
-            );
+            return c.json({ success: false, message: "Missing session id" }, 400);
         }
 
         const [userSession] = await getUserSession(c);
@@ -306,13 +261,7 @@ authRouter.post("/session/revoke-session", async (c) => {
         });
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                success: false,
-                message: "Internal server error",
-            },
-            500,
-        );
+        return c.json({ success: false, message: "Internal server error" }, 500);
     }
 });
 

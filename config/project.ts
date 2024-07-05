@@ -77,7 +77,7 @@ export const Loaders: LoaderType[] = [
         metadata: {},
     },
     {
-        icon: "",
+        icon: "puzzle_loader_icon",
         name: "PUZZLE_LOADER",
         supported_project_types: [ProjectType.MOD],
         supported_fields: [
@@ -321,12 +321,6 @@ export const Categories: CategoryType[] = [
         header: TagHeaderTypes.FEATURE,
     },
     {
-        icon: "high_icon",
-        name: "high",
-        project_types: [ProjectType.SHADER],
-        header: TagHeaderTypes.PERFORMANCE_IMPACT,
-    },
-    {
         icon: "items_icon",
         name: "items",
         project_types: [ProjectType.RESOURCE_PACK],
@@ -357,12 +351,6 @@ export const Categories: CategoryType[] = [
         header: TagHeaderTypes.FEATURE,
     },
     {
-        icon: "low_icon",
-        name: "low",
-        project_types: [ProjectType.SHADER],
-        header: TagHeaderTypes.PERFORMANCE_IMPACT,
-    },
-    {
         icon: "magic_icon",
         name: "magic",
         project_types: [ProjectType.MODPACK],
@@ -379,12 +367,6 @@ export const Categories: CategoryType[] = [
         name: "management",
         project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
-    },
-    {
-        icon: "medium_icon",
-        name: "medium",
-        project_types: [ProjectType.SHADER],
-        header: TagHeaderTypes.PERFORMANCE_IMPACT,
     },
     {
         icon: "minigame_icon",
@@ -447,6 +429,30 @@ export const Categories: CategoryType[] = [
         header: TagHeaderTypes.PERFORMANCE_IMPACT,
     },
     {
+        icon: "low_icon",
+        name: "low",
+        project_types: [ProjectType.SHADER],
+        header: TagHeaderTypes.PERFORMANCE_IMPACT,
+    },
+    {
+        icon: "medium_icon",
+        name: "medium",
+        project_types: [ProjectType.SHADER],
+        header: TagHeaderTypes.PERFORMANCE_IMPACT,
+    },
+    {
+        icon: "high_icon",
+        name: "high",
+        project_types: [ProjectType.SHADER],
+        header: TagHeaderTypes.PERFORMANCE_IMPACT,
+    },
+    {
+        icon: "screenshot_icon",
+        name: "screenshot",
+        project_types: [ProjectType.SHADER],
+        header: TagHeaderTypes.PERFORMANCE_IMPACT,
+    },
+    {
         icon: "quests_icon",
         name: "quests",
         project_types: [ProjectType.MODPACK],
@@ -469,12 +475,6 @@ export const Categories: CategoryType[] = [
         name: "reflections",
         project_types: [ProjectType.SHADER],
         header: TagHeaderTypes.FEATURE,
-    },
-    {
-        icon: "screenshot_icon",
-        name: "screenshot",
-        project_types: [ProjectType.SHADER],
-        header: TagHeaderTypes.PERFORMANCE_IMPACT,
     },
     {
         icon: "semi-realistic_icon",

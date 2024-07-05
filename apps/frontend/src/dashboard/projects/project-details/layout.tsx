@@ -38,7 +38,7 @@ import {
 } from "@root/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@root/types";
 import { time_past_phrases } from "@root/types";
-import React, { Suspense, useContext } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
@@ -51,7 +51,7 @@ export default function ProjectDetailsLayout() {
     const { projectData, fetchingProjectData, featuredProjectVersions } = useContext(Projectcontext);
     const { session } = useContext(AuthContext);
 
-    if (projectData === null) {
+    if (projectData === null || (!fetchingProjectData && !projectData)) {
         return <NotFoundPage />;
     }
 
@@ -419,7 +419,7 @@ const ProjectDetailsNav = ({
 
     return (
         <nav
-            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg border border-border/75"
+            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg"
             id="project-page-nav"
         >
             <ul className="w-fit grow flex flex-wrap gap-x-4">
@@ -432,9 +432,7 @@ const ProjectDetailsNav = ({
                                 to={link.href}
                                 className="routerNavLink flex flex-col relative"
                             >
-                                <span className="navLinkText py-0.5 flex items-center justify-center">
-                                    {link.label}
-                                </span>
+                                <span className="navLinkText py-1 flex items-center justify-center">{link.label}</span>
                                 <span className="activityIndicator" />
                             </RouterNavLink>
                         </li>
@@ -456,12 +454,10 @@ const ProjectDetailsNav = ({
 
 const TooltipWrapper = ({ children, text }: { text: string; children: React.ReactNode }) => {
     return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger>{children}</TooltipTrigger>
-                <TooltipContent className="text-sm">{text}</TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger>{children}</TooltipTrigger>
+            <TooltipContent className="text-sm">{text}</TooltipContent>
+        </Tooltip>
     );
 };
 

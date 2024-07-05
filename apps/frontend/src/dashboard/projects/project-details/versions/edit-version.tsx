@@ -265,11 +265,11 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                                     return (
                                         <div
                                             key={file.id}
-                                            className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover"
+                                            className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-x-4 rounded-lg bg-bg-hover"
                                         >
-                                            <div className="flex flex-wrap gap-x-3 gap-y-1 items-center justify-center">
+                                            <div className="flex flex-wrap gap-x-2 gap-y-1 items-center justify-center">
                                                 <FileIcon className="w-5 h-5 text-foreground-muted" />
-                                                <p className="text-lg font-semibold text-foreground-muted mr-2">
+                                                <p className="text-lg font-semibold text-foreground-muted mr-1">
                                                     {file.file_name}
                                                 </p>
                                                 <p className="text-base text-foreground-muted">
@@ -313,7 +313,6 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             <Select
                                 value={releaseChannel}
                                 onValueChange={(value) => {
-                                    console.log(value);
                                     setReleaseChannel(value as ReleaseChannels);
                                 }}
                             >
@@ -336,7 +335,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             <Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
                                 Version number
                             </Label>
-                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
+                            <div className="input_box w-full flex items-center justify-center px-3">
                                 <label
                                     htmlFor="version-number-input"
                                     className="text-foreground/50 text-base cursor-text pr-2"
