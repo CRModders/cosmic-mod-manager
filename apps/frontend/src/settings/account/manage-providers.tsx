@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FormErrorMessage, FormSuccessMessage } from "@/components/ui/form-message";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getSignInUrl } from "@/src/(auth)/auth";
 import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";

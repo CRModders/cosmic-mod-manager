@@ -8,14 +8,14 @@ import {
     GearIcon,
     PersonIcon,
 } from "@/components/icons";
+import { PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { AbsolutePositionedSpinner, SuspenseFallback } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
 import { FormatProjectTypes } from "@/lib/utils";
 import "@/src/globals.css";
-import { PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Projectcontext } from "@/src/providers/project-context";
@@ -38,7 +38,7 @@ import {
 } from "@root/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@root/types";
 import { time_past_phrases } from "@root/types";
-import React, { Suspense, useContext, useEffect } from "react";
+import React, { Suspense, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
