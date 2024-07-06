@@ -1,4 +1,4 @@
-import type { AuthProviderType } from "@root/types";
+import type { AuthProvidersEnum } from "@root/types";
 import useFetch from "../hooks/fetch";
 
 export const authConfig = {
@@ -6,7 +6,7 @@ export const authConfig = {
     basePath: "/api/auth",
 };
 
-export const getSignInUrl = async (provider: AuthProviderType): Promise<string> => {
+export const getSignInUrl = async (provider: AuthProvidersEnum): Promise<string> => {
     const res = await useFetch(`${authConfig.basePath}/signin/${provider}`);
     return (await res.json())?.signinUrl as string;
 };

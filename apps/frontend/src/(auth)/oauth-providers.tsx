@@ -1,7 +1,7 @@
 import { DiscordIcon, GithubIcon, GitlabIcon, GoogleIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
-import { AuthProvidersEnum, type AuthProviderType } from "@root/types";
+import { AuthProvidersEnum } from "@root/types";
 import React, { useState } from "react";
 import { getSignInUrl } from "./auth";
 
@@ -42,7 +42,7 @@ const AuthProviders = () => {
                         <Button
                             onClick={async () => {
                                 setLoading(true);
-                                const signinUrl = await getSignInUrl(provider.name.toLowerCase() as AuthProviderType);
+                                const signinUrl = await getSignInUrl(provider.name.toLowerCase() as AuthProvidersEnum);
                                 window.location.href = signinUrl;
                             }}
                             aria-label={`Continue using ${provider.name}`}

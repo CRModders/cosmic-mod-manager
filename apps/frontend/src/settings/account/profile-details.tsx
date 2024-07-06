@@ -2,7 +2,7 @@ import { EditIcon, SaveIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { AuthProviderData } from "@/types";
-import type { AuthProviderType, LocalUserSession } from "@root/types";
+import type { AuthProvidersEnum, LocalUserSession } from "@root/types";
 import { useState } from "react";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
     username: string;
     linkedProviders: AuthProviderData[];
     setNewSession: (newSession: Partial<LocalUserSession>) => void;
-    currProfileProvider: AuthProviderType | undefined;
+    currProfileProvider: AuthProvidersEnum | undefined;
 };
 
 const EditProfileDialog = ({ name, username, linkedProviders, setNewSession, currProfileProvider }: Props) => {
@@ -62,7 +62,7 @@ type EditFormProps = {
     name: string;
     username: string;
     linkedProviders: AuthProviderData[];
-    currProfileProvider: AuthProviderType | undefined;
+    currProfileProvider: AuthProvidersEnum | undefined;
     setNewSession: (newSession: Partial<LocalUserSession>) => void;
     dialogOpen?: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;

@@ -8,7 +8,7 @@ import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import type { AuthProviderType, LocalUserSession } from "@root/types";
+import type { AuthProvidersEnum, LocalUserSession } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -25,7 +25,7 @@ type UserSession = {
     ip_addr?: string;
     region?: string;
     country?: string;
-    provider: AuthProviderType;
+    provider: AuthProvidersEnum;
 };
 
 const getLoggedInSessions = async () => {

@@ -10,7 +10,7 @@ import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";
 import type { AuthProviderData } from "@/types";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import type { AuthProviderType } from "@root/types";
+import type { AuthProvidersEnum } from "@root/types";
 import type React from "react";
 import { useState } from "react";
 
@@ -74,7 +74,7 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
         if (loading) return;
         setLoading(true);
 
-        const signinUrl = await getSignInUrl(name.toLowerCase() as AuthProviderType);
+        const signinUrl = await getSignInUrl(name.toLowerCase() as AuthProvidersEnum);
         if (!signinUrl) return setLoading(false);
         window.location.href = signinUrl;
     };
