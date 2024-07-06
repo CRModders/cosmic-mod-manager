@@ -448,7 +448,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                     <Textarea
                         placeholder={placeholder}
                         className={cn(
-                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground-muted focus:border-border dark:focus:border-border",
+                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/95 border-border focus:border-border bg-background-shallow/75",
                             wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
                         )}
                         ref={editorTextarea}
@@ -575,7 +575,7 @@ const EditorModal = ({
             </DialogTrigger>
             <DialogContent className="">
                 <DialogHeader>
-                    <DialogTitle className="font-semibold text-foreground-muted text-xl">{title}</DialogTitle>
+                    <DialogTitle className="font-semibold dark:text-foreground-muted text-xl">{title}</DialogTitle>
                 </DialogHeader>
                 {children}
 

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ const ChangePasswordPage = () => {
     if (session === undefined) {
         return (
             <div className="w-full flex items-center justify-center min-h-[100vh]">
-                <CubeLoader size="lg" />
+                <LoadingSpinner size="lg" />
             </div>
         );
     }

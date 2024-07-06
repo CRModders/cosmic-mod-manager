@@ -2,7 +2,7 @@ import { SaveIcon } from "@/components/icons";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
@@ -54,7 +54,7 @@ const ProjectLinksSettings = () => {
     if (projectData === undefined) {
         return (
             <div className="w-full flex items-center justify-center py-8">
-                <CubeLoader size="lg" />
+                <LoadingSpinner size="lg" />
             </div>
         );
     }

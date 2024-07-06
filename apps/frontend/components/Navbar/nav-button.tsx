@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { LogoutIcon } from "../icons";
 import { Button } from "../ui/button";
-import { CubeLoader } from "../ui/spinner";
+import { LoadingSpinner } from "../ui/spinner";
 import ProfileDropdown, { ProfileDropdownLink } from "./profile-dropdown";
 
 export const LoginButton = ({
@@ -26,7 +26,7 @@ const NavButton = () => {
     const { session, logout: _logout } = useContext(AuthContext);
 
     if (session === undefined) {
-        return <CubeLoader size="sm" />;
+        return <LoadingSpinner size="sm" />;
     }
 
     if (!session?.user_id) {
@@ -87,7 +87,7 @@ export const SignOutBtn = ({ ...props }: Props) => {
         <div className="group w-full flex items-center justify-center rounded-lg bg_stagger_animation">
             <ProfileDropdownLink
                 label="Sign Out"
-                icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <CubeLoader size="sm" />}
+                icon={!loading ? <LogoutIcon className="w-5 h-5" /> : <LoadingSpinner size="sm" />}
                 disabled={loading}
                 onClick={handleClick}
                 {...props}

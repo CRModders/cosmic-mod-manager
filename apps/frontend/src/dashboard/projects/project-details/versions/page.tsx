@@ -121,6 +121,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                                 <a
                                                                     href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
                                                                     className="noClickRedirect flex h-fit items-center justify-center"
+                                                                    aria-label={`Download ${version.files[0].file_name}`}
                                                                 >
                                                                     <Button
                                                                         className="h-fit w-fit p-2 rounded-lg"
@@ -132,7 +133,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                                 </a>
                                                             </TooltipTrigger>
                                                             <TooltipContent className="">
-                                                                <span className="">
+                                                                <span className="text-background/85">
                                                                     {version.files[0].file_name} (
                                                                     {parseFileSize(version.files[0].file_size)})
                                                                 </span>
@@ -141,22 +142,21 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">
-                                                    <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted">
+                                                    <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted text-base">
                                                         <Link
                                                             to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
                                                             className="noClickRedirect"
                                                         >
-                                                            <p className="text-base font-bold">
-                                                                {version.version_title}
-                                                            </p>
+                                                            <p className="font-bold">{version.version_title}</p>
                                                         </Link>
                                                         <div className="w-full flex items-center justify-start gap-x-2 gap-y-1">
                                                             <ReleaseChannelIndicator
                                                                 release_channel={version.release_channel}
-                                                                labelClassName="leading-normal"
-                                                                className="brightness-[80%] dark:brightness-[95%]"
+                                                                labelClassName="leading-normal leading-tight"
                                                             />
-                                                            <p className="text-base">{version.version_number}</p>
+                                                            <p className="font-[500] leading-tight">
+                                                                {version.version_number}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
@@ -167,7 +167,9 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                                 .map((loader) => CapitalizeAndFormatString(loader))
                                                                 .join(", ")}
                                                         </p>
-                                                        <p>{FormatVersionsList(version.supported_game_versions)}</p>
+                                                        <p className="leading-tight">
+                                                            {FormatVersionsList(version.supported_game_versions)}
+                                                        </p>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top dark:text-foreground-muted">

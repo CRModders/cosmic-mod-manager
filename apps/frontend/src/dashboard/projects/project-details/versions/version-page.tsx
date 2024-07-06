@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { FormatVersionsList } from "@/lib/semver";
 import { cn, constructVersionPageUrl } from "@/lib/utils";
@@ -100,7 +100,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
     if (loading === true) {
         return (
             <div className="w-full flex items-center justify-center py-4">
-                <CubeLoader size="lg" />
+                <LoadingSpinner size="lg" />
             </div>
         );
     }
@@ -158,6 +158,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         <div className="flex flex-wrap gap-x-3 gap-y-2">
                             <a
                                 href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url || "")}`}
+                                aria-label={`Download ${versionData.data?.versions[0].files[0].file_name}`}
                             >
                                 <Button className="gap-2" tabIndex={-1}>
                                     <DownloadIcon size="1.15rem" />
@@ -264,8 +265,13 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 
                                                 <a
                                                     href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url)}`}
+                                                    aria-label={`Download ${versionData.data?.versions[0].files[0].file_name}`}
                                                 >
-                                                    <Button className="gap-2" tabIndex={-1}>
+                                                    <Button
+                                                        className="bg-background"
+                                                        tabIndex={-1}
+                                                        variant={"secondary"}
+                                                    >
                                                         <DownloadIcon size="1.15rem" />
                                                         Download
                                                     </Button>
@@ -374,7 +380,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
 
             {loading || !versionData.data ? (
                 <div className="w-full flex items-center justify-center py-4">
-                    <CubeLoader size="lg" />
+                    <LoadingSpinner size="lg" />
                 </div>
             ) : null}
         </div>

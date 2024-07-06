@@ -251,7 +251,7 @@ const EditProfileInfoForm = ({
                                                 <Input
                                                     {...field}
                                                     placeholder="john_doe"
-                                                    className="w-full flex items-center justify-centerp"
+                                                    className="w-full flex items-center justify-center"
                                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         field.onChange(e);
                                                         checkFormError();

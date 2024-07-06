@@ -1,4 +1,3 @@
-import { CategoryIcon } from "@/components/category-icons";
 import { SaveIcon } from "@/components/icons";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import type { CategoryType } from "@root/config/project";
 import { CapitalizeAndFormatString, GetProjectTagsFromNames, GetValidProjectCategories } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import CategoryIconWrapper from "@/components/category-icon-wrapper";
 
 const TagsSettingsPage = () => {
     const [loading, setLoading] = useState(false);
@@ -140,7 +140,7 @@ const TagsSettingsPage = () => {
                                         onCheckedChange={(e) => handleTagsSelection(category, !!e)}
                                         label={
                                             <span className="flex items-center justify-center gap-1">
-                                                <CategoryIcon name={category.icon} />
+                                                <CategoryIconWrapper name={category.icon} />
                                                 {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
                                             </span>
                                         }
@@ -179,7 +179,7 @@ const TagsSettingsPage = () => {
                                             }
                                             label={
                                                 <span className="flex items-center justify-center gap-1">
-                                                    <CategoryIcon name={category.icon} />
+                                                    <CategoryIconWrapper name={category.icon} />
                                                     {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ")}
                                                 </span>
                                             }

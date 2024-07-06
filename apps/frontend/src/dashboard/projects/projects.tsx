@@ -1,7 +1,7 @@
 import { PlusIcon } from "@/components/icons";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import type { ProjectStatuses, ProjectVisibility } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
@@ -59,7 +59,7 @@ const Projects = () => {
                 <div className="w-full flex relative rounded-lg overflow-hidden">
                     {projectsList === null || projectsList.isLoading === true ? (
                         <div className="w-full flex items-center justify-center my-4">
-                            <CubeLoader />
+                            <LoadingSpinner />
                         </div>
                     ) : projectsList.data?.length > 0 ? (
                         <ProjectListTable projectsList={projectsList.data} />

@@ -1,7 +1,7 @@
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { useQuery } from "@tanstack/react-query";
@@ -55,7 +55,7 @@ const AccountSettingsPage = () => {
                     <title>... | CRMM</title>
                 </Helmet>
                 <div className="py-12 flex">
-                    <CubeLoader size="lg" />
+                    <LoadingSpinner size="lg" />
                 </div>
             </>
         );
@@ -121,7 +121,7 @@ const AccountSettingsPage = () => {
 
                     <div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
-                            <p className="text-lg font-semibold text-foreground">Email</p>
+                            <p className="text-xl font-semibold text-foreground">Email</p>
                             <form
                                 className="w-full flex items-center justify-start"
                                 name="Email"

@@ -2,93 +2,68 @@ import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import "./styles.css";
 
-export const Spinner = ({ size = "1.8rem", className }: { size?: string; className?: string }) => {
-    return (
-        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
-        <svg
-            className={cn("animate-spin ease-linear duration-700 text-foreground", className)}
-            viewBox="0 0 64 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            width={size}
-            height={size}
-        >
-            <path
-                d="M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z"
-                stroke="currentColor"
-                className="text-bg-hover"
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762"
-                stroke="currentColor"
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="currentColor"
-            />
-        </svg>
-    );
-};
+type LoaderSizes = "xs" | "sm" | "default" | "lg" | "xl" | "2xl";
 
-type CubeLoaderSize = "xs" | "sm" | "default" | "lg" | "xl" | "2xl";
-
-export function CubeLoader({ size }: { size?: CubeLoaderSize }) {
+export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
     let cubeSize = "1.25rem";
+    let borderWidth = "0.2rem";
 
     switch (size) {
         case "xs":
-            cubeSize = "0.8rem";
+            cubeSize = "1rem";
+            borderWidth = "0.15rem";
             break;
         case "sm":
-            cubeSize = "1rem";
+            cubeSize = "1.25rem";
+            borderWidth = "0.16rem";
             break;
         case "lg":
-            cubeSize = "1.75rem";
+            cubeSize = "2.5rem";
+            borderWidth = "0.2rem";
             break;
         case "xl":
-            cubeSize = "2.5rem";
+            cubeSize = "3.25rem";
+            borderWidth = "0.25rem";
             break;
         case "2xl":
-            cubeSize = "3.5rem";
+            cubeSize = "4rem";
+            borderWidth = "0.3rem";
             break;
         default:
-            cubeSize = "1.25rem";
+            cubeSize = "2rem";
+            borderWidth = "0.2rem";
             break;
     }
 
     return (
-        <div className="w-full grid place-items-center relative">
-            <div
-                className="scene"
-                // @ts-expect-error
-                style={{ "--size": cubeSize }}
-            >
-                <div className="cube-wrapper">
-                    <div className="cube">
-                        <div className="cube-faces">
-                            <div className="cube-face shadow" />
-                            <div className="cube-face bottom" />
-                            <div className="cube-face top" />
-                            <div className="cube-face left" />
-                            <div className="cube-face right" />
-                            <div className="cube-face back" />
-                            <div className="cube-face front" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div
+            className="size-[var(--size)] [border-width:_var(--border-width)] border-foreground-muted border-l-transparent border-r-transparent rounded-full animate-spin"
+            style={{
+                // @ts-ignore
+                "--size": cubeSize,
+                // @ts-ignore
+                "--border-width": borderWidth,
+            }}
+        />
     );
 }
+
+export const WanderingCubesSpinner = () => {
+    return (
+        <span className="wandering_cubes_animation flex items-center justify-center" role="img" aria-label="Loading">
+            <span className="flex items-center justify-center relative contain-paint size-[var(--frame-size)]">
+                <span className="wandering_cube cube1 bg-foreground" />
+                <span className="wandering_cube cube2 bg-foreground" />
+            </span>
+        </span>
+    );
+};
 
 export const AbsolutePositionedSpinner = ({
     size,
     className,
     preventScroll = false,
-}: { size?: CubeLoaderSize; className?: string; preventScroll?: boolean }) => {
+}: { size?: LoaderSizes; className?: string; preventScroll?: boolean }) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (preventScroll !== true) return;
@@ -107,22 +82,18 @@ export const AbsolutePositionedSpinner = ({
                 className,
             )}
         >
-            <div className="w-full h-full flex items-center justify-center relative rounded-xl">
-                <div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background opacity-60" />
-                <CubeLoader size={size} />
+            <div className="w-full h-full flex items-center justify-center relative rounded-xl backdrop-blur-[1px]">
+                <div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background opacity-50" />
+                <LoadingSpinner size={size} />
             </div>
         </div>
     );
 };
 
-export const DotsLoader = ({ className }: { className?: string }) => {
-    return <div className={cn("dots-loader w-10", className)} />;
-};
-
 export const SuspenseFallback = () => {
     return (
         <div className="w-full flex items-center justify-center py-12">
-            <DotsLoader />
+            <WanderingCubesSpinner />
         </div>
     );
 };

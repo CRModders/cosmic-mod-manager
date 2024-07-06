@@ -1,5 +1,5 @@
 import { FormErrorMessage } from "@/components/ui/form-message";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -48,7 +48,7 @@ const VerifyActionPage = () => {
                     <meta name="description" content="..." />
                 </Helmet>
                 <div className="w-full min-h-[100vh] flex items-center justify-center">
-                    <CubeLoader size="lg" />
+                    <LoadingSpinner size="lg" />
                 </div>
             </>
         );

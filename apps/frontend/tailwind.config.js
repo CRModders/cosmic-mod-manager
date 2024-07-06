@@ -34,6 +34,7 @@ module.exports = {
                 "accent-bg": "hsla(var(--accent-bg))",
                 "accent-foreground": "hsla(var(--accent-foreground))",
                 background: "hsla(var(--background))",
+                "body-background": "hsla(var(--body-background))",
                 "background-shallow": "hsla(var(--background-shallow))",
                 "background-shallower": "hsla(var(--background-shallower))",
                 foreground: "hsla(var(--foreground))",
@@ -50,6 +51,8 @@ module.exports = {
             fontSize: {
                 sm: "0.9rem",
                 base: "1rem",
+                lg: "1.1rem",
+                xl: "1.17rem",
             },
         },
     },

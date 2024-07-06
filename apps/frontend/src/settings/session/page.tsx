@@ -2,7 +2,7 @@ import CopyBtn from "@/components/copy-btn";
 import { KeyIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AbsolutePositionedSpinner, CubeLoader } from "@/components/ui/spinner";
+import { AbsolutePositionedSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";
@@ -134,7 +134,7 @@ const RevokeBtn = ({ session_id, fetchLoggedInSessions }: Props) => {
             }}
             disabled={loading}
         >
-            {loading ? <CubeLoader size="xs" /> : <Cross1Icon />}
+            {loading ? <LoadingSpinner size="xs" /> : <Cross1Icon />}
             Revoke session
         </Button>
     );
@@ -151,7 +151,7 @@ const SessionsList = ({
                 return (
                     <div
                         key={session?.id}
-                        className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-background-shallow dark:bg-zinc-950/50"
+                        className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-body-background"
                     >
                         <div className="flex flex-col items-start justify-center gap-2 text-foreground-muted">
                             <div className="flex flex-col gap-y-2 sm:gap-0 items-center justify-center">
@@ -211,7 +211,7 @@ const SessionsList = ({
                             {userSession?.session_id && userSession?.session_id !== session.id ? (
                                 <RevokeBtn session_id={session?.id} fetchLoggedInSessions={fetchLoggedInSessions} />
                             ) : (
-                                <p className="italic text-foreground-muted text-nowrap">Current session</p>
+                                <p className="italic dark:text-foreground-muted text-nowrap">Current session</p>
                             )}
                         </div>
                     </div>

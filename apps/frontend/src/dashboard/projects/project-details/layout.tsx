@@ -34,6 +34,7 @@ import {
     createURLSafeSlug,
     formatDate,
     isLoaderVisibleInVersionList,
+    parseFileSize,
     timeSince,
 } from "@root/lib/utils";
 import type { ProjectDataType, ProjectVersionsList } from "@root/types";
@@ -281,7 +282,7 @@ const AdditionalProjectDetailsCard = ({
                                 // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                                 <div
                                     key={version.id}
-                                    className="w-full flex items-start justify-start p-2 pb-2.5 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+                                    className="w-full flex items-start justify-start p-1.5 pb-2 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
                                     onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                         if (
                                             // @ts-expect-error
@@ -299,27 +300,40 @@ const AdditionalProjectDetailsCard = ({
                                         }
                                     }}
                                 >
-                                    <a
-                                        href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                        className="versionFileDownloadLink"
-                                    >
-                                        <Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2 rounded-lg">
-                                            <DownloadIcon size="1.1rem" />
-                                        </Button>
-                                    </a>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <a
+                                                href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+                                                className="versionFileDownloadLink mt-1"
+                                                aria-label={`Download ${version.files[0].file_name}`}
+                                            >
+                                                <Button
+                                                    tabIndex={-1}
+                                                    size={"icon"}
+                                                    className="h-fit w-fit p-2 rounded-lg"
+                                                >
+                                                    <DownloadIcon size="1.1rem" />
+                                                </Button>
+                                            </a>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <span>
+                                                {version.files[0].file_name} (
+                                                {parseFileSize(version.files[0].file_size)})
+                                            </span>
+                                        </TooltipContent>
+                                    </Tooltip>
 
-                                    <div className="flex w-fit h-full grow flex-col gap-1 select-text">
+                                    <div className="flex w-fit h-full grow flex-col select-text text-base dark:text-foreground-muted">
                                         <Link
                                             to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
                                                 projectData?.url_slug
                                             }/version/${version.url_slug}`}
                                             className="versionPageLink w-fit"
                                         >
-                                            <p className="text-lg leading-none font-semibold text-foreground-muted">
-                                                {version.version_title}
-                                            </p>
+                                            <p className="font-semibold leading-tight">{version.version_title}</p>
                                         </Link>
-                                        <p className="text-foreground-muted leading-none text-pretty">
+                                        <p className="text-pretty">
                                             {`${version.supported_loaders.map((loader) => (isLoaderVisibleInVersionList(loader) ? CapitalizeAndFormatString(loader) : null)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
                                         </p>
                                         <ReleaseChannelIndicator release_channel={version.release_channel} />

@@ -1,4 +1,4 @@
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { redirectToMessagePage } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -67,7 +67,7 @@ export const SignInCallbackPage = () => {
                 <meta name="description" content="Your verification token is either invalid or expired." />
             </Helmet>
             <div className="max-w-xl flex items-center justify-center gap-4 flex-col p-8">
-                <CubeLoader size="lg" />
+                <LoadingSpinner size="lg" />
             </div>
         </div>
     );

@@ -214,7 +214,13 @@ const getSearchPageRoutes = () => {
         routes.push({
             path: `${createURLSafeSlug(project_type).value}s`,
             element: (
-                <Suspense fallback={<SuspenseFallback />}>
+                <Suspense
+                    fallback={
+                        <div className="w-full h-[75vh] flex items-center justify-center">
+                            <SuspenseFallback />
+                        </div>
+                    }
+                >
                     <SearchPage projectType={project_type} />
                 </Suspense>
             ),
@@ -232,7 +238,13 @@ const router = createBrowserRouter([
             {
                 path: "",
                 element: (
-                    <Suspense fallback={<SuspenseFallback />}>
+                    <Suspense
+                        fallback={
+                            <div className="w-full h-[75vh] flex items-center justify-center">
+                                <SuspenseFallback />
+                            </div>
+                        }
+                    >
                         <HomePage />
                     </Suspense>
                 ),

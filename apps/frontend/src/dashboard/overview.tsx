@@ -68,7 +68,7 @@ const Overview = () => {
                     </h1>
 
                     <div className="w-full flex flex-wrap gap-4">
-                        <div className="w-fit grow shrink flex flex-wrap items-center justify-center px-5 py-4 rounded-lg bg-bg-hover">
+                        <div className="w-fit grow shrink flex flex-wrap items-center justify-center px-5 py-4 rounded-lg bg-body-background">
                             <div className="w-full flex flex-col gap-2">
                                 <h2 className="text-foreground-muted font-semibold text-lg">Total downloads</h2>
                                 <span className="text-foreground font-semibold text-4xl mt-1">43,675</span>
@@ -76,7 +76,7 @@ const Overview = () => {
                             </div>
                         </div>
 
-                        <div className="w-fit grow shrink flex flex-wrap items-center justify-center px-5 py-4 rounded-lg bg-bg-hover">
+                        <div className="w-fit grow shrink flex flex-wrap items-center justify-center px-5 py-4 rounded-lg bg-body-background">
                             <div className="w-full flex flex-col gap-2">
                                 <h2 className="text-foreground-muted font-semibold text-lg">Total followers</h2>
                                 <span className="text-foreground font-semibold text-4xl mt-1">5,624</span>

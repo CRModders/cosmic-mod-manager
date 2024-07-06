@@ -14,158 +14,42 @@
     --start-angle: 45deg;
 }
 
-.scene {
-    position: relative;
-    z-index: 2;
-    height: calc(var(--size) * 2.75);
-    width: calc(var(--size) * 2.75);
-    display: grid;
-    place-items: center;
+.wandering_cubes_animation{
+    --frame-size: 2.1rem;
+    --cube-size: 0.5rem;
+    --animation-duration: 1.8s;
 }
 
-@keyframes fade-in {
-    100% {
-        opacity: 1;
-    }
-}
-
-.cube-wrapper {
-    transform-style: preserve-3d;
-    animation: bouncing var(--animation-duration) infinite;
-}
-
-.cube {
-    transform-style: preserve-3d;
-    transform: rotateX(45deg) rotateZ(45deg);
-    animation: rotation var(--animation-duration) infinite;
-}
-
-.cube-faces {
-    transform-style: preserve-3d;
-    height: var(--size);
-    width: var(--size);
-    position: relative;
-    transform-origin: 0 0;
-    transform: translateX(0) translateY(0) translateZ(calc(var(--size) / -2));
-}
-
-.cube-face {
+.wandering_cube{
     position: absolute;
-    inset: 0;
-    font-size: var(--size);
-
-    @apply bg-foreground/90 border-[0.1rem] dark:border-[0.11rem] border-background;
+    top: 0;
+    left: 0;
+    width: var(--cube-size);
+    height: var(--cube-size);
+    animation-name: wandering_cubes;
+    animation-duration: var(--animation-duration);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 
-.cube-face.shadow {
-    transform: translateZ(calc(-1 * var(--size)));
-    animation: bouncing-shadow var(--animation-duration) infinite;
+.wandering_cube.cube1{
+    animation-delay: 0;
+}
+.wandering_cube.cube2{
+    animation-delay: calc(-0.5 * var(--animation-duration));
 }
 
-.cube-face.top {
-    transform: translateZ(var(--size));
-}
-
-.cube-face.front {
-    transform-origin: 0 50%;
-    transform: rotateY(-90deg);
-}
-
-.cube-face.back {
-    transform-origin: 0 50%;
-    transform: rotateY(-90deg) translateZ(calc(-1 * var(--size)));
-}
-
-.cube-face.right {
-    transform-origin: 50% 0;
-    transform: rotateX(-90deg) translateY(calc(-1 * var(--size)));
-}
-
-.cube-face.left {
-    transform-origin: 50% 0;
-    transform: rotateX(-90deg) translateY(calc(-1 * var(--size))) translateZ(var(--size));
-}
-
-@keyframes rotation {
-    0% {
-        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(var(--start-angle));
-        animation-timing-function: cubic-bezier(0.17, 0.84, 0.44, 1);
+@keyframes wandering_cubes {
+    25% {
+        transform: translatex(calc(var(--frame-size) - var(--cube-size))) rotate(-90deg) scale(.5);
     }
-
     50% {
-        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(calc((calc(var(--start-angle) + 360deg)) / 2));
-        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
+        transform: translatex(calc(var(--frame-size) - var(--cube-size))) translatey(calc(var(--frame-size) - var(--cube-size))) rotate(-180deg);
     }
-
+    75% {
+        transform: translatex(0) translatey(calc(var(--frame-size) - var(--cube-size))) rotate(-270deg) scale(.5);
+    }
     100% {
-        transform: rotateX(var(--start-angle)) rotateY(0) rotateZ(calc(var(--start-angle) + 360deg));
-        animation-timing-function: cubic-bezier(0.17, 0.84, 0.44, 1);
-    }
-}
-
-@keyframes bouncing {
-    0% {
-        transform: translateY(calc(var(--size) / -2));
-        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
-    }
-
-    45% {
-        transform: translateY(var(--size));
-        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    100% {
-        transform: translateY(calc(var(--size) / -2));
-        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
-    }
-}
-
-@keyframes bouncing-shadow {
-    0% {
-        transform: translateZ(calc(-1 * var(--size))) scale(1.3);
-        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
-        opacity: 0.05;
-    }
-
-    45% {
-        transform: translateZ(0);
-        animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-        opacity: 0.3;
-    }
-
-    100% {
-        transform: translateZ(calc(-1 * var(--size))) scale(1.3);
-        animation-timing-function: cubic-bezier(0.76, 0.05, 0.86, 0.06);
-        opacity: 0.05;
-    }
-}
-
-
-.dots-loader {
-    aspect-ratio: 2;
-    --_gradient: no-repeat radial-gradient(circle closest-side, hsla(var(--foreground)) 90%, #0000);
-    background:
-        var(--_gradient) 0% 50%,
-        var(--_gradient) 50% 50%,
-        var(--_gradient) 100% 50%;
-    background-size: calc(100%/3) 50%;
-    animation: l3 1s infinite linear;
-}
-
-@keyframes l3 {
-    20% {
-        background-position: 0% 0%, 50% 50%, 100% 50%
-    }
-
-    40% {
-        background-position: 0% 100%, 50% 0%, 100% 50%
-    }
-
-    60% {
-        background-position: 0% 50%, 50% 100%, 100% 0%
-    }
-
-    80% {
-        background-position: 0% 50%, 50% 50%, 100% 100%
+        transform: rotate(-360deg);
     }
 }

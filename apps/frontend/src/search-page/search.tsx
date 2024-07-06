@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SortOptions } from "@root/lib/sort";
-import { CategoryIcon } from "@/components/category-icons";
+import CategoryIconWrapper from "@/components/category-icon-wrapper";
 
 export default function SearchPage({ projectType }: { projectType: ProjectType }) {
     const [searchParams] = useSearchParams();
@@ -71,7 +71,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                             }}
                                             label={
                                                 <span className="flex items-center justify-center gap-1">
-                                                    <CategoryIcon name={category.icon} />
+                                                    <CategoryIconWrapper name={category.icon} />
                                                     {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") ||
                                                         ""}
                                                 </span>
@@ -104,7 +104,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                             }}
                                             label={
                                                 <span className="flex items-center justify-center gap-1">
-                                                    <CategoryIcon name={category.icon} />
+                                                    <CategoryIconWrapper name={category.icon} />
                                                     {CapitalizeAndFormatString(category.name)?.replaceAll("-", " ") ||
                                                         ""}
                                                 </span>
@@ -138,7 +138,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                 }}
                                                 label={
                                                     <span className="flex items-center justify-center gap-1">
-                                                        <CategoryIcon name={category.icon} />
+                                                        <CategoryIconWrapper name={category.icon} />
                                                         {CapitalizeAndFormatString(category.name)?.replaceAll(
                                                             "-",
                                                             " ",
@@ -204,7 +204,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                         }}
                                         label={
                                             <span className="flex items-center justify-center gap-1">
-                                                <CategoryIcon name={loader.icon} />
+                                                <CategoryIconWrapper name={loader.icon} />
                                                 {CapitalizeAndFormatString(loader.name)?.replaceAll("-", " ") || ""}
                                             </span>
                                         }

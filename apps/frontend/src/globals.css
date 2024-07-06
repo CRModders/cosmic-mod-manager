@@ -6,7 +6,7 @@
 
 :root {
     --scrollbar-width: 0.6rem;
-    --tint-hue: 220;
+    --tint-hue: 210;
     --bg-saturation: 10%;
     --accent-color-hue: 345;
 
@@ -16,8 +16,8 @@
     --background-light: 0, 0%, 99%;
     --accent-bg-light: var(--accent-color-hue), 77%, 50%;
     --accent-foreground-light: var(--accent-color-hue), 77%, 50%;
-    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 90%;
-    --background-shallower-light: var(--tint-hue), var(--bg-saturation), 84%;
+    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 92%;
+    --background-shallower-light: var(--tint-hue), var(--bg-saturation), 86%;
     --foreground-light: var(--tint-hue), var(--bg-saturation), 10%;
     --foreground-muted-light: var(--foreground-light), 0.75;
     --bg-hover-light: var(--tint-hue), var(--bg-saturation), 92%;
@@ -155,7 +155,7 @@ body.subtract-scrollbar-width {
 }
 
 .input_box{
-    @apply rounded-lg border-2 border-transparent bg-background-shallow/65 dark:bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
+    @apply rounded-lg border-2 border-transparent bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
 }
 
 /* Hero sectoin bg */

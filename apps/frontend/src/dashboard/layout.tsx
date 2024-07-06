@@ -9,7 +9,7 @@ import {
     LayoutListIcon,
 } from "@/components/icons";
 import RedrectTo from "@/components/redirect-to";
-import { CubeLoader } from "@/components/ui/spinner";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import { PanelContent, PanelLayout, SidePanel, SidepanelLink } from "@/components/panel-layout";
 import React, { useContext } from "react";
@@ -69,7 +69,7 @@ export default function DashboardPageLayout() {
     if (session === undefined) {
         return (
             <div className="w-full flex items-center justify-center py-8">
-                <CubeLoader size="lg" />
+                <LoadingSpinner size="lg" />
             </div>
         );
     }

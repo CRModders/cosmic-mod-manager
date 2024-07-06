@@ -12,13 +12,13 @@ const ReleaseChannelIndicator = ({ release_channel, labelClassName, className }:
     return (
         <div
             className={cn(
-                "flex gap-1.5 items-center justify-start",
+                "flex gap-1.5 items-center justify-start brightness-[80%] dark:brightness-[95%]",
                 release_channel === ReleaseChannels.RELEASE
-                    ? " text-blue-600 dark:text-blue-400"
+                    ? "text-blue-500 dark:text-blue-400"
                     : release_channel === ReleaseChannels.BETA
                       ? "text-orange-500 dark:text-orange-400"
                       : release_channel === ReleaseChannels.ALPHA
-                        ? " text-danger-text"
+                        ? "text-danger-text"
                         : "",
                 className,
             )}
