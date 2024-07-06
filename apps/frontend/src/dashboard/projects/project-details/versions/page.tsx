@@ -142,7 +142,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">
-                                                    <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted text-base">
+                                                    <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted text-base leading-snug">
                                                         <Link
                                                             to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
                                                             className="noClickRedirect"
@@ -154,22 +154,18 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                                 release_channel={version.release_channel}
                                                                 labelClassName="leading-normal leading-tight"
                                                             />
-                                                            <p className="font-[500] leading-tight">
-                                                                {version.version_number}
-                                                            </p>
+                                                            <p className="font-[500]">{version.version_number}</p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top dark:text-foreground-muted">
-                                                    <div className="flex flex-col items-start justify-start">
-                                                        <p className="">
+                                                    <div className="flex flex-col items-start justify-start leading-snug">
+                                                        <p>
                                                             {version.supported_loaders
                                                                 .map((loader) => CapitalizeAndFormatString(loader))
                                                                 .join(", ")}
                                                         </p>
-                                                        <p className="leading-tight">
-                                                            {FormatVersionsList(version.supported_game_versions)}
-                                                        </p>
+                                                        <p>{FormatVersionsList(version.supported_game_versions)}</p>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top dark:text-foreground-muted">

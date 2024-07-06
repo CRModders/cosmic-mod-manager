@@ -42,7 +42,7 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }: Pagina
                 size,
             }),
             "transition-none",
-            !isActive && "text-foreground-muted bg-background",
+            !isActive && "text-foreground-muted bg-background hover:bg-background/75 dark:hover:bg-background-shallow",
             className,
         )}
         {...props}

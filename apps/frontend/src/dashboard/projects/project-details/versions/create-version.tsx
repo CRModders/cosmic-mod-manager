@@ -268,7 +268,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             <Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
                                 Version number
                             </Label>
-                            <div className="w-full flex items-center justify-center px-3 rounded-md bg-background-shallow/50 dark:bg-background-shallow border border-border focus-within:bg-transparent focus-within:border-border-hicontrast transition-colors">
+                            <div className="input_box w-full flex items-center justify-center px-3">
                                 <label
                                     htmlFor="version-number-input"
                                     className="text-foreground/50 text-base cursor-text pr-2"
@@ -278,7 +278,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                                 <Input
                                     id="version-number-input"
                                     type="text"
-                                    className="px-0 border-none bg-transparent text-base dark:text-foreground-muted"
+                                    className="px-0 border-none bg-transparent dark:bg-transparent text-base dark:text-foreground-muted"
                                     value={versionNumber}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setVersionNumber(e.target.value);

@@ -4,9 +4,8 @@ import { cors } from "hono/cors";
 import authRouter from "./auth/router";
 import cdnRouter from "./cdn/router";
 import projectRouter from "./project/project";
-import userRouter from "./user/user";
-import syncMeilisearchWithPostgres from "./search/sync";
 import searchRouter from "./search/search";
+import userRouter from "./user/user";
 
 type Bindings = {
     ip: SocketAddress;
@@ -18,7 +17,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.use(
     "*",
     cors({
-        origin: ["http://localhost:3000", "http://192.168.138.67:3000", "https://preview.crmm.tech"],
+        origin: ["http://localhost:3000", "https://preview.crmm.tech"],
         credentials: true,
     }),
 );
