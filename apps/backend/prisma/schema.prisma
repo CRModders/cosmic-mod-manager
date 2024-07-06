@@ -7,26 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum UserRoles {
-    ADMIN
-    MODERATOR
-    CREATOR
-    USER
-}
-
-enum UserVerificationActionTypes {
-    ADD_PASSWORD
-    CHANGE_PASSWORD
-    DELETE_USER_ACCOUNT
-}
-
-enum Providers {
-    google
-    discord
-    github
-    gitlab
-}
-
 model Account {
     id                     String  @id @default(cuid())
     user_id                String
@@ -50,7 +30,7 @@ model User {
     email                   String    @unique @db.VarChar(256)
     password                String?   @db.VarChar(256)
     unverified_new_password String?   @db.VarChar(256)
-    role                    UserRoles @default(USER)
+    role                    String @default("USER")
     email_verified          DateTime?
     avatar_image            String?
     avatar_image_provider   String?   @db.VarChar(32)
@@ -89,7 +69,7 @@ model DeletedUser {
 model VerificationRequest {
     id           String                      @id @default(cuid())
     user_id      String
-    action       UserVerificationActionTypes
+    action       String
     token        String                      @unique @default(cuid()) @db.VarChar(128)
     date_created DateTime                    @default(now())
 

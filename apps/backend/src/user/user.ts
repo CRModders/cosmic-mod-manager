@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { type Account, UserVerificationActionTypes, type VerificationRequest } from "@prisma/client";
+import { type Account, type VerificationRequest } from "@prisma/client";
 import {
     addNewPasswordVerificationTokenValidity,
     changePasswordConfirmationTokenValidity,
@@ -16,6 +16,7 @@ import {
 } from "../helpers/send-emails";
 import { deleteAllUserFiles } from "../helpers/storage";
 import { hashPassword, isUsernameAvailable, matchPassword } from "../helpers/user-profile";
+import { UserVerificationActionTypes } from "@root/types";
 const userRouter = new Hono();
 
 // * Returns an array of all the oAuth providers linked to the account
@@ -233,7 +234,7 @@ userRouter.post("/add-new-password", async (c) => {
             },
         });
 
-        await sendNewPasswordVerificationEmail({
+        sendNewPasswordVerificationEmail({
             user_id: user.id,
             email: user.email,
             name: user.name,
@@ -583,7 +584,7 @@ userRouter.post("/send-password-change-email", async (c) => {
             });
         }
 
-        await sendPasswordChangeEmail(userData);
+        sendPasswordChangeEmail(userData);
 
         return c.json({
             success: true,

@@ -1,9 +1,10 @@
 import prisma from "@/lib/prisma";
 import { generateRandomCode } from "@root/lib/utils";
-import type { AuthProviderType, LocalUserSession } from "@root/types";
+import type { AuthProvidersEnum, LocalUserSession } from "@root/types";
 import type { Context } from "hono";
 import { deleteCookie, getCookie } from "hono/cookie";
 import type { BlankInput, Env } from "hono/types";
+import { SendNewSigninAlertEmail } from "../helpers/send-emails";
 
 type CreateUserSessionProps = {
     user_id: string;
@@ -15,7 +16,8 @@ type CreateUserSessionProps = {
     provider: string;
     ip_addr?: string;
     browser?: string;
-    os?: string;
+    os_name?: string;
+    os_version?: string;
     region?: string;
     country?: string;
 };
@@ -30,7 +32,8 @@ export async function CreateUserSession({
     provider,
     ip_addr,
     browser,
-    os,
+    os_name,
+    os_version,
     region,
     country,
 }: CreateUserSessionProps): Promise<LocalUserSession> {
@@ -43,10 +46,21 @@ export async function CreateUserSession({
             provider: provider,
             ip_addr,
             browser,
-            os,
+            os: `${os_name} ${os_version}`.trim(),
             region,
             country,
         },
+    });
+
+    SendNewSigninAlertEmail({
+        name: name,
+        receiver_email: email,
+        region: region,
+        country: country,
+        ip: ip_addr,
+        browserName: browser,
+        osName: os_name,
+        auth_provider: provider,
     });
 
     return {
@@ -104,7 +118,7 @@ export async function ValidateUserSession(sessionData: LocalUserSession): Promis
                     name: session.user?.name as string,
                     user_name: session.user?.user_name as string,
                     avatar_image: session.user?.avatar_image as string,
-                    avatar_provider: session.user?.avatar_image_provider as AuthProviderType,
+                    avatar_provider: session.user?.avatar_image_provider as AuthProvidersEnum,
                     role: session.user?.role as string,
                     session_id: session.id,
                     session_token: session.session_token,

@@ -311,7 +311,6 @@ body.subtract-scrollbar-width {
 }
 
 .hero_section_showcase strong {
-    /* animation: opacityFadeOut calc(0.01 * var(--showcase-animation-cycle-duration)) calc((0.17 * var(--index) * var(--showcase-animation-cycle-duration)) + (0.03 * var(--showcase-animation-cycle-duration) * (var(--index) - 1))) ease-out infinite; */
     animation: opacityFadeOut var(--showcase-animation-cycle-duration) calc((0.17 * var(--index) * var(--showcase-animation-cycle-duration)) + (0.03 * var(--showcase-animation-cycle-duration) * (var(--index) - 1))) ease infinite;
 }
 

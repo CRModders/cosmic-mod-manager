@@ -8,6 +8,21 @@ import {
 } from "@root/config/project";
 import { ProjectVisibility, ReleaseChannels, type TypeTimePastPhrases } from "@root/types";
 
+export const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
 export const timeSince = (pastTime: Date, timePastPhrases: TypeTimePastPhrases): string => {
     try {
         const now = new Date();
@@ -57,21 +72,6 @@ export const formatDate = (
     local_minutes?: number,
 ): string => {
     try {
-        const monthNames = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-
         const year = local_year || date.getFullYear();
         const monthIndex = local_monthIndex || date.getMonth();
         const month = monthNames[monthIndex];

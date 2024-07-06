@@ -3,9 +3,21 @@ export enum AuthProvidersEnum {
     GITHUB = "github",
     DISCORD = "discord",
     GITLAB = "gitlab",
+    CREDENTIALS = "credential",
 }
 
-export type AuthProviderType = "google" | "github" | "discord" | "gitlab" | "credential";
+export enum GlobalUserRoles {
+    ADMIN = "ADMIN",
+    MODERATOR = "MODERATOR",
+    CREATOR = "CREATOR",
+    USER = "USER",
+}
+
+export enum UserVerificationActionTypes {
+    ADD_PASSWORD = "ADD_PASSWORD",
+    CHANGE_PASSWORD = "CHANGE_PASSWORD",
+    DELETE_USER_ACCOUNT = "DELETE_USER_ACCOUNT",
+}
 
 export enum ProjectType {
     MOD = "MOD",
@@ -84,7 +96,7 @@ export interface LocalUserSession {
     name: string;
     user_name: string;
     avatar_image?: string;
-    avatar_provider?: AuthProviderType;
+    avatar_provider?: AuthProvidersEnum;
     role: string;
     session_id: string;
     session_token: string;

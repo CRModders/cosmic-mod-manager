@@ -2,16 +2,18 @@ import {
     AccountDeletionVerificationEmailTemplate,
     ChangePasswordVerificationEmailTemplate,
     NewPasswordConfirmationEmailTemplate,
+    NewSignInAlertEmailTemplate,
 } from "@/lib/email-templates";
 import { sendEmail } from "@/lib/nodemailer";
 import prisma from "@/lib/prisma";
-import { UserVerificationActionTypes, type User } from "@prisma/client";
+import { type User } from "@prisma/client";
 import {
     addNewPasswordVerificationTokenValidity,
     changePasswordConfirmationTokenValidity,
     deleteAccountVerificationTokenValidity,
 } from "@root/config";
-import { generateRandomCode } from "@root/lib/utils";
+import { generateRandomCode, monthNames } from "@root/lib/utils";
+import { UserVerificationActionTypes } from "@root/types";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -147,6 +149,57 @@ export const sendAccountDeletionConfirmationEmail = async (user: Partial<User>) 
         return { success: true, message: "Email sent successfully" };
     } catch (error) {
         console.error(error);
+        return {
+            success: false,
+            message: "Error while sending email",
+        };
+    }
+};
+
+export const SendNewSigninAlertEmail = async ({
+    name,
+    receiver_email,
+    region,
+    country,
+    ip,
+    browserName,
+    osName,
+    auth_provider,
+}: {
+    name: string;
+    receiver_email: string;
+    region: string;
+    country: string;
+    ip: string;
+    browserName: string;
+    osName: string;
+    auth_provider: string;
+}) => {
+    try {
+        const currTime = new Date();
+
+        const emailTemplate = NewSignInAlertEmailTemplate({
+            name: name,
+            sessions_page_url: `${baseUrl}/settings/sessions`,
+            site_url: baseUrl,
+            os_name: osName,
+            browser_name: browserName,
+            ip_address: ip,
+            auth_provider: auth_provider,
+            location: `${region} - ${country}`,
+            formatted_timestamp: `${monthNames[currTime.getUTCMonth()]} ${currTime.getUTCDate()}, ${currTime.getUTCFullYear()} at ${currTime.getUTCHours()}:${currTime.getUTCMinutes()}  (UTC Time 24 hr format)`,
+        });
+
+        await sendEmail({
+            receiver: receiver_email,
+            subject: emailTemplate.subject,
+            text: emailTemplate.text,
+            template: emailTemplate.EmailHTML,
+        });
+
+        return { success: true, message: "Email sent successfully" };
+    } catch (err) {
+        console.error(err);
         return {
             success: false,
             message: "Error while sending email",

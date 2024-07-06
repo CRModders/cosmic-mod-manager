@@ -3,7 +3,7 @@ import type { authHandlerResult } from "@/types";
 import type { Session, User } from "@prisma/client";
 import { secureCookie, userSessionValidity } from "@root/config";
 import { Capitalize } from "@root/lib/utils";
-import type { AuthProviderType, LocalUserSession } from "@root/types";
+import { AuthProvidersEnum, type LocalUserSession } from "@root/types";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
@@ -34,7 +34,7 @@ type IpAddressType =
 const signinAndCreateUserSession = async (
     c: Context<Env, string, BlankInput>,
     user: User,
-    provider: AuthProviderType,
+    provider: AuthProvidersEnum,
     responseMsg?: string,
 ) => {
     const userAgent = c.req.header("user-agent");
@@ -56,7 +56,8 @@ const signinAndCreateUserSession = async (
         role: user.role,
         provider: provider,
         ip_addr: sessionDeviceData?.ip_addr,
-        os: sessionDeviceData?.os,
+        os_name: sessionDeviceData?.os.name,
+        os_version: sessionDeviceData?.os.version,
         browser: sessionDeviceData?.browser,
         country: sessionDeviceData?.country,
         region: sessionDeviceData?.region,
@@ -85,7 +86,7 @@ authRouter.get("/signin/google", googleSigninHandler);
 
 authRouter.post("/callback/:provider", async (c) => {
     try {
-        const provider = c.req.param("provider") as AuthProviderType;
+        const provider = c.req.param("provider") as AuthProvidersEnum;
         let result: authHandlerResult;
 
         switch (provider) {
@@ -160,7 +161,7 @@ authRouter.post("/signin/credentials", async (c) => {
             return c.json({ success: false, message: "Incorrect email or password" }, 400);
         }
 
-        return await signinAndCreateUserSession(c, userData, "credential");
+        return await signinAndCreateUserSession(c, userData, AuthProvidersEnum.CREDENTIALS);
     } catch (error) {
         console.error(error);
         return c.json({ success: false, message: "Internal server error" }, 500);

@@ -2,6 +2,7 @@ import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
 import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
+import { AuthProvidersEnum } from "@root/types";
 
 async function fetchUserData(access_token: string) {
     const userDataRes = await fetch("https://api.github.com/user", {
@@ -65,7 +66,7 @@ async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
     const profile: Profile = {
         name: userData?.name || null,
         email: userEmailData?.email || null,
-        providerName: "github",
+        providerName: AuthProvidersEnum.GITHUB,
         providerAccountId: userData?.id || null,
         authType: "oauth",
         accessToken: access_token,

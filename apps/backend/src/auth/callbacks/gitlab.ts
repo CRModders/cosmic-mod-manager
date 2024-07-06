@@ -2,6 +2,7 @@ import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
 import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
+import { AuthProvidersEnum } from "@root/types";
 
 async function fetchUserProfile(access_token: string, access_token_type: string) {
     const userDataRes = await fetch("https://gitlab.com/api/v4/user", {
@@ -38,7 +39,7 @@ async function fetchGitlabUserData(temp_access_code: string) {
     const profile: Profile = {
         name: userProfile?.name || null,
         email: userProfile?.email || null,
-        providerName: "gitlab",
+        providerName: AuthProvidersEnum.GITLAB,
         providerAccountId: userProfile?.id || null,
         authType: "oauth",
         accessToken: access_token,

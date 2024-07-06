@@ -55,7 +55,10 @@ export type GeoApiData = {
 export const getDeviceDetails = async (userAgent: string, ip_addr: string) => {
     const parsedResult = new UAParser(userAgent).getResult();
     const browser = parsedResult.browser.name;
-    const os = `${parsedResult.os.name} ${parsedResult.os.version || ""}`;
+    const os = {
+        name: parsedResult?.os?.name || "",
+        version: parsedResult?.os?.version || "",
+    };
 
     const geoData: GeoApiData | null = {};
 

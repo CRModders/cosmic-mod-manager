@@ -2,6 +2,7 @@ import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
 import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
+import { AuthProvidersEnum } from "@root/types";
 
 async function fetchUserData(access_token: string) {
     const userDataRes = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`, {
@@ -41,7 +42,7 @@ async function fetchGithubUserData(temp_access_code: string): Promise<Profile> {
     const profile: Profile = {
         name: userData?.name || null,
         email: userData?.email || null,
-        providerName: "google",
+        providerName: AuthProvidersEnum.GOOGLE,
         providerAccountId: userData?.sub || null,
         authType: "oauth",
         accessToken: access_token,

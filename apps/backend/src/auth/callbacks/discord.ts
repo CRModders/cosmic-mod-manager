@@ -2,6 +2,7 @@ import type { Profile, authHandlerResult } from "@/types";
 import type { Context } from "hono";
 import type { BlankInput, Env } from "hono/types";
 import authenticateUser, { ValidateProviderProfileData } from "../authenticate";
+import { AuthProvidersEnum } from "@root/types";
 
 async function fetchUserProfile(access_token: string, access_token_type: string) {
     const userDataRes = await fetch("https://discord.com/api/v10/users/@me", {
@@ -40,7 +41,7 @@ async function fetchDiscordUserData(temp_access_code: string) {
     const profile: Profile = {
         name: userProfile?.name || null,
         email: userProfile?.email || null,
-        providerName: "discord",
+        providerName: AuthProvidersEnum.DISCORD,
         providerAccountId: userProfile?.id || null,
         authType: "oauth",
         accessToken: access_token,
