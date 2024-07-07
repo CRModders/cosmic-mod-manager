@@ -20,6 +20,7 @@ import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { deleteAllProjectFiles } from "../helpers/storage";
 import versionRouter from "./version";
+import syncMeilisearchWithPostgres, { deleteProjectFromSearchIndex } from "../search/sync";
 
 const projectRouter = new Hono();
 
@@ -310,6 +311,13 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             },
         });
 
+        if (
+            GetProjectVisibility(visibility) !== ProjectVisibility.PUBLIC &&
+            GetProjectVisibility(visibility) !== ProjectVisibility.LISTED
+        ) {
+            deleteProjectFromSearchIndex(project.id);
+        }
+
         return c.json({
             message: "Project updated successfully",
             data: {
@@ -362,6 +370,7 @@ projectRouter.get("/:projectSlug/delete", async (c) => {
         });
 
         await deleteAllProjectFiles(user.id, project.id).catch((e) => console.error(e));
+        deleteProjectFromSearchIndex(project.id);
 
         return c.json({ message: "Project deleted successfully" });
     } catch (error) {

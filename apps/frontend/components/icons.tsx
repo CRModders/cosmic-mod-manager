@@ -73,12 +73,12 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                 />
                 <linearGradient id="gradient-5">
                     <stop
-                        className="text-[hsl(var(--accent-color-hue),_77%,_50%)] dark:text-[hsla(var(--accent-color-hue),_95%,_71%)]"
+                        className="text-[hsl(var(--accent-color-hue),_77%,_55%)] dark:text-[hsla(var(--accent-color-hue),_95%,_65%)]"
                         stopColor="currentColor"
                         offset="0"
                     />
                     <stop
-                        className="text-[hsl(var(--accent-color-hue),_83%,_41%)] dark:text-[hsl(var(--accent-color-hue),_77%,_50%)]"
+                        className="text-[hsl(var(--accent-color-hue),_83%,_45%)] dark:text-[hsl(var(--accent-color-hue),_77%,_35%)]"
                         stopColor="currentColor"
                         offset="1"
                     />
@@ -1685,6 +1685,26 @@ export const CaretDownFilledIcon: React.FC<IconSvgProps> = ({ size, width, heigh
                 strokeWidth="0"
                 fill="currentColor"
             />
+        </svg>
+    );
+};
+
+export const FunnelIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            {...props}
+        >
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
         </svg>
     );
 };

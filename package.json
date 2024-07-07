@@ -9,7 +9,7 @@
     "private": true,
     "scripts": {
         "build": "turbo build",
-        "dev": "bunx --bun turbo dev",
+        "dev": "turbo dev",
         "lint": "turbo lint"
     },
     "workspaces": ["apps/*"],

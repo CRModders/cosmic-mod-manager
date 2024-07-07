@@ -76,7 +76,7 @@ export default function HomePage() {
     return (
         <>
             {createPortal(
-                <div className="relative w-full h-[125vh] flex items-center justify-center overflow-hidden">
+                <div className="relative w-full h-[125vh] flex items-center justify-center overflow-hidden bg-blue-400">
                     <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
                         <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent to-[hsla(var(--body-background))]" />
                     </div>
@@ -133,9 +133,11 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
-                        <Button size={"lg"} aria-label="Explore mods">
-                            Explore mods
-                        </Button>
+                        <Link to={"/mods"}>
+                            <Button size={"lg"} aria-label="Explore mods" tabIndex={-1}>
+                                Explore mods
+                            </Button>
+                        </Link>
 
                         <CTAButton />
                     </div>

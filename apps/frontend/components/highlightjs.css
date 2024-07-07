@@ -108,7 +108,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body pre {
-    @apply mt-4 p-4 bg-background-shallow/50 dark:bg-background-shallow rounded-lg overflow-x-auto;
+    @apply mt-4 p-4 bg-background-shallow/50 dark:bg-background-shallow rounded-xl overflow-x-auto;
 }
 
 .markdown-body pre code {

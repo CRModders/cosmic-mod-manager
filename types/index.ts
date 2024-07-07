@@ -229,3 +229,30 @@ export type ProjectVersionsList = {
         }[];
     }[];
 };
+
+export type SearchResult = {
+    id: string;
+    name: string;
+    type: string[];
+    summary: string;
+    tags: string[];
+    featured_tags: string[];
+    oss: boolean;
+    icon: string;
+    total_downloads: number;
+    created_on: Date;
+    updated_on: Date;
+    author: string;
+    game_versions: string[];
+    url_slug: string;
+    license: string | null;
+    loaders: string[];
+};
+
+export enum SearchResultSortTypes {
+    RELEVANCE = "RELEVANCE",
+    DOWNLOADS = "DOWNLOADS",
+    FOLLOW_COUNT = "FOLLOW_COUNT",
+    RECENTLY_PUBLISHED = "RECENTLY_PUBLISHED",
+    RECENTLY_UPDATED = "RECENTLY_UPDATED",
+}

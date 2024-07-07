@@ -13,6 +13,7 @@ import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { InferProjectTypeFromLoaders } from "../helpers/project";
 import { deleteAllVersionFiles, saveProjectVersionFile } from "../helpers/storage";
+import { updateProjectToSearchIndex } from "../search/sync";
 
 const versionRouter = new Hono();
 
@@ -561,6 +562,8 @@ versionRouter.post("/create", async (c) => {
                 type: InferProjectTypeFromLoaders([...newProjectVersion.supported_loaders, ...previousVersionLoaders]),
             },
         });
+
+        updateProjectToSearchIndex(project.id);
 
         return c.json({
             message: "Successfully created new version",

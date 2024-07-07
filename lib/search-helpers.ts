@@ -1,4 +1,5 @@
 import { Categories, type CategoryType, type LoaderType, Loaders } from "@root/config/project";
+import { createURLSafeSlug } from "@root/lib/utils";
 import type { ProjectType, TagHeaderTypes } from "@root/types";
 
 export const getSelectedCategoryFilters = (params: string[]): string[] => {
@@ -15,9 +16,9 @@ export const getSelectedCategoryFilters = (params: string[]): string[] => {
 export const getSelectedLoaderFilters = (params: string[]): string[] => {
     const selectedLoaders: string[] = [];
     for (const loader of Loaders) {
-        const loaderName = loader.name.toLowerCase().replaceAll("_", "-");
+        const loaderName = createURLSafeSlug(loader.name).value;
         if (params.includes(loaderName) && !selectedLoaders.includes(loaderName)) {
-            selectedLoaders.push(loaderName);
+            selectedLoaders.push(loader.name);
         }
     }
 
@@ -40,11 +41,11 @@ export const getAllLoaderFilters = (projectType: ProjectType) => {
     const allLoadersList = new Set<LoaderType>();
 
     for (const loader of Loaders) {
-        if (loader.supported_project_types.includes(projectType)) {
-            allLoadersList.add({
-                ...loader,
-                name: loader.name.toLowerCase().replaceAll("_", "-"),
-            });
+        if (
+            loader.supported_project_types.includes(projectType) &&
+            loader?.metadata?.visible_in_version_list !== false
+        ) {
+            allLoadersList.add(loader);
         }
     }
 

@@ -62,8 +62,16 @@ export const WanderingCubesSpinner = () => {
 export const AbsolutePositionedSpinner = ({
     size,
     className,
+    spinnerWrapperClassName,
+    backdropBgClassName,
     preventScroll = false,
-}: { size?: LoaderSizes; className?: string; preventScroll?: boolean }) => {
+}: {
+    size?: LoaderSizes;
+    className?: string;
+    spinnerWrapperClassName?: string;
+    backdropBgClassName?: string;
+    preventScroll?: boolean;
+}) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (preventScroll !== true) return;
@@ -82,8 +90,18 @@ export const AbsolutePositionedSpinner = ({
                 className,
             )}
         >
-            <div className="w-full h-full flex items-center justify-center relative rounded-xl backdrop-blur-[1px]">
-                <div className="w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background opacity-50" />
+            <div
+                className={cn(
+                    "w-full h-full flex items-center justify-center relative rounded-xl backdrop-blur-[1px]",
+                    spinnerWrapperClassName,
+                )}
+            >
+                <div
+                    className={cn(
+                        "w-full h-full absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-background opacity-50",
+                        backdropBgClassName,
+                    )}
+                />
                 <LoadingSpinner size={size} />
             </div>
         </div>

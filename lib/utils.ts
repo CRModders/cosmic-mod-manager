@@ -2,6 +2,7 @@ import {
     Categories,
     type CategoryType,
     Loaders,
+    type LoaderType,
     ProjectTypes,
     ProjectVisibilityOptions,
     ReleaseChannelsList,
@@ -253,6 +254,26 @@ export const GetProjectLoadersList = (loaders_list: string[]) => {
         const loaderName = GetProjectLoader(loader);
         if (loaderName && !list.includes(loaderName)) {
             list.push(loaderName);
+        }
+    }
+
+    return list;
+};
+
+export const GetProjectLoadersDataFromName = (namesList: string[], projectType?: string[]) => {
+    const list = new Set<LoaderType>();
+
+    for (const loader of Loaders) {
+        if (namesList.includes(loader.name)) {
+            if (!projectType?.length) list.add(loader);
+            else {
+                for (const supportedProjectType of loader.supported_project_types) {
+                    if (projectType.includes(supportedProjectType)) {
+                        list.add(loader);
+                        return;
+                    }
+                }
+            }
         }
     }
 

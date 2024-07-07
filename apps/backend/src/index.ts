@@ -6,6 +6,7 @@ import cdnRouter from "./cdn/router";
 import projectRouter from "./project/project";
 import searchRouter from "./search/search";
 import userRouter from "./user/user";
+import syncMeilisearchWithPostgres from "./search/sync";
 
 type Bindings = {
     ip: SocketAddress;
@@ -46,6 +47,6 @@ Bun.serve({
     },
 });
 
-// setInterval(async () => {
-//     await syncMeilisearchWithPostgres();
-// }, Number.parseInt(process.env.POSTGRES_SYNC_INTERVAL_MS) || 3_600_000);
+setInterval(async () => {
+    await syncMeilisearchWithPostgres();
+}, Number.parseInt(process.env.POSTGRES_SYNC_INTERVAL_MS) || 3_600_000);

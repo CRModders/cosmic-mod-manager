@@ -27,7 +27,7 @@ export default function PaginatedNavigation({
     const pages = (() => {
         const list: number[] = new Array(pagesCount);
         for (let i = 0; i < pagesCount; i++) {
-            list.push(i + 1);
+            list[i] = i + 1;
         }
         return list;
     })();
@@ -44,7 +44,7 @@ export default function PaginatedNavigation({
                     )}
                 </PaginationItem>
 
-                {pagesCount < 8 ? (
+                {pagesCount < 7 ? (
                     pages.map((page) => {
                         return (
                             <PaginationItem key={page}>
@@ -65,11 +65,9 @@ export default function PaginatedNavigation({
                                 </PaginationItem>
                             );
                         })}
-
                         <PaginationItem>
                             <PaginationEllipsis />
                         </PaginationItem>
-
                         <PaginationItem>
                             <PaginationLink
                                 to={generateLinkHref(pages[pagesCount - 1])}

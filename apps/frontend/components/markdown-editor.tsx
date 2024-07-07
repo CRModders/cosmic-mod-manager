@@ -34,7 +34,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { TooltipWrapper } from "@/src/settings/session/timestamp";
 
 const IconButton = ({
     children,
@@ -49,24 +49,19 @@ const IconButton = ({
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
 }) => {
     return (
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    size={"icon"}
-                    variant={"secondary"}
-                    tabIndex={disabled ? -1 : 0}
-                    disabled={disabled}
-                    className="h-8 w-8 bg-zinc-300/65 text-foreground-muted hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700/65"
-                    onClick={onClick}
-                    {...props}
-                >
-                    {children}
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent className="bg-background-shallow text-foreground-muted">
-                <span className="">{tooltipContent || ""}</span>
-            </TooltipContent>
-        </Tooltip>
+        <TooltipWrapper text={tooltipContent} asChild>
+            <Button
+                size={"icon"}
+                variant={"secondary"}
+                tabIndex={disabled ? -1 : 0}
+                disabled={disabled}
+                className="h-8 w-8 bg-zinc-300/65 text-foreground-muted hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700/65"
+                onClick={onClick}
+                {...props}
+            >
+                {children}
+            </Button>
+        </TooltipWrapper>
     );
 };
 
@@ -531,7 +526,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                 {previewOn && (
                     <div
                         className={cn(
-                            "flex w-full items-center justify-center rounded-lg border-2 border-border-hicontrast/50 p-4 dark:border dark:border-border",
+                            "flex w-full items-center justify-center rounded-xl border-2 border-border-hicontrast/50 p-4 dark:border dark:border-border",
                             !editorValue && "min-h-24",
                         )}
                     >

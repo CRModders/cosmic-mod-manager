@@ -44,6 +44,7 @@ import { Helmet } from "react-helmet";
 import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
 import "./../styles.css";
+import { TooltipWrapper } from "@/src/settings/session/timestamp";
 
 const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}";
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -433,7 +434,7 @@ const ProjectDetailsNav = ({
 
     return (
         <nav
-            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-lg"
+            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-xl"
             id="project-page-nav"
         >
             <ul className="w-fit grow flex flex-wrap gap-x-4">
@@ -463,15 +464,6 @@ const ProjectDetailsNav = ({
                 </Link>
             )}
         </nav>
-    );
-};
-
-const TooltipWrapper = ({ children, text }: { text: string; children: React.ReactNode }) => {
-    return (
-        <Tooltip>
-            <TooltipTrigger>{children}</TooltipTrigger>
-            <TooltipContent className="text-sm">{text}</TooltipContent>
-        </Tooltip>
     );
 };
 

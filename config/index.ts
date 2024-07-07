@@ -1,3 +1,5 @@
+import { SearchResultSortTypes } from "@root/types";
+
 export const siteTitle = "Cosmic Reach Mod Manager";
 
 // Route types
@@ -27,3 +29,8 @@ export const userSessionValidity = 2592000; // 30 * 24 * 60 * 60; A month
 
 // unsecure cookie until we get ssl
 export const secureCookie = true;
+
+// Search settings
+export const projectsSearchIndexName = "projects";
+export const defaultSearchPageSize = 20;
+export const defaultSortType = SearchResultSortTypes.RELEVANCE;

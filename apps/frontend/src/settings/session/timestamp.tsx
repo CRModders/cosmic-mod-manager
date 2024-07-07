@@ -86,7 +86,7 @@ export const TooltipWrapper = ({
     asChild,
 }: {
     children: React.ReactNode;
-    text: string;
+    text: string | React.ReactNode;
     className?: string;
     asChild?: boolean;
 }) => {
@@ -95,8 +95,8 @@ export const TooltipWrapper = ({
             <TooltipTrigger asChild={asChild} className={className}>
                 {children}
             </TooltipTrigger>
-            <TooltipContent>
-                <span className="text-sm sm:text-base">{text}</span>
+            <TooltipContent className="bg-background-shallower text-foreground-muted">
+                <span className="text-sm">{text}</span>
             </TooltipContent>
         </Tooltip>
     );

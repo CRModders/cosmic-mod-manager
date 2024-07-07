@@ -54,6 +54,7 @@ export type CategoryType = {
     name: string;
     project_types: ProjectType[];
     header: TagHeaderTypes;
+    isDisplayed?: boolean;
 };
 
 export type LicenseDataType = {
@@ -115,48 +116,56 @@ export const Categories: CategoryType[] = [
         name: "8x-",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "16x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "32x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "48x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "64x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "128x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "256x",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "",
         name: "512x+",
         project_types: [ProjectType.RESOURCE_PACK],
         header: TagHeaderTypes.RESOLUTION,
+        isDisplayed: false,
     },
     {
         icon: "adventure_icon",

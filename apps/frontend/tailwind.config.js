@@ -39,6 +39,7 @@ module.exports = {
                 "background-shallower": "hsla(var(--background-shallower))",
                 foreground: "hsla(var(--foreground))",
                 "foreground-muted": "hsla(var(--foreground-muted))",
+                "foreground-extra-muted": "hsla(var(--foreground-extra-muted))",
                 "bg-hover": "hsla(var(--bg-hover))",
                 "danger-bg": "hsla(var(--danger-bg))",
                 "danger-text": "hsla(var(--danger-text))",
@@ -49,7 +50,7 @@ module.exports = {
                 "border-hicontrast": "hsla(var(--border-hicontrast))",
             },
             fontSize: {
-                sm: "0.9rem",
+                sm: "0.85rem",
                 base: "1rem",
                 lg: "1.1rem",
                 xl: "1.17rem",

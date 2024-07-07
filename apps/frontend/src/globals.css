@@ -7,19 +7,20 @@
 :root {
     --scrollbar-width: 0.6rem;
     --tint-hue: 210;
-    --bg-saturation: 10%;
+    --bg-saturation: 16%;
     --accent-color-hue: 345;
 
     /* LIGHT THEME */
     --body-background-light: var(--tint-hue), var(--bg-saturation), 92%;
 
-    --background-light: 0, 0%, 99%;
+    --background-light: var(--tint-hue), var(--bg-saturation), 99%;
     --accent-bg-light: var(--accent-color-hue), 77%, 50%;
     --accent-foreground-light: var(--accent-color-hue), 77%, 50%;
-    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 92%;
-    --background-shallower-light: var(--tint-hue), var(--bg-saturation), 86%;
+    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 90%;
+    --background-shallower-light: var(--tint-hue), var(--bg-saturation), 80%;
     --foreground-light: var(--tint-hue), var(--bg-saturation), 10%;
-    --foreground-muted-light: var(--foreground-light), 0.75;
+    --foreground-muted-light: var(--tint-hue), var(--bg-saturation), 35%;
+    --foreground-extra-muted-light:var(--tint-hue), var(--bg-saturation), 47%;
     --bg-hover-light: var(--tint-hue), var(--bg-saturation), 92%;
     --danger-bg-light: 0, 72%, 51%;
     --danger-text-light: 0, 72%, 51%;
@@ -35,10 +36,11 @@
     --background-dark: var(--tint-hue), var(--bg-saturation), 11%;
     --accent-bg-dark: var(--accent-color-hue), 85%, 62%;
     --accent-foreground-dark: var(--accent-color-hue), 95%, 72%;
-    --background-shallow-dark: var(--tint-hue), var(--bg-saturation), 16%;
-    --background-shallower-dark: var(--tint-hue), var(--bg-saturation), 26%;
-    --foreground-dark: 0, 0%, 98%;
-    --foreground-muted-dark: var(--foreground-dark), 0.8;
+    --background-shallow-dark: var(--tint-hue), var(--bg-saturation), 18%;
+    --background-shallower-dark: var(--tint-hue), var(--bg-saturation), 30%;
+    --foreground-dark: var(--tint-hue), var(--bg-saturation), 96%;
+    --foreground-muted-dark: var(--tint-hue), var(--bg-saturation), 77%;
+    --foreground-extra-muted-dark: var(--tint-hue), var(--bg-saturation), 63%;
     --bg-hover-dark: var(--tint-hue), var(--bg-saturation), 16%;
     --danger-bg-dark: 0, 95%, 65%;
     --danger-text-dark: 0, 91%, 71%;
@@ -58,6 +60,7 @@
     --background-shallower: var(--background-shallower-dark);
     --foreground: var(--foreground-dark);
     --foreground-muted: var(--foreground-muted-dark);
+    --foreground-extra-muted: var(--foreground-extra-muted-dark);
     --bg-hover: var(--bg-hover-dark);
     --danger-bg: var(--danger-bg-dark);
     --danger-text: var(--danger-text-dark);
@@ -77,6 +80,7 @@
     --background-shallower: var(--background-shallower-light);
     --foreground: var(--foreground-light);
     --foreground-muted: var(--foreground-muted-light);
+    --foreground-extra-muted: var(--foreground-extra-muted-light);
     --bg-hover: var(--bg-hover-light);
     --danger-bg: var(--danger-bg-light);
     --danger-text: var(--danger-text-light);
@@ -163,7 +167,8 @@ body.subtract-scrollbar-width {
 .hero_section_grid_bg {
     --line-width: 0.1rem;
     --bg-size: 2rem;
-    --line-color: hsla(var(--background-light), 0.35);
+    --line-color: hsla(var(--body-background), 0.3);
+    --transition-from-bg: var(--background);
 
     content: '';
     position: absolute;
@@ -174,14 +179,15 @@ body.subtract-scrollbar-width {
     background:
     linear-gradient(var(--line-color) var(--line-width), transparent var(--line-width)),
     linear-gradient(to right, var(--line-color) var(--line-width), transparent var(--line-width)),
-    hsla(var(--body-background));
+    hsla(var(--transition-from-bg));
     background-size: var(--bg-size) var(--bg-size);
     background-position: -0.7rem -0.7rem, -0.7rem -0.7rem, 0 0;
     background-attachment: absolute;
 }
 
 .dark .hero_section_grid_bg {
-    --line-color: hsla(var(--background-shallow), 0.2);
+    --line-color: hsla(var(--background), 0.25);
+    --transition-from-bg: var(--body-background);
 }
 
 /* Theme switcher styling */
