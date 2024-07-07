@@ -9,9 +9,9 @@ export default async function useFetch(url: string | Request | URL, init?: Fetch
 
     try {
         return await fetch(`${import.meta.env.VITE_SERVER_URL}${url}`, {
-            signal: abortController.signal,
-            credentials: "include",
             ...init,
+            signal: init?.signal ? init.signal : abortController.signal,
+            credentials: "include",
         });
     } finally {
         abortControllerMap.delete(url.toString());
