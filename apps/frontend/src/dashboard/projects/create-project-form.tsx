@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormErrorMessage } from "@/components/ui/form-message";
-import { Input } from "@/components/ui/input";
+import { Input, InputWithInlineLabel } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -153,24 +153,15 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
                                                     <FormMessage className="text-danger-text dark:text-danger-text leading-tight" />
                                                 </FormLabel>
                                                 <FormControl>
-                                                    <div className="input_box w-full flex items-center justify-center pl-3 rounded-md overflow-hidden">
-                                                        <label
-                                                            htmlFor="project-url-input"
-                                                            className="whitespace-nowrap text-foreground/65 text-sm cursor-text"
-                                                        >
-                                                            /project/
-                                                        </label>
-                                                        <Input
-                                                            id="project-url-input"
-                                                            type="text"
-                                                            className="px-0 pl-0.5 border-none bg-transparent dark:bg-transparent rounded-none"
-                                                            {...field}
-                                                            onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
-                                                                field.onChange(val);
-                                                                setKeepNameAndUrlSynced(false);
-                                                            }}
-                                                        />
-                                                    </div>
+                                                    <InputWithInlineLabel
+                                                        label="/project/"
+                                                        {...field}
+                                                        id="project-url-input"
+                                                        onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
+                                                            field.onChange(val);
+                                                            setKeepNameAndUrlSynced(false);
+                                                        }}
+                                                    />
                                                 </FormControl>
                                             </FormItem>
                                         )}

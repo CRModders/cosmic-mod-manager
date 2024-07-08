@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { Input, InputWithInlineLabel } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
@@ -124,23 +124,14 @@ const GeneralProjectSettings = () => {
                                 URL
                             </Label>
 
-                            <div className="group input_box w-full flex items-center justify-center pl-3 rounded-md overflow-hidden">
-                                <label
-                                    htmlFor="settings-project-url-input"
-                                    className="text-foreground/50 text-base cursor-text"
-                                >
-                                    /{createURLSafeSlug(projectData?.type[0] || "").value}/
-                                </label>
-                                <Input
-                                    id="settings-project-url-input"
-                                    type="text"
-                                    className="px-0 pl-0.5 border-none rounded-none bg-transparent dark:bg-transparent w-full md:w-[32ch] text-base dark:text-foreground-muted"
-                                    value={projectUrl}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setProjectUrl(createURLSafeSlug(e.target.value).value);
-                                    }}
-                                />
-                            </div>
+                            <InputWithInlineLabel
+                                label={`/${createURLSafeSlug(projectData?.type[0] || "").value}/`}
+                                id="settings-project-url-input"
+                                value={projectUrl}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setProjectUrl(createURLSafeSlug(e.target.value).value);
+                                }}
+                            />
                         </div>
                         <div className="w-full flex flex-col items-start justify-center gap-1">
                             <Label htmlFor="settings-summary-textarea" className="font-semibold text-lg">

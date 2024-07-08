@@ -11,7 +11,7 @@
     --accent-color-hue: 345;
 
     /* LIGHT THEME */
-    --body-background-light: var(--tint-hue), var(--bg-saturation), 92%;
+    --body-background-light: var(--tint-hue), var(--bg-saturation), 91%;
 
     --background-light: var(--tint-hue), var(--bg-saturation), 99%;
     --accent-bg-light: var(--accent-color-hue), 75%, 48%;
@@ -155,9 +155,43 @@ body * ::-webkit-scrollbar-track {
     background-color: hsla(var(--background));
 }
 
+/* Input type elemnt styles */
+@layer components {
+    .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        box-shadow: inset 0px -1px 2px hsla(var(--foreground-light), 0.125),
+        0 0 0 0.175rem transparent;
+    }
 
-.input_box{
-    @apply rounded-lg border-[0.2rem] border-transparent bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
+    .accent_surround_shadow {
+        --surround-width: 0.175rem;
+        box-shadow: inset 0px -1px 2px transparent,
+        0 0 0 var(--surround-width) hsla(var(--accent-bg-dark)) !important;
+    }
+
+    .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, 0.5),
+        0 0 0 0.175rem transparent;
+    }
+
+    .input_box_styles:not(.no_input_box_styles) {
+        @apply neumorphic_shadow input_box_transitions rounded-lg bg-background-shallow focus-within:bg-background-shallow/75 focus-within:outline-none disabled:opacity-60;
+    }
+
+    .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus-within{
+        @apply accent_surround_shadow;
+    }
+
+    .dark .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus-within{
+        @apply accent_surround_shadow;
+    }
+
+    .input_box_styles{}
+
+    .input_box_transitions:not(.no_input_box_transitions){
+        transition-property: background-color, box-shadow, color;
+        transition-duration: 150ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 }
 
 .navItemHeight {

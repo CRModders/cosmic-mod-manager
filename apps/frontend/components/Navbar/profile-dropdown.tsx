@@ -30,7 +30,7 @@ export const ProfileDropdownLink = ({ icon, label, className, labelClassName, ..
             variant="ghost"
             size="lg"
             className={cn(
-                "px-4 w-full text-md flex items-center justify-start gap-2 navlink_text hover:bg-transparent dark:hover:bg-transparent",
+                "no_neumorphic_shadow px-4 w-full text-md flex items-center justify-start gap-2 navlink_text hover:bg-transparent dark:hover:bg-transparent",
                 className,
             )}
             {...props}

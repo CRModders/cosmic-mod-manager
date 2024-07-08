@@ -125,12 +125,12 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
                     onChange={(e) => {
                         setSearchTerm(e.target.value);
                     }}
-                    className="multi-select-input focus:rounded-bl-none focus:rounded-br-none border dark:border focus:border-border-hicontrast dark:focus:border-border-hicontrast"
+                    className="multi-select-input focus:rounded-bl-none focus:rounded-br-none no_accent_surround_shadow focus-within:bg-background-shallow dark:focus-within:bg-background-shallow"
                 />
 
                 <label
                     htmlFor={input_id}
-                    className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] py-2 rounded-lg rounded-tl-none rounded-tr-none bg-background border border-border-hicontrast border-t-0"
+                    className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] py-2 rounded-lg rounded-tl-none rounded-tr-none bg-background-shallow shadow-xl shadow-background-shallower dark:shadow-body-background"
                 >
                     <div className="w-ful max-h-[18rem] overflow-auto" ref={listScrollContainer}>
                         {visibleList.map((item, index) => {
@@ -140,7 +140,7 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
                                     key={item}
                                     className={cn(
                                         "w-full text-sm flex items-center justify-start px-4 py-2 text-foreground-muted font-semibold",
-                                        index === focusedListItemIndex && "bg-background-shallow text-foreground",
+                                        index === focusedListItemIndex && "bg-background text-foreground",
                                     )}
                                     id={`multiselect-option-item-${index}-${input_id}`}
                                     onMouseEnter={() => {
@@ -155,6 +155,12 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
                                 </p>
                             );
                         })}
+
+                        {!visibleList?.length && (
+                            <div className="w-full flex items-center justify-center py-2">
+                                <span className="text-foreground-muted font-[500]">No results</span>
+                            </div>
+                        )}
                     </div>
                 </label>
             </div>

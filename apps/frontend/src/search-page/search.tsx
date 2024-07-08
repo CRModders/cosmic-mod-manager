@@ -41,6 +41,7 @@ import useFetch from "../hooks/fetch";
 import { TooltipWrapper } from "../settings/session/timestamp";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import "./styles.css";
+import "@/src/globals.css";
 import { cn } from "@/lib/utils";
 import { FunnelIcon } from "@/components/icons";
 import { defaultSearchPageSize, defaultSortType } from "@root/config";
@@ -449,16 +450,21 @@ const SearchPageContent = ({
     }, []);
 
     return (
-        <div className="w-full flex items-start justify-start flex-col gap-3">
+        <div className="w-full flex items-start justify-start flex-col gap-4">
             <ContentWrapperCard>
-                <div className="w-full flex items-start justify-start gap-x-3 gap-y-1 flex-wrap md:flex-nowrap">
-                    <div className="flex items-start justify-center gap-x-3 gap-y-1 w-full md:w-fit grow">
+                <div className="w-full flex items-start justify-start gap-x-3 gap-y-2 flex-wrap md:flex-nowrap">
+                    <div className="flex items-start justify-center gap-x-3 gap-y-2 w-full md:w-fit grow">
                         <Button
                             variant={"secondary"}
                             className={cn(
-                                "flex lg:hidden border-2 py-4 border-transparent text-foreground-muted",
-                                isFiltersPanelVisible && "bg-accent-bg/15 border-accent-bg hover:bg-accent-bg/10",
+                                "flex lg:hidden py-4 text-foreground-muted",
+                                isFiltersPanelVisible &&
+                                    "bg-accent-bg/15 no_neumorphic_shadow accent_surround_shadow hover:bg-accent-bg/10",
                             )}
+                            style={{
+                                // @ts-ignore
+                                "--surround-width": "0.1rem",
+                            }}
                             onClick={() => {
                                 setIsFiltersPanelVisible((prev) => !prev);
                             }}
@@ -467,9 +473,9 @@ const SearchPageContent = ({
                             <span className="text-sm">Filters...</span>
                         </Button>
 
-                        <div className="w-full flex items-center justify-center overflow-hidden relative">
+                        <div className="w-full flex items-center justify-center relative">
                             <Label
-                                className="h-full flex items-center justify-start pl-2 pr-2 cursor-text absolute left-0"
+                                className="h-full flex items-center justify-start px-3 cursor-text absolute left-0"
                                 htmlFor="searchpage-query-input"
                             >
                                 <MagnifyingGlassIcon className="w-5 h-5 text-foreground/50" />
@@ -487,7 +493,7 @@ const SearchPageContent = ({
                                     navigate(urlPathname);
                                 }}
                                 placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
-                                className="pl-9"
+                                className="pl-10 text-lg"
                             />
                         </div>
                     </div>
@@ -504,7 +510,7 @@ const SearchPageContent = ({
                             navigate(urlPathname);
                         }}
                     >
-                        <SelectTrigger className="w-48 lg:w-64 text-sm lg:text-base dark:text-foreground-muted">
+                        <SelectTrigger className="w-48 lg:w-64 text-sm lg:text-[0.9rem] dark:text-foreground-muted">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -529,7 +535,7 @@ const SearchPageContent = ({
                 </div>
             </ContentWrapperCard>
 
-            <div className="w-full relative flex flex-col items-start justify-start gap-3 pb-20">
+            <div className="w-full relative flex flex-col items-start justify-start gap-4 pb-20">
                 {totalPages > 1 && Pagination}
 
                 <>
@@ -546,7 +552,7 @@ const SearchPageContent = ({
                             return (
                                 <ContentWrapperCard
                                     key={project.id}
-                                    className="searchItemWrapperGrid grid gap-x-3 gap-y-2"
+                                    className="searchItemWrapperGrid grid gap-x-3 gap-y-2 rounded-xl"
                                 >
                                     <Link
                                         to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
@@ -585,7 +591,7 @@ const SearchPageContent = ({
                                     </div>
 
                                     <p
-                                        className="text-base text-foreground-muted leading-tight sm:text-pretty"
+                                        className="text-base text-foreground-muted leading-tight sm:text-pretty max-w-[80ch]"
                                         style={{ gridArea: "summary" }}
                                     >
                                         {project.summary}
@@ -626,7 +632,7 @@ const SearchPageContent = ({
                                     </div>
 
                                     <div
-                                        className="xl:ml-6"
+                                        className="xl:ml-4"
                                         style={{
                                             gridArea: "stats",
                                         }}

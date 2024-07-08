@@ -16,7 +16,7 @@ const HamMenu = ({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) => {
     return (
         <button
             type="button"
-            className="navItemHeight w-10 flex items-center justify-center hover:bg-bg-hover cursor-pointer rounded-lg"
+            className="navItemHeight w-10 flex items-center justify-center hover:bg-background cursor-pointer rounded-lg"
             onClick={handleHamMenuClick}
             aria-label="Menu"
         >

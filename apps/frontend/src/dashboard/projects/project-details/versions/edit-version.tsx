@@ -10,7 +10,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input, InputWithInlineLabel } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -335,23 +335,15 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             <Label htmlFor="version-number-input" className="font-semibold text-foreground text-lg">
                                 Version number
                             </Label>
-                            <div className="input_box w-full flex items-center justify-center px-3">
-                                <label
-                                    htmlFor="version-number-input"
-                                    className="text-foreground/50 text-base cursor-text pr-2"
-                                >
-                                    #
-                                </label>
-                                <Input
-                                    id="version-number-input"
-                                    type="text"
-                                    className="px-0 border-none bg-transparent text-base dark:text-foreground-muted"
-                                    value={versionNumber}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setVersionNumber(e.target.value);
-                                    }}
-                                />
-                            </div>
+                            <InputWithInlineLabel
+                                label="#"
+                                id="version-number-input"
+                                className="pl-2"
+                                value={versionNumber}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setVersionNumber(e.target.value);
+                                }}
+                            />
                         </div>
 
                         <div className="w-full flex flex-col">

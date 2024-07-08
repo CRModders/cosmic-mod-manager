@@ -6,7 +6,7 @@ import {
 } from "@/lib/email-templates";
 import { sendEmail } from "@/lib/nodemailer";
 import prisma from "@/lib/prisma";
-import { type User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import {
     addNewPasswordVerificationTokenValidity,
     changePasswordConfirmationTokenValidity,

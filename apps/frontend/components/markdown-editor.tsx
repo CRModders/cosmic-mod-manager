@@ -55,7 +55,7 @@ const IconButton = ({
                 variant={"secondary"}
                 tabIndex={disabled ? -1 : 0}
                 disabled={disabled}
-                className="h-8 w-8 text-foreground-muted bg-background-shallower/65 dark:bg-background-shallower/75 hover:bg-background-shallower dark:hover:bg-background-shallower/55"
+                className="h-8 w-8 text-foreground-muted bg-background-shallower/55 dark:bg-background-shallower/75 hover:bg-background-shallower/80 dark:hover:bg-background-shallower/55"
                 onClick={onClick}
                 {...props}
             >
@@ -443,7 +443,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                     <Textarea
                         placeholder={placeholder}
                         className={cn(
-                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/95 border-border focus:border-border bg-background-shallow/75",
+                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/95 focus-within:!bg-background-shallow/10",
                             wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
                         )}
                         ref={editorTextarea}

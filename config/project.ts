@@ -578,6 +578,8 @@ export const Categories: CategoryType[] = [
 ];
 
 export const GameVersions = [
+    { version: "0.1.39", releaseType: ReleaseChannels.RELEASE },
+    { version: "0.1.38", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.37", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.36", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.35", releaseType: ReleaseChannels.RELEASE },

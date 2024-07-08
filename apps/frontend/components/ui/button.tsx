@@ -16,8 +16,9 @@ const buttonVariants = cva(
                 "destructive-outlined":
                     "bg-background text-danger-text shadow-sm hover:bg-bg-hover border border-border",
                 outline: "text-foreground-muted border border-border bg-background shadow-sm hover:bg-bg-hover",
-                secondary: "bg-background-shallow text-foreground-muted shadow-sm hover:bg-background-shallow/80",
-                ghost: "text-foreground-muted hover:bg-bg-hover",
+                secondary:
+                    "neumorphic_shadow bg-background-shallow text-foreground-muted shadow-sm hover:bg-background-shallow/80",
+                ghost: "text-foreground-muted hover:bg-bg-hover hover:neumorphic_shadow input_box_transitions",
                 link: "text-foreground-muted underline-offset-4 hover:underline text-base",
             },
             size: {

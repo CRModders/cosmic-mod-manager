@@ -18,7 +18,7 @@ const SelectTrigger = React.forwardRef<
     <SelectPrimitive.Trigger
         ref={ref}
         className={cn(
-            "input_box flex h-9 w-full items-center justify-between whitespace-nowrap px-3 py-2 text-sm ring-offset-white focus:outline-none [&>span]:line-clamp-1",
+            "input_box_styles flex h-10 items-center justify-between whitespace-nowrap font-[500] text-foreground-muted px-3 py-2 text-base [&>span]:line-clamp-1",
             className,
         )}
         {...props}
@@ -26,7 +26,7 @@ const SelectTrigger = React.forwardRef<
         {children}
         <SelectPrimitive.Icon asChild>
             <span className="pl-2 flex items-center justify-center">
-                <CaretDownFilledIcon className="w-4 h-4 opacity-75" />
+                <CaretDownFilledIcon className="w-4 h-4 text-foreground/55 dark:text-foreground/65" />
             </span>
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
@@ -108,7 +108,7 @@ const SelectItem = React.forwardRef<
     <SelectPrimitive.Item
         ref={ref}
         className={cn(
-            "relative flex w-full font-[500] cursor-default select-none items-center rounded-lg py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-bg-hover focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+            "relative flex w-full font-[500] cursor-default select-none items-center rounded-md py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-bg-hover focus:text-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
             className,
         )}
         {...props}
