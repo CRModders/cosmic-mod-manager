@@ -95,7 +95,7 @@ export const TooltipWrapper = ({
             <TooltipTrigger asChild={asChild} className={className}>
                 {children}
             </TooltipTrigger>
-            <TooltipContent className="bg-background-shallower text-foreground-muted">
+            <TooltipContent className="bg-background-shallower text-foreground/95">
                 <span className="text-sm">{text}</span>
             </TooltipContent>
         </Tooltip>

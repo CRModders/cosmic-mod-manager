@@ -76,7 +76,7 @@ export default function HomePage() {
     return (
         <>
             {createPortal(
-                <div className="relative w-full h-[125vh] flex items-center justify-center overflow-hidden bg-blue-400">
+                <div className="relative w-full h-[150vh] flex items-center justify-center overflow-hidden">
                     <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
                         <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent to-[hsla(var(--body-background))]" />
                     </div>
@@ -156,12 +156,12 @@ export default function HomePage() {
                             {section.items.map((item) => {
                                 return (
                                     <Link
-                                        className={`${styles.showcase_item} w-full rounded-lg p-3 grid gap-4 dark:border-2 border-border/50 dark:bg-transparent bg-background`}
+                                        className={`${styles.showcase_item} w-full rounded-lg p-3 grid gap-4 border-2 border-background-shallower/75 dark:border-border/50 bg-body-background`}
                                         to={item.url}
                                         key={item.url}
                                         aria-label={item.name}
                                     >
-                                        <div className="h-16 w-16 bg-background-shallow rounded-lg flex items-center justify-center">
+                                        <div className="h-16 w-16 bg-background-shallower/50 dark:bg-background-shallow rounded-lg flex items-center justify-center">
                                             {" "}
                                         </div>
                                         <div className="flex flex-col items-start justify-start mr-4 max-h-24">

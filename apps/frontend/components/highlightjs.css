@@ -151,7 +151,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body kbd {
-    @apply bg-zinc-300 dark:bg-zinc-700 text-foreground shadow-inner shadow-foreground/10 px-2 pt-1 pb-0.5 rounded leading-none text-sm;
+    @apply bg-zinc-300 dark:bg-zinc-700 text-foreground shadow-inner shadow-foreground/10 px-2 pt-1 pb-0.5 rounded-lg leading-none text-sm;
 }
 
 .markdown-body details {
@@ -159,7 +159,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body details summary {
-    @apply font-bold bg-background-shallow m-[-0.5rem] mb-0 py-2 px-3 cursor-pointer rounded hover:bg-background-shallow/75;
+    @apply font-bold bg-background-shallow m-[-0.5rem] mb-0 py-2 px-3 cursor-pointer rounded-lg hover:bg-background-shallow/75;
 }
 
 .markdown-body details[open] summary {

@@ -44,8 +44,8 @@ const Projects = () => {
             </Helmet>
 
             <ContentWrapperCard className="p-0">
-                <div className="w-full flex items-center justify-between p-4 pb-0">
-                    <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
+                <div className="p-4 w-full flex gap-x-4 gap-y-1 items-center justify-between flex-wrap">
+                    <h1 className="flex items-center justify-start font-semibold text-2xl text-foreground-muted">
                         Projects
                     </h1>
 

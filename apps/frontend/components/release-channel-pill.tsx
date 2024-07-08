@@ -16,7 +16,7 @@ const ReleaseChannelIndicator = ({ release_channel, labelClassName, className }:
                 release_channel === ReleaseChannels.RELEASE
                     ? "text-blue-500 dark:text-blue-400"
                     : release_channel === ReleaseChannels.BETA
-                      ? "text-orange-500 dark:text-orange-400"
+                      ? "text-orange-600 dark:text-orange-400"
                       : release_channel === ReleaseChannels.ALPHA
                         ? "text-danger-text"
                         : "",

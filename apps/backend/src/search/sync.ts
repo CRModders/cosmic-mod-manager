@@ -96,7 +96,7 @@ const syncMeilisearchWithPostgres = async () => {
             } satisfies SearchResult);
         }
 
-        const response = await index.addDocuments(formattedProjectData);
+        await index.addDocuments(formattedProjectData);
     } catch (err) {
         console.error(err);
     } finally {
@@ -166,6 +166,7 @@ syncMeilisearchWithPostgres();
 const index = meilisearch.index(projectsSearchIndexName);
 index.updateFilterableAttributes(["tags", "loaders", "type", "game_versions", "oss"]);
 index.updateSortableAttributes(["total_downloads", "follow_count", "updated_on", "created_on"]);
-index.updateRankingRules(["words", "typo", "proximity", "attribute", "sort", "exactness"]);
+index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]);
+index.updateSearchableAttributes(["name", "url_slug", "summary", "author"]);
 
 export default syncMeilisearchWithPostgres;

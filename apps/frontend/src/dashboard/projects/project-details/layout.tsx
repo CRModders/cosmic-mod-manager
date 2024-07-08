@@ -12,7 +12,6 @@ import { PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout"
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { AbsolutePositionedSpinner, SuspenseFallback } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
 import { FormatProjectTypes } from "@/lib/utils";
 import "@/src/globals.css";
@@ -43,8 +42,8 @@ import React, { Suspense, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 import PublishingChecklist from "../publishing-checklist";
-import "./../styles.css";
 import { TooltipWrapper } from "@/src/settings/session/timestamp";
+import "./../styles.css";
 
 const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}";
 const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -301,29 +300,20 @@ const AdditionalProjectDetailsCard = ({
                                         }
                                     }}
                                 >
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <a
-                                                href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                                className="versionFileDownloadLink mt-1"
-                                                aria-label={`Download ${version.files[0].file_name}`}
-                                            >
-                                                <Button
-                                                    tabIndex={-1}
-                                                    size={"icon"}
-                                                    className="h-fit w-fit p-2 rounded-lg"
-                                                >
-                                                    <DownloadIcon size="1.1rem" />
-                                                </Button>
-                                            </a>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <span>
-                                                {version.files[0].file_name} (
-                                                {parseFileSize(version.files[0].file_size)})
-                                            </span>
-                                        </TooltipContent>
-                                    </Tooltip>
+                                    <TooltipWrapper
+                                        text={`${version.files[0].file_name} (${parseFileSize(version.files[0].file_size)})`}
+                                        asChild={true}
+                                    >
+                                        <a
+                                            href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+                                            className="versionFileDownloadLink mt-0.5 ml-0.5"
+                                            aria-label={`Download ${version.files[0].file_name}`}
+                                        >
+                                            <Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2 rounded-lg">
+                                                <DownloadIcon size="1.1rem" />
+                                            </Button>
+                                        </a>
+                                    </TooltipWrapper>
 
                                     <div className="flex w-fit h-full grow flex-col select-text text-base dark:text-foreground-muted">
                                         <Link
@@ -445,10 +435,12 @@ const ProjectDetailsNav = ({
                                 key={link.href}
                                 aria-label={link.label}
                                 to={link.href}
-                                className="routerNavLink flex flex-col relative"
+                                className="routerNavLink navItemHeight py-1 flex flex-col items-center justify-center"
                             >
-                                <span className="navLinkText py-1 flex items-center justify-center">{link.label}</span>
-                                <span className="activityIndicator" />
+                                <span className="projectDetailsNavLinkText relative flex items-center justify-center">
+                                    {link.label}
+                                    <span className="activityIndicator" />
+                                </span>
                             </RouterNavLink>
                         </li>
                     );

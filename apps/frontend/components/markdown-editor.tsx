@@ -55,7 +55,7 @@ const IconButton = ({
                 variant={"secondary"}
                 tabIndex={disabled ? -1 : 0}
                 disabled={disabled}
-                className="h-8 w-8 bg-zinc-300/65 text-foreground-muted hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-700/65"
+                className="h-8 w-8 text-foreground-muted bg-background-shallower/65 dark:bg-background-shallower/75 hover:bg-background-shallower dark:hover:bg-background-shallower/55"
                 onClick={onClick}
                 {...props}
             >

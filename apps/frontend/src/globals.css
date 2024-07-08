@@ -14,12 +14,12 @@
     --body-background-light: var(--tint-hue), var(--bg-saturation), 92%;
 
     --background-light: var(--tint-hue), var(--bg-saturation), 99%;
-    --accent-bg-light: var(--accent-color-hue), 77%, 50%;
-    --accent-foreground-light: var(--accent-color-hue), 77%, 50%;
-    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 90%;
+    --accent-bg-light: var(--accent-color-hue), 75%, 48%;
+    --accent-foreground-light: var(--accent-color-hue), 75%, 48%;
+    --background-shallow-light: var(--tint-hue), var(--bg-saturation), 91%;
     --background-shallower-light: var(--tint-hue), var(--bg-saturation), 80%;
     --foreground-light: var(--tint-hue), var(--bg-saturation), 10%;
-    --foreground-muted-light: var(--tint-hue), var(--bg-saturation), 35%;
+    --foreground-muted-light: var(--tint-hue), var(--bg-saturation), 34%;
     --foreground-extra-muted-light:var(--tint-hue), var(--bg-saturation), 47%;
     --bg-hover-light: var(--tint-hue), var(--bg-saturation), 92%;
     --danger-bg-light: 0, 72%, 51%;
@@ -35,8 +35,8 @@
 
     --background-dark: var(--tint-hue), var(--bg-saturation), 11%;
     --accent-bg-dark: var(--accent-color-hue), 85%, 62%;
-    --accent-foreground-dark: var(--accent-color-hue), 95%, 72%;
-    --background-shallow-dark: var(--tint-hue), var(--bg-saturation), 18%;
+    --accent-foreground-dark: var(--accent-color-hue), 95%, 70%;
+    --background-shallow-dark: var(--tint-hue), var(--bg-saturation), 19%;
     --background-shallower-dark: var(--tint-hue), var(--bg-saturation), 30%;
     --foreground-dark: var(--tint-hue), var(--bg-saturation), 96%;
     --foreground-muted-dark: var(--tint-hue), var(--bg-saturation), 77%;
@@ -140,42 +140,38 @@ body.subtract-scrollbar-width {
 
 ::-webkit-scrollbar-thumb {
     width: var(--scrollbar-width);
-    border-radius: 1rem;
-    background-color: #d4d4d8;
+    background-color: hsla(var(--background-shallower-dark));
 }
 
 ::-webkit-scrollbar-track {
-    width: var(--scrollbar-width);
-    background-color: white;
+    background-color: hsla(var(--background-dark));
 }
 
-
-.dark ::-webkit-scrollbar-thumb {
-    background-color: #27272a;
+body * ::-webkit-scrollbar-thumb {
+    background-color: hsla(var(--background-shallower));
 }
 
-.dark ::-webkit-scrollbar-track {
-    background-color: #09090b;
+body * ::-webkit-scrollbar-track {
+    background-color: hsla(var(--background));
 }
+
 
 .input_box{
-    @apply rounded-lg border-2 border-transparent bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
+    @apply rounded-lg border-[0.2rem] border-transparent bg-background-shallow disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-foreground/60 transition-colors focus-within:bg-background-shallow/15 dark:focus-within:bg-background-shallow/15 focus-within:border-accent-bg;
 }
 
-/* Hero sectoin bg */
+.navItemHeight {
+    height: 2.75rem;
+}
+
+/* Subtle grid bg for the body */
 
 .hero_section_grid_bg {
     --line-width: 0.1rem;
     --bg-size: 2rem;
-    --line-color: hsla(var(--body-background), 0.3);
-    --transition-from-bg: var(--background);
+    --line-color: hsla(var(--background-shallower), 0.2);
+    --transition-from-bg: var(--body-background);
 
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background:
     linear-gradient(var(--line-color) var(--line-width), transparent var(--line-width)),
     linear-gradient(to right, var(--line-color) var(--line-width), transparent var(--line-width)),
@@ -186,7 +182,7 @@ body.subtract-scrollbar-width {
 }
 
 .dark .hero_section_grid_bg {
-    --line-color: hsla(var(--background), 0.3);
+    --line-color: hsla(var(--background-shallow), 0.125);
     --transition-from-bg: var(--body-background);
 }
 

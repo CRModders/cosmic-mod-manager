@@ -19,7 +19,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
             <CookiesProvider>
                 <AuthProvider>
                     <ThemeProvider>
-                        <TooltipProvider delayDuration={400}>{children}</TooltipProvider>
+                        <TooltipProvider delayDuration={400} skipDelayDuration={300}>
+                            {children}
+                        </TooltipProvider>
                     </ThemeProvider>
                 </AuthProvider>
             </CookiesProvider>

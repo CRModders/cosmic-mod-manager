@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import "@/src/globals.css";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, NavLink as RouterNavLink } from "react-router-dom";
@@ -7,10 +6,11 @@ import { BrandIcon } from "../icons";
 import HamMenu, { MobileNav } from "./mobile-menu";
 import NavButton from "./nav-button";
 import { MenuProfileLinks } from "./profile-dropdown";
-import "./styles.css";
 import { ProjectTypes } from "@root/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
 import ThemeSwitch from "./theme-switcher";
+import "@/src/globals.css";
+import "./styles.css";
 
 const Navbar = () => {
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
@@ -55,10 +55,11 @@ const Navbar = () => {
                         <ul className="hidden lg:flex items-center justify-center gap-3">
                             {NavLinks.map((link) => {
                                 return (
-                                    <li key={link.href} className="flex items-center justify-center">
+                                    <li key={link.href} className="navItemHeight flex px-2 items-center justify-center">
                                         <Navlink href={link.href} label={link.label}>
-                                            <span className="navLinkText navItemHeight px-2 flex items-center justify-center text-base">
+                                            <span className="navLinkText relative flex items-center justify-center text-base">
                                                 {link.label}
+                                                <span className="activityIndicator" />
                                             </span>
                                         </Navlink>
                                     </li>

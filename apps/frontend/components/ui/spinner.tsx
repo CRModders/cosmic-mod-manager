@@ -37,7 +37,7 @@ export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
 
     return (
         <div
-            className="size-[var(--size)] [border-width:_var(--border-width)] border-foreground-muted border-l-transparent border-r-transparent rounded-full animate-spin"
+            className="size-[var(--size)] [border-width:_var(--border-width)] border-foreground-muted border-l-transparent border-r-transparent rounded-[999px] animate-spin"
             style={{
                 // @ts-ignore
                 "--size": cubeSize,

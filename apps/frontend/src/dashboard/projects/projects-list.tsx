@@ -38,7 +38,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                         return (
                             <TableRow
                                 key={project.id}
-                                className="cursor-pointer border-none"
+                                className="cursor-pointer border-none text-base dark:text-foreground-muted"
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {
@@ -52,7 +52,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                         to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
                                         className="noClickRedirect ml-4 flex w-fit h-full aspect-square p-2 rounded-lg bg-background-shallow"
                                     >
-                                        <CubeIcon className="w-8 h-8 text-foreground-muted" />
+                                        <CubeIcon className="w-8 h-8 text-foreground/50" />
                                     </Link>
                                 </TableCell>
                                 <TableCell>
@@ -60,7 +60,11 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                         to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
                                         className="noClickRedirect"
                                     >
-                                        <Button variant={"link"} className="p-0" tabIndex={-1}>
+                                        <Button
+                                            variant={"link"}
+                                            className="p-0 font-normal text-base text-foreground dark:text-foreground-muted"
+                                            tabIndex={-1}
+                                        >
                                             {project.name}
                                         </Button>
                                     </Link>

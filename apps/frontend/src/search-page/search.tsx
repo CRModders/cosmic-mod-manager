@@ -1,7 +1,7 @@
 import { ContentWrapperCard, PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
 import { LabelledCheckBox } from "@/components/ui/checkbox";
-import { CrossCircledIcon, CubeIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon, CubeIcon, MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
     CapitalizeAndFormatString,
     createURLSafeSlug,
@@ -26,8 +26,15 @@ import {
     getSelectedLoaderFilters,
 } from "@root/lib/search-helpers";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import CategoryIconWrapper from "@/components/category-icon-wrapper";
 import { useQuery } from "@tanstack/react-query";
 import useFetch from "../hooks/fetch";
@@ -39,12 +46,14 @@ import { FunnelIcon } from "@/components/icons";
 import { defaultSearchPageSize, defaultSortType } from "@root/config";
 import { Helmet } from "react-helmet";
 import PaginatedNavigation from "@/components/pagination";
+import { Label } from "@/components/ui/label";
 
 let searchResultsFetchReqAbortController: AbortController;
 const timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}";
 const categoryFilterKey = "tags";
 const searchQueryKey = "query";
 const pageOffsetParamKey = "page";
+let newSearchQueryTimeout: number | undefined;
 
 type UpdateParamOptions = {
     deleteParamOnFalsyValue?: boolean;
@@ -124,21 +133,26 @@ const getSearchResults = async (searchQuery: string, projectType: string) => {
 export default function SearchPage({ projectType }: { projectType: ProjectType }) {
     const [searchParams] = useSearchParams();
     const [isFiltersPanelVisible, setIsFiltersPanelVisible] = useState(false);
-    const [selectedLoaderFilters, setSelectedLoaderFilters] = useState(new Set<string>([]));
-    const [selectedCategoryFilters, setSelectedCategoryFilters] = useState(new Set<string>([]));
+    const selectedLoaderFilters = new Set(getSelectedLoaderFilters(searchParams.getAll("l")));
+    const selectedCategoryFilters = new Set(getSelectedCategoryFilters(searchParams.getAll(categoryFilterKey)));
     const navigate = useNavigate();
 
     const searchResults = useQuery({
         queryKey: [`${projectType}-search`],
         queryFn: () => getSearchResults(searchParams.get(searchQueryKey) || "", projectType),
+        refetchOnMount: true,
     });
+
+    const refetchSearchQueryResults = async () => {
+        if (newSearchQueryTimeout) clearTimeout(newSearchQueryTimeout);
+        newSearchQueryTimeout = window.setTimeout(() => {
+            searchResults.refetch();
+        }, 50);
+    };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        setSelectedLoaderFilters(new Set(getSelectedLoaderFilters(searchParams.getAll("l"))));
-        setSelectedCategoryFilters(new Set(getSelectedCategoryFilters(searchParams.getAll(categoryFilterKey))));
-
-        searchResults.refetch();
+        refetchSearchQueryResults();
     }, [searchParams]);
 
     return (
@@ -412,58 +426,90 @@ const SearchPageContent = ({
         />
     );
 
+    useEffect(() => {
+        const handleSearchInputFocus = (e: KeyboardEvent) => {
+            if (e.shiftKey || e.altKey) return;
+
+            if (e.key === "/" || (e.ctrlKey && e.key === "k")) {
+                if (e.key !== "/") e.preventDefault();
+                // @ts-ignore
+                if (e.target?.closest("#searchpage-query-input")) return;
+                e.preventDefault();
+
+                const input = document.querySelector("#searchpage-query-input") as Element;
+                // @ts-ignore
+                input.focus();
+            }
+        };
+
+        document.addEventListener("keydown", handleSearchInputFocus);
+        return () => {
+            document.removeEventListener("keydown", handleSearchInputFocus);
+        };
+    }, []);
+
     return (
         <div className="w-full flex items-start justify-start flex-col gap-3">
             <ContentWrapperCard>
-                <div className="w-full flex items-center justify-start gap-x-3 gap-y-1 flex-wrap md:flex-nowrap">
-                    <div className="flex gap-x-3 gap-y-1 w-full md:w-fit grow">
+                <div className="w-full flex items-start justify-start gap-x-3 gap-y-1 flex-wrap md:flex-nowrap">
+                    <div className="flex items-start justify-center gap-x-3 gap-y-1 w-full md:w-fit grow">
                         <Button
                             variant={"secondary"}
                             className={cn(
-                                "flex lg:hidden border-2 border-transparent",
+                                "flex lg:hidden border-2 py-4 border-transparent text-foreground-muted",
                                 isFiltersPanelVisible && "bg-accent-bg/15 border-accent-bg hover:bg-accent-bg/10",
                             )}
                             onClick={() => {
                                 setIsFiltersPanelVisible((prev) => !prev);
                             }}
                         >
-                            <FunnelIcon size="1.1rem" />
-                            Filters...
+                            <FunnelIcon size="1rem" />
+                            <span className="text-sm">Filters...</span>
                         </Button>
 
-                        <Input
-                            value={searchParams.get(searchQueryKey) || ""}
-                            onChange={(e) => {
-                                const urlPathname = updateSearchParam(searchQueryKey, e.target.value, {
-                                    deleteParamOnFalsyValue: true,
-                                    newParamsAdditionMode: "replace",
-                                    deleteParamIfNewValueMatchesOldOne: false,
-                                    customUrlModifierFunc: deletePageOffsetParam,
-                                });
-                                navigate(urlPathname);
-                            }}
-                            placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
-                        />
+                        <div className="w-full flex items-center justify-center overflow-hidden relative">
+                            <Label
+                                className="h-full flex items-center justify-start pl-2 pr-2 cursor-text absolute left-0"
+                                htmlFor="searchpage-query-input"
+                            >
+                                <MagnifyingGlassIcon className="w-5 h-5 text-foreground/50" />
+                            </Label>
+                            <Input
+                                id="searchpage-query-input"
+                                value={searchParams.get(searchQueryKey) || ""}
+                                onChange={(e) => {
+                                    const urlPathname = updateSearchParam(searchQueryKey, e.target.value, {
+                                        deleteParamOnFalsyValue: true,
+                                        newParamsAdditionMode: "replace",
+                                        deleteParamIfNewValueMatchesOldOne: false,
+                                        customUrlModifierFunc: deletePageOffsetParam,
+                                    });
+                                    navigate(urlPathname);
+                                }}
+                                placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
+                                className="pl-9"
+                            />
+                        </div>
                     </div>
 
-                    <div className="flex flex-row flex-wrap items-center justify-center gap-2">
-                        <Label className="whitespace-nowrap text-foreground-muted">Sort by</Label>
-                        <Select
-                            defaultValue={searchParams.get("sortBy") || defaultSortType}
-                            onValueChange={(val) => {
-                                const urlPathname = updateSearchParam("sortBy", val, {
-                                    deleteParamIfValueMatches: defaultSortType,
-                                    newParamsAdditionMode: "replace",
-                                    deleteParamIfNewValueMatchesOldOne: false,
-                                    customUrlModifierFunc: deletePageOffsetParam,
-                                });
-                                navigate(urlPathname);
-                            }}
-                        >
-                            <SelectTrigger className="w-48 lg:w-64">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
+                    <Select
+                        value={searchParams.get("sortBy") || defaultSortType}
+                        onValueChange={(val) => {
+                            const urlPathname = updateSearchParam("sortBy", val, {
+                                deleteParamIfValueMatches: defaultSortType,
+                                newParamsAdditionMode: "replace",
+                                deleteParamIfNewValueMatchesOldOne: false,
+                                customUrlModifierFunc: deletePageOffsetParam,
+                            });
+                            navigate(urlPathname);
+                        }}
+                    >
+                        <SelectTrigger className="w-48 lg:w-64 text-sm lg:text-base dark:text-foreground-muted">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel className="text-foreground font-bold">Sort by</SelectLabel>
                                 {[
                                     SearchResultSortTypes.RELEVANCE,
                                     SearchResultSortTypes.DOWNLOADS,
@@ -477,14 +523,14 @@ const SearchPageContent = ({
                                         </SelectItem>
                                     );
                                 })}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
             </ContentWrapperCard>
 
             <div className="w-full relative flex flex-col items-start justify-start gap-3 pb-20">
-                {totalPages > 1 && <>{Pagination}</>}
+                {totalPages > 1 && Pagination}
 
                 <>
                     {!!searchResults?.length &&
@@ -508,6 +554,7 @@ const SearchPageContent = ({
                                         style={{
                                             gridArea: "icon",
                                         }}
+                                        tabIndex={-1}
                                     >
                                         {project.icon ? (
                                             <img
@@ -521,7 +568,7 @@ const SearchPageContent = ({
                                     </Link>
 
                                     <div
-                                        className="flex flex-wrap gap-2 pb-[0.1rem] items-end justify-start overflow-hidden"
+                                        className="flex flex-wrap gap-2 pb-[0.1rem] items-end justify-start"
                                         style={{ gridArea: "title" }}
                                     >
                                         <Link to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}>
@@ -530,8 +577,8 @@ const SearchPageContent = ({
                                             </h2>
                                         </Link>
                                         <p className="text-foreground-muted leading-none">
-                                            <span>by</span>{" "}
-                                            <Link to={`/user/${project.author}`} className="underline">
+                                            <span>by</span>
+                                            <Link to={`/user/${project.author}`} className="underline px-1">
                                                 {project.author}
                                             </Link>
                                         </p>
@@ -584,16 +631,29 @@ const SearchPageContent = ({
                                             gridArea: "stats",
                                         }}
                                     >
-                                        <div className="flex items-center justify-start gap-2 dark:text-foreground-muted">
+                                        <div className="flex flex-col items-end justify-start gap-x-2 gap-y-1 dark:text-foreground-muted">
+                                            {/* <p>
+                                                <em className="not-italic font-semibold text-xl dark:text-foreground-muted">
+                                                    {project.total_downloads}
+                                                </em>
+                                            </p> */}
+
                                             <TooltipWrapper
                                                 text={formatDate(new Date(project?.updated_on), timestamp_template)}
-                                                className="cursor-text flex gap-1.5 items-end justify-center"
+                                                asChild={true}
                                             >
-                                                <UpdateIcon className="w-4 h-4" />
-                                                <p className="leading-none text-sm sm:text-base">
-                                                    Updated{" "}
-                                                    {timeSince(new Date(project?.updated_on), time_past_phrases)}
-                                                </p>
+                                                <Button
+                                                    variant={"link"}
+                                                    className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
+                                                    tabIndex={-1}
+                                                >
+                                                    <UpdateIcon className="w-4 h-4 block" />
+
+                                                    <span className="leading-none text-sm sm:text-base">
+                                                        Updated{" "}
+                                                        {timeSince(new Date(project?.updated_on), time_past_phrases)}
+                                                    </span>
+                                                </Button>
                                             </TooltipWrapper>
                                         </div>
                                     </div>
@@ -616,7 +676,7 @@ const SearchPageContent = ({
                     </div>
                 )}
 
-                {totalPages > 1 && <>{Pagination}</>}
+                {totalPages > 1 && Pagination}
             </div>
         </div>
     );

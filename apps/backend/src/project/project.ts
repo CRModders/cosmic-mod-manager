@@ -20,7 +20,7 @@ import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { deleteAllProjectFiles } from "../helpers/storage";
 import versionRouter from "./version";
-import syncMeilisearchWithPostgres, { deleteProjectFromSearchIndex } from "../search/sync";
+import { deleteProjectFromSearchIndex } from "../search/sync";
 
 const projectRouter = new Hono();
 
@@ -32,22 +32,12 @@ projectRouter.post("/create-new-project", async (c) => {
         const summary = isValidString(body?.summary, maxProjectSummaryLength, 1, true).value;
 
         if (!name || !url || !body?.visibility || !summary) {
-            return c.json(
-                {
-                    message: "Missing required data",
-                },
-                400,
-            );
+            return c.json({ message: "Missing required data" }, 400);
         }
 
         const [user] = await getUserSession(c);
         if (!user?.id) {
-            return c.json(
-                {
-                    message: "Unauthenticated request",
-                },
-                401,
-            );
+            return c.json({ message: "Unauthenticated request" }, 401);
         }
 
         // * Check if the url slug is available
@@ -58,12 +48,7 @@ projectRouter.post("/create-new-project", async (c) => {
         });
 
         if (alreadyExistingProjectWithTheUrlSlug?.id) {
-            return c.json(
-                {
-                    message: "That URL slug is already taken.",
-                },
-                400,
-            );
+            return c.json({ message: "That URL slug is already taken." }, 400);
         }
         const project = await prisma.project.create({
             data: {
@@ -91,12 +76,7 @@ projectRouter.post("/create-new-project", async (c) => {
         });
     } catch (error) {
         console.error(error);
-        return c.json(
-            {
-                message: "Internal server error",
-            },
-            500,
-        );
+        return c.json({ message: "Internal server error" }, 500);
     }
 });
 
@@ -104,12 +84,7 @@ projectRouter.get("/get-all-projects", async (c) => {
     try {
         const [user] = await getUserSession(c);
         if (!user?.id) {
-            return c.json(
-                {
-                    message: "",
-                },
-                401,
-            );
+            return c.json({ message: "" }, 401);
         }
 
         const projects = await prisma.projectMember.findMany({

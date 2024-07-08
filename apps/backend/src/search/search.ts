@@ -6,8 +6,6 @@ import { getSelectedCategoryFilters, getSelectedLoaderFilters } from "@root/lib/
 
 const searchRouter = new Hono();
 
-const attribuesToMatchQueryWith = ["name", "summary"];
-
 searchRouter.get("/", async (c) => {
     try {
         const query = decodeURIComponent(c.req.query("query") || "");
@@ -44,7 +42,6 @@ searchRouter.get("/", async (c) => {
 
         const res = await searchIndex.search(query, {
             limit: defaultSearchPageSize,
-            attributesToSearchOn: attribuesToMatchQueryWith,
             showRankingScore: true,
             sort: !sortBy ? [] : [sortBy],
             filter: [filter],

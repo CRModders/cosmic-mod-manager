@@ -8,12 +8,12 @@ import {
     createURLSafeSlug,
     parseFileSize,
 } from "@root/lib/utils";
-import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject } from "@root/types";
+import { MemberPermissionsInProject, ProjectType, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { InferProjectTypeFromLoaders } from "../helpers/project";
 import { deleteAllVersionFiles, saveProjectVersionFile } from "../helpers/storage";
-import { updateProjectToSearchIndex } from "../search/sync";
+import { deleteProjectFromSearchIndex } from "../search/sync";
 
 const versionRouter = new Hono();
 
@@ -563,8 +563,6 @@ versionRouter.post("/create", async (c) => {
             },
         });
 
-        updateProjectToSearchIndex(project.id);
-
         return c.json({
             message: "Successfully created new version",
             newVersionUrlSlug: newVersionUrlSlug,
@@ -687,6 +685,10 @@ versionRouter.get("/:versionSlug/delete", async (c) => {
                 featured_tags: featuredTags,
             },
         });
+
+        if (!updatedProjectType.length || (updatedProjectType[0] === "PROJECT" && updatedProjectType.length === 1)) {
+            deleteProjectFromSearchIndex(project.id);
+        }
 
         return c.json({ message: `Project version ${deletedVersion.version_number} deleted successfully` });
     } catch (error) {

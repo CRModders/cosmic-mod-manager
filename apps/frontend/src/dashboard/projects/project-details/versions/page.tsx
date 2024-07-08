@@ -4,10 +4,10 @@ import { ContentWrapperCard } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { FormatVersionsList } from "@/lib/semver";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
+import { TooltipWrapper } from "@/src/settings/session/timestamp";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, parseFileSize } from "@root/lib/utils";
 import { useContext, useEffect, useState } from "react";
@@ -116,29 +116,24 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                             >
                                                 <TableCell className="align-top">
                                                     <div className="flex items-start ml-4 lg:ml-6 justify-start pt-1">
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild>
-                                                                <a
-                                                                    href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                                                    className="noClickRedirect flex h-fit items-center justify-center"
-                                                                    aria-label={`Download ${version.files[0].file_name}`}
+                                                        <TooltipWrapper
+                                                            text={`${version.files[0].file_name} (${parseFileSize(version.files[0].file_size)})`}
+                                                            asChild={true}
+                                                        >
+                                                            <a
+                                                                href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+                                                                className="noClickRedirect flex h-fit items-center justify-center"
+                                                                aria-label={`Download ${version.files[0].file_name}`}
+                                                            >
+                                                                <Button
+                                                                    className="h-fit w-fit p-2 rounded-lg"
+                                                                    size={"icon"}
+                                                                    tabIndex={-1}
                                                                 >
-                                                                    <Button
-                                                                        className="h-fit w-fit p-2 rounded-lg"
-                                                                        size={"icon"}
-                                                                        tabIndex={-1}
-                                                                    >
-                                                                        <DownloadIcon size="1.15rem" />
-                                                                    </Button>
-                                                                </a>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent className="">
-                                                                <span className="text-background/85">
-                                                                    {version.files[0].file_name} (
-                                                                    {parseFileSize(version.files[0].file_size)})
-                                                                </span>
-                                                            </TooltipContent>
-                                                        </Tooltip>
+                                                                    <DownloadIcon size="1.15rem" />
+                                                                </Button>
+                                                            </a>
+                                                        </TooltipWrapper>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="align-top">

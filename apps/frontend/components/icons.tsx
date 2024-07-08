@@ -73,12 +73,12 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                 />
                 <linearGradient id="gradient-5">
                     <stop
-                        className="text-[hsl(var(--accent-color-hue),_77%,_55%)] dark:text-[hsla(var(--accent-color-hue),_95%,_65%)]"
+                        className="text-[hsl(var(--accent-color-hue),_77%,_58%)] dark:text-[hsla(var(--accent-color-hue),_95%,_64%)]"
                         stopColor="currentColor"
                         offset="0"
                     />
                     <stop
-                        className="text-[hsl(var(--accent-color-hue),_83%,_45%)] dark:text-[hsl(var(--accent-color-hue),_77%,_35%)]"
+                        className="text-[hsl(var(--accent-color-hue),_83%,_42%)] dark:text-[hsl(var(--accent-color-hue),_77%,_38%)]"
                         stopColor="currentColor"
                         offset="1"
                     />
@@ -1705,6 +1705,30 @@ export const FunnelIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
             {...props}
         >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+        </svg>
+    );
+};
+
+export const SortIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            {...props}
+        >
+            <path d="m3 16 4 4 4-4" />
+            <path d="M7 20V4" />
+            <path d="M11 4h10" />
+            <path d="M11 8h7" />
+            <path d="M11 12h4" />
         </svg>
     );
 };
