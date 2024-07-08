@@ -18,7 +18,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.use(
     "*",
     cors({
-        origin: ["http://localhost:3000", "https://preview.crmm.tech", "https://crmm.tech", "https://*.crmm.tech"],
+        origin: ["http://localhost:3000", "https://preview.crmm.tech"],
         credentials: true,
     }),
 );

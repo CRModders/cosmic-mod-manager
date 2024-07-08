@@ -186,7 +186,7 @@ body.subtract-scrollbar-width {
 }
 
 .dark .hero_section_grid_bg {
-    --line-color: hsla(var(--background), 0.25);
+    --line-color: hsla(var(--background), 0.3);
     --transition-from-bg: var(--body-background);
 }
 

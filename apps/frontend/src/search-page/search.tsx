@@ -52,6 +52,7 @@ type UpdateParamOptions = {
     deleteParamIfNewValueMatchesOldOne?: boolean;
     newParamsAdditionMode?: "replace" | "append";
     deleteParamWithMatchingValOnly?: boolean;
+    customUrlModifierFunc?: (currUrl: URL) => URL;
 };
 
 const updateSearchParam = (
@@ -63,9 +64,10 @@ const updateSearchParam = (
         deleteParamIfValueMatches,
         deleteParamWithMatchingValOnly = true,
         deleteParamIfNewValueMatchesOldOne = true,
+        customUrlModifierFunc,
     }: UpdateParamOptions = {},
 ) => {
-    const currUrl = new URL(window.location.href);
+    let currUrl = new URL(window.location.href);
 
     if (
         (deleteParamOnFalsyValue === true && !value) ||
@@ -80,7 +82,14 @@ const updateSearchParam = (
         else if (newParamsAdditionMode === "append") currUrl.searchParams.append(key, value);
     }
 
+    if (customUrlModifierFunc) currUrl = customUrlModifierFunc(currUrl);
+
     return currUrl.href.replace(window.location.origin, "");
+};
+
+const deletePageOffsetParam = (url: URL) => {
+    url.searchParams.delete(pageOffsetParamKey);
+    return url;
 };
 
 const getSearchResults = async (searchQuery: string, projectType: string) => {
@@ -178,6 +187,9 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                     const urlPathname = updateSearchParam(
                                                         categoryFilterKey,
                                                         category.name,
+                                                        {
+                                                            customUrlModifierFunc: deletePageOffsetParam,
+                                                        },
                                                     );
                                                     navigate(urlPathname);
                                                 }}
@@ -210,6 +222,9 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                     const urlPathname = updateSearchParam(
                                                         categoryFilterKey,
                                                         category.name,
+                                                        {
+                                                            customUrlModifierFunc: deletePageOffsetParam,
+                                                        },
                                                     );
                                                     navigate(urlPathname);
                                                 }}
@@ -243,6 +258,9 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                         const urlPathname = updateSearchParam(
                                                             categoryFilterKey,
                                                             category.name,
+                                                            {
+                                                                customUrlModifierFunc: deletePageOffsetParam,
+                                                            },
                                                         );
                                                         navigate(urlPathname);
                                                     }}
@@ -276,6 +294,9 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                     const urlPathname = updateSearchParam(
                                                         categoryFilterKey,
                                                         category.name,
+                                                        {
+                                                            customUrlModifierFunc: deletePageOffsetParam,
+                                                        },
                                                     );
                                                     navigate(urlPathname);
                                                 }}
@@ -301,7 +322,9 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                                 checked={selectedLoaderFilters.has(loader.name)}
                                                 onCheckedChange={() => {
                                                     const loaderName = createURLSafeSlug(loader.name).value;
-                                                    const urlPathname = updateSearchParam("l", loaderName);
+                                                    const urlPathname = updateSearchParam("l", loaderName, {
+                                                        customUrlModifierFunc: deletePageOffsetParam,
+                                                    });
 
                                                     navigate(urlPathname);
                                                 }}
@@ -328,6 +351,7 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                                     onCheckedChange={(e) => {
                                         const urlPathname = updateSearchParam("oss", `${!!e}`, {
                                             deleteParamIfValueMatches: "false",
+                                            customUrlModifierFunc: deletePageOffsetParam,
                                         });
                                         navigate(urlPathname);
                                     }}
@@ -414,10 +438,9 @@ const SearchPageContent = ({
                                     deleteParamOnFalsyValue: true,
                                     newParamsAdditionMode: "replace",
                                     deleteParamIfNewValueMatchesOldOne: false,
+                                    customUrlModifierFunc: deletePageOffsetParam,
                                 });
-                                const newUrl = new URL(`${window.location.origin}${urlPathname}`);
-                                newUrl.searchParams.delete(pageOffsetParamKey);
-                                navigate(newUrl.href.replace(window.location.origin, ""));
+                                navigate(urlPathname);
                             }}
                             placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
                         />
@@ -432,6 +455,7 @@ const SearchPageContent = ({
                                     deleteParamIfValueMatches: defaultSortType,
                                     newParamsAdditionMode: "replace",
                                     deleteParamIfNewValueMatchesOldOne: false,
+                                    customUrlModifierFunc: deletePageOffsetParam,
                                 });
                                 navigate(urlPathname);
                             }}
