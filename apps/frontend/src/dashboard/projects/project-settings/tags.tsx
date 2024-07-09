@@ -160,7 +160,7 @@ const TagsSettingsPage = () => {
                         <p className=" text-foreground-muted">You can feature up to 3 of your most relevant tags.</p>
 
                         {!selectedTags?.size ? (
-                            <p className="text-sm text-foreground-muted mt-2">
+                            <p className="text-foreground-muted mt-2">
                                 Select at least one category in order to feature a category.
                             </p>
                         ) : (

@@ -177,10 +177,12 @@ body * ::-webkit-scrollbar-track {
         @apply neumorphic_shadow input_box_transitions rounded-lg bg-background-shallow focus-within:bg-background-shallow/75 focus-within:outline-none disabled:opacity-60;
     }
 
+    .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus,
     .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus-within{
         @apply accent_surround_shadow;
     }
 
+    .dark .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus,
     .dark .input_box_styles:not(.no_input_box_styles, .no_accent_surround_shadow):focus-within{
         @apply accent_surround_shadow;
     }

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .markdown-body {
     @apply text-foreground-muted text-base;
 }
@@ -108,7 +112,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body pre {
-    @apply mt-4 p-4 bg-background-shallow/50 dark:bg-background-shallow rounded-xl overflow-x-auto;
+    @apply mt-4 p-4 w-full inline-block bg-background-shallow/50 dark:bg-background-shallow rounded-xl overflow-x-auto whitespace-break-spaces;
 }
 
 .markdown-body pre code {
@@ -151,7 +155,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body kbd {
-    @apply bg-zinc-300 dark:bg-zinc-700 text-foreground shadow-inner shadow-foreground/10 px-2 pt-1 pb-0.5 rounded-lg leading-none text-sm;
+    @apply bg-background-shallow rounded-lg text-foreground px-2 pt-1 pb-0.5 leading-none text-sm;
 }
 
 .markdown-body details {

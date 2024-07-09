@@ -11,7 +11,7 @@ type SidePanelProps = {
 };
 
 export const SidePanel = ({ children, className }: SidePanelProps) => {
-    return <Card className={cn("w-full lg:w-72 xl:w-80 px-4 py-4 rounded-xl shadow-none", className)}>{children}</Card>;
+    return <Card className={cn("px-4 py-4 rounded-xl shadow-none w-full lg:w-72 xl:w-80", className)}>{children}</Card>;
 };
 
 type PanelContentProps = {
@@ -23,7 +23,7 @@ export const PanelContent = ({ children, className }: PanelContentProps) => {
     return (
         <section
             className={cn(
-                "grow max-w-full flex flex-col gap-4 items-center justify-center rounded-lg lg:w-64",
+                "grow w-full max-w-full flex flex-col gap-card-gap items-center justify-center rounded-lg",
                 className,
             )}
         >
@@ -37,7 +37,12 @@ type Props = {
 };
 
 export const PanelLayout = ({ children }: Props) => {
-    return <div className="w-full flex flex-wrap items-start justify-start gap-x-4 gap-y-3 relative">{children}</div>;
+    // return <div className="w-full flex flex-wrap items-start justify-start gap-card-gap relative">{children}</div>;
+    return (
+        <div className="w-full gap-card-gap relative grid place-items-start grid-cols-1 lg:grid-cols-[min-content_1fr]">
+            {children}
+        </div>
+    );
 };
 
 type SidePanelLinkProps = {
@@ -74,7 +79,10 @@ export const ContentWrapperCard = ({
 }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) => {
     return (
         <Card
-            className={cn("w-full flex flex-col items-start justify-center px-5 py-4 gap-4 rounded-xl", className)}
+            className={cn(
+                "w-full flex flex-col items-start justify-center px-5 py-4 gap-card-gap rounded-xl",
+                className,
+            )}
             {...props}
         >
             {children}

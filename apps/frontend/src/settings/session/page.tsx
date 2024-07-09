@@ -80,7 +80,7 @@ const Sessions = () => {
                                 </p>
                             </div>
 
-                            <div className="w-full relative flex flex-col items-center justify-center gap-4 mt-4 min-h-24">
+                            <div className="w-full relative flex flex-col items-center justify-center gap-3 mt-4 min-h-24">
                                 {userSession && loggedInSessions.data && (
                                     <SessionsList
                                         loggedInSessions={loggedInSessions.data}
@@ -113,9 +113,9 @@ const RevokeBtn = ({ session_id, fetchLoggedInSessions }: Props) => {
 
     return (
         <Button
-            variant="outline"
+            variant="secondary"
             aria-label="Revoke session"
-            className="gap-2 hover:bg-bg-hover"
+            className="gap-2 bg-background dark:bg-background-shallow hover:bg-background/85 dark:hover:bg-background-shallow/80"
             onClick={async () => {
                 if (loading) return;
                 setLoading(true);
@@ -151,7 +151,7 @@ const SessionsList = ({
                 return (
                     <div
                         key={session?.id}
-                        className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-body-background"
+                        className="w-full flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-body-background/80"
                     >
                         <div className="flex flex-col items-start justify-center gap-2 text-foreground-muted">
                             <div className="flex flex-col gap-y-2 sm:gap-0 items-center justify-center">

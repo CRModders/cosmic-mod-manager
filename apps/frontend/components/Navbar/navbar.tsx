@@ -55,8 +55,12 @@ const Navbar = () => {
                         <ul className="hidden lg:flex items-center justify-center gap-3">
                             {NavLinks.map((link) => {
                                 return (
-                                    <li key={link.href} className="navItemHeight flex px-2 items-center justify-center">
-                                        <Navlink href={link.href} label={link.label}>
+                                    <li key={link.href} className="flex px-2 items-center justify-center">
+                                        <Navlink
+                                            href={link.href}
+                                            label={link.label}
+                                            className="navItemHeight flex items-center justify-center"
+                                        >
                                             <span className="navLinkText relative flex items-center justify-center text-base">
                                                 {link.label}
                                                 <span className="activityIndicator" />
@@ -99,9 +103,9 @@ type Props = {
     children?: React.ReactNode;
 };
 
-export const Navlink = ({ href, label, children }: Props) => {
+export const Navlink = ({ href, label, children, className }: Props) => {
     return (
-        <RouterNavLink aria-label={label} to={href} className="routerNavLink">
+        <RouterNavLink aria-label={label} to={href} className={cn("routerNavLink", className)}>
             {children ? children : label}
         </RouterNavLink>
     );

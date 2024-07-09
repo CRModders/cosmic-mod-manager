@@ -155,10 +155,17 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
                                                 <FormControl>
                                                     <InputWithInlineLabel
                                                         label="/project/"
-                                                        {...field}
                                                         id="project-url-input"
-                                                        onChange={(val: React.ChangeEvent<HTMLInputElement>) => {
-                                                            field.onChange(val);
+                                                        wrapperClassName="place-items-baseline"
+                                                        {...field}
+                                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                            field.onChange({
+                                                                ...event,
+                                                                target: {
+                                                                    ...event.target,
+                                                                    value: createURLSafeSlug(event.target.value).value,
+                                                                },
+                                                            });
                                                             setKeepNameAndUrlSynced(false);
                                                         }}
                                                     />

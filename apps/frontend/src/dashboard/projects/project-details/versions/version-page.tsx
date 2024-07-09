@@ -16,20 +16,21 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { FormatVersionsList } from "@/lib/semver";
-import { cn, constructVersionPageUrl } from "@/lib/utils";
+import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import NotFoundPage from "@/src/not-found";
 import { Projectcontext } from "@/src/providers/project-context";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { FileIcon, StarIcon } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, formatDate, parseFileSize } from "@root/lib/utils";
+import { StarIcon } from "@radix-ui/react-icons";
+import { CapitalizeAndFormatString, formatDate } from "@root/lib/utils";
 import type { ProjectVersionData } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../layout";
+import FileDetails from "@/components/file-details";
 
 const serverUrl = import.meta.env.VITE_SERVER_URL;
 
@@ -110,9 +111,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
     }
 
     return (
-        <div className="w-full flex flex-col gap-4 relative">
+        <div className="w-full flex flex-col gap-card-gap relative">
             <Helmet>
-                <title>{`${versionData.data?.versions[0].version_number} - ${projectData?.name} | CRMM`}</title>
+                <title>{`${projectData?.name} ${versionData.data?.versions[0].version_number} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
 
@@ -141,7 +142,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                 </BreadcrumbList>
                             </Breadcrumb>
                         </div>
-                        <div className="w-full flex gap-4 items-center justify-start">
+                        <div className="w-full flex gap-4 items-center justify-start py-2">
                             <h1 className=" text-foreground font-semibold text-3xl">
                                 {versionData.data?.versions[0].version_title}
                             </h1>
@@ -225,8 +226,8 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         </div>
                     </ContentWrapperCard>
 
-                    <div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
-                        <div className="w-full flex flex-col gap-4">
+                    <div className="w-full gap-card-gap grid grid-cols-1 xl:grid-cols-[1fr_min-content]">
+                        <div className="w-full flex flex-col gap-card-gap">
                             {versionData.data?.versions[0]?.changelog?.length ? (
                                 <ContentWrapperCard className="w-full items-start flex-wrap">
                                     <h1 className="text-foreground font-semibold text-2xl">Changelog</h1>
@@ -237,53 +238,74 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                             <ContentWrapperCard className="items-start">
                                 <h1 className="text-foreground font-semibold text-2xl">Files</h1>
                                 <div className="w-full flex flex-col gap-4">
-                                    {versionData.data?.versions[0]?.files?.map((versionFile) => {
+                                    {versionData.data?.versions[0]?.files?.map((file) => {
                                         return (
-                                            <div
-                                                key={versionFile.id}
-                                                className={cn(
-                                                    "w-full flex flex-wrap sm:flex-nowrap items-center justify-between px-6 py-3 gap-x-4 gap-y-2 rounded-lg border-2 border-border",
-                                                    versionFile.is_primary === true && "bg-bg-hover",
-                                                )}
+                                            <FileDetails
+                                                key={file.id}
+                                                file_name={file.file_name}
+                                                file_size={file.file_size}
+                                                is_primary={file.is_primary}
                                             >
-                                                <div className="flex items-center gap-x-2 flex-wrap">
-                                                    <div className="flex items-center justify-center gap-2">
-                                                        <FileIcon className="w-5 h-5 text-foreground-muted" />
-                                                        <p className="w-fit font-semibold text-foreground-muted mr-1">
-                                                            {versionFile.file_name}
-                                                        </p>
-                                                    </div>
-                                                    <span className="text-sm text-foreground-muted">
-                                                        {parseFileSize(versionFile.file_size)}
-                                                    </span>
-                                                    {versionFile.is_primary ? (
-                                                        <span className="text-sm text-foreground-muted italic">
-                                                            Primary
-                                                        </span>
-                                                    ) : null}
-                                                </div>
-
                                                 <a
                                                     href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url)}`}
                                                     aria-label={`Download ${versionData.data?.versions[0].files[0].file_name}`}
                                                 >
                                                     <Button
-                                                        className="bg-background"
+                                                        className="bg-background hover:bg-background/75"
                                                         tabIndex={-1}
                                                         variant={"secondary"}
                                                     >
-                                                        <DownloadIcon size="1.15rem" />
+                                                        <DownloadIcon size="1.1rem" />
                                                         Download
                                                     </Button>
                                                 </a>
-                                            </div>
+                                            </FileDetails>
+
+                                            // <div
+                                            //     key={versionFile.id}
+                                            //     className={cn(
+                                            //         "w-full flex flex-wrap sm:flex-nowrap items-center justify-between px-6 py-3 gap-x-4 gap-y-2 rounded-lg border-2 border-border",
+                                            //         versionFile.is_primary === true && "bg-bg-hover",
+                                            //     )}
+                                            // >
+                                            //     <div className="flex items-center gap-x-2 flex-wrap">
+                                            //         <div className="flex items-center justify-center gap-2">
+                                            //             <FileIcon className="w-5 h-5 text-foreground-muted" />
+                                            //             <p className="w-fit font-semibold text-foreground-muted mr-1">
+                                            //                 {versionFile.file_name}
+                                            //             </p>
+                                            //         </div>
+                                            //         <span className="text-sm text-foreground-muted">
+                                            //             {parseFileSize(versionFile.file_size)}
+                                            //         </span>
+                                            //         {versionFile.is_primary ? (
+                                            //             <span className="text-sm text-foreground-muted italic">
+                                            //                 Primary
+                                            //             </span>
+                                            //         ) : null}
+                                            //     </div>
+
+                                            //     <a
+                                            //         href={`${serverUrl}/api/file/${encodeURIComponent(versionData.data?.versions[0].files[0].file_url)}`}
+                                            //         aria-label={`Download ${versionData.data?.versions[0].files[0].file_name}`}
+                                            //     >
+                                            //         <Button
+                                            //             className="bg-background"
+                                            //             tabIndex={-1}
+                                            //             variant={"secondary"}
+                                            //         >
+                                            //             <DownloadIcon size="1.15rem" />
+                                            //             Download
+                                            //         </Button>
+                                            //     </a>
+                                            // </div>
                                         );
                                     })}
                                 </div>
                             </ContentWrapperCard>
                         </div>
 
-                        <ContentWrapperCard className="h-fit">
+                        <ContentWrapperCard className="h-fit min-w-[20rem]">
                             <h1 className="text-foreground font-semibold text-2xl">Metadata</h1>
 
                             <div className="w-full flex flex-col gap-4">
@@ -299,7 +321,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                     {
                                         label: "Version number",
                                         element: (
-                                            <p className="text-foreground-muted leading-none text-base px-1">
+                                            <p className="text-foreground-muted leading-none text-base">
                                                 {versionData.data?.versions[0].version_number}
                                             </p>
                                         ),
@@ -307,7 +329,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                     {
                                         label: "Loaders",
                                         element: (
-                                            <p className="text-foreground-muted leading-none text-base px-1">
+                                            <p className="text-foreground-muted leading-none text-base">
                                                 {versionData.data?.versions[0].supported_loaders
                                                     .map((loader) => CapitalizeAndFormatString(loader))
                                                     .join(", ")}
@@ -317,7 +339,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                     {
                                         label: "Game versions",
                                         element: (
-                                            <p className="text-foreground-muted leading-tight text-pretty text-base px-1">
+                                            <p className="text-foreground-muted leading-tight text-pretty text-base">
                                                 {FormatVersionsList(
                                                     versionData.data.versions[0].supported_game_versions,
                                                 )}
@@ -332,7 +354,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                     {
                                         label: "Publication date",
                                         element: (
-                                            <p className="text-foreground-muted leading-none text-base px-1">
+                                            <p className="text-foreground-muted leading-none text-base">
                                                 {formatDate(
                                                     new Date(versionData.data?.versions[0].published_on),
                                                     "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
@@ -367,7 +389,9 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                 ].map((item) => {
                                     return (
                                         <div key={item.label} className="w-full flex flex-col">
-                                            <p className="text-lg font-semibold text-foreground-muted">{item.label}</p>
+                                            <p className="text-lg font-semibold dark:text-foreground-muted">
+                                                {item.label}
+                                            </p>
                                             {item.element}
                                         </div>
                                     );

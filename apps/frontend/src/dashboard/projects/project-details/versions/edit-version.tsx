@@ -1,4 +1,5 @@
-import { ChevronRightIcon, SaveIcon } from "@/components/icons";
+import FileDetails from "@/components/file-details";
+import { ChevronRightIcon, SaveIcon, HashIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import {
@@ -20,9 +21,9 @@ import { constructVersionPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
-import { Cross1Icon, FileIcon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
 import type { ProjectVersionData } from "@root/types";
 import { ReleaseChannels } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
@@ -94,7 +95,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
         if (createURLSafeSlug(versionNumber).value !== versionNumber) {
             return toast({
-                title: "Version number should be a url safe string",
+                title: "Version number must be a URL safe string",
                 variant: "destructive",
             });
         }
@@ -169,10 +170,10 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
     return (
         <>
             <Helmet>
-                <title>{`Edit ${versionData.data?.versions[0].version_number} - ${projectData?.name} | CRMM`}</title>
+                <title>{`Edit ${projectData?.name} ${versionData.data?.versions[0].version_number} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
-            <div className="w-full flex flex-col gap-4 items-start justify-center relative">
+            <div className="w-full flex flex-col gap-card-gap items-start justify-center relative">
                 <ContentWrapperCard>
                     <div className="w-full">
                         <Breadcrumb>
@@ -198,7 +199,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                     <div className="w-full flex flex-col gap-4">
                         <Input
                             type="text"
-                            className="w-full text-lg py-2 px-4 h-12"
+                            className="w-full text-xl py-2 px-4 h-12"
                             placeholder="Enter the version title..."
                             value={versionName}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,7 +207,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             }}
                         />
 
-                        <div className="flex flex-wrap gap-4 items-center justify-start">
+                        <div className="flex flex-wrap gap-x-3 gap-y-2 items-center justify-start">
                             <Button className="gap-2" onClick={updateProjectVersion} disabled={loading}>
                                 <SaveIcon className="w-4 h-4" />
                                 Save
@@ -242,8 +243,8 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                     </div>
                 </ContentWrapperCard>
 
-                <div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
-                    <div className="w-full flex flex-col gap-4">
+                <div className="w-full gap-card-gap grid grid-cols-1 xl:grid-cols-[1fr_min-content]">
+                    <div className="w-full flex flex-col gap-card-gap">
                         <ContentWrapperCard>
                             <div className="w-full flex flex-col items-start justify-center gap-1">
                                 <Label className="font-semibold text-lg">Changelog</Label>
@@ -263,31 +264,20 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             {versionData.data?.versions[0].files[0].id &&
                                 versionData.data?.versions[0].files.map((file) => {
                                     return (
-                                        <div
+                                        <FileDetails
                                             key={file.id}
-                                            className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-x-4 rounded-lg bg-bg-hover"
+                                            file_name={file.file_name}
+                                            file_size={file.file_size}
+                                            is_primary={file.is_primary}
                                         >
-                                            <div className="flex flex-wrap gap-x-2 gap-y-1 items-center justify-center">
-                                                <FileIcon className="w-5 h-5 text-foreground-muted" />
-                                                <p className="text-lg font-semibold text-foreground-muted mr-1">
-                                                    {file.file_name}
-                                                </p>
-                                                <p className="text-base text-foreground-muted">
-                                                    {parseFileSize(file.file_size)}
-                                                </p>
-                                                {file.is_primary && (
-                                                    <p className="italic text-foreground-muted">Primary</p>
-                                                )}
-                                            </div>
-
                                             {file.is_primary !== true && (
-                                                <Label htmlFor="version-main-file-input">
-                                                    <p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
+                                                <Label tabIndex={0}>
+                                                    <p className="py-2.5 px-6 font-[500] text-foreground text-base cursor-pointer bg-background hover:bg-background/75 rounded-lg">
                                                         Replace file
                                                     </p>
                                                 </Label>
                                             )}
-                                        </div>
+                                        </FileDetails>
                                     );
                                 })}
 
@@ -298,7 +288,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                         {/* <ContentWrapperCard>2</ContentWrapperCard> */}
                     </div>
 
-                    <ContentWrapperCard className="w-full h-fit">
+                    <ContentWrapperCard className="h-fit min-w-[20rem]">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
                             <p className="font-semibold text-2xl">Metadata</p>
                         </div>
@@ -336,7 +326,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                                 Version number
                             </Label>
                             <InputWithInlineLabel
-                                label="#"
+                                label={<HashIcon size="1.1rem" />}
                                 id="version-number-input"
                                 className="pl-2"
                                 value={versionNumber}
@@ -374,7 +364,6 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                         </div>
                     </ContentWrapperCard>
                 </div>
-
                 {loading ? <AbsolutePositionedSpinner /> : null}
             </div>
         </>

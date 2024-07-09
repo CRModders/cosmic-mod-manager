@@ -196,7 +196,7 @@ const LicenseSettingsPage = () => {
                                 />
                             </div>
                         </div>
-                        <div className="w-full flex items-center justify-end">
+                        <div className="w-full flex items-center justify-end my-4">
                             <Button
                                 disabled={
                                     projectData?.licenseUrl === form.getValues("licenseUrl") &&

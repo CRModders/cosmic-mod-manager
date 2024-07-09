@@ -67,7 +67,7 @@ const AccountSettingsPage = () => {
                 <title>Account settings | CRMM</title>
                 <meta name="description" content="All devices where you are logged in." />
             </Helmet>
-            <div className="w-full flex flex-col items-center justify-start pb-8 gap-4">
+            <div className="w-full flex flex-col items-center justify-start pb-8 gap-card-gap">
                 <ContentWrapperCard>
                     <div className="w-full flex flex-wrap gap-4 items-center justify-between">
                         <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">User profile</h2>

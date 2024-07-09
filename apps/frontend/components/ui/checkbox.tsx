@@ -45,7 +45,7 @@ const LabelledCheckBox = ({
         <Label
             htmlFor={checkBoxId}
             className={cn(
-                "flex text-[0.95rem] py-0.5 gap-x-2 font-[400] items-center justify-start transition-opacity transition-[filter] cursor-not-allowed text-foreground-muted",
+                "flex text-[0.95rem] py-[0.1rem] gap-x-2 font-[400] items-center justify-start transition-[filter] cursor-not-allowed text-foreground-muted",
                 !disabled && "hover:brightness-[85%] cursor-pointer",
                 className,
             )}

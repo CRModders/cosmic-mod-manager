@@ -158,7 +158,7 @@ export const MenuProfileLinks = ({
         <div className="w-full flex flex-col items-center justify-center gap-4">
             <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1" className="border-none outline-none">
-                    <AccordionTrigger className="w-full border-none outline-none">
+                    <AccordionTrigger className="w-full border-none outline-none no_input_styles">
                         <div className="w-full flex items-center justify-center gap-4">
                             {session?.avatar_image ? (
                                 <img

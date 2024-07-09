@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { IconSvgProps } from "@/types";
 import type React from "react";
 
-const DefaultSvgSize = "1.6rem";
+const DefaultSvgSize = "1.25rem";
 
 export const SunIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
@@ -1729,6 +1729,72 @@ export const SortIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
             <path d="M11 4h10" />
             <path d="M11 8h7" />
             <path d="M11 12h4" />
+        </svg>
+    );
+};
+
+export const CrossIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.15"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            {...props}
+        >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+        </svg>
+    );
+};
+
+export const HashIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            {...props}
+        >
+            <line x1="4" x2="20" y1="9" y2="9" />
+            <line x1="4" x2="20" y1="15" y2="15" />
+            <line x1="10" x2="8" y1="3" y2="21" />
+            <line x1="16" x2="14" y1="3" y2="21" />
+        </svg>
+    );
+};
+
+export const ExternalLinkIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            {...props}
+        >
+            <path d="M15 3h6v6" />
+            <path d="M10 14 21 3" />
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
         </svg>
     );
 };

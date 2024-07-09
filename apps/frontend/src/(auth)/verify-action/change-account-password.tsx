@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import SecurityLink from "./session-page-link";
+import { CrossIcon } from "@/components/icons";
 
 const formSchema = z.object({
     email: z.string(),
@@ -257,6 +258,7 @@ const ChangeAccountPassword = ({ code, email }: Props) => {
 
                             <div className="w-full flex items-center justify-end gap-2">
                                 <Button variant="secondary" type="button" onClick={cancelAction}>
+                                    <CrossIcon className="w-4 h-4" />
                                     Cancel
                                 </Button>
 

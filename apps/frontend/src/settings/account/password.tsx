@@ -38,7 +38,7 @@ const PasswordSection = ({ email, hasAPassword, fetchPageData }: Props) => {
                 >
                     <Button
                         className="flex items-center justify-center gap-2"
-                        variant="outline"
+                        variant="secondary"
                         aria-label="Change password"
                         tabIndex={-1}
                     >
@@ -47,7 +47,7 @@ const PasswordSection = ({ email, hasAPassword, fetchPageData }: Props) => {
                     </Button>
                 </Link>
                 <RemovePasswordForm email={email || ""} fetchPageData={fetchPageData}>
-                    <Button className="gap-2" variant={"destructive-outlined"} aria-label="Remove password">
+                    <Button className="gap-2 text-danger-text" variant={"secondary"} aria-label="Remove password">
                         <TrashIcon size="1rem" />
                         Remove password
                     </Button>

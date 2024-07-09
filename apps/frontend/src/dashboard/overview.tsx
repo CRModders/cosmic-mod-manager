@@ -9,7 +9,7 @@ const Overview = () => {
     const { session } = useContext(AuthContext);
 
     return (
-        <div className="w-full flex flex-col items-center justify-center gap-4">
+        <div className="w-full flex flex-col items-center justify-center gap-card-gap">
             <Helmet>
                 <title>Dashboard | CRMM</title>
                 <meta name="description" content="Your dashboard." />
@@ -47,8 +47,8 @@ const Overview = () => {
                 </div>
             </ContentWrapperCard>
 
-            {/* Notifications */}
-            <div className="w-full flex flex-wrap items-start justify-start gap-4">
+            <div className="w-full flex flex-wrap items-start justify-start gap-card-gap">
+                {/* Notifications */}
                 <ContentWrapperCard className="w-fit grow shrink flex">
                     <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
                         Notifications

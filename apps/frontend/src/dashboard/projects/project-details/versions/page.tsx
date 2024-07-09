@@ -27,7 +27,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
                 <title>{`Versions - ${projectData?.name} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
             </Helmet>
-            <div className="w-full flex flex-col gap-4 items-start justify-center">
+            <div className="w-full flex flex-col gap-card-gap items-start justify-center">
                 {isAProjectMember === true && (
                     <ContentWrapperCard>
                         <div className="w-full flex flex-wrap gap-4 items-center justify-start">
@@ -142,7 +142,7 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                             to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
                                                             className="noClickRedirect"
                                                         >
-                                                            <p className="font-bold">{version.version_title}</p>
+                                                            <p className="font-bold ">{version.version_title}</p>
                                                         </Link>
                                                         <div className="w-full flex items-center justify-start gap-x-2 gap-y-1">
                                                             <ReleaseChannelIndicator

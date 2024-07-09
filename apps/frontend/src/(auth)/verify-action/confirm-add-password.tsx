@@ -7,6 +7,7 @@ import useFetch from "@/src/hooks/fetch";
 import type React from "react";
 import { useState } from "react";
 import SecurityLink from "./session-page-link";
+import { CrossIcon } from "@/components/icons";
 
 const AddPasswordConfirmAction = ({ code }: { code: string }) => {
     const { toast } = useToast();
@@ -83,6 +84,7 @@ const AddPasswordConfirmAction = ({ code }: { code: string }) => {
                         name="Cancel"
                     >
                         <Button type="submit" variant="secondary" aria-label="Cancel">
+                            <CrossIcon className="w-4 h-4" />
                             Cancel
                         </Button>
                     </form>

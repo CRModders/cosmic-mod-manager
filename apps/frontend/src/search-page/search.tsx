@@ -1,7 +1,7 @@
 import { ContentWrapperCard, PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
 import { LabelledCheckBox } from "@/components/ui/checkbox";
-import { CrossCircledIcon, CubeIcon, MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, CrossCircledIcon, CubeIcon, MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
     CapitalizeAndFormatString,
     createURLSafeSlug,
@@ -406,6 +406,8 @@ type SearchPageContentProps = {
     isFiltersPanelVisible: boolean;
 };
 
+let searchQuerySyncTimeout: number | undefined;
+
 const SearchPageContent = ({
     projectType,
     searchResults,
@@ -417,6 +419,7 @@ const SearchPageContent = ({
 }: SearchPageContentProps) => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState(searchParams.get(searchQueryKey) || "");
     const totalPages = Math.ceil(totalEstimatedHits / defaultSearchPageSize);
 
     const Pagination = (
@@ -449,15 +452,34 @@ const SearchPageContent = ({
         };
     }, []);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (searchQuerySyncTimeout) clearTimeout(searchQuerySyncTimeout);
+
+        searchQuerySyncTimeout = window.setTimeout(() => {
+            const urlPathname = updateSearchParam(searchQueryKey, searchQuery, {
+                deleteParamOnFalsyValue: true,
+                newParamsAdditionMode: "replace",
+                deleteParamIfNewValueMatchesOldOne: false,
+                customUrlModifierFunc: deletePageOffsetParam,
+            });
+            navigate(urlPathname);
+        }, 100);
+
+        return () => {
+            if (searchQuerySyncTimeout) clearTimeout(searchQuerySyncTimeout);
+        };
+    }, [searchQuery]);
+
     return (
-        <div className="w-full flex items-start justify-start flex-col gap-4">
+        <div className="w-full flex items-start justify-start flex-col gap-card-gap">
             <ContentWrapperCard>
                 <div className="w-full flex items-start justify-start gap-x-3 gap-y-2 flex-wrap md:flex-nowrap">
                     <div className="flex items-start justify-center gap-x-3 gap-y-2 w-full md:w-fit grow">
                         <Button
                             variant={"secondary"}
                             className={cn(
-                                "flex lg:hidden py-4 text-foreground-muted",
+                                "flex lg:hidden h-10 py-4 text-foreground-muted",
                                 isFiltersPanelVisible &&
                                     "bg-accent-bg/15 no_neumorphic_shadow accent_surround_shadow hover:bg-accent-bg/10",
                             )}
@@ -469,8 +491,8 @@ const SearchPageContent = ({
                                 setIsFiltersPanelVisible((prev) => !prev);
                             }}
                         >
-                            <FunnelIcon size="1rem" />
-                            <span className="text-sm">Filters...</span>
+                            <FunnelIcon size="1.1rem" />
+                            <span className="text-base">Filters...</span>
                         </Button>
 
                         <div className="w-full flex items-center justify-center relative">
@@ -482,15 +504,9 @@ const SearchPageContent = ({
                             </Label>
                             <Input
                                 id="searchpage-query-input"
-                                value={searchParams.get(searchQueryKey) || ""}
+                                value={searchQuery}
                                 onChange={(e) => {
-                                    const urlPathname = updateSearchParam(searchQueryKey, e.target.value, {
-                                        deleteParamOnFalsyValue: true,
-                                        newParamsAdditionMode: "replace",
-                                        deleteParamIfNewValueMatchesOldOne: false,
-                                        customUrlModifierFunc: deletePageOffsetParam,
-                                    });
-                                    navigate(urlPathname);
+                                    setSearchQuery(e.target.value);
                                 }}
                                 placeholder={`Search ${CapitalizeAndFormatString(projectType)?.toLowerCase()}s...`}
                                 className="pl-10 text-lg"
@@ -510,7 +526,7 @@ const SearchPageContent = ({
                             navigate(urlPathname);
                         }}
                     >
-                        <SelectTrigger className="w-48 lg:w-64 text-sm lg:text-[0.9rem] dark:text-foreground-muted">
+                        <SelectTrigger className="w-48 lg:w-64 dark:text-foreground-muted">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -535,7 +551,7 @@ const SearchPageContent = ({
                 </div>
             </ContentWrapperCard>
 
-            <div className="w-full relative flex flex-col items-start justify-start gap-4 pb-20">
+            <div className="w-full relative flex flex-col items-start justify-start gap-card-gap pb-20">
                 {totalPages > 1 && Pagination}
 
                 <>
@@ -574,7 +590,7 @@ const SearchPageContent = ({
                                     </Link>
 
                                     <div
-                                        className="flex flex-wrap gap-2 pb-[0.1rem] items-end justify-start"
+                                        className="flex flex-wrap gap-2 items-baseline justify-start"
                                         style={{ gridArea: "title" }}
                                     >
                                         <Link to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}>
@@ -644,23 +660,49 @@ const SearchPageContent = ({
                                                 </em>
                                             </p> */}
 
-                                            <TooltipWrapper
-                                                text={formatDate(new Date(project?.updated_on), timestamp_template)}
-                                                asChild={true}
-                                            >
-                                                <Button
-                                                    variant={"link"}
-                                                    className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
-                                                    tabIndex={-1}
+                                            {searchParams.get("sortBy") === SearchResultSortTypes.RECENTLY_PUBLISHED ? (
+                                                <TooltipWrapper
+                                                    text={formatDate(new Date(project?.created_on), timestamp_template)}
+                                                    asChild={true}
                                                 >
-                                                    <UpdateIcon className="w-4 h-4 block" />
+                                                    <Button
+                                                        variant={"link"}
+                                                        className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
+                                                        tabIndex={-1}
+                                                    >
+                                                        <CalendarIcon className="w-4 h-4 block" />
 
-                                                    <span className="leading-none text-sm sm:text-base">
-                                                        Updated{" "}
-                                                        {timeSince(new Date(project?.updated_on), time_past_phrases)}
-                                                    </span>
-                                                </Button>
-                                            </TooltipWrapper>
+                                                        <span className="leading-none text-sm sm:text-base">
+                                                            Created{" "}
+                                                            {timeSince(
+                                                                new Date(project?.created_on),
+                                                                time_past_phrases,
+                                                            )}
+                                                        </span>
+                                                    </Button>
+                                                </TooltipWrapper>
+                                            ) : (
+                                                <TooltipWrapper
+                                                    text={formatDate(new Date(project?.updated_on), timestamp_template)}
+                                                    asChild={true}
+                                                >
+                                                    <Button
+                                                        variant={"link"}
+                                                        className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
+                                                        tabIndex={-1}
+                                                    >
+                                                        <UpdateIcon className="w-4 h-4 block" />
+
+                                                        <span className="leading-none text-sm sm:text-base">
+                                                            Updated{" "}
+                                                            {timeSince(
+                                                                new Date(project?.updated_on),
+                                                                time_past_phrases,
+                                                            )}
+                                                        </span>
+                                                    </Button>
+                                                </TooltipWrapper>
+                                            )}
                                         </div>
                                     </div>
                                 </ContentWrapperCard>

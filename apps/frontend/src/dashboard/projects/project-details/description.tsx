@@ -9,7 +9,7 @@ const ProjectDescription = () => {
     return (
         <>
             {projectData?.description && (
-                <ContentWrapperCard className="items-start flex-wrap">
+                <ContentWrapperCard className="items-start flex-wrap w-full grid grid-cols-1">
                     <MarkdownRenderBox text={projectData.description} />
                 </ContentWrapperCard>
             )}

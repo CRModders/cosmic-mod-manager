@@ -72,7 +72,7 @@ const GeneralProjectSettings = () => {
     }, [projectData]);
 
     return (
-        <div className="w-full flex flex-col relative items-center justify-center gap-4">
+        <div className="w-full flex flex-col relative items-center justify-center gap-card-gap">
             {projectData === undefined ? null : (
                 <>
                     <Helmet>
@@ -110,7 +110,7 @@ const GeneralProjectSettings = () => {
                             </Label>
                             <Input
                                 type="text"
-                                className="w-full md:w-[32ch] text-base dark:text-foreground-muted"
+                                className="w-full md:w-[32ch] text-base"
                                 id="settings-project-name-input"
                                 value={projectName}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +126,7 @@ const GeneralProjectSettings = () => {
 
                             <InputWithInlineLabel
                                 label={`/${createURLSafeSlug(projectData?.type[0] || "").value}/`}
+                                wrapperClassName="place-items-baseline"
                                 id="settings-project-url-input"
                                 value={projectUrl}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

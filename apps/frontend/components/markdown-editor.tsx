@@ -1,15 +1,7 @@
 import "@/components/highlightjs.css";
 import { cn } from "@/lib/utils";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import {
-    CodeIcon,
-    Cross2Icon,
-    FontItalicIcon,
-    ImageIcon,
-    InfoCircledIcon,
-    PlusIcon,
-    VideoIcon,
-} from "@radix-ui/react-icons";
+import { CodeIcon, FontItalicIcon, ImageIcon, InfoCircledIcon, VideoIcon } from "@radix-ui/react-icons";
 import { isValidUrl } from "@root/lib/utils";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -17,11 +9,13 @@ import {
     BoldIcon,
     BulletedListIcon,
     ChainIcon,
+    CrossIcon,
     EyeScanIcon,
     Heading1Icon,
     Heading2Icon,
     Heading3Icon,
     NumberedListIcon,
+    PlusIcon,
     QuoteIcon,
     StrikethroughIcon,
     UnderlineIcon,
@@ -67,6 +61,10 @@ const IconButton = ({
 
 const Separator = () => {
     return <span className="hidden h-10 w-[0.1rem] bg-background-shallow lg:flex" />;
+};
+
+const BtnGroup = ({ children }: { children: React.ReactNode }) => {
+    return <div className="flex items-center justify-center gap-x-2 gap-y-1">{children}</div>;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>vscode
@@ -277,148 +275,160 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
         <div className="flex w-full flex-col items-start justify-center gap-1">
             {/* TOOLBAR */}
             <div className="flex w-full flex-wrap items-center justify-between gap-1">
-                <div className="flex flex-wrap items-center justify-start gap-2">
-                    <IconButton
-                        tooltipContent={"Heading 1"}
-                        disabled={previewOn}
-                        onClick={() => {
-                            toggleTextAtCursorsLine("# ", true);
-                        }}
-                    >
-                        <Heading1Icon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton
-                        tooltipContent={"Heading 2"}
-                        disabled={previewOn}
-                        onClick={() => {
-                            toggleTextAtCursorsLine("## ", true);
-                        }}
-                    >
-                        <Heading2Icon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton
-                        tooltipContent={"Heading 3"}
-                        disabled={previewOn}
-                        onClick={() => {
-                            toggleTextAtCursorsLine("### ", true);
-                        }}
-                    >
-                        <Heading3Icon className="h-5 w-5" />
-                    </IconButton>
-                    <Separator />
-                    <IconButton tooltipContent={"Bold"} disabled={previewOn} onClick={Bold}>
-                        <BoldIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton tooltipContent={"Italic"} disabled={previewOn} onClick={Italic}>
-                        <FontItalicIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton tooltipContent={"Underline"} disabled={previewOn} onClick={Underline}>
-                        <UnderlineIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton
-                        tooltipContent={"Strikethrough"}
-                        disabled={previewOn}
-                        onClick={() => {
-                            toggleTextAtCursorsLine(`~~${textSeparatorChar}~~`);
-                        }}
-                    >
-                        <StrikethroughIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton tooltipContent={"Code"} disabled={previewOn} onClick={CodeBlock}>
-                        <CodeIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton tooltipContent={"Spoiler"} disabled={previewOn} onClick={Spoiler}>
-                        <EyeScanIcon className="h-4 w-4" />
-                    </IconButton>
-                    <Separator />
-                    <IconButton tooltipContent={"Bulleted list"} disabled={previewOn} onClick={UnorderedList}>
-                        <BulletedListIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton
-                        tooltipContent={"Numbered list"}
-                        disabled={previewOn}
-                        onClick={() => {
-                            toggleTextAtCursorsLine("1. ", true);
-                        }}
-                    >
-                        <NumberedListIcon className="h-5 w-5" />
-                    </IconButton>
-                    <IconButton tooltipContent={"Quote"} disabled={previewOn} onClick={Quote}>
-                        <QuoteIcon className="h-5 w-5" />
-                    </IconButton>
-                    <Separator />
-                    <LinkInsertionModal
-                        disabled={previewOn}
-                        modalTitle="Insert link"
-                        getMarkdownString={(url: string, altText: string, isPreview?: boolean) => {
-                            let selectedText = "";
-                            if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
-                            const linkLabel = altText || selectedText || url;
-                            return `[${isPreview === true ? linkLabel : ""}${textSeparatorChar}](${url})`;
-                        }}
-                        insertFragmentFunc={(markdownString: string, url: string, altText: string) => {
-                            let selectedText = "";
-                            if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
-                            const linkLabel = altText || selectedText || url;
-                            toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
-                        }}
-                        altTextInputLabel="Label"
-                        altTextInputPlaceholder="Enter label..."
-                        urlInputLabel="URL"
-                        urlInputPlaceholder="Enter the link's URL..."
-                        isAltTextRequired={false}
-                        altTextInputVisible={true}
-                    >
-                        <IconButton tooltipContent={"Link"} disabled={previewOn}>
-                            <ChainIcon className="h-4 w-4" />
+                <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
+                    <BtnGroup>
+                        <IconButton
+                            tooltipContent={"Heading 1"}
+                            disabled={previewOn}
+                            onClick={() => {
+                                toggleTextAtCursorsLine("# ", true);
+                            }}
+                        >
+                            <Heading1Icon className="h-5 w-5" />
                         </IconButton>
-                    </LinkInsertionModal>
+                        <IconButton
+                            tooltipContent={"Heading 2"}
+                            disabled={previewOn}
+                            onClick={() => {
+                                toggleTextAtCursorsLine("## ", true);
+                            }}
+                        >
+                            <Heading2Icon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton
+                            tooltipContent={"Heading 3"}
+                            disabled={previewOn}
+                            onClick={() => {
+                                toggleTextAtCursorsLine("### ", true);
+                            }}
+                        >
+                            <Heading3Icon className="h-5 w-5" />
+                        </IconButton>
+                    </BtnGroup>
+                    <Separator />
+                    <BtnGroup>
+                        <IconButton tooltipContent={"Bold"} disabled={previewOn} onClick={Bold}>
+                            <BoldIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton tooltipContent={"Italic"} disabled={previewOn} onClick={Italic}>
+                            <FontItalicIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton tooltipContent={"Underline"} disabled={previewOn} onClick={Underline}>
+                            <UnderlineIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton
+                            tooltipContent={"Strikethrough"}
+                            disabled={previewOn}
+                            onClick={() => {
+                                toggleTextAtCursorsLine(`~~${textSeparatorChar}~~`);
+                            }}
+                        >
+                            <StrikethroughIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton tooltipContent={"Code"} disabled={previewOn} onClick={CodeBlock}>
+                            <CodeIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton tooltipContent={"Spoiler"} disabled={previewOn} onClick={Spoiler}>
+                            <EyeScanIcon className="h-4 w-4" />
+                        </IconButton>
+                    </BtnGroup>
+                    <Separator />
+                    <BtnGroup>
+                        <IconButton tooltipContent={"Bulleted list"} disabled={previewOn} onClick={UnorderedList}>
+                            <BulletedListIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton
+                            tooltipContent={"Numbered list"}
+                            disabled={previewOn}
+                            onClick={() => {
+                                toggleTextAtCursorsLine("1. ", true);
+                            }}
+                        >
+                            <NumberedListIcon className="h-5 w-5" />
+                        </IconButton>
+                        <IconButton tooltipContent={"Quote"} disabled={previewOn} onClick={Quote}>
+                            <QuoteIcon className="h-5 w-5" />
+                        </IconButton>
+                    </BtnGroup>
+                    <Separator />
+                    <BtnGroup>
+                        <LinkInsertionModal
+                            disabled={previewOn}
+                            modalTitle="Insert link"
+                            getMarkdownString={(url: string, altText: string, isPreview?: boolean) => {
+                                let selectedText = "";
+                                if (editorTextarea.current)
+                                    selectedText = getTextareaSelectedText(editorTextarea.current);
+                                const linkLabel = altText || selectedText || url;
+                                return `[${isPreview === true ? linkLabel : ""}${textSeparatorChar}](${url})`;
+                            }}
+                            insertFragmentFunc={(markdownString: string, url: string, altText: string) => {
+                                let selectedText = "";
+                                if (editorTextarea.current)
+                                    selectedText = getTextareaSelectedText(editorTextarea.current);
+                                const linkLabel = altText || selectedText || url;
+                                toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
+                            }}
+                            altTextInputLabel="Label"
+                            altTextInputPlaceholder="Enter label..."
+                            urlInputLabel="URL"
+                            urlInputPlaceholder="Enter the link's URL..."
+                            isAltTextRequired={false}
+                            altTextInputVisible={true}
+                        >
+                            <IconButton tooltipContent={"Link"} disabled={previewOn}>
+                                <ChainIcon className="h-4 w-4" />
+                            </IconButton>
+                        </LinkInsertionModal>
 
-                    <LinkInsertionModal
-                        disabled={previewOn}
-                        modalTitle="Insert image"
-                        getMarkdownString={(url: string, altText: string, isPreview = false) => {
-                            let selectedText = "";
-                            if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
-                            const linkLabel = altText || selectedText || url;
-                            return `![${isPreview ? linkLabel : ""}${textSeparatorChar}](${url})`;
-                        }}
-                        insertFragmentFunc={(markdownString: string, url: string, altText: string) => {
-                            let selectedText = "";
-                            if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
-                            const linkLabel = altText || selectedText || url;
-                            toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
-                        }}
-                        altTextInputLabel="Description (alt text)"
-                        altTextInputPlaceholder="Describe the image..."
-                        urlInputLabel="URL"
-                        urlInputPlaceholder="Enter the image URL..."
-                        isAltTextRequired={false}
-                        altTextInputVisible={true}
-                    >
-                        <IconButton tooltipContent={"Image"} disabled={previewOn}>
-                            <ImageIcon className="h-4 w-4" />
-                        </IconButton>
-                    </LinkInsertionModal>
+                        <LinkInsertionModal
+                            disabled={previewOn}
+                            modalTitle="Insert image"
+                            getMarkdownString={(url: string, altText: string, isPreview = false) => {
+                                let selectedText = "";
+                                if (editorTextarea.current)
+                                    selectedText = getTextareaSelectedText(editorTextarea.current);
+                                const linkLabel = altText || selectedText || url;
+                                return `![${isPreview ? linkLabel : ""}${textSeparatorChar}](${url})`;
+                            }}
+                            insertFragmentFunc={(markdownString: string, url: string, altText: string) => {
+                                let selectedText = "";
+                                if (editorTextarea.current)
+                                    selectedText = getTextareaSelectedText(editorTextarea.current);
+                                const linkLabel = altText || selectedText || url;
+                                toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
+                            }}
+                            altTextInputLabel="Description (alt text)"
+                            altTextInputPlaceholder="Describe the image..."
+                            urlInputLabel="URL"
+                            urlInputPlaceholder="Enter the image URL..."
+                            isAltTextRequired={false}
+                            altTextInputVisible={true}
+                        >
+                            <IconButton tooltipContent={"Image"} disabled={previewOn}>
+                                <ImageIcon className="h-4 w-4" />
+                            </IconButton>
+                        </LinkInsertionModal>
 
-                    <LinkInsertionModal
-                        disabled={previewOn}
-                        modalTitle="Insert YouTube video"
-                        getMarkdownString={getYoutubeIframe}
-                        insertFragmentFunc={(markdownString: string, _url: string, _altText: string) => {
-                            toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT");
-                        }}
-                        altTextInputLabel=""
-                        altTextInputPlaceholder=""
-                        urlInputLabel="YouTube video URL"
-                        urlInputPlaceholder="Enter YouTube video URL"
-                        isAltTextRequired={false}
-                        altTextInputVisible={false}
-                    >
-                        <IconButton tooltipContent={"Video"} disabled={previewOn}>
-                            <VideoIcon className="h-5 w-5" />
-                        </IconButton>
-                    </LinkInsertionModal>
+                        <LinkInsertionModal
+                            disabled={previewOn}
+                            modalTitle="Insert YouTube video"
+                            getMarkdownString={getYoutubeIframe}
+                            insertFragmentFunc={(markdownString: string, _url: string, _altText: string) => {
+                                toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT");
+                            }}
+                            altTextInputLabel=""
+                            altTextInputPlaceholder=""
+                            urlInputLabel="YouTube video URL"
+                            urlInputPlaceholder="Enter YouTube video URL"
+                            isAltTextRequired={false}
+                            altTextInputVisible={false}
+                        >
+                            <IconButton tooltipContent={"Video"} disabled={previewOn}>
+                                <VideoIcon className="h-5 w-5" />
+                            </IconButton>
+                        </LinkInsertionModal>
+                    </BtnGroup>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                     <Switch
@@ -578,7 +588,7 @@ const EditorModal = ({
                     <div className="flex w-full flex-wrap items-center justify-end gap-2">
                         <DialogClose asChild>
                             <Button className="gap-2" variant={"secondary"}>
-                                <Cross2Icon className="h-4 w-4" />
+                                <CrossIcon className="h-4 w-4" />
                                 Cancel
                             </Button>
                         </DialogClose>

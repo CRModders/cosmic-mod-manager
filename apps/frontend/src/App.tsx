@@ -15,7 +15,7 @@ export default function RootLayout() {
             {/* A portal for the grid_bg_div inserted from the home.tsx */}
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
             <Navbar />
-            <main className="flex items-center justify-center container px-4 sm:px-8 relative">
+            <main className="flex items-center justify-center container px-3 sm:px-8 relative">
                 <Outlet />
             </main>
             <Toaster />

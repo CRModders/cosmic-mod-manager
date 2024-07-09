@@ -117,7 +117,7 @@ const AddPasswordForm = ({ email }: Props) => {
             }}
         >
             <DialogTrigger asChild>
-                <Button className="gap-2" variant="outline">
+                <Button className="gap-2" variant="secondary">
                     <KeyIcon size="1.1rem" />
                     Add password
                 </Button>

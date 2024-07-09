@@ -85,7 +85,7 @@ export default function HomePage() {
             )}
 
             <div className="w-full h-fit flex flex-col items-center justify-start pb-8">
-                <section className="hero_section w-full min-h-[100vh] flex flex-col items-center justify-center container">
+                <section className="hero_section w-full h-[100vh] max-h-[1080px] flex flex-col items-center justify-center container">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center">
                         <h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">

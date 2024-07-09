@@ -1,4 +1,4 @@
-import { TrashIcon } from "@/components/icons";
+import { CrossIcon, TrashIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { FormSuccessMessage } from "@/components/ui/form-message";
@@ -98,6 +98,7 @@ const DeleteUserAccount = ({ code }: { code: string }) => {
                         }}
                     >
                         <Button type="submit" variant="secondary" aria-label="Cancel">
+                            <CrossIcon className="w-4 h-4" />
                             Cancel
                         </Button>
                     </form>

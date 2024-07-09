@@ -35,6 +35,15 @@ projectRouter.post("/create-new-project", async (c) => {
             return c.json({ message: "Missing required data" }, 400);
         }
 
+        if (url !== createURLSafeSlug(url).value) {
+            return c.json(
+                {
+                    message: `Please provide a URL safe value for the slug.  \"${url}\" contains invalid characters`,
+                },
+                400,
+            );
+        }
+
         const [user] = await getUserSession(c);
         if (!user?.id) {
             return c.json({ message: "Unauthenticated request" }, 401);
@@ -215,14 +224,20 @@ projectRouter.post("/:projectSlug/update", async (c) => {
         const summary = isValidString(body?.summary, maxProjectSummaryLength, 1, true);
 
         const currUrlSlug = c.req.param("projectSlug");
-        const urlSafeUrlSlug = createURLSafeSlug(url_slug.value);
+        const urlSafeUrlSlug = createURLSafeSlug(url_slug.value).value;
 
-        if (!currUrlSlug || !name || !urlSafeUrlSlug.value || !body?.visibility || !summary) {
+        if (!currUrlSlug || !name || !urlSafeUrlSlug || !body?.visibility || !summary) {
             return c.json({ message: "Missing required data" }, 400);
         }
 
         if (!name.isValid || !url_slug.isValid || !summary.isValid) {
-            return c.json({ message: "Length check failed" }, 400);
+            return c.json({ message: "Invalid length" }, 400);
+        }
+
+        if (url_slug.value !== urlSafeUrlSlug) {
+            return c.json({
+                message: `Please provide a URL safe value for the slug.  \"${url_slug.value}\" contains invalid characters`,
+            });
         }
 
         const [user] = await getUserSession(c);
@@ -280,7 +295,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             },
             data: {
                 name: name.value,
-                url_slug: urlSafeUrlSlug.value,
+                url_slug: urlSafeUrlSlug,
                 summary: summary.value,
                 visibility: GetProjectVisibility(visibility),
             },

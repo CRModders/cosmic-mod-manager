@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FormErrorMessage, FormSuccessMessage } from "@/components/ui/form-message";
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getSignInUrl } from "@/src/(auth)/auth";
 import { authProvidersList } from "@/src/(auth)/oauth-providers";
 import useFetch from "@/src/hooks/fetch";
@@ -28,7 +28,7 @@ const ManageProviders = ({ linkedProviders, fetchLinkedProviders }: Props) => {
             </div>
 
             <ProvidersList linkedProviders={linkedProviders} fetchLinkedProviders={fetchLinkedProviders}>
-                <Button className="gap-2" variant="outline">
+                <Button className="gap-2" variant="secondary">
                     <GearIcon size="1rem" />
                     Manage providers
                 </Button>
@@ -156,9 +156,10 @@ const ProvidersList = ({ linkedProviders, children, fetchLinkedProviders }: Prov
                                                             onClick={() => {
                                                                 RemoveProvider(provider.name.toLowerCase());
                                                             }}
+                                                            disabled={linkedProviders?.length === 1}
                                                         >
                                                             <TrashIcon size="1rem" />
-                                                            <p>Remove</p>
+                                                            Remove
                                                         </Button>
                                                     </>
                                                 ) : (

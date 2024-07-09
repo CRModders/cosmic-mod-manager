@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "@/components/icons";
+import { ChevronRightIcon, CrossIcon, HashIcon, PlusIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import RedrectTo from "@/components/redirect-to";
@@ -20,7 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import useFetch from "@/src/hooks/fetch";
 import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
-import { Cross1Icon, FileIcon, PlusIcon } from "@radix-ui/react-icons";
+import { FileIcon } from "@radix-ui/react-icons";
 import { maxFileSize } from "@root/config";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
@@ -43,7 +43,6 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
     const [loaders, setLoaders] = useState<string[]>([]);
     const [supportedGameVersions, setSupportedGameVersions] = useState<string[]>([]);
     const [versionFile, setversionFile] = useState<File | null>(null);
-
     const createProjectVersion = async () => {
         if (!versionName) return toast({ title: "Version title is required", variant: "destructive" });
         if (!versionNumber) return toast({ title: "Version number is required", variant: "destructive" });
@@ -62,7 +61,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 
         if (createURLSafeSlug(versionNumber).value !== versionNumber) {
             return toast({
-                title: "Version number should be a url safe string",
+                title: "Version number must be a URL safe string",
                 variant: "destructive",
             });
         }
@@ -117,7 +116,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 
     return (
         <>
-            <div className="w-full flex flex-col gap-4 items-start justify-center">
+            <div className="w-full flex flex-col gap-card-gap items-start justify-center">
                 <ContentWrapperCard>
                     <div className="w-full px-1">
                         <Breadcrumb>
@@ -143,7 +142,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                     <div className="w-full flex flex-col gap-4">
                         <Input
                             type="text"
-                            className="w-full text-lg py-2 px-4 h-12"
+                            className="w-full text-xl py-2 px-4 h-12"
                             placeholder="Enter the version title..."
                             value={versionName}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +157,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             </Button>
                             <Link to={`/${projectType}/${projectUrlSlug}/versions`} className=" rounded-lg">
                                 <Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
-                                    <Cross1Icon />
+                                    <CrossIcon className="w-4 h-4" />
                                     Cancel
                                 </Button>
                             </Link>
@@ -166,8 +165,8 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                     </div>
                 </ContentWrapperCard>
 
-                <div className="w-full gap-4 grid grid-cols-1 xl:grid-cols-[70%_1fr]">
-                    <div className="w-full flex flex-col gap-4">
+                <div className="w-full gap-card-gap grid grid-cols-1 xl:grid-cols-[1fr_min-content]">
+                    <div className="w-full flex flex-col gap-card-gap">
                         <ContentWrapperCard>
                             <div className="w-full flex flex-col items-start justify-center gap-1">
                                 <Label htmlFor="version-changelog-textarea" className="font-semibold text-lg">
@@ -190,11 +189,11 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             </div>
 
                             <div className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover">
-                                <div className="flex gap-3 items-center">
+                                <div className="flex gap-x-2 gap-y-1 items-center">
                                     <FileIcon className="w-5 h-5 text-foreground-muted" />
                                     {versionFile ? (
                                         <>
-                                            <p className="text-lg font-semibold text-foreground-muted mr-2">
+                                            <p className="text-lg font-semibold text-foreground-muted">
                                                 {versionFile.name}
                                             </p>
                                             <p className="text-base text-foreground-muted">
@@ -207,7 +206,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                                 </div>
 
                                 <Label htmlFor="version-main-file-input" tabIndex={0}>
-                                    <p className="py-2 px-6 font-semibold text-foreground text-base cursor-pointer rounded-lg bg-background border border-transparent hover:border-border-hicontrast hover:bg-bg-hover transition-colors">
+                                    <p className="py-2.5 px-6 font-[500] text-foreground text-base cursor-pointer bg-background hover:bg-background/75 rounded-lg">
                                         Choose file
                                     </p>
                                 </Label>
@@ -231,7 +230,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                         </ContentWrapperCard>
                     </div>
 
-                    <ContentWrapperCard className="w-full h-fit">
+                    <ContentWrapperCard className="h-fit min-w-[20rem]">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
                             <p className="font-semibold text-2xl">Metadata</p>
                         </div>
@@ -270,7 +269,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             </Label>
 
                             <InputWithInlineLabel
-                                label="#"
+                                label={<HashIcon size="1.1rem" />}
                                 id="version-number-input"
                                 className="pl-2"
                                 value={versionNumber}

@@ -27,6 +27,7 @@ const CopyBtn = ({ text, label, className, labelClassName, iconClassName }: Prop
                 setShowTickIcon(false);
             }, 2_000);
         } catch (error) {
+            console.error(error);
             toast({
                 title: "Couldn't copy to clipboard !",
                 description: "Try again or copy the text manually",

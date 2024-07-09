@@ -5,15 +5,16 @@ import {
     CrownIcon,
     DiscordIcon,
     DownloadIcon,
+    ExternalLinkIcon,
     GearIcon,
     PersonIcon,
 } from "@/components/icons";
-import { PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
+import { ContentWrapperCard, PanelContent, PanelLayout, SidePanel } from "@/components/panel-layout";
 import ReleaseChannelIndicator from "@/components/release-channel-pill";
 import { Button } from "@/components/ui/button";
 import { AbsolutePositionedSpinner, SuspenseFallback } from "@/components/ui/spinner";
 import { FormatVersionsList } from "@/lib/semver";
-import { FormatProjectTypes } from "@/lib/utils";
+import { cn, FormatProjectTypes } from "@/lib/utils";
 import "@/src/globals.css";
 import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
@@ -65,9 +66,9 @@ export default function ProjectDetailsLayout() {
             {projectData === undefined ? null : (
                 <div className="w-full pb-32">
                     <PanelLayout>
-                        <div className="w-full lg:w-80 flex items-center justify-center gap-4 flex-col">
-                            <SidePanel>
-                                <div className="w-full flex flex-col gap-1 p-2">
+                        <SidePanel className="p-0 bg-transparent flex flex-col items-center justify-center gap-card-gap">
+                            <ContentWrapperCard>
+                                <div className="w-full flex flex-col gap-1 p-1">
                                     <div className="w-fit p-2 bg-background-shallow rounded-xl">
                                         <CubeIcon className="w-20 h-20 text-foreground-muted" />
                                     </div>
@@ -101,6 +102,7 @@ export default function ProjectDetailsLayout() {
                                     <div className="flex items-center justify-start gap-2 text-foreground-muted">
                                         <CalendarIcon className="w-4 h-4" />
                                         <TooltipWrapper
+                                            className="cursor-text"
                                             text={formatDate(new Date(projectData?.created_on), timestamp_template)}
                                         >
                                             <p>
@@ -112,6 +114,7 @@ export default function ProjectDetailsLayout() {
                                     <div className="flex items-center justify-start gap-2 text-foreground-muted">
                                         <UpdateIcon className="w-4 h-4" />
                                         <TooltipWrapper
+                                            className="cursor-text"
                                             text={formatDate(new Date(projectData?.updated_on), timestamp_template)}
                                         >
                                             <p>
@@ -137,14 +140,13 @@ export default function ProjectDetailsLayout() {
                                         </Button>
                                     </div>
                                 </div>
-                            </SidePanel>
-
+                            </ContentWrapperCard>
                             <AdditionalProjectDetailsCard
                                 className="hidden lg:flex"
                                 projectData={projectData}
                                 featuredProjectVersions={featuredProjectVersions}
                             />
-                        </div>
+                        </SidePanel>
                         <PanelContent>
                             <Suspense fallback={<SuspenseFallback />}>
                                 <PublishingChecklist />
@@ -218,19 +220,19 @@ const AdditionalProjectDetailsCard = ({
     const navigate = useNavigate();
 
     return (
-        <SidePanel className={className}>
-            <div className="w-full flex flex-col gap-1 p-2">
-                {projectData?.external_links?.issue_tracker_link ||
-                projectData?.external_links?.project_source_link ||
-                projectData?.external_links?.project_wiki_link ||
-                projectData?.external_links?.discord_invite_link ? (
-                    <div className="w-full flex flex-col gap-2">
-                        <h2 className="text-lg font-semibold text-foreground">External resources</h2>
-                        <div className="w-full flex gap-x-3 gap-y-2 flex-wrap">
+        <div className={cn("w-full flex flex-col gap-card-gap", className)}>
+            {projectData?.external_links?.issue_tracker_link ||
+            projectData?.external_links?.project_source_link ||
+            projectData?.external_links?.project_wiki_link ||
+            projectData?.external_links?.discord_invite_link ? (
+                <ContentWrapperCard className="items-start justify-start">
+                    <div className="w-full flex flex-col items-start justify-start gap-y-2 p-1">
+                        <h2 className="text-lg font-bold text-foreground">Links</h2>
+                        <div className="w-full flex items-start justify-center flex-col gap-y-1.5">
                             {projectData?.external_links?.issue_tracker_link ? (
                                 <ExternalLink
                                     url={projectData?.external_links?.issue_tracker_link}
-                                    label="Issues"
+                                    label="Report issues"
                                     icon={<ExclamationTriangleIcon className="w-4 h-4" />}
                                 />
                             ) : null}
@@ -238,15 +240,15 @@ const AdditionalProjectDetailsCard = ({
                             {projectData?.external_links?.project_source_link ? (
                                 <ExternalLink
                                     url={projectData?.external_links?.project_source_link}
-                                    label="Source"
-                                    icon={<CodeIcon className="w-5 h-5" />}
+                                    label="View source"
+                                    icon={<CodeIcon className="w-[1.1rem] h-[1.1rem]" />}
                                 />
                             ) : null}
 
                             {projectData?.external_links?.project_wiki_link ? (
                                 <ExternalLink
                                     url={projectData?.external_links?.project_wiki_link}
-                                    label="Wiki"
+                                    label="Visit wiki"
                                     icon={<BookIcon className="w-4 h-4" />}
                                 />
                             ) : null}
@@ -254,145 +256,152 @@ const AdditionalProjectDetailsCard = ({
                             {projectData?.external_links?.discord_invite_link ? (
                                 <ExternalLink
                                     url={projectData?.external_links?.discord_invite_link}
-                                    label="Discord"
+                                    label="Join Discord server"
                                     icon={
                                         <DiscordIcon className="w-4 h-4 text-foreground-muted fill-current dark:fill-current" />
                                     }
                                 />
                             ) : null}
                         </div>
-                        <span className="w-full h-[1px] my-2 bg-border" />
                     </div>
-                ) : null}
+                </ContentWrapperCard>
+            ) : null}
 
-                {featuredProjectVersions?.versions?.length ? (
-                    <div className="w-full flex flex-col">
-                        <div className="w-full flex items-center justify-between flex-wrap mb-3">
-                            <h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
-                            <Link
-                                to={`/${createURLSafeSlug(projectData?.type[0]).value}/${projectData?.url_slug}/versions#all-versions`}
-                                className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
-                            >
-                                <span>See all</span>
-                                <ChevronRightIcon size="1rem" />
-                            </Link>
-                        </div>
-                        {featuredProjectVersions?.versions.map((version) => {
-                            return (
-                                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                                <div
-                                    key={version.id}
-                                    className="w-full flex items-start justify-start p-1.5 pb-2 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
-                                    onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                                        if (
-                                            // @ts-expect-error
-                                            !e.target.closest(".versionFileDownloadLink") &&
-                                            // @ts-expect-error
-                                            !e.target.closest(".versionPageLink")
-                                        ) {
-                                            const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${
-                                                projectData?.url_slug
-                                            }/version/${version.url_slug}`;
-                                            if (window.location.pathname !== link) {
-                                                window.scrollTo({ top: 0 });
-                                                navigate(link);
-                                            }
-                                        }
-                                    }}
+            <ContentWrapperCard className={className}>
+                <div className="w-full flex flex-col gap-1 p-1">
+                    {featuredProjectVersions?.versions?.length ? (
+                        <div className="w-full flex flex-col">
+                            <div className="w-full flex items-center justify-between flex-wrap mb-3">
+                                <h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
+                                <Link
+                                    to={`/${createURLSafeSlug(projectData?.type[0]).value}/${projectData?.url_slug}/versions#all-versions`}
+                                    className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
                                 >
-                                    <TooltipWrapper
-                                        text={`${version.files[0].file_name} (${parseFileSize(version.files[0].file_size)})`}
-                                        asChild={true}
+                                    <span>See all</span>
+                                    <ChevronRightIcon size="1rem" />
+                                </Link>
+                            </div>
+                            {featuredProjectVersions?.versions.map((version) => {
+                                return (
+                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                                    <div
+                                        key={version.id}
+                                        className="w-full flex items-start justify-start p-1.5 pb-2 rounded-lg cursor-pointer hover:bg-bg-hover gap-3"
+                                        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                                            if (
+                                                // @ts-expect-error
+                                                !e.target.closest(".versionFileDownloadLink") &&
+                                                // @ts-expect-error
+                                                !e.target.closest(".versionPageLink")
+                                            ) {
+                                                const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${
+                                                    projectData?.url_slug
+                                                }/version/${version.url_slug}`;
+                                                if (window.location.pathname !== link) {
+                                                    window.scrollTo({ top: 0 });
+                                                    navigate(link);
+                                                }
+                                            }
+                                        }}
                                     >
-                                        <a
-                                            href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                            className="versionFileDownloadLink mt-0.5 ml-0.5"
-                                            aria-label={`Download ${version.files[0].file_name}`}
+                                        <TooltipWrapper
+                                            text={`${version.files[0].file_name} (${parseFileSize(version.files[0].file_size)})`}
+                                            asChild={true}
                                         >
-                                            <Button tabIndex={-1} size={"icon"} className="h-fit w-fit p-2 rounded-lg">
-                                                <DownloadIcon size="1.1rem" />
-                                            </Button>
-                                        </a>
-                                    </TooltipWrapper>
+                                            <a
+                                                href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
+                                                className="versionFileDownloadLink mt-0.5 ml-0.5"
+                                                aria-label={`Download ${version.files[0].file_name}`}
+                                            >
+                                                <Button
+                                                    tabIndex={-1}
+                                                    size={"icon"}
+                                                    className="h-fit w-fit p-2 rounded-lg"
+                                                >
+                                                    <DownloadIcon size="1.1rem" />
+                                                </Button>
+                                            </a>
+                                        </TooltipWrapper>
 
-                                    <div className="flex w-fit h-full grow flex-col select-text text-base dark:text-foreground-muted">
-                                        <Link
-                                            to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
-                                                projectData?.url_slug
-                                            }/version/${version.url_slug}`}
-                                            className="versionPageLink w-fit"
-                                        >
-                                            <p className="font-semibold leading-tight">{version.version_title}</p>
-                                        </Link>
-                                        <p className="text-pretty">
-                                            {`${version.supported_loaders.map((loader) => (isLoaderVisibleInVersionList(loader) ? CapitalizeAndFormatString(loader) : null)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
-                                        </p>
-                                        <ReleaseChannelIndicator release_channel={version.release_channel} />
+                                        <div className="flex w-fit h-full grow flex-col select-text text-base dark:text-foreground-muted">
+                                            <Link
+                                                to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
+                                                    projectData?.url_slug
+                                                }/version/${version.url_slug}`}
+                                                className="versionPageLink w-fit"
+                                            >
+                                                <p className="font-semibold leading-tight">{version.version_title}</p>
+                                            </Link>
+                                            <p className="text-pretty">
+                                                {`${version.supported_loaders.map((loader) => (isLoaderVisibleInVersionList(loader) ? CapitalizeAndFormatString(loader) : null)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}
+                                            </p>
+                                            <ReleaseChannelIndicator release_channel={version.release_channel} />
+                                        </div>
                                     </div>
-                                </div>
+                                );
+                            })}
+                            <span className="w-full h-[1px] my-2 bg-border" />
+                        </div>
+                    ) : null}
+                    <h2 className="text-lg font-semibold text-foreground">Project members</h2>
+                    <div className="w-full flex items-center justify-center gap-2 flex-col">
+                        {projectData?.members?.map((member) => {
+                            return (
+                                <React.Fragment key={member.user.user_name}>
+                                    <ProjectMember
+                                        username={member.user.user_name}
+                                        role={member.role}
+                                        role_title={member.role_title}
+                                        avatar_image={member.user.avatar_image || ""}
+                                    />
+                                </React.Fragment>
                             );
                         })}
-                        <span className="w-full h-[1px] my-2 bg-border" />
                     </div>
-                ) : null}
-                <h2 className="text-lg font-semibold text-foreground">Project members</h2>
-                <div className="w-full flex items-center justify-center gap-2 flex-col">
-                    {projectData?.members?.map((member) => {
-                        return (
-                            <React.Fragment key={member.user.user_name}>
-                                <ProjectMember
-                                    username={member.user.user_name}
-                                    role={member.role}
-                                    role_title={member.role_title}
-                                    avatar_image={member.user.avatar_image || ""}
-                                />
-                            </React.Fragment>
-                        );
-                    })}
-                </div>
 
-                <span className="w-full h-[1px] my-2 bg-border" />
+                    <span className="w-full h-[1px] my-2 bg-border" />
 
-                <h2 className="text-lg font-semibold text-foreground">Technical information</h2>
-                <div className="w-full grid grid-cols-2">
-                    <span className="font-semibold text-foreground-muted">License</span>
-                    {projectData?.license ? (
-                        projectData?.licenseUrl ? (
-                            <a
-                                rel="noreferrer"
-                                target="_blank"
-                                href={projectData.licenseUrl}
-                                className="w-fit text-blue-500 dark:text-blue-400 hover:underline underline-offset-2"
-                            >
-                                {projectData.license}
-                            </a>
+                    <h2 className="text-lg font-semibold text-foreground">Technical information</h2>
+                    <div className="w-full grid grid-cols-2">
+                        <span className="font-semibold text-foreground-muted">License</span>
+                        {projectData?.license ? (
+                            projectData?.licenseUrl ? (
+                                <a
+                                    rel="noreferrer"
+                                    target="_blank"
+                                    href={projectData.licenseUrl}
+                                    className="w-fit text-blue-500 dark:text-blue-400 hover:underline underline-offset-2"
+                                >
+                                    {projectData.license}
+                                </a>
+                            ) : (
+                                <span className="text-foreground-muted">{projectData?.license}</span>
+                            )
                         ) : (
-                            <span className="text-foreground-muted">{projectData?.license}</span>
-                        )
-                    ) : (
+                            <span className="text-foreground-muted">Unknown</span>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <span className="font-semibold text-foreground-muted">Client side</span>
                         <span className="text-foreground-muted">Unknown</span>
-                    )}
-                </div>
-                <div className="grid grid-cols-2">
-                    <span className="font-semibold text-foreground-muted">Client side</span>
-                    <span className="text-foreground-muted">Unknown</span>
-                </div>
-                <div className="grid grid-cols-2">
-                    <span className="font-semibold text-foreground-muted">Server side</span>
-                    <span className="text-foreground-muted">Unknown</span>
-                </div>
-                <div className="grid grid-cols-2">
-                    <span className="font-semibold text-foreground-muted">Project ID</span>
-                    <div className="w-fit flex items-center justify-start gap-2 rounded pl-2 pr-1">
-                        <CopyBtn
-                            text={projectData.id}
-                            label={`...${projectData.id.slice(projectData.id.length - 10)}`}
-                            labelClassName="text-foreground-muted"
-                        />
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <span className="font-semibold text-foreground-muted">Server side</span>
+                        <span className="text-foreground-muted">Unknown</span>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <span className="font-semibold text-foreground-muted">Project ID</span>
+                        <div className="w-fit flex items-center justify-start gap-2 rounded pl-2 pr-1">
+                            <CopyBtn
+                                text={projectData.id}
+                                label={`...${projectData.id.slice(projectData.id.length - 10)}`}
+                                labelClassName="text-foreground-muted"
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </SidePanel>
+            </ContentWrapperCard>
+        </div>
     );
 };
 
@@ -424,7 +433,7 @@ const ProjectDetailsNav = ({
 
     return (
         <nav
-            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 gap-y-2 rounded-xl"
+            className="w-full flex flex-wrap items-center justify-betweens bg-background py-2 px-6 gap-x-4 rounded-xl"
             id="project-page-nav"
         >
             <ul className="w-fit grow flex flex-wrap gap-x-4">
@@ -435,7 +444,7 @@ const ProjectDetailsNav = ({
                                 key={link.href}
                                 aria-label={link.label}
                                 to={link.href}
-                                className="routerNavLink navItemHeight py-1 flex flex-col items-center justify-center"
+                                className="routerNavLink py-1 flex flex-col items-center justify-center"
                             >
                                 <span className="projectDetailsNavLinkText relative flex items-center justify-center">
                                     {link.label}
@@ -446,10 +455,9 @@ const ProjectDetailsNav = ({
                     );
                 })}
             </ul>
-
             {isProjectMember === true && (
                 <Link to={`${baseHref}/settings`}>
-                    <Button className="gap-2" variant={"ghost"} tabIndex={-1}>
+                    <Button className="gap-2" variant={"secondary"} tabIndex={-1}>
                         <GearIcon size="1.25rem" />
                         Settings
                     </Button>
@@ -462,9 +470,10 @@ const ProjectDetailsNav = ({
 const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
     return (
         <Link to={url} className="flex items-center justify-center" target="_blank" referrerPolicy="no-referrer">
-            <Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-1">
+            <Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-2 font-semibold">
                 {icon}
                 {label}
+                <ExternalLinkIcon className="w-[0.9rem] h-[0.9rem] text-foreground-muted ml-1" />
             </Button>
         </Link>
     );

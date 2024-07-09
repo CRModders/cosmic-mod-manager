@@ -19,7 +19,7 @@ const EditProfileDialog = ({ name, username, linkedProviders, setNewSession, cur
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button className="gap-2" variant="outline" aria-label="Edit profile">
+                <Button className="gap-2" variant="secondary" aria-label="Edit profile">
                     <EditIcon size="1rem" className="text-foreground-muted" />
                     <p className="pr-1">Edit</p>
                 </Button>
@@ -212,7 +212,7 @@ const EditProfileInfoForm = ({
                                                 defaultValue={field.value}
                                             >
                                                 <FormControl className="capitalize">
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -251,7 +251,6 @@ const EditProfileInfoForm = ({
                                                 <Input
                                                     {...field}
                                                     placeholder="john_doe"
-                                                    className="w-full flex items-center justify-center"
                                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         field.onChange(e);
                                                         checkFormError();
@@ -279,7 +278,6 @@ const EditProfileInfoForm = ({
                                                 <Input
                                                     {...field}
                                                     placeholder="John Doe"
-                                                    className="w-full flex items-center justify-center"
                                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         field.onChange(e);
                                                         checkFormError();

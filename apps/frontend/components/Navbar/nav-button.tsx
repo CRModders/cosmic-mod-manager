@@ -44,7 +44,7 @@ const NavButton = () => {
                     size="lg"
                     variant="ghost"
                     aria-label="Profile icon"
-                    className="p-0 m-0 h-fit rounded-full w-fit"
+                    className="p-0 m-0 h-fit rounded-full w-fit no_input_box_styles"
                 >
                     <div className="flex items-center justify-center navItemHeight aspect-square p-1 hover:bg-background rounded-full">
                         {session?.avatar_image ? (

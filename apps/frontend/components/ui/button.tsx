@@ -10,15 +10,15 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "text-[hsla(var(--foreground-dark))] dark:text-[hsla(var(--foreground-light))] bg-accent-bg hover:bg-accent-bg/90 shadow",
+                    "neumorphic_shadow text-[hsla(var(--foreground-dark))] dark:text-[hsla(var(--foreground-light))] bg-accent-bg hover:bg-accent-bg/90 shadow",
                 destructive:
-                    "bg-danger-bg text-[hsla(var(--foreground-dark))] dark:text-[hsla(var(--foreground-light))] shadow-sm hover:bg-danger-bg/90",
+                    "neumorphic_shadow bg-danger-bg text-[hsla(var(--foreground-dark))] dark:text-[hsla(var(--foreground-light))] shadow-sm hover:bg-danger-bg/90",
                 "destructive-outlined":
                     "bg-background text-danger-text shadow-sm hover:bg-bg-hover border border-border",
                 outline: "text-foreground-muted border border-border bg-background shadow-sm hover:bg-bg-hover",
                 secondary:
-                    "neumorphic_shadow bg-background-shallow text-foreground-muted shadow-sm hover:bg-background-shallow/80",
-                ghost: "text-foreground-muted hover:bg-bg-hover hover:neumorphic_shadow input_box_transitions",
+                    "neumorphic_shadow bg-background-shallow text-foreground/85 shadow-sm hover:bg-background-shallow/80",
+                ghost: "text-foreground-muted hover:neumorphic_shadow input_box_transitions hover:input_box_styles no_accent_surround_shadow",
                 link: "text-foreground-muted underline-offset-4 hover:underline text-base",
             },
             size: {
