@@ -2,7 +2,11 @@ import { Hono } from "hono";
 import meilisearch from "@/lib/search-service";
 import { defaultSearchPageSize, projectsSearchIndexName } from "@root/config";
 import { SearchResultSortTypes } from "@root/types";
-import { getSelectedCategoryFilters, getSelectedLoaderFilters } from "@root/lib/search-helpers";
+import {
+    generateSearchFilterString,
+    getSelectedCategoryFilters,
+    getSelectedLoaderFilters,
+} from "@root/lib/search-helpers";
 
 const searchRouter = new Hono();
 
@@ -14,13 +18,17 @@ searchRouter.get("/", async (c) => {
         const offset = Math.max(page - 1, 0) * defaultSearchPageSize;
         const projectType = decodeURIComponent(c.req.query("projectType") || "");
         const categoryFilters = getSelectedCategoryFilters(c.req.queries("tags") || []);
-        const loaderFilers = getSelectedLoaderFilters(c.req.queries("loaders") || []);
+        const loaderFilters = getSelectedLoaderFilters(c.req.queries("loaders") || []);
+        const ossOnly = c.req.query("oss") === "true";
         const searchIndex = meilisearch.index(projectsSearchIndexName);
 
-        let filter = `type = ${projectType}`;
-        if (loaderFilers.length > 0) filter += ` AND (loaders = ${loaderFilers.join(" AND loaders = ")})`;
-        if (categoryFilters.length > 0) filter += ` AND (tags = ${categoryFilters.join(" AND tags = ")} )`;
-        if (c.req.query("oss") === "true") filter += " AND oss = true";
+        const filter = generateSearchFilterString({
+            projectType: projectType,
+            query: query,
+            loaderFiltersList: loaderFilters,
+            categoryFiltersList: categoryFilters,
+            ossOnly: ossOnly,
+        });
 
         switch (sortBy) {
             case SearchResultSortTypes.DOWNLOADS:
@@ -48,9 +56,19 @@ searchRouter.get("/", async (c) => {
             offset: offset,
         });
 
-        return c.json({ data: res }, 200);
+        return c.json(
+            {
+                ...res,
+                projectType,
+                loaderFilters,
+                categoryFilters,
+                offset,
+                ossOnly,
+            },
+            200,
+        );
     } catch (err) {
-        console.error(err);
+        // console.error(err);
         return c.json({ data: null, message: "Internal server error" }, 500);
     }
 });

@@ -62,7 +62,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                     >
                                         <Button
                                             variant={"link"}
-                                            className="p-0 font-normal text-base text-foreground dark:text-foreground-muted"
+                                            className="p-0 font-[500] text-base text-foreground dark:text-foreground/85"
                                             tabIndex={-1}
                                         >
                                             {project.name}

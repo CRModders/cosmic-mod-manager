@@ -16,13 +16,13 @@ export default function NotFoundPage() {
                         404 | Page not found.
                     </h1>
                 </div>
-                <p className="text-xl text-foreground-muted max-w-xl flex items-center justify-center text-center">
+                <p className="text-lg dark:text-foreground-muted max-w-xl flex items-center justify-center text-center">
                     Sorry, we couldn't find the page you're looking for.
                 </p>
 
                 <Link to="/" className="mt-4">
                     <Button className="text-foreground" variant={"link"} aria-label="Go to home page">
-                        <span className="text-xl">Home</span>
+                        <span className="text-lg">Home</span>
                     </Button>
                 </Link>
             </div>

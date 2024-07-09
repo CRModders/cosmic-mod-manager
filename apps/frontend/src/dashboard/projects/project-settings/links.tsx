@@ -71,7 +71,7 @@ const ProjectLinksSettings = () => {
                 <div className="w-full flex-col flex gap-4">
                     <div className="w-full flex flex-col items-start md:flex-row md:items-center justify-between gap-x-4 gap-y-2">
                         <div className="flex flex-col">
-                            <span className="text-xl font-semibold text-foreground">Issue tracker</span>
+                            <span className="text-lg font-semibold text-foreground">Issue tracker</span>
                             <span className=" text-foreground-muted">
                                 A place for users to report bugs, issues, and concerns about your project.
                             </span>
@@ -89,7 +89,7 @@ const ProjectLinksSettings = () => {
 
                     <div className="w-full flex flex-col items-start md:flex-row md:items-center justify-between gap-x-4 gap-y-2">
                         <div className="flex flex-col">
-                            <span className="text-xl font-semibold text-foreground">Source code</span>
+                            <span className="text-lg font-semibold text-foreground">Source code</span>
                             <span className=" text-foreground-muted">
                                 A page/repository containing the source code for your project
                             </span>
@@ -107,7 +107,7 @@ const ProjectLinksSettings = () => {
 
                     <div className="w-full flex flex-col items-start md:flex-row md:items-center justify-between gap-x-4 gap-y-2">
                         <div className="flex flex-col">
-                            <span className="text-xl font-semibold text-foreground">Wiki page</span>
+                            <span className="text-lg font-semibold text-foreground">Wiki page</span>
                             <span className=" text-foreground-muted">
                                 A page containing information, documentation, and help for the project.
                             </span>
@@ -125,7 +125,7 @@ const ProjectLinksSettings = () => {
 
                     <div className="w-full flex flex-col items-start md:flex-row md:items-center justify-between gap-x-4 gap-y-2">
                         <div className="flex flex-col">
-                            <span className="text-xl font-semibold text-foreground">Discord invite</span>
+                            <span className="text-lg font-semibold text-foreground">Discord invite</span>
                             <span className=" text-foreground-muted">An invitation link to your Discord server.</span>
                         </div>
                         <Input

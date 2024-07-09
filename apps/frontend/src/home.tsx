@@ -85,7 +85,7 @@ export default function HomePage() {
             )}
 
             <div className="w-full h-fit flex flex-col items-center justify-start pb-8">
-                <section className="hero_section w-full h-[100vh] max-h-[1080px] flex flex-col items-center justify-center container">
+                <section className="hero_section w-full min-h-[720px] h-[100vh] max-h-[1080px] flex flex-col items-center justify-center container">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center">
                         <h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">
@@ -112,8 +112,8 @@ export default function HomePage() {
                             </span>
                         </h2>
 
-                        <div className="flex flex-col items-center justify-center gap-2">
-                            <h2 className="w-full text-center flex flex-wrap items-center justify-center text-xl lg:text-2xl text-foreground-muted">
+                        <div className="flex flex-col items-center justify-center gap-1">
+                            <h2 className="w-full text-center flex flex-wrap items-center justify-center text-lg lg:text-xl text-foreground-muted">
                                 The best place for your&nbsp;
                                 <a
                                     href="https://finalforeach.itch.io/cosmic-reach"
@@ -126,7 +126,7 @@ export default function HomePage() {
                                 </a>
                                 &nbsp;mods.
                             </h2>
-                            <h2 className="text-xl lg:text-2xl flex text-center text-foreground-muted">
+                            <h2 className="text-lg lg:text-xl flex text-center text-foreground-muted">
                                 Discover, play, and create content, all in one spot.
                             </h2>
                         </div>
@@ -148,7 +148,7 @@ export default function HomePage() {
                         className="w-full flex items-start justify-start flex-col px-4 my-2"
                         key={section.categoryName}
                     >
-                        <h2 className="text-left text-xl font-semibold underline underline-offset-2 py-1 px-1 text-foreground-muted">
+                        <h2 className="text-left text-xl font-[500] underline underline-offset-2 py-1 px-1 text-foreground-muted">
                             {section.title}
                         </h2>
 
@@ -166,7 +166,7 @@ export default function HomePage() {
                                         </div>
                                         <div className="flex flex-col items-start justify-start mr-4 max-h-24">
                                             <h3
-                                                className={`${styles.item_name} text-lg sm:text-xl text-foreground-muted font-semibold`}
+                                                className={`${styles.item_name} text-lg sm:text-lg text-foreground-muted font-semibold`}
                                             >
                                                 {item.name}
                                             </h3>

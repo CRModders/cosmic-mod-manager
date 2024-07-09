@@ -106,7 +106,7 @@ export function ProjectSettingsLayoutContent({
                             </div>
 
                             <div className="w-full mt-6">
-                                <h1 className="w-full px-1 text-2xl font-semibold mb-2 text-foreground">
+                                <h1 className="w-full px-1 text-xl font-semibold mb-2 text-foreground">
                                     Project settings
                                 </h1>
                                 <ul className="w-full flex flex-col items-start justify-center gap-1">
@@ -124,7 +124,7 @@ export function ProjectSettingsLayoutContent({
                                 </ul>
                             </div>
                             <div className="w-full mt-4">
-                                <h1 className="w-full px-1 text-xl font-semibold mb-2 text-foreground">View</h1>
+                                <h1 className="w-full px-1 text-lg font-semibold mb-2 text-foreground">View</h1>
                                 <ul className="w-full flex flex-col items-start justify-center gap-1">
                                     {viewPageLinks?.map((link) => {
                                         return (
@@ -140,7 +140,7 @@ export function ProjectSettingsLayoutContent({
                                 </ul>
                             </div>
                             <div className="w-full mt-4">
-                                <h1 className="w-full px-1 text-xl font-semibold mb-2 text-foreground">Upload</h1>
+                                <h1 className="w-full px-1 text-lg font-semibold mb-2 text-foreground">Upload</h1>
                                 <ul className="w-full flex flex-col items-start justify-center gap-1">
                                     {UploadPageLinks?.map((link) => {
                                         return (

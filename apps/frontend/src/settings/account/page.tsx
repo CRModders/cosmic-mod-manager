@@ -99,12 +99,12 @@ const AccountSettingsPage = () => {
                                     {session?.name}
                                 </h1>
                                 <ScrollArea className="w-full">
-                                    <div className="w-full flex text-sm sm:text-base items-center sm:justify-start justify-center">
-                                        <span role="img" aria-hidden className="text-foreground/60 select-none text-xl">
+                                    <p className="text-foreground text-base py-1">
+                                        <span role="img" aria-hidden className="text-foreground/50 select-none">
                                             @
                                         </span>
-                                        <span className="text-foreground">{session?.user_name}</span>
-                                    </div>
+                                        {session?.user_name}
+                                    </p>
                                     <ScrollBar orientation="horizontal" />
                                 </ScrollArea>
                             </div>
@@ -121,7 +121,7 @@ const AccountSettingsPage = () => {
 
                     <div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
-                            <p className="text-xl font-semibold text-foreground">Email</p>
+                            <p className="text-lg font-semibold text-foreground">Email</p>
                             <form
                                 className="w-full flex items-center justify-start"
                                 name="Email"

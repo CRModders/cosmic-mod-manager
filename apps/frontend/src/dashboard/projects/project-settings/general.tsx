@@ -86,7 +86,7 @@ const GeneralProjectSettings = () => {
                         </h1>
 
                         <div className="flex flex-col">
-                            <p className="text-xl font-semibold text-foreground p-1">Icon</p>
+                            <p className="text-lg font-semibold text-foreground p-1">Icon</p>
                             <div className="flex gap-4">
                                 <span className="p-2 flex items-center justify-center rounded-lg bg-background-shallow">
                                     <CubeIcon className="w-20 h-20 text-foreground-muted" />

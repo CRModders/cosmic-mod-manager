@@ -18,7 +18,7 @@ const buttonVariants = cva(
                 outline: "text-foreground-muted border border-border bg-background shadow-sm hover:bg-bg-hover",
                 secondary:
                     "neumorphic_shadow bg-background-shallow text-foreground/85 shadow-sm hover:bg-background-shallow/80",
-                ghost: "text-foreground-muted hover:neumorphic_shadow input_box_transitions hover:input_box_styles no_accent_surround_shadow",
+                ghost: "text-foreground-muted hover:neumorphic_shadow input_box_transitions hover:input_box_styles no_accent_surround_shadow dark:no_accent_surround_shadow",
                 link: "text-foreground-muted underline-offset-4 hover:underline text-base",
             },
             size: {

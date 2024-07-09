@@ -11,7 +11,7 @@ const SessionListPageWrapper = ({ children, showWarning, setShowWarning }: Props
     if (showWarning !== false) {
         return (
             <div className="w-full flex flex-col items-center justify-center p-8 bg-yellow-600/10 dark:bg-yellow-400/5 rounded-lg">
-                <h1 className="text-xl sm:text-2xl mb-2 text-yellow-600 dark:text-yellow-400">
+                <h1 className="text-lg sm:text-2xl mb-2 text-yellow-600 dark:text-yellow-400">
                     Warning: Sensitive info
                 </h1>
                 <p className="text-yellow-600 dark:text-yellow-400">

@@ -15,7 +15,7 @@ const PasswordSection = ({ email, hasAPassword, fetchPageData }: Props) => {
         return (
             <div className="w-full flex flex-wrap items-end justify-between gap-2">
                 <div className="flex flex-col items-start justify-center">
-                    <p className="text-xl font-semibold text-foreground">Password</p>
+                    <p className="text-lg font-semibold text-foreground">Password</p>
                     <p className="text-base text-foreground-muted">Add a password to use credentials login</p>
                 </div>
                 <AddPasswordForm email={email || ""} />
@@ -26,7 +26,7 @@ const PasswordSection = ({ email, hasAPassword, fetchPageData }: Props) => {
     return (
         <div className="w-full flex flex-wrap items-end justify-between gap-2">
             <div className="flex flex-col items-start justify-center">
-                <p className="text-xl font-semibold text-foreground">Password</p>
+                <p className="text-lg font-semibold text-foreground">Password</p>
                 <p className="text-base text-foreground-muted">Change your account password</p>
             </div>
 

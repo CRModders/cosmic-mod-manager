@@ -51,3 +51,39 @@ export const getAllLoaderFilters = (projectType: ProjectType) => {
 
     return Array.from(allLoadersList);
 };
+
+type filterStringGenerationProps = {
+    projectType: string;
+    query: string;
+    loaderFiltersList: string[];
+    categoryFiltersList: string[];
+    ossOnly: boolean;
+    includeQuery?: boolean;
+};
+
+const URIEncodeStringList = (list: string[]): string[] => {
+    for (let i = 0; i < list.length; i++) {
+        list[i] = encodeURIComponent(list[i]);
+    }
+
+    return list;
+};
+
+export const generateSearchFilterString = ({
+    projectType,
+    query,
+    loaderFiltersList,
+    categoryFiltersList,
+    ossOnly,
+    includeQuery = false,
+}: filterStringGenerationProps): string => {
+    let filter = `type = ${encodeURIComponent(projectType)}`;
+    if (loaderFiltersList.length > 0)
+        filter += ` AND ( loaders = ${URIEncodeStringList(loaderFiltersList).join(" AND loaders = ")})`;
+    if (categoryFiltersList.length > 0)
+        filter += ` AND ( tags = ${URIEncodeStringList(categoryFiltersList).join(" AND tags = ")} )`;
+    if (ossOnly) filter += " AND oss = true";
+    if (includeQuery && query) filter += ` AND query = ${query}`;
+
+    return filter;
+};

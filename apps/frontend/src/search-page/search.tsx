@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
+    generateSearchFilterString,
     getAllLoaderFilters,
     getAllTaggedFilters,
     getSelectedCategoryFilters,
@@ -377,15 +378,24 @@ export default function SearchPage({ projectType }: { projectType: ProjectType }
                     </SidePanel>
                     <PanelContent>
                         <SearchPageContent
-                            isLoadingInitialData={searchResults.isLoading}
+                            isLoadingInitialData={searchResults.isLoading || !searchResults.isFetchedAfterMount}
                             isFetchingData={searchResults.isFetching}
                             selectedLoaderFilters={selectedLoaderFilters}
                             selectedCategoryFilters={selectedCategoryFilters}
                             projectType={projectType}
-                            searchResults={searchResults.data?.data?.hits as SearchResult[] | null | undefined}
-                            totalEstimatedHits={searchResults.data?.data?.estimatedTotalHits || 0}
+                            searchResults={searchResults.data?.hits as SearchResult[] | null | undefined}
+                            totalEstimatedHits={searchResults.data?.estimatedTotalHits || 0}
+                            searchOffset={searchResults.data?.offset || 0}
                             setIsFiltersPanelVisible={setIsFiltersPanelVisible}
                             isFiltersPanelVisible={isFiltersPanelVisible}
+                            cachedResultDetails={{
+                                projectType: searchResults.data?.projectType as string,
+                                query: (searchResults.data?.query || "") as string,
+                                offset: (searchResults.data?.offset || 0) as number,
+                                ossOnly: searchResults.data?.ossOnly === true,
+                                loaderFiltersList: (searchResults.data?.loaderFilters || []) as string[],
+                                categoryFiltersList: (searchResults.data?.categoryFilters || []) as string[],
+                            }}
                         />
                     </PanelContent>
                 </PanelLayout>
@@ -400,10 +410,19 @@ type SearchPageContentProps = {
     selectedCategoryFilters: Set<string>;
     searchResults: SearchResult[] | null | undefined;
     totalEstimatedHits: number;
+    searchOffset: number;
     isLoadingInitialData: boolean;
     isFetchingData: boolean;
     setIsFiltersPanelVisible: React.Dispatch<React.SetStateAction<boolean>>;
     isFiltersPanelVisible: boolean;
+    cachedResultDetails: {
+        projectType: string;
+        query: string;
+        offset: number;
+        ossOnly: boolean;
+        loaderFiltersList: string[];
+        categoryFiltersList: string[];
+    };
 };
 
 let searchQuerySyncTimeout: number | undefined;
@@ -412,22 +431,40 @@ const SearchPageContent = ({
     projectType,
     searchResults,
     totalEstimatedHits,
+    searchOffset,
     isLoadingInitialData,
     isFetchingData,
     isFiltersPanelVisible,
     setIsFiltersPanelVisible,
+    cachedResultDetails,
 }: SearchPageContentProps) => {
     const [searchParams] = useSearchParams();
+    const activePage = Number.parseInt(searchParams.get(pageOffsetParamKey) || "1") || 1;
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState(searchParams.get(searchQueryKey) || "");
-    const totalPages = Math.ceil(totalEstimatedHits / defaultSearchPageSize);
+    const cachedSearchResultFilterString = generateSearchFilterString({
+        ...cachedResultDetails,
+        includeQuery: true,
+    });
+
+    const filterStringFromCurrUrl = generateSearchFilterString({
+        projectType: projectType,
+        query: searchParams.get(searchQueryKey) || "",
+        ossOnly: searchParams.get("oss") === "true",
+        loaderFiltersList: searchParams.getAll("tags"),
+        categoryFiltersList: searchParams.getAll("l"),
+        includeQuery: true,
+    });
+
+    const isWrongSearchResultCache =
+        searchOffset !== (activePage - 1) * defaultSearchPageSize ||
+        cachedSearchResultFilterString !== filterStringFromCurrUrl;
+
+    const totalPages =
+        isLoadingInitialData && isWrongSearchResultCache ? 1 : Math.ceil(totalEstimatedHits / defaultSearchPageSize);
 
     const Pagination = (
-        <PaginatedNavigation
-            activePage={Number.parseInt(searchParams.get(pageOffsetParamKey) || "1") || 1}
-            pagesCount={totalPages}
-            searchParamKey={pageOffsetParamKey}
-        />
+        <PaginatedNavigation activePage={activePage} pagesCount={totalPages} searchParamKey={pageOffsetParamKey} />
     );
 
     useEffect(() => {
@@ -455,13 +492,16 @@ const SearchPageContent = ({
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (searchQuerySyncTimeout) clearTimeout(searchQuerySyncTimeout);
+        const urlParamQueryValue = searchParams.get(searchQueryKey) || "";
 
         searchQuerySyncTimeout = window.setTimeout(() => {
+            if (urlParamQueryValue === searchQuery) return;
+
             const urlPathname = updateSearchParam(searchQueryKey, searchQuery, {
                 deleteParamOnFalsyValue: true,
                 newParamsAdditionMode: "replace",
                 deleteParamIfNewValueMatchesOldOne: false,
-                customUrlModifierFunc: deletePageOffsetParam,
+                customUrlModifierFunc: isLoadingInitialData ? undefined : deletePageOffsetParam,
             });
             navigate(urlPathname);
         }, 100);
@@ -470,6 +510,14 @@ const SearchPageContent = ({
             if (searchQuerySyncTimeout) clearTimeout(searchQuerySyncTimeout);
         };
     }, [searchQuery]);
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        const urlQueryParam = decodeURIComponent(searchParams.get(searchQueryKey) || "");
+        if (urlQueryParam !== searchQuery) {
+            setSearchQuery(urlQueryParam);
+        }
+    }, [searchParams]);
 
     return (
         <div className="w-full flex items-start justify-start flex-col gap-card-gap">
@@ -555,162 +603,170 @@ const SearchPageContent = ({
                 {totalPages > 1 && Pagination}
 
                 <>
-                    {!!searchResults?.length &&
-                        searchResults.map((project) => {
-                            const projectTags = Array.from(
-                                GetProjectTagsFromNames(project.featured_tags, ...[project?.type || []]),
-                            );
+                    {!searchResults?.length || (isLoadingInitialData && isWrongSearchResultCache)
+                        ? null
+                        : searchResults.map((project) => {
+                              const projectTags = Array.from(
+                                  GetProjectTagsFromNames(project.featured_tags, ...[project?.type || []]),
+                              );
 
-                            const projectLoaders = Array.from(
-                                GetProjectLoadersDataFromName(...[project?.loaders || []]) || [],
-                            );
+                              const projectLoaders = Array.from(
+                                  GetProjectLoadersDataFromName(...[project?.loaders || []]) || [],
+                              );
 
-                            return (
-                                <ContentWrapperCard
-                                    key={project.id}
-                                    className="searchItemWrapperGrid grid gap-x-3 gap-y-2 rounded-xl"
-                                >
-                                    <Link
-                                        to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
-                                        className="flex relative items-center justify-center bg-background-shallow dark:bg-background-shallower/55 rounded-2xl size-24 mr-1 overflow-hidden"
-                                        style={{
-                                            gridArea: "icon",
-                                        }}
-                                        tabIndex={-1}
-                                    >
-                                        {project.icon ? (
-                                            <img
-                                                src={`${project.icon.startsWith("http") ? "" : window.location.origin}${project.icon}`}
-                                                alt={project.name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <CubeIcon className="w-[60%] h-[60%] text-foreground/65" />
-                                        )}
-                                    </Link>
+                              return (
+                                  <ContentWrapperCard
+                                      key={project.id}
+                                      className="searchItemWrapperGrid grid gap-x-3 gap-y-2 rounded-xl"
+                                  >
+                                      <Link
+                                          to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
+                                          className="flex relative items-center justify-center bg-background-shallow dark:bg-background-shallower/55 rounded-2xl size-24 mr-1 overflow-hidden"
+                                          style={{
+                                              gridArea: "icon",
+                                          }}
+                                          tabIndex={-1}
+                                      >
+                                          {project.icon ? (
+                                              <img
+                                                  src={`${project.icon.startsWith("http") ? "" : window.location.origin}${project.icon}`}
+                                                  alt={project.name}
+                                                  className="w-full h-full object-cover"
+                                              />
+                                          ) : (
+                                              <CubeIcon className="w-[60%] h-[60%] text-foreground/65" />
+                                          )}
+                                      </Link>
 
-                                    <div
-                                        className="flex flex-wrap gap-2 items-baseline justify-start"
-                                        style={{ gridArea: "title" }}
-                                    >
-                                        <Link to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}>
-                                            <h2 className="text-2xl font-semibold leading-none break-words sm:text-wrap">
-                                                {project.name}
-                                            </h2>
-                                        </Link>
-                                        <p className="text-foreground-muted leading-none">
-                                            <span>by</span>
-                                            <Link to={`/user/${project.author}`} className="underline px-1">
-                                                {project.author}
-                                            </Link>
-                                        </p>
-                                    </div>
+                                      <div
+                                          className="flex flex-wrap gap-2 items-baseline justify-start"
+                                          style={{ gridArea: "title" }}
+                                      >
+                                          <Link to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}>
+                                              <h2 className="text-2xl font-semibold leading-none break-words sm:text-wrap">
+                                                  {project.name}
+                                              </h2>
+                                          </Link>
+                                          <p className="text-foreground-muted leading-none">
+                                              <span>by</span>
+                                              <Link to={`/user/${project.author}`} className="underline px-1">
+                                                  {project.author}
+                                              </Link>
+                                          </p>
+                                      </div>
 
-                                    <p
-                                        className="text-base text-foreground-muted leading-tight sm:text-pretty max-w-[80ch]"
-                                        style={{ gridArea: "summary" }}
-                                    >
-                                        {project.summary}
-                                    </p>
+                                      <p
+                                          className="text-base text-foreground-muted leading-tight sm:text-pretty max-w-[80ch]"
+                                          style={{ gridArea: "summary" }}
+                                      >
+                                          {project.summary}
+                                      </p>
 
-                                    <div
-                                        className="w-full flex items-center justify-start gap-x-4 gap-y-0 flex-wrap"
-                                        style={{
-                                            gridArea: "tags",
-                                        }}
-                                    >
-                                        {[...projectTags].map((tag) => {
-                                            if (tag.header === TagHeaderTypes.RESOLUTION) return null;
+                                      <div
+                                          className="w-full flex items-center justify-start gap-x-4 gap-y-0 flex-wrap"
+                                          style={{
+                                              gridArea: "tags",
+                                          }}
+                                      >
+                                          {[...projectTags].map((tag) => {
+                                              if (tag.header === TagHeaderTypes.RESOLUTION) return null;
 
-                                            return (
-                                                <span
-                                                    className="flex gap-1 items-center justify-center font-[400] text-foreground-extra-muted"
-                                                    key={tag.name}
-                                                >
-                                                    <CategoryIconWrapper name={tag.icon} />
-                                                    {CapitalizeAndFormatString(tag.name)}
-                                                </span>
-                                            );
-                                        })}
-                                        {[...projectLoaders].map((loader) => {
-                                            if (["RESOURCE_PACK", "DATAPACK"].includes(loader.name)) return null;
+                                              return (
+                                                  <span
+                                                      className="flex gap-1 items-center justify-center font-[400] text-foreground-extra-muted"
+                                                      key={tag.name}
+                                                  >
+                                                      <CategoryIconWrapper name={tag.icon} />
+                                                      {CapitalizeAndFormatString(tag.name)}
+                                                  </span>
+                                              );
+                                          })}
+                                          {[...projectLoaders].map((loader) => {
+                                              if (["RESOURCE_PACK", "DATAPACK"].includes(loader.name)) return null;
 
-                                            return (
-                                                <span
-                                                    className="flex gap-1 items-center justify-center font-[400] text-foreground-extra-muted"
-                                                    key={loader.name}
-                                                >
-                                                    <CategoryIconWrapper name={loader.icon} />
-                                                    {CapitalizeAndFormatString(loader.name)}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
+                                              return (
+                                                  <span
+                                                      className="flex gap-1 items-center justify-center font-[400] text-foreground-extra-muted"
+                                                      key={loader.name}
+                                                  >
+                                                      <CategoryIconWrapper name={loader.icon} />
+                                                      {CapitalizeAndFormatString(loader.name)}
+                                                  </span>
+                                              );
+                                          })}
+                                      </div>
 
-                                    <div
-                                        className="xl:ml-4"
-                                        style={{
-                                            gridArea: "stats",
-                                        }}
-                                    >
-                                        <div className="flex flex-col items-end justify-start gap-x-2 gap-y-1 dark:text-foreground-muted">
-                                            {/* <p>
+                                      <div
+                                          className="xl:ml-4"
+                                          style={{
+                                              gridArea: "stats",
+                                          }}
+                                      >
+                                          <div className="flex flex-col items-end justify-start gap-x-2 gap-y-1 dark:text-foreground-muted">
+                                              {/* <p>
                                                 <em className="not-italic font-semibold text-xl dark:text-foreground-muted">
                                                     {project.total_downloads}
                                                 </em>
                                             </p> */}
 
-                                            {searchParams.get("sortBy") === SearchResultSortTypes.RECENTLY_PUBLISHED ? (
-                                                <TooltipWrapper
-                                                    text={formatDate(new Date(project?.created_on), timestamp_template)}
-                                                    asChild={true}
-                                                >
-                                                    <Button
-                                                        variant={"link"}
-                                                        className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
-                                                        tabIndex={-1}
-                                                    >
-                                                        <CalendarIcon className="w-4 h-4 block" />
+                                              {searchParams.get("sortBy") ===
+                                              SearchResultSortTypes.RECENTLY_PUBLISHED ? (
+                                                  <TooltipWrapper
+                                                      text={formatDate(
+                                                          new Date(project?.created_on),
+                                                          timestamp_template,
+                                                      )}
+                                                      asChild={true}
+                                                  >
+                                                      <Button
+                                                          variant={"link"}
+                                                          className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
+                                                          tabIndex={-1}
+                                                      >
+                                                          <CalendarIcon className="w-4 h-4 block" />
 
-                                                        <span className="leading-none text-sm sm:text-base">
-                                                            Created{" "}
-                                                            {timeSince(
-                                                                new Date(project?.created_on),
-                                                                time_past_phrases,
-                                                            )}
-                                                        </span>
-                                                    </Button>
-                                                </TooltipWrapper>
-                                            ) : (
-                                                <TooltipWrapper
-                                                    text={formatDate(new Date(project?.updated_on), timestamp_template)}
-                                                    asChild={true}
-                                                >
-                                                    <Button
-                                                        variant={"link"}
-                                                        className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
-                                                        tabIndex={-1}
-                                                    >
-                                                        <UpdateIcon className="w-4 h-4 block" />
+                                                          <span className="leading-none text-sm sm:text-base">
+                                                              Created{" "}
+                                                              {timeSince(
+                                                                  new Date(project?.created_on),
+                                                                  time_past_phrases,
+                                                              )}
+                                                          </span>
+                                                      </Button>
+                                                  </TooltipWrapper>
+                                              ) : (
+                                                  <TooltipWrapper
+                                                      text={formatDate(
+                                                          new Date(project?.updated_on),
+                                                          timestamp_template,
+                                                      )}
+                                                      asChild={true}
+                                                  >
+                                                      <Button
+                                                          variant={"link"}
+                                                          className="flex items-center justify-center gap-1.5 no-underline decoration-transparent h-fit w-fit p-0"
+                                                          tabIndex={-1}
+                                                      >
+                                                          <UpdateIcon className="w-4 h-4 block" />
 
-                                                        <span className="leading-none text-sm sm:text-base">
-                                                            Updated{" "}
-                                                            {timeSince(
-                                                                new Date(project?.updated_on),
-                                                                time_past_phrases,
-                                                            )}
-                                                        </span>
-                                                    </Button>
-                                                </TooltipWrapper>
-                                            )}
-                                        </div>
-                                    </div>
-                                </ContentWrapperCard>
-                            );
-                        })}
+                                                          <span className="leading-none text-sm sm:text-base">
+                                                              Updated{" "}
+                                                              {timeSince(
+                                                                  new Date(project?.updated_on),
+                                                                  time_past_phrases,
+                                                              )}
+                                                          </span>
+                                                      </Button>
+                                                  </TooltipWrapper>
+                                              )}
+                                          </div>
+                                      </div>
+                                  </ContentWrapperCard>
+                              );
+                          })}
                 </>
 
-                {isLoadingInitialData || (!searchResults?.length && isFetchingData) ? (
+                {(!searchResults?.length && isFetchingData) || (isLoadingInitialData && isWrongSearchResultCache) ? (
                     <AbsolutePositionedSpinner
                         className="h-full"
                         backdropBgClassName="opacity-0"
@@ -720,7 +776,7 @@ const SearchPageContent = ({
 
                 {!searchResults?.length && !isFetchingData && (
                     <div className="w-full flex items-center justify-center py-12">
-                        <h3 className="text-xl text-foreground-muted">No results found!</h3>
+                        <h3 className="text-lg text-foreground-muted">No results found!</h3>
                     </div>
                 )}
 
