@@ -23,7 +23,13 @@ import { Projectcontext } from "@/src/providers/project-context";
 import { FileIcon } from "@radix-ui/react-icons";
 import { maxFileSize } from "@root/config";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@root/lib/utils";
+import {
+    CapitalizeAndFormatString,
+    createURLSafeSlug,
+    getProjectPagePathname,
+    getVersionPagePathname,
+    parseFileSize,
+} from "@root/lib/utils";
 import { ReleaseChannels } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -94,20 +100,19 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
             title: result?.message,
         });
 
-        navigate(`/${projectType}/${projectData?.url_slug}/version/${result?.newVersionUrlSlug}`);
-
+        navigate(getVersionPagePathname(projectType, projectData?.url_slug, result?.newVersionUrlSlug));
         await fetchAllProjectVersions();
     };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (isAProjectMember === false) {
-            return navigate(`/${projectType}/${projectUrlSlug}`, { replace: true });
+            return navigate(getProjectPagePathname(projectType, projectUrlSlug), { replace: true });
         }
     }, [isAProjectMember]);
 
     if (isAProjectMember === false) {
-        return <RedrectTo destinationUrl={`/${projectType}/${projectUrlSlug}`} />;
+        return <RedrectTo destinationUrl={getProjectPagePathname(projectType, projectUrlSlug)} />;
     }
 
     if (isAProjectMember === undefined) {
@@ -123,7 +128,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                             <BreadcrumbList className="flex items-center">
                                 <BreadcrumbItem>
                                     <BreadcrumbLink
-                                        href={`/${projectType}/${projectUrlSlug}/versions`}
+                                        href={`${getProjectPagePathname(projectType, projectUrlSlug)}/versions`}
                                         className=" text-base"
                                     >
                                         Versions
@@ -155,7 +160,10 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                                 <PlusIcon className="w-5 h-5" />
                                 Create
                             </Button>
-                            <Link to={`/${projectType}/${projectUrlSlug}/versions`} className=" rounded-lg">
+                            <Link
+                                to={`${getProjectPagePathname(projectType, projectUrlSlug)}/versions`}
+                                className=" rounded-lg"
+                            >
                                 <Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
                                     <CrossIcon className="w-4 h-4" />
                                     Cancel
@@ -185,7 +193,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 
                         <ContentWrapperCard className="w-full">
                             <div className="w-full flex flex-col items-start justify-center gap-1">
-                                <p className="font-semibold text-2xl">Files</p>
+                                <p className="font-semibold text-xl">Files</p>
                             </div>
 
                             <div className="w-full flex items-center justify-between py-3 px-6 flex-wrap gap-4 rounded-lg bg-bg-hover">
@@ -232,7 +240,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
 
                     <ContentWrapperCard className="h-fit min-w-[20rem]">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
-                            <p className="font-semibold text-2xl">Metadata</p>
+                            <p className="font-semibold text-xl">Metadata</p>
                         </div>
 
                         <div className="w-full flex flex-col">

@@ -15,13 +15,23 @@ export default function PaginatedNavigation({
     activePage,
     searchParamKey = "page",
     offsetMultiplier = 1,
-}: { pagesCount: number; activePage: number; searchParamKey?: string; offsetMultiplier?: number }) {
+    includeHashInURL,
+}: {
+    pagesCount: number;
+    activePage: number;
+    searchParamKey?: string;
+    offsetMultiplier?: number;
+    includeHashInURL?: boolean;
+}) {
     const generateLinkHref = (page: number) => {
         const currUrl = new URL(window.location.href);
         if (page === 1) currUrl.searchParams.delete(searchParamKey);
         else currUrl.searchParams.set(searchParamKey, (page * offsetMultiplier).toString());
 
-        return currUrl.toString().replace(window.location.origin, "");
+        return currUrl
+            .toString()
+            .replace(window.location.origin, "")
+            .replace(window.location.hash, includeHashInURL === true ? window.location.hash : "");
     };
 
     const pages = (() => {

@@ -88,9 +88,7 @@ export default function HomePage() {
                 <section className="hero_section w-full min-h-[720px] h-[100vh] max-h-[1080px] flex flex-col items-center justify-center container">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center">
-                        <h1 className="font-frijole text-2xl lg:text-4xl text-foreground text-center">
-                            Cosmic Reach Mod Manager
-                        </h1>
+                        <h1 className="text-2xl lg:text-4xl text-foreground text-center">Cosmic Reach Mod Manager</h1>
 
                         <h2 className="h-10 lg:h-14 mb-2 overflow-hidden">
                             <span className="hero_section_showcase flex flex-col items-center justify-center">

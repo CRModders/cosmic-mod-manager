@@ -9,8 +9,14 @@ import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { TooltipWrapper } from "@/src/settings/session/timestamp";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, createURLSafeSlug, formatDate, parseFileSize } from "@root/lib/utils";
-import { useContext, useEffect, useState } from "react";
+import {
+    CapitalizeAndFormatString,
+    formatDate,
+    getProjectPagePathname,
+    getVersionPagePathname,
+    parseFileSize,
+} from "@root/lib/utils";
+import { useContext, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -32,7 +38,7 @@ const VersionListPage = ({ projectType }: { projectType: string }) => {
                     <ContentWrapperCard>
                         <div className="w-full flex flex-wrap gap-4 items-center justify-start">
                             <Link
-                                to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}/version/create`}
+                                to={`${getProjectPagePathname(projectData?.type[0], projectData?.url_slug)}/version/create`}
                             >
                                 <Button className="gap-2" tabIndex={-1}>
                                     <UploadIcon className="w-4 h-4" />
@@ -60,8 +66,9 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
     const [urlSearchParams] = useSearchParams();
     const { allProjectVersions } = useContext(Projectcontext);
     const perPageLimit = 20;
+    const page = urlSearchParams.get(pageSearchParamKey) || "1";
     const pagesCount = Math.ceil((allProjectVersions?.versions.length || 0) / perPageLimit);
-    const [activePage, setActivePage] = useState(1);
+    const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
     const navigate = useNavigate();
 
     const Pagination =
@@ -69,11 +76,8 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
         ) : null;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        const page = urlSearchParams.get(pageSearchParamKey);
-        if (page) setActivePage(Number.parseInt(page) > pagesCount ? 1 : Number.parseInt(page));
-        else setActivePage(1);
+        console.log(urlSearchParams);
     }, [urlSearchParams]);
 
     return (
@@ -109,7 +113,11 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                     // @ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
                                                         navigate(
-                                                            `/${projectType}/${projectUrlSlug}/version/${version.url_slug}`,
+                                                            getVersionPagePathname(
+                                                                projectType,
+                                                                projectUrlSlug,
+                                                                version?.url_slug,
+                                                            ),
                                                         );
                                                     }
                                                 }}
@@ -139,7 +147,11 @@ const AllProjectVersionsList = ({ projectType, projectUrlSlug }: { projectType: 
                                                 <TableCell className="align-top">
                                                     <div className="w-full flex flex-col items-start justify-start dark:text-foreground-muted text-base leading-snug">
                                                         <Link
-                                                            to={`/${projectType}/${projectUrlSlug}/version/${version.url_slug}`}
+                                                            to={getVersionPagePathname(
+                                                                projectType,
+                                                                projectUrlSlug,
+                                                                version?.url_slug,
+                                                            )}
                                                             className="noClickRedirect"
                                                         >
                                                             <p className="font-bold ">{version.version_title}</p>

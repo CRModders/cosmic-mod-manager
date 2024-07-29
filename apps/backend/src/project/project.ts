@@ -79,8 +79,8 @@ projectRouter.post("/create-new-project", async (c) => {
         return c.json({
             message: "New project created successfully",
             data: {
-                projectUrl: project.url_slug,
-                projectType: project.type[0],
+                url_slug: project.url_slug,
+                type: project.type[0],
             },
         });
     } catch (error) {
@@ -312,7 +312,7 @@ projectRouter.post("/:projectSlug/update", async (c) => {
             message: "Project updated successfully",
             data: {
                 name: name,
-                url_slug: urlSafeUrlSlug.value,
+                url_slug: urlSafeUrlSlug,
                 summary: summary,
                 visibility: GetProjectVisibility(visibility),
             },

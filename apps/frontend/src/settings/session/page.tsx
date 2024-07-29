@@ -68,9 +68,7 @@ const Sessions = () => {
                     <CardContent className="w-full flex flex-col items-center justify-center gap-4 m-0 p-0">
                         <SessionListPageWrapper showWarning={showWarning} setShowWarning={setShowWarning}>
                             <div className="w-full flex flex-wrap gap-4 items-center justify-between">
-                                <h1 className="flex text-left text-2xl text-foreground-muted font-semibold">
-                                    Sessions
-                                </h1>
+                                <h1 className="flex text-left text-xl text-foreground-muted font-semibold">Sessions</h1>
                             </div>
                             <div className="w-full flex flex-col items-center justify-center text-foreground-muted">
                                 <p className="w-full text-left">

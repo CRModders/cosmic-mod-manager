@@ -50,7 +50,7 @@ const Overview = () => {
             <div className="w-full flex flex-wrap items-start justify-start gap-card-gap">
                 {/* Notifications */}
                 <ContentWrapperCard className="w-fit grow shrink flex">
-                    <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
+                    <h1 className="w-full flex items-center justify-start font-semibold text-xl text-foreground-muted">
                         Notifications
                     </h1>
                     <div className="w-full flex flex-col">
@@ -63,7 +63,7 @@ const Overview = () => {
                 </ContentWrapperCard>
 
                 <ContentWrapperCard className="shrink-0 w-full sm:w-64 flex flex-col gap-4">
-                    <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
+                    <h1 className="w-full flex items-center justify-start font-semibold text-xl text-foreground-muted">
                         Analytics
                     </h1>
 

@@ -339,3 +339,30 @@ export const isLoaderVisibleInVersionList = (loaderName: string) => {
 
     return false;
 };
+
+export const getProjectTypePathname = (projectType: string) => {
+    return `/${createURLSafeSlug(projectType).value.replaceAll("_", "-")}`;
+};
+
+export const getProjectPagePathname = (
+    projectType: string | undefined,
+    projectUrlSlug: string | undefined,
+    linkHash?: string,
+) => {
+    let path = `${getProjectTypePathname(projectType)}/${projectUrlSlug}`;
+    if (linkHash) path += `#${linkHash}`;
+
+    return path;
+};
+
+export const getVersionPagePathname = (
+    projectType: string | undefined,
+    projectUrlSlug: string | undefined,
+    versionUrlSlug: string | undefined,
+    linkHash?: string,
+) => {
+    let path = `${getProjectPagePathname(projectType, projectUrlSlug)}/version/${versionUrlSlug}`;
+    if (linkHash) path += `#${linkHash}`;
+
+    return path;
+};

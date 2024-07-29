@@ -117,7 +117,7 @@ const TagsSettingsPage = () => {
                     </Helmet>
 
                     <div className="w-full flex flex-col items-start justify-start gap-1">
-                        <h2 className="text-2xl font-semibold">Tags</h2>
+                        <h2 className="text-xl font-semibold">Tags</h2>
                         <p className=" text-foreground-muted">
                             Accurate tagging is important to help people find your mod. Make sure to select all tags
                             that apply.

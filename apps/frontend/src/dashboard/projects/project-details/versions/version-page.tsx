@@ -23,7 +23,7 @@ import NotFoundPage from "@/src/not-found";
 import { Projectcontext } from "@/src/providers/project-context";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { StarIcon } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, formatDate } from "@root/lib/utils";
+import { CapitalizeAndFormatString, formatDate, getProjectPagePathname, getVersionPagePathname } from "@root/lib/utils";
 import type { ProjectVersionData } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
@@ -75,7 +75,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
             title: result?.message,
         });
 
-        navigate(`/${projectType}/${projectUrlSlug}/versions`);
+        navigate(`${getProjectPagePathname(projectType, projectUrlSlug)}/versions`);
 
         if (versionData.data?.versions[0].is_featured === true) {
             await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions()]);
@@ -111,7 +111,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
     }
 
     return (
-        <div className="w-full flex flex-col gap-card-gap relative">
+        <div className="w-full flex flex-col gap-card-gap relative" id="version-details">
             <Helmet>
                 <title>{`${projectData?.name} ${versionData.data?.versions[0].version_number} | CRMM`}</title>
                 <meta name="description" content={projectData?.summary} />
@@ -125,7 +125,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                                 <BreadcrumbList className="flex items-center">
                                     <BreadcrumbItem>
                                         <BreadcrumbLink
-                                            href={`/${projectType}/${projectUrlSlug}/versions`}
+                                            href={`${getProjectPagePathname(projectType, projectUrlSlug)}/versions`}
                                             className="text-base"
                                         >
                                             Versions
@@ -175,7 +175,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                             {isAProjectMember === true && (
                                 <>
                                     <Link
-                                        to={`/${projectType}/${projectUrlSlug}/version/${versionData.data?.versions[0].url_slug}/edit`}
+                                        to={`${getVersionPagePathname(projectType, projectUrlSlug, versionData.data?.versions[0].url_slug)}/edit`}
                                     >
                                         <Button variant={"secondary"} className="gap-2" tabIndex={-1}>
                                             <EditIcon className="w-4 h-4" />
@@ -230,13 +230,13 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         <div className="w-full flex flex-col gap-card-gap">
                             {versionData.data?.versions[0]?.changelog?.length ? (
                                 <ContentWrapperCard className="w-full items-start flex-wrap">
-                                    <h1 className="text-foreground font-semibold text-2xl">Changelog</h1>
+                                    <h1 className="text-foreground font-semibold text-xl">Changelog</h1>
                                     <MarkdownRenderBox text={versionData.data?.versions[0]?.changelog} />
                                 </ContentWrapperCard>
                             ) : null}
 
                             <ContentWrapperCard className="items-start">
-                                <h1 className="text-foreground font-semibold text-2xl">Files</h1>
+                                <h1 className="text-foreground font-semibold text-xl">Files</h1>
                                 <div className="w-full flex flex-col gap-4">
                                     {versionData.data?.versions[0]?.files?.map((file) => {
                                         return (
@@ -306,7 +306,7 @@ export default function ProjectVersionPage({ projectType }: { projectType: strin
                         </div>
 
                         <ContentWrapperCard className="h-fit min-w-[20rem]">
-                            <h1 className="text-foreground font-semibold text-2xl">Metadata</h1>
+                            <h1 className="text-foreground font-semibold text-xl">Metadata</h1>
 
                             <div className="w-full flex flex-col gap-4">
                                 {[

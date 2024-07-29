@@ -11,7 +11,7 @@ export const ProjectTypes = [
     ProjectType.MOD,
     ProjectType.PLUGIN,
     ProjectType.MODPACK,
-    ProjectType.DATAPACK,
+    ProjectType.DATA_PACK,
     ProjectType.RESOURCE_PACK,
     ProjectType.SHADER,
 ];
@@ -92,8 +92,8 @@ export const Loaders: LoaderType[] = [
     },
     {
         icon: "",
-        name: "DATAPACK",
-        supported_project_types: [ProjectType.DATAPACK],
+        name: "DATA_PACK",
+        supported_project_types: [ProjectType.DATA_PACK],
         supported_fields: [LoaderSupportedFields.GAME_VERSIONS],
         metadata: {
             visible_in_version_list: false,
@@ -170,7 +170,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "adventure_icon",
         name: "adventure",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN, ProjectType.MODPACK],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN, ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -248,7 +248,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "cursed_icon",
         name: "cursed",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -260,13 +260,13 @@ export const Categories: CategoryType[] = [
     {
         icon: "decoration_icon",
         name: "decoration",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "economy_icon",
         name: "economy",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -290,7 +290,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "equipment_icon",
         name: "equipment",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -314,13 +314,13 @@ export const Categories: CategoryType[] = [
     {
         icon: "food_icon",
         name: "food",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "game-mechanics_icon",
         name: "game-mechanics",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -344,7 +344,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "library_icon",
         name: "library",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -368,25 +368,25 @@ export const Categories: CategoryType[] = [
     {
         icon: "magic_icon",
         name: "magic",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "management_icon",
         name: "management",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "minigame_icon",
         name: "minigame",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "mobs_icon",
         name: "mobs",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -410,7 +410,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "optimization_icon",
         name: "optimization",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -506,19 +506,19 @@ export const Categories: CategoryType[] = [
     {
         icon: "social_icon",
         name: "social",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "storage_icon",
         name: "storage",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         icon: "technology_icon",
         name: "technology",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -536,7 +536,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "transportation_icon",
         name: "transportation",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -554,7 +554,7 @@ export const Categories: CategoryType[] = [
     {
         icon: "utility_icon",
         name: "utility",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -572,12 +572,16 @@ export const Categories: CategoryType[] = [
     {
         icon: "worldgen_icon",
         name: "worldgen",
-        project_types: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        project_types: [ProjectType.MOD, ProjectType.DATA_PACK, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
 ];
 
 export const GameVersions = [
+    { version: "0.1.43", releaseType: ReleaseChannels.RELEASE },
+    { version: "0.1.42", releaseType: ReleaseChannels.RELEASE },
+    { version: "0.1.41", releaseType: ReleaseChannels.RELEASE },
+    { version: "0.1.40", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.39", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.38", releaseType: ReleaseChannels.RELEASE },
     { version: "0.1.37", releaseType: ReleaseChannels.RELEASE },

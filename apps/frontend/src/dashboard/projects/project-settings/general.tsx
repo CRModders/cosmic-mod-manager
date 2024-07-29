@@ -20,7 +20,12 @@ import useFetch from "@/src/hooks/fetch";
 import { Projectcontext } from "@/src/providers/project-context";
 import { Cross2Icon, CubeIcon } from "@radix-ui/react-icons";
 import { maxProjectSummaryLength } from "@root/config";
-import { CapitalizeAndFormatString, GetProjectVisibility, createURLSafeSlug } from "@root/lib/utils";
+import {
+    CapitalizeAndFormatString,
+    GetProjectVisibility,
+    createURLSafeSlug,
+    getProjectTypePathname,
+} from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -81,7 +86,7 @@ const GeneralProjectSettings = () => {
                     </Helmet>
 
                     <ContentWrapperCard className="w-full flex flex-col items-start justify-center gap-6">
-                        <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground">
+                        <h1 className="w-full flex items-center justify-start font-semibold text-xl text-foreground">
                             Project information
                         </h1>
 
@@ -125,7 +130,7 @@ const GeneralProjectSettings = () => {
                             </Label>
 
                             <InputWithInlineLabel
-                                label={`/${createURLSafeSlug(projectData?.type[0] || "").value}/`}
+                                label={`${getProjectTypePathname(projectData?.type[0] || "")}/`}
                                 wrapperClassName="place-items-baseline"
                                 id="settings-project-url-input"
                                 value={projectUrl}
@@ -239,7 +244,7 @@ const DeleteProjectCard = ({ projectName, projectUrlSlug }: { projectName: strin
 
     return (
         <ContentWrapperCard className="items-start gap-2">
-            <h2 className="font-semibold text-foreground text-2xl">Delete project</h2>
+            <h2 className="font-semibold text-foreground text-xl">Delete project</h2>
             <p className="text-foreground-muted">
                 Removes your project from our servers and search. Clicking on this will delete your project, so be extra
                 careful!

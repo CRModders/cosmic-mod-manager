@@ -31,8 +31,10 @@ import {
 } from "@radix-ui/react-icons";
 import {
     CapitalizeAndFormatString,
-    createURLSafeSlug,
     formatDate,
+    getProjectPagePathname,
+    getProjectTypePathname,
+    getVersionPagePathname,
     isLoaderVisibleInVersionList,
     parseFileSize,
     timeSince,
@@ -72,9 +74,10 @@ export default function ProjectDetailsLayout() {
                                     <div className="w-fit p-2 bg-background-shallow rounded-xl">
                                         <CubeIcon className="w-20 h-20 text-foreground-muted" />
                                     </div>
-                                    <h1 className="text-2xl font-semibold text-foreground">{projectData?.name}</h1>
+                                    <h1 className="text-xl font-semibold text-foreground">{projectData?.name}</h1>
                                     <Link
-                                        to={`/${createURLSafeSlug(projectData.type[0]).value}s`}
+                                        to={`${getProjectTypePathname(projectData.type[0])}s`}
+                                        // to={`/${createURLSafeSlug(projectData.type[0]).value}s`}
                                         className=" w-fit flex items-start justify-start gap-2 text-foreground-muted hover:underline hover:underline-offset-2"
                                     >
                                         <CubeIcon className="w-4 h-4 mt-0.5" />
@@ -152,7 +155,7 @@ export default function ProjectDetailsLayout() {
                                 <PublishingChecklist />
                             </Suspense>
                             <ProjectDetailsNav
-                                baseHref={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`}
+                                baseHref={getProjectPagePathname(projectData?.type[0], projectData?.url_slug)}
                                 user_id={session?.user_id}
                                 members_id_list={projectData?.members?.map((member) => member.user.id) || []}
                             />
@@ -274,7 +277,7 @@ const AdditionalProjectDetailsCard = ({
                             <div className="w-full flex items-center justify-between flex-wrap mb-3">
                                 <h2 className="text-lg font-semibold text-foreground">Featured versions</h2>
                                 <Link
-                                    to={`/${createURLSafeSlug(projectData?.type[0]).value}/${projectData?.url_slug}/versions#all-versions`}
+                                    to={`${getProjectPagePathname(projectData?.type[0], projectData?.url_slug)}/versions#all-versions`}
                                     className="text-blue-500 dark:text-blue-400 flex items-center justify-center gap-1 hover:underline underline-offset-2"
                                 >
                                     <span>See all</span>
@@ -294,11 +297,13 @@ const AdditionalProjectDetailsCard = ({
                                                 // @ts-expect-error
                                                 !e.target.closest(".versionPageLink")
                                             ) {
-                                                const link = `/${createURLSafeSlug(projectData?.type[0] || "").value}/${
-                                                    projectData?.url_slug
-                                                }/version/${version.url_slug}`;
+                                                const link = getVersionPagePathname(
+                                                    projectData?.type?.[0],
+                                                    projectData?.url_slug,
+                                                    version?.url_slug,
+                                                );
                                                 if (window.location.pathname !== link) {
-                                                    window.scrollTo({ top: 0 });
+                                                    // window.scrollTo({ top: 0 });
                                                     navigate(link);
                                                 }
                                             }
@@ -310,7 +315,7 @@ const AdditionalProjectDetailsCard = ({
                                         >
                                             <a
                                                 href={`${serverUrl}/api/file/${encodeURIComponent(version.files[0].file_url)}`}
-                                                className="versionFileDownloadLink mt-0.5 ml-0.5"
+                                                className="versionFileDownloadLink mt-[0.1rem] ml-[0.1rem]"
                                                 aria-label={`Download ${version.files[0].file_name}`}
                                             >
                                                 <Button
@@ -325,12 +330,14 @@ const AdditionalProjectDetailsCard = ({
 
                                         <div className="flex w-fit h-full grow flex-col select-text text-base dark:text-foreground-muted">
                                             <Link
-                                                to={`/${createURLSafeSlug(projectData?.type[0] || "").value}/${
-                                                    projectData?.url_slug
-                                                }/version/${version.url_slug}`}
+                                                to={getVersionPagePathname(
+                                                    projectData?.type?.[0],
+                                                    projectData?.url_slug,
+                                                    version?.url_slug,
+                                                )}
                                                 className="versionPageLink w-fit"
                                             >
-                                                <p className="font-semibold leading-tight">{version.version_title}</p>
+                                                <p className="font-semibold leading-none">{version.version_title}</p>
                                             </Link>
                                             <p className="text-pretty">
                                                 {`${version.supported_loaders.map((loader) => (isLoaderVisibleInVersionList(loader) ? CapitalizeAndFormatString(loader) : null)).join(", ")} ${FormatVersionsList(version.supported_game_versions)}`}

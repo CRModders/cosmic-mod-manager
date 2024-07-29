@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .markdown-body {
-    @apply text-foreground-muted text-base;
+    @apply text-foreground/90 dark:text-foreground text-base;
 }
 
 .markdown-body h1:first-child {
@@ -64,15 +64,17 @@
 }
 
 .markdown-body h1 {
-    @apply text-3xl mb-5;
+    margin-bottom: 1.25rem;
+    font-size: 2rem;
 }
 
 .markdown-body h2 {
-    @apply text-2xl mb-4;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
 }
 
 .markdown-body h3 {
-    @apply text-xl;
+    font-size: 1.35rem;
 }
 
 
@@ -120,7 +122,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body code {
-    @apply max-w-full py-1 px-2 text-[90%] rounded-lg bg-background-shallow/50 dark:bg-background-shallow font-mono;
+    @apply max-w-full py-0.5 px-2 text-[90%] rounded-lg bg-background-shallow/50 dark:bg-background-shallow font-mono;
 }
 
 .markdown-body hr {
@@ -218,7 +220,7 @@ code.hljs {
   */
 .hljs {
     color: #383a42;
-    background: #fafafa
+    background: #FBFCFF
 }
 
 .hljs-comment,

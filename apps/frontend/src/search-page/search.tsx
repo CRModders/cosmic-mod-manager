@@ -7,6 +7,7 @@ import {
     createURLSafeSlug,
     formatDate,
     GetProjectLoadersDataFromName,
+    getProjectPagePathname,
     GetProjectTagsFromNames,
     timeSince,
 } from "@root/lib/utils";
@@ -553,6 +554,9 @@ const SearchPageContent = ({
                             <Input
                                 id="searchpage-query-input"
                                 value={searchQuery}
+                                spellCheck={false}
+                                autoCorrect={"false"}
+                                autoComplete={"false"}
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
                                 }}
@@ -620,7 +624,7 @@ const SearchPageContent = ({
                                       className="searchItemWrapperGrid grid gap-x-3 gap-y-2 rounded-xl"
                                   >
                                       <Link
-                                          to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
+                                          to={getProjectPagePathname(project.type[0], project.url_slug)}
                                           className="flex relative items-center justify-center bg-background-shallow dark:bg-background-shallower/55 rounded-2xl size-24 mr-1 overflow-hidden"
                                           style={{
                                               gridArea: "icon",
@@ -642,8 +646,8 @@ const SearchPageContent = ({
                                           className="flex flex-wrap gap-2 items-baseline justify-start"
                                           style={{ gridArea: "title" }}
                                       >
-                                          <Link to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}>
-                                              <h2 className="text-2xl font-semibold leading-none break-words sm:text-wrap">
+                                          <Link to={getProjectPagePathname(project.type[0], project.url_slug)}>
+                                              <h2 className="text-xl font-semibold leading-none break-words sm:text-wrap">
                                                   {project.name}
                                               </h2>
                                           </Link>

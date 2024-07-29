@@ -23,7 +23,12 @@ import { useIsUseAProjectMember } from "@/src/hooks/project-member";
 import { Projectcontext } from "@/src/providers/project-context";
 import { Cross1Icon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { GameVersions, Loaders, ReleaseChannelsList } from "@root/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
+import {
+    CapitalizeAndFormatString,
+    createURLSafeSlug,
+    getProjectPagePathname,
+    getVersionPagePathname,
+} from "@root/lib/utils";
 import type { ProjectVersionData } from "@root/types";
 import { ReleaseChannels } from "@root/types";
 import { useQuery } from "@tanstack/react-query";
@@ -127,13 +132,13 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
         toast({
             title: result?.message,
         });
-        navigate(`/${projectType}/${projectData?.url_slug}/version/${result?.data?.url_slug}`);
+        navigate(getVersionPagePathname(projectType, projectData?.url_slug, result?.data?.url_slug));
     };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (isAProjectMember === false) {
-            return navigate(`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`, { replace: true });
+            return navigate(getVersionPagePathname(projectType, projectUrlSlug, versionUrlSlug), { replace: true });
         }
     }, [isAProjectMember]);
 
@@ -180,7 +185,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             <BreadcrumbList className="flex items-center">
                                 <BreadcrumbItem>
                                     <BreadcrumbLink
-                                        href={`/${projectType}/${projectUrlSlug}/versions`}
+                                        href={`${getProjectPagePathname(projectType, projectUrlSlug)}/versions`}
                                         className="text-base"
                                     >
                                         Versions
@@ -231,7 +236,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                             </Button>
 
                             <Link
-                                to={`/${projectType}/${projectUrlSlug}/version/${versionUrlSlug}`}
+                                to={getVersionPagePathname(projectType, projectUrlSlug, versionUrlSlug)}
                                 className="rounded-lg"
                             >
                                 <Button className="gap-2" variant={"secondary"} disabled={loading} tabIndex={-1}>
@@ -258,7 +263,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
                         <ContentWrapperCard className="w-full h-fit">
                             <div className="w-full flex flex-col items-start justify-center gap-1">
-                                <p className="font-semibold text-2xl">Files</p>
+                                <p className="font-semibold text-xl">Files</p>
                             </div>
 
                             {versionData.data?.versions[0].files[0].id &&
@@ -290,7 +295,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
 
                     <ContentWrapperCard className="h-fit min-w-[20rem]">
                         <div className="w-full flex flex-col items-start justify-center gap-1">
-                            <p className="font-semibold text-2xl">Metadata</p>
+                            <p className="font-semibold text-xl">Metadata</p>
                         </div>
 
                         <div className="w-full flex flex-col">

@@ -11,7 +11,7 @@ const ReportsPage = () => {
 
             {/* Profile overview */}
             <ContentWrapperCard>
-                <h1 className="w-full flex items-center justify-start font-semibold text-2xl text-foreground-muted">
+                <h1 className="w-full flex items-center justify-start font-semibold text-xl text-foreground-muted">
                     Reports
                 </h1>
                 <div className="w-full flex">

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatProjectTypes } from "@/lib/utils";
 import { CubeIcon } from "@radix-ui/react-icons";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
+import { CapitalizeAndFormatString, getProjectPagePathname } from "@root/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import type { ProjectData } from "./projects";
 
@@ -42,14 +42,14 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {
-                                        navigate(`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`);
+                                        navigate(getProjectPagePathname(project.type[0], project.url_slug));
                                     }
                                 }}
                             >
                                 <TableCell>
                                     <Link
                                         tabIndex={-1}
-                                        to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
+                                        to={getProjectPagePathname(project.type[0], project.url_slug)}
                                         className="noClickRedirect ml-4 flex w-fit h-full aspect-square p-2 rounded-lg bg-background-shallow"
                                     >
                                         <CubeIcon className="w-8 h-8 text-foreground/50" />
@@ -57,7 +57,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                 </TableCell>
                                 <TableCell>
                                     <Link
-                                        to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}`}
+                                        to={getProjectPagePathname(project.type[0], project.url_slug)}
                                         className="noClickRedirect"
                                     >
                                         <Button
@@ -84,7 +84,7 @@ export default function ProjectListTable({ projectsList }: { projectsList: Proje
                                 <TableCell className="cursor-default">
                                     <div className="flex items-center justify-center pr-4">
                                         <Link
-                                            to={`/${createURLSafeSlug(project.type[0]).value}/${project.url_slug}/settings`}
+                                            to={`${getProjectPagePathname(project.type[0], project.url_slug)}/settings`}
                                             className="noClickRedirect rounded-lg flex items-center justify-center h-full w-fit text-foreground-muted"
                                         >
                                             <GearIcon size="2.25rem" className="hover:bg-background rounded-lg p-2" />

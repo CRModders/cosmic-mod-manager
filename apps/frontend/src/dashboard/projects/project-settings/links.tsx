@@ -67,7 +67,7 @@ const ProjectLinksSettings = () => {
             </Helmet>
 
             <ContentWrapperCard className="relative">
-                <h2 className=" text-2xl font-semibold">External links</h2>
+                <h2 className=" text-xl font-semibold">Links</h2>
                 <div className="w-full flex-col flex gap-4">
                     <div className="w-full flex flex-col items-start md:flex-row md:items-center justify-between gap-x-4 gap-y-2">
                         <div className="flex flex-col">

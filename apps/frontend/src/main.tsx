@@ -18,7 +18,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import DashboardPageLayout from "@/src/dashboard/layout";
 import ProjectDetailsLayout from "@/src/dashboard/projects/project-details/layout";
 import ProjectSettingsLayout from "@/src/dashboard/projects/project-settings/layout";
-import { createURLSafeSlug } from "@root/lib/utils";
+import { getProjectTypePathname } from "@root/lib/utils";
 
 const SignupPage = lazy(() => import("@/src/(auth)/signup/page"));
 const LoginPage = lazy(() => import("@/src/(auth)/login/page"));
@@ -198,10 +198,10 @@ const projectRoute = (project_type: string) => {
 };
 
 const getProjectPageRoutes = () => {
-    const routePaths = ["project", ...ProjectTypes.map((project_type) => createURLSafeSlug(project_type).value)];
-    const projectRouteType = projectRoute("a");
-    const list: (typeof projectRouteType)[] = [];
-    for (const project_type of routePaths) {
+    const projectTypeRoutes = [...ProjectTypes.map((project_type) => getProjectTypePathname(project_type).slice(1))];
+    const projectRoute_1 = projectRoute("project");
+    const list: (typeof projectRoute_1)[] = [projectRoute_1];
+    for (const project_type of projectTypeRoutes) {
         list.push(projectRoute(project_type));
     }
 
@@ -212,7 +212,7 @@ const getSearchPageRoutes = () => {
     const routes = [];
     for (const project_type of ProjectTypes) {
         routes.push({
-            path: `${createURLSafeSlug(project_type).value}s`,
+            path: `${getProjectTypePathname(project_type).slice(1)}s`,
             element: (
                 <Suspense
                     fallback={

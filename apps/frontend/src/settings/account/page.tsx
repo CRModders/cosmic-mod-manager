@@ -70,7 +70,7 @@ const AccountSettingsPage = () => {
             <div className="w-full flex flex-col items-center justify-start pb-8 gap-card-gap">
                 <ContentWrapperCard>
                     <div className="w-full flex flex-wrap gap-4 items-center justify-between">
-                        <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">User profile</h2>
+                        <h2 className="flex text-left text-xl font-semibold text-foreground-muted">User profile</h2>
                         <div className="flex h-full items-center justify-center">
                             <EditProfileDialog
                                 name={session?.name || ""}
@@ -81,42 +81,31 @@ const AccountSettingsPage = () => {
                             />
                         </div>
                     </div>
-                    <div className="w-full flex flex-col items-center justify-center my-2">
-                        <div className="w-full flex flex-wrap items-center justify-start gap-6">
-                            <div className="flex grow sm:grow-0 items-center justify-center">
-                                {session?.avatar_image ? (
-                                    <img
-                                        src={session?.avatar_image}
-                                        alt={`${session?.user_name} `}
-                                        className="h-24 aspect-square rounded-full bg-bg-hover"
-                                    />
-                                ) : (
-                                    <span>{session?.name[0]}</span>
-                                )}
-                            </div>
-                            <div className="grow max-w-full flex flex-col items-start justify-center">
-                                <h1 className="flex w-full items-center sm:justify-start justify-center text-2xl font-semibold">
-                                    {session?.name}
-                                </h1>
-                                <ScrollArea className="w-full">
-                                    <p className="text-foreground text-base py-1">
-                                        <span role="img" aria-hidden className="text-foreground/50 select-none">
-                                            @
-                                        </span>
-                                        {session?.user_name}
-                                    </p>
-                                    <ScrollBar orientation="horizontal" />
-                                </ScrollArea>
-                            </div>
+
+                    <div className="w-full flex items-center justify-start flex-wrap gap-6">
+                        <div className="flex items-center justify-center aspect-square h-28 rounded-full bg-background-shallow overflow-hidden">
+                            {session?.avatar_image ? (
+                                <img src={session?.avatar_image} alt={`${session?.user_name} `} className="w-full" />
+                            ) : (
+                                <span aria-hidden role="img" className="text-3xl font-semibold text-foreground/50">
+                                    {session?.name[0]}
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col items-start justify-center">
+                            <h1 className="text-xl font-semibold">{session?.name}</h1>
+                            <p className="text-foreground">
+                                <span className="text-foreground/50"> @</span>
+                                {session?.user_name}
+                            </p>
                         </div>
                     </div>
                 </ContentWrapperCard>
 
                 <ContentWrapperCard>
                     <div className="w-full flex flex-wrap gap-4 items-center justify-between">
-                        <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">
-                            Account security
-                        </h2>
+                        <h2 className="flex text-left text-xl font-semibold text-foreground-muted">Account security</h2>
                     </div>
 
                     <div className="w-full flex flex-col items-center justify-center my-2 gap-8 sm:gap-6">
@@ -156,7 +145,7 @@ const AccountSettingsPage = () => {
 
                 <ContentWrapperCard>
                     <div className="w-full flex flex-wrap gap-4 items-center justify-between">
-                        <h2 className="flex text-left text-2xl font-semibold text-foreground-muted">Delete account</h2>
+                        <h2 className="flex text-left text-xl font-semibold text-foreground-muted">Delete account</h2>
                     </div>
                     <DeleteAccountSection />
                 </ContentWrapperCard>

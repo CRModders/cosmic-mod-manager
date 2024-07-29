@@ -47,7 +47,7 @@ const ProjectDescriptSettingsPage = () => {
                         <meta name="description" content="Your projects on crmm." />
                     </Helmet>
 
-                    <h2 className="text-2xl font-semibold">Description</h2>
+                    <h2 className="text-xl font-semibold">Description</h2>
                     <MarkdownEditor
                         editorValue={description}
                         setEditorValue={setDescription}

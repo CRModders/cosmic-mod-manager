@@ -453,7 +453,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                     <Textarea
                         placeholder={placeholder}
                         className={cn(
-                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/95 focus-within:!bg-background-shallow/10",
+                            "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/85 dark:text-foreground/95 focus-within:!bg-background-shallow/10",
                             wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
                         )}
                         ref={editorTextarea}

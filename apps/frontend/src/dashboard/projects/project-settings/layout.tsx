@@ -24,7 +24,7 @@ import NotFoundPage from "@/src/not-found";
 import { AuthContext } from "@/src/providers/auth-provider";
 import { Projectcontext } from "@/src/providers/project-context";
 import { CubeIcon } from "@radix-ui/react-icons";
-import { createURLSafeSlug } from "@root/lib/utils";
+import { getProjectPagePathname } from "@root/lib/utils";
 import React, { Suspense, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
@@ -41,7 +41,7 @@ export function ProjectSettingsLayoutContent({
 
     useEffect(() => {
         if (projectData?.url_slug) {
-            setBaseUrl(`/${createURLSafeSlug(projectData?.type[0] || "").value}/${projectData?.url_slug}`);
+            setBaseUrl(getProjectPagePathname(projectData?.type[0], projectData?.url_slug));
         }
     }, [projectData]);
 
@@ -50,14 +50,14 @@ export function ProjectSettingsLayoutContent({
         if (session === undefined) return;
 
         if (!session?.user_id) {
-            return navigate(`/${projectType}/${projectUrlSlug}`);
+            return navigate(getProjectPagePathname(projectType, projectUrlSlug));
         }
 
         if (session?.user_id && projectData?.members) {
             for (const member of projectData.members) {
                 if (member?.user?.id === session.user_id) return;
             }
-            return navigate(`/${projectType}/${projectUrlSlug}`);
+            return navigate(getProjectPagePathname(projectType, projectUrlSlug));
         }
     }, [session, projectData]);
 
@@ -80,7 +80,10 @@ export function ProjectSettingsLayoutContent({
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
                                             <BreadcrumbLink
-                                                href={`/${createURLSafeSlug(projectData.type[0]).value}/${projectData.url_slug}`}
+                                                href={getProjectPagePathname(
+                                                    projectData?.type[0],
+                                                    projectData?.url_slug,
+                                                )}
                                             >
                                                 {projectData?.name}
                                             </BreadcrumbLink>

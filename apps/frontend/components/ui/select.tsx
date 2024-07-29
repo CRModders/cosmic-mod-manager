@@ -18,7 +18,7 @@ const SelectTrigger = React.forwardRef<
     <SelectPrimitive.Trigger
         ref={ref}
         className={cn(
-            "input_box_styles flex h-10 items-center justify-between whitespace-nowrap font-[500] text-foreground/85 dark:text-foreground/75 px-3 py-2 text-base [&>span]:line-clamp-1",
+            "input_box_styles flex h-10 items-center justify-between whitespace-nowrap font-[500] text-foreground/85 px-3 py-2 text-base [&>span]:line-clamp-1",
             className,
         )}
         {...props}

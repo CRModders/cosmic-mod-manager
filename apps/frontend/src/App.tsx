@@ -4,6 +4,7 @@ import "@/src/globals.css";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 import Providers from "./providers";
+import ScrollToHashElement from "@/components/scroll-to-hash-elem";
 
 export default function RootLayout() {
     return (
@@ -19,6 +20,7 @@ export default function RootLayout() {
                 <Outlet />
             </main>
             <Toaster />
+            <ScrollToHashElement />
         </Providers>
     );
 }

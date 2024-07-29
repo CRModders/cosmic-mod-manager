@@ -100,7 +100,7 @@ const LicenseSettingsPage = () => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)} className="relative">
                     <ContentWrapperCard>
-                        <h2 className="text-2xl font-semibold">License</h2>
+                        <h2 className="text-xl font-semibold">License</h2>
                         <div className="w-full flex flex-col xl:flex-row items-start justify-between gap-4">
                             <p className="text-foreground-muted text-pretty">
                                 It is very important to choose a proper license for your{" "}

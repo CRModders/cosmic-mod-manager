@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
     content: ["./components/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}", "./index.html"],
@@ -47,9 +46,10 @@ module.exports = {
             },
             fontSize: {
                 sm: "0.85rem",
-                base: "1rem",
-                lg: "1.2rem",
-                xl: "1.4rem",
+                base: "0.975rem",
+                lg: "1.25rem",
+                xl: "1.625rem",
+                "2xl": "2.15rem",
             },
             gap: {
                 "card-gap": "0.75rem",

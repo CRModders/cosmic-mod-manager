@@ -11,7 +11,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { maxProjectNameLength, maxProjectSummaryLength, minProjectNameLength } from "@root/config";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@root/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug, getProjectPagePathname } from "@root/lib/utils";
 import { ProjectVisibility } from "@root/types";
 import type React from "react";
 import { useState } from "react";
@@ -83,7 +83,7 @@ const CreateProjectForm = ({ children, fetchProjects }: Props) => {
         setDialogOpen(false);
         await fetchProjects();
 
-        navigate(`/${createURLSafeSlug(result?.data?.projectType).value}/${result?.data?.projectUrl}`);
+        navigate(getProjectPagePathname(result?.data?.type, result?.data?.url_slug));
     };
 
     return (
