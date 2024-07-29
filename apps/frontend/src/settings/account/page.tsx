@@ -1,6 +1,5 @@
 import { ContentWrapperCard } from "@/components/panel-layout";
 import { Input } from "@/components/ui/input";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { AuthContext } from "@/src/providers/auth-provider";

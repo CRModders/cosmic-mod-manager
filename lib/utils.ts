@@ -1,8 +1,8 @@
 import {
     Categories,
     type CategoryType,
-    Loaders,
     type LoaderType,
+    Loaders,
     ProjectTypes,
     ProjectVisibilityOptions,
     ReleaseChannelsList,
@@ -349,7 +349,7 @@ export const getProjectPagePathname = (
     projectUrlSlug: string | undefined,
     linkHash?: string,
 ) => {
-    let path = `${getProjectTypePathname(projectType)}/${projectUrlSlug}`;
+    let path = `${getProjectTypePathname(projectType || "")}/${projectUrlSlug}`;
     if (linkHash) path += `#${linkHash}`;
 
     return path;
