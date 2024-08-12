@@ -28,9 +28,12 @@ export function MultiSelectInput({ inputPlaceholder, initialSelected, input_id, 
     };
 
     const AddItemToSelectedList = (item: string) => {
-        if (!selectedItems.includes(item)) {
-            setSelectedItems((prev) => [...prev, item]);
-        }
+        setSelectedItems((prev) => {
+            if (!prev.includes(item)) {
+                return [...prev, item];
+            }
+            return prev;
+        });
     };
 
     const RemoveItemFromSelectedList = (item: string) => {

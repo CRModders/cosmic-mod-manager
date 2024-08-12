@@ -98,8 +98,8 @@ export const formatDate = (
     }
 };
 
-export function createURLSafeSlug(slug: string) {
-    const allowedURLCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`!@$()-_.,"';
+export function createURLSafeSlug(slug: string, extraChars?: string) {
+    const allowedURLCharacters = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\`!@$()-_.,"${extraChars || ""}`;
 
     const result = {
         validInput: false,
@@ -111,7 +111,7 @@ export function createURLSafeSlug(slug: string) {
             result.value += char;
         }
     }
-
+    result.validInput = result.value === slug;
     return result;
 }
 

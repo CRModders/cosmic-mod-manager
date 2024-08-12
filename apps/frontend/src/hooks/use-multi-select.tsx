@@ -9,7 +9,6 @@ const useMultiSelect = ({ options }: Props) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (!searchTerm && selectedItems.length === 0) setVisibleList(options);
 
@@ -34,7 +33,7 @@ const useMultiSelect = ({ options }: Props) => {
         } else {
             setVisibleList(listWithoutSelectedItems);
         }
-    }, [searchTerm, selectedItems]);
+    }, [searchTerm, selectedItems, options]);
 
     return {
         visibleList,

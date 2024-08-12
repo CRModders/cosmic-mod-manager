@@ -9,7 +9,7 @@
     "start": "bunx prisma generate && bun run src/index.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.16.2",
+    "@prisma/client": "^5.18.0",
     "fuse.js": "^7.0.0",
     "hono": "^4.3.7",
     "meilisearch": "^0.40.0",
@@ -19,6 +19,6 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/nodemailer": "^6.4.15",
-    "prisma": "^5.16.2"
+    "prisma": "^5.18.0"
   }
 }

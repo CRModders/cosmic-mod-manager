@@ -1,5 +1,5 @@
 import FileDetails from "@/components/file-details";
-import { ChevronRightIcon, SaveIcon, HashIcon } from "@/components/icons";
+import { ChevronRightIcon, HashIcon, SaveIcon } from "@/components/icons";
 import MarkdownEditor from "@/components/markdown-editor";
 import { ContentWrapperCard } from "@/components/panel-layout";
 import {
@@ -11,6 +11,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { LabelledCheckBox } from "@/components/ui/checkbox";
 import { Input, InputWithInlineLabel } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
@@ -46,9 +47,19 @@ const getVersionData = async (projectUrlSlug: string, versionUrlSlug: string) =>
     }
 };
 
+const getAllVisibleGameVersions = (showAllVersions: boolean) => {
+    const list = [];
+    for (const version of GameVersions) {
+        if (showAllVersions || version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
+    }
+    return list;
+};
+
 const EditVersionPage = ({ projectType }: { projectType: string }) => {
     const { projectUrlSlug, versionUrlSlug } = useParams();
     const [pageInitialized, setPageInitialized] = useState(false);
+    const [showAllVersions, setShowAllVersions] = useState(true);
+    const [visibleGameVersions, setvisibleGameVersions] = useState(getAllVisibleGameVersions(showAllVersions));
 
     const { projectData, fetchFeaturedProjectVersions, fetchAllProjectVersions, fetchProjectData } =
         useContext(Projectcontext);
@@ -98,7 +109,7 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
         if (!supportedGameVersions?.length)
             return toast({ title: "Supported game versions is required", variant: "destructive" });
 
-        if (createURLSafeSlug(versionNumber).value !== versionNumber) {
+        if (createURLSafeSlug(versionNumber, "+").value !== versionNumber) {
             return toast({
                 title: "Version number must be a URL safe string",
                 variant: "destructive",
@@ -167,6 +178,10 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
     useEffect(() => {
         setLoading(versionData.isLoading);
     }, [versionData.isLoading]);
+
+    useEffect(() => {
+        setvisibleGameVersions(getAllVisibleGameVersions(showAllVersions));
+    }, [showAllVersions]);
 
     if (isAProjectMember === false) {
         return null;
@@ -354,17 +369,20 @@ const EditVersionPage = ({ projectType }: { projectType: string }) => {
                         <div className="w-full flex flex-col">
                             <Label className="font-semibold text-foreground text-lg">Game versions</Label>
                             <MultiSelectInput
-                                options={(() => {
-                                    const list = [];
-                                    for (const version of GameVersions) {
-                                        if (version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
-                                    }
-                                    return list;
-                                })()}
+                                options={visibleGameVersions}
                                 inputPlaceholder="Choose versions.."
                                 input_id={"supported-game-version-filter-input"}
                                 initialSelected={supportedGameVersions?.map((val) => val)}
                                 setSelectedValues={setSupportedGameVersions}
+                            />
+                            <LabelledCheckBox
+                                checked={showAllVersions}
+                                onCheckedChange={(value) => {
+                                    setShowAllVersions(value === true);
+                                }}
+                                checkBoxId="show-all-versions-checkbox"
+                                label="Show all versions"
+                                className="mt-2"
                             />
                         </div>
                     </ContentWrapperCard>

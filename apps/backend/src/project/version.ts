@@ -8,7 +8,7 @@ import {
     createURLSafeSlug,
     parseFileSize,
 } from "@root/lib/utils";
-import { MemberPermissionsInProject, ProjectType, ProjectVisibility, UserRolesInProject } from "@root/types";
+import { MemberPermissionsInProject, ProjectVisibility, UserRolesInProject } from "@root/types";
 import { Hono } from "hono";
 import { getUserSession } from "../helpers/auth";
 import { InferProjectTypeFromLoaders } from "../helpers/project";
@@ -215,7 +215,7 @@ versionRouter.post("/:versionSlug/update", async (c) => {
         if (!supportedGameVersions?.length) return c.json({ message: "Supported game versions is required" }, 400);
         if (!releaseChannel) return c.json({ message: "Release channel is required" }, 400);
 
-        if (createURLSafeSlug(versionNumber).value !== versionNumber.toLowerCase()) {
+        if (createURLSafeSlug(versionNumber, "+").value !== versionNumber.toLowerCase()) {
             return c.json({ message: "Version number must be a URL safe string" }, 400);
         }
 
@@ -427,10 +427,10 @@ versionRouter.post("/create", async (c) => {
             );
         }
 
-        if (createURLSafeSlug(versionNumber).value !== versionNumber) {
+        if (createURLSafeSlug(versionNumber, "+").value !== versionNumber) {
             return c.json(
                 {
-                    message: "Version number should be a url safe string",
+                    message: "Version number must be a url safe string",
                 },
                 400,
             );

@@ -11,6 +11,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { LabelledCheckBox } from "@/components/ui/checkbox";
 import { Input, InputWithInlineLabel } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelectInput } from "@/components/ui/multi-select";
@@ -34,11 +35,21 @@ import { ReleaseChannels } from "@root/types";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+const getAllVisibleGameVersions = (showAllVersions: boolean) => {
+    const list = [];
+    for (const version of GameVersions) {
+        if (showAllVersions || version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
+    }
+    return list;
+};
+
 const CreateVersionPage = ({ projectType }: { projectType: string }) => {
     const { projectUrlSlug } = useParams();
     const { projectData, fetchAllProjectVersions } = useContext(Projectcontext);
     const [loading, setLoading] = useState(false);
     const isAProjectMember = useIsUseAProjectMember();
+    const [showAllVersions, setShowAllVersions] = useState(true);
+    const [visibleGameVersions, setvisibleGameVersions] = useState(getAllVisibleGameVersions(showAllVersions));
     const navigate = useNavigate();
 
     // Formdata
@@ -65,7 +76,7 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
             });
         }
 
-        if (createURLSafeSlug(versionNumber).value !== versionNumber) {
+        if (createURLSafeSlug(versionNumber, "+").value !== versionNumber) {
             return toast({
                 title: "Version number must be a URL safe string",
                 variant: "destructive",
@@ -110,6 +121,10 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
             return navigate(getProjectPagePathname(projectType, projectUrlSlug), { replace: true });
         }
     }, [isAProjectMember]);
+
+    useEffect(() => {
+        setvisibleGameVersions(getAllVisibleGameVersions(showAllVersions));
+    }, [showAllVersions]);
 
     if (isAProjectMember === false) {
         return <RedrectTo destinationUrl={getProjectPagePathname(projectType, projectUrlSlug)} />;
@@ -299,16 +314,19 @@ const CreateVersionPage = ({ projectType }: { projectType: string }) => {
                         <div className="w-full flex flex-col">
                             <Label className="font-semibold text-foreground text-lg">Game versions</Label>
                             <MultiSelectInput
-                                options={(() => {
-                                    const list = [];
-                                    for (const version of GameVersions) {
-                                        if (version.releaseType === ReleaseChannels.RELEASE) list.push(version.version);
-                                    }
-                                    return list;
-                                })()}
+                                options={visibleGameVersions}
                                 inputPlaceholder="Choose versions.."
                                 input_id={"supported-game-version-filter-input"}
                                 setSelectedValues={setSupportedGameVersions}
+                            />
+                            <LabelledCheckBox
+                                checked={showAllVersions}
+                                onCheckedChange={(value) => {
+                                    setShowAllVersions(value === true);
+                                }}
+                                checkBoxId="show-all-versions-checkbox"
+                                label="Show all versions"
+                                className="mt-2"
                             />
                         </div>
                     </ContentWrapperCard>
