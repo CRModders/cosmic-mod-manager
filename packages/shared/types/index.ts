@@ -1,0 +1,154 @@
+export enum AuthProviders {
+    GITHUB = "github",
+    GITLAB = "gitlab",
+    DISCORD = "discord",
+    GOOGLE = "google",
+    CREDENTIAL = "credential",
+    UNKNOWN = "unknown",
+}
+
+export enum GlobalUserRoles {
+    ADMIN = "admin",
+    MODERATOR = "moderator",
+    CREATOR = "creator",
+    USER = "user",
+}
+
+export enum UserSessionStates {
+    ACTIVE = "active",
+    UNVERIFIED = "unverified",
+}
+
+export interface LoggedInUserData {
+    id: string;
+    email: string;
+    name: string;
+    userName: string;
+    hasAPassword: boolean;
+    avatarUrl?: string | null;
+    avatarProvider?: AuthProviders | null;
+    role: GlobalUserRoles;
+    sessionId: string;
+    sessionToken: string;
+}
+
+export enum ProjectType {
+    MOD = "mod",
+    MODPACK = "modpack",
+    SHADER = "shader",
+    RESOURCE_PACK = "resource-pack",
+    DATAPACK = "datapack",
+    PLUGIN = "plugin",
+}
+
+export enum AuthActionIntent {
+    SIGN_IN = "signin",
+    SIGN_UP = "signup",
+    LINK_PROVIDER = "link-provider",
+}
+
+export interface LinkedProvidersListData {
+    id: string;
+    providerName: string;
+    providerAccountId: string;
+    providerAccountEmail: string;
+    avatarImageUrl?: string | null;
+}
+
+export enum ConfirmationType {
+    CONFIRM_NEW_PASSWORD = "confirm-new-password",
+    CHANGE_ACCOUNT_PASSWORD = "change-account-password",
+    DELETE_USER_ACCOUNT = "delete-user-account"
+}
+
+// PROJECT
+export enum ProjectVisibility {
+    PUBLIC = "public",
+    PRIVATE = "private",
+    UNLISTED = "unlisted",
+    ARCHIVED = "archived",
+}
+
+export enum ProjectPublishingStatus {
+    DRAFT = "draft",
+    SCHEDULED = "scheduled",
+    PUBLISHED = "published",
+    UNKNOWN = "unknown",
+}
+
+export enum VersionReleaseChannel {
+    RELEASE = "release",
+    BETA = "beta",
+    ALPHA = "alpha",
+}
+
+export enum ProjectPermissions {
+    UPLOAD_VERSION = "upload_version",
+    DELETE_VERSION = "delete_version",
+    EDIT_DETAILS = "edit_details",
+    EDIT_DESCRIPTION = "edit_description",
+    MANAGE_INVITES = "manage_invites",
+    REMOVE_MEMBER = "remove_member",
+    EDIT_MEMBER = "edit_member",
+    DELETE_PROJECT = "delete_project",
+    VIEW_ANALYTICS = "view_analytics",
+    VIEW_REVENUE = "view_revenue",
+};
+
+export enum OrganisationPermissions {
+    EDIT_DETAILS = "edit_details",
+    MANAGE_INVITES = "manage_invites",
+    REMOVE_MEMBER = "remove_member",
+    EDIT_MEMBER = "edit_member",
+    ADD_PROJECT = "add_project",
+    REMOVE_PROJECT = "remove_project",
+    DELETE_ORGANIZATION = "delete_organisation",
+    EDIT_MEMBER_DEFAULT_PERMISSIONS = "edit_member_default_permissions",
+}
+
+export enum LoaderSupportedFields {
+    CLIENT_AND_SERVER = "client_and_server",
+    SERVER_ONLY = "server_only",
+    CLIENT_ONLY = "client_only",
+    SINGLEPLAYER = "singleplayer",
+    GAME_VERSIONS = "game_versions",
+}
+
+export type FileObjectType = {
+    name: string;
+    size: number;
+    type: string;
+}
+
+export enum DependsOn {
+    PROJECT = "project",
+    VERSION = "version"
+}
+
+export enum DependencyType {
+    REQUIRED = "required",
+    OPTIONAL = "optional",
+    INCOMPATIBLE = "incompatible",
+    EMBEDDED = "embedded"
+}
+
+export enum FileType {
+    JAR = "jar",
+    ZIP = "zip",
+    PNG = "png",
+    JPEG = "jpeg"
+}
+
+export enum ProjectServerSideEnv {
+    UNKNOWN = "unknown",
+    REQUIRED = "required",
+    OPTIONAL = "optional",
+    UNSUPPORTED = "unsupported"
+}
+
+export enum ProjectClientSideEnv {
+    UNKNOWN = "unknown",
+    REQUIRED = "required",
+    OPTIONAL = "optional",
+    UNSUPPORTED = "unsupported"
+}

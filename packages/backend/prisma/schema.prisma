@@ -1,0 +1,234 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("PG_DATABASE_URL")
+}
+
+model User {
+    id                String   @id @db.VarChar(32)
+    name              String   @db.VarChar(32)
+    email             String   @unique @db.VarChar(64)
+    userName          String   @unique @db.VarChar(32)
+    lowerCaseUserName String   @unique @db.VarChar(32)
+    dateJoined        DateTime @default(now())
+    emailVerified     Boolean
+    role              String   @db.VarChar(32)
+    bio               String?  @db.VarChar(256)
+    password          String?
+    avatarUrl         String?  @db.VarChar(256)
+    avatarUrlProvider String?  @db.VarChar(32)
+    newSignInAlerts   Boolean  @default(true)
+
+    sessions         Session[]          @relation(name: "UserSessions")
+    authAccounts     AuthAccount[]      @relation(name: "UserAuthAccounts")
+    confirmations    UserConfirmation[] @relation(name: "UserConfirmations")
+    teamMemberships  TeamMember[]       @relation(name: "TeamMemberships")
+    authoredVersions Version[]          @relation(name: "UserAuthoredVersions")
+}
+
+model Session {
+    id               String   @id @db.VarChar(32)
+    userId           String   @db.VarChar(32)
+    sessionToken     String   @db.VarChar(64)
+    dateCreated      DateTime @default(now())
+    dateExpires      DateTime
+    dateLastActive   DateTime @default(now())
+    providerName     String?  @db.VarChar(32)
+    status           String   @db.VarChar(32)
+    revokeAccessCode String   @unique @db.VarChar(64)
+
+    // Session device info
+    os        String? @db.VarChar(32)
+    browser   String? @db.VarChar(32)
+    city      String? @db.VarChar(32)
+    country   String? @db.VarChar(32)
+    ip        String  @db.VarChar(64)
+    userAgent String  @db.VarChar(128)
+
+    user User @relation(name: "UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuthAccount {
+    id                   String  @id @db.VarChar(32)
+    userId               String  @db.VarChar(32)
+    providerName         String  @db.VarChar(32)
+    providerAccountId    String  @db.VarChar(64)
+    providerAccountEmail String  @db.VarChar(64)
+    avatarUrl            String? @db.VarChar(256)
+    tokenType            String? @db.VarChar(32)
+    accessToken          String  @db.VarChar(256)
+    refreshToken         String? @db.VarChar(256)
+    authType             String? @db.VarChar(32)
+    authorizationScope   String? @db.VarChar(256)
+
+    user User @relation(name: "UserAuthAccounts", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserConfirmation {
+    id               String   @id @db.VarChar(32)
+    userId           String   @db.VarChar(32)
+    confirmationType String   @db.VarChar(64)
+    accessCode       String   @unique @db.VarChar(64)
+    dateCreated      DateTime @default(now())
+    contextData      String?
+
+    user User @relation(name: "UserConfirmations", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Organisation {
+    id          String  @id @db.VarChar(32)
+    teamId      String  @unique @db.VarChar(32)
+    slug        String  @db.VarChar(32)
+    name        String  @db.VarChar(32)
+    description String? @db.VarChar(256)
+    icon        String? @db.VarChar(32)
+
+    team     Team      @relation(name: "OrganisationTeam", fields: [teamId], references: [id])
+    projects Project[] @relation(name: "OrganisationProjects")
+}
+
+model Team {
+    id      String       @id @db.VarChar(32)
+    members TeamMember[] @relation(name: "TeamMembers")
+
+    // Will be null if its a project team
+    organisation Organisation? @relation(name: "OrganisationTeam")
+    // Will be null if its an organisation team
+    project      Project?      @relation(name: "ProjectTeam")
+}
+
+model TeamMember {
+    id      String  @id @db.VarChar(32)
+    teamId  String  @db.VarChar(32)
+    userId  String  @db.VarChar(32)
+    role    String  @db.VarChar(32)
+    isOwner Boolean
+
+    // List of permissions in a Project Team
+    permissions String[]
+
+    // List of permissions in an Organisation Team
+    // is empty in Team Projects
+    organisationPermissions String[]
+
+    // Whether the member has joined the team or is just invited
+    accepted Boolean
+
+    team Team @relation(name: "TeamMembers", fields: [teamId], references: [id], onDelete: Cascade)
+    user User @relation(name: "TeamMemberships", fields: [userId], references: [id])
+}
+
+model Project {
+    id             String    @id @db.VarChar(32)
+    teamId         String    @unique @db.VarChar(32)
+    organisationId String?   @db.VarChar(32)
+    name           String    @db.VarChar(32)
+    slug           String    @unique @db.VarChar(32)
+    summary        String    @db.VarChar(256)
+    description    String?   @db.VarChar(65256)
+    datePublished  DateTime  @default(now())
+    dateUpdated    DateTime  @default(now())
+    dateQueued     DateTime?
+    dateApproved   DateTime?
+    status         String    @db.VarChar(32)
+    visibility     String    @db.VarChar(32)
+    icon           String?   @db.VarChar(32)
+
+    // null for custom licenses
+    licenseId   String? @db.VarChar(32)
+    licenseName String? @db.VarChar(64)
+    licenseUrl  String? @db.VarChar(256)
+
+    downloads Int @default(0)
+    followers Int @default(0)
+
+    categories         String[]
+    featuredCategories String[]
+    loaders            String[]
+    gameVersions       String[]
+    type               String[]
+    clientSide         String   @db.VarChar(32)
+    serverSide         String   @db.VarChar(32)
+
+    // Links
+    issueTrackerUrl  String? @db.VarChar(256)
+    projectSourceUrl String? @db.VarChar(256)
+    projectWikiUrl   String? @db.VarChar(256)
+    discordInviteUrl String? @db.VarChar(256)
+
+    versions     Version[]     @relation(name: "ProjectVersions")
+    team         Team          @relation(name: "ProjectTeam", fields: [teamId], references: [id])
+    organisation Organisation? @relation(name: "OrganisationProjects", fields: [organisationId], references: [id])
+    gallery      GalleryItem[] @relation(name: "ProjectGallery")
+    // Project that depend on this version
+    dependents   Dependency[]  @relation(name: "ProjectDependents")
+}
+
+model Version {
+    id             String   @id @db.VarChar(32)
+    projectId      String   @db.VarChar(32)
+    authorId       String   @db.VarChar(32)
+    title          String   @db.VarChar(32)
+    versionNumber  String   @db.VarChar(32)
+    changelog      String?  @db.VarChar(65256)
+    slug           String   @db.VarChar(32)
+    datePublished  DateTime @default(now())
+    featured       Boolean
+    downloads      Int      @default(0)
+    releaseChannel String   @db.VarChar(32)
+    gameVersions   String[]
+    loaders        String[]
+
+    files        VersionFile[] @relation(name: "VersionFiles")
+    project      Project       @relation(name: "ProjectVersions", fields: [projectId], references: [id], onDelete: Cascade)
+    author       User          @relation(name: "UserAuthoredVersions", fields: [authorId], references: [id])
+    // Dependencies this project has
+    dependencies Dependency[]  @relation(name: "VersionDependencies")
+    // Project that depend on this version
+    dependents   Dependency[]  @relation(name: "VersionDependents")
+}
+
+model VersionFile {
+    id        String  @id @db.VarChar(32)
+    versionId String  @db.VarChar(32)
+    isPrimary Boolean
+    fileId    String  @unique @db.VarChar(32)
+
+    version Version @relation(name: "VersionFiles", fields: [versionId], references: [id], onDelete: Cascade)
+}
+
+model Dependency {
+    id                 String  @id @db.VarChar(32)
+    projectId          String  @db.VarChar(32)
+    versionId          String? @db.VarChar(32)
+    dependentVersionId String  @db.VarChar(32)
+    dependencyType     String  @db.VarChar(32)
+
+    dependentVersion  Version  @relation(name: "VersionDependencies", fields: [dependentVersionId], references: [id], onDelete: Cascade)
+    dependencyProject Project  @relation(name: "ProjectDependents", fields: [projectId], references: [id])
+    dependencyVersion Version? @relation(name: "VersionDependents", fields: [versionId], references: [id])
+}
+
+model GalleryItem {
+    id          String  @id @db.VarChar(32)
+    projectId   String  @db.VarChar(32)
+    name        String  @db.VarChar(64)
+    description String  @db.VarChar(512)
+    image       String  @db.VarChar(32)
+    featured    Boolean
+
+    project Project @relation(name: "ProjectGallery", fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model File {
+    id             String  @id @db.VarChar(32)
+    name           String  @db.VarChar(64)
+    size           Int
+    type           String  @db.VarChar(32)
+    hash           String? @db.VarChar(256)
+    url            String  @db.VarChar(256)
+    storageService String  @db.VarChar(32)
+}
