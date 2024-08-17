@@ -31,7 +31,7 @@ const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
 
 // Project details
 const ProjectPage = lazy(() => import("@/src/pages/project/page"));
-const ProjectGallery = lazy(() => import("@/src/pages/project/gallery"));
+const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
 const UploadVersionPage = lazy(() => import("@/src/pages/project/versions/upload-version"));
 const VersionPage = lazy(() => import("@/src/pages/project/versions/version-page/page"));
@@ -39,6 +39,7 @@ const VersionPage = lazy(() => import("@/src/pages/project/versions/version-page
 // Project settings
 const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/project-settings/layout"));
 const GeneralSettingsPage = lazy(() => import("@/src/pages/project/project-settings/page"));
+const DescriptionSettings = lazy(() => import("@/src/pages/project/project-settings/description"));
 
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => {
@@ -143,6 +144,14 @@ const projectPageRoutes = () => {
                             element: (
                                 <Suspense fallback={<SuspenseFallback />}>
                                     <GeneralSettingsPage />
+                                </Suspense>
+                            ),
+                        },
+                        {
+                            path: "description",
+                            element: (
+                                <Suspense fallback={<SuspenseFallback />}>
+                                    <DescriptionSettings />
                                 </Suspense>
                             ),
                         },

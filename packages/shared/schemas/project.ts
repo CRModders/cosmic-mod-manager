@@ -1,6 +1,8 @@
 import { z } from "zod";
 import {
     MAX_OPTIONAL_FILES,
+    MAX_PROJECT_DESCRIPTION_LENGTH,
+    MAX_PROJECT_GALLERY_IMAGE_SIZE,
     MAX_PROJECT_ICON_SIZE,
     MAX_PROJECT_NAME_LENGTH,
     MAX_PROJECT_SUMMARY_LENGTH,
@@ -182,3 +184,37 @@ export const generalProjectSettingsFormSchema = z.object({
     serverSide: z.nativeEnum(ProjectSupport),
     summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
 });
+
+
+export const updateDescriptionFormSchema = z.object({
+    description: z.string().max(MAX_PROJECT_DESCRIPTION_LENGTH).optional()
+});
+
+export const addNewGalleryImageFromSchema = z.object({
+    image: z.instanceof(File).refine(
+        (file) => {
+            if (file instanceof File) {
+                if (file.size > MAX_PROJECT_GALLERY_IMAGE_SIZE) return false;
+            }
+            return true;
+        },
+        { message: `Gallery image can only be a maximum of ${MAX_PROJECT_GALLERY_IMAGE_SIZE / 1024} KiB` },
+    ).refine(
+        (file) => {
+            if (file instanceof File) {
+                const type = getFileType(file.type);
+                if (type !== FileType.JPEG && type !== FileType.PNG) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        { message: "Invalid file type only jpg and png files allowed" },
+    ),
+
+    title: z.string().min(2).max(32),
+    description: z.string().max(256).optional(),
+    orderIndex: z.number().optional(),
+    featured: z.boolean()
+})

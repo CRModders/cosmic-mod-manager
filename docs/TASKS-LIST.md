@@ -20,9 +20,15 @@
     [Iris Versions](https://api.modrinth.com/v2/project/iris/version)
     [Iris Dependencies](https://api.modrinth.com/v2/project/iris/dependencies)
 
+- [-] Add project gallery
+  - [x] Add gallery image upload
+  - [-] Update project data endpoint to send gallery image list
+  - [-] Add gallery list display
+  - [-] Add gallery edit option
+  - [-] Add option to remove gallery image
+
 - [-] Add settings page
 - [-] Add option to add dependencies on a version
 - [-] Add edit version page
 - [-] Add function to count download count
-- [-] Add project gallery
 - [-] Add project changelog page

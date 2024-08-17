@@ -213,12 +213,13 @@ model Dependency {
 }
 
 model GalleryItem {
-    id          String  @id @db.VarChar(32)
-    projectId   String  @db.VarChar(32)
-    name        String  @db.VarChar(64)
-    description String  @db.VarChar(512)
-    image       String  @db.VarChar(32)
+    id          String   @id @db.VarChar(32)
+    projectId   String   @db.VarChar(32)
+    name        String   @db.VarChar(64)
+    description String   @db.VarChar(512)
+    image       String   @db.VarChar(32)
     featured    Boolean
+    dateCreated DateTime @default(now())
 
     project Project @relation(name: "ProjectGallery", fields: [projectId], references: [id], onDelete: Cascade)
 }

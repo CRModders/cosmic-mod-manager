@@ -1,12 +1,12 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
-import { deleteProjectFile, saveProjectFile } from "@/services/storage";
+import { deleteProjectFile, saveProjectFile, saveProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
-import type { generalProjectSettingsFormSchema, newProjectFormSchema } from "@shared/schemas/project";
+import type { addNewGalleryImageFromSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema } from "@shared/schemas/project";
 import {
     type OrganisationPermissions,
     ProjectPermissions,
@@ -364,11 +364,6 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
     }
 
     let projectIcon = project.icon;
-
-    console.log({ new: formData.icon, old: projectIcon });
-    console.log("\n")
-    console.log(formData)
-
     // Check if the icon was updated
     if (formData.icon !== projectIcon && projectIcon) {
         try {
@@ -401,3 +396,128 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
 
     return ctx.json({ success: true, message: "Project details updated", data: updatedProject }, httpCode("ok"))
 }
+
+export const updateProjectDescription = async (ctx: Context, slug: string, userSession: ContextUserSession, data: z.infer<typeof updateDescriptionFormSchema>) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true
+                        }
+                    }
+                }
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id
+                                },
+                                select: {
+                                    permissions: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    };
+
+    await prisma.project.update({
+        where: { id: project.id },
+        data: {
+            description: data.description || ""
+        }
+    });
+
+    return ctx.json({ success: true, message: "Project description updated" }, httpCode("ok"));
+};
+
+export const addNewGalleryImage = async (ctx: Context, slug: string, userSession: ContextUserSession, formData: z.infer<typeof addNewGalleryImageFromSchema>) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true
+                        }
+                    }
+                }
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id
+                                },
+                                select: {
+                                    permissions: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    };
+
+    // Check if there's already a featured image
+    if (formData.featured === true) {
+        const existingFeaturedImage = await prisma.galleryItem.findFirst({
+            where: {
+                projectId: project.id,
+                featured: true
+            }
+        });
+
+        if (existingFeaturedImage?.id) return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+    }
+
+    const fileName = `${FILE_STORAGE_SERVICES.LOCAL}-${nanoid(STRING_ID_LENGTH)}.${getFileType(formData.image.type)}`;
+    await saveProjectGalleryFile(project.id, fileName, FILE_STORAGE_SERVICES.LOCAL, formData.image);
+
+    await prisma.galleryItem.create({
+        data: {
+            id: nanoid(STRING_ID_LENGTH),
+            projectId: project.id,
+            name: formData.title,
+            description: formData.description || "",
+            featured: formData.featured,
+            image: fileName
+        }
+    });
+
+    return ctx.json({ success: true, message: "Added the new gallery image" }, httpCode("ok"));
+};

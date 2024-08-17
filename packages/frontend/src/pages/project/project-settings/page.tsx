@@ -106,6 +106,7 @@ const GeneralSettingsPage = () => {
                                             hidden
                                             className="hidden"
                                             id="project-icon-input"
+                                            accept={".jpg, .jpeg, .png"}
                                             type="file" value={""} name={field.name} onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
@@ -230,7 +231,7 @@ const GeneralSettingsPage = () => {
                                     </div>
 
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="min-w-[15rem]">
+                                        <SelectTrigger className="w-[15rem] max-w-full">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -258,7 +259,7 @@ const GeneralSettingsPage = () => {
                                     </div>
 
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="min-w-[15rem]">
+                                        <SelectTrigger className="w-[15rem] max-w-full">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -334,7 +335,7 @@ const GeneralSettingsPage = () => {
                                     </div>
 
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="min-w-[15rem]">
+                                        <SelectTrigger className="w-[15rem] max-w-full">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -350,7 +351,7 @@ const GeneralSettingsPage = () => {
 
                         <div className="w-full flex items-center justify-end mt-2">
                             <Button type="submit"
-                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues())}
+                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                 Save changes

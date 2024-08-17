@@ -85,6 +85,8 @@ export const configuredXss = new FilterXSS({
                     "wsrv.nl",
                     "cf.way2muchnoise.eu",
                     "bstats.org",
+                    "localhost",
+                    "crmm.tech"
                 ];
 
                 if (!allowedHostnames.includes(url.hostname)) {

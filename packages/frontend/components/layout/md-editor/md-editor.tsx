@@ -50,6 +50,7 @@ const IconButton = ({
             <TooltipTrigger asChild>
                 <Button
                     size={"icon"}
+                    type="button"
                     variant={"secondary"}
                     tabIndex={disabled ? -1 : 0}
                     disabled={disabled}
@@ -112,11 +113,12 @@ type Props = {
     editorValue: string;
     setEditorValue: (value: string) => void;
     placeholder?: string;
+    textAreaClassName?: string;
 };
 
 const textSeparatorChar = "{|}";
 
-const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => {
+const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClassName }: Props) => {
     const [previewOn, setPreviewOn] = useState(false);
     const editorTextarea = useRef<HTMLTextAreaElement>(null);
     const [lastSelectionRange, setLastSelectionRange] = useState<number[] | null>();
@@ -432,8 +434,9 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder }: Props) => 
                         <Textarea
                             placeholder={placeholder}
                             className={cn(
-                                "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground/85 dark:text-foreground/95 focus-within:!bg-background-shallow/10",
+                                "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground dark:text-foreground focus-within:!bg-background-shallow/10",
                                 wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
+                                textAreaClassName
                             )}
                             ref={editorTextarea}
                             value={editorValue}
@@ -555,13 +558,14 @@ const EditorModal = ({
                 <DialogFooter>
                     <div className="flex w-full flex-wrap items-center justify-end gap-2">
                         <DialogClose asChild>
-                            <Button className="gap-2" variant={"secondary"}>
+                            <Button className="gap-2" variant={"secondary"} type="button">
                                 <XIcon className="h-4 w-4" />
                                 Cancel
                             </Button>
                         </DialogClose>
 
                         <Button
+                            type="button"
                             className="gap-2"
                             onClick={() => {
                                 insertFragmentFunc();

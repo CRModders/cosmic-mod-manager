@@ -338,13 +338,13 @@ const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
     const [slug, setSlug] = useState("");
     const [dependencyType, setDependencyType] = useState(DependencyType.REQUIRED);
 
-    const checkIfValidProjectDependency = async () => {};
+    const checkIfValidProjectDependency = async () => { };
 
     const checkIfValidVersionDependency = async () => {
         return false;
     };
 
-    const handleAddingDependency = async () => {};
+    const handleAddingDependency = async () => { };
 
     return (
         <div className="w-full flex flex-col gap-3 items-start justify-center">
@@ -426,7 +426,7 @@ const SelectPrimaryFileInput = ({
                 htmlFor={inputId}
                 className={cn(buttonVariants({ variant: "secondary" }), "cursor-pointer bg-card-background hover:bg-card-background/80")}
             >
-                {selectedFile ? "Change file" : "Choose file"}
+                {selectedFile ? "Replace file" : "Choose file"}
             </label>
         </div>
     );

@@ -1,10 +1,10 @@
 import { ctxReqBodyKey } from "@/../types";
-import { createNewProject, getAllUserProjects, getProjectData, updateProject } from "@/controllers/project/project";
+import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, updateProject, updateProjectDescription } from "@/controllers/project/project";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { parseValueToSchema } from "@shared/schemas";
-import { generalProjectSettingsFormSchema, newProjectFormSchema } from "@shared/schemas/project";
+import { addNewGalleryImageFromSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import versionRouter from "./version";
@@ -79,6 +79,55 @@ projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await updateProject(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.patch("/:slug/description", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!userSession) return defaultInvalidReqResponse(ctx);
+
+        const { data, error } = parseValueToSchema(updateDescriptionFormSchema, ctx.get(ctxReqBodyKey));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await updateProjectDescription(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!userSession) return defaultInvalidReqResponse(ctx);
+
+        const formData = ctx.get(ctxReqBodyKey);
+        const obj = {
+            image: formData.get("image"),
+            title: formData.get("title"),
+            description: formData.get("description"),
+            orderIndex: Number.parseInt(formData.get("orderIndex") || "0"),
+            featured: formData.get("featured") === "true",
+        }
+
+        const { data, error } = parseValueToSchema(addNewGalleryImageFromSchema, obj);
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await addNewGalleryImage(ctx, slug, userSession, data);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
