@@ -22,13 +22,13 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
         profileData.userName.toLowerCase() === userSession.userName.toLowerCase()
             ? null
             : !!(
-                await prisma.user.findUnique({
-                    where: {
-                        lowerCaseUserName: profileData.userName.toLowerCase(),
-                        NOT: [{ id: userSession.id }],
-                    },
-                })
-            )?.id;
+                  await prisma.user.findUnique({
+                      where: {
+                          lowerCaseUserName: profileData.userName.toLowerCase(),
+                          NOT: [{ id: userSession.id }],
+                      },
+                  })
+              )?.id;
 
     if (existingUserWithSameUserName) return ctx.json({ success: false, message: "Username already taken" }, httpCode("bad_request"));
 
@@ -42,7 +42,7 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
         });
 
         if (!authAccount?.id) {
-            await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA)
+            await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
             return ctx.json({ success: false, message: "Invalid profile provider" }, httpCode("bad_request"));
         }
 
@@ -89,9 +89,9 @@ export const getLinkedAuthProviders = async (ctx: Context, userSession: ContextU
 export const getAllSessions = async (ctx: Context, userSession: ContextUserSession) => {
     const sessions = await prisma.session.findMany({
         where: {
-            userId: userSession.id
+            userId: userSession.id,
         },
-        orderBy: { dateCreated: "desc" }
+        orderBy: { dateCreated: "desc" },
     });
 
     if (!sessions?.[0]?.id) {
@@ -113,8 +113,8 @@ export const getAllSessions = async (ctx: Context, userSession: ContextUserSessi
             country: session.country,
             ip: session.ip,
             userAgent: session.userAgent,
-        })
+        });
     }
 
     return ctx.json({ success: true, sessions: sessions }, httpCode("ok"));
-}
+};

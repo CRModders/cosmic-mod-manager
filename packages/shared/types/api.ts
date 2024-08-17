@@ -1,13 +1,12 @@
 import type {
     DependencyType,
     OrganisationPermissions,
-    ProjectClientSideEnv,
     ProjectPermissions,
     ProjectPublishingStatus,
-    ProjectServerSideEnv,
+    ProjectSupport,
     ProjectType,
     ProjectVisibility,
-    UserSessionStates,
+    UserSessionStates
 } from ".";
 
 export interface SessionListData {
@@ -80,8 +79,8 @@ export interface ProjectDetailsData {
     projectWikiUrl: string | null;
     discordInviteUrl: string | null;
 
-    clientSide: ProjectClientSideEnv;
-    serverSide: ProjectServerSideEnv;
+    clientSide: ProjectSupport;
+    serverSide: ProjectSupport;
     loaders: string[];
     gameVersions: string[];
 

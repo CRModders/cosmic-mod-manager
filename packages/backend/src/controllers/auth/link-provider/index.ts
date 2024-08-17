@@ -8,7 +8,12 @@ import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import type { Context } from "hono";
 import { createNewAuthAccount, getAuthProviderProfileData } from "../commons";
 
-export const linkAuthProviderHandler = async (ctx: Context, userSession: ContextUserSession, authProvider: string, tokenExchangeCode: string) => {
+export const linkAuthProviderHandler = async (
+    ctx: Context,
+    userSession: ContextUserSession,
+    authProvider: string,
+    tokenExchangeCode: string,
+) => {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
 
     if (
@@ -94,7 +99,7 @@ export const unlinkAuthProvider = async (ctx: Context, userSession: ContextUserS
                 },
             })
         ).count;
-    } catch (err) { }
+    } catch (err) {}
 
     if (!deletedAuthAccount || deletedAuthAccount < 1) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);

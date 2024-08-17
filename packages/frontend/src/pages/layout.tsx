@@ -26,7 +26,13 @@ const RootLayout = () => {
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
             <div className="w-full relative">
-                <Suspense fallback={<div className="w-full flex items-center justify-center h-10 py-2">LOADING...</div>}>
+                <Suspense
+                    fallback={
+                        <div className="w-full flex items-center justify-center h-nav-item py-3 italic text-muted-foreground">
+                            LOADING...
+                        </div>
+                    }
+                >
                     <Navbar />
                 </Suspense>
                 <div className="full_page container px-4 sm:px-8">

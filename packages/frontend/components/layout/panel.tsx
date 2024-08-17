@@ -45,7 +45,7 @@ export const ContentCardTemplate = ({
     titleClassName?: string;
 }) => {
     return (
-        <Card className={cn("w-full", !title && "pt-6", cardClassname)}>
+        <Card className={cn("w-full", !title && "pt-5", cardClassname)}>
             {!!title && (
                 <CardHeader className={headerClassName}>
                     <CardTitle className={titleClassName}>{title}</CardTitle>

@@ -15,6 +15,7 @@ export const MIN_PROJECT_NAME_LENGTH = 2;
 export const MAX_PROJECT_NAME_LENGTH = 32;
 export const MAX_PROJECT_SUMMARY_LENGTH = 320;
 export const MAX_PROJECT_DESCRIPTION_LENGTH = 65256;
+export const MAX_PROJECT_ICON_SIZE = 524288; // 512 KiB
 
 // Version
 export const MIN_VERSION_TITLE_LENGTH = 2;

@@ -11,13 +11,13 @@ const bodyParserMiddleware = async (ctx: Context, next: Next) => {
         } else if (contentType.includes("multipart/form-data")) {
             body = await ctx.req.formData();
         } else {
-            body = null
+            body = null;
         }
 
-        ctx.set(ctxReqBodyKey, body || null)
-    } catch (error) { }
+        ctx.set(ctxReqBodyKey, body || null);
+    } catch (error) {}
 
     await next();
-}
+};
 
 export default bodyParserMiddleware;

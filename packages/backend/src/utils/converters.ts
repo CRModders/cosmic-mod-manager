@@ -13,4 +13,4 @@ export const getFileTypeFromString = (type: string): FileType | null => {
         default:
             return null;
     }
-}
+};

@@ -6,6 +6,9 @@ export const parseValueToSchema = <T extends z.Schema>(schema: T, data: unknown,
         return { data: parsedData, error: null };
     } catch (error) {
         // @ts-ignore
-        return { data: null, error: error?.issues?.[0]?.message || error };
+        const errorMsg = error?.issues?.[0]?.message
+        // @ts-ignore
+        const errorPath = error?.issues?.[0]?.path?.[0];
+        return { data: null, error: errorMsg && errorPath ? `${errorPath}: ${errorMsg}` : error };
     }
 };

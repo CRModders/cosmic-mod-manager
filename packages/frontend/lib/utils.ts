@@ -138,6 +138,16 @@ export const FormatProjectTypes = (types: string[]) => {
     return str;
 };
 
+
+export const getProjectFileLink = (slug: string, fileName: string) => {
+    return `${SERVER_URL}/cdn/data/${slug}/${fileName}`;
+}
+
+export const getProjectIcon = (slug: string) => {
+    return getProjectFileLink(slug, "icon");
+    // return `https://wsrv.nl/?url=${encodeURIComponent(url)}`
+}
+
 export const getVersionFileDownloadLink = (projectSlug: string, versionSlug: string, fileName: string) => {
     return `${SERVER_URL}/cdn/data/${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`;
 };

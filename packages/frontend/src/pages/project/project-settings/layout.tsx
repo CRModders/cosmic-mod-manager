@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner } from "@/components/ui/spinner";
-import { getProjectPagePathname } from "@/lib/utils";
+import { getProjectIcon, getProjectPagePathname } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -71,7 +71,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
 
                         <div className="w-full flex items-start justify-start gap-3">
                             <AvatarImg
-                                url={projectData.icon || ""}
+                                url={projectData.icon ? getProjectIcon(projectData.slug) : ""}
                                 alt={projectData.name}
                                 fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
                                 imgClassName="rounded"

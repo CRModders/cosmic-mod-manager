@@ -1,19 +1,17 @@
-import type { ContextUserSession } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
+import { deleteProjectFile, saveProjectFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
-import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
-import { createURLSafeSlug } from "@shared/lib/utils";
-import type { newProjectFormSchema } from "@shared/schemas/project";
+import { getFileType } from "@shared/lib/utils/convertors";
+import type { generalProjectSettingsFormSchema, newProjectFormSchema } from "@shared/schemas/project";
 import {
     type OrganisationPermissions,
-    ProjectClientSideEnv,
-    type ProjectPermissions,
+    ProjectPermissions,
     ProjectPublishingStatus,
-    ProjectServerSideEnv,
+    ProjectSupport,
     type ProjectVisibility,
 } from "@shared/types";
 import type { ProjectDetailsData, ProjectsListData, TeamMember } from "@shared/types/api";
@@ -61,11 +59,6 @@ export const getFormattedTeamMember = (dbMember: DBTeamMember) => ({
 });
 
 export const createNewProject = async (ctx: Context, userSession: ContextUserSession, formData: z.infer<typeof newProjectFormSchema>) => {
-    if (formData.slug !== createURLSafeSlug(formData.slug).value) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-        return defaultInvalidReqResponse(ctx, "urlSlug must be a URL safe string");
-    }
-
     const existingProjectWithSameUrl = await prisma.project.findUnique({
         where: {
             slug: formData.slug,
@@ -102,8 +95,8 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
             visibility: formData.visibility,
             status: ProjectPublishingStatus.DRAFT,
             type: ["project"],
-            clientSide: ProjectClientSideEnv.UNKNOWN,
-            serverSide: ProjectServerSideEnv.UNKNOWN,
+            clientSide: ProjectSupport.UNKNOWN,
+            serverSide: ProjectSupport.UNKNOWN,
         },
     });
 
@@ -174,7 +167,7 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
             name: project.name,
             slug: project.slug,
             status: project.status as ProjectPublishingStatus,
-            icon: project.icon,
+            icon: project.icon || "",
             type: project.type,
         });
     }
@@ -283,8 +276,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 projectSourceUrl: project?.projectSourceUrl,
                 projectWikiUrl: project?.projectWikiUrl,
                 discordInviteUrl: project?.discordInviteUrl,
-                clientSide: project.clientSide as ProjectClientSideEnv,
-                serverSide: project.serverSide as ProjectServerSideEnv,
+                clientSide: project.clientSide as ProjectSupport,
+                serverSide: project.serverSide as ProjectSupport,
                 loaders: project.loaders,
                 gameVersions: project.gameVersions,
                 members: project.team.members.map((member) => ({
@@ -299,16 +292,112 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 })),
                 organisation: organisation
                     ? {
-                          id: organisation.id,
-                          name: organisation.name,
-                          slug: organisation.slug,
-                          description: organisation.description,
-                          icon: organisation.icon || "",
-                          members: [],
-                      }
+                        id: organisation.id,
+                        name: organisation.name,
+                        slug: organisation.slug,
+                        description: organisation.description,
+                        icon: organisation.icon || "",
+                        members: [],
+                    }
                     : null,
             } satisfies ProjectDetailsData,
         },
         httpCode("ok"),
     );
 };
+
+export const updateProject = async (ctx: Context, slug: string, userSession: ContextUserSession, formData: z.infer<typeof generalProjectSettingsFormSchema>) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            name: true,
+            slug: true,
+            icon: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true
+                        }
+                    }
+                }
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id
+                                },
+                                select: {
+                                    permissions: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    }
+
+    // Check if the slug is available
+    if (formData.slug !== project.slug) {
+        const existingProjectWithSameSlug = await prisma.project.findUnique({
+            where: {
+                slug: formData.slug
+            }
+        });
+
+        if (existingProjectWithSameSlug?.id) return ctx.json({ success: false, message: `The slug "${formData.slug}" is already taken` });
+    }
+
+    let projectIcon = project.icon;
+
+    console.log({ new: formData.icon, old: projectIcon });
+    console.log("\n")
+    console.log(formData)
+
+    // Check if the icon was updated
+    if (formData.icon !== projectIcon && projectIcon) {
+        try {
+            await deleteProjectFile(project.id, projectIcon, FILE_STORAGE_SERVICES.LOCAL);
+        } catch (error) { }
+    }
+
+    if (formData.icon instanceof File) {
+        const fileName = `${FILE_STORAGE_SERVICES.LOCAL}_${nanoid(STRING_ID_LENGTH)}.${getFileType(formData.icon.type)}`;
+        await saveProjectFile(project.id, fileName, FILE_STORAGE_SERVICES.LOCAL, formData.icon);
+        projectIcon = fileName;
+    } else if (!formData.icon) {
+        projectIcon = "";
+    }
+
+    const updatedProject = await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            name: formData.name,
+            slug: formData.slug,
+            icon: projectIcon,
+            visibility: formData.visibility,
+            clientSide: formData.clientSide,
+            serverSide: formData.serverSide,
+            summary: formData.summary
+        }
+    });
+
+    return ctx.json({ success: true, message: "Project details updated", data: updatedProject }, httpCode("ok"))
+}

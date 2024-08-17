@@ -68,7 +68,7 @@ export const isUserAProjectMember = (userId?: string, membersList?: Partial<Team
     } catch {
         return false;
     }
-}
+};
 
 const fileSizeSuffixes = {
     bytes: "Bytes",

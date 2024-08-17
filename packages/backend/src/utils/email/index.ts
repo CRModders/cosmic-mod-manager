@@ -1,7 +1,16 @@
 import { sendEmail } from "@/services/email";
-import { CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms, CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms, DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms } from "@shared/config";
+import {
+    CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms,
+    CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms,
+    DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
+} from "@shared/config";
 import { monthNames } from "@shared/lib/utils/date-time";
-import { changeAccountPasswordEmailTemplate, confirmNewPasswordEmailTemplate, deleteUserAccountEmailTemplate, newSignInAlertEmailTemplate } from "./templates";
+import {
+    changeAccountPasswordEmailTemplate,
+    confirmNewPasswordEmailTemplate,
+    deleteUserAccountEmailTemplate,
+    newSignInAlertEmailTemplate,
+} from "./templates";
 
 const frontendUrl = process.env.FRONTEND_URL;
 

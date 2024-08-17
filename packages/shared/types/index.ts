@@ -58,7 +58,7 @@ export interface LinkedProvidersListData {
 export enum ConfirmationType {
     CONFIRM_NEW_PASSWORD = "confirm-new-password",
     CHANGE_ACCOUNT_PASSWORD = "change-account-password",
-    DELETE_USER_ACCOUNT = "delete-user-account"
+    DELETE_USER_ACCOUNT = "delete-user-account",
 }
 
 // PROJECT
@@ -93,7 +93,7 @@ export enum ProjectPermissions {
     DELETE_PROJECT = "delete_project",
     VIEW_ANALYTICS = "view_analytics",
     VIEW_REVENUE = "view_revenue",
-};
+}
 
 export enum OrganisationPermissions {
     EDIT_DETAILS = "edit_details",
@@ -118,37 +118,30 @@ export type FileObjectType = {
     name: string;
     size: number;
     type: string;
-}
+};
 
 export enum DependsOn {
     PROJECT = "project",
-    VERSION = "version"
+    VERSION = "version",
 }
 
 export enum DependencyType {
     REQUIRED = "required",
     OPTIONAL = "optional",
     INCOMPATIBLE = "incompatible",
-    EMBEDDED = "embedded"
+    EMBEDDED = "embedded",
 }
 
 export enum FileType {
     JAR = "jar",
     ZIP = "zip",
     PNG = "png",
-    JPEG = "jpeg"
+    JPEG = "jpeg",
 }
 
-export enum ProjectServerSideEnv {
+export enum ProjectSupport {
     UNKNOWN = "unknown",
     REQUIRED = "required",
     OPTIONAL = "optional",
-    UNSUPPORTED = "unsupported"
-}
-
-export enum ProjectClientSideEnv {
-    UNKNOWN = "unknown",
-    REQUIRED = "required",
-    OPTIONAL = "optional",
-    UNSUPPORTED = "unsupported"
+    UNSUPPORTED = "unsupported",
 }

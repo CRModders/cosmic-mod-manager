@@ -33,7 +33,7 @@ export const getProjectTypeFromString = (type: string) => {
         default:
             return ProjectType.MOD;
     }
-}
+};
 
 export const getAuthProviderFromString = (providerName: string) => {
     switch (providerName.toLowerCase()) {
@@ -76,7 +76,7 @@ export const getProjectVisibilityFromString = (visibility: string) => {
         default:
             return ProjectVisibility.PUBLIC;
     }
-}
+};
 
 export const getFileType = (strType: string) => {
     switch (strType) {
@@ -93,4 +93,4 @@ export const getFileType = (strType: string) => {
         default:
             return null;
     }
-}
+};

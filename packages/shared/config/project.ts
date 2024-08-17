@@ -52,9 +52,7 @@ export const loaders: Loader[] = [
             LoaderSupportedFields.SINGLEPLAYER,
             LoaderSupportedFields.GAME_VERSIONS,
         ],
-        metadata: {
-
-        },
+        metadata: {},
     },
     {
         icon: "puzzle_loader_icon",

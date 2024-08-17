@@ -1,11 +1,12 @@
 import { ctxReqBodyKey } from "@/../types";
-import { createNewProject, getAllUserProjects, getProjectData } from "@/controllers/project/project";
+import { createNewProject, getAllUserProjects, getProjectData, updateProject } from "@/controllers/project/project";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { parseValueToSchema } from "@shared/schemas";
-import { newProjectFormSchema } from "@shared/schemas/project";
+import { generalProjectSettingsFormSchema, newProjectFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
+import type { z } from "zod";
 import versionRouter from "./version";
 
 const projectRouter = new Hono();
@@ -52,6 +53,37 @@ projectRouter.get("/:slug", async (ctx: Context) => {
         return defaultServerErrorResponse(ctx);
     }
 });
+
+projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!userSession) return defaultInvalidReqResponse(ctx);
+        const formData = ctx.get(ctxReqBodyKey);
+        const obj = {
+            icon: formData.get("icon"),
+            name: formData.get("name"),
+            slug: formData.get("slug"),
+            visibility: formData.get("visibility"),
+            clientSide: formData.get("clientSide"),
+            serverSide: formData.get("serverSide"),
+            summary: formData.get("summary"),
+
+        } satisfies z.infer<typeof generalProjectSettingsFormSchema>;
+
+        const { data, error } = parseValueToSchema(generalProjectSettingsFormSchema, obj);
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await updateProject(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+})
 
 projectRouter.route("/:projectSlug/version", versionRouter);
 export default projectRouter;

@@ -2,15 +2,15 @@ import { CubeIcon, DiscordIcon } from "@/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@/components/layout/panel";
 import AvatarImg from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import CopyBtn from "@/components/ui/copy-btn";
 import { ButtonLink } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, formatDate, timeSince } from "@/lib/utils";
+import { cn, formatDate, getProjectIcon, timeSince } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { Capitalize } from "@shared/lib/utils";
+import { ProjectSupport } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
 import {
     BookOpenIcon,
@@ -18,12 +18,16 @@ import {
     CalendarIcon,
     CodeIcon,
     CrownIcon,
+    DownloadIcon,
+    GitCommitHorizontalIcon,
+    GlobeIcon,
+    HardDriveIcon,
     HeartIcon,
+    MonitorIcon,
     MoreHorizontalIcon,
-    RefreshCcwIcon,
     SquareArrowOutUpRightIcon,
     TriangleAlertIcon,
-    UserIcon,
+    UserIcon
 } from "lucide-react";
 import type React from "react";
 import { useContext } from "react";
@@ -55,9 +59,9 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
 
             <Panel className="pb-12">
                 <PanelAside className="flex flex-col gap-panel-cards">
-                    <ContentCardTemplate className="flex flex-col items-start justify-center gap-1">
+                    <ContentCardTemplate className="flex flex-col items-start justify-center gap-1.5">
                         <AvatarImg
-                            url={projectData.icon || ""}
+                            url={projectData.icon ? getProjectIcon(projectData.slug) : ""}
                             alt={projectData.name}
                             fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
                             imgClassName="rounded"
@@ -70,33 +74,29 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                 <CubeIcon className="w-4 h-4" />
                                 {Capitalize(projectType)}
                             </Link>
-                            <p>{projectData?.summary}</p>
+                            <p className="leading-tight">{projectData?.summary}</p>
                         </div>
-                        <Separator className="my-1.5" />
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild className="cursor-text">
-                                    <p className="flex gap-2 items-center justify-center text-muted-foreground">
-                                        <CalendarIcon className="w-btn-icon h-btn-icon" />
-                                        Created {timeSince(new Date(projectData.datePublished))}
-                                    </p>
-                                </TooltipTrigger>
-                                <TooltipContent>{formatDate(new Date(projectData.datePublished))}</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                                <TooltipTrigger asChild className="cursor-text">
-                                    <p className="flex gap-2 items-center justify-center text-muted-foreground">
-                                        <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
-                                        Updated {timeSince(new Date(projectData.dateUpdated))}
-                                    </p>
-                                </TooltipTrigger>
-                                <TooltipContent>{formatDate(new Date(projectData.dateUpdated))}</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+
+                        <ProjectSupportEnv clientSide={projectData.clientSide} serverSide={projectData.serverSide} />
+                        <span className="text-muted-foreground italic text-sm">TODO: ADD FEATURED_CATEGORIES</span>
 
                         <Separator className="my-1.5" />
 
-                        <div className="w-full flex flex-wrap items-center justify-between gap-2">
+                        <div className="w-full flex gap-x-2 gap-y-1 items-center justify-start px-0.5">
+                            <DownloadIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            <span>
+                                <em className="not-italic font-bold text-lg text-muted-foreground">24.7k</em> downloads
+                            </span>
+                        </div>
+
+                        <div className="w-full flex gap-x-2 gap-y-1 items-center justify-start px-0.5">
+                            <HeartIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            <span>
+                                <em className="not-italic font-bold text-lg text-muted-foreground">1.4k</em> followers
+                            </span>
+                        </div>
+
+                        <div className="w-full flex flex-wrap items-center justify-between gap-2 mt-1">
                             <Button variant={"secondary"} className="grow">
                                 <HeartIcon className="w-btn-icon h-btn-icon" />
                                 Follow
@@ -131,13 +131,73 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
 
 export default ProjectPageLayout;
 
+const ClientSide = () => {
+    return (
+        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
+            <MonitorIcon className="w-btn-icon h-btn-icon" />
+            Client
+        </span>
+    );
+};
+
+const ServerSide = () => {
+    return (
+        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
+            <HardDriveIcon className="w-btn-icon h-btn-icon" />
+            Server
+        </span>
+    );
+};
+
+const ClientOrServerSide = () => {
+    return (
+        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
+            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            Client or server
+        </span>
+    );
+};
+
+const ClientAndServerSide = () => {
+    return (
+        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
+            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            Client and server
+        </span>
+    );
+};
+
+const Unsupported = () => {
+    return (
+        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
+            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            Unsupported
+        </span>
+    );
+};
+
+const ProjectSupportEnv = ({ clientSide, serverSide }: { clientSide: ProjectSupport; serverSide: ProjectSupport }) => {
+    if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.REQUIRED) return <ClientAndServerSide />;
+    if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) return <ClientOrServerSide />;
+
+    if (serverSide === ProjectSupport.REQUIRED) return <ServerSide />;
+    if (clientSide === ProjectSupport.REQUIRED) return <ClientSide />;
+
+    if (serverSide === ProjectSupport.OPTIONAL) return <ServerSide />;
+    if (clientSide === ProjectSupport.OPTIONAL) return <ClientSide />;
+
+    if (serverSide === ProjectSupport.UNKNOWN || clientSide === ProjectSupport.UNKNOWN) return null;
+
+    return <Unsupported />;
+};
+
 const AdditionalProjectDetails = ({ projectData, className }: { projectData: ProjectDetailsData; className?: string }) => {
     return (
         <div className={cn("w-full flex flex-col items-start justify-start gap-panel-cards", className)}>
             {projectData?.issueTrackerUrl ||
-            projectData?.projectSourceUrl ||
-            projectData?.projectWikiUrl ||
-            projectData?.discordInviteUrl ? (
+                projectData?.projectSourceUrl ||
+                projectData?.projectWikiUrl ||
+                projectData?.discordInviteUrl ? (
                 <ContentCardTemplate title="Links" className="items-start justify-start" headerClassName="pb-3" titleClassName="text-lg">
                     <div className="w-full flex items-start justify-center flex-col gap-y-1.5">
                         {projectData?.issueTrackerUrl ? (
@@ -176,7 +236,7 @@ const AdditionalProjectDetails = ({ projectData, className }: { projectData: Pro
             ) : null}
 
             <ContentCardTemplate className={cn("w-full flex flex-col items-start justify-start gap-1", className)}>
-                <h2 className="text-lg font-semibold mb-1">Project members</h2>
+                <h2 className="text-lg font-semibold">Project members</h2>
                 {projectData.members?.map((member) => {
                     return (
                         <ProjectMember
@@ -188,38 +248,33 @@ const AdditionalProjectDetails = ({ projectData, className }: { projectData: Pro
                         />
                     );
                 })}
+            </ContentCardTemplate>
 
-                <Separator className="my-2" />
+            <ContentCardTemplate className="gap-1">
+                <h2 className="text-lg font-semibold mb-1">Details</h2>
 
-                <h2 className="text-lg font-semibold">Technical information</h2>
-                <div className="w-full flex flex-col items-start justify-center gap-0.5">
-                    <div className="w-full grid grid-cols-[max-content,_1fr] gap-x-4 gap-y-0.5 items-center justify-start">
-                        <span>License</span>
-                        {projectData.licenseName ? (
-                            projectData.licenseUrl ? (
-                                <Link to={projectData.licenseUrl}>{projectData.licenseName} </Link>
-                            ) : (
-                                <span>{projectData.licenseName}</span>
-                            )
-                        ) : (
-                            <span className="text-muted-foreground">Unknown</span>
-                        )}
+                <span className="text-muted-foreground italic text-sm">TODO: ADD LICENSE</span>
 
-                        <span>Client side</span>
-                        <span className="text-muted-foreground">{Capitalize(projectData.clientSide)}</span>
-
-                        <span>Server side</span>
-                        <span className="text-muted-foreground">{Capitalize(projectData.serverSide)}</span>
-
-                        <span>Project ID</span>
-                        <CopyBtn
-                            id="project-layout-sidenav-project-id-copy-btn"
-                            text={projectData.id}
-                            label={projectData.id}
-                            maxLabelChars={12}
-                        />
-                    </div>
-                </div>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild className="cursor-text">
+                            <p className="flex gap-2 items-center justify-center text-muted-foreground">
+                                <CalendarIcon className="w-btn-icon h-btn-icon" />
+                                Created {timeSince(new Date(projectData.datePublished))}
+                            </p>
+                        </TooltipTrigger>
+                        <TooltipContent>{formatDate(new Date(projectData.datePublished))}</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild className="cursor-text">
+                            <p className="flex gap-2 items-center justify-center text-muted-foreground">
+                                <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
+                                Updated {timeSince(new Date(projectData.dateUpdated))}
+                            </p>
+                        </TooltipTrigger>
+                        <TooltipContent>{formatDate(new Date(projectData.dateUpdated))}</TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </ContentCardTemplate>
         </div>
     );

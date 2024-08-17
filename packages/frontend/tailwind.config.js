@@ -83,7 +83,7 @@ module.exports = {
                 "iconified-btn": "2.25rem",
             },
             padding: {
-                "card-surround": "1.5rem",
+                "card-surround": "1.25rem",
             },
         },
     },

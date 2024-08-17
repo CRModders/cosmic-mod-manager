@@ -16,7 +16,7 @@ versionRouter.get("/", async (ctx: Context) => {
         const userSession = getUserSessionFromCtx(ctx);
         const featuredOnly = ctx.req.query("featured") === "true";
 
-        return await getAllProjectVersions(ctx, projectSlug, userSession, featuredOnly)
+        return await getAllProjectVersions(ctx, projectSlug, userSession, featuredOnly);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -47,7 +47,7 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
                 if (file instanceof File) return file;
                 if (typeof file === "string") return JSON.parse(file);
             }),
-        }
+        };
 
         const { data, error } = parseValueToSchema(newVersionFormSchema, schemaObj);
         if (error || !data) {

@@ -10,7 +10,6 @@ import { formatVersionsListString } from "@/lib/semver";
 import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, getVersionFileDownloadLink } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { Projectcontext } from "@/src/contexts/curr-project";
-import { SERVER_URL } from "@/src/hooks/fetch";
 import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, isUserAProjectMember, parseFileSize } from "@shared/lib/utils";

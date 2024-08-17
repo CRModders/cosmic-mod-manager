@@ -90,10 +90,10 @@ export const createNewAuthAccount = async (
 
 type IpAddressType =
     | {
-        address: string;
-        family: string;
-        port: number;
-    }
+          address: string;
+          family: string;
+          port: number;
+      }
     | string
     | null;
 

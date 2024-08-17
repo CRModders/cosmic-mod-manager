@@ -39,10 +39,13 @@ export const oAuthSignInHandler = async (ctx: Context, authProvider: string, tok
     });
 
     if (!expectedAuthAccount?.id) {
-        return ctx.json({
-            success: false,
-            message: `This ${Capitalize(profileData.providerName)} account (${profileData.email}) is not linked to any ${SITE_NAME_SHORT} user account. First link ${Capitalize(profileData.providerName)} auth provider to your user account to be able to signin using ${Capitalize(profileData.providerName)}`
-        }, httpCode('bad_request'));
+        return ctx.json(
+            {
+                success: false,
+                message: `This ${Capitalize(profileData.providerName)} account (${profileData.email}) is not linked to any ${SITE_NAME_SHORT} user account. First link ${Capitalize(profileData.providerName)} auth provider to your user account to be able to signin using ${Capitalize(profileData.providerName)}`,
+            },
+            httpCode("bad_request"),
+        );
     }
 
     const newSession = await createNewUserSession({

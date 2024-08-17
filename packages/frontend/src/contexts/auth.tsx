@@ -56,6 +56,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setSession(null);
+        window.location.reload();
     };
 
     const validateSession = async () => {

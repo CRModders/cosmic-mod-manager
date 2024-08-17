@@ -130,10 +130,11 @@ const projectPageRoutes = () => {
                     path: "settings",
                     element: (
                         <>
-                            <RedirectIfNotLoggedIn redirectTo="/login" />
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectSettingsLayout projectType={type} />
-                            </Suspense>
+                            <RedirectIfNotLoggedIn redirectTo="/login">
+                                <Suspense fallback={<SuspenseFallback />}>
+                                    <ProjectSettingsLayout projectType={type} />
+                                </Suspense>
+                            </RedirectIfNotLoggedIn>
                         </>
                     ),
                     children: [

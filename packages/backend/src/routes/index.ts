@@ -18,5 +18,4 @@ router.route("/auth", authRouter);
 router.route("/user", userRouter);
 router.route("/project", projectRouter);
 
-
 export default router;

@@ -68,7 +68,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
             role: GlobalUserRoles.USER,
             newSignInAlerts: true,
             avatarUrl: profileData.avatarImage,
-            avatarUrlProvider: profileData.providerName
+            avatarUrlProvider: profileData.providerName,
         },
     });
 

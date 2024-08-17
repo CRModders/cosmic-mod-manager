@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
     MAX_OPTIONAL_FILES,
+    MAX_PROJECT_ICON_SIZE,
     MAX_PROJECT_NAME_LENGTH,
     MAX_PROJECT_SUMMARY_LENGTH,
     MAX_VERSION_CHANGELOG_LENGTH,
@@ -13,11 +14,22 @@ import {
 import GAME_VERSIONS from "../config/game-versions";
 import { loaders } from "../config/project";
 import { createURLSafeSlug } from "../lib/utils";
-import { DependencyType, ProjectVisibility, VersionReleaseChannel } from "../types";
+import { getFileType } from "../lib/utils/convertors";
+import { DependencyType, FileType, ProjectSupport, ProjectVisibility, VersionReleaseChannel } from "../types";
 
 export const newProjectFormSchema = z.object({
     name: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
-    slug: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
+    slug: z
+        .string()
+        .min(MIN_PROJECT_NAME_LENGTH)
+        .max(MAX_PROJECT_NAME_LENGTH)
+        .refine(
+            (slug) => {
+                if (slug !== createURLSafeSlug(slug).value) return false;
+                return true;
+            },
+            { message: "Slug must be a URL safe string" },
+        ),
     visibility: z.nativeEnum(ProjectVisibility),
     summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
 });
@@ -123,4 +135,50 @@ export const newVersionFormSchema = z.object({
                 message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
             },
         ),
+});
+
+export const generalProjectSettingsFormSchema = z.object({
+    icon: z
+        .instanceof(File)
+        .refine(
+            (file) => {
+                if (file instanceof File) {
+                    if (file.size > MAX_PROJECT_ICON_SIZE) return false;
+                }
+                return true;
+            },
+            { message: `Icon can only be a maximum of ${MAX_PROJECT_ICON_SIZE / 1024} KiB` },
+        )
+        .refine(
+            (file) => {
+                if (file instanceof File) {
+                    const type = getFileType(file.type);
+                    if (type !== FileType.JPEG && type !== FileType.PNG) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            { message: "Invalid file type only jpg and png files allowed" },
+        )
+        .or(z.string())
+        .optional(),
+
+    name: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
+    slug: z
+        .string()
+        .min(MIN_PROJECT_NAME_LENGTH)
+        .max(MAX_PROJECT_NAME_LENGTH)
+        .refine(
+            (slug) => {
+                if (slug !== createURLSafeSlug(slug).value) return false;
+                return true;
+            },
+            { message: "Slug must be a URL safe string" },
+        ),
+    visibility: z.nativeEnum(ProjectVisibility),
+    clientSide: z.nativeEnum(ProjectSupport),
+    serverSide: z.nativeEnum(ProjectSupport),
+    summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
 });

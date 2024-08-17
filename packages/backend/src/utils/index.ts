@@ -63,12 +63,18 @@ export const isConfirmationCodeValid = (dateCreated: Date, validity: number) => 
     return Date.now() <= new Date(dateCreated).getTime() + validity;
 };
 
-export const isProjectAccessibleToCurrSession = (visibility: string, publishingStatus: string, userSessionId: string | undefined, members: Partial<TeamMember>[]) => {
+export const isProjectAccessibleToCurrSession = (
+    visibility: string,
+    publishingStatus: string,
+    userSessionId: string | undefined,
+    members: Partial<TeamMember>[],
+) => {
     const isMember = isUserAProjectMember(userSessionId, members);
     // const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
     const isPrivate = visibility === ProjectVisibility.PRIVATE;
 
     return (
         // isPublished &&
-        !isPrivate) || isMember;
-}
+        !isPrivate || isMember
+    );
+};

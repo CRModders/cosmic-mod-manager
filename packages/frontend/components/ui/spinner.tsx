@@ -50,7 +50,7 @@ export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
 
 export const WanderingCubesSpinner = () => {
     return (
-        <span className="wandering_cubes_animation flex items-center justify-center" role="img" aria-label="Loading">
+        <span className="wandering_cubes_animation flex items-center justify-center" role="presentation" aria-label="Loading">
             <span className="flex items-center justify-center relative contain-paint size-[var(--frame-size)]">
                 <span className="wandering_cube cube1 bg-muted-foreground" />
                 <span className="wandering_cube cube2 bg-muted-foreground" />

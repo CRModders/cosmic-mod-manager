@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FormatProjectTypes, getProjectPagePathname } from "@/lib/utils";
+import { FormatProjectTypes, getProjectIcon, getProjectPagePathname } from "@/lib/utils";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { SettingsIcon } from "lucide-react";
@@ -95,7 +95,7 @@ const ProjectsPage = () => {
                                                         className="noClickRedirect ml-4 flex"
                                                     >
                                                         <AvatarImg
-                                                            url={project.icon || ""}
+                                                            url={project.icon ? getProjectIcon(project.slug) : ""}
                                                             alt={project.name}
                                                             fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
                                                             imgClassName="rounded"
