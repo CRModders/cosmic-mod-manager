@@ -24,7 +24,7 @@
 
 .markdown-body li,
 .markdown-body p {
-    @apply p-0 leading-normal;
+    @apply p-0 leading-normal text-muted-foreground;
 }
 
 .markdown-body h1,
@@ -87,13 +87,13 @@
 }
 
 .markdown-body a {
-    @apply text-blue-500 dark:text-blue-400/85 cursor-pointer transition-[filter] w-auto h-auto box-border inline-block underline;
+    @apply text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block underline;
 }
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
     text-decoration: none;
-    @apply text-blue-500 dark:text-blue-400;
+    @apply text-link-hover-foreground;
 }
 
 .markdown-body a:active {

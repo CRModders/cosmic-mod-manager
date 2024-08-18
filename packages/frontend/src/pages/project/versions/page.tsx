@@ -69,7 +69,6 @@ const ProjectVersionsListTable = ({
 }: { projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[] }) => {
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
-    // const { allProjectVersions } = useContext(Projectcontext);
     const perPageLimit = 20;
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
     const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);

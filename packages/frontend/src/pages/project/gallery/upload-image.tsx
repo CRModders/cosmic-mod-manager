@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { addNewGalleryImageFromSchema } from "@shared/schemas/project";
 import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -20,17 +20,17 @@ const UploadGalleryImageForm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const { projectData, fetchProjectData } = useContext(Projectcontext);
 
-
     const form = useForm<z.infer<typeof addNewGalleryImageFromSchema>>({
         resolver: zodResolver(addNewGalleryImageFromSchema),
         defaultValues: {
             title: "",
             description: "",
-            orderIndex: 0,
+            orderIndex: (projectData?.gallery?.[0]?.orderIndex || 0) + 1,
             featured: false
         }
     });
     form.watch();
+
 
     const uploadGalleryImage = async (values: z.infer<typeof addNewGalleryImageFromSchema>) => {
         if (isLoading) return;
@@ -62,6 +62,13 @@ const UploadGalleryImageForm = () => {
             setIsLoading(false);
         }
     }
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (projectData) {
+            form.setValue("orderIndex", (projectData?.gallery?.[0]?.orderIndex || 0) + 1);
+        }
+    }, [projectData])
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -167,8 +174,11 @@ const UploadGalleryImageForm = () => {
                                     <FormLabel>
                                         Order index
                                         <FormMessage />
+                                        <FormDescription className="my-1 leading-normal text-sm">
+                                            Image with higher order index will be listed first.
+                                        </FormDescription>
                                     </FormLabel>
-                                    <Input {...field} placeholder="Enter order index..." min={0} type="number" />
+                                    <Input {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} placeholder="Enter order index..." min={0} type="number" />
                                 </FormItem>
                             )}
                         />

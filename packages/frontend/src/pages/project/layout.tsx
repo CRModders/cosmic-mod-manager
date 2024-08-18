@@ -1,21 +1,24 @@
 import { CubeIcon, DiscordIcon } from "@/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@/components/layout/panel";
 import AvatarImg from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/link";
+import ReleaseChannelIndicator from "@/components/ui/release-channel-pill";
 import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, formatDate, imageUrl, timeSince } from "@/lib/utils";
+import { formatVersionsListString } from "@/lib/semver";
+import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { Capitalize } from "@shared/lib/utils";
+import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
 import { ProjectSupport } from "@shared/types";
-import type { ProjectDetailsData } from "@shared/types/api";
+import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
     BookOpenIcon,
     BookmarkIcon,
     CalendarIcon,
+    ChevronRightIcon,
     CodeIcon,
     CrownIcon,
     DownloadIcon,
@@ -32,13 +35,13 @@ import {
 import type React from "react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import NotFoundPage from "../not-found";
 import ProjectNav from "./project-nav";
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { slug } = useParams();
-    const { projectData } = useContext(Projectcontext);
+    const { projectData, featuredProjectVersions, currUsersMembership } = useContext(Projectcontext);
 
     if (projectData === undefined) {
         return <FullWidthSpinner />;
@@ -111,18 +114,18 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                         </div>
                     </ContentCardTemplate>
 
-                    <AdditionalProjectDetails projectData={projectData} className="hidden lg:flex" />
+                    <AdditionalProjectDetails projectData={projectData} featuredProjectVersions={featuredProjectVersions || null} className="hidden lg:flex" />
                 </PanelAside>
 
                 <PanelContent>
                     <ContentCardTemplate className="px-3 py-2" cardClassname="!p-0">
                         <ProjectNav
                             baseHref={`/${projectData?.type[0] || projectType}/${projectData?.slug || slug}`}
-                            isAProjectMember={true}
+                            isAProjectMember={!!currUsersMembership?.id}
                         />
                     </ContentCardTemplate>
                     <Outlet />
-                    <AdditionalProjectDetails projectData={projectData} className="flex lg:hidden" />
+                    <AdditionalProjectDetails projectData={projectData} featuredProjectVersions={featuredProjectVersions || null} className="flex lg:hidden" />
                 </PanelContent>
             </Panel>
         </>
@@ -191,7 +194,9 @@ const ProjectSupportEnv = ({ clientSide, serverSide }: { clientSide: ProjectSupp
     return <Unsupported />;
 };
 
-const AdditionalProjectDetails = ({ projectData, className }: { projectData: ProjectDetailsData; className?: string }) => {
+const AdditionalProjectDetails = ({ projectData, featuredProjectVersions, className }: { projectData: ProjectDetailsData; featuredProjectVersions: ProjectVersionData[] | null; className?: string }) => {
+    const navigate = useNavigate();
+
     return (
         <div className={cn("w-full flex flex-col items-start justify-start gap-panel-cards", className)}>
             {projectData?.issueTrackerUrl ||
@@ -236,6 +241,60 @@ const AdditionalProjectDetails = ({ projectData, className }: { projectData: Pro
             ) : null}
 
             <ContentCardTemplate className={cn("w-full flex flex-col items-start justify-start gap-1", className)}>
+                {
+                    featuredProjectVersions?.length ?
+                        (
+                            <>
+                                <div className="w-full flex items-center justify-between flex-wrap">
+                                    <h2 className="text-lg font-semibold">Featured versions</h2>
+                                    <Link to={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/versions`}
+                                        className="flex items-center justify-center gap-1 text-blue-500 dark:text-blue-400 hover:underline"
+                                    >
+                                        See all
+                                        <ChevronRightIcon className="w-btn-icon h-btn-icon" />
+                                    </Link>
+                                </div>
+
+                                {featuredProjectVersions.map((featuredVersion) => (
+                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                                    <div key={featuredVersion.id}
+                                        className="w-full flex items-start justify-start gap-2 hover:bg-background py-1.5 px-2.5 rounded-lg bg_hover_stagger cursor-pointer text-[0.97rem]"
+                                        onClick={(e) => {
+                                            // @ts-expect-error
+                                            if (!e.target.closest(".noClickRedirect")) {
+                                                navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, featuredVersion.slug));
+                                            }
+                                        }}
+                                    >
+                                        <a href={featuredVersion.primaryFile?.url || ""} target="_blank" rel="noreferrer"
+                                            className={cn(buttonVariants({ variant: "default", size: "icon" }), "noClickRedirect shrink-0 mt-1")}
+                                        >
+                                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                                        </a>
+
+                                        <div className="flex flex-col items-start justify-start">
+                                            <Link to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, featuredVersion.slug)} className="noClickRedirect">
+                                                <span className="leading-none font-bold">{featuredVersion.title}</span>
+                                            </Link>
+
+                                            <p className="leading-tight text-muted-foreground text-pretty text-[0.93rem]">
+                                                {featuredVersion.loaders
+                                                    .map((loader) => CapitalizeAndFormatString(loader))
+                                                    .join(", ")}{" "}
+                                                {formatVersionsListString(featuredVersion.gameVersions)}
+                                            </p>
+
+                                            <ReleaseChannelIndicator releaseChannel={featuredVersion.releaseChannel} className="mt-0.5" />
+
+                                        </div>
+                                    </div>
+                                ))}
+
+                                <Separator orientation="horizontal" className="my-1.5" />
+                            </>
+                        ) : null
+                }
+
                 <h2 className="text-lg font-semibold">Project members</h2>
                 {projectData.members?.map((member) => {
                     return (

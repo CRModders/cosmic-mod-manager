@@ -6,7 +6,8 @@ import type {
     ProjectSupport,
     ProjectType,
     ProjectVisibility,
-    UserSessionStates
+    UserSessionStates,
+    VersionReleaseChannel
 } from ".";
 
 export interface SessionListData {
@@ -60,6 +61,7 @@ export interface GalleryItem {
     image: string;
     featured: boolean;
     dateCreated: Date;
+    orderIndex: number;
 }
 
 export interface ProjectDetailsData {
@@ -156,7 +158,7 @@ export interface ProjectVersionData {
     datePublished: string;
     featured: boolean;
     downloads: number;
-    releaseChannel: string;
+    releaseChannel: VersionReleaseChannel;
     gameVersions: string[];
     loaders: string[];
     files: VersionFile[];

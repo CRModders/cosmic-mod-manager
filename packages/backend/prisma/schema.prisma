@@ -220,6 +220,7 @@ model GalleryItem {
     image       String   @db.VarChar(32)
     featured    Boolean
     dateCreated DateTime @default(now())
+    orderIndex  Int
 
     project Project @relation(name: "ProjectGallery", fields: [projectId], references: [id], onDelete: Cascade)
 }

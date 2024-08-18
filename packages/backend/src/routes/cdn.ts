@@ -5,7 +5,7 @@ import { Hono } from "hono";
 
 const cdnRouter = new Hono();
 
-cdnRouter.get("/data/:projectSlug/icon", async (ctx) => {
+cdnRouter.get("/data/:projectSlug/:icon", async (ctx) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug } = ctx.req.param();

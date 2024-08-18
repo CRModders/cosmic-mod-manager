@@ -1,5 +1,5 @@
 import { ctxReqBodyKey } from "@/../types";
-import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, updateProject, updateProjectDescription } from "@/controllers/project/project";
+import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, removeGalleryImage, updateProject, updateProjectDescription } from "@/controllers/project/project";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -128,6 +128,21 @@ projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) =
         }
 
         return await addNewGalleryImage(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        const galleryItemId = ctx.get(ctxReqBodyKey)?.id;
+        const userSession = getUserSessionFromCtx(ctx);
+
+        if (!slug || !userSession || !galleryItemId) return defaultInvalidReqResponse(ctx);
+
+        return await removeGalleryImage(ctx, slug, userSession, galleryItemId);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

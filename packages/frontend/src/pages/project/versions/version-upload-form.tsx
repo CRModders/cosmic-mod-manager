@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { VariantButtonLink } from "@/components/ui/link";
 import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, getProjectPagePathname } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GAME_VERSIONS from "@shared/config/game-versions";
@@ -26,7 +27,7 @@ import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project";
 import { DependencyType, DependsOn, type FileObjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
-import { FileIcon, PlusIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,6 +41,8 @@ interface Props {
         additionalFiles?: boolean;
     };
     handleSubmit: (data: z.infer<typeof newVersionFormSchema>) => Promise<void>;
+    isLoading: boolean;
+    setIsLoading: (value: boolean) => void;
 }
 
 const UploadNewVersionForm = ({
@@ -47,6 +50,7 @@ const UploadNewVersionForm = ({
     gobackToUrl,
     fileSelectionEnabled = { primaryFile: true, additionalFiles: true },
     handleSubmit,
+    isLoading,
 }: Props) => {
     if (!projectData) return null;
     const versionsPageUrl = `${getProjectPagePathname(projectData.type[0], projectData.slug)}/versions`;
@@ -58,6 +62,7 @@ const UploadNewVersionForm = ({
             changelog: "",
             releaseChannel: VersionReleaseChannel.RELEASE,
             versionNumber: "",
+            featured: false,
         },
     });
     form.watch();
@@ -97,6 +102,7 @@ const UploadNewVersionForm = ({
                         <div className="w-full flex gap-x-panel-cards gap-y-2 items-center justify-start">
                             <Button
                                 type="submit"
+                                disabled={isLoading}
                                 onClick={async () => {
                                     try {
                                         const formValues = newVersionFormSchema.parse(form.getValues());
@@ -123,9 +129,20 @@ const UploadNewVersionForm = ({
                                     }
                                 }}
                             >
-                                <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                                {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
                                 Create
                             </Button>
+
+                            <FormField
+                                control={form.control}
+                                name="featured"
+                                render={({ field }) => (
+                                    <Button variant="secondary" disabled={isLoading} type="button" onClick={() => field.onChange(!field.value)}>
+                                        <StarIcon className={cn("w-btn-icon h-btn-icon", field.value === true && "fill-current")} />
+                                        {field.value === true ? "Unfeature version" : "Feature version"}
+                                    </Button>
+                                )}
+                            />
 
                             <VariantButtonLink variant="secondary" url={gobackToUrl || versionsPageUrl}>
                                 <CancelButtonIcon className="w-btn-icon h-btn-icon" />

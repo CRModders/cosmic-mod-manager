@@ -30,7 +30,7 @@
     --danger-foreground-dark: 0, 91%, 71%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
-
+    --link-foreground-dark: 213, 94%, 68%;
 
     /* LIGHT THEME */
     --foreground-light: var(--tint-hue), var(--bg-saturation), 18%;
@@ -47,6 +47,9 @@
     --danger-foreground-light: 0, 65%, 52%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 24%;
+    --link-foreground-light: 221, 83%, 53%;
+
+    --link-hover-foreground: 217, 91%, 60%;
 }
 
 html,
@@ -75,6 +78,7 @@ html body {
     --danger-foreground: var(--danger-foreground-dark);
     --success-background: var(--success-background-dark);
     --success-foreground: var(--success-foreground-dark);
+    --link-foreground: var(--link-foreground-dark);
 
     color-scheme: dark;
 }
@@ -96,6 +100,7 @@ html body {
     --danger-foreground: var(--danger-foreground-light);
     --success-background: var(--success-background-light);
     --success-foreground: var(--success-foreground-light);
+    --link-foreground: var(--link-foreground-light);
 
     color-scheme: light;
 }

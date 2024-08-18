@@ -1,7 +1,7 @@
 const CDN_PREFIX = "/cdn/data";
 
 export const projectIconUrl = (slug: string, icon: string) => {
-    return icon ? `${CDN_PREFIX}/${slug}/icon` : null;
+    return icon ? `${CDN_PREFIX}/${slug}/${icon}` : null;
 }
 
 export const projectGalleryFileUrl = (slug: string, fileName: string) => {

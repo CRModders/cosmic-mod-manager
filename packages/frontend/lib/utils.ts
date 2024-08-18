@@ -38,6 +38,21 @@ export const monthNames = [
     "December",
 ];
 
+export const shortMonthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
+
 export const timeSince = (pastTime: Date): string => {
     try {
         const now = new Date();
@@ -75,11 +90,11 @@ export const timeSince = (pastTime: Date): string => {
     }
 };
 
-export const formatDate = (date: Date, timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}"): string => {
+export const formatDate = (date: Date, timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}", useShortMonthNames = false): string => {
     try {
         const year = date.getFullYear();
         const monthIndex = date.getMonth();
-        const month = monthNames[monthIndex];
+        const month = (useShortMonthNames ? shortMonthNames : monthNames)[monthIndex];
         const day = date.getDate();
 
         const hours = date.getHours();

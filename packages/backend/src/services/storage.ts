@@ -66,6 +66,14 @@ export const saveProjectGalleryFile = async (projectId: string, fileName: string
     return null;
 }
 
+export const deleteProjectGalleryFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES) => {
+    if (storageService === FILE_STORAGE_SERVICES.LOCAL) {
+        await deleteFileFromLocalStorage(`${getProjectStoragePath(projectId)}/gallery/${fileName}`);
+    }
+
+    return null;
+}
+
 export const deleteProjectFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES) => {
     if (storageService === FILE_STORAGE_SERVICES.LOCAL) {
         return await deleteFileFromLocalStorage(getProjectFileStorageUrl(projectId, fileName));

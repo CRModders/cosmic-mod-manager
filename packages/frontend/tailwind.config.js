@@ -41,6 +41,8 @@ module.exports = {
                 "danger-foreground": "hsla(var(--danger-foreground))",
                 "success-background": "hsla(var(--success-background))",
                 "success-foreground": "hsla(var(--success-foreground))",
+                "link-foreground": "hsla(var(--link-foreground))",
+                "link-hover-foreground": "hsla(var(--link-hover-foreground))",
             },
             fontSize: {
                 sm: "var(--font-sm)",

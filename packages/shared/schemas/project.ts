@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+    MAX_ADDITIONAL_VERSION_FILE_SIZE,
     MAX_OPTIONAL_FILES,
     MAX_PROJECT_DESCRIPTION_LENGTH,
     MAX_PROJECT_GALLERY_IMAGE_SIZE,
@@ -40,6 +41,7 @@ export const newVersionFormSchema = z.object({
     title: z.string().min(MIN_VERSION_TITLE_LENGTH).max(MAX_VERSION_TITLE_LENGTH),
     changelog: z.string().max(MAX_VERSION_CHANGELOG_LENGTH).optional(),
     releaseChannel: z.nativeEnum(VersionReleaseChannel).default(VersionReleaseChannel.RELEASE),
+    featured: z.boolean(),
     versionNumber: z
         .string()
         .min(1)
@@ -121,7 +123,7 @@ export const newVersionFormSchema = z.object({
             (files) => {
                 const fileNamesList: string[] = [];
                 for (const file of files || []) {
-                    if (file.size > MAX_VERSION_FILE_SIZE) {
+                    if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE) {
                         return false;
                     }
                     if (!fileNamesList.includes(file.name.toLowerCase())) {
@@ -215,6 +217,6 @@ export const addNewGalleryImageFromSchema = z.object({
 
     title: z.string().min(2).max(32),
     description: z.string().max(256).optional(),
-    orderIndex: z.number().optional(),
+    orderIndex: z.number().min(0),
     featured: z.boolean()
 })

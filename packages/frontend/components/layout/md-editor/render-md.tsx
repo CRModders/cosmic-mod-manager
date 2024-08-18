@@ -7,6 +7,7 @@ import ini from "highlight.js/lib/languages/ini";
 import java from "highlight.js/lib/languages/java";
 // Scripting
 import "@/components/layout/md-editor/highlightjs.css";
+import { cn } from "@/lib/utils";
 import javascript from "highlight.js/lib/languages/javascript";
 import json from "highlight.js/lib/languages/json";
 import kotlin from "highlight.js/lib/languages/kotlin";
@@ -58,7 +59,7 @@ export const renderHighlightedString = (string: string) =>
                 if (lang && hljs.getLanguage(lang)) {
                     try {
                         return hljs.highlight(str, { language: lang }).value;
-                    } catch (__) {}
+                    } catch (__) { }
                 }
 
                 return "";
@@ -66,10 +67,10 @@ export const renderHighlightedString = (string: string) =>
         }).render(string),
     );
 
-export const MarkdownRenderBox = ({ text }: { text: string }) => {
+export const MarkdownRenderBox = ({ text, className }: { text: string; className?: string }) => {
     return (
         <div
-            className="w-full markdown-body"
+            className={cn("w-full markdown-body", className)}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: renderHighlightedString(text) }}
         />

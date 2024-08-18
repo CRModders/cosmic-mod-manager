@@ -17,16 +17,18 @@ import { formatVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, projectFileUrl } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermissions } from "@shared/types";
 import { ChevronRightIcon, DownloadIcon, EditIcon, FileIcon, FlagIcon, Trash2Icon } from "lucide-react";
 import { useContext } from "react";
+import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { ProjectMember } from "../../layout";
 
 const VersionPage = ({ projectType }: { projectType: string }) => {
     const { slug: projectSlug, versionSlug } = useParams();
-    const { currUsersMembership, allProjectVersions } = useContext(Projectcontext);
+    const { projectData, currUsersMembership, allProjectVersions } = useContext(Projectcontext);
     const versionData = allProjectVersions?.filter((version) => {
         if (version.slug === versionSlug) return version;
     })[0];
@@ -47,6 +49,14 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
 
     return (
         <>
+            <Helmet>
+                <title>
+                    {versionData.title} - {projectData?.name || ""} | {SITE_NAME_SHORT}
+                </title>
+                <meta name="description" content={projectData?.summary || " "} />
+            </Helmet>
+
+
             <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-3">
                 <Breadcrumb>
                     <BreadcrumbList className="flex items-center">

@@ -1,6 +1,6 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
-import { deleteProjectFile, saveProjectFile, saveProjectGalleryFile } from "@/services/storage";
+import { deleteProjectFile, deleteProjectGalleryFile, saveProjectFile, saveProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
@@ -212,7 +212,18 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             loaders: true,
             gameVersions: true,
 
-            gallery: true,
+            gallery: {
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    featured: true,
+                    image: true,
+                    dateCreated: true,
+                    orderIndex: true
+                },
+                orderBy: { orderIndex: "desc" }
+            },
 
             team: {
                 select: {
@@ -290,6 +301,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     image: projectGalleryFileUrl(project.slug, galleryItem.image),
                     featured: galleryItem.featured,
                     dateCreated: galleryItem.dateCreated,
+                    orderIndex: galleryItem.orderIndex
                 })),
                 members: project.team.members.map((member) => ({
                     id: member.id,
@@ -469,6 +481,13 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
         where: { slug: slug },
         select: {
             id: true,
+            gallery: {
+                select: {
+                    id: true,
+                    orderIndex: true,
+                },
+                orderBy: { orderIndex: "desc" }
+            },
             team: {
                 select: {
                     members: {
@@ -500,6 +519,13 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
+    // Check if the order index is not already occupied
+    for (const item of project.gallery) {
+        if (item.orderIndex === formData.orderIndex) {
+            return ctx.json({ success: false, message: "An image with same order index already exists" }, httpCode("bad_request"));
+        }
+    }
+
     if (
         !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
         !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
@@ -529,9 +555,69 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
-            image: fileName
+            image: fileName,
+            orderIndex: formData.orderIndex || project.gallery?.[0]?.orderIndex + 1 || 1
         }
     });
 
     return ctx.json({ success: true, message: "Added the new gallery image" }, httpCode("ok"));
 };
+
+export const removeGalleryImage = async (ctx: Context, slug: string, userSession: ContextUserSession, galleryItemId: string) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            gallery: {
+                where: { id: galleryItemId },
+                select: {
+                    id: true,
+                    image: true
+                },
+            },
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true
+                        }
+                    }
+                }
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id
+                                },
+                                select: {
+                                    permissions: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!project?.id || !project.gallery?.[0]?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    };
+
+    // Delete the file from storage
+    await deleteProjectGalleryFile(project.id, project.gallery[0].image, FILE_STORAGE_SERVICES.LOCAL);
+    await prisma.galleryItem.delete({
+        where: { id: galleryItemId }
+    });
+
+    return ctx.json({ success: true, message: "Gallery image deleted" }, httpCode("ok"));
+}

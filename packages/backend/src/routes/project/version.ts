@@ -37,6 +37,7 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         const schemaObj = {
             title: formData.get("title"),
             changelog: formData.get("changelog"),
+            featured: formData.get("featured") === "true",
             releaseChannel: formData.get("releaseChannel"),
             versionNumber: formData.get("versionNumber"),
             loaders: JSON.parse(loaders ? loaders.toString() : "[]"),

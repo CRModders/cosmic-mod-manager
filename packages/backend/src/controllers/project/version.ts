@@ -11,7 +11,7 @@ import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { newVersionFormSchema } from "@shared/schemas/project";
-import { type DependencyType, ProjectPermissions, type ProjectType } from "@shared/types";
+import { type DependencyType, ProjectPermissions, type ProjectType, type VersionReleaseChannel } from "@shared/types";
 import type { DBFileData, ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
@@ -161,7 +161,7 @@ export const createNewVersion = async (
             versionNumber: formData.versionNumber,
             changelog: formData.changelog,
             slug: newUrlSlug || "",
-            featured: false,
+            featured: formData.featured,
             releaseChannel: formData.releaseChannel,
             gameVersions: formData.gameVersions,
             loaders: formData.loaders,
@@ -204,7 +204,7 @@ export const createNewVersion = async (
         {
             success: true,
             message: "Successfully created new version",
-            urlSlug: newVersion.slug,
+            slug: newVersion.slug,
         },
         httpCode("ok"),
     );
@@ -361,7 +361,7 @@ export const getAllProjectVersions = async (
             featured: version.featured,
             downloads: version.downloads,
             changelog: version.changelog,
-            releaseChannel: version.releaseChannel,
+            releaseChannel: version.releaseChannel as VersionReleaseChannel,
             gameVersions: version.gameVersions,
             loaders: version.loaders,
             primaryFile: primaryFile?.id ? primaryFile : null,
