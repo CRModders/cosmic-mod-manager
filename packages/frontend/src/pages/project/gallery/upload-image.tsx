@@ -17,7 +17,8 @@ import type { z } from "zod";
 
 const UploadGalleryImageForm = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const { projectData } = useContext(Projectcontext);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const { projectData, fetchProjectData } = useContext(Projectcontext);
 
 
     const form = useForm<z.infer<typeof addNewGalleryImageFromSchema>>({
@@ -53,17 +54,17 @@ const UploadGalleryImageForm = () => {
                 return toast.error(result?.message || "Error");
             }
 
-            // TODO: Refetch gallery list
+            await fetchProjectData();
             toast.success(result?.message || "Success");
             form.reset();
-
+            setDialogOpen(false);
         } finally {
             setIsLoading(false);
         }
     }
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button variant={"default"}>
                     <UploadIcon className="w-btn-icon h-btn-icon" />

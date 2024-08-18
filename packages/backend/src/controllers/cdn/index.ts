@@ -82,7 +82,7 @@ export const serveVersionFile = async (
     return new Response(file, { status: httpCode("ok") });
 };
 
-export const serveProjectFile = async (ctx: Context,
+export const serveProjectIconFile = async (ctx: Context,
     slug: string,
     userSession: ContextUserSession | undefined,) => {
     const project = await prisma.project.findFirst({
@@ -100,4 +100,33 @@ export const serveProjectFile = async (ctx: Context,
     if (!iconFile) return ctx.json({}, httpCode("not_found"));
 
     return new Response(iconFile);
+}
+
+export const serveProjectGalleryImage = async (ctx: Context,
+    slug: string,
+    image: string,
+    userSession: ContextUserSession | undefined,) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [
+                { slug: slug },
+                { id: slug }
+            ]
+        },
+        select: {
+            id: true,
+            gallery: {
+                where: {
+                    image: image
+                },
+            }
+        },
+    });
+
+    if (!project?.gallery?.[0]?.id) return ctx.json({}, httpCode("not_found"));
+
+    const imageFile = await getFileFromStorage(FILE_STORAGE_SERVICES.LOCAL, `${getProjectStoragePath(project.id)}/gallery/${project.gallery[0].image}`);
+    if (!imageFile) return ctx.json({}, httpCode("not_found"));
+
+    return new Response(imageFile);
 }

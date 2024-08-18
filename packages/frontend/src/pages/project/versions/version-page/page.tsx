@@ -14,7 +14,7 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelIndicator from "@/components/ui/release-channel-pill";
 import { formatVersionsListString } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, getVersionFileDownloadLink } from "@/lib/utils";
+import { cn, formatDate, getProjectPagePathname, projectFileUrl } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
@@ -69,7 +69,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                 <div className="flex flex-wrap gap-x-3 gap-y-1">
                     <VariantButtonLink
                         variant={"default"}
-                        url={getVersionFileDownloadLink(projectSlug, versionSlug, versionData.primaryFile?.name || "")}
+                        url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
                     >
                         <DownloadIcon className="w-btn-icon h-btn-icon" />
                         Download
@@ -112,23 +112,23 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                 fileName={versionData.primaryFile.name}
                                 fileSize={versionData.primaryFile.size}
                                 isPrimary={true}
-                                downloadLink={getVersionFileDownloadLink(projectSlug, versionSlug, versionData.primaryFile.name)}
+                                downloadLink={projectFileUrl(versionData.primaryFile.url)}
                             />
                         ) : null}
 
                         {versionData.files?.length
                             ? versionData.files.map((file) => {
-                                  if (file.isPrimary) return null;
-                                  return (
-                                      <FileDetailsItem
-                                          key={file.id}
-                                          fileName={file.name}
-                                          fileSize={file.size}
-                                          isPrimary={false}
-                                          downloadLink={getVersionFileDownloadLink(projectSlug, versionSlug, file.name)}
-                                      />
-                                  );
-                              })
+                                if (file.isPrimary) return null;
+                                return (
+                                    <FileDetailsItem
+                                        key={file.id}
+                                        fileName={file.name}
+                                        fileSize={file.size}
+                                        isPrimary={false}
+                                        downloadLink={projectFileUrl(file.url)}
+                                    />
+                                );
+                            })
                             : null}
                     </ContentCardTemplate>
                 </div>

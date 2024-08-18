@@ -49,12 +49,13 @@ interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
 }
 
 export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLinkProps>(
-    ({ children, url, className, variant = "secondary", size = "default" }, ref) => {
+    ({ children, url, className, variant = "secondary", size = "default", ...props }, ref) => {
         return (
             <Link
                 to={url}
                 ref={ref}
                 className={cn("flex items-center justify-center gap-2 font-medium", buttonVariants({ variant, size }), className)}
+                {...props}
             >
                 {children}
             </Link>

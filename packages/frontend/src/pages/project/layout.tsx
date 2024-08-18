@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, formatDate, getProjectIcon, timeSince } from "@/lib/utils";
+import { cn, formatDate, imageUrl, timeSince } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { Capitalize } from "@shared/lib/utils";
@@ -61,7 +61,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                 <PanelAside className="flex flex-col gap-panel-cards">
                     <ContentCardTemplate className="flex flex-col items-start justify-center gap-1.5">
                         <AvatarImg
-                            url={projectData.icon ? getProjectIcon(projectData.slug) : ""}
+                            url={imageUrl(projectData.icon)}
                             alt={projectData.name}
                             fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
                             imgClassName="rounded"

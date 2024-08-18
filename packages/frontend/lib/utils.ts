@@ -139,15 +139,13 @@ export const FormatProjectTypes = (types: string[]) => {
 };
 
 
-export const getProjectFileLink = (slug: string, fileName: string) => {
-    return `${SERVER_URL}/cdn/data/${slug}/${fileName}`;
+export const projectFileUrl = (pathname: string) => {
+    return `${SERVER_URL}${pathname}`;
 }
 
-export const getProjectIcon = (slug: string) => {
-    return getProjectFileLink(slug, "icon");
-    // return `https://wsrv.nl/?url=${encodeURIComponent(url)}`
-}
-
-export const getVersionFileDownloadLink = (projectSlug: string, versionSlug: string, fileName: string) => {
-    return `${SERVER_URL}/cdn/data/${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`;
+export const imageUrl = (pathname: string | undefined | null) => {
+    if (!pathname) return "";
+    const dev = import.meta.env.PUBLIC_ENV === "development";
+    const directUrl = projectFileUrl(pathname);
+    return dev ? directUrl : `https://wsrv.nl/?url=${encodeURIComponent(directUrl)}`;
 };

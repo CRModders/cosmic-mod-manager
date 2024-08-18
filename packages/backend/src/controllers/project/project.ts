@@ -3,6 +3,7 @@ import prisma from "@/services/prisma";
 import { deleteProjectFile, saveProjectFile, saveProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
@@ -167,7 +168,7 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
             name: project.name,
             slug: project.slug,
             status: project.status as ProjectPublishingStatus,
-            icon: project.icon || "",
+            icon: projectIconUrl(project.slug, project.icon || ""),
             type: project.type,
         });
     }
@@ -210,6 +211,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             serverSide: true,
             loaders: true,
             gameVersions: true,
+
+            gallery: true,
 
             team: {
                 select: {
@@ -256,7 +259,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             project: {
                 id: project.id,
                 name: project.name,
-                icon: project.icon || "",
+                icon: projectIconUrl(project.slug, project.icon || ""),
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
@@ -280,6 +283,14 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 serverSide: project.serverSide as ProjectSupport,
                 loaders: project.loaders,
                 gameVersions: project.gameVersions,
+                gallery: project.gallery.map((galleryItem) => ({
+                    id: galleryItem.id,
+                    name: galleryItem.name,
+                    description: galleryItem.description,
+                    image: projectGalleryFileUrl(project.slug, galleryItem.image),
+                    featured: galleryItem.featured,
+                    dateCreated: galleryItem.dateCreated,
+                })),
                 members: project.team.members.map((member) => ({
                     id: member.id,
                     userId: member.user.id,
@@ -352,8 +363,9 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
-    // Check if the slug is available
+    // If the project slug has been updated
     if (formData.slug !== project.slug) {
+        // Check if the slug is available
         const existingProjectWithSameSlug = await prisma.project.findUnique({
             where: {
                 slug: formData.slug
@@ -365,7 +377,9 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
 
     let projectIcon = project.icon;
     // Check if the icon was updated
-    if (formData.icon !== projectIcon && projectIcon) {
+    // if the icon is an instanceof File that means a its a new icon so delete the old one
+    // if the icon is empty that means the icon is removed so delete the file also
+    if ((formData.icon instanceof File || !formData.icon) && projectIcon) {
         try {
             await deleteProjectFile(project.id, projectIcon, FILE_STORAGE_SERVICES.LOCAL);
         } catch (error) { }

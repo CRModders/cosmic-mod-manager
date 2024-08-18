@@ -1,4 +1,4 @@
-import { serveProjectFile, serveVersionFile } from "@/controllers/cdn";
+import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "@/controllers/cdn";
 import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { Hono } from "hono";
@@ -12,11 +12,24 @@ cdnRouter.get("/data/:projectSlug/icon", async (ctx) => {
         if (!projectSlug) {
             return defaultInvalidReqResponse(ctx);
         }
-        return await serveProjectFile(ctx, projectSlug, userSession);
+        return await serveProjectIconFile(ctx, projectSlug, userSession);
     } catch (error) {
         return defaultServerErrorResponse(ctx);
     }
-})
+});
+
+cdnRouter.get("/data/:projectSlug/gallery/:image", async (ctx) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, image } = ctx.req.param();
+        if (!projectSlug || !image) {
+            return defaultInvalidReqResponse(ctx);
+        }
+        return await serveProjectGalleryImage(ctx, projectSlug, image, userSession);
+    } catch (error) {
+        return defaultServerErrorResponse(ctx);
+    }
+});
 
 cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", async (ctx) => {
     try {

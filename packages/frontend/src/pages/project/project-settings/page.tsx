@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, getProjectIcon } from "@/lib/utils";
+import { cn, imageUrl } from "@/lib/utils";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +47,18 @@ const GeneralSettingsPage = () => {
     });
     form.watch();
 
+    const resetForm = (icon: string) => {
+        if (!projectData) return;
+
+        form.setValue("icon", icon);
+        form.setValue("name", projectData.name);
+        form.setValue("slug", projectData.slug);
+        form.setValue("visibility", projectData.visibility);
+        form.setValue("clientSide", projectData.clientSide);
+        form.setValue("serverSide", projectData.serverSide);
+        form.setValue("summary", projectData.summary);
+    }
+
     const saveSettings = async (values: z.infer<typeof generalProjectSettingsFormSchema>) => {
         if (isLoading) return;
         setIsLoading(true);
@@ -73,7 +85,6 @@ const GeneralSettingsPage = () => {
 
             await fetchProjectData(result?.data?.slug || projectData?.slug);
             toast.success(result?.message || "Success");
-            form.setValue("icon", result?.data?.icon);
 
         } finally {
             setIsLoading(false);
@@ -83,6 +94,7 @@ const GeneralSettingsPage = () => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(projectData);
+        resetForm(projectData?.icon || "");
     }, [projectData])
 
     if (!projectData) return;
@@ -128,7 +140,7 @@ const GeneralSettingsPage = () => {
                                                 const file = form.getValues().icon;
                                                 if (!file || !(file instanceof File)) {
                                                     if (typeof field.value === "string") {
-                                                        return field.value ? getProjectIcon(projectData.slug) : "";
+                                                        return field.value ? imageUrl(projectData.icon || "") : "";
                                                     }
                                                     return "";
                                                 }

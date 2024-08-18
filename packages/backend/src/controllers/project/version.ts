@@ -4,6 +4,7 @@ import prisma from "@/services/prisma";
 import { saveProjectVersionFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
+import { versionFileUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
@@ -270,6 +271,7 @@ export const getAllProjectVersions = async (
         where: { slug: slug },
         select: {
             id: true,
+            slug: true,
             status: true,
             visibility: true,
             team: {
@@ -333,6 +335,7 @@ export const getAllProjectVersions = async (
                 name: fileData.name,
                 size: fileData.size,
                 type: fileData.type,
+                url: versionFileUrl(project.slug, version.slug, fileData.name)
             };
 
             files.push(formattedFile);
@@ -383,13 +386,13 @@ export const getAllProjectVersions = async (
                 },
                 version: dependency.dependencyVersion?.id
                     ? {
-                          id: dependency.dependencyVersion.id,
-                          title: dependency.dependencyVersion.title,
-                          versionNumber: dependency.dependencyVersion.versionNumber,
-                          slug: dependency.dependencyVersion.slug,
-                          loaders: dependency.dependencyVersion.loaders,
-                          gameVersions: dependency.dependencyVersion.gameVersions,
-                      }
+                        id: dependency.dependencyVersion.id,
+                        title: dependency.dependencyVersion.title,
+                        versionNumber: dependency.dependencyVersion.versionNumber,
+                        slug: dependency.dependencyVersion.slug,
+                        loaders: dependency.dependencyVersion.loaders,
+                        gameVersions: dependency.dependencyVersion.gameVersions,
+                    }
                     : null,
             })),
         });

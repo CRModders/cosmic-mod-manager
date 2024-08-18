@@ -22,12 +22,18 @@
 
 - [-] Add project gallery
   - [x] Add gallery image upload
-  - [-] Update project data endpoint to send gallery image list
-  - [-] Add gallery list display
+  - [x] Update project data endpoint to send gallery image list
+  - [x] Move all the Url construction logic to backend and send already constructed url's to the frontend (eg. for icons)
+  - [x] Add gallery list display
+  - [-] Implement gallery item indexing option
   - [-] Add gallery edit option
   - [-] Add option to remove gallery image
 
 - [-] Add settings page
+  - [x] General settings page
+  - [x] Description settings page
+  - [-] Tags settings page
+
 - [-] Add option to add dependencies on a version
 - [-] Add edit version page
 - [-] Add function to count download count

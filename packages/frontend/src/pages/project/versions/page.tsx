@@ -7,7 +7,7 @@ import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { formatVersionsListString } from "@/lib/semver";
-import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, getVersionFileDownloadLink } from "@/lib/utils";
+import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { Projectcontext } from "@/src/contexts/curr-project";
 import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
@@ -136,11 +136,7 @@ const ProjectVersionsListTable = ({
                                                                             <VariantButtonLink
                                                                                 variant="default"
                                                                                 size="icon"
-                                                                                url={getVersionFileDownloadLink(
-                                                                                    projectData.slug,
-                                                                                    version.slug,
-                                                                                    version.primaryFile.name,
-                                                                                )}
+                                                                                url={projectFileUrl(version.primaryFile.url)}
                                                                                 className="noClickRedirect"
                                                                             >
                                                                                 <DownloadIcon className="w-btn-icon h-btn-icon" />

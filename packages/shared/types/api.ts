@@ -53,6 +53,15 @@ export interface Organisation {
     members: TeamMember[];
 }
 
+export interface GalleryItem {
+    id: string;
+    name: string;
+    description: string | null;
+    image: string;
+    featured: boolean;
+    dateCreated: Date;
+}
+
 export interface ProjectDetailsData {
     id: string;
     name: string;
@@ -84,6 +93,7 @@ export interface ProjectDetailsData {
     loaders: string[];
     gameVersions: string[];
 
+    gallery: GalleryItem[];
     members: TeamMember[];
     organisation: Organisation | null;
 }
@@ -92,6 +102,7 @@ export interface VersionFile {
     id: string;
     isPrimary: boolean;
     name: string;
+    url: string;
     size: number;
     type: string;
     hash?: string;
