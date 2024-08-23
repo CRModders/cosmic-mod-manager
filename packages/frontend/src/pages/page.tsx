@@ -9,6 +9,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 
 const HomePage = () => {
     const { session } = useSession();
@@ -78,7 +79,8 @@ const HomePage = () => {
 
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
                         <Link to={"/mods"}>
-                            <Button size={"lg"} aria-label="Explore mods" tabIndex={-1}>
+                            <Button size={"lg"} aria-label="Explore mods" tabIndex={-1} className="px-6">
+                                <CompassIcon className="w-btn-icon-md h-btn-icon-md" />
                                 Explore mods
                             </Button>
                         </Link>
@@ -89,16 +91,18 @@ const HomePage = () => {
                             <VariantButtonLink
                                 url="/signup"
                                 size={"lg"}
-                                className="bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
+                                className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
                             >
+                                <LogInIcon className="w-btn-icon-md h-btn-icon-md" />
                                 Sign Up
                             </VariantButtonLink>
                         ) : (
                             <VariantButtonLink
                                 url="/dashboard/projects"
                                 size={"lg"}
-                                className="bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
+                                className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
                             >
+                                <LayoutDashboardIcon className="w-btn-icon-md h-btn-icon-md" />
                                 Dashboard
                             </VariantButtonLink>
                         )}

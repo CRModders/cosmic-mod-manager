@@ -40,7 +40,7 @@ const ProjectsPage = () => {
         <>
             <Helmet>
                 <title>Projects | {SITE_NAME_SHORT}</title>
-                <meta name="description" content="Settings" />
+                <meta name="description" content={`Your ${SITE_NAME_SHORT} projects`} />
             </Helmet>
 
             <Card className="w-full overflow-hidden">
@@ -97,7 +97,9 @@ const ProjectsPage = () => {
                                                         <AvatarImg
                                                             url={imageUrl(project.icon)}
                                                             alt={project.name}
-                                                            fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
+                                                            fallback={
+                                                                <CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />
+                                                            }
                                                             imgClassName="rounded"
                                                             wrapperClassName="h-12 rounded"
                                                         />
@@ -108,7 +110,11 @@ const ProjectsPage = () => {
                                                         to={getProjectPagePathname(project.type[0], project.slug)}
                                                         className="noClickRedirect"
                                                     >
-                                                        <Button variant={"link"} className="p-0 font-[500]" tabIndex={-1}>
+                                                        <Button
+                                                            variant={"link"}
+                                                            className="p-0 font-[500]"
+                                                            tabIndex={-1}
+                                                        >
                                                             {project.name}
                                                         </Button>
                                                     </Link>

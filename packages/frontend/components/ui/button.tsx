@@ -10,10 +10,10 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-accent-background text-card-background dark:text-background hover:bg-accent-background/90 neumorphic_shadow [--shadow-alpha:0.25]",
+                    "font-[600] bg-accent-background text-card-background dark:text-background hover:bg-accent-background/90 neumorphic_shadow [--shadow-alpha:0.25]",
                 destructive:
-                    "bg-danger-background text-card-background dark:text-background hover:bg-danger-background/90 neumorphic_shadow [--shadow-alpha:1]",
-                outline: "border border-shallower-background hover:bg-shallow-background hover:text-accent-foreground",
+                    "font-[600] bg-danger-background text-card-background dark:text-background hover:bg-danger-background/90 neumorphic_shadow [--shadow-alpha:1]",
+                outline: "border border-shallow-background hover:bg-shallow-background",
                 secondary: "bg-shallow-background text-muted-foreground hover:bg-shallow-background/80 neumorphic_shadow",
                 "secondary-destructive": "text-danger-foreground bg-shallow-background hover:bg-shallow-background/80 neumorphic_shadow",
                 ghost: "text-muted-foreground hover:bg-shallow-background hover:neumorphic_shadow",

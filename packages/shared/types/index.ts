@@ -63,7 +63,7 @@ export enum ConfirmationType {
 
 // PROJECT
 export enum ProjectVisibility {
-    PUBLIC = "public",
+    LISTED = "listed",
     PRIVATE = "private",
     UNLISTED = "unlisted",
     ARCHIVED = "archived",

@@ -57,19 +57,17 @@ const Navbar = () => {
                             </span>
                         </Link>
 
-                        <ul className="hidden lg:flex items-center justify-center gap-3">
+                        <ul className="hidden lg:flex items-center justify-center gap-1">
                             {NavLinks.map((link) => {
                                 return (
-                                    <li key={link.href} className="flex px-2 items-center justify-center">
+                                    <li key={link.href} className="flex items-center justify-center">
                                         <Navlink
                                             href={link.href}
                                             label={link.label}
-                                            className="h-nav-item navLinkText flex items-center justify-center"
+                                            className="h-9"
+                                            // className="h-nav-item navLinkText flex items-center justify-center"
                                         >
-                                            <span className="relative flex items-center justify-center">
-                                                {link.label}
-                                                <span className="activityIndicator" />
-                                            </span>
+                                            {link.label}
                                         </Navlink>
                                     </li>
                                 );
@@ -108,9 +106,13 @@ type Props = {
 
 export const Navlink = ({ href, label, children, className }: Props) => {
     return (
-        <RouterNavLink aria-label={label} to={href} className={cn("routerNavLink", className)}>
+        <ButtonLink
+            url={href}
+            className={cn("hover:bg-card-background/80 dark:hover:bg-shallow-background/80", className)}
+            activeClassName="bg-card-background dark:bg-shallow-background"
+        >
             {children ? children : label}
-        </RouterNavLink>
+        </ButtonLink>
     );
 };
 

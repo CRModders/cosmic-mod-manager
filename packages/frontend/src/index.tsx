@@ -33,9 +33,10 @@ const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
 const ProjectPage = lazy(() => import("@/src/pages/project/page"));
 const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
-const UploadVersionPage = lazy(() => import("@/src/pages/project/versions/upload-version"));
-const VersionPage = lazy(() => import("@/src/pages/project/versions/version-page/page"));
 const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
+const VersionPage = lazy(() => import("@/src/pages/project/versions/version/page"));
+const UploadVersionPage = lazy(() => import("@/src/pages/project/versions/version/new-version"));
+const EditVersionPage = lazy(() => import("@/src/pages/project/versions/version/edit-version"));
 
 // Project settings
 const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/project-settings/layout"));
@@ -122,6 +123,14 @@ const projectPageRoutes = () => {
                                                 </Suspense>
                                             ),
                                         },
+                                        {
+                                            path: "edit",
+                                            element: (
+                                                <Suspense fallback={<SuspenseFallback />}>
+                                                    <EditVersionPage />
+                                                </Suspense>
+                                            ),
+                                        }
                                     ],
                                 },
                             ],

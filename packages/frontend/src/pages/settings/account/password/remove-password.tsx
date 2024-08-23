@@ -1,6 +1,7 @@
 import { Button, CancelButton } from "@/components/ui/button";
 import {
     Dialog,
+    DialogBody,
     DialogClose,
     DialogContent,
     DialogDescription,
@@ -73,36 +74,38 @@ const RemovePasswordForm = () => {
                     </DialogDescription>
                 </DialogHeader>
 
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(removeAccountPassword)}
-                        className="w-full flex flex-col items-start justify-start gap-form-elements"
-                    >
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="password-input">
-                                        Password
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Input {...field} type="password" id="password-input" placeholder="Enter your current password" />
-                                </FormItem>
-                            )}
-                        />
+                <DialogBody>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(removeAccountPassword)}
+                            className="w-full flex flex-col items-start justify-start gap-form-elements"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="password-input">
+                                            Password
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <Input {...field} type="password" id="password-input" placeholder="Enter your current password" />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <CancelButton disabled={isLoading} />
-                            </DialogClose>
-                            <Button type="submit" variant={"destructive"} disabled={isLoading || !form.getValues().password}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
-                                Remove password
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <CancelButton disabled={isLoading} />
+                                </DialogClose>
+                                <Button type="submit" variant={"destructive"} disabled={isLoading || !form.getValues().password}>
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                                    Remove password
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );

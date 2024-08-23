@@ -149,7 +149,6 @@ model Project {
     featuredCategories String[]
     loaders            String[]
     gameVersions       String[]
-    type               String[]
     clientSide         String   @db.VarChar(32)
     serverSide         String   @db.VarChar(32)
 

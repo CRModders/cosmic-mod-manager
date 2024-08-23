@@ -1,8 +1,7 @@
 import { Button, CancelButton } from "@/components/ui/button";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { Trash2Icon } from "lucide-react";
@@ -48,7 +47,7 @@ const DeleteAccountDialog = () => {
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="w-full flex flex-col items-start justify-start gap-form-elements">
+                <DialogBody className="w-full flex flex-col items-start justify-start gap-form-elements">
                     <p>Are you sure you want to delete your account?</p>
 
                     <DialogFooter>
@@ -61,7 +60,8 @@ const DeleteAccountDialog = () => {
                             Delete
                         </Button>
                     </DialogFooter>
-                </div>
+                </DialogBody>
+
             </DialogContent>
         </Dialog>
     );

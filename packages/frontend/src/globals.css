@@ -9,7 +9,7 @@
     --accent-color-hue: 345;
 
     /* FONT SIZES */
-    --font-sm: 0.83rem;
+    --font-sm: 0.85rem;
     --font-base: 1rem;
     --font-lg: 1.17rem;
     --font-xl: 1.5rem;
@@ -30,7 +30,7 @@
     --danger-foreground-dark: 0, 91%, 71%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
-    --link-foreground-dark: 213, 94%, 68%;
+    --link-foreground-dark: 213, 94%, 72%;
 
     /* LIGHT THEME */
     --foreground-light: var(--tint-hue), var(--bg-saturation), 18%;
@@ -47,7 +47,7 @@
     --danger-foreground-light: 0, 65%, 52%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 24%;
-    --link-foreground-light: 221, 83%, 53%;
+    --link-foreground-light: 221, 85%, 50%;
 
     --link-hover-foreground: 217, 91%, 60%;
 }
@@ -179,7 +179,7 @@ body.no-scrollbar {
         min-height: clamp(45rem, 100vh, 67rem);
     }
 
-    .bg_hover_stagger {
+    .bg_hover_stagger:not(.no_bg_hover_stagger) {
         transition: background-color 300ms ease;
         @apply hover:duration-0 group-hover:duration-0;
     }

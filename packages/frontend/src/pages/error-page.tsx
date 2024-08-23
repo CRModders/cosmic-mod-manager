@@ -7,7 +7,7 @@ export default function ErrorView() {
         <>
             <Helmet>
                 <title>! Error | {SITE_NAME_SHORT}</title>
-                <meta name="description" content="We couldn't find the page you are looking for." />
+                <meta name="description" content="We're having issues loading the current page" />
             </Helmet>
             <div className="w-full full_page flex flex-col items-center justify-center gap-4">
                 <div className="headings">
@@ -19,7 +19,12 @@ export default function ErrorView() {
                     Seems like something broke, while we try to resolve the issue try refreshing the page.
                 </p>
 
-                <Button className="text-foreground" variant={"link"} aria-label="Refresh the page" onClick={() => window.location.reload()}>
+                <Button
+                    className="text-foreground"
+                    variant={"link"}
+                    aria-label="Refresh the page"
+                    onClick={() => window.location.reload()}
+                >
                     <span className="text-lg">Refresh</span>
                 </Button>
             </div>

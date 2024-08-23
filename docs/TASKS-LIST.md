@@ -20,16 +20,19 @@
     [Iris Versions](https://api.modrinth.com/v2/project/iris/version)
     [Iris Dependencies](https://api.modrinth.com/v2/project/iris/dependencies)
 
-- [-] Add project gallery
+- [x] Add project gallery
   - [x] Add gallery image upload
   - [x] Update project data endpoint to send gallery image list
   - [x] Move all the Url construction logic to backend and send already constructed url's to the frontend (eg. for icons)
   - [x] Add gallery list display
   - [x] Implement gallery item indexing option
   - [x] Add option to remove gallery image
-  - [-] Add gallery edit option
+  - [x] Add gallery edit option
 
-- [-] Add changelog page
+- [x] Add changelog page
+
+- [x] Add the interactive download button on project home page
+- [-] Add the new version list UI
 
 - [-] Add settings page
   - [x] General settings page
@@ -37,6 +40,11 @@
   - [-] Tags settings page
 
 - [-] Add option to add dependencies on a version
-- [-] Add edit version page
+- [-] Add edit version page \
+  NOTE:- Create reusabel components from the new version page and use them in both upload form and edit form
+
 - [-] Add function to count downloads
-- [-] Add project changelog page
+- [-] Add custom redirect after login
+
+- [-] Fix project deletion
+- [-] Fix user deletion

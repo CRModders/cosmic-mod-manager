@@ -16,63 +16,80 @@ import useFetch from "@/src/hooks/fetch";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const RemoveGalleryImage = ({ children, id }: { children: React.ReactNode; id: string }) => {
-    const { projectData, fetchProjectData } = useContext(projectContext);
+const DeleteVersionDialog = ({
+    projectSlug,
+    versionSlug,
+    featured,
+}: { projectSlug: string; versionSlug: string; featured: boolean }) => {
+    const { projectData, fetchAllProjectVersions, fetchFeaturedProjectVersions } = useContext(projectContext);
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    const deleteImage = async () => {
+    const deleteVersion = async () => {
         if (isLoading) return;
         setIsLoading(true);
-
         try {
-            const response = await useFetch(`/api/project/${projectData?.slug}/gallery`, {
+            const response = await useFetch(`/api/project/${projectSlug}/version/${versionSlug}`, {
                 method: "DELETE",
-                body: JSON.stringify({ id: id }),
             });
-
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
                 return toast.error(result?.message || "Error");
             }
 
-            await fetchProjectData();
+            navigate(`/${projectData?.type[0]}/${projectSlug}/versions`);
+            if (featured === true) {
+                await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions()]);
+            } else {
+                await fetchAllProjectVersions();
+            }
+
             return toast.success(result?.message || "Success");
-        } catch (error) {
+        } finally {
             setIsLoading(false);
         }
     };
 
     return (
         <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogTrigger asChild>
+                <Button variant={"secondary-destructive"}>
+                    <Trash2Icon className="w-btn-icon h-form-submit-btn" />
+                    Delete
+                </Button>
+            </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Are you sure you want to delete this gallery image?</DialogTitle>
+                    <DialogTitle>Are you sure you want to delete this version?</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Delete gallery image</DialogDescription>
+                        <DialogDescription>Delete version</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
-                <DialogBody className="flex flex-col gap-4">
+
+                <DialogBody className="flex flex-col items-start justify-start gap-4">
                     <span className="text-muted-foreground">
-                        This will remove this gallery image forever (like really forever).
+                        This will remove this version forever (like really forever).
                     </span>
+
                     <DialogFooter>
                         <DialogClose asChild disabled={isLoading}>
                             <CancelButton disabled={isLoading} />
                         </DialogClose>
 
-                        <Button variant={"destructive"} disabled={isLoading} onClick={deleteImage}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                        <Button variant={"destructive"} onClick={deleteVersion} disabled={isLoading}>
+                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon" />}
                             Delete
                         </Button>
                     </DialogFooter>
+
                 </DialogBody>
             </DialogContent>
         </Dialog>
     );
 };
 
-export default RemoveGalleryImage;
+export default DeleteVersionDialog;

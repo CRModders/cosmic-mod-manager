@@ -9,7 +9,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn, imageUrl } from "@/lib/utils";
-import { Projectcontext } from "@/src/contexts/curr-project";
+import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Capitalize } from "@shared/lib/utils";
@@ -32,11 +32,11 @@ const getInitialValues = (projectData?: ProjectDetailsData | null) => {
         clientSide: projectData?.clientSide,
         serverSide: projectData?.serverSide,
         summary: projectData?.summary,
-    }
-}
+    };
+};
 
 const GeneralSettingsPage = () => {
-    const { projectData, fetchProjectData } = useContext(Projectcontext);
+    const { projectData, fetchProjectData } = useContext(projectContext);
     const [isLoading, setIsLoading] = useState(false);
 
     let initialValues = getInitialValues(projectData);
@@ -57,7 +57,7 @@ const GeneralSettingsPage = () => {
         form.setValue("clientSide", projectData.clientSide);
         form.setValue("serverSide", projectData.serverSide);
         form.setValue("summary", projectData.summary);
-    }
+    };
 
     const saveSettings = async (values: z.infer<typeof generalProjectSettingsFormSchema>) => {
         if (isLoading) return;
@@ -75,7 +75,7 @@ const GeneralSettingsPage = () => {
 
             const response = await useFetch(`/api/project/${projectData?.slug}`, {
                 method: "PATCH",
-                body: formData
+                body: formData,
             });
             const result = await response.json();
 
@@ -85,17 +85,16 @@ const GeneralSettingsPage = () => {
 
             await fetchProjectData(result?.data?.slug || projectData?.slug);
             toast.success(result?.message || "Success");
-
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(projectData);
         resetForm(projectData?.icon || "");
-    }, [projectData])
+    }, [projectData]);
 
     if (!projectData) return;
 
@@ -103,7 +102,10 @@ const GeneralSettingsPage = () => {
         <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
             <ContentCardTemplate title="Project information">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(saveSettings)} className="w-full flex flex-col items-start justify-start gap-form-elements">
+                    <form
+                        onSubmit={form.handleSubmit(saveSettings)}
+                        className="w-full flex flex-col items-start justify-start gap-form-elements"
+                    >
                         <FormField
                             control={form.control}
                             name="icon"
@@ -119,20 +121,26 @@ const GeneralSettingsPage = () => {
                                             className="hidden"
                                             id="project-icon-input"
                                             accept={".jpg, .jpeg, .png"}
-                                            type="file" value={""} name={field.name} onChange={(e) => {
+                                            type="file"
+                                            value={""}
+                                            name={field.name}
+                                            onChange={(e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
 
                                                 try {
-                                                    generalProjectSettingsFormSchema.parse({ ...form.getValues(), icon: file });
+                                                    generalProjectSettingsFormSchema.parse({
+                                                        ...form.getValues(),
+                                                        icon: file,
+                                                    });
                                                     field.onChange(file);
                                                 } catch (error) {
                                                     // @ts-ignore
                                                     toast.error(error?.issues?.[0]?.message || "Error with the file");
                                                     console.error(error);
                                                 }
-
-                                            }} />
+                                            }}
+                                        />
 
                                         <AvatarImg
                                             alt={projectData.name}
@@ -156,24 +164,25 @@ const GeneralSettingsPage = () => {
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <label htmlFor="project-icon-input" className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}>
+                                            <label
+                                                htmlFor="project-icon-input"
+                                                className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
+                                            >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
                                                 Upload icon
                                             </label>
-                                            {
-                                                form.getValues().icon ?
-                                                    <Button variant={"secondary"}
-                                                        type="button"
-                                                        onClick={() => {
-                                                            form.setValue("icon", "")
-                                                        }}
-                                                    >
-                                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                                        Remove icon
-                                                    </Button>
-                                                    :
-                                                    null
-                                            }
+                                            {form.getValues().icon ? (
+                                                <Button
+                                                    variant={"secondary"}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        form.setValue("icon", "");
+                                                    }}
+                                                >
+                                                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                    Remove icon
+                                                </Button>
+                                            ) : null}
                                         </div>
                                     </div>
                                 </FormItem>
@@ -205,10 +214,9 @@ const GeneralSettingsPage = () => {
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
                                         <Input {...field} className="md:w-[32ch]" />
-                                        <span className="text-sm lg:text-base text-muted-foreground px-1">{window.location.origin}/{projectData.type[0]}/
-                                            <em className="not-italic text-foreground font-[500]">
-                                                {form.getValues().slug}
-                                            </em>
+                                        <span className="text-sm lg:text-base text-muted-foreground px-1">
+                                            {window.location.origin}/{projectData.type[0]}/
+                                            <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
                                 </FormItem>
@@ -224,7 +232,7 @@ const GeneralSettingsPage = () => {
                                         Summary
                                         <FormMessage />
                                     </FormLabel>
-                                    <Textarea {...field} className="resize-none md:w-[48ch]" />
+                                    <Textarea {...field} className="resize-none md:w-[48ch]" spellCheck="false" />
                                 </FormItem>
                             )}
                         />
@@ -239,7 +247,9 @@ const GeneralSettingsPage = () => {
                                             Client-side
                                             <FormMessage />
                                         </FormLabel>
-                                        <span className="text-muted-foreground">Select based on if the {projectData.type[0]} has functionality on the client side.</span>
+                                        <span className="text-muted-foreground">
+                                            Select based on if the {projectData.type[0]} has functionality on the client side.
+                                        </span>
                                     </div>
 
                                     <Select value={field.value} onValueChange={field.onChange}>
@@ -250,7 +260,9 @@ const GeneralSettingsPage = () => {
                                             <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
                                             <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
                                             <SelectItem value={ProjectSupport.UNKNOWN}>{Capitalize(ProjectSupport.UNKNOWN)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>{Capitalize(ProjectSupport.UNSUPPORTED)}</SelectItem>
+                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>
+                                                {Capitalize(ProjectSupport.UNSUPPORTED)}
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
@@ -267,7 +279,9 @@ const GeneralSettingsPage = () => {
                                             Server-side
                                             <FormMessage />
                                         </FormLabel>
-                                        <span className="text-muted-foreground">Select based on if the {projectData.type[0]} has functionality on the logical server.</span>
+                                        <span className="text-muted-foreground">
+                                            Select based on if the {projectData.type[0]} has functionality on the logical server.
+                                        </span>
                                     </div>
 
                                     <Select value={field.value} onValueChange={field.onChange}>
@@ -278,7 +292,9 @@ const GeneralSettingsPage = () => {
                                             <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
                                             <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
                                             <SelectItem value={ProjectSupport.UNKNOWN}>{Capitalize(ProjectSupport.UNKNOWN)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>{Capitalize(ProjectSupport.UNSUPPORTED)}</SelectItem>
+                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>
+                                                {Capitalize(ProjectSupport.UNSUPPORTED)}
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
@@ -297,51 +313,53 @@ const GeneralSettingsPage = () => {
                                         </FormLabel>
                                         <div className="max-w-[68ch] flex flex-col items-start justify-start text-muted-foreground gap-1.5">
                                             <p className="leading-tight">
-                                                Listed and archived projects are visible in search. Unlisted projects are published, but not visible in search or on user profiles. Private projects are only accessible by members of the project.
+                                                Listed and archived projects are visible in search. Unlisted projects are published, but not
+                                                visible in search or on user profiles. Private projects are only accessible by members of
+                                                the project.
                                             </p>
 
-                                            {projectData.status !== ProjectPublishingStatus.PUBLISHED ? <span>If approved by the moderators:</span> : null}
+                                            {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
+                                                <span>If approved by the moderators:</span>
+                                            ) : null}
 
                                             <div className="flex flex-col items-start justify-center">
                                                 <span className="flex items-center justify-center gap-1.5">
-                                                    {
-                                                        field.value === ProjectVisibility.PUBLIC ||
-                                                            field.value === ProjectVisibility.ARCHIVED
-                                                            ?
-                                                            <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
-                                                            : <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
-                                                    }
+                                                    {field.value === ProjectVisibility.LISTED ||
+                                                        field.value === ProjectVisibility.ARCHIVED ? (
+                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                    ) : (
+                                                        <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
+                                                    )}
                                                     Visible in search
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
-                                                    {
-                                                        field.value === ProjectVisibility.PUBLIC ||
-                                                            field.value === ProjectVisibility.ARCHIVED ?
-                                                            <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
-                                                            : <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
-                                                    }
+                                                    {field.value === ProjectVisibility.LISTED ||
+                                                        field.value === ProjectVisibility.ARCHIVED ? (
+                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                    ) : (
+                                                        <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
+                                                    )}
                                                     Visible on profile
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
-                                                    {
-                                                        field.value === ProjectVisibility.PRIVATE ?
-
-                                                            <TooltipProvider>
-                                                                <Tooltip>
-                                                                    <TooltipTrigger asChild>
-                                                                        <span>
-                                                                            <TriangleAlertIcon className="w-btn-icon h-btn-icon text-orange-600 dark:text-orange-400" />
-                                                                        </span>
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent>Only members will be able to view the project</TooltipContent>
-                                                                </Tooltip>
-                                                            </TooltipProvider>
-                                                            :
-                                                            <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
-                                                    }
+                                                    {field.value === ProjectVisibility.PRIVATE ? (
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <span>
+                                                                        <TriangleAlertIcon className="w-btn-icon h-btn-icon text-orange-600 dark:text-orange-400" />
+                                                                    </span>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>
+                                                                    Only members will be able to view the project
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
+                                                    ) : (
+                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                    )}
                                                     Visible via URL
                                                 </span>
-
                                             </div>
                                         </div>
                                     </div>
@@ -351,10 +369,16 @@ const GeneralSettingsPage = () => {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value={ProjectVisibility.PUBLIC}>{Capitalize(ProjectVisibility.PUBLIC)}</SelectItem>
-                                            <SelectItem value={ProjectVisibility.ARCHIVED}>{Capitalize(ProjectVisibility.ARCHIVED)}</SelectItem>
-                                            <SelectItem value={ProjectVisibility.UNLISTED}>{Capitalize(ProjectVisibility.UNLISTED)}</SelectItem>
-                                            <SelectItem value={ProjectVisibility.PRIVATE}>{Capitalize(ProjectVisibility.PRIVATE)}</SelectItem>
+                                            <SelectItem value={ProjectVisibility.LISTED}>{Capitalize(ProjectVisibility.LISTED)}</SelectItem>
+                                            <SelectItem value={ProjectVisibility.ARCHIVED}>
+                                                {Capitalize(ProjectVisibility.ARCHIVED)}
+                                            </SelectItem>
+                                            <SelectItem value={ProjectVisibility.UNLISTED}>
+                                                {Capitalize(ProjectVisibility.UNLISTED)}
+                                            </SelectItem>
+                                            <SelectItem value={ProjectVisibility.PRIVATE}>
+                                                {Capitalize(ProjectVisibility.PRIVATE)}
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
@@ -362,17 +386,16 @@ const GeneralSettingsPage = () => {
                         />
 
                         <div className="w-full flex items-center justify-end mt-2">
-                            <Button type="submit"
+                            <Button
+                                type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                 Save changes
                             </Button>
                         </div>
-
                     </form>
                 </Form>
-
             </ContentCardTemplate>
         </div>
     );

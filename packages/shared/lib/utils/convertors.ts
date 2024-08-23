@@ -74,7 +74,7 @@ export const getProjectVisibilityFromString = (visibility: string) => {
         case ProjectVisibility.ARCHIVED:
             return ProjectVisibility.ARCHIVED;
         default:
-            return ProjectVisibility.PUBLIC;
+            return ProjectVisibility.LISTED;
     }
 };
 

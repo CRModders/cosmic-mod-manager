@@ -1,4 +1,4 @@
-import { createNewVersion, getAllProjectVersions } from "@/controllers/project/version";
+import { createNewVersion, deleteProjectVersion, getAllProjectVersions, getProjectVersionData } from "@/controllers/project/version";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -46,7 +46,6 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
             primaryFile: formData.get("primaryFile"),
             additionalFiles: (formData.getAll("additionalFiles") || []).filter((file: unknown) => {
                 if (file instanceof File) return file;
-                if (typeof file === "string") return JSON.parse(file);
             }),
         };
 
@@ -60,6 +59,32 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await createNewVersion(ctx, userSession, projectSlug, data);
+    } catch (error) {
+        console.trace(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+versionRouter.get("/:versionSlug", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, versionSlug } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
+
+        return await getProjectVersionData(ctx, projectSlug, versionSlug, userSession);
+    } catch (error) {
+        console.trace(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+versionRouter.delete("/:versionSlug", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, versionSlug } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
+
+        return await deleteProjectVersion(ctx, projectSlug, versionSlug, userSession);
     } catch (error) {
         console.trace(error);
         return defaultServerErrorResponse(ctx);

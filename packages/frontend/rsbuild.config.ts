@@ -26,6 +26,15 @@ export default defineConfig({
             {
                 tag: "link",
                 attrs: {
+                    rel: "preconnect",
+                    href: "https://fonts.gstatic.com",
+                },
+                head: true,
+                append: true,
+            },
+            {
+                tag: "link",
+                attrs: {
                     rel: "stylesheet",
                     href: "https://fonts.googleapis.com/css2?&family=Inter:wght@100..900&display=swap",
                 },

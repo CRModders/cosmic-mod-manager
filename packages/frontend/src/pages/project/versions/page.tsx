@@ -1,15 +1,14 @@
-import { ContentCardTemplate } from "@/components/layout/panel";
 import PaginatedNavigation from "@/components/pagination-nav";
 import { Card } from "@/components/ui/card";
 import { VariantButtonLink } from "@/components/ui/link";
-import ReleaseChannelIndicator from "@/components/ui/release-channel-pill";
+import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { formatVersionsListString } from "@/lib/semver";
 import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
-import { Projectcontext } from "@/src/contexts/curr-project";
+import { projectContext } from "@/src/contexts/curr-project";
 import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, isUserAProjectMember, parseFileSize } from "@shared/lib/utils";
@@ -21,7 +20,7 @@ import { Helmet } from "react-helmet";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const ProjectVersionsPage = () => {
-    const { projectData, allProjectVersions } = useContext(Projectcontext);
+    const { projectData, allProjectVersions } = useContext(projectContext);
     const { session } = useSession();
     const projectMembership = useMemo(() => {
         return isUserAProjectMember(session?.id, projectData?.members);
@@ -35,12 +34,17 @@ const ProjectVersionsPage = () => {
 
     return (
         <>
-            {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
-            {projectMembership && projectMembership?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) ? (
-                <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
-            ) : null}
+            <div className="grid gap-panel-cards [grid-area:_content]">
+                {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
+                {projectMembership && projectMembership?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+                    <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
+                ) : null}
 
-            <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
+                <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
+            </div>
+            <div className="grid [grid-area:_sidebar]">
+                <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
+            </div>
         </>
     );
 };
@@ -49,7 +53,7 @@ export default ProjectVersionsPage;
 
 const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => {
     return (
-        <ContentCardTemplate className="px-4 py-3 flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2" cardClassname="p-0">
+        <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
             <VariantButtonLink url={uploadPageUrl} variant={"default"}>
                 <UploadIcon className="w-btn-icon h-btn-icon" />
                 Upload a version
@@ -59,7 +63,7 @@ const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => 
                 <InfoIcon className="h-btn-icon w-btn-icon" />
                 Upload a new project version
             </div>
-        </ContentCardTemplate>
+        </Card>
     );
 };
 
@@ -88,7 +92,6 @@ const ProjectVersionsListTable = ({
                 <title>
                     {projectData?.name || ""} - Versions | {SITE_NAME_SHORT}
                 </title>
-                <meta name="description" content="Dashboard" />
             </Helmet>
 
             <div className="w-full flex flex-col gap-2 items-center justify-center" id="all-versions">
@@ -161,7 +164,7 @@ const ProjectVersionsListTable = ({
                                                             </Link>
 
                                                             <div className="flex flex-wrap gap-1 items-center justify-start">
-                                                                <ReleaseChannelIndicator releaseChannel={version.releaseChannel} />
+                                                                <ReleaseChannelChip releaseChannel={version.releaseChannel} />
                                                                 <span className="leading-tight">{version.versionNumber}</span>
                                                             </div>
                                                         </div>

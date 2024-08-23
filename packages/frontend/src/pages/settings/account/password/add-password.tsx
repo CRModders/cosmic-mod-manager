@@ -1,6 +1,7 @@
 import { Button, CancelButton } from "@/components/ui/button";
 import {
     Dialog,
+    DialogBody,
     DialogClose,
     DialogContent,
     DialogDescription,
@@ -73,53 +74,56 @@ const AddPasswordForm = () => {
                     <DialogDescription>You will be able to use this password to log into your account</DialogDescription>
                 </DialogHeader>
 
-                <Form {...form}>
-                    <form
-                        className="flex flex-col items-center justify-start gap-form-elements"
-                        onSubmit={form.handleSubmit(addNewPassword)}
-                    >
-                        <FormField
-                            control={form.control}
-                            name="newPassword"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        New password
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input {...field} type="password" placeholder="Your new password" spellCheck={false} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="confirmNewPassword"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Confirm password
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input {...field} type="password" placeholder="Re-enter your password" spellCheck={false} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
 
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <CancelButton />
-                            </DialogClose>
-                            <Button disabled={!isFormSubmittable || isLoading}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                Add password
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                <DialogBody>
+                    <Form {...form}>
+                        <form
+                            className="flex flex-col items-center justify-start gap-form-elements"
+                            onSubmit={form.handleSubmit(addNewPassword)}
+                        >
+                            <FormField
+                                control={form.control}
+                                name="newPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            New password
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} type="password" placeholder="Your new password" spellCheck={false} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="confirmNewPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Confirm password
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input {...field} type="password" placeholder="Re-enter your password" spellCheck={false} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <CancelButton />
+                                </DialogClose>
+                                <Button disabled={!isFormSubmittable || isLoading}>
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                    Add password
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );

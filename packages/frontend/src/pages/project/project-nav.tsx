@@ -1,10 +1,10 @@
 import { ButtonLink } from "@/components/ui/link";
 import { SettingsIcon } from "lucide-react";
 
-const ProjectNav = ({ baseHref, isAProjectMember }: { baseHref: string; isAProjectMember: boolean }) => {
+const ProjectNav = ({ baseHref }: { baseHref: string }) => {
     const links = [
         {
-            label: "Description",
+            label: "About",
             href: `${baseHref}`,
         },
         {
@@ -22,23 +22,17 @@ const ProjectNav = ({ baseHref, isAProjectMember }: { baseHref: string; isAProje
     ];
 
     return (
-        <nav className="w-full flex items-center justify-start" id="project-page-nav">
-            <ul className="w-fit grow flex flex-wrap gap-x-2 gap-y-1.5">
+        <nav className="w-full max-w-full flex items-center justify-start overflow-x-auto" id="project-page-nav">
+            <ul className="w-full flex gap-1">
                 {links.map((link) => {
                     return (
                         <li key={link.href} className="flex items-center justify-center">
-                            <ButtonLink key={link.href} url={link.href} className="h-9 px-3">
+                            <ButtonLink key={link.href} url={link.href} className="h-9 text-sm px-4 py-0 rounded-full font-semibold">
                                 {link.label}
                             </ButtonLink>
                         </li>
                     );
                 })}
-                {isAProjectMember === true && (
-                    <ButtonLink url={`${baseHref}/settings`} className="h-9 px-3 w-fit">
-                        <SettingsIcon className="w-btn-icon h-btn-icon" />
-                        Settings
-                    </ButtonLink>
-                )}
             </ul>
         </nav>
     );

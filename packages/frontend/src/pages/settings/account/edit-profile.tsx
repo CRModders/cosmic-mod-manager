@@ -1,6 +1,7 @@
 import { Button, CancelButton } from "@/components/ui/button";
 import {
     Dialog,
+    DialogBody,
     DialogClose,
     DialogContent,
     DialogDescription,
@@ -85,110 +86,112 @@ const EditProfileDialog = ({
                     <DialogDescription>Edit your crmm profile</DialogDescription>
                 </VisuallyHidden>
 
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(handleSubmit)}
-                        name="Edit profile"
-                        className="w-full flex flex-col items-start justify-start gap-3"
-                    >
-                        <FormField
-                            control={form.control}
-                            name="avatarUrlProvider"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Avatar provider
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {linkedAuthProviders
-                                                ?.map((provider) => ({
-                                                    ...provider,
-                                                    providerName: getAuthProviderFromString(provider.providerName),
-                                                }))
-                                                .map((provider) => {
-                                                    return (
-                                                        <SelectItem key={provider.id} value={provider.providerName}>
-                                                            {Capitalize(provider.providerName)}
-                                                        </SelectItem>
-                                                    );
-                                                })}
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="userName"
-                            render={({ field }) => (
-                                <>
+                <DialogBody>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(handleSubmit)}
+                            name="Edit profile"
+                            className="w-full flex flex-col items-start justify-start gap-3"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="avatarUrlProvider"
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Username
+                                            Avatar provider
                                             <FormMessage />
                                         </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="text"
-                                                spellCheck={false}
-                                                onChange={(e) => {
-                                                    e.target.value = formatUserName(e.target.value);
-                                                    field.onChange(e);
-                                                }}
-                                            />
-                                        </FormControl>
+                                        <Select value={field.value} onValueChange={field.onChange}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {linkedAuthProviders
+                                                    ?.map((provider) => ({
+                                                        ...provider,
+                                                        providerName: getAuthProviderFromString(provider.providerName),
+                                                    }))
+                                                    .map((provider) => {
+                                                        return (
+                                                            <SelectItem key={provider.id} value={provider.providerName}>
+                                                                {Capitalize(provider.providerName)}
+                                                            </SelectItem>
+                                                        );
+                                                    })}
+                                            </SelectContent>
+                                        </Select>
                                     </FormItem>
-                                </>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <>
-                                    <FormItem>
-                                        <FormLabel>
-                                            Name
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="text"
-                                                spellCheck={false}
-                                                onChange={(e) => {
-                                                    e.target.value = formatUserName(e.target.value, " ");
-                                                    field.onChange(e);
-                                                }}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                </>
-                            )}
-                        />
+                                )}
+                            />
 
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <CancelButton />
-                            </DialogClose>
-                            <Button
-                                disabled={
-                                    isLoading || isFetchingData || JSON.stringify(form.getValues()) === JSON.stringify(initialFormValues)
-                                }
-                            >
-                                {isLoading || isFetchingData ? <LoadingSpinner size="xs" /> : <SaveIcon className="size-4" />}
-                                Save
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                            <FormField
+                                control={form.control}
+                                name="userName"
+                                render={({ field }) => (
+                                    <>
+                                        <FormItem>
+                                            <FormLabel>
+                                                Username
+                                                <FormMessage />
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="text"
+                                                    spellCheck={false}
+                                                    onChange={(e) => {
+                                                        e.target.value = formatUserName(e.target.value);
+                                                        field.onChange(e);
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    </>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <>
+                                        <FormItem>
+                                            <FormLabel>
+                                                Name
+                                                <FormMessage />
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="text"
+                                                    spellCheck={false}
+                                                    onChange={(e) => {
+                                                        e.target.value = formatUserName(e.target.value, " ");
+                                                        field.onChange(e);
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    </>
+                                )}
+                            />
+
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <CancelButton />
+                                </DialogClose>
+                                <Button
+                                    disabled={
+                                        isLoading || isFetchingData || JSON.stringify(form.getValues()) === JSON.stringify(initialFormValues)
+                                    }
+                                >
+                                    {isLoading || isFetchingData ? <LoadingSpinner size="xs" /> : <SaveIcon className="size-4" />}
+                                    Save
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .markdown-body {
-    @apply text-foreground text-base;
+    @apply text-muted-foreground text-base;
 }
 
 .markdown-body h1:first-child {
@@ -29,13 +29,13 @@
 
 .markdown-body h1,
 .markdown-body h2 {
-    @apply pt-2.5 pb-1 border-b border-foreground;
+    @apply pt-2.5 pb-1 border-b border-extra-muted-foreground;
 }
 
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
-    @apply text-foreground font-semibold;
+    @apply font-bold;
 }
 
 .markdown-body h1,
@@ -64,17 +64,15 @@
 }
 
 .markdown-body h1 {
-    margin-bottom: 1.25rem;
-    font-size: 2rem;
+    @apply mb-5 text-2xl;
 }
 
 .markdown-body h2 {
-    margin-bottom: 1rem;
-    font-size: 1.6rem;
+    @apply text-xl mb-4;
 }
 
 .markdown-body h3 {
-    font-size: 1.35rem;
+    @apply text-lg;
 }
 
 
@@ -93,7 +91,7 @@
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
     text-decoration: none;
-    @apply text-link-hover-foreground;
+    @apply brightness-110;
 }
 
 .markdown-body a:active {

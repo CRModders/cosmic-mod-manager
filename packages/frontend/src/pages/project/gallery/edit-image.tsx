@@ -1,4 +1,4 @@
-import { Button, CancelButton, buttonVariants } from "@/components/ui/button";
+import { Button, CancelButton } from "@/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -14,49 +14,43 @@ import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } fr
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { addNewGalleryImageFormSchema } from "@shared/schemas/project";
-import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
+import { updateGalleryImageFormSchema } from "@shared/schemas/project";
+import type { GalleryItem } from "@shared/types/api";
+import { Edit2Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-const UploadGalleryImageForm = () => {
+const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { projectData, fetchProjectData } = useContext(projectContext);
 
-    const form = useForm<z.infer<typeof addNewGalleryImageFormSchema>>({
-        resolver: zodResolver(addNewGalleryImageFormSchema),
+    const form = useForm<z.infer<typeof updateGalleryImageFormSchema>>({
+        resolver: zodResolver(updateGalleryImageFormSchema),
         defaultValues: {
             title: "",
             description: "",
-            orderIndex: (projectData?.gallery?.[0]?.orderIndex || 0) + 1,
+            orderIndex: 0,
             featured: false,
         },
     });
     form.watch();
 
-    const uploadGalleryImage = async (values: z.infer<typeof addNewGalleryImageFormSchema>) => {
+    const updateGalleryImage = async (values: z.infer<typeof updateGalleryImageFormSchema>) => {
         if (isLoading) return;
         setIsLoading(true);
 
         try {
-            const formData = new FormData();
-            formData.append("image", values.image);
-            formData.append("title", values.title);
-            formData.append("description", values.description || "");
-            formData.append("orderIndex", (values.orderIndex || 0).toString());
-            formData.append("featured", values.featured.toString());
-
-            const response = await useFetch(`/api/project/${projectData?.slug}/gallery`, {
-                method: "POST",
-                body: formData,
+            const response = await useFetch(`/api/project/${projectData?.slug}/gallery/${galleryItem.id}`, {
+                method: "PATCH",
+                body: JSON.stringify(values),
             });
             const result = await response.json();
 
@@ -75,96 +69,54 @@ const UploadGalleryImageForm = () => {
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (projectData) {
-            form.setValue("orderIndex", (projectData?.gallery?.[0]?.orderIndex || 0) + 1);
+        if (galleryItem) {
+            form.setValue("title", galleryItem.name);
+            form.setValue("description", galleryItem.description || "");
+            form.setValue("orderIndex", galleryItem.orderIndex);
+            form.setValue("featured", galleryItem.featured);
         }
-    }, [projectData]);
+    }, [galleryItem]);
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant={"default"}>
-                    <UploadIcon className="w-btn-icon h-btn-icon" />
-                    Upload gallery image
+                <Button variant={"secondary"} size={"sm"}>
+                    <Edit2Icon className="w-btn-icon h-btn-icon" />
+                    Edit
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[36rem]">
                 <DialogHeader>
-                    <DialogTitle>Upload an image</DialogTitle>
+                    <DialogTitle>Edit gallery item</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Upload a new gallery image</DialogDescription>
+                        <DialogDescription>Edit a gallery image</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
 
                 <DialogBody>
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(uploadGalleryImage)}
+                            onSubmit={form.handleSubmit(updateGalleryImage)}
                             className="w-full flex flex-col items-start justify-start gap-form-elements"
                         >
-                            <FormField
-                                control={form.control}
-                                name="image"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <div className="w-full flex flex-col items-center justify-center">
-                                            <div
-                                                className={cn(
-                                                    "w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-3 gap-x-4 gap-y-2",
-                                                    field.value && "rounded-b-none",
-                                                )}
-                                            >
-                                                <div className="w-full flex items-center justify-start gap-1.5">
-                                                    {/* {children} */}
-                                                    <input
-                                                        hidden
-                                                        type="file"
-                                                        name={field.name}
-                                                        id="gallery-image-input"
-                                                        className="hidden"
-                                                        accept={".jpg, .jpeg, .png"}
-                                                        onChange={(e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file) {
-                                                                field.onChange(file);
-                                                            }
-                                                        }}
-                                                    />
-                                                    <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
-                                                    {field.value ? (
-                                                        <div className="flex items-center flex-wrap justify-start gap-x-2">
-                                                            <span className="font-semibold">{field.value.name}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <span className="text-muted-foreground italic">
-                                                            No file choosen
-                                                        </span>
-                                                    )}
-                                                </div>
+                            <div className="w-full flex flex-col items-center justify-center">
+                                <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-3 gap-x-4 gap-y-2 rounded-b-none">
+                                    <div className="w-full flex items-center justify-start gap-1.5">
+                                        <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
 
-                                                <label
-                                                    htmlFor="gallery-image-input"
-                                                    className={cn(
-                                                        buttonVariants({ variant: "secondary" }),
-                                                        "cursor-pointer bg-card-background hover:bg-card-background/80",
-                                                    )}
-                                                >
-                                                    {field.value ? "Replace file" : "Choose file"}
-                                                </label>
-                                            </div>
-                                            {field.value ? (
-                                                <div className="w-full aspect-[2/1] rounded rounded-t-none overflow-hidden bg-[hsla(var(--background-dark))]">
-                                                    <img
-                                                        src={URL.createObjectURL(field.value)}
-                                                        alt="img"
-                                                        className="object-contain w-full h-full"
-                                                    />
-                                                </div>
-                                            ) : null}
+                                        <div className="flex items-center flex-wrap justify-start gap-x-2">
+                                            <span className="font-semibold">Current image</span>
                                         </div>
-                                    </FormItem>
-                                )}
-                            />
+                                    </div>
+                                </div>
+                                <div className="w-full aspect-[2/1] rounded rounded-t-none overflow-hidden bg-[hsla(var(--background-dark))]">
+                                    <img
+                                        src={imageUrl(galleryItem.image)}
+                                        alt="img"
+                                        className="object-contain w-full h-full"
+                                    />
+                                </div>
+                            </div>
 
                             <FormField
                                 control={form.control}
@@ -260,9 +212,9 @@ const UploadGalleryImageForm = () => {
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
-                                        <PlusIcon className="w-btn-icon h-btn-icon" />
+                                        <SaveIcon className="w-btn-icon h-btn-icon" />
                                     )}
-                                    Add gallery image
+                                    Save changes
                                 </Button>
                             </DialogFooter>
                         </form>
@@ -273,4 +225,4 @@ const UploadGalleryImageForm = () => {
     );
 };
 
-export default UploadGalleryImageForm;
+export default EditGalleryImage;

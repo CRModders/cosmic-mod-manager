@@ -1,47 +1,28 @@
-import { CubeIcon, DiscordIcon } from "@/components/icons";
-import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@/components/layout/panel";
-import AvatarImg from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ButtonLink } from "@/components/ui/link";
-import ReleaseChannelIndicator from "@/components/ui/release-channel-pill";
-import { Separator } from "@/components/ui/separator";
+import { ImgWrapper } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Chip from "@/components/ui/chip";
+import { ButtonLink, VariantButtonLink } from "@/components/ui/link";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatVersionsListString } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, timeSince } from "@/lib/utils";
-import { Projectcontext } from "@/src/contexts/curr-project";
+import { cn, getProjectPagePathname, imageUrl } from "@/lib/utils";
+import { projectContext } from "@/src/contexts/curr-project";
+import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
-import { ProjectSupport } from "@shared/types";
-import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import {
-    BookOpenIcon,
-    BookmarkIcon,
-    CalendarIcon,
-    ChevronRightIcon,
-    CodeIcon,
-    CrownIcon,
-    DownloadIcon,
-    GitCommitHorizontalIcon,
-    GlobeIcon,
-    HardDriveIcon,
-    HeartIcon,
-    MonitorIcon,
-    MoreHorizontalIcon,
-    SquareArrowOutUpRightIcon,
-    TriangleAlertIcon,
-    UserIcon
-} from "lucide-react";
-import type React from "react";
+import { Capitalize } from "@shared/lib/utils";
+import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
+import { BookmarkIcon, ClipboardCopyIcon, CrownIcon, DownloadIcon, FlagIcon, HeartIcon, MoreVertical, SettingsIcon, TagsIcon, UserIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import NotFoundPage from "../not-found";
+import InteractiveDownloadPopup from "./interactive-download";
 import ProjectNav from "./project-nav";
+import "./styles.css";
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
-    const { slug } = useParams();
-    const { projectData, featuredProjectVersions, currUsersMembership } = useContext(Projectcontext);
+    const { projectData, currUsersMembership } = useContext(projectContext);
 
     if (projectData === undefined) {
         return <FullWidthSpinner />;
@@ -60,281 +41,117 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                 <meta name="description" content={projectData?.summary || " "} />
             </Helmet>
 
-            <Panel className="pb-12">
-                <PanelAside className="flex flex-col gap-panel-cards">
-                    <ContentCardTemplate className="flex flex-col items-start justify-center gap-1.5">
-                        <AvatarImg
-                            url={imageUrl(projectData.icon)}
-                            alt={projectData.name}
-                            fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
-                            imgClassName="rounded"
-                            wrapperClassName="rounded h-24"
-                        />
-
-                        <h2 className="font-semibold text-xl mt-1 leading-tight mb-0.5">{projectData?.name}</h2>
-                        <div className="w-full flex flex-col items-start justify-start gap-0.5 text-muted-foreground">
-                            <Link to={`/${projectType}s`} className="flex items-center justify-center gap-2 hover:underline">
-                                <CubeIcon className="w-4 h-4" />
-                                {Capitalize(projectType)}
-                            </Link>
-                            <p className="leading-tight">{projectData?.summary}</p>
-                        </div>
-
-                        <ProjectSupportEnv clientSide={projectData.clientSide} serverSide={projectData.serverSide} />
-                        <span className="text-muted-foreground italic text-sm">TODO: ADD FEATURED_CATEGORIES</span>
-
-                        <Separator className="my-1.5" />
-
-                        <div className="w-full flex gap-x-2 gap-y-1 items-center justify-start px-0.5">
-                            <DownloadIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                            <span>
-                                <em className="not-italic font-bold text-lg text-muted-foreground">24.7k</em> downloads
-                            </span>
-                        </div>
-
-                        <div className="w-full flex gap-x-2 gap-y-1 items-center justify-start px-0.5">
-                            <HeartIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                            <span>
-                                <em className="not-italic font-bold text-lg text-muted-foreground">1.4k</em> followers
-                            </span>
-                        </div>
-
-                        <div className="w-full flex flex-wrap items-center justify-between gap-2 mt-1">
-                            <Button variant={"secondary"} className="grow">
-                                <HeartIcon className="w-btn-icon h-btn-icon" />
-                                Follow
-                            </Button>
-                            <Button variant={"secondary"} className="grow">
-                                <BookmarkIcon className="w-btn-icon h-btn-icon" />
-                                Save
-                            </Button>
-                            <Button variant={"secondary"} className="aspect-square p-0">
-                                <MoreHorizontalIcon className="w-btn-icon h-btn-icon" />
-                            </Button>
-                        </div>
-                    </ContentCardTemplate>
-
-                    <AdditionalProjectDetails projectData={projectData} featuredProjectVersions={featuredProjectVersions || null} className="hidden lg:flex" />
-                </PanelAside>
-
-                <PanelContent>
-                    <ContentCardTemplate className="px-3 py-2" cardClassname="!p-0">
-                        <ProjectNav
-                            baseHref={`/${projectData?.type[0] || projectType}/${projectData?.slug || slug}`}
-                            isAProjectMember={!!currUsersMembership?.id}
-                        />
-                    </ContentCardTemplate>
-                    <Outlet />
-                    <AdditionalProjectDetails projectData={projectData} featuredProjectVersions={featuredProjectVersions || null} className="flex lg:hidden" />
-                </PanelContent>
-            </Panel>
+            <div className="project-page-layout pb-12 gap-panel-cards">
+                <PageHeader projectData={projectData} projectType={projectType} currUsersMembership={currUsersMembership} />
+                <Outlet />
+            </div>
         </>
     );
 };
 
 export default ProjectPageLayout;
 
-const ClientSide = () => {
+const PageHeader = ({
+    projectData,
+    projectType,
+    currUsersMembership,
+}: { projectData: ProjectDetailsData; projectType: string; currUsersMembership: TeamMember | null }) => {
     return (
-        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
-            <MonitorIcon className="w-btn-icon h-btn-icon" />
-            Client
-        </span>
-    );
-};
-
-const ServerSide = () => {
-    return (
-        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
-            <HardDriveIcon className="w-btn-icon h-btn-icon" />
-            Server
-        </span>
-    );
-};
-
-const ClientOrServerSide = () => {
-    return (
-        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
-            Client or server
-        </span>
-    );
-};
-
-const ClientAndServerSide = () => {
-    return (
-        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
-            Client and server
-        </span>
-    );
-};
-
-const Unsupported = () => {
-    return (
-        <span className="flex items-center justify-center gap-x-1 font-bold text-muted-foreground">
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
-            Unsupported
-        </span>
-    );
-};
-
-const ProjectSupportEnv = ({ clientSide, serverSide }: { clientSide: ProjectSupport; serverSide: ProjectSupport }) => {
-    if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.REQUIRED) return <ClientAndServerSide />;
-    if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) return <ClientOrServerSide />;
-
-    if (serverSide === ProjectSupport.REQUIRED) return <ServerSide />;
-    if (clientSide === ProjectSupport.REQUIRED) return <ClientSide />;
-
-    if (serverSide === ProjectSupport.OPTIONAL) return <ServerSide />;
-    if (clientSide === ProjectSupport.OPTIONAL) return <ClientSide />;
-
-    if (serverSide === ProjectSupport.UNKNOWN || clientSide === ProjectSupport.UNKNOWN) return null;
-
-    return <Unsupported />;
-};
-
-const AdditionalProjectDetails = ({ projectData, featuredProjectVersions, className }: { projectData: ProjectDetailsData; featuredProjectVersions: ProjectVersionData[] | null; className?: string }) => {
-    const navigate = useNavigate();
-
-    return (
-        <div className={cn("w-full flex flex-col items-start justify-start gap-panel-cards", className)}>
-            {projectData?.issueTrackerUrl ||
-                projectData?.projectSourceUrl ||
-                projectData?.projectWikiUrl ||
-                projectData?.discordInviteUrl ? (
-                <ContentCardTemplate title="Links" className="items-start justify-start" headerClassName="pb-3" titleClassName="text-lg">
-                    <div className="w-full flex items-start justify-center flex-col gap-y-1.5">
-                        {projectData?.issueTrackerUrl ? (
-                            <ExternalLink
-                                url={projectData?.issueTrackerUrl}
-                                label="Report issues"
-                                icon={<TriangleAlertIcon className="w-btn-icon h-btn-icon" />}
-                            />
-                        ) : null}
-
-                        {projectData?.projectSourceUrl ? (
-                            <ExternalLink
-                                url={projectData?.projectSourceUrl}
-                                label="View source"
-                                icon={<CodeIcon className="w-btn-icon h-btn-icon" />}
-                            />
-                        ) : null}
-
-                        {projectData?.projectWikiUrl ? (
-                            <ExternalLink
-                                url={projectData?.projectWikiUrl}
-                                label="Visit wiki"
-                                icon={<BookOpenIcon className="w-btn-icon h-btn-icon" />}
-                            />
-                        ) : null}
-
-                        {projectData?.discordInviteUrl ? (
-                            <ExternalLink
-                                url={projectData?.discordInviteUrl}
-                                label="Join Discord server"
-                                icon={<DiscordIcon className="w-btn-icon h-btn-icon fill-current dark:fill-current" />}
-                            />
-                        ) : null}
-                    </div>
-                </ContentCardTemplate>
-            ) : null}
-
-            <ContentCardTemplate className={cn("w-full flex flex-col items-start justify-start gap-1", className)}>
-                {
-                    featuredProjectVersions?.length ?
-                        (
-                            <>
-                                <div className="w-full flex items-center justify-between flex-wrap">
-                                    <h2 className="text-lg font-semibold">Featured versions</h2>
-                                    <Link to={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/versions`}
-                                        className="flex items-center justify-center gap-1 text-blue-500 dark:text-blue-400 hover:underline"
-                                    >
-                                        See all
-                                        <ChevronRightIcon className="w-btn-icon h-btn-icon" />
-                                    </Link>
-                                </div>
-
-                                {featuredProjectVersions.map((featuredVersion) => (
-                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                                    <div key={featuredVersion.id}
-                                        className="w-full flex items-start justify-start gap-2 hover:bg-background py-1.5 px-2.5 rounded-lg bg_hover_stagger cursor-pointer text-[0.97rem]"
-                                        onClick={(e) => {
-                                            // @ts-expect-error
-                                            if (!e.target.closest(".noClickRedirect")) {
-                                                navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, featuredVersion.slug));
-                                            }
-                                        }}
-                                    >
-                                        <a href={featuredVersion.primaryFile?.url || ""} target="_blank" rel="noreferrer"
-                                            className={cn(buttonVariants({ variant: "default", size: "icon" }), "noClickRedirect shrink-0 mt-1")}
-                                        >
-                                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                                        </a>
-
-                                        <div className="flex flex-col items-start justify-start">
-                                            <Link to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, featuredVersion.slug)} className="noClickRedirect">
-                                                <span className="leading-none font-bold">{featuredVersion.title}</span>
-                                            </Link>
-
-                                            <p className="leading-tight text-muted-foreground text-pretty text-[0.93rem]">
-                                                {featuredVersion.loaders
-                                                    .map((loader) => CapitalizeAndFormatString(loader))
-                                                    .join(", ")}{" "}
-                                                {formatVersionsListString(featuredVersion.gameVersions)}
-                                            </p>
-
-                                            <ReleaseChannelIndicator releaseChannel={featuredVersion.releaseChannel} className="mt-0.5" />
-
-                                        </div>
+        <div className="project-page-header w-full max-w-full mt-4">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-6 mb-4 border-0 border-b border-card-background dark:border-shallow-background">
+                <div className="flex gap-5">
+                    <ImgWrapper
+                        src={imageUrl(projectData.icon)}
+                        alt={projectData.name}
+                        className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black"
+                    />
+                    <div className="flex flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
+                        </div>
+                        <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</p>
+                        <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
+                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <span className="font-semibold">{projectData.downloads}</span>
+                            </div>
+                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                                <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <span className="font-semibold">{projectData.followers}</span>
+                            </div>
+                            {(projectData.featuredCategories?.length || 0) > 0 ? (
+                                <div className="hidden md:flex items-center gap-3 pr-4">
+                                    <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                                    <div className="flex items-center gap-2">
+                                        {projectData.featuredCategories.map((category) => (
+                                            <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
+                                                {Capitalize(category)}
+                                            </Chip>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
 
-                                <Separator orientation="horizontal" className="my-1.5" />
-                            </>
-                        ) : null
-                }
+                <div className="flex flex-col justify-center gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <InteractiveDownloadPopup />
+                        <Button
+                            variant={"secondary"}
+                            className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
+                        >
+                            <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                        </Button>
+                        <Button
+                            variant={"secondary"}
+                            className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
+                        >
+                            <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                        </Button>
+                        {currUsersMembership?.id ? (
+                            <VariantButtonLink
+                                url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
+                                variant={"secondary"}
+                                className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
+                            >
+                                <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                            </VariantButtonLink>
+                        ) : null}
 
-                <h2 className="text-lg font-semibold">Project members</h2>
-                {projectData.members?.map((member) => {
-                    return (
-                        <ProjectMember
-                            key={member.userId}
-                            userName={member.userName}
-                            isOwner={member.isOwner}
-                            role={member.role || ""}
-                            avatarImageUrl={member.avatarUrl || ""}
-                        />
-                    );
-                })}
-            </ContentCardTemplate>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant={"ghost"}
+                                    className="rounded-full w-11 h-11 p-0 hover:bg-card-background/70 dark:hover:bg-shallow-background"
+                                >
+                                    <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
+                                <Button variant="ghost-destructive" className="w-full">
+                                    <FlagIcon className="w-btn-icon h-btn-icon" />
+                                    Report
+                                </Button>
+                                <PopoverClose asChild>
+                                    <Button className="w-full" variant="ghost" onClick={() => { navigator.clipboard.writeText(projectData.id) }}>
+                                        <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                                        Copy ID
+                                    </Button>
+                                </PopoverClose>
+                            </PopoverContent>
+                        </Popover>
 
-            <ContentCardTemplate className="gap-1">
-                <h2 className="text-lg font-semibold mb-1">Details</h2>
+                    </div>
+                </div>
+            </div>
 
-                <span className="text-muted-foreground italic text-sm">TODO: ADD LICENSE</span>
-
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild className="cursor-text">
-                            <p className="flex gap-2 items-center justify-center text-muted-foreground">
-                                <CalendarIcon className="w-btn-icon h-btn-icon" />
-                                Created {timeSince(new Date(projectData.datePublished))}
-                            </p>
-                        </TooltipTrigger>
-                        <TooltipContent>{formatDate(new Date(projectData.datePublished))}</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger asChild className="cursor-text">
-                            <p className="flex gap-2 items-center justify-center text-muted-foreground">
-                                <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
-                                Updated {timeSince(new Date(projectData.dateUpdated))}
-                            </p>
-                        </TooltipTrigger>
-                        <TooltipContent>{formatDate(new Date(projectData.dateUpdated))}</TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            </ContentCardTemplate>
+            <div className="w-full overflow-x-auto">
+                <Card className="w-min max-w-full rounded-full p-1">
+                    <ProjectNav baseHref={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`} />
+                </Card>
+            </div>
         </div>
     );
 };
@@ -347,8 +164,8 @@ export const ProjectMember = ({
     className,
 }: { userName: string; isOwner: boolean; role: string; avatarImageUrl: string; className?: string }) => {
     return (
-        <ButtonLink url={`/user/${userName}`} className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal", className)}>
-            <AvatarImg url={avatarImageUrl} alt={userName} fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />} />
+        <ButtonLink url={`/user/${userName}`} className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background", className)}>
+            <ImgWrapper src={avatarImageUrl} alt={userName} className="h-10 rounded-full" fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />} />
             <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
                 <div className="flex items-center justify-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{userName}</span>
@@ -369,14 +186,9 @@ export const ProjectMember = ({
     );
 };
 
-const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
-    return (
-        <Link to={url} className="flex items-center justify-center" target="_blank" referrerPolicy="no-referrer">
-            <Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-2 text-muted-foreground">
-                {icon}
-                {label}
-                <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
-            </Button>
-        </Link>
-    );
+export const fullWidthLayoutStyles = {
+    gridRowStart: "content",
+    gridRowEnd: "content",
+    gridColumnStart: "sidebar",
+    gridColumnEnd: "content",
 };

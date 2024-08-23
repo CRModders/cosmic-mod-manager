@@ -18,7 +18,7 @@ type ProjectContextType = {
     currUsersMembership: TeamMember | null;
 };
 
-export const Projectcontext = createContext<ProjectContextType>({
+export const projectContext = createContext<ProjectContextType>({
     projectData: undefined,
     fetchProjectData: async (slug?: string) => {
         slug;
@@ -29,8 +29,8 @@ export const Projectcontext = createContext<ProjectContextType>({
     },
     featuredProjectVersions: undefined,
     allProjectVersions: undefined,
-    fetchFeaturedProjectVersions: async () => {},
-    fetchAllProjectVersions: async () => {},
+    fetchFeaturedProjectVersions: async () => { },
+    fetchAllProjectVersions: async () => { },
     currUsersMembership: null,
 });
 
@@ -146,12 +146,13 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
     }, [currProjectSlug]);
 
     useEffect(() => {
-        if (projectData.isFetching || featuredProjectVersions.isFetching || allProjectVersions.isFetching) setFetchingProjectData(true);
+        if (projectData.isFetching || featuredProjectVersions.isFetching || allProjectVersions.isFetching)
+            setFetchingProjectData(true);
         else setFetchingProjectData(false);
     }, [projectData.isFetching, featuredProjectVersions.isFetching, allProjectVersions.isFetching]);
 
     return (
-        <Projectcontext.Provider
+        <projectContext.Provider
             value={{
                 projectData: projectData.data,
                 fetchProjectData: fetchProjectData,
@@ -165,7 +166,7 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
             }}
         >
             {children}
-        </Projectcontext.Provider>
+        </projectContext.Provider>
     );
 };
 

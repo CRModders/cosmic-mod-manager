@@ -1,21 +1,33 @@
-import { ContentCardTemplate } from "@/components/layout/panel";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn, formatDate, imageUrl } from "@/lib/utils";
-import { Projectcontext } from "@/src/contexts/curr-project";
+import { projectContext } from "@/src/contexts/curr-project";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { ProjectPermissions } from "@shared/types";
 import type { GalleryItem, TeamMember } from "@shared/types/api";
-import { ArrowLeftIcon, ArrowRightIcon, CalendarIcon, Edit2Icon, ExternalLinkIcon, InfoIcon, Trash2Icon, XIcon } from "lucide-react";
+import {
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    CalendarIcon,
+    ExpandIcon,
+    ExternalLinkIcon,
+    InfoIcon,
+    ShrinkIcon,
+    Trash2Icon,
+    XIcon,
+} from "lucide-react";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import RemoveGalleryImage from "./remove-image";
+import { fullWidthLayoutStyles } from "../layout";
 
+const RemoveGalleryImage = lazy(() => import("./remove-image"));
+const EditGalleryImage = lazy(() => import("./edit-image"));
 const UploadGalleryImageForm = lazy(() => import("@/src/pages/project/gallery/upload-image"));
 
 const ProjectGallery = () => {
-    const { projectData, currUsersMembership } = useContext(Projectcontext);
+    const { projectData, currUsersMembership } = useContext(projectContext);
     const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
     const [dialogOpen, setdialogOpen] = useState(false);
 
@@ -26,13 +38,13 @@ const ProjectGallery = () => {
                 <title>
                     {projectData?.name || ""} - Gallery | {SITE_NAME_SHORT}
                 </title>
-                <meta name="description" content="Dashboard" />
             </Helmet>
 
-            <div className="w-full flex flex-col items-start justify-start gap-panel-cards">
-                {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.EDIT_DETAILS) ?
-                    <ContentCardTemplate className="px-4 py-3 flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2" cardClassname="p-0">
-
+            <div className="w-full flex flex-col items-start justify-start gap-panel-cards"
+                style={fullWidthLayoutStyles}
+            >
+                {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
+                    <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
                         <Suspense>
                             <UploadGalleryImageForm />
                         </Suspense>
@@ -40,63 +52,60 @@ const ProjectGallery = () => {
                             <InfoIcon className="h-btn-icon w-btn-icon" />
                             Upload a new gallery image
                         </div>
-                    </ContentCardTemplate>
-                    : null
-                }
+                    </Card>
+                ) : null}
 
-                {
-                    projectData.gallery?.length ? (
-                        <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                            {
-                                projectData.gallery.map((galleryItem, index) => (
-                                    <GalleryItemCard
-                                        key={galleryItem.id}
-                                        galleryItem={galleryItem}
-                                        index={index}
-                                        setActiveIndex={setActiveGalleryIndex}
-                                        setdialogOpen={setdialogOpen}
-                                        currUsersMembership={currUsersMembership}
-                                    />
-                                ))
-                            }
+                {projectData.gallery?.length ? (
+                    <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        {projectData.gallery.map((galleryItem, index) => (
+                            <GalleryItemCard
+                                key={galleryItem.id}
+                                galleryItem={galleryItem}
+                                index={index}
+                                setActiveIndex={setActiveGalleryIndex}
+                                setdialogOpen={setdialogOpen}
+                                currUsersMembership={currUsersMembership}
+                            />
+                        ))}
 
-
-                            {
-                                projectData.gallery?.[activeGalleryIndex] ?
-                                    <ImageDialog
-                                        galleryItem={projectData.gallery[activeGalleryIndex]}
-                                        totalItems={projectData.gallery.length}
-                                        activeIndex={activeGalleryIndex}
-                                        setActiveIndex={setActiveGalleryIndex}
-                                        dialogOpen={dialogOpen}
-                                        setDialogOpen={setdialogOpen}
-                                    /> : null
-                            }
-                        </div>
-                    ) : null
-                }
+                        {projectData.gallery?.[activeGalleryIndex] ? (
+                            <ImageDialog
+                                galleryItem={projectData.gallery[activeGalleryIndex]}
+                                totalItems={projectData.gallery.length}
+                                activeIndex={activeGalleryIndex}
+                                setActiveIndex={setActiveGalleryIndex}
+                                dialogOpen={dialogOpen}
+                                setDialogOpen={setdialogOpen}
+                            />
+                        ) : null}
+                    </div>
+                ) : null}
             </div>
-
         </>
     );
 };
 
 export default ProjectGallery;
 
-
-const GalleryItemCard = ({ galleryItem, index, setActiveIndex, setdialogOpen, currUsersMembership }:
-    {
-        galleryItem: GalleryItem;
-        index: number;
-        setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
-        setdialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-        currUsersMembership: TeamMember | null;
-    }) => {
+const GalleryItemCard = ({
+    galleryItem,
+    index,
+    setActiveIndex,
+    setdialogOpen,
+    currUsersMembership,
+}: {
+    galleryItem: GalleryItem;
+    index: number;
+    setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+    setdialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    currUsersMembership: TeamMember | null;
+}) => {
     return (
         <div className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2">
             <div className="flex items-center justify-center aspect-video bg-[hsla(var(--background-dark))] rounded-lg overflow-hidden">
                 {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-                <img src={imageUrl(galleryItem.image)}
+                <img
+                    src={imageUrl(galleryItem.image)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
                     onClick={(e) => {
@@ -116,93 +125,116 @@ const GalleryItemCard = ({ galleryItem, index, setActiveIndex, setdialogOpen, cu
                         <CalendarIcon className="w-btn-icon h-btn-icon" />
                         {formatDate(new Date(galleryItem.dateCreated), "${month} ${day}, ${year}")}
                     </p>
-                    {
-                        currUsersMembership?.id && currUsersMembership?.permissions.includes(ProjectPermissions.EDIT_DETAILS) ?
-                            <div className="w-full flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
-                                <Button variant={"secondary"} size={"sm"}>
-                                    <Edit2Icon className="w-btn-icon h-btn-icon" />
-                                    Edit
-                                </Button>
+                    {currUsersMembership?.id && currUsersMembership?.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
+                        <div className="w-full flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
+                            <Suspense>
+                                <EditGalleryImage galleryItem={galleryItem} />
 
-                                <RemoveGalleryImage
-                                    id={galleryItem.id}
-                                >
+                                <RemoveGalleryImage id={galleryItem.id}>
                                     <Button variant={"secondary"} size={"sm"}>
                                         <Trash2Icon className="w-btn-icon h-btn-icon" />
                                         Remove
                                     </Button>
                                 </RemoveGalleryImage>
-                            </div>
-                            : null
-                    }
+                            </Suspense>
+                        </div>
+                    ) : null}
                 </div>
             </div>
-
         </div>
-    )
+    );
 };
 
-const ImageDialog = ({ galleryItem, setActiveIndex, totalItems, dialogOpen, setDialogOpen }:
-    {
-        galleryItem: GalleryItem;
-        activeIndex: number;
-        setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
-        totalItems: number;
-        dialogOpen: boolean;
-        setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+const ImageDialog = ({
+    galleryItem,
+    setActiveIndex,
+    totalItems,
+    dialogOpen,
+    setDialogOpen,
+}: {
+    galleryItem: GalleryItem;
+    activeIndex: number;
+    setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+    totalItems: number;
+    dialogOpen: boolean;
+    setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+    const [isFullWidth, setIsFullWidth] = useState(false);
 
-    }) => {
+    const toggleFullWidth = () => {
+        setIsFullWidth((prev) => !prev);
+    };
 
     const next = () => {
         setActiveIndex((current) => {
-            if (current < (totalItems - 1)) {
-                return current + 1
+            if (current < totalItems - 1) {
+                return current + 1;
             }
             return 0;
-        })
+        });
     };
 
     const previous = () => {
         setActiveIndex((current) => {
             if (current > 0) {
-                return current - 1
+                return current - 1;
             }
-            return totalItems - 1
-
-        })
+            return totalItems - 1;
+        });
     };
 
     const handleKeyboardInputs = (e: KeyboardEvent) => {
-        console.log(e.key)
         if (e.key === "ArrowLeft") {
             previous();
         } else if (e.key === "ArrowRight") {
             next();
         }
-    }
+    };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         document.body.addEventListener("keydown", handleKeyboardInputs);
         return () => {
             document.body.removeEventListener("keydown", handleKeyboardInputs);
-        }
-    }, [])
+        };
+    }, []);
+
+    useEffect(() => {
+        if (dialogOpen === false) setIsFullWidth(false);
+    }, [dialogOpen]);
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogContent id="gallery_dialog_content" className="bg-transparent border-none ring-0 max-w-full w-fit p-0">
+            <DialogContent
+                id="gallery_dialog_content"
+                className="w-full flex items-center justify-center max-w-full bg-transparent border-none ring-0 p-0 pt-0 pb-0"
+            >
                 <VisuallyHidden>
                     <DialogTitle>{galleryItem.name}</DialogTitle>
                     <DialogDescription>{galleryItem.description}</DialogDescription>
                 </VisuallyHidden>
-                <div className="w-fit h-[calc(100dvh_-_2rem)] flex flex-col items-center justify-center relative">
-                    <img src={imageUrl(galleryItem.image)} alt={galleryItem.name} className="border-none ring-0 rounded-lg max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)] object-contain" />
+                <div id="image_popup_content" className="w-full h-[100dvh] flex flex-col items-center justify-center relative">
+                    <DialogClose asChild>
+                        <div className="absolute top-0 left-0 w-full h-full z-0" />
+                    </DialogClose>
 
-                    <div className="max-w-full flex flex-col items-center justify-center group p-16 pt-32 pb-4 rounded w-fit absolute left-[50%] bottom-[0.5rem] translate-x-[-50%]">
+                    <img
+                        src={imageUrl(galleryItem.image)}
+                        alt={galleryItem.name}
+                        className={cn(
+                            "border-none ring-0 rounded-lg max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)] object-contain z-10",
+                            isFullWidth && "w-full h-full",
+                        )}
+                    />
+
+                    <div className="max-w-full flex flex-col items-center justify-center group p-16 pt-24 pb-4 rounded w-fit absolute left-[50%] bottom-[0.5rem] translate-x-[-50%] z-20">
                         <div className="max-w-full w-max flex flex-col items-center justify-center transition-all duration-300 opacity-0 scale-75 translate-y-[1rem] group-hover:translate-y-[-1rem] group-hover:scale-100 group-hover:opacity-100 text-[hsla(var(--foreground-dark))]">
-                            <span className="drop-shadow-[1px_1px_5px_hsla(var(--background-dark))] font-bold text-lg">{galleryItem.name}</span>
-                            <span className="drop-shadow-[1px_1px_5px_hsla(var(--background-dark))] text-pretty">{galleryItem.description}</span>
+                            <span className="drop-shadow-[1px_1px_5px_hsla(var(--background-dark))] font-bold text-lg">
+                                {galleryItem.name}
+                            </span>
+                            <span className="drop-shadow-[1px_1px_5px_hsla(var(--background-dark))] text-pretty">
+                                {galleryItem.description}
+                            </span>
                         </div>
 
                         <div className="flex items-center justify-start gap-2 p-2.5 px-3 rounded-xl bg-card-background opacity-45 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300 origin-bottom">
@@ -212,7 +244,9 @@ const ImageDialog = ({ galleryItem, setActiveIndex, totalItems, dialogOpen, setD
                                 </Button>
                             </DialogClose>
 
-                            <a href={imageUrl(galleryItem.image)} aria-label={galleryItem.name}
+                            <a
+                                href={imageUrl(galleryItem.image)}
+                                aria-label={galleryItem.name}
                                 className={cn(buttonVariants({ variant: "secondary", size: "icon" }), "rounded-full")}
                                 target="_blank"
                                 rel="noreferrer"
@@ -221,15 +255,19 @@ const ImageDialog = ({ galleryItem, setActiveIndex, totalItems, dialogOpen, setD
                                 <ExternalLinkIcon className="w-btn-icon h-btn-icon" />
                             </a>
 
-                            <Button variant={"secondary"} size={"icon"} className="rounded-full"
-                                onClick={previous}
-                            >
+                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={toggleFullWidth}>
+                                {isFullWidth ? (
+                                    <ShrinkIcon className="w-btn-icon h-btn-icon" />
+                                ) : (
+                                    <ExpandIcon className="w-btn-icon h-btn-icon" />
+                                )}
+                            </Button>
+
+                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={previous}>
                                 <ArrowLeftIcon className="w-btn-icon h-btn-icon" />
                             </Button>
 
-                            <Button variant={"secondary"} size={"icon"} className="rounded-full"
-                                onClick={next}
-                            >
+                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={next}>
                                 <ArrowRightIcon className="w-btn-icon h-btn-icon" />
                             </Button>
                         </div>
@@ -237,5 +275,5 @@ const ImageDialog = ({ galleryItem, setActiveIndex, totalItems, dialogOpen, setD
                 </div>
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};

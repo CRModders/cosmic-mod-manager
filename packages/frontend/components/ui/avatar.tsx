@@ -21,5 +21,30 @@ const AvatarImg = ({ url, alt, fallback, wrapperClassName, imgClassName }: Props
         </div>
     );
 };
-
 export default AvatarImg;
+
+export const ImgWrapper = ({
+    src,
+    alt,
+    className,
+    fallback,
+}: { src: string; alt: string; className?: string; fallback?: React.ReactNode }) => {
+    if (!src) {
+        return (
+            <div className={cn("h-24 aspect-square rounded-lg bg-shallow-background/50 border border-shallow-background", className)}>
+                {fallback}
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={src}
+            alt={alt}
+            className={cn(
+                "h-24 object-contain rounded-lg bg-shallow-background/50 border border-shallow-background aspect-square",
+                className,
+            )}
+        />
+    );
+};

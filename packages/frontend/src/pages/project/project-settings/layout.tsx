@@ -12,7 +12,7 @@ import {
 import { ButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
-import { Projectcontext } from "@/src/contexts/curr-project";
+import { projectContext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
@@ -32,7 +32,7 @@ import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 
 const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
-    const { projectData } = useContext(Projectcontext);
+    const { projectData } = useContext(projectContext);
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
 
     if (!projectData) {
@@ -45,7 +45,6 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
                 <title>
                     {projectData?.name || ""} - Settings | {SITE_NAME_SHORT}
                 </title>
-                <meta name="description" content="Dashboard" />
             </Helmet>
 
             <Panel className="pb-12">
@@ -80,7 +79,9 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
 
                             <div className="flex flex-col items-start justify-start">
                                 <span className="text-lg font-semibold">{projectData.name}</span>
-                                <span className="font-semibold text-muted-foreground">{CapitalizeAndFormatString(projectData.status)}</span>
+                                <span className="font-semibold text-muted-foreground">
+                                    {CapitalizeAndFormatString(projectData.status)}
+                                </span>
                             </div>
                         </div>
 

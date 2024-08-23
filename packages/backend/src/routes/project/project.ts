@@ -1,10 +1,10 @@
 import { ctxReqBodyKey } from "@/../types";
-import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, removeGalleryImage, updateProject, updateProjectDescription } from "@/controllers/project/project";
+import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, removeGalleryImage, updateGalleryImage, updateProject, updateProjectDescription } from "@/controllers/project/project";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { parseValueToSchema } from "@shared/schemas";
-import { addNewGalleryImageFromSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema } from "@shared/schemas/project";
+import { addNewGalleryImageFormSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import versionRouter from "./version";
@@ -122,12 +122,30 @@ projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) =
             featured: formData.get("featured") === "true",
         }
 
-        const { data, error } = parseValueToSchema(addNewGalleryImageFromSchema, obj);
+        const { data, error } = parseValueToSchema(addNewGalleryImageFormSchema, obj);
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
 
         return await addNewGalleryImage(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.patch("/:slug/gallery/:imageId", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const { slug, imageId } = ctx.req.param();
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!slug || !imageId || !userSession) return defaultInvalidReqResponse(ctx);
+
+        const { data, error } = parseValueToSchema(updateGalleryImageFormSchema, ctx.get(ctxReqBodyKey));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await updateGalleryImage(ctx, slug, userSession, imageId, data);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -147,7 +165,7 @@ projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context)
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-})
+});
 
 projectRouter.route("/:projectSlug/version", versionRouter);
 export default projectRouter;

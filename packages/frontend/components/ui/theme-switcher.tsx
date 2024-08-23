@@ -48,7 +48,10 @@ export default function ThemeSwitch({ className, iconWrapperClassName, iconClass
                 type="button"
                 variant={"ghost"}
                 aria-label={label ? label : "Change theme"}
-                className={cn("no_neumorphic_shadow rounded-full p-0 hover:bg-card-background overflow-hidden", className)}
+                className={cn(
+                    "no_neumorphic_shadow rounded-full p-0 hover:bg-card-background dark:hover:bg-shallow-background overflow-hidden",
+                    className,
+                )}
                 onClick={switchTheme}
             >
                 <div

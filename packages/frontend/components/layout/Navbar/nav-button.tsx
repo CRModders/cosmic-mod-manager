@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/src/contexts/auth";
 import type { LoggedInUserData } from "@shared/types";
-import { LayoutDashboardIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { LayoutDashboardIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -21,12 +21,17 @@ export const LoginButton = ({
 }) => {
     return (
         <Button
-            className={cn("bg-card-background hover:bg-card-background/85 text-foreground-bright dark:text-foreground-bright", className)}
+            className={cn(
+                "bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90",
+                className,
+            )}
             variant={"secondary"}
+            // size={"sm"}
             aria-label="Login"
             tabIndex={-1}
             onClick={onClick}
         >
+            <LogInIcon className="w-btn-icon h-btn-icon" />
             Log In
         </Button>
     );

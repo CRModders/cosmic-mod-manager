@@ -1,6 +1,7 @@
 import { Button, CancelButton } from "@/components/ui/button";
 import {
     Dialog,
+    DialogBody,
     DialogClose,
     DialogContent,
     DialogDescription,
@@ -38,7 +39,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
         defaultValues: {
             name: "",
             slug: "",
-            visibility: ProjectVisibility.PUBLIC,
+            visibility: ProjectVisibility.LISTED,
             summary: "",
         },
     });
@@ -87,114 +88,117 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                         <DialogDescription>Create a new project</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(createProject)}
-                        className="w-full flex flex-col items-start justify-center gap-form-elements"
-                    >
-                        <FormField
-                            name="name"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="project-name-input">
-                                        Name
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Input
-                                        placeholder="Project name"
-                                        id="project-name-input"
-                                        type="text"
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            if (!autoFillUrlSlug) return;
-                                            const name = e.target.value;
-                                            form.setValue("slug", createURLSafeSlug(name).value);
-                                        }}
-                                    />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            name="slug"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="project-url-slug-input">
-                                        URL
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Input
-                                        id="project-url-slug-input"
-                                        type="text"
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            if (autoFillUrlSlug === true) setAutoFillUrlSlug(false);
-                                        }}
-                                    />
-                                </FormItem>
-                            )}
-                        />
+                <DialogBody>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(createProject)}
+                            className="w-full flex flex-col items-start justify-center gap-form-elements"
+                        >
+                            <FormField
+                                name="name"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="project-name-input">
+                                            Name
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <Input
+                                            placeholder="Project name"
+                                            id="project-name-input"
+                                            type="text"
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                if (!autoFillUrlSlug) return;
+                                                const name = e.target.value;
+                                                form.setValue("slug", createURLSafeSlug(name).value);
+                                            }}
+                                        />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="slug"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="project-url-slug-input">
+                                            URL
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <Input
+                                            id="project-url-slug-input"
+                                            placeholder="Enter project URL"
+                                            type="text"
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                if (autoFillUrlSlug === true) setAutoFillUrlSlug(false);
+                                            }}
+                                        />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            name="visibility"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Visibility
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Select disabled={field.disabled} name={field.name} value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={ProjectVisibility.PUBLIC}>{Capitalize(ProjectVisibility.PUBLIC)}</SelectItem>
-                                            <SelectItem value={ProjectVisibility.PRIVATE}>
-                                                {Capitalize(ProjectVisibility.PRIVATE)}
-                                            </SelectItem>
-                                            <SelectItem value={ProjectVisibility.UNLISTED}>
-                                                {Capitalize(ProjectVisibility.UNLISTED)}
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                name="visibility"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Visibility
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <Select disabled={field.disabled} name={field.name} value={field.value} onValueChange={field.onChange}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value={ProjectVisibility.LISTED}>{Capitalize(ProjectVisibility.LISTED)}</SelectItem>
+                                                <SelectItem value={ProjectVisibility.PRIVATE}>
+                                                    {Capitalize(ProjectVisibility.PRIVATE)}
+                                                </SelectItem>
+                                                <SelectItem value={ProjectVisibility.UNLISTED}>
+                                                    {Capitalize(ProjectVisibility.UNLISTED)}
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            name="summary"
-                            control={form.control}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="project-summary-input">
-                                        Summary
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <Textarea
-                                        placeholder="Enter project summary..."
-                                        id="project-summary-input"
-                                        {...field}
-                                        className="resize-none"
-                                    />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                name="summary"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel htmlFor="project-summary-input">
+                                            Summary
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <Textarea
+                                            placeholder="Enter project summary..."
+                                            id="project-summary-input"
+                                            {...field}
+                                            className="resize-none"
+                                        />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <CancelButton type="button" />
-                            </DialogClose>
-                            <Button disabled={isLoading || !isFormSubmittable()}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon h-btn-icon" />}
-                                Continue
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <CancelButton type="button" />
+                                </DialogClose>
+                                <Button disabled={isLoading || !isFormSubmittable()}>
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon h-btn-icon" />}
+                                    Continue
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );

@@ -1,13 +1,19 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
 import { deleteProjectFile, deleteProjectGalleryFile, saveProjectFile, saveProjectGalleryFile } from "@/services/storage";
-import { isProjectAccessibleToCurrSession } from "@/utils";
+import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
-import type { addNewGalleryImageFromSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema } from "@shared/schemas/project";
+import type {
+    addNewGalleryImageFormSchema,
+    generalProjectSettingsFormSchema,
+    newProjectFormSchema,
+    updateDescriptionFormSchema,
+    updateGalleryImageFormSchema,
+} from "@shared/schemas/project";
 import {
     type OrganisationPermissions,
     ProjectPermissions,
@@ -18,6 +24,7 @@ import {
 import type { ProjectDetailsData, ProjectsListData, TeamMember } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
+import { rsort } from "semver";
 import type { z } from "zod";
 
 export const requiredProjectMemberFields = {
@@ -95,14 +102,13 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
             summary: formData.summary,
             visibility: formData.visibility,
             status: ProjectPublishingStatus.DRAFT,
-            type: ["project"],
             clientSide: ProjectSupport.UNKNOWN,
             serverSide: ProjectSupport.UNKNOWN,
         },
     });
 
     return ctx.json(
-        { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: newProject.type },
+        { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: inferProjectType([]) },
         httpCode("ok"),
     );
 };
@@ -122,8 +128,8 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
                             slug: true,
                             status: true,
                             icon: true,
-                            type: true,
                             visibility: true,
+                            loaders: true,
                             organisation: {
                                 select: {
                                     team: {
@@ -169,7 +175,7 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
             slug: project.slug,
             status: project.status as ProjectPublishingStatus,
             icon: projectIconUrl(project.slug, project.icon || ""),
-            type: project.type,
+            type: inferProjectType(project.loaders),
         });
     }
 
@@ -184,11 +190,9 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         select: {
             id: true,
             name: true,
-            // org_id: true,
             status: true,
             summary: true,
             description: true,
-            type: true,
             categories: true,
             featuredCategories: true,
             licenseId: true,
@@ -220,9 +224,9 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     featured: true,
                     image: true,
                     dateCreated: true,
-                    orderIndex: true
+                    orderIndex: true,
                 },
-                orderBy: { orderIndex: "desc" }
+                orderBy: { orderIndex: "desc" },
             },
 
             team: {
@@ -274,7 +278,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
-                type: project.type,
+                type: inferProjectType(project.loaders),
                 categories: project.categories,
                 featuredCategories: project.featuredCategories,
                 licenseId: project.licenseId,
@@ -293,7 +297,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 clientSide: project.clientSide as ProjectSupport,
                 serverSide: project.serverSide as ProjectSupport,
                 loaders: project.loaders,
-                gameVersions: project.gameVersions,
+                gameVersions: rsort(project.gameVersions || []),
                 gallery: project.gallery.map((galleryItem) => ({
                     id: galleryItem.id,
                     name: galleryItem.name,
@@ -301,7 +305,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     image: projectGalleryFileUrl(project.slug, galleryItem.image),
                     featured: galleryItem.featured,
                     dateCreated: galleryItem.dateCreated,
-                    orderIndex: galleryItem.orderIndex
+                    orderIndex: galleryItem.orderIndex,
                 })),
                 members: project.team.members.map((member) => ({
                     id: member.id,
@@ -310,8 +314,10 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     avatarUrl: member.user.avatarUrl,
                     role: member.role,
                     isOwner: member.isOwner,
-                    permissions: member.permissions as ProjectPermissions[],
-                    organisationPermissions: member.organisationPermissions as OrganisationPermissions[],
+                    permissions: (member.user.id === userSession?.id ? member.permissions : []) as ProjectPermissions[],
+                    organisationPermissions: (member.user.id === userSession?.id
+                        ? member.organisationPermissions
+                        : []) as OrganisationPermissions[],
                 })),
                 organisation: organisation
                     ? {
@@ -329,7 +335,12 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
     );
 };
 
-export const updateProject = async (ctx: Context, slug: string, userSession: ContextUserSession, formData: z.infer<typeof generalProjectSettingsFormSchema>) => {
+export const updateProject = async (
+    ctx: Context,
+    slug: string,
+    userSession: ContextUserSession,
+    formData: z.infer<typeof generalProjectSettingsFormSchema>,
+) => {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
         select: {
@@ -342,10 +353,10 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
                     members: {
                         where: { userId: userSession.id },
                         select: {
-                            permissions: true
-                        }
-                    }
-                }
+                            permissions: true,
+                        },
+                    },
+                },
             },
             organisation: {
                 select: {
@@ -353,17 +364,17 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
                         select: {
                             members: {
                                 where: {
-                                    userId: userSession.id
+                                    userId: userSession.id,
                                 },
                                 select: {
-                                    permissions: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
@@ -380,8 +391,8 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
         // Check if the slug is available
         const existingProjectWithSameSlug = await prisma.project.findUnique({
             where: {
-                slug: formData.slug
-            }
+                slug: formData.slug,
+            },
         });
 
         if (existingProjectWithSameSlug?.id) return ctx.json({ success: false, message: `The slug "${formData.slug}" is already taken` });
@@ -416,14 +427,19 @@ export const updateProject = async (ctx: Context, slug: string, userSession: Con
             visibility: formData.visibility,
             clientSide: formData.clientSide,
             serverSide: formData.serverSide,
-            summary: formData.summary
-        }
+            summary: formData.summary,
+        },
     });
 
-    return ctx.json({ success: true, message: "Project details updated", data: updatedProject }, httpCode("ok"))
-}
+    return ctx.json({ success: true, message: "Project details updated", data: updatedProject }, httpCode("ok"));
+};
 
-export const updateProjectDescription = async (ctx: Context, slug: string, userSession: ContextUserSession, data: z.infer<typeof updateDescriptionFormSchema>) => {
+export const updateProjectDescription = async (
+    ctx: Context,
+    slug: string,
+    userSession: ContextUserSession,
+    data: z.infer<typeof updateDescriptionFormSchema>,
+) => {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
         select: {
@@ -433,10 +449,10 @@ export const updateProjectDescription = async (ctx: Context, slug: string, userS
                     members: {
                         where: { userId: userSession.id },
                         select: {
-                            permissions: true
-                        }
-                    }
-                }
+                            permissions: true,
+                        },
+                    },
+                },
             },
             organisation: {
                 select: {
@@ -444,17 +460,17 @@ export const updateProjectDescription = async (ctx: Context, slug: string, userS
                         select: {
                             members: {
                                 where: {
-                                    userId: userSession.id
+                                    userId: userSession.id,
                                 },
                                 select: {
-                                    permissions: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
@@ -464,19 +480,24 @@ export const updateProjectDescription = async (ctx: Context, slug: string, userS
         !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)
     ) {
         return ctx.json({ success: false }, httpCode("not_found"));
-    };
+    }
 
     await prisma.project.update({
         where: { id: project.id },
         data: {
-            description: data.description || ""
-        }
+            description: data.description || "",
+        },
     });
 
     return ctx.json({ success: true, message: "Project description updated" }, httpCode("ok"));
 };
 
-export const addNewGalleryImage = async (ctx: Context, slug: string, userSession: ContextUserSession, formData: z.infer<typeof addNewGalleryImageFromSchema>) => {
+export const addNewGalleryImage = async (
+    ctx: Context,
+    slug: string,
+    userSession: ContextUserSession,
+    formData: z.infer<typeof addNewGalleryImageFormSchema>,
+) => {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
         select: {
@@ -486,17 +507,17 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
                     id: true,
                     orderIndex: true,
                 },
-                orderBy: { orderIndex: "desc" }
+                orderBy: { orderIndex: "desc" },
             },
             team: {
                 select: {
                     members: {
                         where: { userId: userSession.id },
                         select: {
-                            permissions: true
-                        }
-                    }
-                }
+                            permissions: true,
+                        },
+                    },
+                },
             },
             organisation: {
                 select: {
@@ -504,17 +525,17 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
                         select: {
                             members: {
                                 where: {
-                                    userId: userSession.id
+                                    userId: userSession.id,
                                 },
                                 select: {
-                                    permissions: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
@@ -531,18 +552,19 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
         !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
     ) {
         return ctx.json({ success: false }, httpCode("not_found"));
-    };
+    }
 
     // Check if there's already a featured image
     if (formData.featured === true) {
         const existingFeaturedImage = await prisma.galleryItem.findFirst({
             where: {
                 projectId: project.id,
-                featured: true
-            }
+                featured: true,
+            },
         });
 
-        if (existingFeaturedImage?.id) return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+        if (existingFeaturedImage?.id)
+            return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
     }
 
     const fileName = `${FILE_STORAGE_SERVICES.LOCAL}-${nanoid(STRING_ID_LENGTH)}.${getFileType(formData.image.type)}`;
@@ -556,8 +578,8 @@ export const addNewGalleryImage = async (ctx: Context, slug: string, userSession
             description: formData.description || "",
             featured: formData.featured,
             image: fileName,
-            orderIndex: formData.orderIndex || project.gallery?.[0]?.orderIndex + 1 || 1
-        }
+            orderIndex: formData.orderIndex || project.gallery?.[0]?.orderIndex + 1 || 1,
+        },
     });
 
     return ctx.json({ success: true, message: "Added the new gallery image" }, httpCode("ok"));
@@ -572,7 +594,7 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
                 where: { id: galleryItemId },
                 select: {
                     id: true,
-                    image: true
+                    image: true,
                 },
             },
             team: {
@@ -580,10 +602,10 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
                     members: {
                         where: { userId: userSession.id },
                         select: {
-                            permissions: true
-                        }
-                    }
-                }
+                            permissions: true,
+                        },
+                    },
+                },
             },
             organisation: {
                 select: {
@@ -591,17 +613,17 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
                         select: {
                             members: {
                                 where: {
-                                    userId: userSession.id
+                                    userId: userSession.id,
                                 },
                                 select: {
-                                    permissions: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
 
     if (!project?.id || !project.gallery?.[0]?.id) return ctx.json({ success: false }, httpCode("not_found"));
@@ -611,13 +633,112 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
         !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
     ) {
         return ctx.json({ success: false }, httpCode("not_found"));
-    };
+    }
 
     // Delete the file from storage
     await deleteProjectGalleryFile(project.id, project.gallery[0].image, FILE_STORAGE_SERVICES.LOCAL);
     await prisma.galleryItem.delete({
-        where: { id: galleryItemId }
+        where: { id: galleryItemId },
     });
 
     return ctx.json({ success: true, message: "Gallery image deleted" }, httpCode("ok"));
-}
+};
+
+export const updateGalleryImage = async (
+    ctx: Context,
+    slug: string,
+    userSession: ContextUserSession,
+    galleryItemId: string,
+    formData: z.infer<typeof updateGalleryImageFormSchema>,
+) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            gallery: {
+                select: {
+                    id: true,
+                    orderIndex: true,
+                },
+                orderBy: { orderIndex: "desc" },
+            },
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true,
+                        },
+                    },
+                },
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id,
+                                },
+                                select: {
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    // Check if the order index is not already occupied
+    let isGalleryItemIdValid = false;
+    for (const item of project.gallery) {
+        if (item.id === galleryItemId) isGalleryItemIdValid = true;
+        if (item.id !== galleryItemId && item.orderIndex === formData.orderIndex) {
+            return ctx.json({ success: false, message: "An image with same order index already exists" }, httpCode("bad_request"));
+        }
+    }
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    }
+
+    // Check if there's already a featured image
+    if (formData.featured === true) {
+        const existingFeaturedImage = await prisma.galleryItem.findFirst({
+            where: {
+                projectId: project.id,
+                featured: true,
+                NOT: [{ id: galleryItemId }],
+            },
+        });
+
+        if (existingFeaturedImage?.id)
+            return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+    }
+
+    try {
+        await prisma.galleryItem.update({
+            where: {
+                id: galleryItemId,
+                projectId: project.id,
+            },
+            data: {
+                name: formData.title,
+                description: formData.description || "",
+                orderIndex: formData.orderIndex,
+                featured: formData.featured,
+            },
+        });
+    } catch (error) {
+        return ctx.json({ success: false, message: "Something went wrong" }, httpCode("bad_request"));
+    }
+
+    return ctx.json({ success: true, message: "Image updated" }, httpCode("ok"));
+};

@@ -1,6 +1,6 @@
 import { MarkdownRenderBox } from "@/components/layout/md-editor/render-md";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -553,10 +553,11 @@ const EditorModal = ({
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
-                {children}
 
-                <DialogFooter>
-                    <div className="flex w-full flex-wrap items-center justify-end gap-2">
+                <DialogBody className="flex flex-col gap-form-elements">
+                    {children}
+
+                    <DialogFooter>
                         <DialogClose asChild>
                             <Button className="gap-2" variant={"secondary"} type="button">
                                 <XIcon className="h-4 w-4" />
@@ -575,8 +576,8 @@ const EditorModal = ({
                             <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
                             Insert
                         </Button>
-                    </div>
-                </DialogFooter>
+                    </DialogFooter>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );
@@ -754,9 +755,10 @@ const KeyboardShortcutsDialog = ({
                 <DialogHeader>
                     <DialogTitle>Keyboard shortcuts</DialogTitle>
                 </DialogHeader>
-                <div className="markdown-body flex w-full flex-col items-center justify-center">
+
+                <DialogBody className="markdown-body flex w-full flex-col items-center justify-center">
                     <MarkdownRenderBox text={shortcutsString} />
-                </div>
+                </DialogBody>
             </DialogContent>
         </Dialog>
     );

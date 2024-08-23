@@ -217,7 +217,7 @@ userRouter.get("/get-all-sessions", LoginProtectedRoute, async (ctx: Context) =>
 
         return await getAllSessions(ctx, userSession);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return defaultServerErrorResponse(ctx);
     }
 });

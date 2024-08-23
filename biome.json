@@ -1,20 +1,14 @@
 {
     "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
-        "ignore": [
-            "node_modules/*",
-            "apps/**/node_modules/*",
-            "dist/*"
-        ],
-        "include": [
-            "./*"
-        ]
+        "ignore": ["node_modules/*", "apps/**/node_modules/*", "dist/*"],
+        "include": ["./*"]
     },
     "linter": {
         "enabled": true
     },
     "formatter": {
-        "lineWidth": 120,
+        "lineWidth": 140,
         "indentWidth": 4,
         "indentStyle": "space"
     },

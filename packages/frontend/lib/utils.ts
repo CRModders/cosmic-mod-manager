@@ -1,4 +1,4 @@
-import { SERVER_URL } from "@/src/hooks/fetch";
+import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -17,10 +17,12 @@ export const getCookie = (key: string) => {
 };
 
 export const isCurrLinkActive = (url: string, pathname?: string, exactEnds = true) => {
+    const origin = window.location.origin;
+
     if (exactEnds === true) {
-        return (pathname || window.location.pathname).endsWith(url);
+        return `${origin}${(pathname || window.location.pathname)}`.endsWith(`${origin}${url}`);
     }
-    return (pathname || window.location.pathname).includes(url);
+    return `${origin}${(pathname || window.location.pathname)}`.includes(`${origin}${url}`);
 };
 
 export const monthNames = [
@@ -38,20 +40,7 @@ export const monthNames = [
     "December",
 ];
 
-export const shortMonthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-];
+export const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export const timeSince = (pastTime: Date): string => {
     try {
@@ -90,7 +79,11 @@ export const timeSince = (pastTime: Date): string => {
     }
 };
 
-export const formatDate = (date: Date, timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}", useShortMonthNames = false): string => {
+export const formatDate = (
+    date: Date,
+    timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
+    useShortMonthNames = false,
+): string => {
     try {
         const year = date.getFullYear();
         const monthIndex = date.getMonth();
@@ -117,12 +110,16 @@ export const formatDate = (date: Date, timestamp_template = "${month} ${day}, ${
     }
 };
 
-export const getProjectPagePathname = (type: string, projectSlug: string) => {
-    return `/${type}/${projectSlug}`;
+export const getProjectPagePathname = (type: string, projectSlug: string, extra?: string) => {
+    let pathname = `/${type}/${projectSlug}`;
+    if (extra) pathname += `${extra}`;
+    return pathname;
 };
 
-export const getProjectVersionPagePathname = (type: string, projectSlug: string, versionSlug: string) => {
-    return `${getProjectPagePathname(type, projectSlug)}/version/${versionSlug}`;
+export const getProjectVersionPagePathname = (type: string, projectSlug: string, versionSlug: string, extra?: string) => {
+    let pathname = `${getProjectPagePathname(type, projectSlug)}/version/${versionSlug}`;
+    if (extra) pathname += `${extra}`;
+    return pathname;
 };
 
 export const constructProjectPageUrl = (type: string, projectUrlSlug: string) => {
@@ -153,14 +150,23 @@ export const FormatProjectTypes = (types: string[]) => {
     return str;
 };
 
-
 export const projectFileUrl = (pathname: string) => {
-    return `${SERVER_URL}${pathname}`;
-}
-
-export const imageUrl = (pathname: string | undefined | null) => {
-    if (!pathname) return "";
-    const dev = import.meta.env.PUBLIC_ENV === "development";
-    const directUrl = projectFileUrl(pathname);
-    return dev ? directUrl : `https://wsrv.nl/?url=${encodeURIComponent(directUrl)}`;
+    return `${pathname}`;
 };
+
+export const imageUrl = (url: string | undefined | null) => {
+    if (!url) return "";
+    const dev = import.meta.env.PUBLIC_ENV === "development";
+    return dev ? url : `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+};
+
+export const isLoaderVisibleInTagsList = (loaderName: string) => {
+    for (const LOADER of loaders) {
+        if (LOADER.name === loaderName) {
+            if (LOADER.metadata.visibleInTagsList === false) return false;
+            return true;
+        }
+    }
+
+    return true;
+}
