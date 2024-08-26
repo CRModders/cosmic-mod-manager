@@ -130,7 +130,7 @@ export function MultiSelectInput({ inputName, inputPlaceholder, initialSelectedI
 
                 <label
                     htmlFor={inputId}
-                    className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] py-2 overflow-hidden rounded rounded-tl-none rounded-tr-none bg-card-background border border-shallower-background"
+                    className="z-10 multi-select-options-list w-full flex-col hidden absolute top-[100%] p-1 overflow-hidden rounded rounded-tl-none rounded-tr-none bg-card-background border border-shallower-background"
                 >
                     <div className="w-ful max-h-[18rem] overflow-auto" ref={listScrollContainer}>
                         {visibleList.map((item, index) => {
@@ -139,7 +139,7 @@ export function MultiSelectInput({ inputName, inputPlaceholder, initialSelectedI
                                 <p
                                     key={item}
                                     className={cn(
-                                        "w-full text-sm flex items-center justify-start px-4 py-2 text-muted-foreground font-semibold",
+                                        "w-full text-sm flex items-center justify-start px-4 py-1.5 text-muted-foreground rounded font-semibold",
                                         index === focusedListItemIndex && "bg-shallow-background text-foreground",
                                     )}
                                     id={`multiselect-option-item-${index}-${inputId}`}

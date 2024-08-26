@@ -6,7 +6,6 @@ import CreateNewProjectDialog from "./new-project";
 
 import { CubeIcon } from "@/components/icons";
 import AvatarImg from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -57,22 +56,23 @@ const ProjectsPage = () => {
                         <div className="w-full mt-2">
                             <Table>
                                 <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="overflow-hidden w-[10%]">
-                                            <span className="pl-4">Icon</span>
-                                        </TableHead>
-                                        <TableHead className="overflow-hidden w-[30%]">Name</TableHead>
-                                        <TableHead className="overflow-hidden w-[24%]">
-                                            <div className="flex">
-                                                <span className="text-base opacity-0 select-none">.</span>
-                                                <span>ID</span>
-                                            </div>
-                                        </TableHead>
-                                        <TableHead className="overflow-hidden w-[17%]">Type</TableHead>
-                                        <TableHead className="overflow-hidden w-[13%]">Status</TableHead>
-                                        <TableHead className="overflow-hidden w-[6%]">
-                                            <span className="mr-4" />
-                                        </TableHead>
+                                    <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
+                                        {/* ICON: VISIBLE ON sm+ width */}
+                                        <TableHead className="invisible sm:visible w-12 pl-table-side-pad-sm sm:pl-table-side-pad">Icon</TableHead>
+                                        {/* DETAILS: MOBILE ONLY */}
+                                        <TableHead className="invisible sm:hidden">Details</TableHead>
+
+                                        {/* NAME: VISIBLE ON sm+ width */}
+                                        <TableHead className="hidden sm:table-cell min-w-16 lg:min-w-36">Name</TableHead>
+                                        {/* ID: VISIBLE ON sm+ width */}
+                                        <TableHead className="hidden sm:table-cell">ID</TableHead>
+                                        {/* TYPE: VISIBLE ON sm+ width */}
+                                        <TableHead className="hidden sm:table-cell">Type</TableHead>
+                                        {/* STATUS: VISIBLE ON sm+ width */}
+                                        <TableHead className="hidden sm:table-cell">Status</TableHead>
+
+                                        {/* SETTINGS LINK: VISIBLE ON sm+ width */}
+                                        <TableHead className="invisible sm:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad"> </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -80,7 +80,7 @@ const ProjectsPage = () => {
                                         return (
                                             <TableRow
                                                 key={project.id}
-                                                className="cursor-pointer border-none text-base"
+                                                className="cursor-pointer border-none text-sm md:text-base text-muted-foreground"
                                                 onClick={(e) => {
                                                     //@ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
@@ -88,60 +88,78 @@ const ProjectsPage = () => {
                                                     }
                                                 }}
                                             >
-                                                <TableCell>
-                                                    <Link
-                                                        tabIndex={-1}
-                                                        to={getProjectPagePathname(project.type[0], project.slug)}
-                                                        className="noClickRedirect ml-4 flex"
-                                                    >
-                                                        <AvatarImg
-                                                            url={imageUrl(project.icon)}
-                                                            alt={project.name}
-                                                            fallback={
-                                                                <CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />
-                                                            }
+                                                {/* ICON */}
+                                                <TableCell className="pl-table-side-pad-sm sm:pl-table-side-pad">
+                                                    <Link tabIndex={-1} to={getProjectPagePathname(project.type[0], project.slug)}
+                                                        className="noClickRedirect flex">
+                                                        <AvatarImg url={imageUrl(project.icon)} alt={project.name} fallback={<CubeIcon
+                                                            className="w-3/4 h-3/4 text-muted-foreground" />
+                                                        }
                                                             imgClassName="rounded"
                                                             wrapperClassName="h-12 rounded"
                                                         />
                                                     </Link>
                                                 </TableCell>
-                                                <TableCell>
-                                                    <Link
-                                                        to={getProjectPagePathname(project.type[0], project.slug)}
-                                                        className="noClickRedirect"
-                                                    >
-                                                        <Button
-                                                            variant={"link"}
-                                                            className="p-0 font-[500]"
-                                                            tabIndex={-1}
+
+                                                {/* AGGREGATED PROJECT DETAILS: VISIBLE ON MOBILE WIDTH ONLY */}
+                                                <TableCell className="sm:hidden !pl-0 sm:pl-2">
+                                                    <div className="flex flex-col items-start justify-center gap-1">
+                                                        <Link
+                                                            to={getProjectPagePathname(project.type[0], project.slug)}
+                                                            className="noClickRedirect leading-none text-lg font-bold text-foreground hover:underline"
                                                         >
                                                             {project.name}
-                                                        </Button>
-                                                    </Link>
-                                                </TableCell>
-                                                <TableCell className="cursor-default">
-                                                    <div className="noClickRedirect w-fit flex items-center justify-start gap-2 rounded">
+                                                        </Link>
+                                                        <span className="leading-none font-medium">{CapitalizeAndFormatString(project.status)}</span>
+                                                        <span className="leading-none">{FormatProjectTypes(project.type)}</span>
                                                         <CopyBtn
                                                             id={`${project.slug}-${project.id}`}
                                                             text={project.id}
                                                             label={project.id}
                                                             maxLabelChars={12}
-                                                            className="px-2 py-1 hover:bg-card-background"
-                                                            iconClassName="w-4 h-4"
+                                                            className="noClickRedirect px-2 py-1 bg-shallow-background/50 neumorphic_shadow"
+                                                            iconClassName="w-3 h-3"
                                                         />
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>{FormatProjectTypes(project.type)}</TableCell>
-                                                <TableCell>{CapitalizeAndFormatString(project.status)}</TableCell>
-                                                <TableCell className="cursor-default">
-                                                    <div className="flex items-center justify-center pr-4">
-                                                        <Link
-                                                            to={`${getProjectPagePathname(project.type[0], project.slug)}/settings`}
-                                                            className="noClickRedirect rounded flex items-center justify-center h-full w-fit"
-                                                        >
-                                                            <SettingsIcon className="w-8 h-8 hover:bg-card-background rounded p-2" />
-                                                        </Link>
-                                                    </div>
+
+                                                {/* NAME */}
+                                                <TableCell className="hidden sm:table-cell">
+                                                    <Link
+                                                        to={getProjectPagePathname(project.type[0], project.slug)}
+                                                        className="noClickRedirect text-base leading-none font-medium hover:underline"
+                                                    >
+                                                        {project.name}
+                                                    </Link>
+                                                </TableCell>
+                                                {/* ID */}
+                                                <TableCell className="hidden sm:table-cell">
+                                                    <CopyBtn
+                                                        id={`${project.slug}-${project.id}`}
+                                                        text={project.id}
+                                                        label={project.id}
+                                                        maxLabelChars={12}
+                                                        className="noClickRedirect px-2 py-1"
+                                                        iconClassName="w-3 h-3"
+                                                    />
+                                                </TableCell>
+                                                {/* TYPE */}
+                                                <TableCell className="hidden sm:table-cell">
+                                                    <span className="leading-none">{FormatProjectTypes(project.type)}</span>
+                                                </TableCell>
+                                                {/* STATUS */}
+                                                <TableCell className="hidden sm:table-cell">
+                                                    <span className="leading-none font-medium">{CapitalizeAndFormatString(project.status)}</span>
+                                                </TableCell>
+
+                                                {/* SETTINGS PAGE LINK */}
+                                                <TableCell className="pr-table-side-pad-sm sm:pr-table-side-pad">
+                                                    <Link
+                                                        to={`${getProjectPagePathname(project.type[0], project.slug)}/settings`}
+                                                        className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background hover:neumorphic_shadow"
+                                                    >
+                                                        <SettingsIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                    </Link>
                                                 </TableCell>
                                             </TableRow>
                                         );
@@ -159,3 +177,11 @@ const ProjectsPage = () => {
 };
 
 export default ProjectsPage;
+
+const ProjectName = ({ name, url }: { name: string; url: string }) => {
+    return (
+        <Link to={url} className="noClickRedirect leading-none font-bold text-lg text-foreground hover:underline">
+            {name}
+        </Link>
+    );
+};

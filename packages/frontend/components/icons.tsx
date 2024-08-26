@@ -3,7 +3,7 @@ import type { IconSvgProps } from "@/types";
 import { XIcon } from "lucide-react";
 import type React from "react";
 
-const DefaultSvgSize = "1.25rem";
+export const DefaultSvgSize = "1rem";
 
 export const SunIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (

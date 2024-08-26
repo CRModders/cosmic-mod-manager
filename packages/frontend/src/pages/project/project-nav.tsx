@@ -1,5 +1,4 @@
 import { ButtonLink } from "@/components/ui/link";
-import { SettingsIcon } from "lucide-react";
 
 const ProjectNav = ({ baseHref }: { baseHref: string }) => {
     const links = [
@@ -22,7 +21,7 @@ const ProjectNav = ({ baseHref }: { baseHref: string }) => {
     ];
 
     return (
-        <nav className="w-full max-w-full flex items-center justify-start overflow-x-auto" id="project-page-nav">
+        <nav className="w-full max-w-full flex items-center justify-start" id="project-page-nav">
             <ul className="w-full flex gap-1">
                 {links.map((link) => {
                     return (

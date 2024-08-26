@@ -45,6 +45,7 @@ module.exports = {
                 "link-hover-foreground": "hsla(var(--link-hover-foreground))",
             },
             fontSize: {
+                tiny: "var(--font-tiny)",
                 sm: "var(--font-sm)",
                 base: "var(--font-base)",
                 lg: "var(--font-lg)",
@@ -73,6 +74,7 @@ module.exports = {
             },
             height: {
                 "nav-item": "2.5rem",
+                "btn-icon-sm": "0.87rem",
                 "btn-icon": "1.05rem",
                 "btn-icon-md": "1.2rem",
                 "btn-icon-lg": "1.35rem",
@@ -80,6 +82,7 @@ module.exports = {
                 "form-submit-btn": "2.25rem",
             },
             width: {
+                "btn-icon-sm": "0.87rem",
                 "btn-icon": "1.05rem",
                 "btn-icon-md": "1.2rem",
                 "btn-icon-lg": "1.35rem",
@@ -87,6 +90,8 @@ module.exports = {
             },
             padding: {
                 "card-surround": "1.25rem",
+                "table-side-pad-sm": "1rem",
+                "table-side-pad": "2rem"
             },
             transitionDuration: {
                 DEFAULT: "225ms",

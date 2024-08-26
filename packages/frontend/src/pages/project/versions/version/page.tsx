@@ -81,8 +81,8 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                             </BreadcrumbList>
                         </Breadcrumb>
 
-                        <div className="w-full flex flex-wrap items-center justify-start gap-8">
-                            <h1 className="text-2xl font-[700] text-muted-foreground">{versionData.title}</h1>
+                        <div className="w-full flex flex-wrap items-center justify-start gap-x-8">
+                            <h1 className="text-2xl font-[700] text-foreground">{versionData.title}</h1>
                             {
                                 versionData.featured ? (
                                     <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
@@ -93,7 +93,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                             }
                         </div>
 
-                        <div className="flex flex-wrap gap-x-3 gap-y-1">
+                        <div className="flex flex-wrap gap-x-2 gap-y-1.5">
                             <VariantButtonLink
                                 variant={"default"}
                                 url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}

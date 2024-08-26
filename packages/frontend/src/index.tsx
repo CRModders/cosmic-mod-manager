@@ -3,7 +3,7 @@ import "@/src/globals.css";
 import RootLayout from "@/src/pages/layout";
 import SettingsPageLayout from "@/src/pages/settings/layout";
 import { projectTypes } from "@shared/config/project";
-import { Suspense, lazy } from "react";
+import { StrictMode, Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ProjectContextProvider from "./contexts/curr-project";
@@ -130,7 +130,7 @@ const projectPageRoutes = () => {
                                                     <EditVersionPage />
                                                 </Suspense>
                                             ),
-                                        }
+                                        },
                                     ],
                                 },
                             ],
@@ -360,5 +360,9 @@ const router = createBrowserRouter([
 const rootEl = document.getElementById("root");
 if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
-    root.render(<RouterProvider router={router} />);
+    root.render(
+        <StrictMode>
+            <RouterProvider router={router} />
+        </StrictMode>,
+    );
 }

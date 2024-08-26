@@ -43,7 +43,7 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
             onClick={copyText}
         >
             {label ? (
-                <span className={cn("text-sm text-muted-foreground", labelClassName)}>
+                <span className={cn("text-sm leading-none text-muted-foreground", labelClassName)}>
                     {label.slice(0, maxLabelChars || label.length)}
                     {maxLabelChars && label.length > maxLabelChars ? "..." : ""}
                 </span>

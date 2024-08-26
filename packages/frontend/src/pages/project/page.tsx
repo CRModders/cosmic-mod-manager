@@ -1,5 +1,6 @@
 import { DiscordIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
+import LoaderIcons from "@/components/loader-icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Chip from "@/components/ui/chip";
@@ -9,9 +10,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { formatVersionsListString, getGroupedVersionsList } from "@/lib/semver";
 import { cn, formatDate, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
+import useTheme from "@/src/hooks/use-theme";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
+import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { BookOpenIcon, BugIcon, CalendarIcon, CodeIcon, DownloadIcon, GitCommitHorizontalIcon, SquareArrowOutUpRightIcon } from "lucide-react";
-import { Suspense, lazy, useContext } from "react";
+import { type ReactNode, Suspense, lazy, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ProjectMember } from "./layout";
 import { ProjectSupprotedEnvironments } from "./supported-env";
@@ -19,6 +22,7 @@ import { ProjectSupprotedEnvironments } from "./supported-env";
 const MarkdownRenderBox = lazy(() => import("@/components/layout/md-editor/render-md"));
 
 const ProjectPage = () => {
+    const { theme } = useTheme();
     const { projectData, featuredProjectVersions } = useContext(projectContext);
     const navigate = useNavigate();
 
@@ -53,11 +57,24 @@ const ProjectPage = () => {
                     <div>
                         <span className="flex font-bold text-muted-foreground pb-1">Loaders</span>
                         <div className="w-full flex flex-wrap gap-1">
-                            {projectData.loaders.map((loader) => (
-                                <Chip key={loader} className="text-muted-foreground">
-                                    {CapitalizeAndFormatString(loader)}
-                                </Chip>
-                            ))}
+                            {projectData.loaders.map((loader) => {
+                                const loaderData = getLoaderFromString(loader);
+                                if (!loaderData) return null;
+                                const accentForeground = loaderData?.metadata?.accent?.foreground;
+                                // @ts-ignore
+                                const loaderIcon: ReactNode = LoaderIcons[loaderData.icon];
+
+                                return (
+                                    <Chip key={loaderData.name}
+                                        style={{
+                                            color: accentForeground ? theme === "dark" ? accentForeground?.dark : accentForeground?.light : "hsla(var(--muted-foreground))",
+                                        }}
+                                    >
+                                        {loaderIcon ? loaderIcon : null}
+                                        {CapitalizeAndFormatString(loaderData.name)}
+                                    </Chip>
+                                )
+                            })}
                         </div>
                     </div>
                     <div>

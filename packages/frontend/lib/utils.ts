@@ -64,15 +64,15 @@ export const timeSince = (pastTime: Date): string => {
             return hours === 1 ? "an hour ago" : `${hours} hours ago`;
         }
         if (days < 7) {
-            return days === 1 ? "a day ago" : `${days} days ago`;
+            return days === 1 ? "yesterday" : `${days} days ago`;
         }
         if (weeks < 4) {
-            return weeks === 1 ? "a week ago" : `${weeks} weeks ago`;
+            return weeks === 1 ? "last week" : `${weeks} weeks ago`;
         }
         if (months < 12) {
-            return months === 1 ? "a month ago" : `${months} months ago`;
+            return months === 1 ? "last month" : `${months} months ago`;
         }
-        return years === 1 ? "a year ago" : `${years} years ago`;
+        return years === 1 ? "last year" : `${years} years ago`;
     } catch (error) {
         console.error(error);
         return "";

@@ -192,7 +192,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                     <CancelButton type="button" />
                                 </DialogClose>
                                 <Button disabled={isLoading || !isFormSubmittable()}>
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon h-btn-icon" />}
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
                                     Continue
                                 </Button>
                             </DialogFooter>

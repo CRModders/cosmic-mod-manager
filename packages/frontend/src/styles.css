@@ -11,10 +11,7 @@
 
 /*  Made for 6 showcase items currently
     % of time given to animate * (Number of total items - 1) +  %  of time each item stays in view * (Number of toal items - 1)  = 100 %
-    CURRENTLY: 3% of the duration is given for animation  and each itemThe best place for your
-    Cosmic Reach
-     mods.
-    Discover, play, and create content, all in one spot. stays 17% of total duration in view
+    CURRENTLY: 3% of the duration is given for animation  and each item stays 17% of total duration in view
 */
 
 @keyframes animateShowcaseItems {

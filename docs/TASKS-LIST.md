@@ -32,7 +32,8 @@
 - [x] Add changelog page
 
 - [x] Add the interactive download button on project home page
-- [-] Add the new version list UI
+- [x] Add accent colors and icons for loaders
+- [x] Add the new version list UI
 
 - [-] Add settings page
   - [x] General settings page

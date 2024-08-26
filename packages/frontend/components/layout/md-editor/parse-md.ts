@@ -82,11 +82,11 @@ export const configuredXss = new FilterXSS({
                     "raw.githubusercontent.com",
                     "img.shields.io",
                     "i.postimg.cc",
-                    "wsrv.nl",
                     "cf.way2muchnoise.eu",
                     "bstats.org",
+                    "crmm.tech",
+                    "wsrv.nl",
                     "localhost",
-                    "crmm.tech"
                 ];
 
                 if (!allowedHostnames.includes(url.hostname)) {
@@ -146,3 +146,7 @@ export const md = (options = {}) => {
 };
 
 export const renderString = (string: string) => configuredXss.process(md().render(string));
+
+
+
+// Any problems you can point out in this file?

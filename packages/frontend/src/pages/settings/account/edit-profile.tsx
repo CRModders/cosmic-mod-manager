@@ -21,7 +21,7 @@ import { Capitalize, formatUserName } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { profileUpdateFormSchema } from "@shared/schemas/settings";
 import type { LinkedProvidersListData, LoggedInUserData } from "@shared/types";
-import { Edit2, SaveIcon } from "lucide-react";
+import { Edit3Icon, SaveIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -74,7 +74,7 @@ const EditProfileDialog = ({
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="" variant={"ghost"}>
-                    <Edit2 className="size-4" />
+                    <Edit3Icon className="w-btn-icon-sm h-btn-icon-sm" />
                     Edit
                 </Button>
             </DialogTrigger>

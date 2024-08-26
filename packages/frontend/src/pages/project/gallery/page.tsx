@@ -15,6 +15,7 @@ import {
     ExternalLinkIcon,
     InfoIcon,
     ShrinkIcon,
+    StarIcon,
     Trash2Icon,
     XIcon,
 } from "lucide-react";
@@ -117,7 +118,10 @@ const GalleryItemCard = ({
 
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
                 <div className="w-full flex flex-col items-start justify-start ">
-                    <span className="text-lg font-bold">{galleryItem.name}</span>
+                    <span className="flex items-center justify-start gap-2 text-lg font-bold">
+                        {galleryItem.name}
+                        {galleryItem.featured === true ? <StarIcon className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" /> : null}
+                    </span>
                     <span className="text-muted-foreground leading-tight">{galleryItem.description}</span>
                 </div>
                 <div className="w-full flex flex-col items-start justify-start gap-1.5 mt-1">
@@ -132,7 +136,7 @@ const GalleryItemCard = ({
 
                                 <RemoveGalleryImage id={galleryItem.id}>
                                     <Button variant={"secondary"} size={"sm"}>
-                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                        <Trash2Icon className="w-btn-icon-sm h-btn-icon-sm" />
                                         Remove
                                     </Button>
                                 </RemoveGalleryImage>

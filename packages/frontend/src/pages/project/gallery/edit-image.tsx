@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { updateGalleryImageFormSchema } from "@shared/schemas/project";
 import type { GalleryItem } from "@shared/types/api";
-import { Edit2Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
+import { Edit3Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -81,7 +81,7 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button variant={"secondary"} size={"sm"}>
-                    <Edit2Icon className="w-btn-icon h-btn-icon" />
+                    <Edit3Icon className="w-3.5 h-3.5" />
                     Edit
                 </Button>
             </DialogTrigger>
@@ -110,11 +110,7 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
                                     </div>
                                 </div>
                                 <div className="w-full aspect-[2/1] rounded rounded-t-none overflow-hidden bg-[hsla(var(--background-dark))]">
-                                    <img
-                                        src={imageUrl(galleryItem.image)}
-                                        alt="img"
-                                        className="object-contain w-full h-full"
-                                    />
+                                    <img src={imageUrl(galleryItem.image)} alt="img" className="object-contain w-full h-full" />
                                 </div>
                             </div>
 
@@ -141,11 +137,7 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
                                             Description
                                             <FormMessage />
                                         </FormLabel>
-                                        <Textarea
-                                            {...field}
-                                            placeholder="Enter description..."
-                                            className="h-fit min-h-14 resize-none"
-                                        />
+                                        <Textarea {...field} placeholder="Enter description..." className="h-fit min-h-14 resize-none" />
                                     </FormItem>
                                 )}
                             />
@@ -164,7 +156,14 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
                                         </FormLabel>
                                         <Input
                                             {...field}
-                                            onChange={(e) => field.onChange(Number.parseInt(e.target.value))}
+                                            onChange={(e) => {
+                                                const parsedNumber = Number.parseInt(e.target.value);
+                                                if (!Number.isNaN(parsedNumber)) {
+                                                    field.onChange(parsedNumber);
+                                                } else {
+                                                    field.onChange("");
+                                                }
+                                            }}
                                             placeholder="Enter order index..."
                                             min={0}
                                             type="number"
@@ -182,16 +181,12 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
                                             Featured
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                A featured gallery image shows up in search and your project card. Only one
-                                                gallery image can be featured.
+                                                A featured gallery image shows up in search and your project card. Only one gallery image
+                                                can be featured.
                                             </FormDescription>
                                         </FormLabel>
                                         {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
-                                        <Button
-                                            variant="secondary"
-                                            type="button"
-                                            onClick={() => field.onChange(!field.value)}
-                                        >
+                                        <Button variant="secondary" type="button" onClick={() => field.onChange(!field.value)}>
                                             {field.value === true ? (
                                                 <StarIcon fill="currentColor" className="w-btn-icon-md h-btn-icon-md" />
                                             ) : (
@@ -209,11 +204,7 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
                                 </DialogClose>
 
                                 <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? (
-                                        <LoadingSpinner size="xs" />
-                                    ) : (
-                                        <SaveIcon className="w-btn-icon h-btn-icon" />
-                                    )}
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                     Save changes
                                 </Button>
                             </DialogFooter>

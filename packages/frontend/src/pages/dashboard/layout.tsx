@@ -22,7 +22,7 @@ const DashboardLayout = () => {
                 <meta name="description" content="Dashboard" />
             </Helmet>
 
-            <Panel>
+            <Panel className="pb-12">
                 <PanelAside>
                     <PanelAsideNavCard label="Dashboard">
                         {SidePanelLinks.map((link) => (

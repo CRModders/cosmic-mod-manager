@@ -1,6 +1,6 @@
 import { BACKEND_PORT, BASE_API_ROUTE_PATH } from "@shared/config";
 import type { SocketAddress } from "bun";
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
@@ -15,6 +15,9 @@ app.use(
     }),
 );
 
+app.get("/favicon.ico", async (ctx: Context) => {
+    return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
+});
 app.route(BASE_API_ROUTE_PATH, router);
 app.route("/cdn", cdnRouter);
 

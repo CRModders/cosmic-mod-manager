@@ -95,7 +95,7 @@ export const UploadVersionPageTopCard = ({
 
             {children}
 
-            <div className="w-full flex gap-x-panel-cards gap-y-2 items-center justify-start">
+            <div className="w-full flex flex-wrap gap-x-panel-cards gap-y-2 items-center justify-start">
                 <Button type="submit" disabled={isLoading}>
                     {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
                     Create
@@ -398,7 +398,7 @@ const AdditionalFiles = ({
 
             <label
                 htmlFor={inputId}
-                className="w-full flex items-center justify-center gap-2 px-4 py-5 border-[0.17rem] border-dashed rounded border-shallower-background cursor-pointer bg-shallow-background/25 hover:bg-shallow-background/35"
+                className="w-full flex items-center justify-center gap-2 px-4 py-5 rounded border-[0.1rem] border-shallow-background cursor-pointer bg-shallow-background/50 hover:bg-shallow-background/70"
             >
                 <UploadIcon className="w-btn-icon h-btn-icon" />
                 Select files

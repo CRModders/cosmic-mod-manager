@@ -1,3 +1,4 @@
+import { loaders } from "../../config/project";
 import { AuthProviders, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
 
 export const getUserRoleFromString = (roleName: string) => {
@@ -94,3 +95,12 @@ export const getFileType = (strType: string) => {
             return null;
     }
 };
+
+export const getLoaderFromString = (loaderName: string) => {
+    for (const LOADER of loaders) {
+        if (LOADER.name === loaderName.toLowerCase()) {
+            return LOADER;
+        }
+    };
+    return null;
+}

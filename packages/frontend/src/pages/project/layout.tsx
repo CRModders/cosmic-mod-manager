@@ -148,7 +148,7 @@ const PageHeader = ({
             </div>
 
             <div className="w-full overflow-x-auto">
-                <Card className="w-min max-w-full rounded-full p-1">
+                <Card className="w-min max-w-full rounded-full p-1 overflow-auto">
                     <ProjectNav baseHref={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`} />
                 </Card>
             </div>

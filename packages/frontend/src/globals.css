@@ -9,6 +9,7 @@
     --accent-color-hue: 345;
 
     /* FONT SIZES */
+    --font-tiny: 0.75rem;
     --font-sm: 0.85rem;
     --font-base: 1rem;
     --font-lg: 1.17rem;
@@ -197,4 +198,5 @@ body.no-scrollbar {
         transition: font-size 150ms ease;
         @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
     }
+
 }

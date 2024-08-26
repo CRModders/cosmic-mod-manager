@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import type React from "react";
 
-const Chip = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+const Chip = ({ children, className, style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) => {
     return (
         <span
+            style={style}
             className={cn(
-                "text-sm font-semibold text-extra-muted-foreground bg-shallow-background/75 px-2 py-[0.15rem] rounded-full",
+                "flex items-center gap-1 text-sm font-semibold text-extra-muted-foreground bg-shallow-background/75 px-2 py-[0.15rem] rounded-full text-nowrap whitespace-nowrap",
                 className,
             )}
         >

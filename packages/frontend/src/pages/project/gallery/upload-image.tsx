@@ -260,7 +260,7 @@ const UploadGalleryImageForm = () => {
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
-                                        <PlusIcon className="w-btn-icon h-btn-icon" />
+                                        <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
                                     )}
                                     Add gallery image
                                 </Button>

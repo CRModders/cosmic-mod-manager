@@ -37,12 +37,18 @@ export type Loader = {
     supportedFields: LoaderSupportedFields[];
     metadata: {
         visibleInTagsList?: boolean;
+        accent?: {
+            foreground: {
+                light: string;
+                dark: string;
+            }
+        }
     };
 };
 
 export const loaders: Loader[] = [
     {
-        icon: "quilt_icon",
+        icon: "quilt",
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD],
         supportedFields: [
@@ -52,10 +58,17 @@ export const loaders: Loader[] = [
             LoaderSupportedFields.SINGLEPLAYER,
             LoaderSupportedFields.GAME_VERSIONS,
         ],
-        metadata: {},
+        metadata: {
+            accent: {
+                foreground: {
+                    light: "#8B61B4",
+                    dark: "#C796F9",
+                }
+            }
+        },
     },
     {
-        icon: "puzzle_loader_icon",
+        icon: "puzzle_loader",
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD],
         supportedFields: [
@@ -65,7 +78,14 @@ export const loaders: Loader[] = [
             LoaderSupportedFields.SINGLEPLAYER,
             LoaderSupportedFields.GAME_VERSIONS,
         ],
-        metadata: {},
+        metadata: {
+            accent: {
+                foreground: {
+                    light: "#4A953F",
+                    dark: "#A5E388",
+                }
+            }
+        },
     },
     {
         icon: "",
@@ -86,3 +106,20 @@ export const loaders: Loader[] = [
         },
     },
 ];
+
+
+// ?                LIGHT       DARK
+// fabric:          #8A7B71     #DBB69B;
+// quilt:           #8B61B4     #C796F9;
+// forge:           #5B6197     #959EEF;
+// neoforge:        #DC895C     #F99E6B;
+// liteloader:      #4C90DE     #7AB0EE;
+// bukkit:          #E78362     #F6AF7B;
+// bungeecord:      #C69E39     #D2C080;
+// folia:           #6AA54F     #A5E388;
+// paper:           #E67E7E     #EEAAAA;
+// purpur:          #7763A3     #C3ABF7;
+// spigot:          #CD7A21     #F1CC84;
+// velocity:        #4B98B0     #83D5EF;
+// waterfall:       #5F83CB     #78A4FB;
+// sponge:          #C49528     #F9E580;
