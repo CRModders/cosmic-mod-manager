@@ -43,52 +43,50 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                 </title>
             </Helmet>
 
-            <div className="w-full flex flex-col gap-panel-cards [grid-area:_content]">
-                <Card className="p-5 w-full flex flex-col items-start justify-start">
-                    {versionsList.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => {
-                        return (
-                            <div key={version.id} className="w-full pl-7 mb-4 relative text-muted-foreground">
-                                <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                                    <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
-                                        <ChangelogBar releaseChannel={version.releaseChannel} />
-                                        <h2 className="leading-tight">
-                                            <Link
-                                                to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
-                                                className="text-xl font-bold text-muted-foreground"
-                                            >
-                                                {version.title}
-                                            </Link>
-                                        </h2>
-                                        <span>
-                                            by{" "}
-                                            <Link to={`/user/${version.author.userName}`} className="text-link-foreground hover:underline">
-                                                {version.author.userName}
-                                            </Link>
-                                        </span>
-                                        <span>on {formatDate(new Date(version.datePublished), "${month} ${day}, ${year}", true)}</span>
-                                    </div>
+            <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
 
-                                    {version.primaryFile?.url ? (
-                                        <a
-                                            href={projectFileUrl(version.primaryFile.url)}
-                                            className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+            <Card className="p-5 w-full flex flex-col items-start justify-start">
+                {versionsList.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => {
+                    return (
+                        <div key={version.id} className="w-full pl-7 mb-4 relative text-muted-foreground">
+                            <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                                <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
+                                    <ChangelogBar releaseChannel={version.releaseChannel} />
+                                    <h2 className="leading-tight">
+                                        <Link
+                                            to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
+                                            className="text-xl font-bold text-muted-foreground"
                                         >
-                                            <DownloadIcon className="w-btn-icon h-btn-icon" />
-                                            Download
-                                        </a>
-                                    ) : null}
+                                            {version.title}
+                                        </Link>
+                                    </h2>
+                                    <span>
+                                        by{" "}
+                                        <Link to={`/user/${version.author.userName}`} className="text-link-foreground hover:underline">
+                                            {version.author.userName}
+                                        </Link>
+                                    </span>
+                                    <span>on {formatDate(new Date(version.datePublished), "${month} ${day}, ${year}", true)}</span>
                                 </div>
-                                {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mt-2 mr-2" /> : null}
-                            </div>
-                        );
-                    })}
-                </Card>
-                {Pagination}
-            </div>
 
-            <div className="grid [grid-area:_sidebar]">
-                <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
-            </div>
+                                {version.primaryFile?.url ? (
+                                    <a
+                                        href={projectFileUrl(version.primaryFile.url)}
+                                        className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+                                    >
+                                        <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                        Download
+                                    </a>
+                                ) : null}
+                            </div>
+                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mt-2 mr-2" /> : null}
+                        </div>
+                    );
+                })}
+            </Card>
+
+            {Pagination}
+
         </>
     );
 };

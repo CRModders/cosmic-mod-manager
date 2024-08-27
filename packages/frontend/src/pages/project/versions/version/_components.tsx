@@ -284,13 +284,11 @@ export const SelectPrimaryFileInput = ({
                 {children}
                 <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
                 {selectedFile ? (
-                    <div className="flex items-center flex-wrap justify-start gap-x-2">
-                        <span>
-                            <strong className="font-semibold">{selectedFile.name}</strong>{" "}
-                            <span className="whitespace-nowrap ml-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
-                            <span className="text-muted-foreground italic ml-1">Primary</span>
-                        </span>
-                    </div>
+                    <span className="flex items-center flex-wrap justify-start gap-x-2">
+                        <strong className="font-semibold">{selectedFile.name}</strong>{" "}
+                        <span className="whitespace-nowrap ml-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
+                        <span className="text-muted-foreground italic ml-1">Primary</span>
+                    </span>
                 ) : (
                     <span className="text-muted-foreground italic">No file choosen</span>
                 )}
@@ -312,44 +310,42 @@ export const SelectAdditionalProjectFiles = ({ formControl }: { formControl: Con
             control={formControl}
             name="additionalFiles"
             render={({ field }) => (
-                <FormItem className="w-full flex items-start justify-center">
-                    <div className="w-full flex flex-col">
-                        <span className="font-semibold">Upload additional files</span>
-                        <span className="text-muted-foreground">Used for files such as sources or Javadocs.</span>
+                <FormItem className="w-full flex flex-col items-start justify-center gap-0">
+                    <span className="font-semibold">Upload additional files</span>
+                    <span className="text-sm text-muted-foreground mb-1">Used for files such as sources or Javadocs.</span>
 
-                        <AdditionalFiles inputId="additional-files-input" selectedFiles={field.value} onChange={field.onChange}>
-                            <input
-                                type="file"
-                                hidden
-                                name={field.name}
-                                multiple
-                                id="additional-files-input"
-                                className="hidden"
-                                onChange={(e) => {
-                                    e.preventDefault();
-                                    const newFiles: File[] = [];
-                                    mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
-                                        const file = e.target.files?.[i];
-                                        if (!file?.name) continue;
-                                        if (!getFileType(file.type)) {
-                                            toast.error(`Invalid file "${file.name}" with type "${file.type}"`);
-                                            continue;
-                                        }
-
-                                        for (const existingFile of field.value || []) {
-                                            if (existingFile.name.toLowerCase() === file.name.toLowerCase()) {
-                                                toast.error(`Cannot add duplicate file. Adding "${file.name}"`);
-                                                continue mainLoop;
-                                            }
-                                        }
-
-                                        newFiles.push(file);
+                    <AdditionalFiles inputId="additional-files-input" selectedFiles={field.value} onChange={field.onChange}>
+                        <input
+                            type="file"
+                            hidden
+                            name={field.name}
+                            multiple
+                            id="additional-files-input"
+                            className="hidden"
+                            onChange={(e) => {
+                                e.preventDefault();
+                                const newFiles: File[] = [];
+                                mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
+                                    const file = e.target.files?.[i];
+                                    if (!file?.name) continue;
+                                    if (!getFileType(file.type)) {
+                                        toast.error(`Invalid file "${file.name}" with type "${file.type}"`);
+                                        continue;
                                     }
-                                    field.onChange([...(field.value || []), ...newFiles]);
-                                }}
-                            />
-                        </AdditionalFiles>
-                    </div>
+
+                                    for (const existingFile of field.value || []) {
+                                        if (existingFile.name.toLowerCase() === file.name.toLowerCase()) {
+                                            toast.error(`Cannot add duplicate file. Adding "${file.name}"`);
+                                            continue mainLoop;
+                                        }
+                                    }
+
+                                    newFiles.push(file);
+                                }
+                                field.onChange([...(field.value || []), ...newFiles]);
+                            }}
+                        />
+                    </AdditionalFiles>
                 </FormItem>
             )}
         />
@@ -379,12 +375,10 @@ const AdditionalFiles = ({
                             <div className="flex items-center justify-start gap-1.5">
                                 {children}
                                 <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
-                                <div className="flex items-center flex-wrap justify-start gap-x-2">
-                                    <span>
-                                        <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
-                                        <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
-                                    </span>
-                                </div>
+                                <span className="flex items-center flex-wrap justify-start gap-x-2">
+                                    <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
+                                    <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
+                                </span>
                             </div>
 
                             <Button

@@ -323,14 +323,8 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                 const dbFile = dbFiles.get(deletedFile);
                 if (dbFile) deletedFilesData.push(dbFile);
             }
-            console.log({
-                additionalFiles,
-                currFilesList: targetVersion.files,
-                deletedFileList,
-                deletedFilesData
-            })
 
-            console.log(await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData));
+            await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData);
         };
 
         // Save the new files

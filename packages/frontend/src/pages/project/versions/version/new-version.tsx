@@ -18,7 +18,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { fullWidthLayoutStyles } from "../../layout";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -111,44 +110,44 @@ const UploadVersionPage = () => {
                             await handleSubmit(formValues);
                         });
                     }}
-                    className="w-full flex flex-col gap-panel-cards items-start justify-start"
-                    style={fullWidthLayoutStyles}
-                >
+                    className="w-full flex flex-col gap-panel-cards items-start justify-start">
+
+                    <UploadVersionPageTopCard
+                        isLoading={isLoading}
+                        submitBtnLabel="Create"
+                        submitBtnIcon={<PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        versionPageUrl={versionsPageUrl}
+                        versionTitle={form.getValues().title}
+                        backUrl={versionsPageUrl}
+                        featuredBtn={
+                            <FormField
+                                control={form.control}
+                                name="featured"
+                                render={({ field }) => (
+                                    <FeaturedBtn isLoading={isLoading} featured={field.value} setFeatured={field.onChange} />
+                                )}
+                            />
+                        }
+                    >
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <VersionTitleInput
+                                        name={field.name}
+                                        value={field.value}
+                                        inputRef={field.ref}
+                                        disabled={field.disabled === true}
+                                        onChange={field.onChange}
+                                    />
+                                </FormItem>
+                            )}
+                        />
+                    </UploadVersionPageTopCard>
+
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                         <div className="w-full flex flex-col gap-panel-cards">
-                            <UploadVersionPageTopCard
-                                isLoading={isLoading}
-                                submitBtnLabel="Create"
-                                submitBtnIcon={<PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                versionPageUrl={versionsPageUrl}
-                                versionTitle={form.getValues().title}
-                                backUrl={versionsPageUrl}
-                                featuredBtn={
-                                    <FormField
-                                        control={form.control}
-                                        name="featured"
-                                        render={({ field }) => (
-                                            <FeaturedBtn isLoading={isLoading} featured={field.value} setFeatured={field.onChange} />
-                                        )}
-                                    />
-                                }
-                            >
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <VersionTitleInput
-                                                name={field.name}
-                                                value={field.value}
-                                                inputRef={field.ref}
-                                                disabled={field.disabled === true}
-                                                onChange={field.onChange}
-                                            />
-                                        </FormItem>
-                                    )}
-                                />
-                            </UploadVersionPageTopCard>
 
                             <ContentCardTemplate title="Changelog">
                                 <FormField

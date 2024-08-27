@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/ui/link";
+import { cn } from "@/lib/utils";
 
-const ProjectNav = ({ baseHref }: { baseHref: string }) => {
+const ProjectNav = ({ baseHref, className }: { baseHref: string; className?: string }) => {
     const links = [
         {
             label: "About",
@@ -21,12 +22,12 @@ const ProjectNav = ({ baseHref }: { baseHref: string }) => {
     ];
 
     return (
-        <nav className="w-full max-w-full flex items-center justify-start" id="project-page-nav">
+        <nav className={cn("w-full flex items-center justify-start", className)} id="project-page-nav">
             <ul className="w-full flex gap-1">
                 {links.map((link) => {
                     return (
                         <li key={link.href} className="flex items-center justify-center">
-                            <ButtonLink key={link.href} url={link.href} className="h-9 text-sm px-4 py-0 rounded-full font-semibold">
+                            <ButtonLink key={link.href} url={link.href} className="h-9 text-sm px-4 py-0 rounded font-semibold">
                                 {link.label}
                             </ButtonLink>
                         </li>

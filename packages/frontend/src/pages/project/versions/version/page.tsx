@@ -24,7 +24,7 @@ import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
-import { ProjectMember, fullWidthLayoutStyles } from "../../layout";
+import { ProjectMember } from "../../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
@@ -57,74 +57,74 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                 </title>
             </Helmet>
 
-            <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start"
-                style={fullWidthLayoutStyles}
-            >
-                <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
-                    <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-3">
-                        <Breadcrumb>
-                            <BreadcrumbList className="flex items-center">
-                                <BreadcrumbItem>
-                                    <BreadcrumbLink
-                                        href={`${getProjectPagePathname(projectType, projectSlug)}/versions`}
-                                        className="text-base"
-                                    >
-                                        Versions
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="flex items-center justify-center">
-                                    <ChevronRightIcon size="1rem" className=" text-foreground" />
-                                </BreadcrumbSeparator>
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage className="text-base">{versionData?.title}</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-
-                        <div className="w-full flex flex-wrap items-center justify-start gap-x-8">
-                            <h1 className="text-2xl font-[700] text-foreground">{versionData.title}</h1>
-                            {
-                                versionData.featured ? (
-                                    <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
-                                        <StarIcon className="w-btn-icon h-btn-icon" />
-                                        Featured
-                                    </span>
-                                ) : null
-                            }
-                        </div>
-
-                        <div className="flex flex-wrap gap-x-2 gap-y-1.5">
-                            <VariantButtonLink
-                                variant={"default"}
-                                url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
+            <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-3">
+                <Breadcrumb>
+                    <BreadcrumbList className="flex items-center">
+                        <BreadcrumbItem>
+                            <BreadcrumbLink
+                                href={`${getProjectPagePathname(projectType, projectSlug)}/versions`}
+                                className="text-base"
                             >
-                                <DownloadIcon className="w-btn-icon h-btn-icon" />
-                                Download
-                            </VariantButtonLink>
+                                Versions
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator className="flex items-center justify-center">
+                            <ChevronRightIcon size="1rem" className=" text-foreground" />
+                        </BreadcrumbSeparator>
+                        <BreadcrumbItem>
+                            <BreadcrumbPage className="text-base">{versionData?.title}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
 
-                            <Button variant={"secondary"}>
-                                <FlagIcon className="w-btn-icon h-btn-icon" />
-                                Report
-                            </Button>
+                <div className="w-full flex flex-wrap items-center justify-start gap-x-8">
+                    <h1 className="text-2xl font-[700] text-foreground">{versionData.title}</h1>
+                    {
+                        versionData.featured ? (
+                            <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
+                                <StarIcon className="w-btn-icon h-btn-icon" />
+                                Featured
+                            </span>
+                        ) : null
+                    }
+                </div>
 
-                            {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
-                                <VariantButtonLink url="edit">
-                                    <Edit3Icon className="w-btn-icon h-btn-icon" />
-                                    Edit
-                                </VariantButtonLink>
-                            ) : null}
+                <div className="flex flex-wrap gap-x-2 gap-y-1.5">
+                    <VariantButtonLink
+                        variant={"default"}
+                        url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
+                    >
+                        <DownloadIcon className="w-btn-icon h-btn-icon" />
+                        Download
+                    </VariantButtonLink>
 
-                            {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.DELETE_VERSION) ? (
-                                <Suspense>
-                                    <DeleteVersionDialog
-                                        projectSlug={projectData?.slug || ""}
-                                        versionSlug={versionData.slug}
-                                        featured={versionData.featured}
-                                    />
-                                </Suspense>
-                            ) : null}
-                        </div>
-                    </Card>
+                    <Button variant={"secondary"}>
+                        <FlagIcon className="w-btn-icon h-btn-icon" />
+                        Report
+                    </Button>
+
+                    {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+                        <VariantButtonLink url="edit">
+                            <Edit3Icon className="w-btn-icon h-btn-icon" />
+                            Edit
+                        </VariantButtonLink>
+                    ) : null}
+
+                    {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.DELETE_VERSION) ? (
+                        <Suspense>
+                            <DeleteVersionDialog
+                                projectSlug={projectData?.slug || ""}
+                                versionSlug={versionData.slug}
+                                featured={versionData.featured}
+                            />
+                        </Suspense>
+                    ) : null}
+                </div>
+            </Card>
+
+            <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
+                <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
+
 
                     {versionData.changelog?.length ? (
                         <ContentCardTemplate title="Changelog">

@@ -12,13 +12,12 @@ import { checkFormValidity } from "@shared/schemas";
 import { updateVersionFormSchema } from "@shared/schemas/project";
 import { VersionReleaseChannel } from "@shared/types";
 import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { fullWidthLayoutStyles } from "../../layout";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -112,10 +111,6 @@ const EditVersionPage = () => {
         }
     };
 
-    useEffect(() => {
-        console.log(form.getValues());
-    }, [form]);
-
     if (!projectData || !versionData?.id) return null;
     const versionsPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug, "/versions");
     const currVersionPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug, `/version/${versionData.slug}`);
@@ -139,45 +134,44 @@ const EditVersionPage = () => {
                             await handleSubmit(formValues);
                         });
                     }}
-                    className="w-full flex flex-col gap-panel-cards items-start justify-start"
-                    style={fullWidthLayoutStyles}
-                >
+                    className="w-full flex flex-col gap-panel-cards items-start justify-start">
+
+                    <UploadVersionPageTopCard
+                        isLoading={isLoading}
+                        submitBtnLabel="Save changes"
+                        submitBtnIcon={<SaveIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        versionPageUrl={versionsPageUrl}
+                        versionTitle={form.getValues().title}
+                        backUrl={currVersionPageUrl}
+                        featuredBtn={
+                            <FormField
+                                control={form.control}
+                                name="featured"
+                                render={({ field }) => (
+                                    <FeaturedBtn isLoading={isLoading} featured={field.value} setFeatured={field.onChange} />
+                                )}
+                            />
+                        }
+                    >
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <VersionTitleInput
+                                        name={field.name}
+                                        value={field.value}
+                                        inputRef={field.ref}
+                                        disabled={field.disabled === true}
+                                        onChange={field.onChange}
+                                    />
+                                </FormItem>
+                            )}
+                        />
+                    </UploadVersionPageTopCard>
+
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                         <div className="w-full flex flex-col gap-panel-cards">
-                            <UploadVersionPageTopCard
-                                isLoading={isLoading}
-                                submitBtnLabel="Save changes"
-                                submitBtnIcon={<SaveIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                versionPageUrl={versionsPageUrl}
-                                versionTitle={form.getValues().title}
-                                backUrl={currVersionPageUrl}
-                                featuredBtn={
-                                    <FormField
-                                        control={form.control}
-                                        name="featured"
-                                        render={({ field }) => (
-                                            <FeaturedBtn isLoading={isLoading} featured={field.value} setFeatured={field.onChange} />
-                                        )}
-                                    />
-                                }
-                            >
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <VersionTitleInput
-                                                name={field.name}
-                                                value={field.value}
-                                                inputRef={field.ref}
-                                                disabled={field.disabled === true}
-                                                onChange={field.onChange}
-                                            />
-                                        </FormItem>
-                                    )}
-                                />
-                            </UploadVersionPageTopCard>
-
                             <ContentCardTemplate title="Changelog">
                                 <FormField
                                     control={form.control}

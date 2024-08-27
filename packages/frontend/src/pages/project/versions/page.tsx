@@ -38,17 +38,15 @@ const ProjectVersionsPage = () => {
 
     return (
         <>
-            <div className="w-full grid gap-panel-cards [grid-area:_content]">
-                {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
-                {projectMembership && projectMembership?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) ? (
-                    <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
-                ) : null}
+            {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
+            {projectMembership && projectMembership?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+                <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
+            ) : null}
 
-                <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
-            </div>
-            <div className="grid [grid-area:_sidebar]">
-                <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
-            </div>
+            <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
+
+            <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
+
         </>
     );
 };

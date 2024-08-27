@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { fullWidthLayoutStyles } from "../layout";
 
 const RemoveGalleryImage = lazy(() => import("./remove-image"));
 const EditGalleryImage = lazy(() => import("./edit-image"));
@@ -41,47 +40,43 @@ const ProjectGallery = () => {
                 </title>
             </Helmet>
 
-            <div className="w-full flex flex-col items-start justify-start gap-panel-cards"
-                style={fullWidthLayoutStyles}
-            >
-                {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
-                    <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
-                        <Suspense>
-                            <UploadGalleryImageForm />
-                        </Suspense>
-                        <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                            <InfoIcon className="h-btn-icon w-btn-icon" />
-                            Upload a new gallery image
-                        </div>
-                    </Card>
-                ) : null}
-
-                {projectData.gallery?.length ? (
-                    <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {projectData.gallery.map((galleryItem, index) => (
-                            <GalleryItemCard
-                                key={galleryItem.id}
-                                galleryItem={galleryItem}
-                                index={index}
-                                setActiveIndex={setActiveGalleryIndex}
-                                setdialogOpen={setdialogOpen}
-                                currUsersMembership={currUsersMembership}
-                            />
-                        ))}
-
-                        {projectData.gallery?.[activeGalleryIndex] ? (
-                            <ImageDialog
-                                galleryItem={projectData.gallery[activeGalleryIndex]}
-                                totalItems={projectData.gallery.length}
-                                activeIndex={activeGalleryIndex}
-                                setActiveIndex={setActiveGalleryIndex}
-                                dialogOpen={dialogOpen}
-                                setDialogOpen={setdialogOpen}
-                            />
-                        ) : null}
+            {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
+                <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
+                    <Suspense>
+                        <UploadGalleryImageForm />
+                    </Suspense>
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                        <InfoIcon className="h-btn-icon w-btn-icon" />
+                        Upload a new gallery image
                     </div>
-                ) : null}
-            </div>
+                </Card>
+            ) : null}
+
+            {projectData.gallery?.length ? (
+                <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+                    {projectData.gallery.map((galleryItem, index) => (
+                        <GalleryItemCard
+                            key={galleryItem.id}
+                            galleryItem={galleryItem}
+                            index={index}
+                            setActiveIndex={setActiveGalleryIndex}
+                            setdialogOpen={setdialogOpen}
+                            currUsersMembership={currUsersMembership}
+                        />
+                    ))}
+
+                    {projectData.gallery?.[activeGalleryIndex] ? (
+                        <ImageDialog
+                            galleryItem={projectData.gallery[activeGalleryIndex]}
+                            totalItems={projectData.gallery.length}
+                            activeIndex={activeGalleryIndex}
+                            setActiveIndex={setActiveGalleryIndex}
+                            dialogOpen={dialogOpen}
+                            setDialogOpen={setdialogOpen}
+                        />
+                    ) : null}
+                </div>
+            ) : null}
         </>
     );
 };
