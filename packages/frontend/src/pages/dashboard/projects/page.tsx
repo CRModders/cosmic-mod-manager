@@ -80,7 +80,7 @@ const ProjectsPage = () => {
                                         return (
                                             <TableRow
                                                 key={project.id}
-                                                className="cursor-pointer border-none text-sm md:text-base text-muted-foreground"
+                                                className="cursor-pointer text-sm md:text-base text-muted-foreground"
                                                 onClick={(e) => {
                                                     //@ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {

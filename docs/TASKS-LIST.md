@@ -35,14 +35,15 @@
 - [x] Add accent colors and icons for loaders
 - [x] Add the new version list UI
 
+- [-] Add edit version page \
+  NOTE:- Create reusable components from the new version page and use them in both upload form and edit form
+- [-] Add option to add dependencies on a version
+
 - [-] Add settings page
   - [x] General settings page
   - [x] Description settings page
   - [-] Tags settings page
 
-- [-] Add option to add dependencies on a version
-- [-] Add edit version page \
-  NOTE:- Create reusabel components from the new version page and use them in both upload form and edit form
 
 - [-] Add function to count downloads
 - [-] Add custom redirect after login

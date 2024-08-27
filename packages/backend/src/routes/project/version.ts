@@ -1,9 +1,9 @@
-import { createNewVersion, deleteProjectVersion, getAllProjectVersions, getProjectVersionData } from "@/controllers/project/version";
+import { createNewVersion, deleteProjectVersion, getAllProjectVersions, getProjectVersionData, updateVersionData } from "@/controllers/project/version";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { parseValueToSchema } from "@shared/schemas";
-import { newVersionFormSchema } from "@shared/schemas/project";
+import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import { ctxReqBodyKey } from "../../../types";
 
@@ -59,6 +59,49 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await createNewVersion(ctx, userSession, projectSlug, data);
+    } catch (error) {
+        console.trace(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+versionRouter.patch("/:versionSlug", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, versionSlug } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
+
+        const formData = ctx.get(ctxReqBodyKey);
+        const dependencies = formData.get("dependencies");
+        const loaders = formData.get("loaders");
+        const gameVersions = formData.get("gameVersions");
+        const additionalFiles = formData.getAll("additionalFiles").map((file: File | string) => {
+            if (file instanceof File) return file;
+            return JSON.parse(file);
+        });
+
+        const schemaObj = {
+            title: formData.get("title"),
+            changelog: formData.get("changelog"),
+            featured: formData.get("featured") === "true",
+            releaseChannel: formData.get("releaseChannel"),
+            versionNumber: formData.get("versionNumber"),
+            dependencies: dependencies ? JSON.parse(dependencies) : [],
+            loaders: loaders ? JSON.parse(loaders) : [],
+            gameVersions: gameVersions ? JSON.parse(gameVersions) : [],
+            additionalFiles: additionalFiles,
+        };
+
+        const { data, error } = parseValueToSchema(updateVersionFormSchema, schemaObj);
+        if (error || !data) {
+            // @ts-ignore
+            const name = error?.issues?.[0]?.path?.[0];
+            // @ts-ignore
+            const errMsg = error?.issues?.[0]?.message;
+            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, httpCode("bad_request"));
+        }
+
+        return await updateVersionData(ctx, projectSlug, versionSlug, userSession, data);
     } catch (error) {
         console.trace(error);
         return defaultServerErrorResponse(ctx);

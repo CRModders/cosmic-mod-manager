@@ -77,7 +77,7 @@ const ChangePasswordPage = () => {
                             />
 
                             <Button className="h-form-submit-btn w-full" disabled={isLoading}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
                                 Continue
                             </Button>
                         </CardContent>

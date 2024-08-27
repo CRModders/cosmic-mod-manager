@@ -8,8 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
+import { checkFormValidity } from "@shared/schemas";
 import { newVersionFormSchema } from "@shared/schemas/project";
 import { VersionReleaseChannel } from "@shared/types";
+import { PlusIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
@@ -28,7 +30,7 @@ import {
 } from "./_components";
 
 const UploadVersionPage = () => {
-    const { projectData, fetchAllProjectVersions, fetchFeaturedProjectVersions } = useContext(projectContext);
+    const { projectData, fetchAllProjectVersions } = useContext(projectContext);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -68,7 +70,7 @@ const UploadVersionPage = () => {
             formData.append("dependencies", JSON.stringify(data.dependencies || []));
             formData.append("primaryFile", data.primaryFile instanceof File ? data.primaryFile : "");
             for (const additionalFile of data.additionalFiles || []) {
-                formData.append("additionalFiles", additionalFile instanceof File ? additionalFile : JSON.stringify(additionalFile));
+                formData.append("additionalFiles", additionalFile);
             }
 
             const response = await useFetch(`/api/project/${projectData.slug}/version/new`, {
@@ -82,41 +84,11 @@ const UploadVersionPage = () => {
                 return;
             }
 
-            if (data.featured !== true) {
-                await fetchAllProjectVersions();
-            } else {
-                await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions()]);
-            }
+            await fetchAllProjectVersions();
             navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.slug));
             return;
         } catch (error) {
             setIsLoading(false);
-        }
-    };
-
-    const validateThenSubmit = async () => {
-        try {
-            const formValues = newVersionFormSchema.parse(form.getValues());
-            await handleSubmit(formValues);
-        } catch (error) {
-            // @ts-ignore
-            const name = error?.issues?.[0]?.path?.[0];
-            // @ts-ignore
-            const errMsg = error?.issues?.[0]?.message;
-            const message =
-                name && errMsg ? (
-                    <div className="w-full flex flex-col items-start justify-start text-danger-foreground">
-                        <span>
-                            Error in <em className="not-italic font-medium">{name}</em>
-                        </span>
-                        <span className="text-sm text-muted-foreground">{errMsg}</span>
-                    </div>
-                ) : (
-                    `Form error: ${error}`
-                );
-
-            toast.error(name ? message : "Error", { description: errMsg });
-            return;
         }
     };
 
@@ -133,7 +105,11 @@ const UploadVersionPage = () => {
                 <form
                     onSubmit={async (e) => {
                         e.preventDefault();
-                        await validateThenSubmit();
+
+                        await checkFormValidity(async () => {
+                            const formValues = newVersionFormSchema.parse(form.getValues());
+                            await handleSubmit(formValues);
+                        });
                     }}
                     className="w-full flex flex-col gap-panel-cards items-start justify-start"
                     style={fullWidthLayoutStyles}
@@ -142,6 +118,8 @@ const UploadVersionPage = () => {
                         <div className="w-full flex flex-col gap-panel-cards">
                             <UploadVersionPageTopCard
                                 isLoading={isLoading}
+                                submitBtnLabel="Create"
+                                submitBtnIcon={<PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
                                 versionPageUrl={versionsPageUrl}
                                 versionTitle={form.getValues().title}
                                 backUrl={versionsPageUrl}

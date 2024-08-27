@@ -4,7 +4,7 @@ import {
     CommandGroup,
     CommandInput,
     CommandItem,
-    CommandList,
+    CommandList
 } from "@/components/ui/command"
 import {
     Popover,
@@ -35,7 +35,7 @@ function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxPr
     const [open, setOpen] = useState(false);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
                 {children}
             </PopoverTrigger>
@@ -43,9 +43,9 @@ function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxPr
                 <Command>
                     <CommandInput placeholder={inputLabel || "Search..."} />
                     <TooltipProvider delayDuration={200}>
-                        <CommandList>
+                        <CommandList className="">
                             <CommandEmpty>No framework found.</CommandEmpty>
-                            <CommandGroup className="pt-1">
+                            <CommandGroup>
                                 {options.map((option) => (
                                     <CommandItem
                                         key={option.value}
@@ -68,7 +68,7 @@ function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxPr
 
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>
-                                                        <InfoIcon className="w-btn-icon h-btn-icon ml-auto" />
+                                                        <InfoIcon className="w-btn-icon h-btn-icon ml-auto mr-2" />
                                                     </TooltipTrigger>
 
                                                     <TooltipContent>

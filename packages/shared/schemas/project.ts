@@ -37,57 +37,69 @@ export const newProjectFormSchema = z.object({
     summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
 });
 
+const AdditionVersionFilesList = z.instanceof(File).array().optional().refine((files) => {
+    if ((files?.length || 0) > MAX_OPTIONAL_FILES) return false; return true;
+}, { message: `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.` },).refine(
+    (files) => {
+        const fileNamesList: string[] = [];
+        for (const file of files || []) {
+            if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE) {
+                return false;
+            }
+            if (!fileNamesList.includes(file.name.toLowerCase())) {
+                fileNamesList.push(file.name.toLowerCase());
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    },
+    {
+        message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
+    },
+);
+const VersionNumber = z.string().min(1).max(MAX_VERSION_NUMBER_LENGTH).refine(
+    (val) => {
+        return val === createURLSafeSlug(val, "+").value;
+    },
+    { message: "Version number must be a URL safe string" },
+);
+const ProjectLoaders = z.string().array().refine(
+    (values) => {
+        const loaderNamesList = loaders.map((loader) => loader.name);
+        for (const value of values) {
+            if (!loaderNamesList.includes(value)) return false;
+        }
+        return true;
+    },
+    { message: "Invalid loader" },
+);
+const SupportedGameVersions = z.string().array().refine(
+    (values) => {
+        const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version);
+        for (const value of values) {
+            if (!gameVersionNumbersList.includes(value)) return false;
+        }
+        return true;
+    },
+    { message: "Invalid game version" },
+);
+const VersionDependencies = z.object({
+    projectId: z.number(),
+    versionId: z.number().optional(),
+    dependencyType: z.nativeEnum(DependencyType),
+}).array().max(64).optional();
+
 export const newVersionFormSchema = z.object({
     title: z.string().min(MIN_VERSION_TITLE_LENGTH).max(MAX_VERSION_TITLE_LENGTH),
     changelog: z.string().max(MAX_VERSION_CHANGELOG_LENGTH).optional(),
     releaseChannel: z.nativeEnum(VersionReleaseChannel).default(VersionReleaseChannel.RELEASE),
     featured: z.boolean(),
-    versionNumber: z
-        .string()
-        .min(1)
-        .max(MAX_VERSION_NUMBER_LENGTH)
-        .refine(
-            (val) => {
-                return val === createURLSafeSlug(val, "+").value;
-            },
-            { message: "Version number must be a URL safe string" },
-        ),
-    loaders: z
-        .string()
-        .array()
-        .refine(
-            (values) => {
-                const loaderNamesList = loaders.map((loader) => loader.name);
-                for (const value of values) {
-                    if (!loaderNamesList.includes(value)) return false;
-                }
-                return true;
-            },
-            { message: "Invalid loader" },
-        ),
-    gameVersions: z
-        .string()
-        .array()
-        .refine(
-            (values) => {
-                const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version);
-                for (const value of values) {
-                    if (!gameVersionNumbersList.includes(value)) return false;
-                }
-                return true;
-            },
-            { message: "Invalid game version" },
-        ),
-
-    dependencies: z
-        .object({
-            projectId: z.number(),
-            versionId: z.number().optional(),
-            dependencyType: z.nativeEnum(DependencyType),
-        })
-        .array()
-        .max(64)
-        .optional(),
+    versionNumber: VersionNumber,
+    loaders: ProjectLoaders,
+    gameVersions: SupportedGameVersions,
+    dependencies: VersionDependencies,
 
     primaryFile: z.instanceof(File).refine(
         (file) => {
@@ -97,37 +109,7 @@ export const newVersionFormSchema = z.object({
         { message: `You can upload a file of size up to ${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB only` },
     ),
 
-    additionalFiles: z
-        .instanceof(File)
-        .array()
-        .optional()
-        .refine(
-            (files) => {
-                if ((files?.length || 0) > MAX_OPTIONAL_FILES) return false;
-                return true;
-            },
-            { message: `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.` },
-        )
-        .refine(
-            (files) => {
-                const fileNamesList: string[] = [];
-                for (const file of files || []) {
-                    if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE) {
-                        return false;
-                    }
-                    if (!fileNamesList.includes(file.name.toLowerCase())) {
-                        fileNamesList.push(file.name.toLowerCase());
-                    } else {
-                        return false;
-                    }
-                }
-
-                return true;
-            },
-            {
-                message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
-            },
-        ),
+    additionalFiles: AdditionVersionFilesList
 });
 
 export const updateVersionFormSchema = z.object({
@@ -135,52 +117,38 @@ export const updateVersionFormSchema = z.object({
     changelog: z.string().max(MAX_VERSION_CHANGELOG_LENGTH).optional(),
     releaseChannel: z.nativeEnum(VersionReleaseChannel).default(VersionReleaseChannel.RELEASE),
     featured: z.boolean(),
-    versionNumber: z
-        .string()
-        .min(1)
-        .max(MAX_VERSION_NUMBER_LENGTH)
-        .refine(
-            (val) => {
-                return val === createURLSafeSlug(val, "+").value;
-            },
-            { message: "Version number must be a URL safe string" },
-        ),
-    loaders: z
-        .string()
-        .array()
-        .refine(
-            (values) => {
-                const loaderNamesList = loaders.map((loader) => loader.name);
-                for (const value of values) {
-                    if (!loaderNamesList.includes(value)) return false;
+    versionNumber: VersionNumber,
+    loaders: ProjectLoaders,
+    gameVersions: SupportedGameVersions,
+    dependencies: VersionDependencies,
+    additionalFiles: z.instanceof(File).or(z.object({
+        id: z.string(),
+        name: z.string(),
+        size: z.number(),
+        type: z.string(),
+    })).array().optional().refine((files) => {
+        if ((files?.length || 0) > MAX_OPTIONAL_FILES) return false;
+        return true;
+    }, { message: `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.` }).refine(
+        (files) => {
+            const fileNamesList: string[] = [];
+            for (const file of files || []) {
+                if (file instanceof File) {
+                    if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE || !getFileType(file.type)) return false;
                 }
-                return true;
-            },
-            { message: "Invalid loader" },
-        ),
-    gameVersions: z
-        .string()
-        .array()
-        .refine(
-            (values) => {
-                const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version);
-                for (const value of values) {
-                    if (!gameVersionNumbersList.includes(value)) return false;
+                if (!fileNamesList.includes(file.name.toLowerCase())) {
+                    fileNamesList.push(file.name.toLowerCase());
+                } else {
+                    return false;
                 }
-                return true;
-            },
-            { message: "Invalid game version" },
-        ),
-
-    dependencies: z
-        .object({
-            projectId: z.number(),
-            versionId: z.number().optional(),
-            dependencyType: z.nativeEnum(DependencyType),
-        })
-        .array()
-        .max(64)
-        .optional(),
+            }
+            if (fileNamesList.length < MAX_OPTIONAL_FILES) return true;
+            return false;
+        },
+        {
+            message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
+        },
+    )
 });
 
 export const generalProjectSettingsFormSchema = z.object({

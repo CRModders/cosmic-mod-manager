@@ -24,7 +24,7 @@ const DeleteVersionDialog = ({
     versionSlug,
     featured,
 }: { projectSlug: string; versionSlug: string; featured: boolean }) => {
-    const { projectData, fetchAllProjectVersions, fetchFeaturedProjectVersions } = useContext(projectContext);
+    const { projectData, fetchAllProjectVersions } = useContext(projectContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -42,12 +42,7 @@ const DeleteVersionDialog = ({
             }
 
             navigate(`/${projectData?.type[0]}/${projectSlug}/versions`);
-            if (featured === true) {
-                await Promise.all([fetchAllProjectVersions(), fetchFeaturedProjectVersions()]);
-            } else {
-                await fetchAllProjectVersions();
-            }
-
+            await fetchAllProjectVersions();
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
@@ -58,7 +53,7 @@ const DeleteVersionDialog = ({
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"secondary-destructive"}>
-                    <Trash2Icon className="w-btn-icon h-form-submit-btn" />
+                    <Trash2Icon className="h-btn-icon w-btn-icon" />
                     Delete
                 </Button>
             </DialogTrigger>

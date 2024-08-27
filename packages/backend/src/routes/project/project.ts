@@ -1,4 +1,5 @@
 import { ctxReqBodyKey } from "@/../types";
+import { getProjectDependencies } from "@/controllers/project/dependency";
 import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, removeGalleryImage, updateGalleryImage, updateProject, updateProjectDescription } from "@/controllers/project/project";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
@@ -79,6 +80,19 @@ projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await updateProject(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.get("/:slug/dependencies", async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!slug) return defaultInvalidReqResponse(ctx);
+
+        return await getProjectDependencies(ctx, slug, userSession);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

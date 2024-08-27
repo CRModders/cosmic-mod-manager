@@ -4,10 +4,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { DownloadIcon } from "lucide-react";
 import { useContext } from "react";
+import { Helmet } from "react-helmet";
 import { Link, useSearchParams } from "react-router-dom";
 
 const VersionChangelogs = () => {
@@ -35,6 +37,12 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
 
     return (
         <>
+            <Helmet>
+                <title>
+                    {projectData?.name || ""} - Changelog | {SITE_NAME_SHORT}
+                </title>
+            </Helmet>
+
             <div className="w-full flex flex-col gap-panel-cards [grid-area:_content]">
                 <Card className="p-5 w-full flex flex-col items-start justify-start">
                     {versionsList.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => {

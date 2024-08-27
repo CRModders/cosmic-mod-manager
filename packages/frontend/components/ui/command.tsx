@@ -59,10 +59,10 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <CommandPrimitive.List
         ref={ref}
-        className={cn("max-h-[18rem] overflow-y-auto overflow-x-hidden", className)}
+        className={cn("max-h-[18rem] overflow-y-auto", className)}
         {...props}
     />
-))
+));
 
 CommandList.displayName = CommandPrimitive.List.displayName
 
@@ -86,7 +86,7 @@ const CommandGroup = React.forwardRef<
     <CommandPrimitive.Group
         ref={ref}
         className={cn(
-            "overflow-hidden p-1 text-zinc-950 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-zinc-500 dark:text-zinc-50 dark:[&_[cmdk-group-heading]]:text-zinc-400",
+            "p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-extra-muted-foreground",
             className
         )}
         {...props}
@@ -130,7 +130,7 @@ const CommandShortcut = ({
     return (
         <span
             className={cn(
-                "ml-auto text-xs tracking-widest text-extra-muted-foreground",
+                "ml-auto text-tiny tracking-widest text-extra-muted-foreground",
                 className
             )}
             {...props}

@@ -20,7 +20,7 @@ import NotFoundPage from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermissions } from "@shared/types";
-import { ChevronRightIcon, DownloadIcon, EditIcon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
+import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
@@ -109,7 +109,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
 
                             {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
                                 <VariantButtonLink url="edit">
-                                    <EditIcon className="w-btn-icon h-btn-icon" />
+                                    <Edit3Icon className="w-btn-icon h-btn-icon" />
                                     Edit
                                 </VariantButtonLink>
                             ) : null}

@@ -1,5 +1,5 @@
 import { PASSWORD_HASH_SALT_ROUNDS, STRING_ID_LENGTH } from "@shared/config";
-import { loaders } from "@shared/config/project";
+import { type Loader, loaders } from "@shared/config/project";
 import { isUserAProjectMember } from "@shared/lib/utils";
 import { type ConfirmationType, type ProjectType, ProjectVisibility } from "@shared/types";
 import type { TeamMember } from "@shared/types/api";
@@ -105,4 +105,21 @@ export const inferProjectType = (projectLoaders: string[]) => {
     }
 
     return types;
+};
+
+export const aggregateProjectLoaders = (projectLoaders: string[]) => {
+    const nameList: string[] = [];
+    const loaderList: Loader[] = [];
+    for (const LOADER of loaders) {
+        if (projectLoaders.includes(LOADER.name) && !nameList.includes(LOADER.name)) {
+            loaderList.push(LOADER);
+            nameList.push(LOADER.name);
+        }
+    };
+
+    return loaderList;
+}
+
+export const aggregateProjectLoaderNames = (projectLoaders: string[]) => {
+    return aggregateProjectLoaders(projectLoaders).map(loader => loader.name);
 }

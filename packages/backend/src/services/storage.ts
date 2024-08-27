@@ -1,15 +1,15 @@
 import { FILE_STORAGE_SERVICES } from "@/../types";
-import { unlink } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 
 export const BASE_STORAGE_PATH = "./uploads";
 
-export const getProjectStoragePath = (projectId: string) => `projects/${projectId}`;
-export const getProjectVersionStoragePath = (projectId: string, versionId: string) => {
-    return `${getProjectStoragePath(projectId)}/versions/${versionId}`;
+export const getProjectStoragePath = (projectId: string, extra?: string) => `projects/${projectId}${extra || ""}`;
+export const getProjectVersionStoragePath = (projectId: string, versionId: string, extra?: string) => {
+    return getProjectStoragePath(projectId, `/versions/${versionId}${extra || ""}`);
 };
 
 export const createFilePathSafeString = (str: string) => {
-    return str.replace(/[^a-z0-9.-]/gi, "_").toLowerCase();
+    return str.replace(/[^a-z0-9.-]/gi, "-").toLowerCase();
 };
 
 export const saveFileToLocalStorage = async (path: string, file: File) => {
@@ -22,11 +22,12 @@ export const saveFileToLocalStorage = async (path: string, file: File) => {
     }
 };
 
-export const deleteFileFromLocalStorage = async (path: string) => {
+export const deleteDataFromLocalStorage = async (path: string) => {
     try {
-        await unlink(`${BASE_STORAGE_PATH}/${path}`);
+        await rm(`${BASE_STORAGE_PATH}/${path}`, { recursive: true });
         return { path };
     } catch (error) {
+        console.error(error);
         return null;
     }
 };
@@ -55,7 +56,7 @@ export const handleFileOperation = async (
                 return await saveFileToLocalStorage(path, file);
             }
             if (operation === "delete") {
-                return await deleteFileFromLocalStorage(path);
+                return await deleteDataFromLocalStorage(path);
             }
         }
         throw new Error(`Unsupported storage service: ${storageService}`);
@@ -66,19 +67,19 @@ export const handleFileOperation = async (
 };
 
 export const saveProjectFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES, file: File) => {
-    return await handleFileOperation("save", `${getProjectStoragePath(projectId)}/${fileName}`, storageService, file);
+    return await handleFileOperation("save", getProjectStoragePath(projectId, `/${fileName}`), storageService, file);
 };
 
 export const saveProjectGalleryFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES, file: File) => {
-    return await handleFileOperation("save", `${getProjectStoragePath(projectId)}/gallery/${fileName}`, storageService, file);
+    return await handleFileOperation("save", getProjectStoragePath(projectId, `/gallery/${fileName}`), storageService, file);
 };
 
 export const deleteProjectGalleryFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES) => {
-    return await handleFileOperation("delete", `${getProjectStoragePath(projectId)}/gallery/${fileName}`, storageService);
+    return await handleFileOperation("delete", getProjectStoragePath(projectId, `/gallery/${fileName}`), storageService);
 };
 
 export const deleteProjectFile = async (projectId: string, fileName: string, storageService: FILE_STORAGE_SERVICES) => {
-    return await handleFileOperation("delete", `${getProjectStoragePath(projectId)}/${fileName}`, storageService);
+    return await handleFileOperation("delete", getProjectStoragePath(projectId, `/${fileName}`), storageService);
 };
 
 export const saveProjectVersionFile = async (
@@ -88,7 +89,7 @@ export const saveProjectVersionFile = async (
     storageService: FILE_STORAGE_SERVICES,
     file: File,
 ) => {
-    return await handleFileOperation("save", `${getProjectVersionStoragePath(projectId, versionId)}/${fileName}`, storageService, file);
+    return await handleFileOperation("save", getProjectVersionStoragePath(projectId, versionId, `/${createFilePathSafeString(fileName)}`), storageService, file);
 };
 
 export const deleteFile = async (url: string, storageService: FILE_STORAGE_SERVICES) => {

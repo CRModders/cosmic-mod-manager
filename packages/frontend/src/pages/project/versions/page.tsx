@@ -98,142 +98,138 @@ const ProjectVersionsListTable = ({
                 </title>
             </Helmet>
 
-            <div className="w-full flex flex-col gap-2 items-center justify-center" id="all-versions">
-                {allProjectVersions?.length ? (
-                    <div className="w-full">
-                        <Card className="w-full overflow-hidden">
-                            <Table>
-                                <TableHeader className="hidden md:table-header-group">
-                                    <TableRow className="hover:bg-transparent dark:hover:bg-transparent h-16">
+            {allProjectVersions?.length ? (
+                <Card className="w-full overflow-hidden">
+                    <Table>
+                        <TableHeader className="hidden md:table-header-group">
+                            <TableRow className="hover:bg-transparent dark:hover:bg-transparent h-16">
+                                {/* MOBILE ONLY */}
+                                <TableHead className="w-full grow md:hidden pl-table-side-pad-sm"> </TableHead>
+                                {/* MOBILE ONLY */}
+                                <TableHead className="md:hidden pr-table-side-pad-sm"> </TableHead>
+
+                                {/* MID WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:table-cell w-10 pl-table-side-pad"> </TableHead>
+                                {/* MID WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:table-cell">Name</TableHead>
+                                {/* MID WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:table-cell">Compatibility</TableHead>
+
+                                {/* MID WIDTH AND BELOW XL*/}
+                                <TableHead className="hidden md:table-cell xl:hidden">Stats</TableHead>
+
+                                {/* XL WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:hidden xl:table-cell">Published</TableHead>
+                                {/* XL WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:hidden xl:table-cell">Downloads</TableHead>
+
+                                {/* MID WIDTH AND ABOVE */}
+                                <TableHead className="hidden md:table-cell pr-table-side-pad"> </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {allProjectVersions.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => (
+                                <TableRow
+                                    key={version.id}
+                                    className="cursor-pointer"
+                                    onClick={(e) => {
+                                        //@ts-expect-error
+                                        if (!e.target.closest(".noClickRedirect")) {
+                                            navigate(versionPagePathname(version.slug));
+                                        }
+                                    }}
+                                >
+                                    <TableCell className="md:hidden pl-table-side-pad-sm">
                                         {/* MOBILE ONLY */}
-                                        <TableHead className="w-full grow md:hidden pl-table-side-pad-sm"> </TableHead>
-                                        {/* MOBILE ONLY */}
-                                        <TableHead className="md:hidden pr-table-side-pad-sm"> </TableHead>
-
-                                        {/* MID WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:table-cell w-10 pl-table-side-pad"> </TableHead>
-                                        {/* MID WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:table-cell">Name</TableHead>
-                                        {/* MID WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:table-cell">Compatibility</TableHead>
-
-                                        {/* MID WIDTH AND BELOW XL*/}
-                                        <TableHead className="hidden md:table-cell xl:hidden">Stats</TableHead>
-
-                                        {/* XL WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:hidden xl:table-cell">Published</TableHead>
-                                        {/* XL WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:hidden xl:table-cell">Downloads</TableHead>
-
-                                        {/* MID WIDTH AND ABOVE */}
-                                        <TableHead className="hidden md:table-cell pr-table-side-pad"> </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {allProjectVersions.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => (
-                                        <TableRow
-                                            key={version.id}
-                                            className="cursor-pointer"
-                                            onClick={(e) => {
-                                                //@ts-expect-error
-                                                if (!e.target.closest(".noClickRedirect")) {
-                                                    navigate(versionPagePathname(version.slug));
-                                                }
-                                            }}
-                                        >
-                                            <TableCell className="md:hidden pl-table-side-pad-sm">
-                                                {/* MOBILE ONLY */}
-                                                <div className="w-full flex flex-col items-start justify-start gap-1.5">
-                                                    <div className="w-full flex items-center justify-start gap-2.5">
-                                                        <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
-                                                        <VersionName
-                                                            title={version.title}
-                                                            number={version.versionNumber}
-                                                            url={versionPagePathname(version.slug)}
-                                                        />
-                                                    </div>
-                                                    <span className="w-full flex flex-wrap items-center justify-start gap-1.5">
-                                                        <GameVersions gameVersions={version.gameVersions} />
-                                                        <ProjectLoaders versionLoaders={version.loaders} />
-                                                    </span>
-                                                    <div className="flex flex-wrap items-start justify-start gap-3">
-                                                        <DatePublished dateStr={version.datePublished} />
-                                                        <DownloadsCount downloads={version.downloads} />
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-
-                                            <TableCell className="hidden md:table-cell pl-table-side-pad pr-2">
-                                                {/* MID WIDTH AND ABOVE */}
+                                        <div className="w-full flex flex-col items-start justify-start gap-1.5">
+                                            <div className="w-full flex items-center justify-start gap-2.5">
                                                 <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
-                                            </TableCell>
-
-                                            <TableCell className="hidden md:table-cell">
-                                                {/* MID WIDTH AND ABOVE */}
                                                 <VersionName
                                                     title={version.title}
                                                     number={version.versionNumber}
                                                     url={versionPagePathname(version.slug)}
                                                 />
-                                            </TableCell>
+                                            </div>
+                                            <div className="w-full flex flex-wrap items-center justify-start gap-1.5">
+                                                <GameVersions gameVersions={version.gameVersions} />
+                                                <ProjectLoaders versionLoaders={version.loaders} />
+                                            </div>
+                                            <div className="flex flex-wrap items-start justify-start gap-3">
+                                                <DatePublished dateStr={version.datePublished} />
+                                                <DownloadsCount downloads={version.downloads} />
+                                            </div>
+                                        </div>
+                                    </TableCell>
 
-                                            <TableCell className="hidden md:table-cell">
-                                                {/* MID WIDTH AND ABOVE */}
-                                                <span className="w-full flex flex-wrap items-start justify-start gap-1.5">
-                                                    <GameVersions gameVersions={version.gameVersions} />
-                                                    <ProjectLoaders versionLoaders={version.loaders} />
-                                                </span>
-                                            </TableCell>
+                                    <TableCell className="hidden md:table-cell pl-table-side-pad pr-2">
+                                        {/* MID WIDTH AND ABOVE */}
+                                        <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
+                                    </TableCell>
 
-                                            <TableCell className="hidden md:table-cell xl:hidden">
-                                                {/* MID WIDTH AND BELOW XL*/}
-                                                <div className="min-w-max lex flex-wrap items-start justify-start gap-3">
-                                                    <DatePublished dateStr={version.datePublished} />
-                                                    <DownloadsCount downloads={version.downloads} />
-                                                </div>
-                                            </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        {/* MID WIDTH AND ABOVE */}
+                                        <VersionName
+                                            title={version.title}
+                                            number={version.versionNumber}
+                                            url={versionPagePathname(version.slug)}
+                                        />
+                                    </TableCell>
 
-                                            <TableCell className="hidden md:hidden xl:table-cell">
-                                                {/* XL WIDTH AND ABOVE */}
-                                                <DatePublished dateStr={version.datePublished} iconVisible={false} />
-                                            </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                        {/* MID WIDTH AND ABOVE */}
+                                        <div className="w-full flex flex-wrap items-start justify-start gap-1.5">
+                                            <GameVersions gameVersions={version.gameVersions} />
+                                            <ProjectLoaders versionLoaders={version.loaders} />
+                                        </div>
+                                    </TableCell>
 
-                                            <TableCell className="hidden md:hidden xl:table-cell">
-                                                {/* XL WIDTH AND ABOVE */}
-                                                <DownloadsCount downloads={version.downloads} iconVisible={false} />
-                                            </TableCell>
+                                    <TableCell className="hidden md:table-cell xl:hidden">
+                                        {/* MID WIDTH AND BELOW XL*/}
+                                        <div className="min-w-max lex flex-wrap items-start justify-start gap-3">
+                                            <DatePublished dateStr={version.datePublished} />
+                                            <DownloadsCount downloads={version.downloads} />
+                                        </div>
+                                    </TableCell>
 
-                                            <TableCell className="pr-table-side-pad-sm md:pr-table-side-pad">
-                                                {/* ALWAYS THE SAME */}
-                                                <div className="w-full flex gap-1 items-center justify-end">
-                                                    <a
-                                                        href={version.primaryFile?.url || ""}
-                                                        className={cn(
-                                                            buttonVariants({ variant: "default", size: "icon" }),
-                                                            "noClickRedirect shrink-0 !w-10 !h-10 rounded-full",
-                                                        )}
-                                                    >
-                                                        <DownloadIcon className="w-btn-icon h-btn-icon" />
-                                                    </a>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="noClickRedirect rounded-full shrink-0 !w-10 !h-10"
-                                                    >
-                                                        <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Card>
-                    </div>
-                ) : null}
+                                    <TableCell className="hidden md:hidden xl:table-cell">
+                                        {/* XL WIDTH AND ABOVE */}
+                                        <DatePublished dateStr={version.datePublished} iconVisible={false} />
+                                    </TableCell>
 
-                {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
-            </div>
+                                    <TableCell className="hidden md:hidden xl:table-cell">
+                                        {/* XL WIDTH AND ABOVE */}
+                                        <DownloadsCount downloads={version.downloads} iconVisible={false} />
+                                    </TableCell>
+
+                                    <TableCell className="pr-table-side-pad-sm md:pr-table-side-pad">
+                                        {/* ALWAYS THE SAME */}
+                                        <div className="w-full flex gap-1 items-center justify-end">
+                                            <a
+                                                href={version.primaryFile?.url || ""}
+                                                className={cn(
+                                                    buttonVariants({ variant: "default", size: "icon" }),
+                                                    "noClickRedirect shrink-0 !w-10 !h-10 rounded-full",
+                                                )}
+                                            >
+                                                <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                            </a>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="noClickRedirect rounded-full shrink-0 !w-10 !h-10"
+                                            >
+                                                <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
+                                            </Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Card>
+            ) : null}
+
+            {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
         </>
     );
 };

@@ -69,6 +69,8 @@ interface UploadVersionPageTopCardProps {
     children: React.ReactNode;
     backUrl: string;
     featuredBtn: React.ReactNode;
+    submitBtnLabel?: string;
+    submitBtnIcon: React.ReactNode;
 }
 export const UploadVersionPageTopCard = ({
     versionPageUrl,
@@ -77,6 +79,8 @@ export const UploadVersionPageTopCard = ({
     backUrl,
     featuredBtn,
     children,
+    submitBtnLabel,
+    submitBtnIcon
 }: UploadVersionPageTopCardProps) => {
     return (
         <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-panel-cards">
@@ -97,8 +101,8 @@ export const UploadVersionPageTopCard = ({
 
             <div className="w-full flex flex-wrap gap-x-panel-cards gap-y-2 items-center justify-start">
                 <Button type="submit" disabled={isLoading}>
-                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                    Create
+                    {isLoading ? <LoadingSpinner size="xs" /> : submitBtnIcon}
+                    {submitBtnLabel || "Submit"}
                 </Button>
 
                 {featuredBtn}
@@ -259,7 +263,7 @@ export const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
                         </SelectContent>
                     </Select>
 
-                    <Button onClick={handleAddingDependency}>
+                    <Button onClick={handleAddingDependency} type="button">
                         <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
                         Add dependency
                     </Button>

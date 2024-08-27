@@ -1,24 +1,26 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { deleteFile, getProjectVersionStoragePath, saveProjectVersionFile } from "@/services/storage";
-import { aggregateVersions, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+import { deleteFile, getProjectVersionStoragePath } from "@/services/storage";
+import { aggregateProjectLoaderNames, aggregateVersions, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
+import type { File as DBFile } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
-import type { newVersionFormSchema } from "@shared/schemas/project";
+import type { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
 import { type DependencyType, ProjectPermissions, type ProjectType, type VersionReleaseChannel } from "@shared/types";
-import type { DBFileData, ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
+import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
 import { getFormattedTeamMember, requiredProjectMemberFields } from "./project";
+import { createVersionFile, createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, retrieveVersionFilesData } from "./utils";
 
-const requiredVersionFields = {
+export const requiredVersionFields = {
     id: true,
     title: true,
     versionNumber: true,
@@ -103,6 +105,7 @@ export const createNewVersion = async (
         select: {
             id: true,
             loaders: true,
+            gameVersions: true,
             team: {
                 select: {
                     members: {
@@ -124,11 +127,10 @@ export const createNewVersion = async (
                 },
             },
             versions: {
+                where: { slug: formData.versionNumber },
                 select: {
                     id: true,
                     slug: true,
-                    gameVersions: true,
-                    loaders: true,
                 },
             },
         },
@@ -151,17 +153,9 @@ export const createNewVersion = async (
         return ctx.json({ success: false, message: "Invalid primary file type" });
     }
 
-    let versionWithSameSlug = null;
-    for (const version of project.versions) {
-        if (version.slug === formData.versionNumber) {
-            versionWithSameSlug = version;
-            break;
-        }
-    }
-
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
     const newUrlSlug =
-        versionWithSameSlug?.id || RESERVED_VERSION_SLUGS.includes(formData.versionNumber.toLowerCase()) ? null : formData.versionNumber;
+        project.versions?.[0]?.id || RESERVED_VERSION_SLUGS.includes(formData.versionNumber.toLowerCase()) ? null : formData.versionNumber;
 
     let newVersion = await prisma.version.create({
         data: {
@@ -192,19 +186,8 @@ export const createNewVersion = async (
         });
     }
 
-    const projectGameVersions = [...formData.gameVersions];
-    const projectLoaders = [...formData.loaders];
-    for (const version of project.versions) {
-        for (const gameVersion of version.gameVersions) {
-            projectGameVersions.push(gameVersion);
-        }
-        for (const loader of version.loaders) {
-            if (!projectLoaders.includes(loader)) {
-                projectLoaders.push(loader);
-            }
-        }
-    }
-    const sortedUniqueGameVersions = aggregateVersions(projectGameVersions);
+    const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...formData.loaders]);
+    const sortedUniqueGameVersions = aggregateVersions([...project.gameVersions, ...formData.gameVersions]);
 
     // Update project loaders list and supported game versions
     await prisma.project.update({
@@ -240,56 +223,216 @@ export const createNewVersion = async (
     );
 };
 
-interface CreateVersionFileProps {
-    files: File[];
-    versionId: string;
-    projectId: string;
-    storageService: FILE_STORAGE_SERVICES;
-    isPrimary?: boolean;
+export const updateVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession, formData: z.infer<typeof updateVersionFormSchema>) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: projectSlug },
+        select: {
+            id: true,
+            loaders: true,
+            gameVersions: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: requiredProjectMemberFields,
+                    },
+                },
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: { userId: userSession.id },
+                                select: requiredProjectMemberFields,
+                            },
+                        },
+                    },
+                },
+            },
+            versions: {
+                select: {
+                    id: true,
+                    loaders: true,
+                    gameVersions: true,
+                    slug: true,
+                    files: {
+                        where: { isPrimary: false },
+                        select: {
+                            id: true,
+                            fileId: true,
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    let targetVersion = null;
+    for (const version of (project?.versions || [])) {
+        if (version.slug === versionSlug) {
+            targetVersion = version;
+            break;
+        }
+    };
+
+    // Return if project or target version not found
+    if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    // Check if the user has permission to edit a version
+    if (
+        !project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) &&
+        !project.organisation?.team?.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)
+    ) {
+        await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
+        return ctx.json({ success: false }, httpCode("not_found"));
+    };
+
+    // Delete removed files and add if there are new files uploaded
+    const additionalFiles = formData.additionalFiles || [];
+    if (additionalFiles?.length || targetVersion?.files?.length) {
+        const newAdditionalFiles: File[] = [];
+        const deletedFileList: string[] = [];
+
+        // Get all the uploaded files
+        for (const file of additionalFiles) {
+            if (file instanceof File) {
+                newAdditionalFiles.push(file);
+            }
+        };
+
+        const nonNewAdditionalFileIds: string[] = [];
+        for (const file of additionalFiles) {
+            if (file instanceof File) continue;
+            nonNewAdditionalFileIds.push(file.id);
+        }
+
+        // Get all the deleted files
+        for (const file of targetVersion.files) {
+            if (!nonNewAdditionalFileIds.includes(file.id)) {
+                deletedFileList.push(file.fileId);
+            }
+        }
+
+
+        // Delete the files that are not in the new list (means the user removed them)
+        if (deletedFileList.length) {
+            const dbFiles = await retrieveVersionFilesData(deletedFileList);
+            const deletedFilesData: DBFile[] = [];
+            for (const deletedFile of deletedFileList) {
+                const dbFile = dbFiles.get(deletedFile);
+                if (dbFile) deletedFilesData.push(dbFile);
+            }
+            console.log({
+                additionalFiles,
+                currFilesList: targetVersion.files,
+                deletedFileList,
+                deletedFilesData
+            })
+
+            console.log(await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData));
+        };
+
+        // Save the new files
+        if (newAdditionalFiles.length) {
+            await createVersionFiles({
+                files: newAdditionalFiles,
+                versionId: targetVersion.id,
+                projectId: project.id,
+                storageService: FILE_STORAGE_SERVICES.LOCAL,
+            });
+        }
+    };
+
+    // Check it the slug is updated and if it is, check if the new slug is available
+    let updatedSlug = formData.versionNumber;
+    if (updatedSlug !== targetVersion.slug) {
+        let newSlugAvailable = true;
+        for (const version of project.versions) {
+            if (version.slug === formData.versionNumber) {
+                newSlugAvailable = false;
+                break;
+            }
+        };
+
+        if (newSlugAvailable !== true) {
+            updatedSlug = targetVersion.id;
+        }
+    };
+
+    // Re evaluate the project loaders list and supported game versions
+    const projectLoaders: string[] = [];
+    const projectGameVersions: string[] = [];
+
+    for (const version of project.versions) {
+        // Exclude the target version from the list, instead use the new data
+        if (version.id === targetVersion.id) {
+            projectLoaders.push(...formData.loaders);
+            projectGameVersions.push(...formData.gameVersions);
+            continue;
+        };
+        projectLoaders.push(...version.loaders);
+        projectGameVersions.push(...version.gameVersions);
+    };
+
+    const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
+    const aggregatedGameVersions = aggregateVersions(projectGameVersions);
+
+
+    // Finally update the version data
+    await prisma.version.update({
+        where: {
+            id: targetVersion.id,
+        },
+        data: {
+            title: formData.title,
+            versionNumber: formData.versionNumber,
+            changelog: formData.changelog,
+            slug: updatedSlug,
+            featured: formData.featured,
+            releaseChannel: formData.releaseChannel,
+            gameVersions: formData.gameVersions,
+            loaders: formData.loaders,
+        },
+    });
+
+    // Update project loaders list and supported game versions
+    await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            gameVersions: aggregatedGameVersions,
+            loaders: aggregatedLoaderNames
+        },
+    });
+
+    // Check if project loaders or game versions were affected by the version update
+    let projectLoadersChanged = false;
+    let gameVersionsChanged = false;
+
+    for (const loader of project.loaders) {
+        if (!aggregatedLoaderNames.includes(loader)) {
+            projectLoadersChanged = true;
+            break;
+        }
+    };
+
+    for (const gameVersion of project.gameVersions) {
+        if (!aggregatedGameVersions.includes(gameVersion)) {
+            gameVersionsChanged = true;
+            break;
+        }
+    };
+
+    return ctx.json({
+        success: true, message: "Version updated successfully", data: {
+            slug: updatedSlug,
+            projectLoadersChanged,
+            gameVersionsChanged
+        }
+    }, httpCode("ok"));
 }
-
-const createVersionFiles = async ({ files, versionId, projectId, storageService, isPrimary }: CreateVersionFileProps) => {
-    const promises = [];
-    for (const file of files) {
-        promises.push(createVersionFile(file, versionId, projectId, storageService, isPrimary === true));
-    }
-
-    return await Promise.all(promises);
-};
-
-const createVersionFile = async (
-    file: File,
-    versionId: string,
-    projectId: string,
-    storageService: FILE_STORAGE_SERVICES,
-    isPrimaryFile = false,
-) => {
-    const fileType = getFileType(file.type);
-    if (!fileType) return null;
-
-    const savedPath = await saveProjectVersionFile(projectId, versionId, file.name, storageService, file);
-    if (!savedPath?.path) return null;
-
-    const dbFile = await prisma.file.create({
-        data: {
-            id: nanoid(STRING_ID_LENGTH),
-            name: file.name,
-            type: fileType,
-            size: file.size,
-            storageService: storageService,
-            url: savedPath.path,
-        },
-    });
-
-    await prisma.versionFile.create({
-        data: {
-            id: nanoid(STRING_ID_LENGTH),
-            versionId: versionId,
-            isPrimary: isPrimaryFile,
-            fileId: dbFile.id,
-        },
-    });
-};
 
 export const getAllProjectVersions = async (
     ctx: Context,
@@ -327,7 +470,7 @@ export const getAllProjectVersions = async (
             idsList.push(file.fileId);
         }
     }
-    const versionFilesMap = await getVersionFilesData(idsList);
+    const versionFilesMap = await retrieveVersionFilesData(idsList);
 
     const versionsList: ProjectVersionData[] = [];
     for (const version of project.versions) {
@@ -410,20 +553,6 @@ export const getAllProjectVersions = async (
     return ctx.json({ success: true, data: versionsList }, httpCode("ok"));
 };
 
-const getVersionFilesData = async (idsList: string[]) => {
-    const files = await prisma.file.findMany({
-        where: {
-            OR: idsList.map((id) => ({ id })),
-        },
-    });
-
-    const map = new Map<string, DBFileData>();
-    for (const file of files) {
-        map.set(file.id, file);
-    }
-
-    return map;
-};
 
 export const getProjectVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession) => {
     const project = await prisma.project.findUnique({
@@ -457,7 +586,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
     for (const file of version.files) {
         idsList.push(file.fileId);
     }
-    const versionFilesMap = await getVersionFilesData(idsList);
+    const versionFilesMap = await retrieveVersionFilesData(idsList);
 
     // Format the data
     let primaryFile: VersionFile | null = null;
@@ -595,10 +724,14 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         },
     });
 
+    // Delete all the files
     for (const file of filesData) {
         const filePath = `${getProjectVersionStoragePath(project.id, version.id)}/${file.name}`;
         await deleteFile(filePath, file.storageService as FILE_STORAGE_SERVICES);
-    }
+    };
+
+    // Delete the version directory
+    await deleteVersionStoreDirectory(project.id, version.id);
 
     const deletedVersion = await prisma.version.delete({
         where: {

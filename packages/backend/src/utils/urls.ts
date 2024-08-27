@@ -1,6 +1,6 @@
 const CDN_SERVER_URL = process.env.CDN_SERVER_URL;
 
-if (!CDN_SERVER_URL) {
+if (CDN_SERVER_URL === undefined) {
     throw new Error("Empty CDN_SERVER_URL value in the backend's .env");
 }
 

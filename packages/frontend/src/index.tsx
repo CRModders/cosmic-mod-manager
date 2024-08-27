@@ -3,7 +3,7 @@ import "@/src/globals.css";
 import RootLayout from "@/src/pages/layout";
 import SettingsPageLayout from "@/src/pages/settings/layout";
 import { projectTypes } from "@shared/config/project";
-import { StrictMode, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ProjectContextProvider from "./contexts/curr-project";
@@ -361,8 +361,8 @@ const rootEl = document.getElementById("root");
 if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
     root.render(
-        <StrictMode>
-            <RouterProvider router={router} />
-        </StrictMode>,
+        // <StrictMode>
+        <RouterProvider router={router} />
+        // </StrictMode>,
     );
 }

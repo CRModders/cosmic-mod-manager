@@ -94,7 +94,7 @@ module.exports = {
                 "table-side-pad": "2rem"
             },
             transitionDuration: {
-                DEFAULT: "225ms",
+                DEFAULT: "200ms",
             },
         },
     },
