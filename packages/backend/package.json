@@ -4,7 +4,7 @@
         "dev": "bun run --hot src/index.ts"
     },
     "dependencies": {
-        "@prisma/client": "^5.18.0",
+        "@prisma/client": "^5.19.0",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",
         "meilisearch": "^0.41.0",
@@ -16,6 +16,6 @@
         "@types/bun": "latest",
         "@types/ioredis": "^5.0.0",
         "@types/nodemailer": "^6.4.15",
-        "prisma": "^5.18.0"
+        "prisma": "^5.19.0"
     }
 }

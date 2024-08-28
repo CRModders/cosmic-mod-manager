@@ -85,11 +85,11 @@ const SupportedGameVersions = z.string().array().refine(
     },
     { message: "Invalid game version" },
 );
-const VersionDependencies = z.object({
-    projectId: z.number(),
-    versionId: z.number().optional(),
+export const VersionDependencies = z.object({
+    projectId: z.string(),
+    versionId: z.string().or(z.null()),
     dependencyType: z.nativeEnum(DependencyType),
-}).array().max(64).optional();
+}).array().max(256).optional();
 
 export const newVersionFormSchema = z.object({
     title: z.string().min(MIN_VERSION_TITLE_LENGTH).max(MAX_VERSION_TITLE_LENGTH),

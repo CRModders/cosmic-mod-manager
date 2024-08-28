@@ -28,10 +28,11 @@ import {
 } from "./_components";
 
 const EditVersionPage = () => {
+    const { projectData, allProjectVersions, fetchProjectData, fetchAllProjectVersions, projectDependencies } = useContext(projectContext);
+
     const { slug: projectSlug, versionSlug } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { projectData, allProjectVersions, fetchProjectData, fetchAllProjectVersions } = useContext(projectContext);
     const versionData = allProjectVersions?.filter((version) => {
         if (version.slug === versionSlug) return version;
     })[0];
@@ -47,7 +48,7 @@ const EditVersionPage = () => {
                 type: file.type,
             });
         }
-    }
+    };
 
     const form = useForm<z.infer<typeof updateVersionFormSchema>>({
         resolver: zodResolver(updateVersionFormSchema),
@@ -59,8 +60,12 @@ const EditVersionPage = () => {
             versionNumber: versionData?.versionNumber || "",
             loaders: versionData?.loaders || [],
             gameVersions: versionData?.gameVersions || [],
-            dependencies: [],
             additionalFiles: versionAdditionalFiles,
+            dependencies: versionData?.dependencies.map((dep) => ({
+                projectId: dep.projectId,
+                versionId: dep.versionId || null,
+                dependencyType: dep.dependencyType
+            })) || [],
         },
     });
     form.watch();
@@ -126,13 +131,8 @@ const EditVersionPage = () => {
 
             <Form {...form}>
                 <form
-                    onSubmit={async (e) => {
+                    onSubmit={(e) => {
                         e.preventDefault();
-
-                        await checkFormValidity(async () => {
-                            const formValues = updateVersionFormSchema.parse(form.getValues());
-                            await handleSubmit(formValues);
-                        });
                     }}
                     className="w-full flex flex-col gap-panel-cards items-start justify-start">
 
@@ -143,6 +143,12 @@ const EditVersionPage = () => {
                         versionPageUrl={versionsPageUrl}
                         versionTitle={form.getValues().title}
                         backUrl={currVersionPageUrl}
+                        onSubmitBtnClick={async () => {
+                            await checkFormValidity(async () => {
+                                const formValues = updateVersionFormSchema.parse(form.getValues());
+                                await handleSubmit(formValues);
+                            });
+                        }}
                         featuredBtn={
                             <FormField
                                 control={form.control}
@@ -190,7 +196,12 @@ const EditVersionPage = () => {
                                     name="dependencies"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <AddDependencies />
+                                            <AddDependencies
+                                                dependencies={field.value || []}
+                                                setDependencies={field.onChange}
+                                                currProjectId={projectData.id}
+                                                dependenciesData={projectDependencies}
+                                            />
                                         </FormItem>
                                     )}
                                 />

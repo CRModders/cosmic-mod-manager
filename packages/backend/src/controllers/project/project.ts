@@ -637,6 +637,8 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
 
     // Delete the file from storage
     await deleteProjectGalleryFile(project.id, project.gallery[0].image, FILE_STORAGE_SERVICES.LOCAL);
+
+    // Delete gallery item from database
     await prisma.galleryItem.delete({
         where: { id: galleryItemId },
     });
@@ -715,7 +717,9 @@ export const updateGalleryImage = async (
             where: {
                 projectId: project.id,
                 featured: true,
-                NOT: [{ id: galleryItemId }],
+                id: {
+                    not: galleryItemId
+                }
             },
         });
 

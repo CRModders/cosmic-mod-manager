@@ -1,5 +1,6 @@
 import { CancelButtonIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
+import { ImgWrapper } from "@/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -17,15 +18,20 @@ import { MultiSelectInput } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import useFetch from "@/src/hooks/fetch";
+import type { DependencyData } from "@/types";
 import GAME_VERSIONS from "@shared/config/game-versions";
 import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
+import type { VersionDependencies } from "@shared/schemas/project";
 import { DependencyType, DependsOn, type FileObjectType, VersionReleaseChannel } from "@shared/types";
+import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import type { Control, FieldValues, RefCallBack } from "react-hook-form";
 import { toast } from "sonner";
+import type { z } from "zod";
 
 interface VersionTitleInputProps {
     name: string;
@@ -71,6 +77,7 @@ interface UploadVersionPageTopCardProps {
     featuredBtn: React.ReactNode;
     submitBtnLabel?: string;
     submitBtnIcon: React.ReactNode;
+    onSubmitBtnClick: () => Promise<void>
 }
 export const UploadVersionPageTopCard = ({
     versionPageUrl,
@@ -80,7 +87,8 @@ export const UploadVersionPageTopCard = ({
     featuredBtn,
     children,
     submitBtnLabel,
-    submitBtnIcon
+    submitBtnIcon,
+    onSubmitBtnClick
 }: UploadVersionPageTopCardProps) => {
     return (
         <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-panel-cards">
@@ -100,7 +108,7 @@ export const UploadVersionPageTopCard = ({
             {children}
 
             <div className="w-full flex flex-wrap gap-x-panel-cards gap-y-2 items-center justify-start">
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} onClick={onSubmitBtnClick}>
                     {isLoading ? <LoadingSpinner size="xs" /> : submitBtnIcon}
                     {submitBtnLabel || "Submit"}
                 </Button>
@@ -201,27 +209,165 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
 };
 
 interface AddDependenciesProps {
-    dependencies?: {
-        projectId: number;
-        versionId?: number;
-        dependencyType: DependencyType;
-    }[];
+    dependencies?: z.infer<typeof VersionDependencies>;
+    setDependencies: (value: z.infer<typeof VersionDependencies>) => void;
+    currProjectId: string;
+    dependenciesData: DependencyData | null;
+
 }
-export const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
+export const AddDependencies = ({ dependencies, setDependencies, currProjectId, dependenciesData }: AddDependenciesProps) => {
+    const [isfetchingData, setIsFetchingData] = useState(false);
     const [dependsOn, setDependsOn] = useState(DependsOn.PROJECT);
-    const [slug, setSlug] = useState("");
+    const [projectSlug, setProjectSlug] = useState("");
+    const [versionSlug, setVersionSlug] = useState("");
     const [dependencyType, setDependencyType] = useState(DependencyType.REQUIRED);
 
-    const checkIfValidProjectDependency = async () => { };
+    // Data for the dependencies
+    const [dependencyData, setDependencyData] = useState<DependencyData>(dependenciesData || { projects: [], versions: [] });
 
-    const checkIfValidVersionDependency = async () => {
-        return false;
+    const isDependencyValid = (projectId: string, versionId: string) => {
+        return !dependencies?.some((dependency) => dependency.projectId === projectId && dependency.versionId === versionId);
     };
 
-    const handleAddingDependency = async () => { };
+    const addNewDependency = (projectId: string, versionId: string | null, type: DependencyType) => {
+        if (projectId === currProjectId) {
+            toast.error("You cannot add the current project as a dependency");
+            return;
+        }
+        setDependencies([...(dependencies || []), { projectId, versionId: versionId, dependencyType: type }]);
+    };
+
+    const removeDependency = (projectId: string, versionId: string | null) => {
+        const filteredDependencies = (dependencies || []).filter((dependency) => {
+            if (dependency.projectId !== projectId || dependency.versionId !== versionId) return dependency;
+        });
+        setDependencies(filteredDependencies);
+    };
+
+    const fetchProject = async (slug: string) => {
+        const res = await useFetch(`/api/project/${slug}`);
+        const data = (await res.json()) as { success: boolean; message?: string; project: ProjectDetailsData | null };
+
+        if (!res.ok || !data?.project) {
+            toast.error(data?.message || "Failed to fetch project");
+            return null;
+        };
+
+        return data.project;
+    };
+
+    const fetchVersion = async (projectSlug: string, versionSlug: string): Promise<ProjectVersionData | null> => {
+        const res = await useFetch(`/api/project/${projectSlug}/version/${versionSlug}`);
+        const data = (await res.json()) as { success: boolean; message?: string; data: ProjectVersionData | null };
+
+        if (!res.ok || !data?.data) {
+            toast.error(data?.message || "Failed to fetch version");
+            return null;
+        };
+
+        return data.data;
+    };
+
+    const addProjectDependency = async () => {
+        if (isfetchingData) return;
+        setIsFetchingData(true);
+        try {
+            const project = await fetchProject(projectSlug);
+            if (!project) return;
+
+            if (!isDependencyValid(project.id, "")) {
+                return toast.error("You have already added this project as a dependency");
+            }
+
+            addNewDependency(project.id, null, dependencyType);
+            setDependencyData((prev) => ({
+                ...prev,
+                projects: [
+                    ...prev.projects,
+                    {
+                        id: project.id,
+                        name: project.name,
+                        slug: project.slug,
+                        icon: project.icon || "",
+                    },
+                ],
+            }));
+            setProjectSlug("");
+            setVersionSlug("");
+        } finally {
+            setIsFetchingData(false);
+        }
+    };
+
+    const addVersionDependency = async () => {
+        if (isfetchingData) return;
+        setIsFetchingData(true);
+        try {
+            const [project, version] = await Promise.all([fetchProject(projectSlug), fetchVersion(projectSlug, versionSlug)]);
+            if (!project || !version) return;
+
+            if (!isDependencyValid(project.id, version.id)) {
+                return toast.error("You have already added this project as a dependency");
+            }
+
+            addNewDependency(project.id, version.id, dependencyType);
+            setDependencyData((prev) => ({
+                ...prev,
+                projects: [
+                    ...prev.projects,
+                    {
+                        id: project.id,
+                        name: project.name,
+                        slug: project.slug,
+                        icon: project.icon || "",
+                    },
+                ],
+                versions: [
+                    ...prev.versions,
+                    {
+                        id: version.id,
+                        title: version.title,
+                        versionNumber: version.versionNumber,
+                        slug: version.slug,
+                    },
+                ]
+            }));
+            setProjectSlug("");
+            setVersionSlug("");
+        } finally {
+            setIsFetchingData(false);
+        }
+    };
+
+    const addDependencyHandler = async () => {
+        if (!projectSlug) return;
+        if (dependsOn === DependsOn.PROJECT) {
+            await addProjectDependency();
+        } else {
+            await addVersionDependency()
+        }
+    };
 
     return (
         <div className="w-full flex flex-col gap-3 items-start justify-center">
+            {dependencies?.length ?
+                <div className="w-full flex flex-col items-start justify-start gap-4 mb-2">
+                    {
+                        dependencies?.map((dependency) => (
+                            <DependencyItem
+                                key={dependency.versionId || dependency.projectId}
+                                dependencyData={dependencyData}
+                                projectId={dependency.projectId}
+                                versionId={dependency.versionId || null}
+                                dependencyType={dependency.dependencyType}
+                                removeDependency={removeDependency}
+                            />
+                        ))
+                    }
+                </div>
+                : null
+            }
+
             <div className="w-full flex flex-col gap-1">
                 <span className="font-semibold text-muted-foreground">Add dependency</span>
                 <div className="w-full flex flex-col items-start justify-center gap-2">
@@ -240,10 +386,19 @@ export const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
                     </Select>
 
                     <Input
-                        placeholder={`Enter the ${dependsOn === DependsOn.PROJECT ? "project ID/slug" : "version ID"}`}
-                        value={slug}
-                        onChange={(e) => setSlug(e.target.value)}
+                        placeholder={"Enter the project ID/slug"}
+                        value={projectSlug}
+                        onChange={(e) => setProjectSlug(e.target.value)}
                     />
+
+                    {
+                        dependsOn === DependsOn.VERSION ?
+                            <Input
+                                placeholder={"Enter the version ID/slug"}
+                                value={versionSlug}
+                                onChange={(e) => setVersionSlug(e.target.value)}
+                            /> : null
+                    }
 
                     <Select
                         defaultValue={DependencyType.REQUIRED}
@@ -263,8 +418,8 @@ export const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
                         </SelectContent>
                     </Select>
 
-                    <Button onClick={handleAddingDependency} type="button">
-                        <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <Button onClick={addDependencyHandler} type="button" disabled={isfetchingData}>
+                        {isfetchingData ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
                         Add dependency
                     </Button>
                 </div>
@@ -272,6 +427,48 @@ export const AddDependencies = ({ dependencies }: AddDependenciesProps) => {
         </div>
     );
 };
+
+interface DependencyItemProps {
+    dependencyData: DependencyData;
+    projectId: string;
+    versionId: string | null;
+    dependencyType: DependencyType;
+    removeDependency: (projectId: string, versionId: string | null) => void;
+}
+
+const DependencyItem = ({ dependencyData, versionId, projectId, dependencyType, removeDependency }: DependencyItemProps) => {
+    const dependencyProject = dependencyData.projects.find((project) => project.id === projectId);
+    const dependencyVersion = dependencyData.versions.find((version) => version.id === versionId);
+
+    if (!dependencyProject?.id) return null;
+
+    return (
+        <div className="w-full flex items-center justify-between gap-x-4 gap-y-1 text-muted-foreground">
+            <div className="flex items-center justify-start gap-2">
+                <ImgWrapper
+                    src={dependencyProject.icon || ""}
+                    alt={dependencyProject.name}
+                    className="h-12 rounded"
+                />
+                <div className="flex flex-col items-start justify-start">
+                    <span className="font-bold text-foreground">{dependencyProject.name}</span>
+                    <span>
+                        {dependencyVersion ? (
+                            <>Version {dependencyVersion.versionNumber} is {dependencyType}</>
+                        ) : (
+                            CapitalizeAndFormatString(dependencyType)
+                        )}
+                    </span>
+                </div>
+            </div>
+
+            <Button variant="secondary" type="button" onClick={() => removeDependency(projectId, versionId)}>
+                <Trash2Icon className="w-btn-icon h-btn-icon" />
+                Remove
+            </Button>
+        </div>
+    )
+}
 
 export const SelectPrimaryFileInput = ({
     children,
@@ -387,7 +584,7 @@ const AdditionalFiles = ({
                                 onClick={() => deleteFileFromList(index)}
                             >
                                 <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                Delete
+                                Remove
                             </Button>
                         </div>
                     ))}

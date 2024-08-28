@@ -14,3 +14,23 @@ export interface UseThemeProps {
     setTheme: (value: string | ((theme: string | undefined) => string)) => void;
     theme?: string | undefined;
 }
+
+export interface DependencyProjectData {
+    id: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    type: string[];
+}
+
+export interface DependencyVersionData {
+    id: string;
+    title: string;
+    versionNumber: string;
+    slug: string;
+}
+
+export interface DependencyData {
+    projects: DependencyProjectData[];
+    versions: DependencyVersionData[];
+}

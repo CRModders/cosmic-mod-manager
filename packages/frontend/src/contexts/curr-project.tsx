@@ -1,6 +1,7 @@
 import { constructProjectPageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
-import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
+import type { DependencyData } from "@/types";
+import type { ProjectDetailsData, ProjectVersionData, ProjectsListData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +16,7 @@ type ProjectContextType = {
     allProjectVersions: ProjectVersionData[] | undefined | null;
     fetchAllProjectVersions: () => Promise<void>;
     currUsersMembership: TeamMember | null;
+    projectDependencies: DependencyData
 };
 
 export const projectContext = createContext<ProjectContextType>({
@@ -30,6 +32,10 @@ export const projectContext = createContext<ProjectContextType>({
     allProjectVersions: undefined,
     fetchAllProjectVersions: async () => { },
     currUsersMembership: null,
+    projectDependencies: {
+        projects: [],
+        versions: []
+    }
 });
 
 const getProjectData = async (slug: string) => {
@@ -53,6 +59,19 @@ const getAllProjectVersions = async (slug: string) => {
     }
 };
 
+const getProjectDependencies = async (slug: string) => {
+    try {
+        const response = await useFetch(`/api/project/${slug}/dependencies`);
+        return ((await response.json()) as {
+            projects: ProjectsListData[];
+            versions: ProjectVersionData[];
+        }) || null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
+
 export const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { slug } = useParams();
     const [fetchingProjectData, setFetchingProjectData] = useState(true);
@@ -72,6 +91,11 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
         queryKey: [`${currProjectSlug}-project-all-versions`],
         queryFn: () => getAllProjectVersions(currProjectSlug),
     });
+
+    const projectDependencies = useQuery({
+        queryKey: [`${currProjectSlug}-project-dependencies`],
+        queryFn: () => getProjectDependencies(currProjectSlug),
+    })
 
     const fetchProjectData = async (slug?: string) => {
         if (slug && currProjectSlug !== slug) {
@@ -98,6 +122,13 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
+        if (slug !== currProjectSlug && slug !== projectData.data?.id) {
+            fetchProjectData(slug);
+        }
+    }, [slug])
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
         redirectToCorrectProjectUrl();
 
         if (!projectData.data?.id) setCurrUsersMembership(null);
@@ -119,7 +150,7 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
                 }
             }
         }
-    }, [session, projectData, currProjectSlug]);
+    }, [session, projectData.data]);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -137,10 +168,10 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
     }, [allProjectVersions.data]);
 
     useEffect(() => {
-        if (projectData.isFetching || allProjectVersions.isFetching)
+        if (projectData.isFetching || allProjectVersions.isFetching || projectDependencies.isFetching)
             setFetchingProjectData(true);
         else setFetchingProjectData(false);
-    }, [projectData.isFetching, allProjectVersions.isFetching]);
+    }, [projectData.isFetching, allProjectVersions.isFetching, projectDependencies.isFetching]);
 
     return (
         <projectContext.Provider
@@ -153,6 +184,7 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
                 allProjectVersions: allProjectVersions.data,
                 fetchAllProjectVersions: fetchAllProjectVersions,
                 currUsersMembership: currUsersMembership,
+                projectDependencies: projectDependencies.data || { projects: [], versions: [] }
             }}
         >
             {children}

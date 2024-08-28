@@ -48,11 +48,9 @@ const projectPageRoutes = () => {
         return {
             path: `${type}/:slug`,
             element: (
-                <Suspense fallback={<SuspenseFallback />}>
-                    <ProjectContextProvider>
-                        <Outlet />
-                    </ProjectContextProvider>
-                </Suspense>
+                <ProjectContextProvider>
+                    <Outlet />
+                </ProjectContextProvider>
             ),
             children: [
                 {

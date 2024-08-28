@@ -35,9 +35,9 @@
 - [x] Add accent colors and icons for loaders
 - [x] Add the new version list UI
 
-- [-] Add edit version page \
+- [x] Add edit version page \
   NOTE:- Create reusable components from the new version page and use them in both upload form and edit form
-- [-] Add option to add dependencies on a version
+- [x] Add option to add dependencies on a version
 
 - [-] Add settings page
   - [x] General settings page

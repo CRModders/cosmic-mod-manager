@@ -1,6 +1,6 @@
-import { CubeIcon } from "@/components/icons";
+import { fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
-import AvatarImg from "@/components/ui/avatar";
+import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -142,9 +142,9 @@ const GeneralSettingsPage = () => {
                                             }}
                                         />
 
-                                        <AvatarImg
+                                        <ImgWrapper
                                             alt={projectData.name}
-                                            url={(() => {
+                                            src={(() => {
                                                 const file = form.getValues().icon;
                                                 if (!file || !(file instanceof File)) {
                                                     if (typeof field.value === "string") {
@@ -158,9 +158,8 @@ const GeneralSettingsPage = () => {
                                                     return "";
                                                 }
                                             })()}
-                                            wrapperClassName="h-24 rounded "
-                                            imgClassName="rounded"
-                                            fallback={<CubeIcon className="w-16 h-16" />}
+                                            className="rounded"
+                                            fallback={fallbackProjectIcon}
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">

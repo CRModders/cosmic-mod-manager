@@ -4,8 +4,8 @@ import type { ProjectsListData } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import CreateNewProjectDialog from "./new-project";
 
-import { CubeIcon } from "@/components/icons";
-import AvatarImg from "@/components/ui/avatar";
+import { fallbackProjectIcon } from "@/components/icons";
+import { ImgWrapper } from "@/components/ui/avatar";
 import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -58,7 +58,7 @@ const ProjectsPage = () => {
                                 <TableHeader>
                                     <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
                                         {/* ICON: VISIBLE ON sm+ width */}
-                                        <TableHead className="invisible sm:visible w-12 pl-table-side-pad-sm sm:pl-table-side-pad">Icon</TableHead>
+                                        <TableHead className="invisible sm:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">Icon</TableHead>
                                         {/* DETAILS: MOBILE ONLY */}
                                         <TableHead className="invisible sm:hidden">Details</TableHead>
 
@@ -91,12 +91,12 @@ const ProjectsPage = () => {
                                                 {/* ICON */}
                                                 <TableCell className="pl-table-side-pad-sm sm:pl-table-side-pad">
                                                     <Link tabIndex={-1} to={getProjectPagePathname(project.type[0], project.slug)}
-                                                        className="noClickRedirect flex">
-                                                        <AvatarImg url={imageUrl(project.icon)} alt={project.name} fallback={<CubeIcon
-                                                            className="w-3/4 h-3/4 text-muted-foreground" />
-                                                        }
-                                                            imgClassName="rounded"
-                                                            wrapperClassName="h-12 rounded"
+                                                        className="noClickRedirect flex shrink-0">
+                                                        <ImgWrapper
+                                                            src={imageUrl(project.icon)}
+                                                            alt={project.name}
+                                                            fallback={fallbackProjectIcon}
+                                                            className="h-12 rounded"
                                                         />
                                                     </Link>
                                                 </TableCell>

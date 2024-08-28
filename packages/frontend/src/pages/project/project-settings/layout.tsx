@@ -1,6 +1,6 @@
-import { CubeIcon } from "@/components/icons";
+import { fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@/components/layout/panel";
-import AvatarImg from "@/components/ui/avatar";
+import { ImgWrapper } from "@/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -69,12 +69,11 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
                         </Breadcrumb>
 
                         <div className="w-full flex items-start justify-start gap-3">
-                            <AvatarImg
-                                url={imageUrl(projectData.icon)}
+                            <ImgWrapper
+                                src={imageUrl(projectData.icon)}
                                 alt={projectData.name}
-                                fallback={<CubeIcon className="w-3/4 h-3/4 text-muted-foreground" />}
-                                imgClassName="rounded"
-                                wrapperClassName="rounded h-14"
+                                fallback={fallbackProjectIcon}
+                                className="rounded h-14"
                             />
 
                             <div className="flex flex-col items-start justify-start">

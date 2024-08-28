@@ -23,6 +23,8 @@ export const groupContinuousVersions = (versions: string[], referenceList: strin
 };
 
 export const getGroupedVersionsList = (list: string[]): string[] => {
+    if (list.length < 2) return [...list];
+
     const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(
         list,

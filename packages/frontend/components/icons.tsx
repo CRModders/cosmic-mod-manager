@@ -567,3 +567,5 @@ export const CubeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 };
 
 export const CancelButtonIcon = XIcon;
+
+export const fallbackProjectIcon = <CubeIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;

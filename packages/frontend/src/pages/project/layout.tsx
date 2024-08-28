@@ -1,4 +1,4 @@
-import { DiscordIcon } from "@/components/icons";
+import { DiscordIcon, fallbackProjectIcon } from "@/components/icons";
 import LoaderIcons from "@/components/loader-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -17,8 +17,26 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
+import { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
-import { BookOpenIcon, BookmarkIcon, BugIcon, CalendarIcon, ClipboardCopyIcon, CodeIcon, CrownIcon, DownloadIcon, FlagIcon, GitCommitHorizontalIcon, HeartIcon, MoreVertical, SettingsIcon, SquareArrowOutUpRightIcon, TagsIcon, UserIcon } from "lucide-react";
+import {
+    BookOpenIcon,
+    BookmarkIcon,
+    BugIcon,
+    CalendarIcon,
+    ClipboardCopyIcon,
+    CodeIcon,
+    CrownIcon,
+    DownloadIcon,
+    FlagIcon,
+    GitCommitHorizontalIcon,
+    HeartIcon,
+    MoreVertical,
+    SettingsIcon,
+    SquareArrowOutUpRightIcon,
+    TagsIcon,
+    UserIcon
+} from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -78,15 +96,20 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                     const loaderIcon: React.ReactNode = LoaderIcons[loaderData.icon];
 
                                     return (
-                                        <Chip key={loaderData.name}
+                                        <Chip
+                                            key={loaderData.name}
                                             style={{
-                                                color: accentForeground ? theme === "dark" ? accentForeground?.dark : accentForeground?.light : "hsla(var(--muted-foreground))",
+                                                color: accentForeground
+                                                    ? theme === "dark"
+                                                        ? accentForeground?.dark
+                                                        : accentForeground?.light
+                                                    : "hsla(var(--muted-foreground))",
                                             }}
                                         >
                                             {loaderIcon ? loaderIcon : null}
                                             {CapitalizeAndFormatString(loaderData.name)}
                                         </Chip>
-                                    )
+                                    );
                                 })}
                             </div>
                         </div>
@@ -136,67 +159,66 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                         </Card>
                     ) : null}
 
-                    {
-                        (featuredProjectVersions?.length || 0) > 0 ? (
-                            <Card className="p-card-surround grid grid-cols-1 gap-1">
-                                <h3 className="text-lg font-bold pb-2">Featured versions</h3>
-                                <TooltipProvider>
-                                    {featuredProjectVersions?.map((version) => (
-                                        // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                                        <div
-                                            key={version.id}
-                                            className="w-full flex items-start justify-start p-1.5 pb-2 rounded cursor-pointer hover:bg-background bg_hover_stagger gap-3"
-                                            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                                                if (
-                                                    // @ts-expect-error
-                                                    !e.target.closest(".noClickRedirect")
-                                                ) {
-                                                    const link = getProjectVersionPagePathname(
-                                                        projectData.type?.[0],
-                                                        projectData.slug,
-                                                        version.slug,
-                                                    );
-                                                    if (window.location.pathname !== link) {
-                                                        navigate(link);
-                                                    }
+                    {(featuredProjectVersions?.length || 0) > 0 ? (
+                        <Card className="p-card-surround grid grid-cols-1 gap-1">
+                            <h3 className="text-lg font-bold pb-2">Featured versions</h3>
+                            <TooltipProvider>
+                                {featuredProjectVersions?.map((version) => (
+                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                                    <div
+                                        key={version.id}
+                                        className="w-full flex items-start justify-start p-1.5 pb-2 rounded cursor-pointer hover:bg-background/75 bg_hover_stagger gap-3"
+                                        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                                            if (
+                                                // @ts-expect-error
+                                                !e.target.closest(".noClickRedirect")
+                                            ) {
+                                                const link = getProjectVersionPagePathname(
+                                                    projectData.type?.[0],
+                                                    projectData.slug,
+                                                    version.slug,
+                                                );
+                                                if (window.location.pathname !== link) {
+                                                    navigate(link);
                                                 }
-                                            }}
-                                        >
-
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <a href={version.primaryFile?.url} className={cn("noClickRedirect flex-shrink-0", buttonVariants({ variant: "default", size: "icon" }))}>
-                                                        <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                                                    </a>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    {version?.primaryFile?.name} ({parseFileSize(version.primaryFile?.size || 0)})
-                                                </TooltipContent>
-                                            </Tooltip>
-
-
-                                            <div className="flex w-fit h-full grow flex-col select-text gap-1">
-                                                <Link
-                                                    to={getProjectVersionPagePathname(
-                                                        projectData.type?.[0],
-                                                        projectData.slug,
-                                                        version.slug,
+                                            }
+                                        }}
+                                    >
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <a
+                                                    href={version.primaryFile?.url}
+                                                    className={cn(
+                                                        "noClickRedirect flex-shrink-0",
+                                                        buttonVariants({ variant: "default", size: "icon" }),
                                                     )}
-                                                    className="noClickRedirect w-fit"
                                                 >
-                                                    <p className="font-semibold leading-none">{version.title}</p>
-                                                </Link>
-                                                <p className="text-pretty leading-tight text-muted-foreground">
-                                                    {version.loaders.map((loader) => (CapitalizeAndFormatString(loader))).join(", ")} {formatVersionsListString(version.gameVersions)}
-                                                </p>
-                                                <ReleaseChannelChip releaseChannel={version.releaseChannel} />
-                                            </div>
+                                                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                </a>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {version?.primaryFile?.name} ({parseFileSize(version.primaryFile?.size || 0)})
+                                            </TooltipContent>
+                                        </Tooltip>
+
+                                        <div className="flex w-fit h-full grow flex-col select-text gap-1">
+                                            <Link
+                                                to={getProjectVersionPagePathname(projectData.type?.[0], projectData.slug, version.slug)}
+                                                className="noClickRedirect w-fit"
+                                            >
+                                                <p className="font-semibold leading-none">{version.title}</p>
+                                            </Link>
+                                            <p className="text-pretty leading-tight text-muted-foreground">
+                                                {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
+                                                {formatVersionsListString(version.gameVersions)}
+                                            </p>
+                                            <ReleaseChannelChip releaseChannel={version.releaseChannel} />
                                         </div>
-                                    ))}
-                                </TooltipProvider>
-                            </Card>
-                        ) : null
-                    }
+                                    </div>
+                                ))}
+                            </TooltipProvider>
+                        </Card>
+                    ) : null}
 
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
                         <h3 className="text-lg font-bold pb-1">Creators</h3>
@@ -267,10 +289,14 @@ const PageHeader = ({
                     src={imageUrl(projectData.icon)}
                     alt={projectData.name}
                     className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black"
+                    fallback={fallbackProjectIcon}
                 />
                 <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                         <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
+                        {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
+                            <span className="text-muted-foreground font-medium">{CapitalizeAndFormatString(projectData.status)}</span>
+                        ) : null}
                     </div>
                     <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</p>
                     <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
@@ -338,14 +364,19 @@ const PageHeader = ({
                                 Report
                             </Button>
                             <PopoverClose asChild>
-                                <Button className="w-full" variant="ghost" onClick={() => { navigator.clipboard.writeText(projectData.id) }}>
+                                <Button
+                                    className="w-full"
+                                    variant="ghost"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(projectData.id);
+                                    }}
+                                >
                                     <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
                                     Copy ID
                                 </Button>
                             </PopoverClose>
                         </PopoverContent>
                     </Popover>
-
                 </div>
             </div>
         </div>
@@ -360,8 +391,16 @@ export const ProjectMember = ({
     className,
 }: { userName: string; isOwner: boolean; role: string; avatarImageUrl: string; className?: string }) => {
     return (
-        <ButtonLink url={`/user/${userName}`} className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background", className)}>
-            <ImgWrapper src={avatarImageUrl} alt={userName} className="h-10 rounded-full" fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />} />
+        <ButtonLink
+            url={`/user/${userName}`}
+            className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
+        >
+            <ImgWrapper
+                src={avatarImageUrl}
+                alt={userName}
+                className="h-10 rounded-full"
+                fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />}
+            />
             <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
                 <div className="flex items-center justify-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{userName}</span>

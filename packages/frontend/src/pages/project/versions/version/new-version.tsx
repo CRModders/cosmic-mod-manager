@@ -102,13 +102,8 @@ const UploadVersionPage = () => {
 
             <Form {...form}>
                 <form
-                    onSubmit={async (e) => {
+                    onSubmit={(e) => {
                         e.preventDefault();
-
-                        await checkFormValidity(async () => {
-                            const formValues = newVersionFormSchema.parse(form.getValues());
-                            await handleSubmit(formValues);
-                        });
                     }}
                     className="w-full flex flex-col gap-panel-cards items-start justify-start">
 
@@ -119,6 +114,12 @@ const UploadVersionPage = () => {
                         versionPageUrl={versionsPageUrl}
                         versionTitle={form.getValues().title}
                         backUrl={versionsPageUrl}
+                        onSubmitBtnClick={async () => {
+                            await checkFormValidity(async () => {
+                                const formValues = newVersionFormSchema.parse(form.getValues());
+                                await handleSubmit(formValues);
+                            });
+                        }}
                         featuredBtn={
                             <FormField
                                 control={form.control}
@@ -167,7 +168,12 @@ const UploadVersionPage = () => {
                                     name="dependencies"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <AddDependencies />
+                                            <AddDependencies
+                                                dependencies={field.value}
+                                                setDependencies={field.onChange}
+                                                currProjectId={projectData.id}
+                                                dependenciesData={{ versions: [], projects: [] }}
+                                            />
                                         </FormItem>
                                     )}
                                 />

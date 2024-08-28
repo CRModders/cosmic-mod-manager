@@ -1,18 +1,17 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { deleteFile, getProjectVersionStoragePath } from "@/services/storage";
 import { aggregateProjectLoaderNames, aggregateVersions, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
-import type { File as DBFile } from "@prisma/client";
+import type { File as DBFile, Dependency } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
-import type { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
-import { type DependencyType, ProjectPermissions, type ProjectType, type VersionReleaseChannel } from "@shared/types";
+import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
+import { type DependencyType, ProjectPermissions, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
@@ -34,32 +33,7 @@ export const requiredVersionFields = {
     loaders: true,
     files: true,
     author: true,
-    dependencies: {
-        select: {
-            id: true,
-            dependencyType: true,
-            dependencyProject: {
-                select: {
-                    id: true,
-                    name: true,
-                    icon: true,
-                    slug: true,
-                    loaders: true,
-                    gameVersions: true,
-                },
-            },
-            dependencyVersion: {
-                select: {
-                    id: true,
-                    title: true,
-                    slug: true,
-                    versionNumber: true,
-                    loaders: true,
-                    gameVersions: true,
-                },
-            },
-        },
-    },
+    dependencies: true,
 };
 
 const requiredProjectFields = {
@@ -184,7 +158,10 @@ export const createNewVersion = async (
                 slug: newVersion.id,
             },
         });
-    }
+    };
+
+    // Add dependencies
+    await createVersionDependencies(newVersion.id, formData.dependencies || []);
 
     const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...formData.loaders]);
     const sortedUniqueGameVersions = aggregateVersions([...project.gameVersions, ...formData.gameVersions]);
@@ -262,7 +239,8 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                             id: true,
                             fileId: true,
                         }
-                    }
+                    },
+                    dependencies: true
                 }
             }
         }
@@ -313,7 +291,6 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                 deletedFileList.push(file.fileId);
             }
         }
-
 
         // Delete the files that are not in the new list (means the user removed them)
         if (deletedFileList.length) {
@@ -372,6 +349,54 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
     const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
     const aggregatedGameVersions = aggregateVersions(projectGameVersions);
 
+    // Delete removed dependencies and add new ones
+    const dependenciesList = formData.dependencies || [];
+    if (targetVersion.dependencies.length || dependenciesList?.length) {
+        const newDependencies: z.infer<typeof VersionDependencies> = [];
+        // List of ids of deleted dependencies
+        const deletedDependencies: string[] = [];
+
+        for (const dependency of dependenciesList) {
+            if (dependency.projectId === project.id) continue;
+
+            let isNewDependency = true;
+            for (const existingDependency of targetVersion.dependencies) {
+                if (existingDependency.projectId === dependency.projectId && existingDependency.versionId === dependency.versionId) {
+                    isNewDependency = false;
+                    break;
+                }
+            };
+
+            if (isNewDependency === true) newDependencies.push(dependency);
+        };
+
+        for (const existingDependency of targetVersion.dependencies) {
+            let isDeletedDependency = true;
+            for (const dependency of dependenciesList) {
+                if (existingDependency.projectId === dependency.projectId && existingDependency.versionId === dependency.versionId) {
+                    isDeletedDependency = false;
+                    break;
+                }
+            };
+
+            if (isDeletedDependency === true) deletedDependencies.push(existingDependency.id);
+        };
+
+        // Delete deleted dependencies
+        if (deletedDependencies.length) {
+            await prisma.dependency.deleteMany({
+                where: {
+                    id: {
+                        in: deletedDependencies,
+                    },
+                },
+            });
+        };
+
+        // Create new dependencies
+        await createVersionDependencies(targetVersion.id, newDependencies);
+    }
+
 
     // Finally update the version data
     await prisma.version.update({
@@ -426,6 +451,85 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             gameVersionsChanged
         }
     }, httpCode("ok"));
+};
+
+const createVersionDependencies = async (dependentVersionId: string, list: z.infer<typeof VersionDependencies>) => {
+    if (!list?.length) return [];
+
+    const validProjectLevelDependencies: Dependency[] = [];
+    const validVersionLevelDependencies: Dependency[] = [];
+
+    const projectIds = new Set<string>();
+    const versionIds = new Set<string>();
+
+    for (const dependency of list) {
+        projectIds.add(dependency.projectId);
+        if (dependency.versionId) versionIds.add(dependency.versionId);
+    };
+
+    // Get all the projects and versions from database
+    const [dependencyProjects, dependencyVersions] = await Promise.all([
+        prisma.project.findMany({
+            where: {
+                id: {
+                    in: Array.from(projectIds)
+                }
+            }
+        }),
+
+        prisma.version.findMany({
+            where: {
+                id: {
+                    in: Array.from(versionIds)
+                }
+            }
+        })
+    ]);
+
+    const projectMap = new Map<string, string>();
+    const versionMap = new Map<string, string>();
+    for (const project of dependencyProjects) {
+        // TODO: Add check for projectPublishingStatus after that is implemented
+        if (project.visibility === ProjectVisibility.PRIVATE) continue;
+        projectMap.set(project.id, project.slug);
+    };
+    for (const version of dependencyVersions) {
+        versionMap.set(version.id, version.slug);
+    };
+
+    for (const dependency of list) {
+        if (projectMap.has(dependency.projectId)) {
+            // If the dependency is a version level dependency, check if the version exists
+            if (dependency.versionId && versionMap.has(dependency.versionId)) {
+                validVersionLevelDependencies.push({
+                    id: nanoid(STRING_ID_LENGTH),
+                    projectId: dependency.projectId,
+                    versionId: dependency.versionId,
+                    dependencyType: dependency.dependencyType,
+                    dependentVersionId
+                });
+            }
+            // If the dependency is a project level dependency
+            else {
+                validProjectLevelDependencies.push({
+                    id: nanoid(STRING_ID_LENGTH),
+                    projectId: dependency.projectId,
+                    versionId: null,
+                    dependencyType: dependency.dependencyType,
+                    dependentVersionId
+                });
+            }
+        }
+    };
+
+    const allDependencies = validProjectLevelDependencies.concat(validVersionLevelDependencies);
+    if (allDependencies.length) {
+        return await prisma.dependency.createMany({
+            data: allDependencies
+        })
+    };
+
+    return [];
 }
 
 export const getAllProjectVersions = async (
@@ -434,8 +538,13 @@ export const getAllProjectVersions = async (
     userSession: ContextUserSession | undefined,
     featuredOnly = false,
 ) => {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [
+                { slug: slug },
+                { id: slug }
+            ]
+        },
         select: {
             ...requiredProjectFields,
             versions: {
@@ -521,25 +630,9 @@ export const getAllProjectVersions = async (
             },
             dependencies: version.dependencies.map((dependency) => ({
                 id: dependency.id,
-                dependencyType: dependency.dependencyType as DependencyType,
-                project: {
-                    id: dependency.dependencyProject.id,
-                    name: dependency.dependencyProject.name,
-                    slug: dependency.dependencyProject.slug,
-                    type: inferProjectType(dependency.dependencyProject.loaders) as ProjectType[],
-                    loaders: dependency.dependencyProject.loaders,
-                    gameVersions: dependency.dependencyProject.gameVersions,
-                },
-                version: dependency.dependencyVersion?.id
-                    ? {
-                        id: dependency.dependencyVersion.id,
-                        title: dependency.dependencyVersion.title,
-                        versionNumber: dependency.dependencyVersion.versionNumber,
-                        slug: dependency.dependencyVersion.slug,
-                        loaders: dependency.dependencyVersion.loaders,
-                        gameVersions: dependency.dependencyVersion.gameVersions,
-                    }
-                    : null,
+                projectId: dependency.projectId,
+                versionId: dependency.versionId,
+                dependencyType: dependency.dependencyType as DependencyType
             })),
         });
     }
@@ -547,16 +640,23 @@ export const getAllProjectVersions = async (
     return ctx.json({ success: true, data: versionsList }, httpCode("ok"));
 };
 
-
 export const getProjectVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession) => {
-    const project = await prisma.project.findUnique({
+    const project = await prisma.project.findFirst({
         where: {
-            slug: projectSlug,
+            OR: [
+                { slug: projectSlug },
+                { id: projectSlug }
+            ]
         },
         select: {
             ...requiredProjectFields,
             versions: {
-                where: { slug: versionSlug },
+                where: {
+                    OR: [
+                        { slug: versionSlug },
+                        { id: versionSlug }
+                    ]
+                },
                 select: requiredVersionFields,
             },
         },
@@ -638,27 +738,11 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
         },
         dependencies: version.dependencies.map((dependency) => ({
             id: dependency.id,
+            projectId: dependency.projectId,
+            versionId: dependency.versionId,
             dependencyType: dependency.dependencyType as DependencyType,
-            project: {
-                id: dependency.dependencyProject.id,
-                name: dependency.dependencyProject.name,
-                slug: dependency.dependencyProject.slug,
-                type: inferProjectType(dependency.dependencyProject.loaders) as ProjectType[],
-                loaders: dependency.dependencyProject.loaders,
-                gameVersions: dependency.dependencyProject.gameVersions,
-            },
-            version: dependency.dependencyVersion?.id
-                ? {
-                    id: dependency.dependencyVersion.id,
-                    title: dependency.dependencyVersion.title,
-                    versionNumber: dependency.dependencyVersion.versionNumber,
-                    slug: dependency.dependencyVersion.slug,
-                    loaders: dependency.dependencyVersion.loaders,
-                    gameVersions: dependency.dependencyVersion.gameVersions,
-                }
-                : null,
-        })),
-    };
+        }))
+    } satisfies ProjectVersionData;
 
     return ctx.json({ success: true, data: versionData }, httpCode("ok"));
 };
@@ -714,15 +798,14 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     const version = project.versions[0];
     const filesData = await prisma.file.findMany({
         where: {
-            OR: version.files.map((file) => ({ id: file.fileId })),
+            id: {
+                in: version.files.map((file) => file.fileId)
+            },
         },
     });
 
     // Delete all the files
-    for (const file of filesData) {
-        const filePath = `${getProjectVersionStoragePath(project.id, version.id)}/${file.name}`;
-        await deleteFile(filePath, file.storageService as FILE_STORAGE_SERVICES);
-    };
+    await deleteVersionFiles(project.id, version.id, filesData);
 
     // Delete the version directory
     await deleteVersionStoreDirectory(project.id, version.id);

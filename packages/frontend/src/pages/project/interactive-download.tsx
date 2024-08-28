@@ -104,7 +104,7 @@ const InteractiveDownloadPopup = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="flex flex-row gap-3 items-center justify-start pb-3">
-                    <ImgWrapper src={projectData.icon || ""} alt={projectData.name} className="h-9 border-none bg-transparent" />
+                    <ImgWrapper src={projectData.icon || ""} alt={projectData.name} className="h-9 rounded" />
                     <DialogTitle>
                         Download {projectData.name}
                     </DialogTitle>

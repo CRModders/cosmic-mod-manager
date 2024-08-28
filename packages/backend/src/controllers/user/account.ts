@@ -121,7 +121,7 @@ export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
     if (confirmationEmail.user.password)
         return ctx.json({ success: false, message: "A password already exists for your account" }, httpCode("bad_request"));
 
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
         where: {
             id: confirmationEmail.userId,
         },
@@ -133,10 +133,9 @@ export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
     await prisma.userConfirmation.deleteMany({
         where: {
             userId: confirmationEmail.userId,
-            OR: [
-                { confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD },
-                { confirmationType: ConfirmationType.CHANGE_ACCOUNT_PASSWORD },
-            ],
+            confirmationType: {
+                in: [ConfirmationType.CONFIRM_NEW_PASSWORD, ConfirmationType.CHANGE_ACCOUNT_PASSWORD]
+            }
         },
     });
 
@@ -268,10 +267,9 @@ export const setNewPassword = async (ctx: Context, code: string, formData: z.inf
     await prisma.userConfirmation.deleteMany({
         where: {
             userId: confirmationEmail.userId,
-            OR: [
-                { confirmationType: ConfirmationType.CHANGE_ACCOUNT_PASSWORD },
-                { confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD },
-            ],
+            confirmationType: {
+                in: [ConfirmationType.CHANGE_ACCOUNT_PASSWORD, ConfirmationType.CONFIRM_NEW_PASSWORD]
+            },
         },
     });
 

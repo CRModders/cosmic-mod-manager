@@ -1,5 +1,7 @@
+import { fallbackProjectIcon } from "@/components/icons";
 import MarkdownRenderBox from "@/components/layout/md-editor/render-md";
 import { ContentCardTemplate } from "@/components/layout/panel";
+import { ImgWrapper } from "@/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -14,7 +16,7 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { formatVersionsListString } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, projectFileUrl } from "@/lib/utils";
+import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
@@ -23,14 +25,15 @@ import { ProjectPermissions } from "@shared/types";
 import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
 const VersionPage = ({ projectType }: { projectType: string }) => {
     const { slug: projectSlug, versionSlug } = useParams();
-    const { projectData, currUsersMembership, allProjectVersions } = useContext(projectContext);
+    const navigate = useNavigate();
+    const { projectData, currUsersMembership, allProjectVersions, projectDependencies } = useContext(projectContext);
     const versionData = allProjectVersions?.filter((version) => {
         if (version.slug === versionSlug) return version;
     })[0];
@@ -131,6 +134,64 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                             <MarkdownRenderBox text={versionData.changelog} />
                         </ContentCardTemplate>
                     ) : null}
+
+                    {
+                        versionData.dependencies.length ?
+                            <ContentCardTemplate title="Dependencies" className="gap-2">
+                                {
+                                    versionData.dependencies.map((dependency) => {
+                                        const dependencyProject = projectDependencies.projects.find((project) => project.id === dependency.projectId);
+                                        const dependencyVersion = projectDependencies.versions.find((version) => version.id === dependency.versionId);
+
+                                        if (!dependencyProject?.id) return null;
+                                        const dependencyProjectPageUrl = getProjectPagePathname(dependencyProject.type[0], dependencyProject.slug);
+                                        const dependencyVersionPageUrl = dependencyVersion?.id ? getProjectVersionPagePathname(dependencyProject.type[0], dependencyProject.slug, dependencyVersion.slug) : null;
+
+                                        const redirectUrl = dependencyVersionPageUrl || dependencyProjectPageUrl;
+
+                                        return (
+                                            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                                            <div
+                                                key={`${dependencyProject.id}-${dependencyVersion?.id}`}
+                                                className="bg_hover_stagger w-full flex items-center justify-start gap-3 text-muted-foreground hover:bg-background/75 cursor-pointer p-2 rounded-lg "
+                                                onClick={(e) => {
+                                                    //@ts-expect-error
+                                                    if (!e.target.closest(".noClickRedirect")) {
+                                                        navigate(redirectUrl);
+                                                    }
+                                                }}
+                                            >
+                                                <ImgWrapper
+                                                    src={dependencyProject.icon || ""}
+                                                    alt={dependencyProject.name}
+                                                    className="h-12"
+                                                    fallback={fallbackProjectIcon}
+                                                />
+                                                <div className="flex flex-col items-start justify-center">
+                                                    {
+                                                        <>
+                                                            <Link
+                                                                to={redirectUrl}
+                                                                className="noClickRedirect font-bold"
+                                                            >
+                                                                {dependencyProject.name}
+                                                            </Link>
+                                                            {
+                                                                dependencyVersion?.id ?
+                                                                    <span>Version {dependencyVersion.versionNumber} is {dependency.dependencyType}</span>
+                                                                    :
+                                                                    <span>{CapitalizeAndFormatString(dependency.dependencyType)}</span>
+                                                            }
+                                                        </>
+                                                    }
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </ContentCardTemplate>
+                            : null
+                    }
 
                     <ContentCardTemplate title="Files" className="gap-2">
                         {versionData.primaryFile?.id ? (

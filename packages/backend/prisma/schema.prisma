@@ -162,8 +162,6 @@ model Project {
     team         Team          @relation(name: "ProjectTeam", fields: [teamId], references: [id])
     organisation Organisation? @relation(name: "OrganisationProjects", fields: [organisationId], references: [id])
     gallery      GalleryItem[] @relation(name: "ProjectGallery")
-    // Project that depend on this version
-    dependents   Dependency[]  @relation(name: "ProjectDependents")
 }
 
 model Version {
@@ -186,8 +184,6 @@ model Version {
     author       User          @relation(name: "UserAuthoredVersions", fields: [authorId], references: [id])
     // Dependencies this project has
     dependencies Dependency[]  @relation(name: "VersionDependencies")
-    // Project that depend on this version
-    dependents   Dependency[]  @relation(name: "VersionDependents")
 }
 
 model VersionFile {
@@ -206,9 +202,7 @@ model Dependency {
     dependentVersionId String  @db.VarChar(32)
     dependencyType     String  @db.VarChar(32)
 
-    dependentVersion  Version  @relation(name: "VersionDependencies", fields: [dependentVersionId], references: [id], onDelete: Cascade)
-    dependencyProject Project  @relation(name: "ProjectDependents", fields: [projectId], references: [id])
-    dependencyVersion Version? @relation(name: "VersionDependents", fields: [versionId], references: [id])
+    dependentVersion Version @relation(name: "VersionDependencies", fields: [dependentVersionId], references: [id], onDelete: Cascade)
 }
 
 model GalleryItem {

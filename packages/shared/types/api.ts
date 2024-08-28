@@ -128,24 +128,10 @@ export interface VersionAuthor {
     role: string;
 }
 
-export interface Dependency {
+export interface DependencyListData {
     id: string;
-    project: {
-        id: string;
-        name: string;
-        slug: string;
-        type: ProjectType[];
-        gameVersions: string[];
-        loaders: string[];
-    };
-    version: {
-        id: string;
-        title: string;
-        slug: string;
-        versionNumber: string;
-        loaders: string[];
-        gameVersions: string[];
-    } | null;
+    projectId: string;
+    versionId: string | null;
     dependencyType: DependencyType;
 }
 
@@ -164,5 +150,5 @@ export interface ProjectVersionData {
     files: VersionFile[];
     primaryFile: VersionFile | null;
     author: VersionAuthor;
-    dependencies: Dependency[];
+    dependencies: DependencyListData[];
 }

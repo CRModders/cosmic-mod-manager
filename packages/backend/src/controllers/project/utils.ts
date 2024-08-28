@@ -74,12 +74,31 @@ export const createVersionFile = async (
 };
 
 export const deleteVersionFiles = async (projectId: string, versionId: string, filesData: DBFile[]) => {
+    // Delete files from storage
     const promises = [];
     for (const file of filesData) {
         promises.push(deleteFile(getProjectVersionStoragePath(projectId, versionId, `/${file.name}`), file.storageService as FILE_STORAGE_SERVICES));
     }
+    await Promise.all(promises);
 
-    return await Promise.all(promises);
+    // Delete files from database
+    await prisma.file.deleteMany({
+        where: {
+            id: {
+                in: filesData.map((file) => file.id)
+            }
+        }
+    });
+
+    // Delete the deleted versionFiles from database
+    await prisma.versionFile.deleteMany({
+        where: {
+            versionId: versionId,
+            fileId: {
+                in: filesData.map((file) => file.id)
+            }
+        },
+    });
 };
 
 export const deleteVersionStoreDirectory = async (projectId: string, versionId: string) => {

@@ -64,43 +64,42 @@
 }
 
 .markdown-body h1 {
-    @apply mb-5 text-2xl;
+    @apply mb-5 text-[2rem];
 }
 
 .markdown-body h2 {
-    @apply text-xl mb-4;
+    @apply text-[1.5rem] mb-4;
 }
 
 .markdown-body h3 {
-    @apply text-lg;
+    @apply text-[1.17rem];
 }
 
 
 .markdown-body blockquote {
-    @apply ml-6 px-4 border-l-[0.25em] border-shallower-background;
+    @apply ml-6 px-4 border-l-[0.25rem] border-shallower-background;
 }
 
 .markdown-body blockquote blockquote {
-    @apply ml-4 px-4 border-l-[0.25em] border-shallower-background;
+    @apply ml-4 px-4 border-l-[0.25rem] border-shallower-background;
 }
 
 .markdown-body a {
-    @apply text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block underline;
+    @apply text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block;
 }
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
-    text-decoration: none;
+    text-decoration: underline;
     @apply brightness-110;
 }
 
 .markdown-body a:active {
-    text-decoration: none;
-    @apply brightness-110;
+    @apply brightness-100;
 }
 
 .markdown-body img {
-    @apply max-w-full w-auto h-auto;
+    @apply max-w-full h-auto inline-block;
 }
 
 html:not(.dark).markdown-body img[src$='#gh-dark-mode-only'] {

@@ -55,7 +55,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                     <h2 className="leading-tight">
                                         <Link
                                             to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
-                                            className="text-xl font-bold text-muted-foreground"
+                                            className="text-xl font-bold"
                                         >
                                             {version.title}
                                         </Link>

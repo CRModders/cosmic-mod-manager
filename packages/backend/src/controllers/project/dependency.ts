@@ -1,10 +1,11 @@
 import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
-import { isProjectAccessibleToCurrSession } from "@/utils";
+import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
+import { projectIconUrl } from "@/utils/urls";
+import type { Dependency } from "@prisma/client";
 import type { ProjectPermissions } from "@shared/types";
 import type { Context } from "hono";
-import { requiredVersionFields } from "./version";
 
 export const getProjectDependencies = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
     const project = await prisma.project.findFirst({
@@ -49,16 +50,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
             versions: {
                 select: {
                     id: true,
-                    dependencies: {
-                        select: {
-                            id: true,
-                            dependencyType: true,
-                            dependencyProject: true,
-                            dependencyVersion: {
-                                select: requiredVersionFields
-                            }
-                        }
-                    }
+                    dependencies: true
                 }
             },
         }
@@ -89,5 +81,49 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
     };
 
-    return ctx.json({ project }, httpCode("ok"));
-}
+    // Aggregate all dependencies
+    const dependencies: Dependency[] = [];
+    for (const version of project.versions) {
+        if (version.dependencies) {
+            for (const dependency of version.dependencies) {
+                dependencies.push(dependency);
+            }
+        }
+    };
+
+    // Separate dependencies into project-level and version-level
+    const projectDependencies: string[] = [];
+    const versionDependencies: string[] = [];
+
+    for (const dependency of dependencies) {
+        projectDependencies.push(dependency.projectId);
+
+        if (dependency.versionId) {
+            versionDependencies.push(dependency.versionId);
+        }
+    };
+
+    const dependencyProjects = await prisma.project.findMany({
+        where: {
+            id: {
+                in: projectDependencies
+            }
+        },
+    });
+
+    const dependencyVersions = await prisma.version.findMany({
+        where: {
+            id: {
+                in: versionDependencies
+            }
+        },
+    });
+
+    return ctx.json({
+        projects: dependencyProjects.map((project) => ({
+            ...project,
+            icon: projectIconUrl(project.slug, project.icon || ""),
+            type: inferProjectType(project.loaders)
+        })), versions: dependencyVersions
+    }, httpCode("ok"));
+};
