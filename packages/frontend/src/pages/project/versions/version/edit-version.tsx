@@ -34,7 +34,7 @@ const EditVersionPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const versionData = allProjectVersions?.filter((version) => {
-        if (version.slug === versionSlug) return version;
+        if (version.slug === versionSlug || version.id === versionSlug) return version;
     })[0];
 
     const versionAdditionalFiles = [];

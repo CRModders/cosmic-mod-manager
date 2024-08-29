@@ -86,7 +86,7 @@ const UploadVersionPage = () => {
             await fetchAllProjectVersions();
             navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.slug));
             return;
-        } catch (error) {
+        } finally {
             setIsLoading(false);
         }
     };

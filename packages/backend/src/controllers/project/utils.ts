@@ -1,7 +1,8 @@
 import type { FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
 import { createFilePathSafeString, deleteDataFromLocalStorage, deleteFile, getProjectVersionStoragePath, saveProjectVersionFile } from "@/services/storage";
-import type { File as DBFile } from "@prisma/client";
+import { createHashFromFile } from "@/utils/file";
+import type { File as DBFile, VersionFile } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { nanoid } from "nanoid";
@@ -30,15 +31,6 @@ export interface CreateVersionFileProps {
     isPrimary?: boolean;
 }
 
-export const createVersionFiles = async ({ files, versionId, projectId, storageService, isPrimary }: CreateVersionFileProps) => {
-    const promises = [];
-    for (const file of files) {
-        promises.push(createVersionFile(file, versionId, projectId, storageService, isPrimary === true));
-    }
-
-    return await Promise.all(promises);
-};
-
 export const createVersionFile = async (
     file: File,
     versionId: string,
@@ -46,31 +38,72 @@ export const createVersionFile = async (
     storageService: FILE_STORAGE_SERVICES,
     isPrimaryFile = false,
 ) => {
-    const fileType = getFileType(file.type);
-    if (!fileType) return null;
+    return await createVersionFiles({
+        versionId,
+        projectId,
+        files: [{
+            file: file,
+            isPrimary: isPrimaryFile,
+            storageService
+        }]
+    })
+};
 
-    const savedPath = await saveProjectVersionFile(projectId, versionId, file.name, storageService, file);
-    if (!savedPath?.path) return null;
+interface createVersionFilesProps {
+    versionId: string;
+    projectId: string;
+    files: {
+        file: File;
+        isPrimary: boolean;
+        storageService: FILE_STORAGE_SERVICES;
+    }[];
+}
 
-    const dbFile = await prisma.file.create({
-        data: {
-            id: nanoid(STRING_ID_LENGTH),
+export const createVersionFiles = async ({ versionId, projectId, files }: createVersionFilesProps) => {
+    if (!files.length) return [];
+
+    const filesToCreate: DBFile[] = [];
+    const versionFilesToCreate: VersionFile[] = [];
+
+    for (const { file, isPrimary, storageService } of files) {
+        const fileType = getFileType(file.type);
+        if (!fileType) continue;
+
+        const sha1_hash = await createHashFromFile(file, "sha1");
+        const sha512_hash = await createHashFromFile(file, "sha512");
+        const path = await saveProjectVersionFile(projectId, versionId, file.name, storageService, file);
+        if (!path?.path) continue;
+
+        const fileId = nanoid(STRING_ID_LENGTH);
+        filesToCreate.push({
+            id: fileId,
             name: createFilePathSafeString(file.name),
-            type: fileType,
             size: file.size,
+            type: fileType,
             storageService: storageService,
-            url: savedPath.path,
-        },
-    });
+            url: path.path,
+            sha1_hash: sha1_hash,
+            sha512_hash: sha512_hash
+        });
 
-    return await prisma.versionFile.create({
-        data: {
+        versionFilesToCreate.push({
             id: nanoid(STRING_ID_LENGTH),
             versionId: versionId,
-            isPrimary: isPrimaryFile,
-            fileId: dbFile.id,
-        },
-    });
+            fileId: fileId,
+            isPrimary: isPrimary
+        })
+    };
+
+    await prisma.$transaction([
+        prisma.file.createMany({
+            data: filesToCreate
+        }),
+        prisma.versionFile.createMany({
+            data: versionFilesToCreate
+        })
+    ]);
+
+    return versionFilesToCreate;
 };
 
 export const deleteVersionFiles = async (projectId: string, versionId: string, filesData: DBFile[]) => {
@@ -104,4 +137,62 @@ export const deleteVersionFiles = async (projectId: string, versionId: string, f
 export const deleteVersionStoreDirectory = async (projectId: string, versionId: string) => {
     const directoryPath = getProjectVersionStoragePath(projectId, versionId);
     return await deleteDataFromLocalStorage(directoryPath);
+}
+
+interface isAnyDuplicateFileProps {
+    projectId: string;
+    files: File[]
+};
+
+export const isAnyDuplicateFile = async ({ projectId, files }: isAnyDuplicateFileProps) => {
+    const sha1_hashes: string[] = [];
+    for (const file of files) {
+        const hash = await createHashFromFile(file, "sha1");
+        sha1_hashes.push(hash);
+    };
+
+    const dbFilesData = await prisma.file.findMany({
+        where: {
+            sha1_hash: {
+                in: sha1_hashes
+            }
+        }
+    });
+
+    if (dbFilesData.length === 0) return false;
+
+    // List of files which has matching hashes
+    const dbFileIds = new Set<string>();
+    const dbFilesMap = new Map<string, DBFile>();
+
+    for (const file of dbFilesData) {
+        dbFileIds.add(file.id);
+        dbFilesMap.set(file.id, file);
+    };
+
+    // Corresponding versionFile of those files
+    const versionFiles = await prisma.versionFile.findMany({
+        where: {
+            fileId: {
+                in: Array.from(dbFileIds)
+            }
+        },
+        include: {
+            version: true
+        }
+    });
+
+    if (!versionFiles?.length) return false;
+
+    const associatedProjectIds = new Set<string>();
+    for (const versionFile of versionFiles) {
+        associatedProjectIds.add(versionFile.version.projectId);
+    };
+
+    // Check if the file is associated with another project or is from the same project
+    for (const associatedProjectId of Array.from(associatedProjectIds)) {
+        if (associatedProjectId !== projectId) return true;
+    };
+
+    return false;
 }

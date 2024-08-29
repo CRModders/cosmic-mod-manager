@@ -4,7 +4,6 @@ import type {
     ProjectPermissions,
     ProjectPublishingStatus,
     ProjectSupport,
-    ProjectType,
     ProjectVisibility,
     UserSessionStates,
     VersionReleaseChannel
@@ -107,7 +106,8 @@ export interface VersionFile {
     url: string;
     size: number;
     type: string;
-    hash?: string;
+    sha1_hash: string | null;
+    sha512_hash: string | null;
 }
 
 export interface DBFileData {

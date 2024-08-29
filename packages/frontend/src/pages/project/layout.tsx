@@ -7,10 +7,9 @@ import Chip from "@/components/ui/chip";
 import { ButtonLink, VariantButtonLink } from "@/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
-import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatVersionsListString, getGroupedVersionsList } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, timeSince } from "@/lib/utils";
+import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive, timeSince } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { PopoverClose } from "@radix-ui/react-popover";
@@ -48,16 +47,17 @@ import { ProjectSupprotedEnvironments } from "./supported-env";
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { theme } = useTheme();
-    const { projectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
+    const { fetchingProjectData, projectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
-    if (projectData === undefined) {
-        return <FullWidthSpinner />;
-    }
+    if (!projectData) return null;
+    if (projectData === null && fetchingProjectData === false) return <NotFoundPage />;
 
-    if (projectData === null) {
-        return <NotFoundPage />;
-    }
+    const isVersionDetailsPage = isCurrLinkActive(getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"), location.pathname, false);
+    const projectEnvironments = ProjectSupprotedEnvironments({
+        clientSide: projectData.clientSide,
+        serverSide: projectData.serverSide,
+    });
 
     return (
         <>
@@ -113,10 +113,23 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                 })}
                             </div>
                         </div>
-                        <div>
-                            <span className="flex font-bold text-muted-foreground pb-1">Environments</span>
-                            <ProjectSupprotedEnvironments clientSide={projectData.clientSide} serverSide={projectData.serverSide} />
-                        </div>
+                        {
+                            projectEnvironments?.length ?
+                                <>
+                                    <div className="flex flex-wrap items-start justify-start gap-1">
+                                        <span className="block w-full font-bold text-muted-foreground">Environments</span>
+                                        {projectEnvironments.map((item, i) => {
+                                            return (
+                                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                <Chip key={i}>
+                                                    {item}
+                                                </Chip>
+                                            )
+                                        })}
+                                    </div>
+                                </>
+                                : null
+                        }
                     </Card>
 
                     {projectData?.issueTrackerUrl ||
@@ -190,7 +203,9 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                     href={version.primaryFile?.url}
                                                     className={cn(
                                                         "noClickRedirect flex-shrink-0",
-                                                        buttonVariants({ variant: "default", size: "icon" }),
+                                                        isVersionDetailsPage ?
+                                                            buttonVariants({ variant: "secondary", size: "icon" })
+                                                            : buttonVariants({ variant: "default", size: "icon" }),
                                                     )}
                                                 >
                                                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />

@@ -17,7 +17,7 @@ import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
 import { getFormattedTeamMember, requiredProjectMemberFields } from "./project";
-import { createVersionFile, createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, retrieveVersionFilesData } from "./utils";
+import { createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, isAnyDuplicateFile, retrieveVersionFilesData } from "./utils";
 
 export const requiredVersionFields = {
     id: true,
@@ -125,7 +125,23 @@ export const createNewVersion = async (
     if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType, inferProjectType([...project.loaders, ...formData.loaders]))) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });
-    }
+    };
+
+    // Check if duplicate files are not being uploaded
+    const isDuplicate = await isAnyDuplicateFile({
+        projectId: project.id,
+        files: [
+            formData.primaryFile,
+            ...(formData.additionalFiles || []).filter((file) => {
+                if (file instanceof File) return file;
+            })
+        ]
+    });
+
+    if (isDuplicate === true) {
+        return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
+    };
+
 
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
     const newUrlSlug =
@@ -166,6 +182,24 @@ export const createNewVersion = async (
     const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...formData.loaders]);
     const sortedUniqueGameVersions = aggregateVersions([...project.gameVersions, ...formData.gameVersions]);
 
+    // Save all the files
+    await createVersionFiles({
+        versionId: newVersion.id,
+        projectId: project.id,
+        files: [
+            ...(formData.additionalFiles || []).map((file) => ({
+                file: file,
+                isPrimary: false,
+                storageService: FILE_STORAGE_SERVICES.LOCAL
+            })),
+            {
+                file: formData.primaryFile,
+                isPrimary: true,
+                storageService: FILE_STORAGE_SERVICES.LOCAL
+            }
+        ]
+    });
+
     // Update project loaders list and supported game versions
     await prisma.project.update({
         where: {
@@ -177,18 +211,6 @@ export const createNewVersion = async (
             dateUpdated: new Date(),
         },
     });
-
-    // Save all the files
-    const savedPrimaryFile = createVersionFile(formData.primaryFile, newVersion.id, project.id, FILE_STORAGE_SERVICES.LOCAL, true);
-
-    const savedAdditionalFiles = createVersionFiles({
-        files: formData.additionalFiles || [],
-        versionId: newVersion.id,
-        projectId: project.id,
-        storageService: FILE_STORAGE_SERVICES.LOCAL,
-    });
-
-    await Promise.all([savedPrimaryFile, savedAdditionalFiles]);
 
     return ctx.json(
         {
@@ -304,13 +326,26 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData);
         };
 
+        // Check if duplicate files are not being uploaded
+        const isDuplicate = await isAnyDuplicateFile({
+            projectId: project.id,
+            files: newAdditionalFiles
+        });
+
+        if (isDuplicate === true) {
+            return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
+        };
+
         // Save the new files
         if (newAdditionalFiles.length) {
             await createVersionFiles({
-                files: newAdditionalFiles,
                 versionId: targetVersion.id,
                 projectId: project.id,
-                storageService: FILE_STORAGE_SERVICES.LOCAL,
+                files: newAdditionalFiles.map((file) => ({
+                    file: file,
+                    isPrimary: false,
+                    storageService: FILE_STORAGE_SERVICES.LOCAL
+                }))
             });
         }
     };
@@ -591,6 +626,8 @@ export const getAllProjectVersions = async (
                 size: fileData.size,
                 type: fileData.type,
                 url: versionFileUrl(project.slug, version.slug, fileData.name),
+                sha1_hash: fileData.sha1_hash,
+                sha512_hash: fileData.sha512_hash
             };
 
             files.push(formattedFile);
@@ -698,6 +735,8 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             size: fileData.size,
             type: fileData.type,
             url: versionFileUrl(project.slug, version.slug, fileData.name),
+            sha1_hash: fileData.sha1_hash,
+            sha512_hash: fileData.sha512_hash
         };
 
         files.push(formattedFile);
@@ -784,7 +823,8 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
             },
         },
     });
-    if (!project?.id || !project.versions?.[0]?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const targetVersion = project?.versions?.[0];
+    if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
     if (
@@ -795,24 +835,23 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
-    const version = project.versions[0];
     const filesData = await prisma.file.findMany({
         where: {
             id: {
-                in: version.files.map((file) => file.fileId)
+                in: targetVersion.files.map((file) => file.fileId)
             },
         },
     });
 
     // Delete all the files
-    await deleteVersionFiles(project.id, version.id, filesData);
+    await deleteVersionFiles(project.id, targetVersion.id, filesData);
 
     // Delete the version directory
-    await deleteVersionStoreDirectory(project.id, version.id);
+    await deleteVersionStoreDirectory(project.id, targetVersion.id);
 
     const deletedVersion = await prisma.version.delete({
         where: {
-            id: version.id,
+            id: targetVersion.id,
         },
     });
 

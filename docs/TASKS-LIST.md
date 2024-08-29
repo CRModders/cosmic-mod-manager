@@ -38,6 +38,7 @@
 - [x] Add edit version page \
   NOTE:- Create reusable components from the new version page and use them in both upload form and edit form
 - [x] Add option to add dependencies on a version
+- [x] Add file hashes to prevent duplicate file upload
 
 - [-] Add settings page
   - [x] General settings page
@@ -50,3 +51,4 @@
 
 - [-] Fix project deletion
 - [-] Fix user deletion
+

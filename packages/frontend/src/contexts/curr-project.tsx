@@ -1,4 +1,4 @@
-import { constructProjectPageUrl } from "@/lib/utils";
+import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
 import type { ProjectDetailsData, ProjectVersionData, ProjectsListData, TeamMember } from "@shared/types/api";
@@ -16,7 +16,7 @@ type ProjectContextType = {
     allProjectVersions: ProjectVersionData[] | undefined | null;
     fetchAllProjectVersions: () => Promise<void>;
     currUsersMembership: TeamMember | null;
-    projectDependencies: DependencyData
+    projectDependencies: DependencyData;
 };
 
 export const projectContext = createContext<ProjectContextType>({
@@ -34,15 +34,15 @@ export const projectContext = createContext<ProjectContextType>({
     currUsersMembership: null,
     projectDependencies: {
         projects: [],
-        versions: []
-    }
+        versions: [],
+    },
 });
 
 const getProjectData = async (slug: string) => {
     try {
         const response = await useFetch(`/api/project/${slug}`);
         if (!response.ok) return null;
-        return ((await response.json())?.project as ProjectDetailsData) || null;
+        return (await response.json())?.project as ProjectDetailsData | null;
     } catch (err) {
         console.error(err);
         return null;
@@ -52,7 +52,7 @@ const getProjectData = async (slug: string) => {
 const getAllProjectVersions = async (slug: string) => {
     try {
         const response = await useFetch(`/api/project/${slug}/version`);
-        return ((await response.json())?.data as ProjectVersionData[]) || null;
+        return (await response.json())?.data as ProjectVersionData[] | null;
     } catch (err) {
         console.error(err);
         return null;
@@ -62,17 +62,21 @@ const getAllProjectVersions = async (slug: string) => {
 const getProjectDependencies = async (slug: string) => {
     try {
         const response = await useFetch(`/api/project/${slug}/dependencies`);
-        return ((await response.json()) as {
+        return (await response.json()) as {
             projects: ProjectsListData[];
             versions: ProjectVersionData[];
-        }) || null;
+        } | null;
     } catch (err) {
         console.error(err);
         return null;
     }
-}
+};
 
-export const ProjectContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const ProjectContextProvider = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
     const { slug } = useParams();
     const [fetchingProjectData, setFetchingProjectData] = useState(true);
     const [currUsersMembership, setCurrUsersMembership] = useState<TeamMember | null>(null);
@@ -80,61 +84,61 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
     const { session } = useSession();
     const navigate = useNavigate();
 
-    const projectData = useQuery({
+    const {
+        data: projectData,
+        isFetching: isProjectDataFetching,
+        refetch: refetchProjectData
+    } = useQuery<ProjectDetailsData | null>({
         queryKey: [`${currProjectSlug}-project-data`],
         queryFn: () => getProjectData(currProjectSlug),
     });
 
     const [featuredProjectVersions, setFeaturedProjectVersions] = useState<ProjectVersionData[]>([]);
 
-    const allProjectVersions = useQuery({
+    const {
+        data: allProjectVersions,
+        isFetching: isAllProjectVersionsFetching,
+        refetch: refetchAllProjectVersions
+    } = useQuery<ProjectVersionData[] | null>({
         queryKey: [`${currProjectSlug}-project-all-versions`],
         queryFn: () => getAllProjectVersions(currProjectSlug),
     });
 
-    const projectDependencies = useQuery({
+    const {
+        data: projectDependencies,
+        isFetching: isProjectDependenciesFetching,
+        refetch: refetchProjectDependencies
+    } = useQuery<{ projects: ProjectsListData[]; versions: ProjectVersionData[] } | null>({
         queryKey: [`${currProjectSlug}-project-dependencies`],
         queryFn: () => getProjectDependencies(currProjectSlug),
-    })
+    });
 
     const fetchProjectData = async (slug?: string) => {
         if (slug && currProjectSlug !== slug) {
             setCurrProjectSlug(slug);
         } else {
-            await projectData.refetch();
+            await Promise.all([refetchProjectData(), fetchAllProjectVersions()]);
         }
     };
 
     const fetchAllProjectVersions = async () => {
-        await allProjectVersions.refetch();
-    };
-
-    const redirectToCorrectProjectUrl = () => {
-        const data = projectData.data || null;
-        if (data?.id) {
-            const constructedUrl = constructProjectPageUrl(data.type[0], data.slug);
-
-            if (window.location.href.replace(window.location.origin, "") !== constructedUrl) {
-                navigate(constructedUrl);
-            }
-        }
+        await refetchAllProjectVersions();
+        await refetchProjectDependencies();
     };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (slug !== currProjectSlug && slug !== projectData.data?.id) {
+        if (slug !== currProjectSlug && slug !== projectData?.id) {
             fetchProjectData(slug);
         }
-    }, [slug])
+    }, [slug]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        redirectToCorrectProjectUrl();
 
-        if (!projectData.data?.id) setCurrUsersMembership(null);
+        if (!projectData?.id) setCurrUsersMembership(null);
         else {
             let valueSet = false;
-            for (const member of projectData.data.members) {
+            for (const member of projectData.members) {
                 if (member.userId === session?.id) {
                     valueSet = true;
                     setCurrUsersMembership(member);
@@ -143,51 +147,62 @@ export const ProjectContextProvider = ({ children }: { children: React.ReactNode
             }
 
             if (!valueSet) {
-                for (const member of projectData.data.organisation?.members || []) {
+                for (const member of projectData.organisation?.members || []) {
                     if (member.userId === session?.id) {
                         setCurrUsersMembership(member);
                     }
                 }
             }
         }
-    }, [session, projectData.data]);
+    }, [session, projectData]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (currProjectSlug) projectData.refetch();
-    }, [currProjectSlug]);
-
-    // Update featuredProjectVersionsList
-    useEffect(() => {
-        if (allProjectVersions.data) {
-            const featuredVersions = allProjectVersions.data.filter((version) => version.featured === true);
+        if (allProjectVersions) {
+            const featuredVersions = allProjectVersions.filter(
+                (version) => version.featured === true
+            );
             setFeaturedProjectVersions(featuredVersions);
         } else {
             setFeaturedProjectVersions([]);
         }
-    }, [allProjectVersions.data]);
+    }, [allProjectVersions]);
 
     useEffect(() => {
-        if (projectData.isFetching || allProjectVersions.isFetching || projectDependencies.isFetching)
+        if (
+            isProjectDataFetching ||
+            isAllProjectVersionsFetching ||
+            isProjectDependenciesFetching
+        )
             setFetchingProjectData(true);
         else setFetchingProjectData(false);
-    }, [projectData.isFetching, allProjectVersions.isFetching, projectDependencies.isFetching]);
+    }, [
+        isProjectDataFetching,
+        isAllProjectVersionsFetching,
+        isProjectDependenciesFetching,
+    ]);
 
     return (
         <projectContext.Provider
             value={{
-                projectData: projectData.data,
-                fetchProjectData: fetchProjectData,
-                fetchingProjectData: fetchingProjectData,
+                projectData,
+                fetchProjectData,
+                fetchingProjectData,
                 alterProjectSlug: setCurrProjectSlug,
-                featuredProjectVersions: featuredProjectVersions,
-                allProjectVersions: allProjectVersions.data,
-                fetchAllProjectVersions: fetchAllProjectVersions,
-                currUsersMembership: currUsersMembership,
-                projectDependencies: projectDependencies.data || { projects: [], versions: [] }
+                featuredProjectVersions,
+                allProjectVersions,
+                fetchAllProjectVersions,
+                currUsersMembership,
+                projectDependencies: projectDependencies || {
+                    projects: [],
+                    versions: [],
+                },
             }}
         >
             {children}
+            {
+                slug !== projectData?.slug && slug !== projectData?.id ?
+                    <AbsolutePositionedSpinner /> : null
+            }
         </projectContext.Provider>
     );
 };

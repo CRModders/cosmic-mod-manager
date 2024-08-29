@@ -258,7 +258,6 @@ const GeneralSettingsPage = () => {
                                         <SelectContent>
                                             <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
                                             <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.UNKNOWN}>{Capitalize(ProjectSupport.UNKNOWN)}</SelectItem>
                                             <SelectItem value={ProjectSupport.UNSUPPORTED}>
                                                 {Capitalize(ProjectSupport.UNSUPPORTED)}
                                             </SelectItem>
@@ -290,7 +289,6 @@ const GeneralSettingsPage = () => {
                                         <SelectContent>
                                             <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
                                             <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.UNKNOWN}>{Capitalize(ProjectSupport.UNKNOWN)}</SelectItem>
                                             <SelectItem value={ProjectSupport.UNSUPPORTED}>
                                                 {Capitalize(ProjectSupport.UNSUPPORTED)}
                                             </SelectItem>

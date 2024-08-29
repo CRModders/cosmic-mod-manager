@@ -1,20 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import useFetch from "@/src/hooks/fetch";
-import type { ProjectsListData } from "@shared/types/api";
-import { useQuery } from "@tanstack/react-query";
-import CreateNewProjectDialog from "./new-project";
-
 import { fallbackProjectIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@/lib/utils";
+import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import type { ProjectsListData } from "@shared/types/api";
+import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
+import { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
+
+const CreateNewProjectDialog = lazy(() => import("./new-project"));
+
 
 const getAllUserProjects = async () => {
     try {
@@ -45,7 +47,9 @@ const ProjectsPage = () => {
             <Card className="w-full overflow-hidden">
                 <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">
                     <CardTitle>Projects</CardTitle>
-                    <CreateNewProjectDialog refetchProjectsList={refetchProjectsList} />
+                    <Suspense>
+                        <CreateNewProjectDialog refetchProjectsList={refetchProjectsList} />
+                    </Suspense>
                 </CardHeader>
                 <CardContent className="p-0">
                     {projectsList.data?.length === 0 ? (

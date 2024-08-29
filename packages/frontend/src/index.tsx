@@ -219,7 +219,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "/",
+                path: "",
                 element: <RootLayout />,
                 children: [
                     {
@@ -331,16 +331,6 @@ const router = createBrowserRouter([
                         ],
                     },
                     ...projectPageRoutes(),
-                    {
-                        path: "",
-                        element: (
-                            <RedirectIfNotLoggedIn redirectTo="/login">
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <DashboardLayout />
-                                </Suspense>
-                            </RedirectIfNotLoggedIn>
-                        ),
-                    },
                     {
                         path: "*",
                         element: (

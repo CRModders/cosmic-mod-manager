@@ -22,8 +22,9 @@ import NotFoundPage from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermissions } from "@shared/types";
+import type { ProjectVersionData } from "@shared/types/api";
 import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
-import { Suspense, lazy, useContext } from "react";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../../layout";
@@ -33,12 +34,28 @@ const DeleteVersionDialog = lazy(() => import("./delete-version"));
 const VersionPage = ({ projectType }: { projectType: string }) => {
     const { slug: projectSlug, versionSlug } = useParams();
     const navigate = useNavigate();
-    const { projectData, currUsersMembership, allProjectVersions, projectDependencies } = useContext(projectContext);
-    const versionData = allProjectVersions?.filter((version) => {
-        if (version.slug === versionSlug) return version;
-    })[0];
+    const { projectData, currUsersMembership, allProjectVersions, projectDependencies, fetchingProjectData } = useContext(projectContext);
 
-    if (allProjectVersions?.length && !versionData?.title) {
+    const getVersionData = () => {
+        for (const version of (allProjectVersions || [])) {
+            if (version.slug === versionSlug || version.id === versionSlug) {
+                return version
+            }
+        };
+
+        return null;
+    };
+    const [versionData, setVersionData] = useState<ProjectVersionData | null>(getVersionData());
+
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (!allProjectVersions?.length) return;
+        setVersionData(getVersionData());
+
+    }, [versionSlug, allProjectVersions])
+
+    if (fetchingProjectData === false && !versionData?.title) {
         return (
             <NotFoundPage
                 className="no_full_page py-16"
@@ -308,9 +325,9 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink }: FileDe
             </div>
 
             <VariantButtonLink
-                variant={isPrimary ? "default" : "secondary"}
+                variant={isPrimary ? "secondary" : "ghost"}
                 url={downloadLink}
-                className={!isPrimary ? "bg-card-background hover:bg-card-background/70" : ""}
+                className={cn("no_neumorphic_shadow hover:bg-card-background/75 hover:text-foreground", isPrimary && "bg-card-background hover:bg-card-background/80")}
             >
                 <DownloadIcon className="w-btn-icon h-btn-icon" />
                 Download

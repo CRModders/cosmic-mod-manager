@@ -1,45 +1,46 @@
+import { cn } from "@/lib/utils";
 import { ProjectSupport } from "@shared/types";
 import { GlobeIcon, HardDriveIcon, MonitorIcon } from "lucide-react";
 
-const ClientSide = () => {
+const ClientSide = ({ className }: { className?: string }) => {
     return (
-        <span className="flex items-center justify-start gap-x-1 font-semibold text-muted-foreground">
+        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <MonitorIcon className="w-btn-icon h-btn-icon" />
             Client side
         </span>
     );
 };
 
-const ServerSide = () => {
+const ServerSide = ({ className }: { className?: string }) => {
     return (
-        <span className="flex items-center justify-start gap-x-1 font-semibold text-muted-foreground">
+        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <HardDriveIcon className="w-btn-icon h-btn-icon" />
             Server side
         </span>
     );
 };
 
-const ClientOrServerSide = () => {
+const ClientOrServerSide = ({ className }: { className?: string }) => {
     return (
-        <span className="flex items-center justify-start gap-x-1 font-semibold text-muted-foreground">
+        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <GlobeIcon className="w-btn-icon h-btn-icon" />
             Client or server
         </span>
     );
 };
 
-const ClientAndServerSide = () => {
+const ClientAndServerSide = ({ className }: { className?: string }) => {
     return (
-        <span className="flex items-center justify-start gap-x-1 font-semibold text-muted-foreground">
+        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <GlobeIcon className="w-btn-icon h-btn-icon" />
             Client and server
         </span>
     );
 };
 
-const Unsupported = () => {
+const Unsupported = ({ className }: { className?: string }) => {
     return (
-        <span className="flex items-center justify-start gap-x-1 font-semibold text-muted-foreground">
+        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <GlobeIcon className="w-btn-icon h-btn-icon" />
             Unsupported
         </span>
@@ -47,44 +48,42 @@ const Unsupported = () => {
 };
 
 export const ProjectSupprotedEnvironments = ({ clientSide, serverSide }: { clientSide: ProjectSupport; serverSide: ProjectSupport }) => {
+    const environments = [];
+
     if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.REQUIRED) {
-        return <ClientAndServerSide />;
+        environments.push(<ClientAndServerSide key="Client-and-server" />)
+    }
+    else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[
+            <ClientSide key="Client-size" />,
+            <ServerSide key="Server-size" />,
+            <ClientAndServerSide key="Client-and-server" />
+        ])
+    }
+    else if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[
+            <ClientSide key="Client-size" />,
+            <ClientAndServerSide key="Client-and-server" />
+        ]);
+    }
+    else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.REQUIRED) {
+        environments.push(...[
+            <ServerSide key="Server-size" />,
+            <ClientAndServerSide key="Client-and-server" />
+        ]);
+    }
+    else if (clientSide === ProjectSupport.REQUIRED || clientSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[
+            <ClientSide key="Client-size" />,
+        ]);
+    }
+    else if (serverSide === ProjectSupport.REQUIRED || serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[
+            <ServerSide key="Server-size" />,
+        ]);
     }
 
-    if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) {
-        return (
-            <ClientOrServerSide />
-        );
-    }
-
-    if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.OPTIONAL) {
-        return (
-            <>
-                <ClientSide />
-                <span className="flex gap-1 items-center">
-                    <ServerSide />
-                    <em className="text-extra-muted-foreground text-sm italic leading-none">(optional)</em>
-                </span>
-            </>
-        )
-    }
-
-    if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.REQUIRED) {
-        return (
-            <>
-                <ServerSide />
-                <span className="flex gap-1 items-center">
-                    <ClientSide />
-                    <em className="text-extra-muted-foreground text-sm italic leading-none">(optional)</em>
-                </span>
-            </>
-        )
-    }
-
-    if (serverSide === ProjectSupport.REQUIRED || serverSide === ProjectSupport.OPTIONAL) return <ServerSide />;
-    if (clientSide === ProjectSupport.REQUIRED || clientSide === ProjectSupport.OPTIONAL) return <ClientSide />;
-
-    return <Unsupported />;
+    return environments;
 };
 
 const ProjectSupportedEnv = ({ clientSide, serverSide }: { clientSide: ProjectSupport; serverSide: ProjectSupport }) => {

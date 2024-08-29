@@ -1,6 +1,15 @@
 import { MarkdownRenderBox } from "@/components/layout/md-editor/render-md";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { FormErrorMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +21,7 @@ import { isValidUrl } from "@shared/lib/utils";
 import {
     BoldIcon,
     CodeIcon,
+    DivideCircle,
     Heading1Icon,
     Heading2Icon,
     Heading3Icon,
@@ -436,7 +446,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                             className={cn(
                                 "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground dark:text-foreground focus-within:!bg-background-shallow/10",
                                 wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
-                                textAreaClassName
+                                textAreaClassName,
                             )}
                             ref={editorTextarea}
                             value={editorValue}
