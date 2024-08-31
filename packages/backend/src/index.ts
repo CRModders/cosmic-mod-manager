@@ -4,6 +4,7 @@ import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
+import { watchFileDownloadsQueue } from "./services/queues/downloads-increment";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 
@@ -27,3 +28,7 @@ Bun.serve({
         return app.fetch(req, { ip: server.requestIP(req) });
     },
 });
+
+(async () => {
+    await watchFileDownloadsQueue();
+})();

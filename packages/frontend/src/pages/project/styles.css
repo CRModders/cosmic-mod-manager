@@ -1,11 +1,11 @@
 .project-page-layout {
     display: grid;
-    grid-template-rows: auto auto 1fr;
-    grid-template-columns: 19rem 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
     grid-template-areas:
-        "header header"
-        "sidebar content"
-        "dummy content";
+        "header"
+        "content"
+        "sidebar";
 }
 
 .project-page-header {
@@ -13,13 +13,13 @@
     grid-area: header;
 }
 
-@media (max-width: 64rem) {
+@media (min-width: 64rem) {
     .project-page-layout {
-        grid-template-rows: auto 1fr auto;
-        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+        grid-template-columns: 19rem 1fr;
         grid-template-areas:
-            "header"
-            "content"
-            "sidebar";
+            "header header"
+            "sidebar content"
+            "dummy content";
     }
 }

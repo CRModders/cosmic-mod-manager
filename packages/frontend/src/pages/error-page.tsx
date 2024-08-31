@@ -19,12 +19,7 @@ export default function ErrorView() {
                     Seems like something broke, while we try to resolve the issue try refreshing the page.
                 </p>
 
-                <Button
-                    className="text-foreground"
-                    variant={"link"}
-                    aria-label="Refresh the page"
-                    onClick={() => window.location.reload()}
-                >
+                <Button className="text-foreground" variant={"link"} aria-label="Refresh the page" onClick={() => window.location.reload()}>
                     <span className="text-lg">Refresh</span>
                 </Button>
             </div>

@@ -1,5 +1,5 @@
-import LoaderIcons from "@/components/loader-icons";
 import PaginatedNavigation from "@/components/pagination-nav";
+import loaderIcons from "@/components/tag-icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Chip from "@/components/ui/chip";
@@ -46,7 +46,6 @@ const ProjectVersionsPage = () => {
             <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
 
             <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
-
         </>
     );
 };
@@ -235,7 +234,10 @@ const ProjectVersionsListTable = ({
 const VersionName = ({ title, number, url }: { title: string; number: string; url: string }) => {
     return (
         <div className="flex flex-col items-start justify-center gap-1">
-            <Link to={url} className="noClickRedirect leading-none font-bold text-foreground whitespace-pre-wrap max-w-[20ch] lg:max-w-[32ch] overflow-hidden">
+            <Link
+                to={url}
+                className="noClickRedirect leading-none font-bold text-foreground whitespace-pre-wrap max-w-[20ch] lg:max-w-[32ch] overflow-hidden"
+            >
                 {number}
             </Link>
             <span className="leading-none font-medium text-muted-foreground text-tiny">{title}</span>
@@ -265,7 +267,7 @@ const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
                 if (!loaderData) return null;
                 const accentForeground = loaderData?.metadata?.accent?.foreground;
                 // @ts-ignore
-                const loaderIcon: ReactNode = LoaderIcons[loaderData.icon];
+                const loaderIcon: ReactNode = loaderIcons[loaderData.name];
 
                 return (
                     <Chip

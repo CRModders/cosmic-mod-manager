@@ -22,13 +22,13 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
         profileData.userName.toLowerCase() === userSession.userName.toLowerCase()
             ? null
             : !!(
-                await prisma.user.findUnique({
-                    where: {
-                        lowerCaseUserName: profileData.userName.toLowerCase(),
-                        NOT: [{ id: userSession.id }],
-                    },
-                })
-            )?.id;
+                  await prisma.user.findUnique({
+                      where: {
+                          lowerCaseUserName: profileData.userName.toLowerCase(),
+                          NOT: [{ id: userSession.id }],
+                      },
+                  })
+              )?.id;
 
     if (existingUserWithSameUserName) return ctx.json({ success: false, message: "Username already taken" }, httpCode("bad_request"));
 

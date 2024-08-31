@@ -1,5 +1,15 @@
 import { Button, CancelButton } from "@/components/ui/button";
-import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -61,7 +71,6 @@ const DeleteAccountDialog = () => {
                         </Button>
                     </DialogFooter>
                 </DialogBody>
-
             </DialogContent>
         </Dialog>
     );

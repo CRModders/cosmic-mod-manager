@@ -19,11 +19,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const DeleteVersionDialog = ({
-    projectSlug,
-    versionSlug,
-    featured,
-}: { projectSlug: string; versionSlug: string; featured: boolean }) => {
+const DeleteVersionDialog = ({ projectSlug, versionSlug, featured }: { projectSlug: string; versionSlug: string; featured: boolean }) => {
     const { projectData, fetchAllProjectVersions } = useContext(projectContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
@@ -66,9 +62,7 @@ const DeleteVersionDialog = ({
                 </DialogHeader>
 
                 <DialogBody className="flex flex-col items-start justify-start gap-4">
-                    <span className="text-muted-foreground">
-                        This will remove this version forever (like really forever).
-                    </span>
+                    <span className="text-muted-foreground">This will remove this version forever (like really forever).</span>
 
                     <DialogFooter>
                         <DialogClose asChild disabled={isLoading}>
@@ -80,7 +74,6 @@ const DeleteVersionDialog = ({
                             Delete
                         </Button>
                     </DialogFooter>
-
                 </DialogBody>
             </DialogContent>
         </Dialog>

@@ -37,23 +37,21 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
     const { projectData, currUsersMembership, allProjectVersions, projectDependencies, fetchingProjectData } = useContext(projectContext);
 
     const getVersionData = () => {
-        for (const version of (allProjectVersions || [])) {
+        for (const version of allProjectVersions || []) {
             if (version.slug === versionSlug || version.id === versionSlug) {
-                return version
+                return version;
             }
-        };
+        }
 
         return null;
     };
     const [versionData, setVersionData] = useState<ProjectVersionData | null>(getVersionData());
 
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (!allProjectVersions?.length) return;
         setVersionData(getVersionData());
-
-    }, [versionSlug, allProjectVersions])
+    }, [versionSlug, allProjectVersions]);
 
     if (fetchingProjectData === false && !versionData?.title) {
         return (
@@ -81,10 +79,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                 <Breadcrumb>
                     <BreadcrumbList className="flex items-center">
                         <BreadcrumbItem>
-                            <BreadcrumbLink
-                                href={`${getProjectPagePathname(projectType, projectSlug)}/versions`}
-                                className="text-base"
-                            >
+                            <BreadcrumbLink href={`${getProjectPagePathname(projectType, projectSlug)}/versions`} className="text-base">
                                 Versions
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -99,14 +94,12 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
 
                 <div className="w-full flex flex-wrap items-center justify-start gap-x-8">
                     <h1 className="text-2xl font-[700] text-foreground">{versionData.title}</h1>
-                    {
-                        versionData.featured ? (
-                            <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
-                                <StarIcon className="w-btn-icon h-btn-icon" />
-                                Featured
-                            </span>
-                        ) : null
-                    }
+                    {versionData.featured ? (
+                        <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
+                            <StarIcon className="w-btn-icon h-btn-icon" />
+                            Featured
+                        </span>
+                    ) : null}
                 </div>
 
                 <div className="flex flex-wrap gap-x-2 gap-y-1.5">
@@ -144,71 +137,73 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
 
             <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                 <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
-
-
                     {versionData.changelog?.length ? (
                         <ContentCardTemplate title="Changelog">
                             <MarkdownRenderBox text={versionData.changelog} />
                         </ContentCardTemplate>
                     ) : null}
 
-                    {
-                        versionData.dependencies.length ?
-                            <ContentCardTemplate title="Dependencies" className="gap-2">
-                                {
-                                    versionData.dependencies.map((dependency) => {
-                                        const dependencyProject = projectDependencies.projects.find((project) => project.id === dependency.projectId);
-                                        const dependencyVersion = projectDependencies.versions.find((version) => version.id === dependency.versionId);
+                    {versionData.dependencies.length ? (
+                        <ContentCardTemplate title="Dependencies" className="gap-2">
+                            {versionData.dependencies.map((dependency) => {
+                                const dependencyProject = projectDependencies.projects.find(
+                                    (project) => project.id === dependency.projectId,
+                                );
+                                const dependencyVersion = projectDependencies.versions.find(
+                                    (version) => version.id === dependency.versionId,
+                                );
 
-                                        if (!dependencyProject?.id) return null;
-                                        const dependencyProjectPageUrl = getProjectPagePathname(dependencyProject.type[0], dependencyProject.slug);
-                                        const dependencyVersionPageUrl = dependencyVersion?.id ? getProjectVersionPagePathname(dependencyProject.type[0], dependencyProject.slug, dependencyVersion.slug) : null;
+                                if (!dependencyProject?.id) return null;
+                                const dependencyProjectPageUrl = getProjectPagePathname(dependencyProject.type[0], dependencyProject.slug);
+                                const dependencyVersionPageUrl = dependencyVersion?.id
+                                    ? getProjectVersionPagePathname(
+                                          dependencyProject.type[0],
+                                          dependencyProject.slug,
+                                          dependencyVersion.slug,
+                                      )
+                                    : null;
 
-                                        const redirectUrl = dependencyVersionPageUrl || dependencyProjectPageUrl;
+                                const redirectUrl = dependencyVersionPageUrl || dependencyProjectPageUrl;
 
-                                        return (
-                                            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                                            <div
-                                                key={`${dependencyProject.id}-${dependencyVersion?.id}`}
-                                                className="bg_hover_stagger w-full flex items-center justify-start gap-3 text-muted-foreground hover:bg-background/75 cursor-pointer p-2 rounded-lg "
-                                                onClick={(e) => {
-                                                    //@ts-expect-error
-                                                    if (!e.target.closest(".noClickRedirect")) {
-                                                        navigate(redirectUrl);
-                                                    }
-                                                }}
-                                            >
-                                                <ImgWrapper
-                                                    src={dependencyProject.icon || ""}
-                                                    alt={dependencyProject.name}
-                                                    className="h-12"
-                                                    fallback={fallbackProjectIcon}
-                                                />
-                                                <div className="flex flex-col items-start justify-center">
-                                                    {
-                                                        <>
-                                                            <Link
-                                                                to={redirectUrl}
-                                                                className="noClickRedirect font-bold"
-                                                            >
-                                                                {dependencyProject.name}
-                                                            </Link>
-                                                            {
-                                                                dependencyVersion?.id ?
-                                                                    <span>Version {dependencyVersion.versionNumber} is {dependency.dependencyType}</span>
-                                                                    :
-                                                                    <span>{CapitalizeAndFormatString(dependency.dependencyType)}</span>
-                                                            }
-                                                        </>
-                                                    }
-                                                </div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </ContentCardTemplate>
-                            : null
-                    }
+                                return (
+                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+                                    <div
+                                        key={`${dependencyProject.id}-${dependencyVersion?.id}`}
+                                        className="bg_hover_stagger w-full flex items-center justify-start gap-3 text-muted-foreground hover:bg-background/75 cursor-pointer p-2 rounded-lg "
+                                        onClick={(e) => {
+                                            //@ts-expect-error
+                                            if (!e.target.closest(".noClickRedirect")) {
+                                                navigate(redirectUrl);
+                                            }
+                                        }}
+                                    >
+                                        <ImgWrapper
+                                            src={dependencyProject.icon || ""}
+                                            alt={dependencyProject.name}
+                                            className="h-12"
+                                            fallback={fallbackProjectIcon}
+                                        />
+                                        <div className="flex flex-col items-start justify-center">
+                                            {
+                                                <>
+                                                    <Link to={redirectUrl} className="noClickRedirect font-bold">
+                                                        {dependencyProject.name}
+                                                    </Link>
+                                                    {dependencyVersion?.id ? (
+                                                        <span>
+                                                            Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
+                                                        </span>
+                                                    ) : (
+                                                        <span>{CapitalizeAndFormatString(dependency.dependencyType)}</span>
+                                                    )}
+                                                </>
+                                            }
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </ContentCardTemplate>
+                    ) : null}
 
                     <ContentCardTemplate title="Files" className="gap-2">
                         {versionData.primaryFile?.id ? (
@@ -222,17 +217,17 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
 
                         {versionData.files?.length
                             ? versionData.files.map((file) => {
-                                if (file.isPrimary) return null;
-                                return (
-                                    <FileDetailsItem
-                                        key={file.id}
-                                        fileName={file.name}
-                                        fileSize={file.size}
-                                        isPrimary={false}
-                                        downloadLink={projectFileUrl(file.url)}
-                                    />
-                                );
-                            })
+                                  if (file.isPrimary) return null;
+                                  return (
+                                      <FileDetailsItem
+                                          key={file.id}
+                                          fileName={file.name}
+                                          fileSize={file.size}
+                                          isPrimary={false}
+                                          downloadLink={projectFileUrl(file.url)}
+                                      />
+                                  );
+                              })
                             : null}
                     </ContentCardTemplate>
                 </div>
@@ -327,7 +322,10 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink }: FileDe
             <VariantButtonLink
                 variant={isPrimary ? "secondary" : "ghost"}
                 url={downloadLink}
-                className={cn("no_neumorphic_shadow hover:bg-card-background/75 hover:text-foreground", isPrimary && "bg-card-background hover:bg-card-background/80")}
+                className={cn(
+                    "no_neumorphic_shadow hover:bg-transparent hover:text-foreground",
+                    isPrimary && "bg-card-background hover:bg-card-background",
+                )}
             >
                 <DownloadIcon className="w-btn-icon h-btn-icon" />
                 Download

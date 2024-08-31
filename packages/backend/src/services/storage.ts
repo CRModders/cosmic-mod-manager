@@ -89,7 +89,12 @@ export const saveProjectVersionFile = async (
     storageService: FILE_STORAGE_SERVICES,
     file: File,
 ) => {
-    return await handleFileOperation("save", getProjectVersionStoragePath(projectId, versionId, `/${createFilePathSafeString(fileName)}`), storageService, file);
+    return await handleFileOperation(
+        "save",
+        getProjectVersionStoragePath(projectId, versionId, `/${createFilePathSafeString(fileName)}`),
+        storageService,
+        file,
+    );
 };
 
 export const deleteFile = async (url: string, storageService: FILE_STORAGE_SERVICES) => {

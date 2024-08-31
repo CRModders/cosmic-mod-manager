@@ -85,6 +85,8 @@ export const getFileType = (strType: string) => {
             return FileType.JPEG;
         case "image/jpg":
             return FileType.JPEG;
+        case "image/webp":
+            return FileType.WEBP;
         case "image/png":
             return FileType.PNG;
         case "application/java-archive":
@@ -101,6 +103,6 @@ export const getLoaderFromString = (loaderName: string) => {
         if (LOADER.name === loaderName.toLowerCase()) {
             return LOADER;
         }
-    };
+    }
     return null;
-}
+};

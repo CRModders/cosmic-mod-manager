@@ -91,7 +91,7 @@ module.exports = {
             padding: {
                 "card-surround": "1.25rem",
                 "table-side-pad-sm": "1rem",
-                "table-side-pad": "2rem"
+                "table-side-pad": "2rem",
             },
             transitionDuration: {
                 DEFAULT: "200ms",

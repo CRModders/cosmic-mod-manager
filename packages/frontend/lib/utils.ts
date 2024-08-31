@@ -20,9 +20,9 @@ export const isCurrLinkActive = (url: string, pathname?: string, exactEnds = tru
     const origin = window.location.origin;
 
     if (exactEnds === true) {
-        return `${origin}${(pathname || window.location.pathname)}`.endsWith(`${origin}${url}`);
+        return `${origin}${pathname || window.location.pathname}`.endsWith(`${origin}${url}`);
     }
-    return `${origin}${(pathname || window.location.pathname)}`.includes(`${origin}${url}`);
+    return `${origin}${pathname || window.location.pathname}`.includes(`${origin}${url}`);
 };
 
 export const monthNames = [
@@ -169,4 +169,4 @@ export const isLoaderVisibleInTagsList = (loaderName: string) => {
     }
 
     return true;
-}
+};

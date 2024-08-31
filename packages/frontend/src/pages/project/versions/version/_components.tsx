@@ -77,7 +77,7 @@ interface UploadVersionPageTopCardProps {
     featuredBtn: React.ReactNode;
     submitBtnLabel?: string;
     submitBtnIcon: React.ReactNode;
-    onSubmitBtnClick: () => Promise<void>
+    onSubmitBtnClick: () => Promise<void>;
 }
 export const UploadVersionPageTopCard = ({
     versionPageUrl,
@@ -88,7 +88,7 @@ export const UploadVersionPageTopCard = ({
     children,
     submitBtnLabel,
     submitBtnIcon,
-    onSubmitBtnClick
+    onSubmitBtnClick,
 }: UploadVersionPageTopCardProps) => {
     return (
         <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-panel-cards">
@@ -213,7 +213,6 @@ interface AddDependenciesProps {
     setDependencies: (value: z.infer<typeof VersionDependencies>) => void;
     currProjectId: string;
     dependenciesData: DependencyData | null;
-
 }
 export const AddDependencies = ({ dependencies, setDependencies, currProjectId, dependenciesData }: AddDependenciesProps) => {
     const [isfetchingData, setIsFetchingData] = useState(false);
@@ -251,7 +250,7 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
         if (!res.ok || !data?.project) {
             toast.error(data?.message || "Failed to fetch project");
             return null;
-        };
+        }
 
         return data.project;
     };
@@ -263,7 +262,7 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
         if (!res.ok || !data?.data) {
             toast.error(data?.message || "Failed to fetch version");
             return null;
-        };
+        }
 
         return data.data;
     };
@@ -332,7 +331,7 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
                         versionNumber: version.versionNumber,
                         slug: version.slug,
                     },
-                ]
+                ],
             }));
             setProjectSlug("");
             setVersionSlug("");
@@ -346,29 +345,26 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
         if (dependsOn === DependsOn.PROJECT) {
             await addProjectDependency();
         } else {
-            await addVersionDependency()
+            await addVersionDependency();
         }
     };
 
     return (
         <div className="w-full flex flex-col gap-3 items-start justify-center">
-            {dependencies?.length ?
+            {dependencies?.length ? (
                 <div className="w-full flex flex-col items-start justify-start gap-4 mb-2">
-                    {
-                        dependencies?.map((dependency) => (
-                            <DependencyItem
-                                key={dependency.versionId || dependency.projectId}
-                                dependencyData={dependencyData}
-                                projectId={dependency.projectId}
-                                versionId={dependency.versionId || null}
-                                dependencyType={dependency.dependencyType}
-                                removeDependency={removeDependency}
-                            />
-                        ))
-                    }
+                    {dependencies?.map((dependency) => (
+                        <DependencyItem
+                            key={dependency.versionId || dependency.projectId}
+                            dependencyData={dependencyData}
+                            projectId={dependency.projectId}
+                            versionId={dependency.versionId || null}
+                            dependencyType={dependency.dependencyType}
+                            removeDependency={removeDependency}
+                        />
+                    ))}
                 </div>
-                : null
-            }
+            ) : null}
 
             <div className="w-full flex flex-col gap-1">
                 <span className="font-semibold text-muted-foreground">Add dependency</span>
@@ -387,20 +383,15 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
                         </SelectContent>
                     </Select>
 
-                    <Input
-                        placeholder={"Enter the project ID/slug"}
-                        value={projectSlug}
-                        onChange={(e) => setProjectSlug(e.target.value)}
-                    />
+                    <Input placeholder={"Enter the project ID/slug"} value={projectSlug} onChange={(e) => setProjectSlug(e.target.value)} />
 
-                    {
-                        dependsOn === DependsOn.VERSION ?
-                            <Input
-                                placeholder={"Enter the version ID/slug"}
-                                value={versionSlug}
-                                onChange={(e) => setVersionSlug(e.target.value)}
-                            /> : null
-                    }
+                    {dependsOn === DependsOn.VERSION ? (
+                        <Input
+                            placeholder={"Enter the version ID/slug"}
+                            value={versionSlug}
+                            onChange={(e) => setVersionSlug(e.target.value)}
+                        />
+                    ) : null}
 
                     <Select
                         defaultValue={DependencyType.REQUIRED}
@@ -447,16 +438,14 @@ const DependencyItem = ({ dependencyData, versionId, projectId, dependencyType, 
     return (
         <div className="w-full flex items-center justify-between gap-x-4 gap-y-1 text-muted-foreground">
             <div className="flex items-center justify-start gap-2">
-                <ImgWrapper
-                    src={dependencyProject.icon || ""}
-                    alt={dependencyProject.name}
-                    className="h-12 rounded"
-                />
+                <ImgWrapper src={dependencyProject.icon || ""} alt={dependencyProject.name} className="h-12 rounded" />
                 <div className="flex flex-col items-start justify-start">
                     <span className="font-bold text-foreground">{dependencyProject.name}</span>
                     <span>
                         {dependencyVersion ? (
-                            <>Version {dependencyVersion.versionNumber} is {dependencyType}</>
+                            <>
+                                Version {dependencyVersion.versionNumber} is {dependencyType}
+                            </>
                         ) : (
                             CapitalizeAndFormatString(dependencyType)
                         )}
@@ -469,8 +458,8 @@ const DependencyItem = ({ dependencyData, versionId, projectId, dependencyType, 
                 Remove
             </Button>
         </div>
-    )
-}
+    );
+};
 
 export const SelectPrimaryFileInput = ({
     children,

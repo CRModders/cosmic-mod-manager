@@ -31,7 +31,12 @@ export const ImgWrapper = ({
 }: { src: string; alt: string; className?: string; fallback?: React.ReactNode }) => {
     if (!src) {
         return (
-            <div className={cn("flex items-center justify-center h-24 aspect-square rounded-lg bg-shallow-background/50 border border-shallow-background", className)}>
+            <div
+                className={cn(
+                    "flex items-center justify-center h-24 aspect-square rounded-lg bg-shallow-background/50 border border-shallow-background",
+                    className,
+                )}
+            >
                 {fallback}
             </div>
         );

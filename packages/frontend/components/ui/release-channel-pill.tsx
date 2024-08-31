@@ -16,10 +16,10 @@ const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props
                 releaseChannel === VersionReleaseChannel.RELEASE
                     ? "text-blue-500 dark:text-blue-400"
                     : releaseChannel === VersionReleaseChannel.BETA
-                        ? "text-orange-600 dark:text-orange-400"
-                        : releaseChannel === VersionReleaseChannel.ALPHA
-                            ? "text-danger-foreground"
-                            : "",
+                      ? "text-orange-600 dark:text-orange-400"
+                      : releaseChannel === VersionReleaseChannel.ALPHA
+                        ? "text-danger-foreground"
+                        : "",
                 className,
             )}
         >
@@ -33,20 +33,22 @@ const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props
 
 export default ReleaseChannelChip;
 
-
 export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
     return (
-        <div className={cn("rounded-full h-10 aspect-square shrink-0 flex items-center justify-center",
-            releaseChannel === VersionReleaseChannel.RELEASE
-                ? "text-blue-500 bg-blue-500/15 dark:text-blue-400 dark:bg-blue-400/15"
-                : releaseChannel === VersionReleaseChannel.BETA
-                    ? "text-orange-600 bg-orange-600/15 dark:text-orange-400 dark:bg-orange-400/15"
-                    : releaseChannel === VersionReleaseChannel.ALPHA
+        <div
+            className={cn(
+                "rounded-full h-10 aspect-square shrink-0 flex items-center justify-center",
+                releaseChannel === VersionReleaseChannel.RELEASE
+                    ? "text-blue-500 bg-blue-500/15 dark:text-blue-400 dark:bg-blue-400/15"
+                    : releaseChannel === VersionReleaseChannel.BETA
+                      ? "text-orange-600 bg-orange-600/15 dark:text-orange-400 dark:bg-orange-400/15"
+                      : releaseChannel === VersionReleaseChannel.ALPHA
                         ? "text-danger-foreground bg-danger-foreground/15"
                         : "",
-            className,
-        )}>
+                className,
+            )}
+        >
             <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
         </div>
-    )
-}
+    );
+};

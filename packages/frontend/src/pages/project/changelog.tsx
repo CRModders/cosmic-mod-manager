@@ -86,7 +86,6 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
             </Card>
 
             {Pagination}
-
         </>
     );
 };
@@ -100,10 +99,10 @@ const ChangelogBar = ({ releaseChannel }: { releaseChannel: VersionReleaseChanne
                     releaseChannel === VersionReleaseChannel.RELEASE
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA
-                            ? "text-orange-500 dark:text-orange-400"
-                            : releaseChannel === VersionReleaseChannel.ALPHA
-                                ? "text-danger-background"
-                                : "",
+                          ? "text-orange-500 dark:text-orange-400"
+                          : releaseChannel === VersionReleaseChannel.ALPHA
+                            ? "text-danger-background"
+                            : "",
                 )}
             >
                 <span className="absolute top-0 left-[-0.5rem] w-4 h-4 rounded-full bg-current translate-x-[0.125rem]" />

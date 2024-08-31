@@ -40,15 +40,20 @@
 - [x] Add option to add dependencies on a version
 - [x] Add file hashes to prevent duplicate file upload
 
+- [-] Add function to count downloads
+
 - [-] Add settings page
   - [x] General settings page
   - [x] Description settings page
-  - [-] Tags settings page
+  - [x] Tags settings page
+  - [-] License settings page
+  - [-] Links settings page
+  - [-] Members settings page
 
-
-- [-] Add function to count downloads
-- [-] Add custom redirect after login
 
 - [-] Fix project deletion
 - [-] Fix user deletion
 
+
+<!-- Later stuff -->
+- [-] Add custom redirect after login

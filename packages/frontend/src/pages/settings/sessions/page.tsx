@@ -78,107 +78,107 @@ const SessionsPage = () => {
                 <CardContent className="w-full flex items-center justify-center flex-col gap-form-elements relative min-h-24">
                     {loggedInSessions.data?.length
                         ? loggedInSessions.data.map((session) => {
-                            return (
-                                <TooltipProvider key={session.id}>
-                                    <div
-                                        key={session.id}
-                                        className="w-full flex flex-wrap gap-x-6 gap-y-3 items-center justify-between bg-background rounded py-3 px-4"
-                                    >
-                                        <div className="flex flex-col gap-2.5 sm:gap-1 grow">
-                                            <div className="font-medium flex flex-wrap gap-x-2 items-center justify-start">
-                                                <span>{session.browser}</span>
-                                                <DotSeparator />
-                                                <span>{session.os}</span>
-                                                <DotSeparator />
-                                                <div className="flex gap-2 items-center justify-center">
-                                                    <span>{session.ip}</span>
-                                                    <CopyBtn text={session.ip || ""} id={`session-ip-${session.id}`} />
-                                                </div>
-                                            </div>
+                              return (
+                                  <TooltipProvider key={session.id}>
+                                      <div
+                                          key={session.id}
+                                          className="w-full flex flex-wrap gap-x-6 gap-y-3 items-center justify-between bg-background rounded py-3 px-4"
+                                      >
+                                          <div className="flex flex-col gap-2.5 sm:gap-1 grow">
+                                              <div className="font-medium flex flex-wrap gap-x-2 items-center justify-start">
+                                                  <span>{session.browser}</span>
+                                                  <DotSeparator />
+                                                  <span>{session.os}</span>
+                                                  <DotSeparator />
+                                                  <div className="flex gap-2 items-center justify-center">
+                                                      <span>{session.ip}</span>
+                                                      <CopyBtn text={session.ip || ""} id={`session-ip-${session.id}`} />
+                                                  </div>
+                                              </div>
 
-                                            <div className="w-full flex flex-wrap gap-x-2 items-center justify-start text-muted-foreground">
-                                                {session.city || session.country ? (
-                                                    <>
-                                                        <span>
-                                                            {session.city || ""}
-                                                            {session.city && session.country && " - "}
-                                                            {session.country || ""}
-                                                        </span>
-                                                        <DotSeparator />
-                                                    </>
-                                                ) : null}
+                                              <div className="w-full flex flex-wrap gap-x-2 items-center justify-start text-muted-foreground">
+                                                  {session.city || session.country ? (
+                                                      <>
+                                                          <span>
+                                                              {session.city || ""}
+                                                              {session.city && session.country && " - "}
+                                                              {session.country || ""}
+                                                          </span>
+                                                          <DotSeparator />
+                                                      </>
+                                                  ) : null}
 
-                                                <Tooltip>
-                                                    <TooltipTrigger className="cursor-text">
-                                                        <span>Last accessed {timeSince(new Date(session.dateLastActive))}</span>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                        {formatDate(new Date(session.dateLastActive))}
-                                                    </TooltipContent>
-                                                </Tooltip>
+                                                  <Tooltip>
+                                                      <TooltipTrigger className="cursor-text">
+                                                          <span>Last accessed {timeSince(new Date(session.dateLastActive))}</span>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
+                                                          {formatDate(new Date(session.dateLastActive))}
+                                                      </TooltipContent>
+                                                  </Tooltip>
 
-                                                <DotSeparator />
+                                                  <DotSeparator />
 
-                                                <Tooltip>
-                                                    <TooltipTrigger className="cursor-text">
-                                                        <span>Created {timeSince(new Date(session.dateCreated))}</span>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                        {formatDate(new Date(session.dateCreated))}
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </div>
+                                                  <Tooltip>
+                                                      <TooltipTrigger className="cursor-text">
+                                                          <span>Created {timeSince(new Date(session.dateCreated))}</span>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
+                                                          {formatDate(new Date(session.dateCreated))}
+                                                      </TooltipContent>
+                                                  </Tooltip>
+                                              </div>
 
-                                            <div className="flex items-center justify-start mt-1">
-                                                <Tooltip>
-                                                    <TooltipTrigger className="cursor-default flex gap-2 items-center justify-start text-muted-foreground">
-                                                        {session?.providerName !== AuthProviders.CREDENTIAL ? (
-                                                            authProvidersList?.map((authProvider) => {
-                                                                if (authProvider?.name.toLowerCase() === session?.providerName) {
-                                                                    return (
-                                                                        <React.Fragment key={authProvider.name}>
-                                                                            {authProvider?.icon}
-                                                                        </React.Fragment>
-                                                                    );
-                                                                }
-                                                                return <React.Fragment key={authProvider.name}>{null}</React.Fragment>;
-                                                            })
-                                                        ) : (
-                                                            <KeyRoundIcon className="w-4 h-4" />
-                                                        )}
-                                                        <span className="capitalize">{session?.providerName}</span>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                        Session created using {Capitalize(session.providerName)} provider
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {session.id === currSession?.sessionId ? (
-                                                <span className="text-muted-foreground italic">Current session</span>
-                                            ) : (
-                                                <Button
-                                                    variant={"secondary"}
-                                                    className="bg-card-background/70 hover:bg-card-background dark:bg-shallow-background dark:hover:bg-shallower-background/80"
-                                                    disabled={isLoading.value}
-                                                    onClick={() => {
-                                                        revokeSession(session.id);
-                                                    }}
-                                                >
-                                                    {isLoading.value && isLoading.sessionId === session.id ? (
-                                                        <LoadingSpinner size="xs" />
-                                                    ) : (
-                                                        <XIcon className="w-btn-icon h-btn-icon" />
-                                                    )}
-                                                    Revoke session
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </TooltipProvider>
-                            );
-                        })
+                                              <div className="flex items-center justify-start mt-1">
+                                                  <Tooltip>
+                                                      <TooltipTrigger className="cursor-default flex gap-2 items-center justify-start text-muted-foreground">
+                                                          {session?.providerName !== AuthProviders.CREDENTIAL ? (
+                                                              authProvidersList?.map((authProvider) => {
+                                                                  if (authProvider?.name.toLowerCase() === session?.providerName) {
+                                                                      return (
+                                                                          <React.Fragment key={authProvider.name}>
+                                                                              {authProvider?.icon}
+                                                                          </React.Fragment>
+                                                                      );
+                                                                  }
+                                                                  return <React.Fragment key={authProvider.name}>{null}</React.Fragment>;
+                                                              })
+                                                          ) : (
+                                                              <KeyRoundIcon className="w-4 h-4" />
+                                                          )}
+                                                          <span className="capitalize">{session?.providerName}</span>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
+                                                          Session created using {Capitalize(session.providerName)} provider
+                                                      </TooltipContent>
+                                                  </Tooltip>
+                                              </div>
+                                          </div>
+                                          <div>
+                                              {session.id === currSession?.sessionId ? (
+                                                  <span className="text-muted-foreground italic">Current session</span>
+                                              ) : (
+                                                  <Button
+                                                      variant={"secondary"}
+                                                      className="bg-card-background/70 hover:bg-card-background dark:bg-shallow-background dark:hover:bg-shallower-background/80"
+                                                      disabled={isLoading.value}
+                                                      onClick={() => {
+                                                          revokeSession(session.id);
+                                                      }}
+                                                  >
+                                                      {isLoading.value && isLoading.sessionId === session.id ? (
+                                                          <LoadingSpinner size="xs" />
+                                                      ) : (
+                                                          <XIcon className="w-btn-icon h-btn-icon" />
+                                                      )}
+                                                      Revoke session
+                                                  </Button>
+                                              )}
+                                          </div>
+                                      </div>
+                                  </TooltipProvider>
+                              );
+                          })
                         : null}
 
                     {loggedInSessions.isFetching ? <AbsolutePositionedSpinner /> : null}

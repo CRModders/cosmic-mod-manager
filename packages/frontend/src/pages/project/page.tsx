@@ -10,10 +10,8 @@ const ProjectPage = () => {
 
     if (!projectData) return null;
     if (!projectData.description) {
-        return (
-            <span className="text-muted-foreground italic">No project description provided</span>
-        );
-    };
+        return <span className="text-muted-foreground italic">No project description provided</span>;
+    }
 
     return (
         <Suspense fallback={<SuspenseFallback />}>

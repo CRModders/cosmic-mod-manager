@@ -17,7 +17,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CreateNewProjectDialog = lazy(() => import("./new-project"));
 
-
 const getAllUserProjects = async () => {
     try {
         const response = await useFetch("/api/project");
@@ -62,7 +61,9 @@ const ProjectsPage = () => {
                                 <TableHeader>
                                     <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
                                         {/* ICON: VISIBLE ON sm+ width */}
-                                        <TableHead className="invisible sm:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">Icon</TableHead>
+                                        <TableHead className="invisible sm:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">
+                                            Icon
+                                        </TableHead>
                                         {/* DETAILS: MOBILE ONLY */}
                                         <TableHead className="invisible sm:hidden">Details</TableHead>
 
@@ -76,7 +77,9 @@ const ProjectsPage = () => {
                                         <TableHead className="hidden sm:table-cell">Status</TableHead>
 
                                         {/* SETTINGS LINK: VISIBLE ON sm+ width */}
-                                        <TableHead className="invisible sm:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad"> </TableHead>
+                                        <TableHead className="invisible sm:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad">
+                                            {" "}
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -94,8 +97,11 @@ const ProjectsPage = () => {
                                             >
                                                 {/* ICON */}
                                                 <TableCell className="pl-table-side-pad-sm sm:pl-table-side-pad">
-                                                    <Link tabIndex={-1} to={getProjectPagePathname(project.type[0], project.slug)}
-                                                        className="noClickRedirect flex shrink-0">
+                                                    <Link
+                                                        tabIndex={-1}
+                                                        to={getProjectPagePathname(project.type[0], project.slug)}
+                                                        className="noClickRedirect flex shrink-0"
+                                                    >
                                                         <ImgWrapper
                                                             src={imageUrl(project.icon)}
                                                             alt={project.name}
@@ -114,7 +120,9 @@ const ProjectsPage = () => {
                                                         >
                                                             {project.name}
                                                         </Link>
-                                                        <span className="leading-none font-medium">{CapitalizeAndFormatString(project.status)}</span>
+                                                        <span className="leading-none font-medium">
+                                                            {CapitalizeAndFormatString(project.status)}
+                                                        </span>
                                                         <span className="leading-none">{FormatProjectTypes(project.type)}</span>
                                                         <CopyBtn
                                                             id={`${project.slug}-${project.id}`}
@@ -153,7 +161,9 @@ const ProjectsPage = () => {
                                                 </TableCell>
                                                 {/* STATUS */}
                                                 <TableCell className="hidden sm:table-cell">
-                                                    <span className="leading-none font-medium">{CapitalizeAndFormatString(project.status)}</span>
+                                                    <span className="leading-none font-medium">
+                                                        {CapitalizeAndFormatString(project.status)}
+                                                    </span>
                                                 </TableCell>
 
                                                 {/* SETTINGS PAGE LINK */}

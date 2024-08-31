@@ -136,6 +136,7 @@ export enum FileType {
     JAR = "jar",
     ZIP = "zip",
     PNG = "png",
+    WEBP = "webp",
     JPEG = "jpeg",
 }
 
@@ -144,4 +145,11 @@ export enum ProjectSupport {
     REQUIRED = "required",
     OPTIONAL = "optional",
     UNSUPPORTED = "unsupported",
+}
+
+export enum TagHeaderTypes {
+    RESOLUTION = "resolution",
+    FEATURE = "feature",
+    CATEGORY = "category",
+    PERFORMANCE_IMPACT = "performance_impact",
 }

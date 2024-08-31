@@ -115,7 +115,9 @@ const GalleryItemCard = ({
                 <div className="w-full flex flex-col items-start justify-start ">
                     <span className="flex items-center justify-start gap-2 text-lg font-bold">
                         {galleryItem.name}
-                        {galleryItem.featured === true ? <StarIcon className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" /> : null}
+                        {galleryItem.featured === true ? (
+                            <StarIcon className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" />
+                        ) : null}
                     </span>
                     <span className="text-muted-foreground leading-tight">{galleryItem.description}</span>
                 </div>

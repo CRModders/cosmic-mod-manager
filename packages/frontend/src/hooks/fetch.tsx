@@ -6,4 +6,3 @@ export default async function useFetch(url: string | Request | URL, init?: Fetch
         credentials: "include",
     });
 }
-

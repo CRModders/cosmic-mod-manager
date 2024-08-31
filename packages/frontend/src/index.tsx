@@ -39,9 +39,10 @@ const UploadVersionPage = lazy(() => import("@/src/pages/project/versions/versio
 const EditVersionPage = lazy(() => import("@/src/pages/project/versions/version/edit-version"));
 
 // Project settings
-const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/project-settings/layout"));
-const GeneralSettingsPage = lazy(() => import("@/src/pages/project/project-settings/page"));
-const DescriptionSettings = lazy(() => import("@/src/pages/project/project-settings/description"));
+const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/settings/layout"));
+const GeneralSettingsPage = lazy(() => import("@/src/pages/project/settings/page"));
+const DescriptionSettings = lazy(() => import("@/src/pages/project/settings/description"));
+const TagsSettingsPage = lazy(() => import("@/src/pages/project/settings/tags"));
 
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => {
@@ -160,6 +161,14 @@ const projectPageRoutes = () => {
                             element: (
                                 <Suspense fallback={<SuspenseFallback />}>
                                     <DescriptionSettings />
+                                </Suspense>
+                            ),
+                        },
+                        {
+                            path: "tags",
+                            element: (
+                                <Suspense fallback={<SuspenseFallback />}>
+                                    <TagsSettingsPage />
                                 </Suspense>
                             ),
                         },
@@ -350,7 +359,7 @@ if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
     root.render(
         // <StrictMode>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} />,
         // </StrictMode>,
     );
 }

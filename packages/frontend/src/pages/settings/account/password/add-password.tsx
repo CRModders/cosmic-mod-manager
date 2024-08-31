@@ -74,7 +74,6 @@ const AddPasswordForm = () => {
                     <DialogDescription>You will be able to use this password to log into your account</DialogDescription>
                 </DialogHeader>
 
-
                 <DialogBody>
                     <Form {...form}>
                         <form

@@ -1,3 +1,4 @@
+import { type CategoryType, categories } from "../../config/project";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -92,3 +93,21 @@ export function parseFileSize(size: number): string {
     }
     return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`;
 }
+
+export const getValidProjectCategories = (projectTypes: string[]) => {
+    const alreadyAddedCategories = new Set<string>();
+    const validCategories: CategoryType[] = [];
+
+    // Loop over all categories and check if the project type is in the category's project types
+    for (const category of categories) {
+        for (const type of category.projectTypes) {
+            if (projectTypes.includes(type) && !alreadyAddedCategories.has(category.name)) {
+                alreadyAddedCategories.add(category.name);
+                validCategories.push(category);
+                break;
+            }
+        }
+    }
+
+    return validCategories;
+};

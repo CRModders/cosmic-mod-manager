@@ -1,11 +1,26 @@
 import { ctxReqBodyKey } from "@/../types";
 import { getProjectDependencies } from "@/controllers/project/dependency";
-import { addNewGalleryImage, createNewProject, getAllUserProjects, getProjectData, removeGalleryImage, updateGalleryImage, updateProject, updateProjectDescription } from "@/controllers/project/project";
+import {
+    addNewGalleryImage,
+    createNewProject,
+    getAllUserProjects,
+    getProjectData,
+    removeGalleryImage,
+    updateGalleryImage,
+} from "@/controllers/project/project";
+import { updateProject, updateProjectDescription, updateProjectTags } from "@/controllers/project/settings";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { parseValueToSchema } from "@shared/schemas";
-import { addNewGalleryImageFormSchema, generalProjectSettingsFormSchema, newProjectFormSchema, updateDescriptionFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project";
+import {
+    addNewGalleryImageFormSchema,
+    generalProjectSettingsFormSchema,
+    newProjectFormSchema,
+    updateDescriptionFormSchema,
+    updateGalleryImageFormSchema,
+    updateProjectTagsFormSchema,
+} from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import versionRouter from "./version";
@@ -71,7 +86,6 @@ projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
             clientSide: formData.get("clientSide"),
             serverSide: formData.get("serverSide"),
             summary: formData.get("summary"),
-
         } satisfies z.infer<typeof generalProjectSettingsFormSchema>;
 
         const { data, error } = parseValueToSchema(generalProjectSettingsFormSchema, obj);
@@ -119,6 +133,24 @@ projectRouter.patch("/:slug/description", LoginProtectedRoute, async (ctx: Conte
     }
 });
 
+projectRouter.patch("/:slug/tags", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!slug || !userSession?.id) return defaultInvalidReqResponse(ctx);
+
+        const { data, error } = parseValueToSchema(updateProjectTagsFormSchema, ctx.get(ctxReqBodyKey));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await updateProjectTags(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
 projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const slug = ctx.req.param("slug");
@@ -134,7 +166,7 @@ projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) =
             description: formData.get("description"),
             orderIndex: Number.parseInt(formData.get("orderIndex") || "0"),
             featured: formData.get("featured") === "true",
-        }
+        };
 
         const { data, error } = parseValueToSchema(addNewGalleryImageFormSchema, obj);
         if (error || !data) {

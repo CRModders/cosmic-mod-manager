@@ -10,7 +10,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ButtonLink } from "@/components/ui/link";
-import { FullWidthSpinner } from "@/components/ui/spinner";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import { SITE_NAME_SHORT } from "@shared/config";
@@ -36,7 +35,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
 
     if (!projectData) {
-        return <FullWidthSpinner />;
+        return null;
     }
 
     return (
@@ -78,9 +77,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
 
                             <div className="flex flex-col items-start justify-start">
                                 <span className="text-lg font-semibold">{projectData.name}</span>
-                                <span className="font-semibold text-muted-foreground">
-                                    {CapitalizeAndFormatString(projectData.status)}
-                                </span>
+                                <span className="font-semibold text-muted-foreground">{CapitalizeAndFormatString(projectData.status)}</span>
                             </div>
                         </div>
 

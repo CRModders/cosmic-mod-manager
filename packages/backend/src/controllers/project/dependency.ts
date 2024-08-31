@@ -10,10 +10,7 @@ import type { Context } from "hono";
 export const getProjectDependencies = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
     const project = await prisma.project.findFirst({
         where: {
-            OR: [
-                { id: slug },
-                { slug: slug }
-            ]
+            OR: [{ id: slug }, { slug: slug }],
         },
         select: {
             id: true,
@@ -26,10 +23,10 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
                         select: {
                             id: true,
                             userId: true,
-                            permissions: true
-                        }
-                    }
-                }
+                            permissions: true,
+                        },
+                    },
+                },
             },
             organisation: {
                 select: {
@@ -40,31 +37,31 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
                                 select: {
                                     id: true,
                                     userId: true,
-                                    permissions: true
-                                }
-                            }
-                        }
-                    }
-                }
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
             },
             versions: {
                 select: {
                     id: true,
-                    dependencies: true
-                }
+                    dependencies: true,
+                },
             },
-        }
+        },
     });
 
     if (!project) {
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
-    };
+    }
 
     // CHECK PERMISSIONS
     const members = (project.team.members || []).map((member) => ({
         id: member.id,
         userId: member.userId,
-        permissions: member.permissions as ProjectPermissions[]
+        permissions: member.permissions as ProjectPermissions[],
     }));
 
     if (project?.organisation?.team?.members) {
@@ -72,14 +69,14 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
             members.push({
                 id: member.id,
                 userId: member.userId,
-                permissions: member.permissions as ProjectPermissions[]
+                permissions: member.permissions as ProjectPermissions[],
             });
         }
-    };
+    }
 
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, members)) {
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
-    };
+    }
 
     // Aggregate all dependencies
     const dependencies: Dependency[] = [];
@@ -89,7 +86,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
                 dependencies.push(dependency);
             }
         }
-    };
+    }
 
     // Separate dependencies into project-level and version-level
     const projectDependencies: string[] = [];
@@ -101,29 +98,33 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
         if (dependency.versionId) {
             versionDependencies.push(dependency.versionId);
         }
-    };
+    }
 
     const dependencyProjects = await prisma.project.findMany({
         where: {
             id: {
-                in: projectDependencies
-            }
+                in: projectDependencies,
+            },
         },
     });
 
     const dependencyVersions = await prisma.version.findMany({
         where: {
             id: {
-                in: versionDependencies
-            }
+                in: versionDependencies,
+            },
         },
     });
 
-    return ctx.json({
-        projects: dependencyProjects.map((project) => ({
-            ...project,
-            icon: projectIconUrl(project.slug, project.icon || ""),
-            type: inferProjectType(project.loaders)
-        })), versions: dependencyVersions
-    }, httpCode("ok"));
+    return ctx.json(
+        {
+            projects: dependencyProjects.map((project) => ({
+                ...project,
+                icon: projectIconUrl(project.slug, project.icon || ""),
+                type: inferProjectType(project.loaders),
+            })),
+            versions: dependencyVersions,
+        },
+        httpCode("ok"),
+    );
 };

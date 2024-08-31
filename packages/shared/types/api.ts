@@ -6,7 +6,7 @@ import type {
     ProjectSupport,
     ProjectVisibility,
     UserSessionStates,
-    VersionReleaseChannel
+    VersionReleaseChannel,
 } from ".";
 
 export interface SessionListData {

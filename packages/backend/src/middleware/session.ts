@@ -14,9 +14,9 @@ export const AuthenticationMiddleware = async (ctx: Context, next: Next) => {
 
     if (!user) {
         if (!getCookie(ctx, "guest-session")) {
-            const code = generateRandomString(32);
-            setUserCookie(ctx, "guest-session", code);
-            ctx.set("guest-session", code);
+            const randomId = generateRandomString(32);
+            setUserCookie(ctx, "guest-session", randomId);
+            ctx.set("guest-session", randomId);
         } else {
             ctx.set("guest-session", getCookie(ctx, "guest-session"));
         }

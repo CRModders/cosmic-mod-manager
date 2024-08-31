@@ -150,12 +150,19 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                             Visibility
                                             <FormMessage />
                                         </FormLabel>
-                                        <Select disabled={field.disabled} name={field.name} value={field.value} onValueChange={field.onChange}>
+                                        <Select
+                                            disabled={field.disabled}
+                                            name={field.name}
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value={ProjectVisibility.LISTED}>{Capitalize(ProjectVisibility.LISTED)}</SelectItem>
+                                                <SelectItem value={ProjectVisibility.LISTED}>
+                                                    {Capitalize(ProjectVisibility.LISTED)}
+                                                </SelectItem>
                                                 <SelectItem value={ProjectVisibility.PRIVATE}>
                                                     {Capitalize(ProjectVisibility.PRIVATE)}
                                                 </SelectItem>

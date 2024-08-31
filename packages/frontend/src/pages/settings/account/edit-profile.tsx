@@ -182,7 +182,9 @@ const EditProfileDialog = ({
                                 </DialogClose>
                                 <Button
                                     disabled={
-                                        isLoading || isFetchingData || JSON.stringify(form.getValues()) === JSON.stringify(initialFormValues)
+                                        isLoading ||
+                                        isFetchingData ||
+                                        JSON.stringify(form.getValues()) === JSON.stringify(initialFormValues)
                                     }
                                 >
                                     {isLoading || isFetchingData ? <LoadingSpinner size="xs" /> : <SaveIcon className="size-4" />}

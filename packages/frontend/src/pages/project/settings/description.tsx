@@ -69,10 +69,7 @@ const DescriptionSettings = () => {
                     />
 
                     <div className="w-full flex items-center justify-end">
-                        <Button
-                            type="submit"
-                            disabled={(projectData?.description || "") === form.getValues().description || isLoading}
-                        >
+                        <Button type="submit" disabled={(projectData?.description || "") === form.getValues().description || isLoading}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                             Save changes
                         </Button>

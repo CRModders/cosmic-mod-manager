@@ -10,7 +10,6 @@ import { nanoid } from "nanoid";
 import { sort } from "semver";
 import { type ContextUserSession, ctxReqAuthSessionKey } from "../../types";
 
-
 export const generateRandomString = (length = STRING_ID_LENGTH) => {
     let result = nanoid(16);
     while (result.length < length) {
@@ -85,7 +84,7 @@ export const isProjectAccessibleToCurrSession = (
 export const aggregateVersions = (versionsList: string[]) => {
     const uniqueItems = Array.from(new Set(versionsList));
     return sort(uniqueItems);
-}
+};
 
 export const inferProjectType = (projectLoaders: string[]) => {
     if (!projectLoaders.length) return ["project"];
@@ -96,7 +95,7 @@ export const inferProjectType = (projectLoaders: string[]) => {
             if (LOADER.name === projectLoader) {
                 for (const supportedProjectType of LOADER.supportedProjectTypes) {
                     if (!types.includes(supportedProjectType)) {
-                        types.push(supportedProjectType)
+                        types.push(supportedProjectType);
                     }
                 }
                 break;
@@ -115,11 +114,11 @@ export const aggregateProjectLoaders = (projectLoaders: string[]) => {
             loaderList.push(LOADER);
             nameList.push(LOADER.name);
         }
-    };
+    }
 
     return loaderList;
-}
+};
 
 export const aggregateProjectLoaderNames = (projectLoaders: string[]) => {
-    return aggregateProjectLoaders(projectLoaders).map(loader => loader.name);
-}
+    return aggregateProjectLoaders(projectLoaders).map((loader) => loader.name);
+};

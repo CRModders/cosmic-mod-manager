@@ -105,8 +105,8 @@ const UploadVersionPage = () => {
                     onSubmit={(e) => {
                         e.preventDefault();
                     }}
-                    className="w-full flex flex-col gap-panel-cards items-start justify-start">
-
+                    className="w-full flex flex-col gap-panel-cards items-start justify-start"
+                >
                     <UploadVersionPageTopCard
                         isLoading={isLoading}
                         submitBtnLabel="Create"
@@ -149,7 +149,6 @@ const UploadVersionPage = () => {
 
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                         <div className="w-full flex flex-col gap-panel-cards">
-
                             <ContentCardTemplate title="Changelog">
                                 <FormField
                                     control={form.control}

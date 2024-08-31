@@ -231,7 +231,7 @@ const GeneralSettingsPage = () => {
                                         Summary
                                         <FormMessage />
                                     </FormLabel>
-                                    <Textarea {...field} className="resize-none md:w-[48ch]" spellCheck="false" />
+                                    <Textarea {...field} className="resize-none md:w-[48ch] min-h-32" spellCheck="false" />
                                 </FormItem>
                             )}
                         />
@@ -322,7 +322,7 @@ const GeneralSettingsPage = () => {
                                             <div className="flex flex-col items-start justify-center">
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
-                                                        field.value === ProjectVisibility.ARCHIVED ? (
+                                                    field.value === ProjectVisibility.ARCHIVED ? (
                                                         <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
                                                         <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
@@ -331,7 +331,7 @@ const GeneralSettingsPage = () => {
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
-                                                        field.value === ProjectVisibility.ARCHIVED ? (
+                                                    field.value === ProjectVisibility.ARCHIVED ? (
                                                         <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
                                                         <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />

@@ -66,8 +66,8 @@ export const createNewUserSession = async ({
                 where: {
                     userId: userId,
                     id: {
-                        not: newSession.id
-                    }
+                        not: newSession.id,
+                    },
                 },
             });
 
@@ -112,7 +112,7 @@ export const getUserSessionCookie = (c: Context): UserSessionCookieData | null =
         }
         const cookieData = JSON.parse(cookie) as UserSessionCookieData;
         return cookieData;
-    } catch (error) { }
+    } catch (error) {}
     return null;
 };
 
@@ -196,7 +196,7 @@ export const revokeSessionFromAccessCode = async (ctx: Context, code: string) =>
                 revokeAccessCode: code,
             },
         });
-    } catch (err) { }
+    } catch (err) {}
 
     if (!session?.id) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);

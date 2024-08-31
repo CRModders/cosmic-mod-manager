@@ -71,7 +71,7 @@ model UserConfirmation {
     id               String   @id @db.VarChar(32)
     userId           String   @db.VarChar(32)
     confirmationType String   @db.VarChar(64)
-    accessCode       String   @unique @db.VarChar(64)
+    accessCode       String   @unique @db.VarChar(128)
     dateCreated      DateTime @default(now())
     contextData      String?
 

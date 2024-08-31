@@ -34,7 +34,7 @@ export const RateLimiterMiddleware = async (ctx: Context, next: Next) => {
 
 export const addToUsedRateLimit = async (ctx: Context, incrementBy = 1) => {
     try {
-        const ipAddr = ctx.get("ip");
+        const ipAddr = getUserIpAddress(ctx);
         const key = `rateLimit:${ipAddr}`;
         const count = Number.parseInt((await redis.get(key)) || "-1");
         if (count < rateLimits.global.limit) {

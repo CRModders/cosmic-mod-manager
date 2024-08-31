@@ -3,199 +3,202 @@
 @tailwind utilities;
 
 :root {
-  --scrollbar-width: 0.6rem;
-  --tint-hue: 210;
-  --bg-saturation: 14%;
-  --accent-color-hue: 345;
+    --scrollbar-width: 0.6rem;
+    --tint-hue: 210;
+    --bg-saturation: 14%;
+    --accent-color-hue: 345;
 
-  /* FONT SIZES */
-  --font-tiny: 0.75rem;
-  --font-sm: 0.85rem;
-  --font-base: 1rem;
-  --font-lg: 1.17rem;
-  --font-xl: 1.5rem;
-  --font-2xl: 2.17rem;
+    /* FONT SIZES */
+    --font-tiny: 0.75rem;
+    --font-sm: 0.85rem;
+    --font-base: 1rem;
+    --font-lg: 1.17rem;
+    --font-xl: 1.5rem;
+    --font-2xl: 2.17rem;
 
-  /* DARK THEME */
-  --foreground-dark: var(--tint-hue), var(--bg-saturation), 88%;
-  --foreground-bright-dark: var(--tint-hue), var(--bg-saturation), 96%;
-  --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
-  --muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 74%;
-  --extra-muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 58%;
-  --background-dark: var(--tint-hue), var(--bg-saturation), 5%;
-  --card-background-dark: var(--tint-hue), var(--bg-saturation), 12%;
-  --accent-background-dark: var(--accent-color-hue), 85%, 62%;
-  --shallow-background-dark: var(--tint-hue), var(--bg-saturation), 22%;
-  --shallower-background-dark: var(--tint-hue), var(--bg-saturation), 32%;
-  --danger-background-dark: 0, 92%, 65%;
-  --danger-foreground-dark: 0, 91%, 71%;
-  --success-background-dark: 160, 84%, 39%;
-  --success-foreground-dark: 158, 64%, 52%;
-  --link-foreground-dark: 213, 94%, 72%;
+    /* DARK THEME */
+    --foreground-dark: var(--tint-hue), var(--bg-saturation), 88%;
+    --foreground-bright-dark: var(--tint-hue), var(--bg-saturation), 96%;
+    --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
+    --muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 74%;
+    --extra-muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 58%;
+    --background-dark: var(--tint-hue), var(--bg-saturation), 5%;
+    --card-background-dark: var(--tint-hue), var(--bg-saturation), 12%;
+    --accent-background-dark: var(--accent-color-hue), 85%, 62%;
+    --shallow-background-dark: var(--tint-hue), var(--bg-saturation), 22%;
+    --shallower-background-dark: var(--tint-hue), var(--bg-saturation), 32%;
+    --danger-background-dark: 0, 92%, 65%;
+    --danger-foreground-dark: 0, 91%, 71%;
+    --success-background-dark: 160, 84%, 39%;
+    --success-foreground-dark: 158, 64%, 52%;
+    --link-foreground-dark: 213, 94%, 68%;
+    --link-hover-foreground-dark: 210, 100%, 75%;
 
-  /* LIGHT THEME */
-  --foreground-light: var(--tint-hue), var(--bg-saturation), 18%;
-  --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 10%;
-  --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
-  --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 34%;
-  --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 46%;
-  --background-light: var(--tint-hue), var(--bg-saturation), 92%;
-  --card-background-light: var(--tint-hue), var(--bg-saturation), 100%;
-  --accent-background-light: var(--accent-color-hue), 80%, 54%;
-  --shallow-background-light: var(--tint-hue), var(--bg-saturation), 90%;
-  --shallower-background-light: var(--tint-hue), var(--bg-saturation), 81%;
-  --danger-background-light: 0, 75%, 46%;
-  --danger-foreground-light: 0, 65%, 52%;
-  --success-background-light: 160, 90%, 30%;
-  --success-foreground-light: 158, 94%, 24%;
-  --link-foreground-light: 221, 85%, 50%;
-
-  --link-hover-foreground: 217, 91%, 60%;
+    /* LIGHT THEME */
+    --foreground-light: var(--tint-hue), var(--bg-saturation), 18%;
+    --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 10%;
+    --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
+    --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 34%;
+    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 46%;
+    --background-light: var(--tint-hue), var(--bg-saturation), 92%;
+    --card-background-light: var(--tint-hue), var(--bg-saturation), 100%;
+    --accent-background-light: var(--accent-color-hue), 80%, 54%;
+    --shallow-background-light: var(--tint-hue), var(--bg-saturation), 90%;
+    --shallower-background-light: var(--tint-hue), var(--bg-saturation), 81%;
+    --danger-background-light: 0, 75%, 46%;
+    --danger-foreground-light: 0, 65%, 52%;
+    --success-background-light: 160, 90%, 30%;
+    --success-foreground-light: 158, 94%, 24%;
+    --link-foreground-light: 200, 92%, 30%;
+    --link-hover-foreground-light: 220, 100%, 50%;
 }
 
 html,
 html body {
-  color: hsla(var(--foreground));
-  background-color: hsla(var(--background));
-  font-size: var(--font-base);
-  font-weight: 400;
-  scrollbar-gutter: stable;
-  width: 100%;
+    color: hsla(var(--foreground));
+    background-color: hsla(var(--background));
+    font-size: var(--font-base);
+    font-weight: 400;
+    scrollbar-gutter: stable;
+    width: 100%;
 }
 
 .dark,
 .dark body {
-  --foreground: var(--foreground-dark);
-  --foreground-bright: var(--foreground-bright-dark);
-  --accent-foreground: var(--accent-foreground-dark);
-  --muted-foreground: var(--muted-foreground-dark);
-  --extra-muted-foreground: var(--extra-muted-foreground-dark);
-  --background: var(--background-dark);
-  --card-background: var(--card-background-dark);
-  --accent-background: var(--accent-background-dark);
-  --shallow-background: var(--shallow-background-dark);
-  --shallower-background: var(--shallower-background-dark);
-  --danger-background: var(--danger-background-dark);
-  --danger-foreground: var(--danger-foreground-dark);
-  --success-background: var(--success-background-dark);
-  --success-foreground: var(--success-foreground-dark);
-  --link-foreground: var(--link-foreground-dark);
+    --foreground: var(--foreground-dark);
+    --foreground-bright: var(--foreground-bright-dark);
+    --accent-foreground: var(--accent-foreground-dark);
+    --muted-foreground: var(--muted-foreground-dark);
+    --extra-muted-foreground: var(--extra-muted-foreground-dark);
+    --background: var(--background-dark);
+    --card-background: var(--card-background-dark);
+    --accent-background: var(--accent-background-dark);
+    --shallow-background: var(--shallow-background-dark);
+    --shallower-background: var(--shallower-background-dark);
+    --danger-background: var(--danger-background-dark);
+    --danger-foreground: var(--danger-foreground-dark);
+    --success-background: var(--success-background-dark);
+    --success-foreground: var(--success-foreground-dark);
+    --link-foreground: var(--link-foreground-dark);
+    --link-hover-foreground: var(--link-hover-foreground-dark);
 
-  color-scheme: dark;
+    color-scheme: dark;
 }
 
 
 .light,
 .light body {
-  --foreground: var(--foreground-light);
-  --foreground-bright: var(--foreground-bright-light);
-  --accent-foreground: var(--accent-foreground-light);
-  --muted-foreground: var(--muted-foreground-light);
-  --extra-muted-foreground: var(--extra-muted-foreground-light);
-  --background: var(--background-light);
-  --card-background: var(--card-background-light);
-  --accent-background: var(--accent-background-light);
-  --shallow-background: var(--shallow-background-light);
-  --shallower-background: var(--shallower-background-light);
-  --danger-background: var(--danger-background-light);
-  --danger-foreground: var(--danger-foreground-light);
-  --success-background: var(--success-background-light);
-  --success-foreground: var(--success-foreground-light);
-  --link-foreground: var(--link-foreground-light);
+    --foreground: var(--foreground-light);
+    --foreground-bright: var(--foreground-bright-light);
+    --accent-foreground: var(--accent-foreground-light);
+    --muted-foreground: var(--muted-foreground-light);
+    --extra-muted-foreground: var(--extra-muted-foreground-light);
+    --background: var(--background-light);
+    --card-background: var(--card-background-light);
+    --accent-background: var(--accent-background-light);
+    --shallow-background: var(--shallow-background-light);
+    --shallower-background: var(--shallower-background-light);
+    --danger-background: var(--danger-background-light);
+    --danger-foreground: var(--danger-foreground-light);
+    --success-background: var(--success-background-light);
+    --success-foreground: var(--success-foreground-light);
+    --link-foreground: var(--link-foreground-light);
+    --link-hover-foreground: var(--link-hover-foreground-light);
 
-  color-scheme: light;
+    color-scheme: light;
 }
 
 ::-webkit-scrollbar {
-  width: var(--scrollbar-width);
-  height: 8px;
+    width: var(--scrollbar-width);
+    height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  width: var(--scrollbar-width);
-  background-color: hsla(var(--extra-muted-foreground), 0.5);
+    width: var(--scrollbar-width);
+    background-color: hsla(var(--extra-muted-foreground), 0.5);
 }
 
 ::-webkit-scrollbar-track {
-  background-color: hsla(var(--card-background));
+    background-color: hsla(var(--card-background));
 }
 
 body * ::-webkit-scrollbar-thumb {
-  width: var(--scrollbar-width);
-  height: var(--scrollbar-width);
-  background-color: hsla(var(--extra-muted-foreground), 0.5);
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+    background-color: hsla(var(--extra-muted-foreground), 0.5);
 }
 
 body * ::-webkit-scrollbar-track {
-  background-color: hsla(var(--card-background));
+    background-color: hsla(var(--card-background));
 }
 
 body.navmenu-open,
 body.no-scrollbar {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 @layer components {
-  .neumorphic_shadow:not(.no_neumorphic_shadow) {
-    box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)),
-      0 0 0 0.175rem transparent;
-  }
+    .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)),
+            0 0 0 0.175rem transparent;
+    }
 
-  .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
-    box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)),
-      0 0 0 0.175rem transparent;
-  }
+    .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)),
+            0 0 0 0.175rem transparent;
+    }
 
-  .focus_ring:not(.no_focus_ring) {
-    --surround-width: 0.17rem;
-    box-shadow: inset 0px -1px 2px transparent,
-      0 0 0 var(--surround-width) hsla(var(--accent-background));
-    transition-property: background-color, box-shadow, color;
-    transition-duration: 150ms;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
+    .focus_ring:not(.no_focus_ring) {
+        --surround-width: 0.17rem;
+        box-shadow: inset 0px -1px 2px transparent,
+            0 0 0 var(--surround-width) hsla(var(--accent-background));
+        transition-property: background-color, box-shadow, color;
+        transition-duration: 150ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-  .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
-    --surround-width: 0.17rem;
-    box-shadow: inset 0px -1px 2px transparent,
-      0 0 0 var(--surround-width) #3b82f6;
-  }
+    .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
+        --surround-width: 0.17rem;
+        box-shadow: inset 0px -1px 2px transparent,
+            0 0 0 var(--surround-width) #3b82f6;
+    }
 
-  .dark .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
-    box-shadow: inset 0px -1px 2px transparent,
-      0 0 0 var(--surround-width) #60a5fa;
-  }
+    .dark .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
+        box-shadow: inset 0px -1px 2px transparent,
+            0 0 0 var(--surround-width) #60a5fa;
+    }
 
-  .input_box_styles:not(.no_input_box_styles) {
-    @apply h-10 rounded flex items-center bg-shallow-background text-foreground px-3 py-2 placeholder:text-extra-muted-foreground focus-visible:outline-none focus-visible:focus_ring focus-visible:bg-shallow-background/50 disabled:cursor-not-allowed disabled:opacity-50;
-  }
+    .input_box_styles:not(.no_input_box_styles) {
+        @apply h-10 rounded flex items-center bg-shallow-background text-foreground px-3 py-2 placeholder:text-extra-muted-foreground focus-visible:outline-none focus-visible:focus_ring focus-visible:bg-shallow-background/50 disabled:cursor-not-allowed disabled:opacity-50;
+    }
 
-  .navLinkText {
-    @apply font-semibold text-foreground hover:text-muted-foreground;
-  }
+    .navLinkText {
+        @apply font-semibold text-foreground hover:text-muted-foreground;
+    }
 
-  .full_page:not(.no_full_page) {
-    min-height: 100vh;
-    min-height: min(100vh, 67rem);
-    min-height: clamp(45rem, 100vh, 67rem);
-  }
+    .full_page:not(.no_full_page) {
+        min-height: 100vh;
+        min-height: min(100vh, 67rem);
+        min-height: clamp(45rem, 100vh, 67rem);
+    }
 
-  .bg_hover_stagger:not(.no_bg_hover_stagger) {
-    transition: background-color 300ms ease;
-    @apply hover:duration-0 group-hover:duration-0;
-  }
+    .bg_hover_stagger:not(.no_bg_hover_stagger) {
+        transition: background-color 300ms ease;
+        @apply hover:duration-0 group-hover:duration-0;
+    }
 
-  .link_blue {
-    @apply text-blue-500 dark:text-blue-400 hover:brightness-110;
-  }
+    .link_blue {
+        @apply text-link-foreground hover:text-link-hover-foreground;
+    }
 
-  a {
-    text-underline-offset: 2px;
-  }
+    a {
+        text-underline-offset: 2px;
+    }
 
-  a,
-  button {
-    transition: font-size 150ms ease;
-    @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
-  }
+    a,
+    button,
+    input[type='checkbox'] {
+        transition: font-size 150ms ease;
+        @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
+    }
 }

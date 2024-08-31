@@ -10,9 +10,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-    ({ className, ...props }, ref) => (
-        <thead ref={ref} className={cn("", className)} {...props} />
-    ),
+    ({ className, ...props }, ref) => <thead ref={ref} className={cn("", className)} {...props} />,
 );
 TableHeader.displayName = "TableHeader";
 
@@ -23,17 +21,17 @@ TableBody.displayName = "TableBody";
 
 const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
     ({ className, ...props }, ref) => (
-        <tfoot ref={ref} className={cn("border-t border-background bg-shallow-background/50 font-medium [&>tr]:last:border-b-0", className)} {...props} />
+        <tfoot
+            ref={ref}
+            className={cn("border-t border-background bg-shallow-background/50 font-medium [&>tr]:last:border-b-0", className)}
+            {...props}
+        />
     ),
 );
 TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(({ className, ...props }, ref) => (
-    <tr
-        ref={ref}
-        className={cn("border-b border-background h-12 hover:bg-background/30 group bg_hover_stagger", className)}
-        {...props}
-    />
+    <tr ref={ref} className={cn("border-b border-background h-12 hover:bg-background/30 group bg_hover_stagger", className)} {...props} />
 ));
 TableRow.displayName = "TableRow";
 

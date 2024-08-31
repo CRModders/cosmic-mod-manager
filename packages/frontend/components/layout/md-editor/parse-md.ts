@@ -147,6 +147,4 @@ export const md = (options = {}) => {
 
 export const renderString = (string: string) => configuredXss.process(md().render(string));
 
-
-
 // Any problems you can point out in this file?

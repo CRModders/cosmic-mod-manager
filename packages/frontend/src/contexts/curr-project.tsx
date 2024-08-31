@@ -30,7 +30,7 @@ export const projectContext = createContext<ProjectContextType>({
     },
     featuredProjectVersions: undefined,
     allProjectVersions: undefined,
-    fetchAllProjectVersions: async () => { },
+    fetchAllProjectVersions: async () => {},
     currUsersMembership: null,
     projectDependencies: {
         projects: [],
@@ -87,7 +87,7 @@ export const ProjectContextProvider = ({
     const {
         data: projectData,
         isFetching: isProjectDataFetching,
-        refetch: refetchProjectData
+        refetch: refetchProjectData,
     } = useQuery<ProjectDetailsData | null>({
         queryKey: [`${currProjectSlug}-project-data`],
         queryFn: () => getProjectData(currProjectSlug),
@@ -98,7 +98,7 @@ export const ProjectContextProvider = ({
     const {
         data: allProjectVersions,
         isFetching: isAllProjectVersionsFetching,
-        refetch: refetchAllProjectVersions
+        refetch: refetchAllProjectVersions,
     } = useQuery<ProjectVersionData[] | null>({
         queryKey: [`${currProjectSlug}-project-all-versions`],
         queryFn: () => getAllProjectVersions(currProjectSlug),
@@ -107,7 +107,7 @@ export const ProjectContextProvider = ({
     const {
         data: projectDependencies,
         isFetching: isProjectDependenciesFetching,
-        refetch: refetchProjectDependencies
+        refetch: refetchProjectDependencies,
     } = useQuery<{ projects: ProjectsListData[]; versions: ProjectVersionData[] } | null>({
         queryKey: [`${currProjectSlug}-project-dependencies`],
         queryFn: () => getProjectDependencies(currProjectSlug),
@@ -117,7 +117,7 @@ export const ProjectContextProvider = ({
         if (slug && currProjectSlug !== slug) {
             setCurrProjectSlug(slug);
         } else {
-            await Promise.all([refetchProjectData(), fetchAllProjectVersions()]);
+            await refetchProjectData();
         }
     };
 
@@ -134,7 +134,6 @@ export const ProjectContextProvider = ({
     }, [slug]);
 
     useEffect(() => {
-
         if (!projectData?.id) setCurrUsersMembership(null);
         else {
             let valueSet = false;
@@ -158,9 +157,7 @@ export const ProjectContextProvider = ({
 
     useEffect(() => {
         if (allProjectVersions) {
-            const featuredVersions = allProjectVersions.filter(
-                (version) => version.featured === true
-            );
+            const featuredVersions = allProjectVersions.filter((version) => version.featured === true);
             setFeaturedProjectVersions(featuredVersions);
         } else {
             setFeaturedProjectVersions([]);
@@ -168,18 +165,9 @@ export const ProjectContextProvider = ({
     }, [allProjectVersions]);
 
     useEffect(() => {
-        if (
-            isProjectDataFetching ||
-            isAllProjectVersionsFetching ||
-            isProjectDependenciesFetching
-        )
-            setFetchingProjectData(true);
+        if (isProjectDataFetching || isAllProjectVersionsFetching || isProjectDependenciesFetching) setFetchingProjectData(true);
         else setFetchingProjectData(false);
-    }, [
-        isProjectDataFetching,
-        isAllProjectVersionsFetching,
-        isProjectDependenciesFetching,
-    ]);
+    }, [isProjectDataFetching, isAllProjectVersionsFetching, isProjectDependenciesFetching]);
 
     return (
         <projectContext.Provider
@@ -199,10 +187,7 @@ export const ProjectContextProvider = ({
             }}
         >
             {children}
-            {
-                slug !== projectData?.slug && slug !== projectData?.id ?
-                    <AbsolutePositionedSpinner /> : null
-            }
+            {slug !== projectData?.slug && slug !== projectData?.id ? <AbsolutePositionedSpinner /> : null}
         </projectContext.Provider>
     );
 };

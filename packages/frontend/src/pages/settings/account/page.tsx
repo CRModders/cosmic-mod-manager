@@ -121,9 +121,7 @@ const AccountSettingsPage = () => {
                             <div className="w-full flex flex-wrap items-end gap-x-8 justify-between gap-2">
                                 <div className="flex flex-col items-start justify-start gap-1.5">
                                     <Label>Manage authentication providers</Label>
-                                    <p className="text-muted-foreground">
-                                        Add or remove login methods from your account.
-                                    </p>
+                                    <p className="text-muted-foreground">Add or remove login methods from your account.</p>
                                 </div>
 
                                 <ManageAuthProviders
@@ -141,8 +139,8 @@ const AccountSettingsPage = () => {
                         <CardContent>
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-12 gap-y-4">
                                 <p className="text-muted-foreground max-w-xl">
-                                    Once you delete your account, there is no going back. Deleting your account will
-                                    remove all of your data from our servers.
+                                    Once you delete your account, there is no going back. Deleting your account will remove all of your data
+                                    from our servers.
                                 </p>
 
                                 <DeleteAccountDialog />

@@ -51,36 +51,19 @@ export const ProjectSupprotedEnvironments = ({ clientSide, serverSide }: { clien
     const environments = [];
 
     if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.REQUIRED) {
-        environments.push(<ClientAndServerSide key="Client-and-server" />)
-    }
-    else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) {
-        environments.push(...[
-            <ClientSide key="Client-size" />,
-            <ServerSide key="Server-size" />,
-            <ClientAndServerSide key="Client-and-server" />
-        ])
-    }
-    else if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.OPTIONAL) {
-        environments.push(...[
-            <ClientSide key="Client-size" />,
-            <ClientAndServerSide key="Client-and-server" />
-        ]);
-    }
-    else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.REQUIRED) {
-        environments.push(...[
-            <ServerSide key="Server-size" />,
-            <ClientAndServerSide key="Client-and-server" />
-        ]);
-    }
-    else if (clientSide === ProjectSupport.REQUIRED || clientSide === ProjectSupport.OPTIONAL) {
-        environments.push(...[
-            <ClientSide key="Client-size" />,
-        ]);
-    }
-    else if (serverSide === ProjectSupport.REQUIRED || serverSide === ProjectSupport.OPTIONAL) {
-        environments.push(...[
-            <ServerSide key="Server-size" />,
-        ]);
+        environments.push(<ClientAndServerSide key="Client-and-server" />);
+    } else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(
+            ...[<ClientSide key="Client-size" />, <ServerSide key="Server-size" />, <ClientAndServerSide key="Client-and-server" />],
+        );
+    } else if (clientSide === ProjectSupport.REQUIRED && serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[<ClientSide key="Client-size" />, <ClientAndServerSide key="Client-and-server" />]);
+    } else if (clientSide === ProjectSupport.OPTIONAL && serverSide === ProjectSupport.REQUIRED) {
+        environments.push(...[<ServerSide key="Server-size" />, <ClientAndServerSide key="Client-and-server" />]);
+    } else if (clientSide === ProjectSupport.REQUIRED || clientSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[<ClientSide key="Client-size" />]);
+    } else if (serverSide === ProjectSupport.REQUIRED || serverSide === ProjectSupport.OPTIONAL) {
+        environments.push(...[<ServerSide key="Server-size" />]);
     }
 
     return environments;

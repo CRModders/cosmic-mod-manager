@@ -21,7 +21,6 @@ import { isValidUrl } from "@shared/lib/utils";
 import {
     BoldIcon,
     CodeIcon,
-    DivideCircle,
     Heading1Icon,
     Heading2Icon,
     Heading3Icon,
@@ -494,7 +493,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                                         rel="noreferrer"
                                         target="_blank"
                                         href="https://www.markdownguide.org/basic-syntax/"
-                                        className=" text-blue-600 hover:brightness-110 hover:underline dark:text-blue-400"
+                                        className="link_blue"
                                     >
                                         Markdown format
                                     </a>{" "}

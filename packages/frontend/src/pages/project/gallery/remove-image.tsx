@@ -56,9 +56,7 @@ const RemoveGalleryImage = ({ children, id }: { children: React.ReactNode; id: s
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody className="flex flex-col gap-4">
-                    <span className="text-muted-foreground">
-                        This will remove this gallery image forever (like really forever).
-                    </span>
+                    <span className="text-muted-foreground">This will remove this gallery image forever (like really forever).</span>
                     <DialogFooter>
                         <DialogClose asChild disabled={isLoading}>
                             <CancelButton disabled={isLoading} />

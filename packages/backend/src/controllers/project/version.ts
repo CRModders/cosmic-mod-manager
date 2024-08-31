@@ -125,7 +125,7 @@ export const createNewVersion = async (
     if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType, inferProjectType([...project.loaders, ...formData.loaders]))) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });
-    };
+    }
 
     // Check if duplicate files are not being uploaded
     const isDuplicate = await isAnyDuplicateFile({
@@ -134,14 +134,13 @@ export const createNewVersion = async (
             formData.primaryFile,
             ...(formData.additionalFiles || []).filter((file) => {
                 if (file instanceof File) return file;
-            })
-        ]
+            }),
+        ],
     });
 
     if (isDuplicate === true) {
         return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
-    };
-
+    }
 
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
     const newUrlSlug =
@@ -174,7 +173,7 @@ export const createNewVersion = async (
                 slug: newVersion.id,
             },
         });
-    };
+    }
 
     // Add dependencies
     await createVersionDependencies(newVersion.id, formData.dependencies || []);
@@ -190,14 +189,14 @@ export const createNewVersion = async (
             ...(formData.additionalFiles || []).map((file) => ({
                 file: file,
                 isPrimary: false,
-                storageService: FILE_STORAGE_SERVICES.LOCAL
+                storageService: FILE_STORAGE_SERVICES.LOCAL,
             })),
             {
                 file: formData.primaryFile,
                 isPrimary: true,
-                storageService: FILE_STORAGE_SERVICES.LOCAL
-            }
-        ]
+                storageService: FILE_STORAGE_SERVICES.LOCAL,
+            },
+        ],
     });
 
     // Update project loaders list and supported game versions
@@ -222,7 +221,13 @@ export const createNewVersion = async (
     );
 };
 
-export const updateVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession, formData: z.infer<typeof updateVersionFormSchema>) => {
+export const updateVersionData = async (
+    ctx: Context,
+    projectSlug: string,
+    versionSlug: string,
+    userSession: ContextUserSession,
+    formData: z.infer<typeof updateVersionFormSchema>,
+) => {
     const project = await prisma.project.findUnique({
         where: { slug: projectSlug },
         select: {
@@ -260,21 +265,21 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                         select: {
                             id: true,
                             fileId: true,
-                        }
+                        },
                     },
-                    dependencies: true
-                }
-            }
-        }
+                    dependencies: true,
+                },
+            },
+        },
     });
 
     let targetVersion = null;
-    for (const version of (project?.versions || [])) {
+    for (const version of project?.versions || []) {
         if (version.slug === versionSlug) {
             targetVersion = version;
             break;
         }
-    };
+    }
 
     // Return if project or target version not found
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
@@ -286,7 +291,7 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
     ) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
-    };
+    }
 
     // Delete removed files and add if there are new files uploaded
     const additionalFiles = formData.additionalFiles || [];
@@ -299,7 +304,7 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             if (file instanceof File) {
                 newAdditionalFiles.push(file);
             }
-        };
+        }
 
         const nonNewAdditionalFileIds: string[] = [];
         for (const file of additionalFiles) {
@@ -324,17 +329,17 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             }
 
             await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData);
-        };
+        }
 
         // Check if duplicate files are not being uploaded
         const isDuplicate = await isAnyDuplicateFile({
             projectId: project.id,
-            files: newAdditionalFiles
+            files: newAdditionalFiles,
         });
 
         if (isDuplicate === true) {
             return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
-        };
+        }
 
         // Save the new files
         if (newAdditionalFiles.length) {
@@ -344,11 +349,11 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                 files: newAdditionalFiles.map((file) => ({
                     file: file,
                     isPrimary: false,
-                    storageService: FILE_STORAGE_SERVICES.LOCAL
-                }))
+                    storageService: FILE_STORAGE_SERVICES.LOCAL,
+                })),
             });
         }
-    };
+    }
 
     // Check it the slug is updated and if it is, check if the new slug is available
     let updatedSlug = formData.versionNumber;
@@ -359,12 +364,12 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                 newSlugAvailable = false;
                 break;
             }
-        };
+        }
 
         if (newSlugAvailable !== true) {
             updatedSlug = targetVersion.id;
         }
-    };
+    }
 
     // Re evaluate the project loaders list and supported game versions
     const projectLoaders: string[] = [];
@@ -376,10 +381,10 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             projectLoaders.push(...formData.loaders);
             projectGameVersions.push(...formData.gameVersions);
             continue;
-        };
+        }
         projectLoaders.push(...version.loaders);
         projectGameVersions.push(...version.gameVersions);
-    };
+    }
 
     const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
     const aggregatedGameVersions = aggregateVersions(projectGameVersions);
@@ -400,10 +405,10 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                     isNewDependency = false;
                     break;
                 }
-            };
+            }
 
             if (isNewDependency === true) newDependencies.push(dependency);
-        };
+        }
 
         for (const existingDependency of targetVersion.dependencies) {
             let isDeletedDependency = true;
@@ -412,10 +417,10 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                     isDeletedDependency = false;
                     break;
                 }
-            };
+            }
 
             if (isDeletedDependency === true) deletedDependencies.push(existingDependency.id);
-        };
+        }
 
         // Delete deleted dependencies
         if (deletedDependencies.length) {
@@ -426,12 +431,11 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
                     },
                 },
             });
-        };
+        }
 
         // Create new dependencies
         await createVersionDependencies(targetVersion.id, newDependencies);
     }
-
 
     // Finally update the version data
     await prisma.version.update({
@@ -457,7 +461,7 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
         },
         data: {
             gameVersions: aggregatedGameVersions,
-            loaders: aggregatedLoaderNames
+            loaders: aggregatedLoaderNames,
         },
     });
 
@@ -470,22 +474,27 @@ export const updateVersionData = async (ctx: Context, projectSlug: string, versi
             projectLoadersChanged = true;
             break;
         }
-    };
+    }
 
     for (const gameVersion of project.gameVersions) {
         if (!aggregatedGameVersions.includes(gameVersion)) {
             gameVersionsChanged = true;
             break;
         }
-    };
+    }
 
-    return ctx.json({
-        success: true, message: "Version updated successfully", data: {
-            slug: updatedSlug,
-            projectLoadersChanged,
-            gameVersionsChanged
-        }
-    }, httpCode("ok"));
+    return ctx.json(
+        {
+            success: true,
+            message: "Version updated successfully",
+            data: {
+                slug: updatedSlug,
+                projectLoadersChanged,
+                gameVersionsChanged,
+            },
+        },
+        httpCode("ok"),
+    );
 };
 
 const createVersionDependencies = async (dependentVersionId: string, list: z.infer<typeof VersionDependencies>) => {
@@ -500,25 +509,25 @@ const createVersionDependencies = async (dependentVersionId: string, list: z.inf
     for (const dependency of list) {
         projectIds.add(dependency.projectId);
         if (dependency.versionId) versionIds.add(dependency.versionId);
-    };
+    }
 
     // Get all the projects and versions from database
     const [dependencyProjects, dependencyVersions] = await Promise.all([
         prisma.project.findMany({
             where: {
                 id: {
-                    in: Array.from(projectIds)
-                }
-            }
+                    in: Array.from(projectIds),
+                },
+            },
         }),
 
         prisma.version.findMany({
             where: {
                 id: {
-                    in: Array.from(versionIds)
-                }
-            }
-        })
+                    in: Array.from(versionIds),
+                },
+            },
+        }),
     ]);
 
     const projectMap = new Map<string, string>();
@@ -527,10 +536,10 @@ const createVersionDependencies = async (dependentVersionId: string, list: z.inf
         // TODO: Add check for projectPublishingStatus after that is implemented
         if (project.visibility === ProjectVisibility.PRIVATE) continue;
         projectMap.set(project.id, project.slug);
-    };
+    }
     for (const version of dependencyVersions) {
         versionMap.set(version.id, version.slug);
-    };
+    }
 
     for (const dependency of list) {
         if (projectMap.has(dependency.projectId)) {
@@ -541,7 +550,7 @@ const createVersionDependencies = async (dependentVersionId: string, list: z.inf
                     projectId: dependency.projectId,
                     versionId: dependency.versionId,
                     dependencyType: dependency.dependencyType,
-                    dependentVersionId
+                    dependentVersionId,
                 });
             }
             // If the dependency is a project level dependency
@@ -551,21 +560,21 @@ const createVersionDependencies = async (dependentVersionId: string, list: z.inf
                     projectId: dependency.projectId,
                     versionId: null,
                     dependencyType: dependency.dependencyType,
-                    dependentVersionId
+                    dependentVersionId,
                 });
             }
         }
-    };
+    }
 
     const allDependencies = validProjectLevelDependencies.concat(validVersionLevelDependencies);
     if (allDependencies.length) {
         return await prisma.dependency.createMany({
-            data: allDependencies
-        })
-    };
+            data: allDependencies,
+        });
+    }
 
     return [];
-}
+};
 
 export const getAllProjectVersions = async (
     ctx: Context,
@@ -575,10 +584,7 @@ export const getAllProjectVersions = async (
 ) => {
     const project = await prisma.project.findFirst({
         where: {
-            OR: [
-                { slug: slug },
-                { id: slug }
-            ]
+            OR: [{ slug: slug }, { id: slug }],
         },
         select: {
             ...requiredProjectFields,
@@ -627,7 +633,7 @@ export const getAllProjectVersions = async (
                 type: fileData.type,
                 url: versionFileUrl(project.slug, version.slug, fileData.name),
                 sha1_hash: fileData.sha1_hash,
-                sha512_hash: fileData.sha512_hash
+                sha512_hash: fileData.sha512_hash,
             };
 
             files.push(formattedFile);
@@ -669,7 +675,7 @@ export const getAllProjectVersions = async (
                 id: dependency.id,
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,
-                dependencyType: dependency.dependencyType as DependencyType
+                dependencyType: dependency.dependencyType as DependencyType,
             })),
         });
     }
@@ -680,19 +686,13 @@ export const getAllProjectVersions = async (
 export const getProjectVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession) => {
     const project = await prisma.project.findFirst({
         where: {
-            OR: [
-                { slug: projectSlug },
-                { id: projectSlug }
-            ]
+            OR: [{ slug: projectSlug }, { id: projectSlug }],
         },
         select: {
             ...requiredProjectFields,
             versions: {
                 where: {
-                    OR: [
-                        { slug: versionSlug },
-                        { id: versionSlug }
-                    ]
+                    OR: [{ slug: versionSlug }, { id: versionSlug }],
                 },
                 select: requiredVersionFields,
             },
@@ -736,7 +736,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             type: fileData.type,
             url: versionFileUrl(project.slug, version.slug, fileData.name),
             sha1_hash: fileData.sha1_hash,
-            sha512_hash: fileData.sha512_hash
+            sha512_hash: fileData.sha512_hash,
         };
 
         files.push(formattedFile);
@@ -780,7 +780,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             projectId: dependency.projectId,
             versionId: dependency.versionId,
             dependencyType: dependency.dependencyType as DependencyType,
-        }))
+        })),
     } satisfies ProjectVersionData;
 
     return ctx.json({ success: true, data: versionData }, httpCode("ok"));
@@ -838,7 +838,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     const filesData = await prisma.file.findMany({
         where: {
             id: {
-                in: targetVersion.files.map((file) => file.fileId)
+                in: targetVersion.files.map((file) => file.fileId),
             },
         },
     });

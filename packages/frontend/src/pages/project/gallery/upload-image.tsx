@@ -19,6 +19,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { checkFormValidity } from "@shared/schemas";
 import { addNewGalleryImageFormSchema } from "@shared/schemas/project";
 import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
@@ -99,7 +100,13 @@ const UploadGalleryImageForm = () => {
                 <DialogBody>
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(uploadGalleryImage)}
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                await checkFormValidity(async () => {
+                                    const formValues = addNewGalleryImageFormSchema.parse(form.getValues());
+                                    await uploadGalleryImage(formValues);
+                                });
+                            }}
                             className="w-full flex flex-col items-start justify-start gap-form-elements"
                         >
                             <FormField
@@ -115,14 +122,13 @@ const UploadGalleryImageForm = () => {
                                                 )}
                                             >
                                                 <div className="w-full flex items-center justify-start gap-1.5">
-                                                    {/* {children} */}
                                                     <input
                                                         hidden
                                                         type="file"
                                                         name={field.name}
                                                         id="gallery-image-input"
                                                         className="hidden"
-                                                        accept={".jpg, .jpeg, .png"}
+                                                        accept={".jpg, .jpeg, .png, .webp"}
                                                         onChange={(e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
@@ -136,9 +142,7 @@ const UploadGalleryImageForm = () => {
                                                             <span className="font-semibold">{field.value.name}</span>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-muted-foreground italic">
-                                                            No file choosen
-                                                        </span>
+                                                        <span className="text-muted-foreground italic">No file choosen</span>
                                                     )}
                                                 </div>
 
@@ -189,11 +193,7 @@ const UploadGalleryImageForm = () => {
                                             Description
                                             <FormMessage />
                                         </FormLabel>
-                                        <Textarea
-                                            {...field}
-                                            placeholder="Enter description..."
-                                            className="h-fit min-h-14 resize-none"
-                                        />
+                                        <Textarea {...field} placeholder="Enter description..." className="h-fit min-h-14 resize-none" />
                                     </FormItem>
                                 )}
                             />
@@ -230,16 +230,12 @@ const UploadGalleryImageForm = () => {
                                             Featured
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                A featured gallery image shows up in search and your project card. Only one
-                                                gallery image can be featured.
+                                                A featured gallery image shows up in search and your project card. Only one gallery image
+                                                can be featured.
                                             </FormDescription>
                                         </FormLabel>
                                         {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
-                                        <Button
-                                            variant="secondary"
-                                            type="button"
-                                            onClick={() => field.onChange(!field.value)}
-                                        >
+                                        <Button variant="secondary" type="button" onClick={() => field.onChange(!field.value)}>
                                             {field.value === true ? (
                                                 <StarIcon fill="currentColor" className="w-btn-icon-md h-btn-icon-md" />
                                             ) : (
@@ -257,11 +253,7 @@ const UploadGalleryImageForm = () => {
                                 </DialogClose>
 
                                 <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? (
-                                        <LoadingSpinner size="xs" />
-                                    ) : (
-                                        <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
-                                    )}
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
                                     Add gallery image
                                 </Button>
                             </DialogFooter>

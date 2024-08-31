@@ -41,7 +41,10 @@ const DialogContent = React.forwardRef<
             {...props}
         >
             {children}
-            <DialogPrimitive.Close id="dialog_close_btn" className="absolute right-4 top-4 rounded transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background p-1 disabled:pointer-events-none">
+            <DialogPrimitive.Close
+                id="dialog_close_btn"
+                className="absolute right-4 top-4 rounded transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background p-1 disabled:pointer-events-none"
+            >
                 <XIcon className="w-btn-icon-md h-btn-icon-md" />
                 <span className="sr-only">Close</span>
             </DialogPrimitive.Close>
@@ -71,7 +74,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
-        className={cn("text-lg text-foreground-bright font-bold leading-none tracking-tight pr-6", className)}
+        className={cn("text-lg text-foreground font-bold leading-none tracking-tight pr-6", className)}
         {...props}
     />
 ));
@@ -86,13 +89,15 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
-    Dialog, DialogBody, DialogClose,
-    DialogContent, DialogDescription,
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogOverlay,
     DialogPortal,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 };
-

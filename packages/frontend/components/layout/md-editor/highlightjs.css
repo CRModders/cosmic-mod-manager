@@ -90,12 +90,13 @@
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
-    text-decoration: underline;
-    @apply brightness-110;
+    /* text-decoration: underline; */
+    @apply text-link-hover-foreground;
 }
 
-.markdown-body a:active {
-    @apply brightness-100;
+.markdown-body a:focus-visible img,
+.markdown-body a:hover img {
+    @apply brightness-110;
 }
 
 .markdown-body img {

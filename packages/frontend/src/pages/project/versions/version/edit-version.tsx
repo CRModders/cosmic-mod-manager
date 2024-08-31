@@ -48,7 +48,7 @@ const EditVersionPage = () => {
                 type: file.type,
             });
         }
-    };
+    }
 
     const form = useForm<z.infer<typeof updateVersionFormSchema>>({
         resolver: zodResolver(updateVersionFormSchema),
@@ -61,11 +61,12 @@ const EditVersionPage = () => {
             loaders: versionData?.loaders || [],
             gameVersions: versionData?.gameVersions || [],
             additionalFiles: versionAdditionalFiles,
-            dependencies: versionData?.dependencies.map((dep) => ({
-                projectId: dep.projectId,
-                versionId: dep.versionId || null,
-                dependencyType: dep.dependencyType
-            })) || [],
+            dependencies:
+                versionData?.dependencies.map((dep) => ({
+                    projectId: dep.projectId,
+                    versionId: dep.versionId || null,
+                    dependencyType: dep.dependencyType,
+                })) || [],
         },
     });
     form.watch();
@@ -104,7 +105,7 @@ const EditVersionPage = () => {
 
             // Reload project data if project loaders or game versions have changed due to the version update
             if (result?.data?.projectLoadersChanged === true || result?.data?.projectGameVersionsChanged === true) {
-                await Promise.all([fetchAllProjectVersions(), fetchProjectData()])
+                await Promise.all([fetchAllProjectVersions(), fetchProjectData()]);
             } else {
                 await fetchAllProjectVersions();
             }
@@ -134,8 +135,8 @@ const EditVersionPage = () => {
                     onSubmit={(e) => {
                         e.preventDefault();
                     }}
-                    className="w-full flex flex-col gap-panel-cards items-start justify-start">
-
+                    className="w-full flex flex-col gap-panel-cards items-start justify-start"
+                >
                     <UploadVersionPageTopCard
                         isLoading={isLoading}
                         submitBtnLabel="Save changes"

@@ -1,9 +1,14 @@
 import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "@/controllers/cdn";
+import { RateLimiterMiddleware } from "@/middleware/rate-limiter";
+import { AuthenticationMiddleware } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { Hono } from "hono";
 
 const cdnRouter = new Hono();
+
+cdnRouter.use("*", RateLimiterMiddleware);
+cdnRouter.use("*", AuthenticationMiddleware);
 
 cdnRouter.get("/data/:projectSlug/:icon", async (ctx) => {
     try {

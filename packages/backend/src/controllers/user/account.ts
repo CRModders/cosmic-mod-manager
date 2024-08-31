@@ -134,8 +134,8 @@ export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
         where: {
             userId: confirmationEmail.userId,
             confirmationType: {
-                in: [ConfirmationType.CONFIRM_NEW_PASSWORD, ConfirmationType.CHANGE_ACCOUNT_PASSWORD]
-            }
+                in: [ConfirmationType.CONFIRM_NEW_PASSWORD, ConfirmationType.CHANGE_ACCOUNT_PASSWORD],
+            },
         },
     });
 
@@ -268,7 +268,7 @@ export const setNewPassword = async (ctx: Context, code: string, formData: z.inf
         where: {
             userId: confirmationEmail.userId,
             confirmationType: {
-                in: [ConfirmationType.CHANGE_ACCOUNT_PASSWORD, ConfirmationType.CONFIRM_NEW_PASSWORD]
+                in: [ConfirmationType.CHANGE_ACCOUNT_PASSWORD, ConfirmationType.CONFIRM_NEW_PASSWORD],
             },
         },
     });

@@ -1,5 +1,5 @@
 import { DiscordIcon, fallbackProjectIcon } from "@/components/icons";
-import LoaderIcons from "@/components/loader-icons";
+import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,16 +34,17 @@ import {
     SettingsIcon,
     SquareArrowOutUpRightIcon,
     TagsIcon,
-    UserIcon
+    UserIcon,
 } from "lucide-react";
-import { useContext } from "react";
+import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import NotFoundPage from "../not-found";
-import InteractiveDownloadPopup from "./interactive-download";
 import ProjectNav from "./project-nav";
 import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
+
+const InteractiveDownloadPopup = lazy(() => import("./interactive-download"));
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { theme } = useTheme();
@@ -53,7 +54,11 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     if (!projectData) return null;
     if (projectData === null && fetchingProjectData === false) return <NotFoundPage />;
 
-    const isVersionDetailsPage = isCurrLinkActive(getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"), location.pathname, false);
+    const isVersionDetailsPage = isCurrLinkActive(
+        getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"),
+        location.pathname,
+        false,
+    );
     const projectEnvironments = ProjectSupprotedEnvironments({
         clientSide: projectData.clientSide,
         serverSide: projectData.serverSide,
@@ -93,7 +98,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                     if (!loaderData) return null;
                                     const accentForeground = loaderData?.metadata?.accent?.foreground;
                                     // @ts-ignore
-                                    const loaderIcon: React.ReactNode = LoaderIcons[loaderData.icon];
+                                    const loaderIcon: React.ReactNode = tagIcons[loaderData.name];
 
                                     return (
                                         <Chip
@@ -113,29 +118,25 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                 })}
                             </div>
                         </div>
-                        {
-                            projectEnvironments?.length ?
-                                <>
-                                    <div className="flex flex-wrap items-start justify-start gap-1">
-                                        <span className="block w-full font-bold text-muted-foreground">Environments</span>
-                                        {projectEnvironments.map((item, i) => {
-                                            return (
-                                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                <Chip key={i}>
-                                                    {item}
-                                                </Chip>
-                                            )
-                                        })}
-                                    </div>
-                                </>
-                                : null
-                        }
+                        {projectEnvironments?.length ? (
+                            <>
+                                <div className="flex flex-wrap items-start justify-start gap-1">
+                                    <span className="block w-full font-bold text-muted-foreground">Environments</span>
+                                    {projectEnvironments.map((item, i) => {
+                                        return (
+                                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                            <Chip key={i}>{item}</Chip>
+                                        );
+                                    })}
+                                </div>
+                            </>
+                        ) : null}
                     </Card>
 
                     {projectData?.issueTrackerUrl ||
-                        projectData?.projectSourceUrl ||
-                        projectData?.projectWikiUrl ||
-                        projectData?.discordInviteUrl ? (
+                    projectData?.projectSourceUrl ||
+                    projectData?.projectWikiUrl ||
+                    projectData?.discordInviteUrl ? (
                         <Card className="p-card-surround grid grid-cols-1 gap-1">
                             <h3 className="text-lg font-bold pb-2">Links</h3>
                             {projectData?.issueTrackerUrl ? (
@@ -203,8 +204,8 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                     href={version.primaryFile?.url}
                                                     className={cn(
                                                         "noClickRedirect flex-shrink-0",
-                                                        isVersionDetailsPage ?
-                                                            buttonVariants({ variant: "secondary", size: "icon" })
+                                                        isVersionDetailsPage
+                                                            ? buttonVariants({ variant: "secondary", size: "icon" })
                                                             : buttonVariants({ variant: "default", size: "icon" }),
                                                     )}
                                                 >
@@ -221,7 +222,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                 to={getProjectVersionPagePathname(projectData.type?.[0], projectData.slug, version.slug)}
                                                 className="noClickRedirect w-fit"
                                             >
-                                                <p className="font-semibold leading-none">{version.title}</p>
+                                                <p className="font-bold leading-none">{version.title}</p>
                                             </Link>
                                             <p className="text-pretty leading-tight text-muted-foreground">
                                                 {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
@@ -341,7 +342,9 @@ const PageHeader = ({
 
             <div className="flex flex-col justify-center gap-4">
                 <div className="flex flex-wrap items-center gap-2">
-                    <InteractiveDownloadPopup />
+                    <Suspense>
+                        <InteractiveDownloadPopup />
+                    </Suspense>
                     <Button
                         variant={"secondary"}
                         className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
