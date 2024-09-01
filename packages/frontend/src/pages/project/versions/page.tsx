@@ -158,13 +158,13 @@ const ProjectVersionsListTable = ({
                                         </div>
                                     </TableCell>
 
+                                    {/* MID WIDTH AND ABOVE */}
                                     <TableCell className="hidden md:table-cell pl-table-side-pad pr-2">
-                                        {/* MID WIDTH AND ABOVE */}
                                         <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
                                     </TableCell>
 
+                                    {/* MID WIDTH AND ABOVE */}
                                     <TableCell className="hidden md:table-cell">
-                                        {/* MID WIDTH AND ABOVE */}
                                         <VersionName
                                             title={version.title}
                                             number={version.versionNumber}
@@ -172,34 +172,34 @@ const ProjectVersionsListTable = ({
                                         />
                                     </TableCell>
 
+                                    {/* MID WIDTH AND ABOVE */}
                                     <TableCell className="hidden md:table-cell">
-                                        {/* MID WIDTH AND ABOVE */}
                                         <div className="w-full flex flex-wrap items-start justify-start gap-1.5">
                                             <GameVersions gameVersions={version.gameVersions} />
                                             <ProjectLoaders versionLoaders={version.loaders} />
                                         </div>
                                     </TableCell>
 
+                                    {/* MID WIDTH AND BELOW XL*/}
                                     <TableCell className="hidden md:table-cell xl:hidden">
-                                        {/* MID WIDTH AND BELOW XL*/}
                                         <div className="min-w-max lex flex-wrap items-start justify-start gap-3">
                                             <DatePublished dateStr={version.datePublished} />
                                             <DownloadsCount downloads={version.downloads} />
                                         </div>
                                     </TableCell>
 
+                                    {/* XL WIDTH AND ABOVE */}
                                     <TableCell className="hidden md:hidden xl:table-cell">
-                                        {/* XL WIDTH AND ABOVE */}
                                         <DatePublished dateStr={version.datePublished} iconVisible={false} />
                                     </TableCell>
 
+                                    {/* XL WIDTH AND ABOVE */}
                                     <TableCell className="hidden md:hidden xl:table-cell">
-                                        {/* XL WIDTH AND ABOVE */}
                                         <DownloadsCount downloads={version.downloads} iconVisible={false} />
                                     </TableCell>
 
+                                    {/* ALWAYS THE SAME */}
                                     <TableCell className="pr-table-side-pad-sm md:pr-table-side-pad">
-                                        {/* ALWAYS THE SAME */}
                                         <div className="w-full flex gap-1 items-center justify-end">
                                             <a
                                                 href={version.primaryFile?.url || ""}

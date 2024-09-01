@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-    --scrollbar-width: 0.6rem;
     --tint-hue: 210;
     --bg-saturation: 14%;
     --accent-color-hue: 345;
@@ -109,25 +108,25 @@ html body {
 }
 
 ::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-    height: 8px;
+    width: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-    width: var(--scrollbar-width);
-    background-color: hsla(var(--extra-muted-foreground), 0.5);
-}
-
-::-webkit-scrollbar-track {
-    background-color: hsla(var(--card-background));
-}
-
+::-webkit-scrollbar-thumb,
 body * ::-webkit-scrollbar-thumb {
-    width: var(--scrollbar-width);
-    height: var(--scrollbar-width);
     background-color: hsla(var(--extra-muted-foreground), 0.5);
 }
 
+::-webkit-scrollbar-thumb:hover,
+body * ::-webkit-scrollbar-thumb:hover {
+    background-color: hsla(var(--extra-muted-foreground), 0.6);
+}
+
+::-webkit-scrollbar-thumb:active,
+body * ::-webkit-scrollbar-thumb:active {
+    background-color: hsla(var(--extra-muted-foreground), 0.75);
+}
+
+::-webkit-scrollbar-track,
 body * ::-webkit-scrollbar-track {
     background-color: hsla(var(--card-background));
 }

@@ -33,7 +33,7 @@ export const ImgWrapper = ({
         return (
             <div
                 className={cn(
-                    "flex items-center justify-center h-24 aspect-square rounded-lg bg-shallow-background/50 border border-shallow-background",
+                    "flex items-center justify-center h-24 aspect-square rounded bg-shallow-background/50 border border-shallow-background",
                     className,
                 )}
             >
@@ -47,7 +47,7 @@ export const ImgWrapper = ({
             src={src}
             alt={alt}
             className={cn(
-                "h-24 object-contain rounded-lg bg-shallow-background/50 border border-shallow-background aspect-square",
+                "h-24 object-contain rounded shadow shadow-background/50 bg-shallow-background/50 border border-shallow-background aspect-square",
                 className,
             )}
         />
