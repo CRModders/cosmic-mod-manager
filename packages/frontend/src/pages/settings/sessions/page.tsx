@@ -159,8 +159,8 @@ const SessionsPage = () => {
                                                   <span className="text-muted-foreground italic">Current session</span>
                                               ) : (
                                                   <Button
-                                                      variant={"secondary"}
-                                                      className="bg-card-background/70 hover:bg-card-background dark:bg-shallow-background dark:hover:bg-shallower-background/80"
+                                                      variant={"secondary-inverted"}
+                                                      className=""
                                                       disabled={isLoading.value}
                                                       onClick={() => {
                                                           revokeSession(session.id);

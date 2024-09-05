@@ -43,9 +43,9 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
             onClick={copyText}
         >
             {label ? (
-                <span className={cn("text-sm leading-none text-muted-foreground", labelClassName)}>
+                <span className={cn("text-sm font-mono leading-none text-foreground dark:text-muted-foreground", labelClassName)}>
                     {label.slice(0, maxLabelChars || label.length)}
-                    {maxLabelChars && label.length > maxLabelChars ? "..." : ""}
+                    {maxLabelChars && label.length > maxLabelChars ? "…" : ""}
                 </span>
             ) : null}
             <div className="w-btn-icon h-btn-icon flex items-center justify-center">

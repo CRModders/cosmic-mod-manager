@@ -75,7 +75,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="max-w-md min-w-72 mx-[auto] mr-4" align="center">
+            <PopoverContent className="max-w-md min-w-72 mx-[auto] mr-4" align="end">
                 <ProfileDropDown session={session} isPopoverOpen={isOpen} />
             </PopoverContent>
         </Popover>

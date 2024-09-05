@@ -16,15 +16,15 @@
     --font-2xl: 2.17rem;
 
     /* DARK THEME */
-    --foreground-dark: var(--tint-hue), var(--bg-saturation), 88%;
-    --foreground-bright-dark: var(--tint-hue), var(--bg-saturation), 96%;
     --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
-    --muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 74%;
-    --extra-muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 58%;
+    --foreground-bright-dark: var(--tint-hue), var(--bg-saturation), 98%;
+    --foreground-dark: var(--tint-hue), var(--bg-saturation), 90%;
+    --muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 78%;
+    --extra-muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 60%;
     --background-dark: var(--tint-hue), var(--bg-saturation), 5%;
     --card-background-dark: var(--tint-hue), var(--bg-saturation), 12%;
     --accent-background-dark: var(--accent-color-hue), 85%, 62%;
-    --shallow-background-dark: var(--tint-hue), var(--bg-saturation), 22%;
+    --shallow-background-dark: var(--tint-hue), var(--bg-saturation), 20%;
     --shallower-background-dark: var(--tint-hue), var(--bg-saturation), 32%;
     --danger-background-dark: 0, 92%, 65%;
     --danger-foreground-dark: 0, 91%, 71%;
@@ -34,22 +34,22 @@
     --link-hover-foreground-dark: 210, 100%, 75%;
 
     /* LIGHT THEME */
-    --foreground-light: var(--tint-hue), var(--bg-saturation), 18%;
-    --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 10%;
     --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
-    --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 34%;
-    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 46%;
+    --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 8%;
+    --foreground-light: var(--tint-hue), var(--bg-saturation), 16%;
+    --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 26%;
+    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 34%;
     --background-light: var(--tint-hue), var(--bg-saturation), 92%;
     --card-background-light: var(--tint-hue), var(--bg-saturation), 100%;
     --accent-background-light: var(--accent-color-hue), 80%, 54%;
-    --shallow-background-light: var(--tint-hue), var(--bg-saturation), 90%;
-    --shallower-background-light: var(--tint-hue), var(--bg-saturation), 81%;
+    --shallow-background-light: var(--tint-hue), var(--bg-saturation), 92%;
+    --shallower-background-light: var(--tint-hue), var(--bg-saturation), 82%;
     --danger-background-light: 0, 75%, 46%;
     --danger-foreground-light: 0, 65%, 52%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 24%;
-    --link-foreground-light: 200, 92%, 30%;
-    --link-hover-foreground-light: 220, 100%, 50%;
+    --link-foreground-light: 208, 88%, 42%;
+    --link-hover-foreground-light: 215, 80%, 50%;
 }
 
 html,

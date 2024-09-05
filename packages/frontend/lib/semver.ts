@@ -49,9 +49,12 @@ export const formatVersionsListString = (list: string[]): string => {
     );
 
     for (const versionGroup of groupedVersions) {
-        if (versionGroup.length === 1) formattedStr += `${versionGroup[0]}, `;
+        const firstItem = versionGroup[0].endsWith(".0") ? versionGroup[0].slice(0, -2) : versionGroup[0];
+
+        if (versionGroup.length === 1) formattedStr += `${firstItem}, `;
         else {
-            formattedStr += `${versionGroup.at(-1)}–${versionGroup[0]}, `;
+            const lastItem = versionGroup.at(-1)?.endsWith(".0") ? versionGroup.at(-1)?.slice(0, -2) : versionGroup.at(-1);
+            formattedStr += `${lastItem}–${firstItem}, `;
         }
     }
 

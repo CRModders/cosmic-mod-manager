@@ -13,13 +13,7 @@ const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props
         <div
             className={cn(
                 "flex gap-1.5 items-center justify-start",
-                releaseChannel === VersionReleaseChannel.RELEASE
-                    ? "text-blue-500 dark:text-blue-400"
-                    : releaseChannel === VersionReleaseChannel.BETA
-                      ? "text-orange-600 dark:text-orange-400"
-                      : releaseChannel === VersionReleaseChannel.ALPHA
-                        ? "text-danger-foreground"
-                        : "",
+                releaseChannelTextColor(releaseChannel as VersionReleaseChannel),
                 className,
             )}
         >
@@ -38,17 +32,32 @@ export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
         <div
             className={cn(
                 "rounded-full h-10 aspect-square shrink-0 flex items-center justify-center",
-                releaseChannel === VersionReleaseChannel.RELEASE
-                    ? "text-blue-500 bg-blue-500/15 dark:text-blue-400 dark:bg-blue-400/15"
-                    : releaseChannel === VersionReleaseChannel.BETA
-                      ? "text-orange-600 bg-orange-600/15 dark:text-orange-400 dark:bg-orange-400/15"
-                      : releaseChannel === VersionReleaseChannel.ALPHA
-                        ? "text-danger-foreground bg-danger-foreground/15"
-                        : "",
+                releaseChannelTextColor(releaseChannel as VersionReleaseChannel),
+                releaseChannelBackgroundColor(releaseChannel as VersionReleaseChannel),
                 className,
             )}
         >
             <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
         </div>
     );
+};
+
+export const releaseChannelTextColor = (releaseChannel: VersionReleaseChannel) => {
+    return releaseChannel === VersionReleaseChannel.RELEASE
+        ? "!text-blue-500 dark:!text-blue-400"
+        : releaseChannel === VersionReleaseChannel.BETA
+          ? "!text-orange-600 dark:!text-orange-400"
+          : releaseChannel === VersionReleaseChannel.ALPHA
+            ? "!text-danger-foreground"
+            : "";
+};
+
+export const releaseChannelBackgroundColor = (releaseChannel: VersionReleaseChannel) => {
+    return releaseChannel === VersionReleaseChannel.RELEASE
+        ? "!bg-blue-500/15 dark:!bg-blue-400/15"
+        : releaseChannel === VersionReleaseChannel.BETA
+          ? "!bg-orange-600/15 dark:!bg-orange-400/15"
+          : releaseChannel === VersionReleaseChannel.ALPHA
+            ? "!bg-danger-foreground/15"
+            : "";
 };

@@ -304,7 +304,7 @@ const PageHeader = ({
                 <ImgWrapper
                     src={imageUrl(projectData.icon)}
                     alt={projectData.name}
-                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black"
+                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-lg"
                     fallback={fallbackProjectIcon}
                 />
                 <div className="flex flex-col gap-1">
@@ -345,23 +345,17 @@ const PageHeader = ({
                     <Suspense>
                         <InteractiveDownloadPopup />
                     </Suspense>
-                    <Button
-                        variant={"secondary"}
-                        className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
-                    >
+                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0">
                         <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
                     </Button>
-                    <Button
-                        variant={"secondary"}
-                        className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
-                    >
+                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0">
                         <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
                     </Button>
                     {currUsersMembership?.id ? (
                         <VariantButtonLink
                             url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
-                            variant={"secondary"}
-                            className="rounded-full w-11 h-11 p-0 bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
+                            variant={"secondary-inverted"}
+                            className="rounded-full w-11 h-11 p-0"
                         >
                             <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
                         </VariantButtonLink>
@@ -369,10 +363,7 @@ const PageHeader = ({
 
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button
-                                variant={"ghost"}
-                                className="rounded-full w-11 h-11 p-0 hover:bg-card-background/70 dark:hover:bg-shallow-background"
-                            >
+                            <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0">
                                 <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
                             </Button>
                         </PopoverTrigger>

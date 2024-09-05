@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ChipButton } from "@/components/ui/chip";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { VariantButtonLink } from "@/components/ui/link";
-import { MultiSelectInput } from "@/components/ui/multi-select";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
@@ -27,7 +28,7 @@ import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project";
 import { DependencyType, DependsOn, type FileObjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import { FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import type { Control, FieldValues, RefCallBack } from "react-hook-form";
 import { toast } from "sonner";
@@ -175,14 +176,46 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel htmlFor="supported-loaders-filter-input">Loaders</FormLabel>
-                        <MultiSelectInput
-                            inputName={field.name}
-                            options={loaders.map((loader) => loader.name)}
-                            inputPlaceholder="Choose loaders.."
-                            inputId={"supported-loaders-filter-input"}
-                            initialSelectedItems={field.value || []}
-                            setSelectedValues={field.onChange}
-                        />
+
+                        {field.value?.length > 0 && (
+                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
+                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                    return (
+                                        <ChipButton
+                                            variant="secondary"
+                                            key={loader}
+                                            onClick={() => {
+                                                field.onChange(field.value?.filter((l: string) => l !== loader));
+                                            }}
+                                        >
+                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                            {CapitalizeAndFormatString(loader)}
+                                        </ChipButton>
+                                    );
+                                })}
+                                {field.value?.length > 3 && (
+                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
+                                        and {field.value?.length - 3} more
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        <MultiSelect
+                            hideSelectedItems
+                            selectedOptions={field.value || []}
+                            options={loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader.name) || "", value: loader.name }))}
+                            onChange={field.onChange}
+                            classNames={{
+                                popupContent: "min-w-[15rem]",
+                                listItem: "font-medium",
+                            }}
+                        >
+                            <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
+                                Choose loaders
+                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
+                            </Button>
+                        </MultiSelect>
                     </FormItem>
                 )}
             />
@@ -193,14 +226,47 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel htmlFor="supported-game-versions-filter-input">Game versions</FormLabel>
-                        <MultiSelectInput
-                            inputName={field.name}
-                            options={GAME_VERSIONS.map((version) => version.version)}
-                            inputPlaceholder="Choose versions.."
-                            inputId={"supported-game-versions-filter-input"}
-                            initialSelectedItems={field.value || []}
-                            setSelectedValues={field.onChange}
-                        />
+                        {field.value?.length > 0 && (
+                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
+                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((version: string) => {
+                                    return (
+                                        <ChipButton
+                                            variant="secondary"
+                                            key={version}
+                                            onClick={() => {
+                                                field.onChange(field.value?.filter((v: string) => v !== version));
+                                            }}
+                                        >
+                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                            {version}
+                                        </ChipButton>
+                                    );
+                                })}
+                                {field.value?.length > 3 && (
+                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
+                                        and {field.value?.length - 3} more
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        <MultiSelect
+                            hideSelectedItems
+                            selectedOptions={field.value || []}
+                            options={GAME_VERSIONS.map((version) => ({
+                                label: CapitalizeAndFormatString(version.version) || "",
+                                value: version.version,
+                            }))}
+                            onChange={field.onChange}
+                            classNames={{
+                                popupContent: "min-w-[15rem]",
+                            }}
+                        >
+                            <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
+                                Choose versions
+                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
+                            </Button>
+                        </MultiSelect>
                     </FormItem>
                 )}
             />

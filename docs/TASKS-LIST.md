@@ -40,7 +40,9 @@
 - [x] Add option to add dependencies on a version
 - [x] Add file hashes to prevent duplicate file upload
 
-- [-] Add function to count downloads
+- [x] Add function to count downloads
+- [-] Add filters on the changelog page
+- [-] Add filters on the versions page
 
 - [-] Add settings page
   - [x] General settings page

@@ -6,10 +6,10 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { useSession } from "@/src/contexts/auth";
 import { SITE_NAME_SHORT } from "@shared/config";
+import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 
 const HomePage = () => {
     const { session } = useSession();
@@ -97,11 +97,7 @@ const HomePage = () => {
                                 Sign Up
                             </VariantButtonLink>
                         ) : (
-                            <VariantButtonLink
-                                url="/dashboard/projects"
-                                size={"lg"}
-                                className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
-                            >
+                            <VariantButtonLink url="/dashboard/projects" size={"lg"} className="px-6" variant="secondary-inverted">
                                 <LayoutDashboardIcon className="w-btn-icon-md h-btn-icon-md" />
                                 Dashboard
                             </VariantButtonLink>

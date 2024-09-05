@@ -7,7 +7,7 @@ import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Link, NavLink as RouterNavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
@@ -61,12 +61,7 @@ const Navbar = () => {
                             {NavLinks.map((link) => {
                                 return (
                                     <li key={link.href} className="flex items-center justify-center">
-                                        <Navlink
-                                            href={link.href}
-                                            label={link.label}
-                                            className="h-9"
-                                            // className="h-nav-item navLinkText flex items-center justify-center"
-                                        >
+                                        <Navlink href={link.href} label={link.label} className="h-9">
                                             {link.label}
                                         </Navlink>
                                     </li>
@@ -108,7 +103,7 @@ export const Navlink = ({ href, label, children, className }: Props) => {
     return (
         <ButtonLink
             url={href}
-            className={cn("hover:bg-card-background/80 dark:hover:bg-shallow-background/80", className)}
+            className={cn("hover:bg-card-background/80 dark:hover:bg-shallow-background/80 font-semibold", className)}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >
             {children ? children : label}

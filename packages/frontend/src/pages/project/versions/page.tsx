@@ -2,9 +2,10 @@ import PaginatedNavigation from "@/components/pagination-nav";
 import loaderIcons from "@/components/tag-icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Chip from "@/components/ui/chip";
+import Chip, { ChipButton } from "@/components/ui/chip";
 import { VariantButtonLink } from "@/components/ui/link";
-import { ReleaseChannelBadge } from "@/components/ui/release-channel-pill";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { ReleaseChannelBadge, releaseChannelBackgroundColor, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getGroupedVersionsList } from "@/lib/semver";
@@ -15,15 +16,33 @@ import useTheme from "@/src/hooks/use-theme";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, isUserAProjectMember } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { ProjectPermissions } from "@shared/types";
+import { ProjectPermissions, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import { CalendarIcon, DownloadIcon, InfoIcon, MoreVerticalIcon, UploadIcon } from "lucide-react";
-import { useContext, useMemo } from "react";
+import {
+    CalendarIcon,
+    ChevronDownIcon,
+    DownloadIcon,
+    FilterIcon,
+    InfoIcon,
+    MoreVerticalIcon,
+    UploadIcon,
+    XCircleIcon,
+    XIcon,
+} from "lucide-react";
+import { useContext, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./../styles.css";
 
+interface FilterItems {
+    loaders: string[];
+    gameVersions: string[];
+    releaseChannels: string[];
+}
+
 const ProjectVersionsPage = () => {
+    const { theme } = useTheme();
+    const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
     const { projectData, allProjectVersions } = useContext(projectContext);
     const { session } = useSession();
     const projectMembership = useMemo(() => {
@@ -36,6 +55,55 @@ const ProjectVersionsPage = () => {
 
     if (projectData === null || allProjectVersions === null) return null;
 
+    const filteredItems = useMemo(() => {
+        const filteredItems: ProjectVersionData[] = [];
+
+        for (const version of allProjectVersions) {
+            if (filters.loaders.length) {
+                let loaderMatch = false;
+                for (const loaderFilter of filters.loaders) {
+                    if (version.loaders.includes(loaderFilter)) {
+                        loaderMatch = true;
+                        break;
+                    }
+                }
+
+                if (!loaderMatch) continue;
+            }
+
+            if (filters.gameVersions.length) {
+                let versionMatch = false;
+                for (const versionFilter of filters.gameVersions) {
+                    if (version.gameVersions.includes(versionFilter)) {
+                        versionMatch = true;
+                        break;
+                    }
+                }
+
+                if (!versionMatch) continue;
+            }
+
+            if (filters.releaseChannels.length) {
+                if (!filters.releaseChannels.includes(version.releaseChannel)) continue;
+            }
+
+            filteredItems.push(version);
+        }
+
+        return filteredItems;
+    }, [filters, allProjectVersions]);
+
+    const availableReleaseChannels: string[] = [];
+    for (const version of allProjectVersions) {
+        if (!availableReleaseChannels.includes(version.releaseChannel)) {
+            availableReleaseChannels.push(version.releaseChannel);
+        }
+    }
+
+    const resetFilters = () => {
+        setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
+    };
+
     return (
         <>
             {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
@@ -43,9 +111,123 @@ const ProjectVersionsPage = () => {
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 
-            <span className="text-extra-muted-foreground italic">TODO: ADD FILTERS</span>
+            <div className="w-full flex items-center justify-start gap-2">
+                {projectData.loaders.length > 1 ? (
+                    <MultiSelect
+                        popupAlign="start"
+                        selectedOptions={[...filters.loaders]}
+                        options={projectData.loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader) || "", value: loader }))}
+                        onChange={(values) => {
+                            setFilters((prev) => ({ ...prev, loaders: values }));
+                        }}
+                    >
+                        <Button variant="secondary-inverted">
+                            <FilterIcon className="w-btn-icon h-btn-icon" />
+                            Loaders
+                            <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                        </Button>
+                    </MultiSelect>
+                ) : null}
 
-            <ProjectVersionsListTable projectData={projectData} allProjectVersions={allProjectVersions} />
+                <MultiSelect
+                    selectedOptions={[...filters.gameVersions]}
+                    options={projectData.gameVersions.map((ver) => ({ label: ver, value: ver }))}
+                    onChange={(values) => {
+                        setFilters((prev) => ({ ...prev, gameVersions: values }));
+                    }}
+                >
+                    <Button variant="secondary-inverted">
+                        <FilterIcon className="w-btn-icon h-btn-icon" />
+                        Game versions
+                        <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                    </Button>
+                </MultiSelect>
+
+                {availableReleaseChannels.length > 1 ? (
+                    <MultiSelect
+                        selectedOptions={[...filters.releaseChannels]}
+                        options={availableReleaseChannels.map((channel) => ({
+                            label: CapitalizeAndFormatString(channel) || "",
+                            value: channel,
+                        }))}
+                        onChange={(values) => {
+                            setFilters((prev) => ({ ...prev, releaseChannels: values }));
+                        }}
+                    >
+                        <Button variant="secondary-inverted">
+                            <FilterIcon className="w-btn-icon h-btn-icon" />
+                            Channels
+                            <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                        </Button>
+                    </MultiSelect>
+                ) : null}
+            </div>
+
+            {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0 ? (
+                <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
+                    {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
+                        <ChipButton onClick={resetFilters}>
+                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            Clear all filters
+                        </ChipButton>
+                    ) : null}
+
+                    {filters.releaseChannels.map((channel) => (
+                        <ChipButton
+                            key={channel}
+                            className={cn(
+                                releaseChannelTextColor(channel as VersionReleaseChannel),
+                                releaseChannelBackgroundColor(channel as VersionReleaseChannel),
+                            )}
+                            onClick={() => {
+                                setFilters((prev) => ({ ...prev, releaseChannels: prev.releaseChannels.filter((c) => c !== channel) }));
+                            }}
+                        >
+                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            {CapitalizeAndFormatString(channel)}
+                        </ChipButton>
+                    ))}
+
+                    {filters.gameVersions.map((version) => (
+                        <ChipButton
+                            key={version}
+                            onClick={() => {
+                                setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version) }));
+                            }}
+                        >
+                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            {CapitalizeAndFormatString(version)}
+                        </ChipButton>
+                    ))}
+
+                    {filters.loaders.map((loader) => {
+                        const loaderData = getLoaderFromString(loader);
+                        if (!loaderData) return null;
+                        const accentForeground = loaderData.metadata?.accent?.foreground;
+
+                        return (
+                            <ChipButton
+                                key={loader}
+                                onClick={() => {
+                                    setFilters((prev) => ({ ...prev, loaders: prev.loaders.filter((l) => l !== loader) }));
+                                }}
+                                style={{
+                                    color: accentForeground
+                                        ? theme === "dark"
+                                            ? accentForeground?.dark
+                                            : accentForeground?.light
+                                        : "hsla(var(--muted-foreground))",
+                                }}
+                            >
+                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                {CapitalizeAndFormatString(loader)}
+                            </ChipButton>
+                        );
+                    })}
+                </div>
+            ) : null}
+
+            <ProjectVersionsListTable projectData={projectData} allProjectVersions={filteredItems} />
         </>
     );
 };
@@ -240,7 +422,7 @@ const VersionName = ({ title, number, url }: { title: string; number: string; ur
             >
                 {number}
             </Link>
-            <span className="leading-none font-medium text-muted-foreground text-tiny">{title}</span>
+            <span className="leading-none font-medium text-muted-foreground text-sm">{title}</span>
         </div>
     );
 };
