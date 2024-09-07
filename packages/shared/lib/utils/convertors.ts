@@ -106,3 +106,15 @@ export const getLoaderFromString = (loaderName: string) => {
     }
     return null;
 };
+
+export const getLoadersFromNames = (loaderNames: string[]) => {
+    const loadersList = [];
+
+    for (const loaderName of loaderNames) {
+        const loader = getLoaderFromString(loaderName);
+        if (loader) {
+            loadersList.push(loader);
+        }
+    }
+    return loadersList;
+};

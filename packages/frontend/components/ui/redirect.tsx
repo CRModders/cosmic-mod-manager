@@ -6,7 +6,7 @@ const Redirect = ({ redirectTo }: { redirectTo: string }) => {
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        navigate(redirectTo);
+        navigate(redirectTo, { replace: true });
     }, [navigate]);
 
     return null;

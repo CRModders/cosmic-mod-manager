@@ -101,6 +101,7 @@ const ProjectsPage = () => {
                                                         tabIndex={-1}
                                                         to={getProjectPagePathname(project.type[0], project.slug)}
                                                         className="noClickRedirect flex shrink-0"
+                                                        aria-label={`view ${project.name}`}
                                                     >
                                                         <ImgWrapper
                                                             src={imageUrl(project.icon)}
@@ -171,6 +172,7 @@ const ProjectsPage = () => {
                                                     <Link
                                                         to={`${getProjectPagePathname(project.type[0], project.slug)}/settings`}
                                                         className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background hover:neumorphic_shadow"
+                                                        aria-label="project settings"
                                                     >
                                                         <SettingsIcon className="w-btn-icon-md h-btn-icon-md" />
                                                     </Link>
@@ -191,11 +193,3 @@ const ProjectsPage = () => {
 };
 
 export default ProjectsPage;
-
-const ProjectName = ({ name, url }: { name: string; url: string }) => {
-    return (
-        <Link to={url} className="noClickRedirect leading-none font-bold text-lg text-foreground hover:underline">
-            {name}
-        </Link>
-    );
-};

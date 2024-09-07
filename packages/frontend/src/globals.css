@@ -38,7 +38,7 @@
     --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 8%;
     --foreground-light: var(--tint-hue), var(--bg-saturation), 16%;
     --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 26%;
-    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 34%;
+    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 38%;
     --background-light: var(--tint-hue), var(--bg-saturation), 92%;
     --card-background-light: var(--tint-hue), var(--bg-saturation), 100%;
     --accent-background-light: var(--accent-color-hue), 80%, 54%;

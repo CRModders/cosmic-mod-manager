@@ -1,13 +1,13 @@
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
-import type { ProjectDetailsData, ProjectVersionData, ProjectsListData, TeamMember } from "@shared/types/api";
+import type { ProfilePageProjectsListData, ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSession } from "./auth";
 
-type ProjectContextType = {
+type ProjectContext = {
     fetchProjectData: (slug?: string) => Promise<void>;
     alterProjectSlug: (slug: string) => void;
     projectData: ProjectDetailsData | null | undefined;
@@ -19,7 +19,7 @@ type ProjectContextType = {
     projectDependencies: DependencyData;
 };
 
-export const projectContext = createContext<ProjectContextType>({
+export const projectContext = createContext<ProjectContext>({
     projectData: undefined,
     fetchProjectData: async (slug?: string) => {
         slug;
@@ -63,7 +63,7 @@ const getProjectDependencies = async (slug: string) => {
     try {
         const response = await useFetch(`/api/project/${slug}/dependencies`);
         return (await response.json()) as {
-            projects: ProjectsListData[];
+            projects: ProfilePageProjectsListData[];
             versions: ProjectVersionData[];
         } | null;
     } catch (err) {
@@ -78,15 +78,14 @@ export const ProjectContextProvider = ({
     children: React.ReactNode;
 }) => {
     const { slug } = useParams();
-    const [fetchingProjectData, setFetchingProjectData] = useState(true);
+    const [loadingProjectData, setLoadingProjectData] = useState(true);
     const [currUsersMembership, setCurrUsersMembership] = useState<TeamMember | null>(null);
     const [currProjectSlug, setCurrProjectSlug] = useState(slug || "");
     const { session } = useSession();
-    const navigate = useNavigate();
 
     const {
         data: projectData,
-        isFetching: isProjectDataFetching,
+        isLoading: isProjectDataLoading,
         refetch: refetchProjectData,
     } = useQuery<ProjectDetailsData | null>({
         queryKey: [`${currProjectSlug}-project-data`],
@@ -97,7 +96,7 @@ export const ProjectContextProvider = ({
 
     const {
         data: allProjectVersions,
-        isFetching: isAllProjectVersionsFetching,
+        isLoading: isAllProjectVersionsLoading,
         refetch: refetchAllProjectVersions,
     } = useQuery<ProjectVersionData[] | null>({
         queryKey: [`${currProjectSlug}-project-all-versions`],
@@ -106,9 +105,9 @@ export const ProjectContextProvider = ({
 
     const {
         data: projectDependencies,
-        isFetching: isProjectDependenciesFetching,
+        isLoading: isProjectDependenciesLoading,
         refetch: refetchProjectDependencies,
-    } = useQuery<{ projects: ProjectsListData[]; versions: ProjectVersionData[] } | null>({
+    } = useQuery<{ projects: ProfilePageProjectsListData[]; versions: ProjectVersionData[] } | null>({
         queryKey: [`${currProjectSlug}-project-dependencies`],
         queryFn: () => getProjectDependencies(currProjectSlug),
     });
@@ -165,16 +164,16 @@ export const ProjectContextProvider = ({
     }, [allProjectVersions]);
 
     useEffect(() => {
-        if (isProjectDataFetching || isAllProjectVersionsFetching || isProjectDependenciesFetching) setFetchingProjectData(true);
-        else setFetchingProjectData(false);
-    }, [isProjectDataFetching, isAllProjectVersionsFetching, isProjectDependenciesFetching]);
+        if (isProjectDataLoading || isAllProjectVersionsLoading || isProjectDependenciesLoading) setLoadingProjectData(true);
+        else setLoadingProjectData(false);
+    }, [isProjectDataLoading, isAllProjectVersionsLoading, isProjectDependenciesLoading]);
 
     return (
         <projectContext.Provider
             value={{
                 projectData,
                 fetchProjectData,
-                fetchingProjectData,
+                fetchingProjectData: loadingProjectData,
                 alterProjectSlug: setCurrProjectSlug,
                 featuredProjectVersions,
                 allProjectVersions,

@@ -389,6 +389,7 @@ const ProjectVersionsListTable = ({
                                                     buttonVariants({ variant: "default", size: "icon" }),
                                                     "noClickRedirect shrink-0 !w-10 !h-10 rounded-full",
                                                 )}
+                                                aria-label={`download ${version.title}`}
                                             >
                                                 <DownloadIcon className="w-btn-icon h-btn-icon" />
                                             </a>
@@ -396,6 +397,7 @@ const ProjectVersionsListTable = ({
                                                 variant="ghost"
                                                 size="icon"
                                                 className="noClickRedirect rounded-full shrink-0 !w-10 !h-10"
+                                                aria-label="more options"
                                             >
                                                 <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
                                             </Button>

@@ -279,7 +279,13 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
                         </div>
 
                         <div className="flex gap-2 items-center justify-center">
-                            <VariantButtonLink url={version.primaryFile?.url || ""} size={"icon"} variant="default" className="shrink-0">
+                            <VariantButtonLink
+                                url={version.primaryFile?.url || ""}
+                                size={"icon"}
+                                variant="default"
+                                className="shrink-0"
+                                label={`download ${version.title}`}
+                            >
                                 <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
                             </VariantButtonLink>
                         </div>

@@ -111,3 +111,23 @@ export const getValidProjectCategories = (projectTypes: string[]) => {
 
     return validCategories;
 };
+
+export const getProjectCategoryDataFromName = (categoryName: string) => {
+    for (const category of categories) {
+        if (category.name === categoryName.toLowerCase()) return category;
+    }
+
+    return null;
+};
+
+export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
+    const uniqueCategoryNames = Array.from(new Set(categoryNames));
+    const categoriesData = [];
+
+    for (const name of uniqueCategoryNames) {
+        const category = getProjectCategoryDataFromName(name);
+        if (category) categoriesData.push(category);
+    }
+
+    return categoriesData;
+};

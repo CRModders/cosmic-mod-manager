@@ -98,18 +98,20 @@ const GalleryItemCard = ({
 }) => {
     return (
         <div className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2">
-            <div className="flex items-center justify-center aspect-video bg-[hsla(var(--background-dark))] rounded-lg overflow-hidden">
-                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+            <button
+                type="button"
+                className="flex items-center justify-center aspect-video bg-[hsla(var(--background-dark))] rounded-lg overflow-hidden"
+                onClick={(e) => {
+                    setActiveIndex(index);
+                    setdialogOpen(true);
+                }}
+            >
                 <img
                     src={imageUrl(galleryItem.image)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
-                    onClick={(e) => {
-                        setActiveIndex(index);
-                        setdialogOpen(true);
-                    }}
                 />
-            </div>
+            </button>
 
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
                 <div className="w-full flex flex-col items-start justify-start ">

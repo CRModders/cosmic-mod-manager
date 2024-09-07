@@ -40,7 +40,7 @@ import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import NotFoundPage from "../not-found";
-import ProjectNav from "./project-nav";
+import SecondaryNav from "./secondary-nav";
 import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
@@ -208,6 +208,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                             ? buttonVariants({ variant: "secondary", size: "icon" })
                                                             : buttonVariants({ variant: "default", size: "icon" }),
                                                     )}
+                                                    aria-label={`download ${version.title}`}
                                                 >
                                                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
                                                 </a>
@@ -280,9 +281,27 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                 </div>
 
                 <div className="w-full flex flex-col gap-panel-cards [grid-area:_content]">
-                    <ProjectNav
-                        baseHref={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}
+                    <SecondaryNav
+                        urlBase={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}
                         className="bg-card-background rounded-lg px-3 py-2"
+                        links={[
+                            {
+                                label: "Description",
+                                href: "",
+                            },
+                            {
+                                label: "Gallery",
+                                href: "/gallery",
+                            },
+                            {
+                                label: "Changelog",
+                                href: "/changelog",
+                            },
+                            {
+                                label: "Versions",
+                                href: "/versions",
+                            },
+                        ]}
                     />
                     <Outlet />
                 </div>
@@ -345,10 +364,10 @@ const PageHeader = ({
                     <Suspense>
                         <InteractiveDownloadPopup />
                     </Suspense>
-                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0">
+                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
                         <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
                     </Button>
-                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0">
+                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
                         <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
                     </Button>
                     {currUsersMembership?.id ? (
@@ -356,6 +375,7 @@ const PageHeader = ({
                             url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
                             variant={"secondary-inverted"}
                             className="rounded-full w-11 h-11 p-0"
+                            label="project settings"
                         >
                             <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
                         </VariantButtonLink>
@@ -363,7 +383,7 @@ const PageHeader = ({
 
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0">
+                            <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
                                 <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
                             </Button>
                         </PopoverTrigger>
@@ -414,14 +434,9 @@ export const ProjectMember = ({
                 <div className="flex items-center justify-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{userName}</span>
                     {isOwner === true && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <CrownIcon className="w-[0.8rem] h-[0.8rem] text-orange-500 dark:text-orange-400" />
-                                </TooltipTrigger>
-                                <TooltipContent>Project owner</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <span className="flex items-center justify-center shrink-0" title="Owner">
+                            <CrownIcon className="w-[0.8rem] h-[0.8rem] text-orange-500 dark:text-orange-400" />
+                        </span>
                     )}
                 </div>
                 <span className="text-sm leading-tight">{role}</span>

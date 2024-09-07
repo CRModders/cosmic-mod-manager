@@ -220,7 +220,7 @@ export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
     );
 };
 
-const commonProps = { className: "w-[0.95rem] aspect-square" };
+const commonProps = { className: "flex items-center justify-center w-[0.95rem] aspect-square" };
 
 const tagIcons = {
     puzzle_loader: <PuzzleIcon {...commonProps} />,
@@ -291,5 +291,5 @@ export function TagIcon({ name }: { name: string }) {
     const icon = tagIcons[name];
     if (!icon) return null;
 
-    return <i className="flex items-center justify-center">{icon}</i>;
+    return icon;
 }

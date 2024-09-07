@@ -11,6 +11,7 @@ export default defineConfig({
                 tag: "html",
                 attrs: {
                     class: "dark",
+                    lang: "en",
                 },
                 append: false,
             },

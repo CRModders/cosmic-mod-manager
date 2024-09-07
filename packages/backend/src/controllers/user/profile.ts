@@ -1,15 +1,38 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { getUserSessionFromCtx } from "@/utils";
+import { getUserSessionFromCtx, inferProjectType } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import { projectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import type { LinkedProvidersListData, UserSessionStates } from "@shared/types";
-import type { SessionListData } from "@shared/types/api";
+import type { LinkedProvidersListData, ProjectPublishingStatus, ProjectSupport, ProjectVisibility, UserSessionStates } from "@shared/types";
+import type { ProfilePageProjectsListData, SessionListData } from "@shared/types/api";
+import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
 import type { z } from "zod";
+
+export const getUserProfileData = async (ctx: Context, userSession: ContextUserSession | undefined, slug: string) => {
+    const user = await prisma.user.findFirst({
+        where: {
+            OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
+        },
+    });
+
+    if (!user) return ctx.json({ success: false, message: "user not found" }, httpCode("not_found"));
+
+    const dataObj: UserProfileData = {
+        id: user.id,
+        name: user.name,
+        userName: user.userName,
+        avatarUrl: user.avatarUrl,
+        bio: user.bio,
+        dateJoined: user.dateJoined,
+    };
+
+    return ctx.json({ success: true, user: dataObj }, httpCode("ok"));
+};
 
 export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeof profileUpdateFormSchema>) => {
     const userSession = getUserSessionFromCtx(ctx);
@@ -117,4 +140,58 @@ export const getAllSessions = async (ctx: Context, userSession: ContextUserSessi
     }
 
     return ctx.json({ success: true, sessions: sessions }, httpCode("ok"));
+};
+
+export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUserSession | undefined, slug: string) => {
+    const user = await prisma.user.findFirst({
+        where: {
+            OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
+        },
+    });
+
+    if (!user) return ctx.json({ success: false, message: "user not found" }, httpCode("not_found"));
+
+    const list = await prisma.teamMember.findMany({
+        where: {
+            userId: user.id,
+        },
+        include: {
+            team: {
+                include: {
+                    project: true,
+                },
+            },
+        },
+    });
+
+    if (!list) return ctx.json({ success: true, projects: [] }, httpCode("ok"));
+
+    const projectListData: ProfilePageProjectsListData[] = [];
+    for (const item of list) {
+        const project = item.team.project;
+        if (!project) continue;
+
+        projectListData.push({
+            id: project.id,
+            slug: project.slug,
+            name: project.name,
+            summary: project.summary,
+            type: inferProjectType(project.loaders),
+            icon: projectIconUrl(project.slug, project.icon || ""),
+            downloads: project.downloads,
+            followers: project.followers,
+            dateUpdated: project.dateUpdated,
+            datePublished: project.datePublished,
+            status: project.status as ProjectPublishingStatus,
+            visibility: project.visibility as ProjectVisibility,
+            clientSide: project.clientSide as ProjectSupport,
+            serverSide: project.serverSide as ProjectSupport,
+            featuredCategories: project.featuredCategories,
+            categories: project.categories,
+            gameVersions: project.gameVersions,
+            loaders: project.loaders,
+        });
+    }
+
+    return ctx.json({ success: true, projects: projectListData }, httpCode("ok"));
 };

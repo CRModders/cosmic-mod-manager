@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { IconSvgProps } from "@/types";
-import { XIcon } from "lucide-react";
+import { UserIcon, XIcon } from "lucide-react";
 import type React from "react";
 
 export const DefaultSvgSize = "1rem";
@@ -569,3 +569,4 @@ export const CubeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
 export const CancelButtonIcon = XIcon;
 
 export const fallbackProjectIcon = <CubeIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
+export const fallbackUserIcon = <UserIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;

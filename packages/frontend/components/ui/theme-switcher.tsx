@@ -1,9 +1,9 @@
 import { MoonIcon, SunIcon } from "@/components/icons";
+import { cn } from "@/lib/utils";
 import useTheme from "@/src/hooks/use-theme";
 import { useEffect } from "react";
-import { cn } from "@/lib/utils";
-import "./styles.css";
 import { Button } from "./button";
+import "./styles.css";
 
 type Props = {
     className?: string;

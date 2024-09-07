@@ -1,0 +1,25 @@
+.profile-page-layout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "content"
+        "sidebar";
+}
+
+.profile-page-header {
+    display: grid;
+    grid-area: header;
+}
+
+@media (min-width: 64rem) {
+    .profile-page-layout {
+        grid-template-rows: auto auto 1fr;
+        grid-template-columns: 19rem 1fr;
+        grid-template-areas:
+            "header header"
+            "sidebar content"
+            "dummy content";
+    }
+}

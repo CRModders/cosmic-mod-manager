@@ -74,7 +74,7 @@ const EditProfileDialog = ({
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="" variant={"ghost"}>
-                    <Edit3Icon className="w-btn-icon-sm h-btn-icon-sm" />
+                    <Edit3Icon className="w-btn-icon h-btn-icon" />
                     Edit
                 </Button>
             </DialogTrigger>

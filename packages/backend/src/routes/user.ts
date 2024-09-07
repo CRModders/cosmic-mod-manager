@@ -11,7 +11,13 @@ import {
     sendAccountPasswordChangeLink,
     setNewPassword,
 } from "@/controllers/user/account";
-import { getAllSessions, getLinkedAuthProviders, updateUserProfile } from "@/controllers/user/profile";
+import {
+    getAllSessions,
+    getAllVisibleProjects,
+    getLinkedAuthProviders,
+    getUserProfileData,
+    updateUserProfile,
+} from "@/controllers/user/profile";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
@@ -28,6 +34,32 @@ import { type Context, Hono } from "hono";
 import { ctxReqBodyKey } from "../../types";
 
 const userRouter = new Hono();
+
+userRouter.get("/_/:slug", async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+        const userSession = getUserSessionFromCtx(ctx);
+
+        return await getUserProfileData(ctx, userSession, slug);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+userRouter.get("/_/:slug/projects", async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+        const userSession = getUserSessionFromCtx(ctx);
+
+        return await getAllVisibleProjects(ctx, userSession, slug);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
 
 userRouter.post("/update-profile", LoginProtectedRoute, async (ctx: Context) => {
     try {

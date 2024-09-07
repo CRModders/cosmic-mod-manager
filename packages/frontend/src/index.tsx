@@ -7,6 +7,7 @@ import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ProjectContextProvider from "./contexts/curr-project";
+import { UserProfileContextProvider } from "./contexts/user-profile";
 import { RedirectIfLoggedIn, RedirectIfNotLoggedIn } from "./pages/auth/guards";
 import DashboardLayout from "./pages/dashboard/layout";
 import ErrorView from "./pages/error-page";
@@ -43,6 +44,10 @@ const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/settings/la
 const GeneralSettingsPage = lazy(() => import("@/src/pages/project/settings/page"));
 const DescriptionSettings = lazy(() => import("@/src/pages/project/settings/description"));
 const TagsSettingsPage = lazy(() => import("@/src/pages/project/settings/tags"));
+
+// User's profile page
+const UserPageLayout = lazy(() => import("./pages/user/layout"));
+const UserProfilePage = lazy(() => import("./pages/user/page"));
 
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => {
@@ -266,6 +271,32 @@ const router = createBrowserRouter([
                                 <ChangePasswordPage />
                             </Suspense>
                         ),
+                    },
+                    {
+                        path: "user",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <UserProfileContextProvider>
+                                    <UserPageLayout />
+                                </UserProfileContextProvider>
+                            </Suspense>
+                        ),
+                        children: [
+                            {
+                                path: ":userName",
+                                element: <Outlet />,
+                                children: [
+                                    {
+                                        path: "",
+                                        element: <UserProfilePage />,
+                                    },
+                                    {
+                                        path: ":projectType",
+                                        element: <UserProfilePage />,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         path: "settings",

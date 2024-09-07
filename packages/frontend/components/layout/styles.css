@@ -1,0 +1,49 @@
+.searchItemWrapperGrid {
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: min-content 1fr min-content min-content;
+    grid-template-areas:
+        'icon title'
+        'summary summary'
+        'tags tags'
+        'stats stats';
+}
+
+
+/* XS+ */
+@media screen and (min-width: 23rem) {
+    .searchItemWrapperGrid {
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: min-content 1fr min-content min-content;
+        grid-template-areas:
+            'icon title'
+            'icon summary'
+            'tags tags'
+            'stats stats';
+    }
+}
+
+
+/* MD+ */
+@media screen and (min-width: 47rem) {
+    .searchItemWrapperGrid {
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: min-content 1fr min-content min-content;
+        grid-template-areas:
+            'icon title'
+            'icon summary'
+            'icon tags'
+            'stats stats';
+    }
+}
+
+/* LG+ */
+@media screen and (min-width: 79rem) {
+    .searchItemWrapperGrid {
+        grid-template-columns: min-content 1fr min-content;
+        grid-template-rows: min-content 1fr auto;
+        grid-template-areas:
+            'icon title stats'
+            'icon summary stats'
+            'icon tags stats';
+    }
+}

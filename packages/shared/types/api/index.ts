@@ -7,7 +7,7 @@ import type {
     ProjectVisibility,
     UserSessionStates,
     VersionReleaseChannel,
-} from ".";
+} from "../";
 
 export interface SessionListData {
     id: string;
@@ -28,9 +28,9 @@ export interface ProjectsListData {
     id: string;
     name: string;
     slug: string;
+    status: ProjectPublishingStatus;
     icon: string | null;
     type: string[];
-    status: ProjectPublishingStatus;
 }
 
 export interface TeamMember {
@@ -151,4 +151,27 @@ export interface ProjectVersionData {
     primaryFile: VersionFile | null;
     author: VersionAuthor;
     dependencies: DependencyListData[];
+}
+
+export interface ProfilePageProjectsListData {
+    id: string;
+    slug: string;
+    name: string;
+    summary: string;
+    type: string[];
+    icon: string | null;
+    downloads: number;
+    followers: number;
+    dateUpdated: Date;
+    datePublished: Date;
+    status: ProjectPublishingStatus;
+    visibility: ProjectVisibility;
+    clientSide: ProjectSupport;
+    serverSide: ProjectSupport;
+    featuredCategories: string[];
+    categories: string[];
+    gameVersions: string[];
+    loaders: string[];
+
+    // author: Author;
 }

@@ -38,6 +38,7 @@ export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
             )}
         >
             <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
+            <span className="sr-only">{CapitalizeAndFormatString(releaseChannel)}</span>
         </div>
     );
 };

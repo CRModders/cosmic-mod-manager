@@ -23,7 +23,7 @@ const OverviewPage = () => {
 
                     <div className="flex flex-col items-start justify-center">
                         <span className="text-xl font-semibold">{session.userName}</span>
-                        <Link to={"/settings/account"} className="flex gap-1 items-center justify-center link_blue">
+                        <Link to={`/user/${session.userName}`} className="flex gap-1 items-center justify-center link_blue">
                             View your profile
                             <ChevronRightIcon className="w-btn-icon h-btn-icon" />
                         </Link>
