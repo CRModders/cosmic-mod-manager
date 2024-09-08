@@ -135,7 +135,7 @@ model Project {
     dateApproved   DateTime?
     status         String    @db.VarChar(32)
     visibility     String    @db.VarChar(32)
-    icon           String?   @db.VarChar(32)
+    iconFileId     String?   @db.VarChar(32)
 
     // null for custom licenses
     licenseId   String? @db.VarChar(32)
@@ -207,10 +207,10 @@ model Dependency {
 
 model GalleryItem {
     id          String   @id @db.VarChar(32)
+    imageFileId String   @db.VarChar(32)
     projectId   String   @db.VarChar(32)
     name        String   @db.VarChar(64)
     description String   @db.VarChar(512)
-    image       String   @db.VarChar(32)
     featured    Boolean
     dateCreated DateTime @default(now())
     orderIndex  Int

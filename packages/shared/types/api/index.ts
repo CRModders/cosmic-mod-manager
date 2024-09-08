@@ -110,16 +110,6 @@ export interface VersionFile {
     sha512_hash: string | null;
 }
 
-export interface DBFileData {
-    id: string;
-    name: string;
-    size: number;
-    type: string;
-    hash: string | null;
-    url: string;
-    storageService: string;
-}
-
 export interface VersionAuthor {
     id: string;
     userName: string;

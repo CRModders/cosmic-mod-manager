@@ -8,7 +8,7 @@ import {
     removeGalleryImage,
     updateGalleryImage,
 } from "@/controllers/project/project";
-import { updateProject, updateProjectDescription, updateProjectTags } from "@/controllers/project/settings";
+import { updateProject, updateProjectDescription, updateProjectExternalLinks, updateProjectTags } from "@/controllers/project/settings";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -18,6 +18,7 @@ import {
     generalProjectSettingsFormSchema,
     newProjectFormSchema,
     updateDescriptionFormSchema,
+    updateExternalLinksFormSchema,
     updateGalleryImageFormSchema,
     updateProjectTagsFormSchema,
 } from "@shared/schemas/project";
@@ -145,6 +146,24 @@ projectRouter.patch("/:slug/tags", LoginProtectedRoute, async (ctx: Context) => 
         }
 
         return await updateProjectTags(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.patch("/:slug/external-links", LoginProtectedRoute, async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!slug || !userSession?.id) return defaultInvalidReqResponse(ctx);
+
+        const { data, error } = parseValueToSchema(updateExternalLinksFormSchema, ctx.get(ctxReqBodyKey));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+
+        return await updateProjectExternalLinks(ctx, userSession, slug, data);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

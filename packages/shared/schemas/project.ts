@@ -17,7 +17,7 @@ import {
 } from "../config/forms";
 import GAME_VERSIONS from "../config/game-versions";
 import { categories, loaders } from "../config/project";
-import { createURLSafeSlug } from "../lib/utils";
+import { createURLSafeSlug, isValidUrl } from "../lib/utils";
 import { getFileType } from "../lib/utils/convertors";
 import { DependencyType, FileType, ProjectSupport, ProjectVisibility, VersionReleaseChannel } from "../types";
 
@@ -281,4 +281,18 @@ const projectCategories = z.array(z.enum([categoryNames[0], ...categoryNames.sli
 export const updateProjectTagsFormSchema = z.object({
     categories: projectCategories,
     featuredCategories: projectCategories.max(MAX_FEATURED_PROJECT_TAGS, `You can feature at most ${MAX_FEATURED_PROJECT_TAGS} tags only!`),
+});
+
+const externalLink = z.string().refine(
+    (value) => {
+        if (!value) return true;
+        return isValidUrl(value);
+    },
+    { message: "Invalid URL" },
+);
+export const updateExternalLinksFormSchema = z.object({
+    issueTracker: externalLink.optional(),
+    sourceCode: externalLink.optional(),
+    wikiPage: externalLink.optional(),
+    discordServer: externalLink.optional(),
 });

@@ -1,5 +1,6 @@
 import { FILE_STORAGE_SERVICES } from "@/../types";
 import { rm } from "node:fs/promises";
+import { uploadImageToImgbb } from "./imgbb-image-upload";
 
 export const BASE_STORAGE_PATH = "./uploads";
 
@@ -38,6 +39,9 @@ export const getFileFromStorage = async (storageService: string, url: string) =>
             const file = Bun.file(`${BASE_STORAGE_PATH}/${url}`);
             return file;
         }
+        if (storageService === FILE_STORAGE_SERVICES.IMGBB) {
+            return url;
+        }
         return null;
     } catch (error) {
         return null;
@@ -58,7 +62,12 @@ export const handleFileOperation = async (
             if (operation === "delete") {
                 return await deleteDataFromLocalStorage(path);
             }
+        } else if (storageService === FILE_STORAGE_SERVICES.IMGBB) {
+            if (operation === "save" && file) {
+                return await uploadImageToImgbb(file);
+            }
         }
+
         throw new Error(`Unsupported storage service: ${storageService}`);
     } catch (error) {
         console.error(`Error during file operation (${operation}) at path: ${path}`, error);

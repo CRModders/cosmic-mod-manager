@@ -10,7 +10,7 @@ const cdnRouter = new Hono();
 cdnRouter.use("*", RateLimiterMiddleware);
 cdnRouter.use("*", AuthenticationMiddleware);
 
-cdnRouter.get("/data/:projectSlug/:icon", async (ctx) => {
+cdnRouter.get("/data/:projectSlug/icon", async (ctx) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug } = ctx.req.param();

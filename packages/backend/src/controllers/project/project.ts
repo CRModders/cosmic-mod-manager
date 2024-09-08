@@ -1,9 +1,10 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import prisma from "@/services/prisma";
-import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
+import { createFilePathSafeString, saveProjectGalleryFile } from "@/services/storage";
 import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
+import type { File as DbFile } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
@@ -121,7 +122,7 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
                             name: true,
                             slug: true,
                             status: true,
-                            icon: true,
+                            iconFileId: true,
                             visibility: true,
                             loaders: true,
                             organisation: {
@@ -157,9 +158,8 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
         }
     }
 
-    for (const {
-        team: { project },
-    } of data) {
+    for (const item of data) {
+        const project = item.team.project;
         if (!project?.id || !isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList))
             continue;
 
@@ -168,7 +168,7 @@ export const getAllUserProjects = async (ctx: Context, userId: string, userSessi
             name: project.name,
             slug: project.slug,
             status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl(project.slug, project.icon || ""),
+            icon: projectIconUrl(project.slug, project.iconFileId || ""),
             type: inferProjectType(project.loaders),
         });
     }
@@ -199,7 +199,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             downloads: true,
             followers: true,
 
-            icon: true,
+            iconFileId: true,
             issueTrackerUrl: true,
             projectSourceUrl: true,
             projectWikiUrl: true,
@@ -216,7 +216,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     name: true,
                     description: true,
                     featured: true,
-                    image: true,
+                    imageFileId: true,
                     dateCreated: true,
                     orderIndex: true,
                 },
@@ -261,6 +261,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
     }
 
+    const galleryFiles = await getFilesFromId(project.gallery.map((item) => item.imageFileId));
+
     const organisation = project.organisation;
     return ctx.json(
         {
@@ -268,7 +270,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             project: {
                 id: project.id,
                 name: project.name,
-                icon: projectIconUrl(project.slug, project.icon || ""),
+                icon: projectIconUrl(project.slug, project.iconFileId || ""),
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
@@ -296,7 +298,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     id: galleryItem.id,
                     name: galleryItem.name,
                     description: galleryItem.description,
-                    image: projectGalleryFileUrl(project.slug, galleryItem.image),
+                    image: projectGalleryFileUrl(project.slug, galleryFiles.get(galleryItem.imageFileId)?.name || ""),
                     featured: galleryItem.featured,
                     dateCreated: galleryItem.dateCreated,
                     orderIndex: galleryItem.orderIndex,
@@ -327,6 +329,23 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         },
         httpCode("ok"),
     );
+};
+
+const getFilesFromId = async (fileIds: string[]) => {
+    const data = await prisma.file.findMany({
+        where: {
+            id: {
+                in: fileIds,
+            },
+        },
+    });
+
+    const map = new Map<string, DbFile>();
+    for (const file of data) {
+        map.set(file.id, file);
+    }
+
+    return map;
 };
 
 export const addNewGalleryImage = async (
@@ -400,13 +419,27 @@ export const addNewGalleryImage = async (
             },
         });
 
-        if (existingFeaturedImage?.id)
+        if (existingFeaturedImage?.id) {
             return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+        }
     }
 
-    const fileName = `${FILE_STORAGE_SERVICES.LOCAL}-${nanoid(STRING_ID_LENGTH)}.${getFileType(formData.image.type)}`;
-    await saveProjectGalleryFile(project.id, fileName, FILE_STORAGE_SERVICES.LOCAL, formData.image);
+    const fileName = createFilePathSafeString(formData.image.name);
+    const fileUrl = await saveProjectGalleryFile(project.id, fileName, FILE_STORAGE_SERVICES.IMGBB, formData.image);
 
+    // Create the generic file entry in the database
+    const dbFile = await prisma.file.create({
+        data: {
+            id: nanoid(STRING_ID_LENGTH),
+            name: fileName,
+            size: formData.image.size,
+            type: getFileType(formData.image.type) || "",
+            url: fileUrl?.path || "",
+            storageService: FILE_STORAGE_SERVICES.IMGBB,
+        },
+    });
+
+    // Create the gallery item
     await prisma.galleryItem.create({
         data: {
             id: nanoid(STRING_ID_LENGTH),
@@ -414,7 +447,7 @@ export const addNewGalleryImage = async (
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
-            image: fileName,
+            imageFileId: dbFile.id,
             orderIndex: formData.orderIndex || project.gallery?.[0]?.orderIndex + 1 || 1,
         },
     });
@@ -431,7 +464,7 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
                 where: { id: galleryItemId },
                 select: {
                     id: true,
-                    image: true,
+                    imageFileId: true,
                 },
             },
             team: {
@@ -473,11 +506,18 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
     }
 
     // Delete the file from storage
-    await deleteProjectGalleryFile(project.id, project.gallery[0].image, FILE_STORAGE_SERVICES.LOCAL);
+    // await deleteProjectGalleryFile(project.id, project.gallery[0].imageFileId, FILE_STORAGE_SERVICES.IMGBB);
 
     // Delete gallery item from database
     await prisma.galleryItem.delete({
         where: { id: galleryItemId },
+    });
+
+    // Delete the file from database
+    await prisma.file.delete({
+        where: {
+            id: project.gallery[0].imageFileId,
+        },
     });
 
     return ctx.json({ success: true, message: "Gallery image deleted" }, httpCode("ok"));

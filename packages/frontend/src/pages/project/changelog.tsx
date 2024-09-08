@@ -98,6 +98,10 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
         setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
     };
 
+    const loadersFilterVisible = projectData.loaders.length > 1;
+    const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
+    const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
+
     return (
         <>
             <Helmet>
@@ -105,58 +109,64 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                     {projectData?.name || ""} - Changelog | {SITE_NAME_SHORT}
                 </title>
             </Helmet>
+            {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible ? (
+                <div className="w-full flex items-center justify-start gap-2">
+                    {loadersFilterVisible ? (
+                        <MultiSelect
+                            popupAlign="start"
+                            selectedOptions={[...filters.loaders]}
+                            options={projectData.loaders.map((loader) => ({
+                                label: CapitalizeAndFormatString(loader) || "",
+                                value: loader,
+                            }))}
+                            onChange={(values) => {
+                                setFilters((prev) => ({ ...prev, loaders: values }));
+                            }}
+                        >
+                            <Button variant="secondary-inverted">
+                                <FilterIcon className="w-btn-icon h-btn-icon" />
+                                Loaders
+                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                            </Button>
+                        </MultiSelect>
+                    ) : null}
 
-            <div className="w-full flex items-center justify-start gap-2">
-                {projectData.loaders.length > 1 ? (
-                    <MultiSelect
-                        popupAlign="start"
-                        selectedOptions={[...filters.loaders]}
-                        options={projectData.loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader) || "", value: loader }))}
-                        onChange={(values) => {
-                            setFilters((prev) => ({ ...prev, loaders: values }));
-                        }}
-                    >
-                        <Button variant="secondary-inverted">
-                            <FilterIcon className="w-btn-icon h-btn-icon" />
-                            Loaders
-                            <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                        </Button>
-                    </MultiSelect>
-                ) : null}
+                    {gameVersionsFilterVisible ? (
+                        <MultiSelect
+                            selectedOptions={[...filters.gameVersions]}
+                            options={projectData.gameVersions.map((ver) => ({ label: ver, value: ver }))}
+                            onChange={(values) => {
+                                setFilters((prev) => ({ ...prev, gameVersions: values }));
+                            }}
+                        >
+                            <Button variant="secondary-inverted">
+                                <FilterIcon className="w-btn-icon h-btn-icon" />
+                                Game versions
+                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                            </Button>
+                        </MultiSelect>
+                    ) : null}
 
-                <MultiSelect
-                    selectedOptions={[...filters.gameVersions]}
-                    options={projectData.gameVersions.map((ver) => ({ label: ver, value: ver }))}
-                    onChange={(values) => {
-                        setFilters((prev) => ({ ...prev, gameVersions: values }));
-                    }}
-                >
-                    <Button variant="secondary-inverted">
-                        <FilterIcon className="w-btn-icon h-btn-icon" />
-                        Game versions
-                        <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                    </Button>
-                </MultiSelect>
-
-                {availableReleaseChannels.length > 1 ? (
-                    <MultiSelect
-                        selectedOptions={[...filters.releaseChannels]}
-                        options={availableReleaseChannels.map((channel) => ({
-                            label: CapitalizeAndFormatString(channel) || "",
-                            value: channel,
-                        }))}
-                        onChange={(values) => {
-                            setFilters((prev) => ({ ...prev, releaseChannels: values }));
-                        }}
-                    >
-                        <Button variant="secondary-inverted">
-                            <FilterIcon className="w-btn-icon h-btn-icon" />
-                            Channels
-                            <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                        </Button>
-                    </MultiSelect>
-                ) : null}
-            </div>
+                    {releaseChannelsFilterVisible ? (
+                        <MultiSelect
+                            selectedOptions={[...filters.releaseChannels]}
+                            options={availableReleaseChannels.map((channel) => ({
+                                label: CapitalizeAndFormatString(channel) || "",
+                                value: channel,
+                            }))}
+                            onChange={(values) => {
+                                setFilters((prev) => ({ ...prev, releaseChannels: values }));
+                            }}
+                        >
+                            <Button variant="secondary-inverted">
+                                <FilterIcon className="w-btn-icon h-btn-icon" />
+                                Channels
+                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                            </Button>
+                        </MultiSelect>
+                    ) : null}
+                </div>
+            ) : null}
 
             {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0 ? (
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">

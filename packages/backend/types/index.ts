@@ -35,4 +35,5 @@ export interface ContextUserSession extends User {
 
 export enum FILE_STORAGE_SERVICES {
     LOCAL = "local",
+    IMGBB = "imgbb",
 }

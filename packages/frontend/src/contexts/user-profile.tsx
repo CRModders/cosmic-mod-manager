@@ -58,7 +58,7 @@ export const UserProfileContextProvider = ({ children }: { children: React.React
             {children}
             {isFetchingData ? <AbsolutePositionedSpinner /> : null}
             {!isFetchingData && !userData.data ? (
-                <NotFoundPage title="User not found" description="The user you are looking for does not exist." />
+                <NotFoundPage title="User not found" description={`No user exists with username or ID of "${userName}"`} />
             ) : null}
         </userProfileContext.Provider>
     );

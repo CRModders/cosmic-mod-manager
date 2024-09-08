@@ -12,7 +12,7 @@ const SecondaryNav = ({ urlBase, className, links }: { urlBase: string; classNam
             <ul className="w-full flex gap-1 flex-wrap">
                 {links.map((link) => {
                     return (
-                        <li key={`${urlBase}-link.href`} className="flex items-center justify-center">
+                        <li key={`${urlBase}-${link.href}`} className="flex items-center justify-center">
                             <ButtonLink url={`${urlBase}${link.href}`} className="h-10 px-4 py-0 rounded font-semibold">
                                 {link.label}
                             </ButtonLink>

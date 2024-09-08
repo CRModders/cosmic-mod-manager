@@ -1,12 +1,12 @@
+import type { ContextUserSession } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-increment";
-import { getFileFromStorage, getProjectStoragePath } from "@/services/storage";
+import { getFileFromStorage } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import type { Context } from "hono";
-import { type ContextUserSession, FILE_STORAGE_SERVICES } from "../../../types";
 import { getUserIpAddress } from "../auth/commons";
 
 export const serveVersionFile = async (
@@ -108,13 +108,21 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
             OR: [{ slug: slug }, { id: slug }],
         },
     });
+    if (!project?.iconFileId) return ctx.json({}, httpCode("not_found"));
 
-    if (!project?.icon) return ctx.json({}, httpCode("not_found"));
+    const iconFileData = await prisma.file.findUnique({
+        where: {
+            id: project.iconFileId,
+        },
+    });
+    if (!iconFileData?.id) return ctx.json({}, httpCode("not_found"));
 
-    const iconFile = await getFileFromStorage(FILE_STORAGE_SERVICES.LOCAL, `${getProjectStoragePath(project.id)}/${project.icon}`);
-    if (!iconFile) return ctx.json({}, httpCode("not_found"));
+    const iconFile = await getFileFromStorage(iconFileData.storageService, iconFileData.url);
+    // Respond accordingly
+    if (iconFile instanceof File) return new Response(iconFile);
+    if (typeof iconFile === "string") return ctx.redirect(iconFile);
 
-    return new Response(iconFile);
+    return ctx.json({}, httpCode("not_found"));
 };
 
 export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, userSession: ContextUserSession | undefined) => {
@@ -124,21 +132,27 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
         },
         select: {
             id: true,
-            gallery: {
-                where: {
-                    image: image,
-                },
+            gallery: true,
+        },
+    });
+    if (!project?.gallery?.[0]?.id) return ctx.json({}, httpCode("not_found"));
+
+    const dbFile = await prisma.file.findFirst({
+        where: {
+            id: {
+                in: project.gallery.map((galleryItem) => galleryItem.imageFileId),
             },
+            name: image,
         },
     });
 
-    if (!project?.gallery?.[0]?.id) return ctx.json({}, httpCode("not_found"));
+    if (!dbFile) return ctx.json({}, httpCode("not_found"));
 
-    const imageFile = await getFileFromStorage(
-        FILE_STORAGE_SERVICES.LOCAL,
-        `${getProjectStoragePath(project.id)}/gallery/${project.gallery[0].image}`,
-    );
+    const imageFile = await getFileFromStorage(dbFile.storageService, dbFile.url);
     if (!imageFile) return ctx.json({}, httpCode("not_found"));
 
-    return new Response(imageFile);
+    if (imageFile instanceof File) return new Response(imageFile);
+    if (typeof imageFile === "string") return ctx.redirect(imageFile);
+
+    return ctx.json({}, httpCode("not_found"));
 };

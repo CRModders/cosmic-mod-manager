@@ -5,6 +5,7 @@ import type { ProfilePageProjectsListData, ProjectDetailsData, ProjectVersionDat
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import NotFoundPage from "../pages/not-found";
 import { useSession } from "./auth";
 
 type ProjectContext = {
@@ -186,7 +187,10 @@ export const ProjectContextProvider = ({
             }}
         >
             {children}
-            {slug !== projectData?.slug && slug !== projectData?.id ? <AbsolutePositionedSpinner /> : null}
+            {slug !== projectData?.slug && slug !== projectData?.id && loadingProjectData ? <AbsolutePositionedSpinner /> : null}
+            {!loadingProjectData && !projectData?.id ? (
+                <NotFoundPage title="Project not found" description={`The project with the slug/ID "${slug}" does not exist.`} />
+            ) : null}
         </projectContext.Provider>
     );
 };

@@ -815,15 +815,24 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
                 },
             },
             versions: {
-                where: { slug: versionSlug },
                 select: {
                     id: true,
+                    slug: true,
                     files: true,
+                    loaders: true,
+                    gameVersions: true,
                 },
             },
         },
     });
-    const targetVersion = project?.versions?.[0];
+    let targetVersion = null;
+    for (const version of project?.versions || []) {
+        if (version.slug === versionSlug || version.id === versionSlug) {
+            targetVersion = version;
+            break;
+        }
+    }
+
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
@@ -852,6 +861,30 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     const deletedVersion = await prisma.version.delete({
         where: {
             id: targetVersion.id,
+        },
+    });
+
+    // Re evaluate the project loaders list and supported game versions
+    const projectLoaders: string[] = [];
+    const projectGameVersions: string[] = [];
+
+    for (const version of project.versions) {
+        // Exclude the target version from the list, instead use the new data
+        if (version.id === deletedVersion.id) continue;
+        projectLoaders.push(...version.loaders);
+        projectGameVersions.push(...version.gameVersions);
+    }
+
+    const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
+    const aggregatedGameVersions = aggregateVersions(projectGameVersions);
+
+    await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            gameVersions: aggregatedGameVersions,
+            loaders: aggregatedLoaderNames,
         },
     });
 

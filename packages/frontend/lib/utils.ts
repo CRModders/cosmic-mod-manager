@@ -156,8 +156,8 @@ export const projectFileUrl = (pathname: string) => {
 
 export const imageUrl = (url: string | undefined | null) => {
     if (!url) return "";
-    const dev = import.meta.env.PUBLIC_ENV === "development";
-    return dev ? url : `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+    if (url.startsWith("https")) return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+    return url;
 };
 
 export const isLoaderVisibleInTagsList = (loaderName: string) => {

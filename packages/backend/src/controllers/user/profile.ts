@@ -177,7 +177,7 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
             name: project.name,
             summary: project.summary,
             type: inferProjectType(project.loaders),
-            icon: projectIconUrl(project.slug, project.icon || ""),
+            icon: projectIconUrl(project.slug, project.iconFileId || ""),
             downloads: project.downloads,
             followers: project.followers,
             dateUpdated: project.dateUpdated,
