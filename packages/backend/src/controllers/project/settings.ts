@@ -4,12 +4,14 @@ import { createFilePathSafeString, deleteProjectFile, saveProjectFile } from "@/
 import { inferProjectType } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
+import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
 import { getValidProjectCategories } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type {
     generalProjectSettingsFormSchema,
     updateDescriptionFormSchema,
     updateExternalLinksFormSchema,
+    updateProjectLicenseFormSchema,
     updateProjectTagsFormSchema,
 } from "@shared/schemas/project";
 import { ProjectPermissions } from "@shared/types";
@@ -316,4 +318,78 @@ export const updateProjectExternalLinks = async (
     });
 
     return ctx.json({ success: true, message: "External links updated" }, httpCode("ok"));
+};
+
+export const updateProjectLicense = async (
+    ctx: Context,
+    userSession: ContextUserSession,
+    slug: string,
+    formData: z.infer<typeof updateProjectLicenseFormSchema>,
+) => {
+    const project = await prisma.project.findUnique({
+        where: { slug: slug },
+        select: {
+            id: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            permissions: true,
+                        },
+                    },
+                },
+            },
+            organisation: {
+                select: {
+                    team: {
+                        select: {
+                            members: {
+                                where: {
+                                    userId: userSession.id,
+                                },
+                                select: {
+                                    permissions: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+
+    if (
+        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
+        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
+    ) {
+        return ctx.json({ success: false }, httpCode("not_found"));
+    }
+
+    if (!formData.name && !formData.id) {
+        return ctx.json({ success: false, message: "Either license name of a valid ID is required" }, httpCode("bad_request"));
+    }
+
+    let validSpdxData: SPDX_LICENSE | null = null;
+    for (const license of SPDX_LICENSE_LIST) {
+        if (license.licenseId === formData.id) {
+            validSpdxData = license;
+            break;
+        }
+    }
+
+    await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            licenseName: validSpdxData?.name || formData.name,
+            licenseId: formData.id,
+            licenseUrl: !formData.name && !formData.id ? "" : formData.url,
+        },
+    });
+
+    return ctx.json({ success: true, message: "Project license updated" }, httpCode("ok"));
 };

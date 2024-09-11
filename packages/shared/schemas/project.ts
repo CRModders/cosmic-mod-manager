@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
     MAX_ADDITIONAL_VERSION_FILE_SIZE,
     MAX_FEATURED_PROJECT_TAGS,
+    MAX_LICENSE_NAME_LENGTH,
     MAX_OPTIONAL_FILES,
     MAX_PROJECT_DESCRIPTION_LENGTH,
     MAX_PROJECT_GALLERY_IMAGE_SIZE,
@@ -82,6 +83,7 @@ const VersionNumber = z
 const ProjectLoaders = z
     .string()
     .array()
+    .min(1)
     .refine(
         (values) => {
             const loaderNamesList = loaders.map((loader) => loader.name);
@@ -95,6 +97,7 @@ const ProjectLoaders = z
 const SupportedGameVersions = z
     .string()
     .array()
+    .min(1)
     .refine(
         (values) => {
             const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version);
@@ -283,16 +286,26 @@ export const updateProjectTagsFormSchema = z.object({
     featuredCategories: projectCategories.max(MAX_FEATURED_PROJECT_TAGS, `You can feature at most ${MAX_FEATURED_PROJECT_TAGS} tags only!`),
 });
 
-const externalLink = z.string().refine(
-    (value) => {
-        if (!value) return true;
-        return isValidUrl(value);
-    },
-    { message: "Invalid URL" },
-);
+const formLink = z
+    .string()
+    .max(256)
+    .refine(
+        (value) => {
+            if (!value) return true;
+            return isValidUrl(value);
+        },
+        { message: "Invalid URL" },
+    );
 export const updateExternalLinksFormSchema = z.object({
-    issueTracker: externalLink.optional(),
-    sourceCode: externalLink.optional(),
-    wikiPage: externalLink.optional(),
-    discordServer: externalLink.optional(),
+    issueTracker: formLink.optional(),
+    sourceCode: formLink.optional(),
+    wikiPage: formLink.optional(),
+    discordServer: formLink.optional(),
+});
+
+// License schema
+export const updateProjectLicenseFormSchema = z.object({
+    name: z.string().max(MAX_LICENSE_NAME_LENGTH).optional(),
+    id: z.string().max(64).optional(),
+    url: formLink.optional(),
 });

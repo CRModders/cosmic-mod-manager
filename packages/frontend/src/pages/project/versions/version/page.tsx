@@ -92,7 +92,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <div className="w-full flex flex-wrap items-center justify-start gap-x-8">
+                <div className="w-full flex flex-wrap items-center justify-start gap-x-4">
                     <h1 className="text-2xl font-[700] text-foreground">{versionData.title}</h1>
                     {versionData.featured ? (
                         <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">

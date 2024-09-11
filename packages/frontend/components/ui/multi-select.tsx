@@ -77,7 +77,10 @@ export const MultiSelect = ({
             <PopoverTrigger asChild>{children}</PopoverTrigger>
             <PopoverContent
                 align={popupAlign || "center"}
-                className={cn("p-1 flex flex-col gap-1 w-fit min-w-max", classNames?.popupContent)}
+                className={cn(
+                    "p-1 flex flex-col gap-1 w-fit min-w-max overscroll-contain border-shallower-background",
+                    classNames?.popupContent,
+                )}
                 onKeyDown={(e) => {
                     if (e.ctrlKey || e.shiftKey || e.altKey) return;
                     if (e.key === "ArrowDown") {

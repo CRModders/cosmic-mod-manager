@@ -202,7 +202,6 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                         )}
 
                         <MultiSelect
-                            hideSelectedItems
                             selectedOptions={field.value || []}
                             options={loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader.name) || "", value: loader.name }))}
                             onChange={field.onChange}
@@ -251,7 +250,6 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                         )}
 
                         <MultiSelect
-                            hideSelectedItems
                             selectedOptions={field.value || []}
                             options={GAME_VERSIONS.map((version) => ({
                                 label: CapitalizeAndFormatString(version.version) || "",

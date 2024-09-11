@@ -61,23 +61,23 @@ const ProjectsPage = () => {
                                 <TableHeader>
                                     <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
                                         {/* ICON: VISIBLE ON sm+ width */}
-                                        <TableHead className="invisible sm:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">
+                                        <TableHead className="invisible md:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">
                                             Icon
                                         </TableHead>
                                         {/* DETAILS: MOBILE ONLY */}
-                                        <TableHead className="invisible sm:hidden">Details</TableHead>
+                                        <TableHead className="invisible md:hidden">Details</TableHead>
 
                                         {/* NAME: VISIBLE ON sm+ width */}
-                                        <TableHead className="hidden sm:table-cell min-w-16 lg:min-w-36">Name</TableHead>
+                                        <TableHead className="hidden md:table-cell min-w-16 lg:min-w-36">Name</TableHead>
                                         {/* ID: VISIBLE ON sm+ width */}
-                                        <TableHead className="hidden sm:table-cell">ID</TableHead>
+                                        <TableHead className="hidden md:table-cell">ID</TableHead>
                                         {/* TYPE: VISIBLE ON sm+ width */}
-                                        <TableHead className="hidden sm:table-cell">Type</TableHead>
+                                        <TableHead className="hidden md:table-cell">Type</TableHead>
                                         {/* STATUS: VISIBLE ON sm+ width */}
-                                        <TableHead className="hidden sm:table-cell">Status</TableHead>
+                                        <TableHead className="hidden md:table-cell">Status</TableHead>
 
                                         {/* SETTINGS LINK: VISIBLE ON sm+ width */}
-                                        <TableHead className="invisible sm:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad">
+                                        <TableHead className="invisible md:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad">
                                             {" "}
                                         </TableHead>
                                     </TableRow>
@@ -87,7 +87,7 @@ const ProjectsPage = () => {
                                         return (
                                             <TableRow
                                                 key={project.id}
-                                                className="cursor-pointer text-sm md:text-base text-muted-foreground"
+                                                className="cursor-pointer text-muted-foreground"
                                                 onClick={(e) => {
                                                     //@ts-expect-error
                                                     if (!e.target.closest(".noClickRedirect")) {
@@ -113,7 +113,7 @@ const ProjectsPage = () => {
                                                 </TableCell>
 
                                                 {/* AGGREGATED PROJECT DETAILS: VISIBLE ON MOBILE WIDTH ONLY */}
-                                                <TableCell className="sm:hidden !pl-0 sm:pl-2">
+                                                <TableCell className="md:hidden !pl-0 sm:pl-2">
                                                     <div className="flex flex-col items-start justify-center gap-1">
                                                         <Link
                                                             to={getProjectPagePathname(project.type[0], project.slug)}
@@ -129,7 +129,7 @@ const ProjectsPage = () => {
                                                             id={`${project.slug}-${project.id}`}
                                                             text={project.id}
                                                             label={project.id}
-                                                            maxLabelChars={12}
+                                                            // maxLabelChars={12}
                                                             className="noClickRedirect px-2 py-1 bg-shallow-background/50 neumorphic_shadow"
                                                             iconClassName="w-3 h-3"
                                                         />
@@ -137,7 +137,7 @@ const ProjectsPage = () => {
                                                 </TableCell>
 
                                                 {/* NAME */}
-                                                <TableCell className="hidden sm:table-cell">
+                                                <TableCell className="hidden md:table-cell">
                                                     <Link
                                                         to={getProjectPagePathname(project.type[0], project.slug)}
                                                         className="noClickRedirect text-base leading-none font-medium hover:underline"
@@ -146,22 +146,22 @@ const ProjectsPage = () => {
                                                     </Link>
                                                 </TableCell>
                                                 {/* ID */}
-                                                <TableCell className="hidden sm:table-cell">
-                                                    <CopyBtn
-                                                        id={`${project.slug}-${project.id}`}
-                                                        text={project.id}
-                                                        label={project.id}
-                                                        maxLabelChars={12}
-                                                        className="noClickRedirect px-2 py-1"
-                                                        iconClassName="w-3 h-3"
-                                                    />
+                                                <TableCell className="hidden md:table-cell">
+                                                    <div className="flex items-center justify-start font-mono text-sm noClickRedirect">
+                                                        <span className="cursor-text p-1.5">{project.id}</span>
+                                                        <CopyBtn
+                                                            id={`${project.slug}-${project.id}`}
+                                                            text={project.id}
+                                                            iconClassName="w-3 h-3"
+                                                        />
+                                                    </div>
                                                 </TableCell>
                                                 {/* TYPE */}
-                                                <TableCell className="hidden sm:table-cell">
+                                                <TableCell className="hidden md:table-cell">
                                                     <span className="leading-none">{FormatProjectTypes(project.type)}</span>
                                                 </TableCell>
                                                 {/* STATUS */}
-                                                <TableCell className="hidden sm:table-cell">
+                                                <TableCell className="hidden md:table-cell">
                                                     <span className="leading-none font-medium">
                                                         {CapitalizeAndFormatString(project.status)}
                                                     </span>

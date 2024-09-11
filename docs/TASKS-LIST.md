@@ -41,17 +41,18 @@
 - [x] Add file hashes to prevent duplicate file upload
 
 - [x] Add function to count downloads
-- [-] Add filters on the changelog page
-- [-] Add filters on the versions page
+- [x] Add filters on the changelog page
+- [x] Add filters on the versions page
 
 - [-] Add settings page
   - [x] General settings page
   - [x] Description settings page
   - [x] Tags settings page
-  - [-] License settings page
-  - [-] Links settings page
+  - [x] License settings page
+  - [x] Links settings page
   - [-] Members settings page
 
+- [-] Add notifications
 
 - [-] Fix project deletion
 - [-] Fix user deletion

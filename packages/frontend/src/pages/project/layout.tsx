@@ -14,12 +14,14 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
+import SPDX_LICENSE_LIST, { LICNESE_REFERENCE_LINK } from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
     BookOpenIcon,
+    BookTextIcon,
     BookmarkIcon,
     BugIcon,
     CalendarIcon,
@@ -59,10 +61,29 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
         location.pathname,
         false,
     );
+
     const projectEnvironments = ProjectSupprotedEnvironments({
         clientSide: projectData.clientSide,
         serverSide: projectData.serverSide,
     });
+
+    const projectLicenseData = {
+        id: projectData.licenseId,
+        name: projectData.licenseName,
+        url: projectData.licenseUrl,
+        text: "",
+    };
+
+    for (const license of SPDX_LICENSE_LIST) {
+        if (license.licenseId === projectData.licenseId) {
+            projectLicenseData.name = license.name;
+            projectLicenseData.text = license?.text || "";
+            if (!projectLicenseData.url) {
+                projectLicenseData.url = `${LICNESE_REFERENCE_LINK}/${license.licenseId}`;
+            }
+            break;
+        }
+    }
 
     return (
         <>
@@ -255,7 +276,26 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                     <Card className="items-start justify-start p-card-surround grid grid-cols-1 gap-1">
                         <h3 className="text-lg font-bold pb-2">Details</h3>
 
-                        <span className="text-muted-foreground italic text-sm">TODO: ADD LICENSE</span>
+                        {projectLicenseData?.id || projectLicenseData?.name ? (
+                            <div className="flex items-center justify-start gap-2 text-muted-foreground">
+                                <BookTextIcon className="w-btn-icon h-btn-icon shrink-0" />
+                                <p>
+                                    LICENSED{" "}
+                                    {projectLicenseData.url ? (
+                                        <a
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            href={projectLicenseData.url}
+                                            className="font-bold link_blue"
+                                        >
+                                            {projectLicenseData.id || projectLicenseData.name}
+                                        </a>
+                                    ) : (
+                                        <span className="font-bold">{projectLicenseData.id || projectLicenseData.name}</span>
+                                    )}
+                                </p>
+                            </div>
+                        ) : null}
 
                         <TooltipProvider>
                             <Tooltip>

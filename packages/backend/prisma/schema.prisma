@@ -138,8 +138,8 @@ model Project {
     iconFileId     String?   @db.VarChar(32)
 
     // null for custom licenses
-    licenseId   String? @db.VarChar(32)
-    licenseName String? @db.VarChar(64)
+    licenseId   String? @db.VarChar(64)
+    licenseName String? @db.VarChar(128)
     licenseUrl  String? @db.VarChar(256)
 
     downloads Int @default(0)

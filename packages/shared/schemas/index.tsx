@@ -23,19 +23,10 @@ export const checkFormValidity = async (callback: () => void | Promise<void>) =>
         const name = error?.issues?.[0]?.path?.[0];
         // @ts-ignore
         const errMsg = error?.issues?.[0]?.message;
-        const message =
-            name && errMsg ? (
-                <div className="w-full flex flex-col items-start justify-start text-danger-foreground">
-                    <span>
-                        Error in <em className="not-italic font-medium">{name}</em>
-                    </span>
-                    <span className="text-sm text-muted-foreground">{errMsg}</span>
-                </div>
-            ) : (
-                `Form error: ${error}`
-            );
+        const errorTitle = name && errMsg ? `Error in "${name}"` : `Form error: ${error}`;
+        const errorDescription = name && errMsg ? errMsg : "";
 
-        toast.error(name ? message : "Error", { description: errMsg });
+        toast.error(errorTitle, { description: errorDescription });
         return false;
     }
 };

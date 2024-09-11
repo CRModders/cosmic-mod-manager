@@ -70,9 +70,7 @@ const HomePage = () => {
                                 >
                                     Cosmic Reach
                                 </a>
-                                &nbsp;mods. {/* </h2> */}
-                                {/* <h2 className="text-lg lg:text-xl flex text-center text-foreground-muted"> */}
-                                Discover, play, and create content, all in one spot.
+                                &nbsp;mods. Discover, play, and create content, all in one spot.
                             </h2>
                         </div>
                     </div>
@@ -80,7 +78,7 @@ const HomePage = () => {
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
                         <Link to={"/mods"}>
                             <Button size={"lg"} aria-label="Explore mods" tabIndex={-1} className="px-6">
-                                <CompassIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <CompassIcon className="w-btn-icon-lg h-btn-icon-lg" />
                                 Explore mods
                             </Button>
                         </Link>

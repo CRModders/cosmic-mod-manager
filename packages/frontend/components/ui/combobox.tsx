@@ -17,7 +17,7 @@ interface ComboBoxProps {
     value: string;
     children: React.ReactNode;
     inputLabel?: string;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
+    setValue: (value: string) => void;
 }
 
 function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxProps) {

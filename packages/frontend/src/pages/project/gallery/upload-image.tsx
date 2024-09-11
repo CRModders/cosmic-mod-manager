@@ -175,11 +175,11 @@ const UploadGalleryImageForm = () => {
                                 name="title"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
+                                        <FormLabel htmlFor="gallery-item-title">
                                             Title
                                             <FormMessage />
                                         </FormLabel>
-                                        <Input {...field} placeholder="Enter title..." />
+                                        <Input {...field} placeholder="Enter title..." id="gallery-item-title" />
                                     </FormItem>
                                 )}
                             />
@@ -189,11 +189,16 @@ const UploadGalleryImageForm = () => {
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
+                                        <FormLabel htmlFor="gallery-item-description">
                                             Description
                                             <FormMessage />
                                         </FormLabel>
-                                        <Textarea {...field} placeholder="Enter description..." className="h-fit min-h-14 resize-none" />
+                                        <Textarea
+                                            {...field}
+                                            placeholder="Enter description..."
+                                            className="h-fit min-h-14 resize-none"
+                                            id="gallery-item-description"
+                                        />
                                     </FormItem>
                                 )}
                             />
@@ -203,7 +208,7 @@ const UploadGalleryImageForm = () => {
                                 name="orderIndex"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
+                                        <FormLabel htmlFor="gallery-item-ordering">
                                             Ordering
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
@@ -216,6 +221,7 @@ const UploadGalleryImageForm = () => {
                                             placeholder="Enter order index..."
                                             min={0}
                                             type="number"
+                                            id="gallery-item-ordering"
                                         />
                                     </FormItem>
                                 )}
@@ -226,7 +232,7 @@ const UploadGalleryImageForm = () => {
                                 name="featured"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
+                                        <FormLabel htmlFor="gallery-item-featured">
                                             Featured
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
@@ -235,7 +241,12 @@ const UploadGalleryImageForm = () => {
                                             </FormDescription>
                                         </FormLabel>
                                         {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
-                                        <Button variant="secondary" type="button" onClick={() => field.onChange(!field.value)}>
+                                        <Button
+                                            variant="secondary"
+                                            type="button"
+                                            onClick={() => field.onChange(!field.value)}
+                                            id="gallery-item-featured"
+                                        >
                                             {field.value === true ? (
                                                 <StarIcon fill="currentColor" className="w-btn-icon-md h-btn-icon-md" />
                                             ) : (

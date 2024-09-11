@@ -18,8 +18,10 @@ export const MAX_PROJECT_DESCRIPTION_LENGTH = 65256;
 export const MAX_PROJECT_ICON_SIZE = 524288; // 512 KiB
 export const MAX_PROJECT_GALLERY_IMAGE_SIZE = 5242880; // 5 MiB
 
-// _Settings
+// Project_Settings
 export const MAX_FEATURED_PROJECT_TAGS = 3;
+export const MAX_LICENSE_NAME_LENGTH = 128;
+export const MAX_LICENSE_URL_LENGTH = 256;
 
 // Version
 export const MIN_VERSION_TITLE_LENGTH = 2;
