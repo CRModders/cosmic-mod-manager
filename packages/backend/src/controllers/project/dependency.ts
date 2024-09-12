@@ -6,6 +6,7 @@ import { projectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
 import type { ProjectPermissions } from "@shared/types";
 import type { Context } from "hono";
+import { getFilesFromId } from "./utils";
 
 export const getProjectDependencies = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
     const project = await prisma.project.findFirst({
@@ -89,21 +90,21 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     }
 
     // Separate dependencies into project-level and version-level
-    const projectDependencies: string[] = [];
-    const versionDependencies: string[] = [];
+    const dependencyProjectIds: string[] = [];
+    const dependencyVersionIds: string[] = [];
 
     for (const dependency of dependencies) {
-        projectDependencies.push(dependency.projectId);
+        dependencyProjectIds.push(dependency.projectId);
 
         if (dependency.versionId) {
-            versionDependencies.push(dependency.versionId);
+            dependencyVersionIds.push(dependency.versionId);
         }
     }
 
     const dependencyProjects = await prisma.project.findMany({
         where: {
             id: {
-                in: projectDependencies,
+                in: dependencyProjectIds,
             },
         },
     });
@@ -111,16 +112,22 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     const dependencyVersions = await prisma.version.findMany({
         where: {
             id: {
-                in: versionDependencies,
+                in: dependencyVersionIds,
             },
         },
     });
+
+    const iconFileIds = [];
+    for (const project of dependencyProjects) {
+        if (project.iconFileId) iconFileIds.push(project.iconFileId);
+    }
+    const projectIconFiles = await getFilesFromId(iconFileIds);
 
     return ctx.json(
         {
             projects: dependencyProjects.map((project) => ({
                 ...project,
-                icon: projectIconUrl(project.slug, project.icon || ""),
+                icon: projectIconUrl(project.slug, project?.iconFileId ? projectIconFiles.get(project.iconFileId)?.url || "" : ""),
                 type: inferProjectType(project.loaders),
             })),
             versions: dependencyVersions,

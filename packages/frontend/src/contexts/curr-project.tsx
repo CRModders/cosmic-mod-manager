@@ -1,12 +1,17 @@
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
-import type { DependencyData } from "@/types";
+import { type DependencyData, LoadingStatus } from "@/types";
 import type { ProfilePageProjectsListData, ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NotFoundPage from "../pages/not-found";
 import { useSession } from "./auth";
+
+type CurrUsersMembership = {
+    data: TeamMember | null;
+    status: LoadingStatus;
+};
 
 type ProjectContext = {
     fetchProjectData: (slug?: string) => Promise<void>;
@@ -16,7 +21,7 @@ type ProjectContext = {
     featuredProjectVersions: ProjectVersionData[] | undefined | null;
     allProjectVersions: ProjectVersionData[] | undefined | null;
     fetchAllProjectVersions: () => Promise<void>;
-    currUsersMembership: TeamMember | null;
+    currUsersMembership: CurrUsersMembership;
     projectDependencies: DependencyData;
 };
 
@@ -32,7 +37,10 @@ export const projectContext = createContext<ProjectContext>({
     featuredProjectVersions: undefined,
     allProjectVersions: undefined,
     fetchAllProjectVersions: async () => {},
-    currUsersMembership: null,
+    currUsersMembership: {
+        data: null,
+        status: LoadingStatus.LOADING,
+    },
     projectDependencies: {
         projects: [],
         versions: [],
@@ -80,7 +88,7 @@ export const ProjectContextProvider = ({
 }) => {
     const { slug } = useParams();
     const [loadingProjectData, setLoadingProjectData] = useState(true);
-    const [currUsersMembership, setCurrUsersMembership] = useState<TeamMember | null>(null);
+    const [currUsersMembership, setCurrUsersMembership] = useState<CurrUsersMembership>({ data: null, status: LoadingStatus.LOADING });
     const [currProjectSlug, setCurrProjectSlug] = useState(slug || "");
     const { session } = useSession();
 
@@ -134,23 +142,30 @@ export const ProjectContextProvider = ({
     }, [slug]);
 
     useEffect(() => {
-        if (!projectData?.id) setCurrUsersMembership(null);
+        if (!projectData?.id) setCurrUsersMembership({ data: null, status: LoadingStatus.LOADING });
         else {
-            let valueSet = false;
+            // let valueSet = false;
+            let membership = null;
             for (const member of projectData.members) {
-                if (member.userId === session?.id) {
-                    valueSet = true;
-                    setCurrUsersMembership(member);
+                if (member.userId === session?.id && member.accepted === true) {
+                    // valueSet = true;
+                    membership = member;
                     break;
                 }
             }
 
-            if (!valueSet) {
-                for (const member of projectData.organisation?.members || []) {
-                    if (member.userId === session?.id) {
-                        setCurrUsersMembership(member);
-                    }
-                }
+            // if (!valueSet) {
+            //     for (const member of projectData.organisation?.members || []) {
+            //         if (member.userId === session?.id) {
+            //             setCurrUsersMembership(member);
+            //         }
+            //     }
+            // }
+
+            if (membership?.id) {
+                setCurrUsersMembership({ data: membership, status: LoadingStatus.LOADED });
+            } else {
+                setCurrUsersMembership({ data: null, status: LoadingStatus.LOADED });
             }
         }
     }, [session, projectData]);
@@ -179,7 +194,7 @@ export const ProjectContextProvider = ({
                 featuredProjectVersions,
                 allProjectVersions,
                 fetchAllProjectVersions,
-                currUsersMembership,
+                currUsersMembership: currUsersMembership,
                 projectDependencies: projectDependencies || {
                     projects: [],
                     versions: [],

@@ -5,7 +5,7 @@ import httpCode, { defaultServerErrorResponse } from "@/utils/http";
 import { PROTECTED_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { Context, Next } from "hono";
 import { getCookie } from "hono/cookie";
-import { ctxReqAuthSessionKey } from "../../types";
+import { ctxReqAuthSessionNamespace } from "../../types";
 import { addToUsedRateLimit } from "./rate-limiter";
 
 export const AuthenticationMiddleware = async (ctx: Context, next: Next) => {
@@ -24,7 +24,7 @@ export const AuthenticationMiddleware = async (ctx: Context, next: Next) => {
         deleteUserCookie(ctx, "guest-session");
     }
 
-    ctx.set(ctxReqAuthSessionKey, user);
+    ctx.set(ctxReqAuthSessionNamespace, user);
     ctx.set("ip", ipAddr);
     await next();
 };

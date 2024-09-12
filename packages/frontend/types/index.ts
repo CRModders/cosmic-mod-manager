@@ -15,6 +15,12 @@ export interface UseThemeProps {
     theme?: string | undefined;
 }
 
+export enum LoadingStatus {
+    LOADING = "loading",
+    LOADED = "loaded",
+    FAILED = "failed",
+}
+
 export interface DependencyProjectData {
     id: string;
     name: string;

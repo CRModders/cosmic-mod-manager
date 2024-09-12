@@ -8,7 +8,7 @@ import { deleteCookie, setCookie } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
 import { nanoid } from "nanoid";
 import { sort } from "semver";
-import { type ContextUserSession, ctxReqAuthSessionKey } from "../../types";
+import { type ContextUserSession, ctxReqAuthSessionNamespace } from "../../types";
 
 export const generateRandomString = (length = STRING_ID_LENGTH) => {
     let result = nanoid(16);
@@ -35,7 +35,7 @@ export const deleteUserCookie = (ctx: Context, name: string, options?: CookieOpt
 };
 
 export const getUserSessionFromCtx = (ctx: Context) => {
-    return ctx.get(ctxReqAuthSessionKey) as ContextUserSession | undefined;
+    return ctx.get(ctxReqAuthSessionNamespace) as ContextUserSession | undefined;
 };
 
 // Hash the user password

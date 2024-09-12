@@ -1,5 +1,5 @@
 import type { Context, Next } from "hono";
-import { ctxReqBodyKey } from "../../types";
+import { ctxReqBodyNamespace } from "../../types";
 
 const bodyParserMiddleware = async (ctx: Context, next: Next) => {
     try {
@@ -14,7 +14,7 @@ const bodyParserMiddleware = async (ctx: Context, next: Next) => {
             body = null;
         }
 
-        ctx.set(ctxReqBodyKey, body || null);
+        ctx.set(ctxReqBodyNamespace, body || null);
     } catch (error) {}
 
     await next();

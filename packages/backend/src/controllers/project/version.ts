@@ -17,7 +17,7 @@ import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
 import { getFormattedTeamMember, requiredProjectMemberFields } from "./project";
-import { createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, isAnyDuplicateFile, retrieveVersionFilesData } from "./utils";
+import { createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, getFilesFromId, isAnyDuplicateFile } from "./utils";
 
 export const requiredVersionFields = {
     id: true,
@@ -112,10 +112,7 @@ export const createNewVersion = async (
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
-    if (
-        !project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) &&
-        !project.organisation?.team?.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)
-    ) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -285,10 +282,7 @@ export const updateVersionData = async (
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to edit a version
-    if (
-        !project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) &&
-        !project.organisation?.team?.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)
-    ) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -321,7 +315,7 @@ export const updateVersionData = async (
 
         // Delete the files that are not in the new list (means the user removed them)
         if (deletedFileList.length) {
-            const dbFiles = await retrieveVersionFilesData(deletedFileList);
+            const dbFiles = await getFilesFromId(deletedFileList);
             const deletedFilesData: DBFile[] = [];
             for (const deletedFile of deletedFileList) {
                 const dbFile = dbFiles.get(deletedFile);
@@ -614,7 +608,7 @@ export const getAllProjectVersions = async (
             idsList.push(file.fileId);
         }
     }
-    const versionFilesMap = await retrieveVersionFilesData(idsList);
+    const versionFilesMap = await getFilesFromId(idsList);
 
     const versionsList: ProjectVersionData[] = [];
     for (const version of project.versions) {
@@ -717,7 +711,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
     for (const file of version.files) {
         idsList.push(file.fileId);
     }
-    const versionFilesMap = await retrieveVersionFilesData(idsList);
+    const versionFilesMap = await getFilesFromId(idsList);
 
     // Format the data
     let primaryFile: VersionFile | null = null;
@@ -802,18 +796,6 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: { userId: userSession.id },
-                                select: requiredProjectMemberFields,
-                            },
-                        },
-                    },
-                },
-            },
             versions: {
                 select: {
                     id: true,
@@ -836,10 +818,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
-    if (
-        !project.team.members?.[0]?.permissions?.includes(ProjectPermissions.DELETE_VERSION) &&
-        !project.organisation?.team?.members?.[0]?.permissions?.includes(ProjectPermissions.DELETE_VERSION)
-    ) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.DELETE_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }

@@ -1,4 +1,4 @@
-import { fallbackProjectIcon } from "@/components/icons";
+import { ProjectStatusIcon, fallbackProjectIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CopyBtn from "@/components/ui/copy-btn";
@@ -147,7 +147,7 @@ const ProjectsPage = () => {
                                                 </TableCell>
                                                 {/* ID */}
                                                 <TableCell className="hidden md:table-cell">
-                                                    <div className="flex items-center justify-start font-mono text-sm noClickRedirect">
+                                                    <div className="w-fit flex items-center justify-start font-mono text-sm noClickRedirect">
                                                         <span className="cursor-text p-1.5">{project.id}</span>
                                                         <CopyBtn
                                                             id={`${project.slug}-${project.id}`}
@@ -162,7 +162,8 @@ const ProjectsPage = () => {
                                                 </TableCell>
                                                 {/* STATUS */}
                                                 <TableCell className="hidden md:table-cell">
-                                                    <span className="leading-none font-medium">
+                                                    <span className="flex items-center gap-1 leading-none font-medium">
+                                                        <ProjectStatusIcon status={project.status} />
                                                         {CapitalizeAndFormatString(project.status)}
                                                     </span>
                                                 </TableCell>

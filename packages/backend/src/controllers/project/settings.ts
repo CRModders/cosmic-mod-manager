@@ -42,31 +42,12 @@ export const updateProject = async (
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: {
-                                    userId: userSession.id,
-                                },
-                                select: {
-                                    permissions: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (
-        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
-        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
-    ) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -155,31 +136,12 @@ export const updateProjectDescription = async (
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: {
-                                    userId: userSession.id,
-                                },
-                                select: {
-                                    permissions: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (
-        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION) &&
-        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)
-    ) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -214,31 +176,12 @@ export const updateProjectTags = async (
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: {
-                                    userId: userSession.id,
-                                },
-                                select: {
-                                    permissions: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (
-        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
-        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
-    ) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -279,31 +222,12 @@ export const updateProjectExternalLinks = async (
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: {
-                                    userId: userSession.id,
-                                },
-                                select: {
-                                    permissions: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (
-        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
-        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
-    ) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -340,31 +264,12 @@ export const updateProjectLicense = async (
                     },
                 },
             },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: {
-                                    userId: userSession.id,
-                                },
-                                select: {
-                                    permissions: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (
-        !project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS) &&
-        !project.organisation?.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)
-    ) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 

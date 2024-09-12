@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn, formatDate, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
+import { LoadingStatus } from "@/types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { ProjectPermissions } from "@shared/types";
@@ -31,7 +32,7 @@ const ProjectGallery = () => {
     const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
     const [dialogOpen, setdialogOpen] = useState(false);
 
-    if (!projectData) return null;
+    if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
     return (
         <>
             <Helmet>
@@ -40,7 +41,7 @@ const ProjectGallery = () => {
                 </title>
             </Helmet>
 
-            {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
+            {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermissions.EDIT_DETAILS) ? (
                 <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
                     <Suspense>
                         <UploadGalleryImageForm />
@@ -61,7 +62,7 @@ const ProjectGallery = () => {
                             index={index}
                             setActiveIndex={setActiveGalleryIndex}
                             setdialogOpen={setdialogOpen}
-                            currUsersMembership={currUsersMembership}
+                            currUsersMembership={currUsersMembership.data}
                         />
                     ))}
 

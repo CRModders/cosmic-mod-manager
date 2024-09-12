@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client";
 
-export const ctxReqBodyKey = "reqBody";
-export const ctxReqAuthSessionKey = "user-session";
+export const ctxReqBodyNamespace = "reqBody";
+export const ctxReqAuthSessionNamespace = "user-session";
 
 export interface AuthUserProfile {
     name?: string | null;

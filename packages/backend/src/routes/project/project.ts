@@ -1,4 +1,4 @@
-import { ctxReqBodyKey } from "@/../types";
+import { ctxReqBodyNamespace } from "@/../types";
 import { getProjectDependencies } from "@/controllers/project/dependency";
 import {
     addNewGalleryImage,
@@ -31,6 +31,7 @@ import {
 } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
+import projectMemberRouter from "./project-member";
 import versionRouter from "./version";
 
 const projectRouter = new Hono();
@@ -40,7 +41,7 @@ projectRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(newProjectFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(newProjectFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -85,7 +86,7 @@ projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
 
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession) return defaultInvalidReqResponse(ctx);
-        const formData = ctx.get(ctxReqBodyKey);
+        const formData = ctx.get(ctxReqBodyNamespace);
         const obj = {
             icon: formData.get("icon"),
             name: formData.get("name"),
@@ -129,7 +130,7 @@ projectRouter.patch("/:slug/description", LoginProtectedRoute, async (ctx: Conte
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateDescriptionFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(updateDescriptionFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -147,7 +148,7 @@ projectRouter.patch("/:slug/tags", LoginProtectedRoute, async (ctx: Context) => 
         const userSession = getUserSessionFromCtx(ctx);
         if (!slug || !userSession?.id) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateProjectTagsFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(updateProjectTagsFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -165,7 +166,7 @@ projectRouter.patch("/:slug/external-links", LoginProtectedRoute, async (ctx: Co
         const userSession = getUserSessionFromCtx(ctx);
         if (!slug || !userSession?.id) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateExternalLinksFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(updateExternalLinksFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -183,7 +184,7 @@ projectRouter.patch("/:slug/license", LoginProtectedRoute, async (ctx: Context) 
         const userSession = getUserSessionFromCtx(ctx);
         if (!slug || !userSession?.id) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateProjectLicenseFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(updateProjectLicenseFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -203,7 +204,7 @@ projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) =
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession) return defaultInvalidReqResponse(ctx);
 
-        const formData = ctx.get(ctxReqBodyKey);
+        const formData = ctx.get(ctxReqBodyNamespace);
         const obj = {
             image: formData.get("image"),
             title: formData.get("title"),
@@ -230,7 +231,7 @@ projectRouter.patch("/:slug/gallery/:imageId", LoginProtectedRoute, async (ctx: 
         const userSession = getUserSessionFromCtx(ctx);
         if (!slug || !imageId || !userSession) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateGalleryImageFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(updateGalleryImageFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -245,7 +246,7 @@ projectRouter.patch("/:slug/gallery/:imageId", LoginProtectedRoute, async (ctx: 
 projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const slug = ctx.req.param("slug");
-        const galleryItemId = ctx.get(ctxReqBodyKey)?.id;
+        const galleryItemId = ctx.get(ctxReqBodyNamespace)?.id;
         const userSession = getUserSessionFromCtx(ctx);
 
         if (!slug || !userSession || !galleryItemId) return defaultInvalidReqResponse(ctx);
@@ -258,4 +259,5 @@ projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context)
 });
 
 projectRouter.route("/:projectSlug/version", versionRouter);
+projectRouter.route("/:projectSlug/member", projectMemberRouter);
 export default projectRouter;

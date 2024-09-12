@@ -9,6 +9,7 @@ import {
     MAX_PROJECT_ICON_SIZE,
     MAX_PROJECT_NAME_LENGTH,
     MAX_PROJECT_SUMMARY_LENGTH,
+    MAX_USERNAME_LENGTH,
     MAX_VERSION_CHANGELOG_LENGTH,
     MAX_VERSION_FILE_SIZE,
     MAX_VERSION_NUMBER_LENGTH,
@@ -308,4 +309,8 @@ export const updateProjectLicenseFormSchema = z.object({
     name: z.string().max(MAX_LICENSE_NAME_LENGTH).optional(),
     id: z.string().max(64).optional(),
     url: formLink.optional(),
+});
+
+export const inviteProjectMemberFormSchema = z.object({
+    userName: z.string().max(MAX_USERNAME_LENGTH),
 });

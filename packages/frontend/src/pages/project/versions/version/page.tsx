@@ -116,14 +116,14 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                         Report
                     </Button>
 
-                    {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
                         <VariantButtonLink url="edit">
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
                         </VariantButtonLink>
                     ) : null}
 
-                    {currUsersMembership?.id && currUsersMembership.permissions.includes(ProjectPermissions.DELETE_VERSION) ? (
+                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermissions.DELETE_VERSION) ? (
                         <Suspense>
                             <DeleteVersionDialog
                                 projectSlug={projectData?.slug || ""}

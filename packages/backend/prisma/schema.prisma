@@ -27,6 +27,7 @@ model User {
     confirmations    UserConfirmation[] @relation(name: "UserConfirmations")
     teamMemberships  TeamMember[]       @relation(name: "TeamMemberships")
     authoredVersions Version[]          @relation(name: "UserAuthoredVersions")
+    notifications    Notification[]     @relation(name: "UserNotifications")
 }
 
 model Session {
@@ -105,7 +106,7 @@ model TeamMember {
     teamId  String  @db.VarChar(32)
     userId  String  @db.VarChar(32)
     role    String  @db.VarChar(32)
-    isOwner Boolean
+    isOwner Boolean @default(false)
 
     // List of permissions in a Project Team
     permissions String[]
@@ -115,7 +116,7 @@ model TeamMember {
     organisationPermissions String[]
 
     // Whether the member has joined the team or is just invited
-    accepted Boolean
+    accepted Boolean @default(false)
 
     team Team @relation(name: "TeamMembers", fields: [teamId], references: [id], onDelete: Cascade)
     user User @relation(name: "TeamMemberships", fields: [userId], references: [id])
@@ -227,4 +228,16 @@ model File {
     sha512_hash    String? @db.VarChar(256)
     url            String  @db.VarChar(256)
     storageService String  @db.VarChar(32)
+}
+
+// NOTIFICATIONS AND STUFF
+model Notification {
+    id          String    @id @db.VarChar(32)
+    userId      String    @db.VarChar(32)
+    read        Boolean   @default(false)
+    dateCreated DateTime  @default(now())
+    dateRead    DateTime?
+    body        Json
+
+    user User @relation(name: "UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
 }

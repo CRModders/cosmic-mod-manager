@@ -1,4 +1,4 @@
-import { fallbackProjectIcon } from "@/components/icons";
+import { ProjectStatusIcon, fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import {
@@ -10,8 +10,10 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ButtonLink } from "@/components/ui/link";
+import Redirect from "@/components/ui/redirect";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
+import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
@@ -31,12 +33,15 @@ import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 
 const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
-    const { projectData } = useContext(projectContext);
+    const { projectData, currUsersMembership } = useContext(projectContext);
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
 
-    if (!projectData) {
+    console.log({ currUsersMembership });
+
+    if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) {
         return null;
     }
+    if (!currUsersMembership.data) return <Redirect redirectTo={`/${projectType}/${projectData.slug}`} />;
 
     return (
         <>
@@ -77,7 +82,10 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
 
                             <div className="flex flex-col items-start justify-start">
                                 <span className="text-lg font-semibold">{projectData.name}</span>
-                                <span className="font-semibold text-muted-foreground">{CapitalizeAndFormatString(projectData.status)}</span>
+                                <span className="flex items-center justify-center gap-1 font-semibold text-muted-foreground">
+                                    <ProjectStatusIcon status={projectData.status} />
+                                    {CapitalizeAndFormatString(projectData.status)}
+                                </span>
                             </div>
                         </div>
 

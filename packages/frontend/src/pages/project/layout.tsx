@@ -1,4 +1,4 @@
-import { DiscordIcon, fallbackProjectIcon } from "@/components/icons";
+import { DiscordIcon, ProjectStatusIcon, fallbackProjectIcon } from "@/components/icons";
 import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -10,8 +10,10 @@ import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatVersionsListString, getGroupedVersionsList } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive, timeSince } from "@/lib/utils";
+import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
+import { LoadingStatus } from "@/types";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
 import SPDX_LICENSE_LIST, { LICNESE_REFERENCE_LINK } from "@shared/config/license-list";
@@ -47,13 +49,14 @@ import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
 const InteractiveDownloadPopup = lazy(() => import("./interactive-download"));
+const JoinProjectBanner = lazy(() => import("./join-project-banner"));
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { theme } = useTheme();
     const { fetchingProjectData, projectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
-    if (!projectData) return null;
+    if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
     if (projectData === null && fetchingProjectData === false) return <NotFoundPage />;
 
     const isVersionDetailsPage = isCurrLinkActive(
@@ -95,7 +98,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
             </Helmet>
 
             <div className="project-page-layout pb-12 gap-panel-cards">
-                <PageHeader projectData={projectData} projectType={projectType} currUsersMembership={currUsersMembership} />
+                <PageHeader projectData={projectData} projectType={projectType} currUsersMembership={currUsersMembership.data} />
 
                 {/* SIDEBAR */}
                 <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
@@ -261,6 +264,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
                         <h3 className="text-lg font-bold pb-1">Creators</h3>
                         {projectData.members?.map((member) => {
+                            if (member.accepted !== true) return null;
                             return (
                                 <ProjectMember
                                     key={member.userId}
@@ -357,97 +361,119 @@ const PageHeader = ({
     projectType,
     currUsersMembership,
 }: { projectData: ProjectDetailsData; projectType: string; currUsersMembership: TeamMember | null }) => {
+    const { session } = useSession();
+
+    let invitedMember = null;
+    if (currUsersMembership?.accepted !== true) {
+        for (const member of projectData.members) {
+            if (member.userId === session?.id && member.accepted === false) {
+                invitedMember = member;
+                break;
+            }
+        }
+    }
+
     return (
-        <div className="project-page-header w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background">
-            <div className="flex gap-5">
-                <ImgWrapper
-                    src={imageUrl(projectData.icon)}
-                    alt={projectData.name}
-                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-lg"
-                    fallback={fallbackProjectIcon}
-                />
-                <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
-                        {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
-                            <span className="text-muted-foreground font-medium">{CapitalizeAndFormatString(projectData.status)}</span>
-                        ) : null}
-                    </div>
-                    <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</p>
-                    <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
-                        <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                            <span className="font-semibold">{projectData.downloads}</span>
+        <div className="w-full flex flex-col [grid-area:_header] gap-1">
+            <div className="w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background">
+                <div className="flex gap-5">
+                    <ImgWrapper
+                        src={imageUrl(projectData.icon)}
+                        alt={projectData.name}
+                        className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-lg"
+                        fallback={fallbackProjectIcon}
+                    />
+                    <div className="flex flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
+                            {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
+                                <span className="flex items-center justify-center gap-1 text-muted-foreground font-medium">
+                                    <ProjectStatusIcon status={projectData.status} />
+                                    {CapitalizeAndFormatString(projectData.status)}
+                                </span>
+                            ) : null}
                         </div>
-                        <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                            <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
-                            <span className="font-semibold">{projectData.followers}</span>
-                        </div>
-                        {(projectData.featuredCategories?.length || 0) > 0 ? (
-                            <div className="hidden md:flex items-center gap-3 pr-4">
-                                <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                                <div className="flex items-center gap-2">
-                                    {projectData.featuredCategories.map((category) => (
-                                        <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
-                                            {Capitalize(category)}
-                                        </Chip>
-                                    ))}
-                                </div>
+                        <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</p>
+                        <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
+                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <span className="font-semibold">{projectData.downloads}</span>
                             </div>
+                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                                <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <span className="font-semibold">{projectData.followers}</span>
+                            </div>
+                            {(projectData.featuredCategories?.length || 0) > 0 ? (
+                                <div className="hidden md:flex items-center gap-3 pr-4">
+                                    <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                                    <div className="flex items-center gap-2">
+                                        {projectData.featuredCategories.map((category) => (
+                                            <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
+                                                {Capitalize(category)}
+                                            </Chip>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col justify-center gap-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Suspense>
+                            <InteractiveDownloadPopup />
+                        </Suspense>
+                        <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
+                            <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                        </Button>
+                        <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
+                            <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                        </Button>
+                        {currUsersMembership?.id ? (
+                            <VariantButtonLink
+                                url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
+                                variant={"secondary-inverted"}
+                                className="rounded-full w-11 h-11 p-0"
+                                label="project settings"
+                            >
+                                <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                            </VariantButtonLink>
                         ) : null}
+
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
+                                    <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
+                                <Button variant="ghost-destructive" className="w-full">
+                                    <FlagIcon className="w-btn-icon h-btn-icon" />
+                                    Report
+                                </Button>
+                                <PopoverClose asChild>
+                                    <Button
+                                        className="w-full"
+                                        variant="ghost"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(projectData.id);
+                                        }}
+                                    >
+                                        <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                                        Copy ID
+                                    </Button>
+                                </PopoverClose>
+                            </PopoverContent>
+                        </Popover>
                     </div>
                 </div>
             </div>
-
-            <div className="flex flex-col justify-center gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                    <Suspense>
-                        <InteractiveDownloadPopup />
-                    </Suspense>
-                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
-                        <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                    </Button>
-                    <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
-                        <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
-                    </Button>
-                    {currUsersMembership?.id ? (
-                        <VariantButtonLink
-                            url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
-                            variant={"secondary-inverted"}
-                            className="rounded-full w-11 h-11 p-0"
-                            label="project settings"
-                        >
-                            <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
-                        </VariantButtonLink>
-                    ) : null}
-
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
-                                <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
-                            <Button variant="ghost-destructive" className="w-full">
-                                <FlagIcon className="w-btn-icon h-btn-icon" />
-                                Report
-                            </Button>
-                            <PopoverClose asChild>
-                                <Button
-                                    className="w-full"
-                                    variant="ghost"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(projectData.id);
-                                    }}
-                                >
-                                    <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
-                                    Copy ID
-                                </Button>
-                            </PopoverClose>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-            </div>
+            {invitedMember && (
+                <Suspense>
+                    <JoinProjectBanner role={invitedMember.role} teamId="" />
+                </Suspense>
+            )}
         </div>
     );
 };

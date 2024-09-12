@@ -11,7 +11,7 @@ import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from 
 import { parseValueToSchema } from "@shared/schemas";
 import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
-import { ctxReqBodyKey } from "../../../types";
+import { ctxReqBodyNamespace } from "../../../types";
 
 const versionRouter = new Hono();
 
@@ -35,7 +35,7 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         const projectSlug = ctx.req.param("projectSlug");
         if (!userSession || !projectSlug) return defaultInvalidReqResponse(ctx);
 
-        const formData = ctx.get(ctxReqBodyKey);
+        const formData = ctx.get(ctxReqBodyNamespace);
         const dependencies = formData.get("dependencies");
         const loaders = formData.get("loaders");
         const gameVersions = formData.get("gameVersions");
@@ -77,7 +77,7 @@ versionRouter.patch("/:versionSlug", async (ctx: Context) => {
         const { projectSlug, versionSlug } = ctx.req.param();
         if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
 
-        const formData = ctx.get(ctxReqBodyKey);
+        const formData = ctx.get(ctxReqBodyNamespace);
         const dependencies = formData.get("dependencies");
         const loaders = formData.get("loaders");
         const gameVersions = formData.get("gameVersions");

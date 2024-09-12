@@ -154,11 +154,44 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
     const list = await prisma.teamMember.findMany({
         where: {
             userId: user.id,
+            accepted: true,
         },
         include: {
             team: {
                 include: {
-                    project: true,
+                    project: {
+                        select: {
+                            id: true,
+                            slug: true,
+                            name: true,
+                            summary: true,
+                            iconFileId: true,
+                            downloads: true,
+                            followers: true,
+                            dateUpdated: true,
+                            datePublished: true,
+                            status: true,
+                            visibility: true,
+                            clientSide: true,
+                            serverSide: true,
+                            featuredCategories: true,
+                            categories: true,
+                            gameVersions: true,
+                            loaders: true,
+                            team: {
+                                select: {
+                                    members: {
+                                        where: {
+                                            userId: userSession?.id,
+                                        },
+                                        select: {
+                                            id: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -170,6 +203,7 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
     for (const item of list) {
         const project = item.team.project;
         if (!project) continue;
+        if (!project.team.members?.[0]?.id) continue;
 
         projectListData.push({
             id: project.id,

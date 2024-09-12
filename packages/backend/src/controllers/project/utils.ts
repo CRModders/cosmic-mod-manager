@@ -13,15 +13,17 @@ import { STRING_ID_LENGTH } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { nanoid } from "nanoid";
 
-export const retrieveVersionFilesData = async (fileIds: string[]) => {
-    const files = await prisma.file.findMany({
+export const getFilesFromId = async (fileIds: string[]) => {
+    const data = await prisma.file.findMany({
         where: {
-            OR: fileIds.map((id) => ({ id })),
+            id: {
+                in: fileIds,
+            },
         },
     });
 
     const map = new Map<string, DBFile>();
-    for (const file of files) {
+    for (const file of data) {
         map.set(file.id, file);
     }
 

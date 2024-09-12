@@ -72,7 +72,7 @@ const ExternalLinksSettingsPage = () => {
                                     {...field}
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
-                                    className="w-full md:w-[32ch]"
+                                    className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
                                 />
                             </FormItem>
                         )}
@@ -97,7 +97,7 @@ const ExternalLinksSettingsPage = () => {
                                     {...field}
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
-                                    className="w-full md:w-[32ch]"
+                                    className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
                                 />
                             </FormItem>
                         )}
@@ -122,7 +122,7 @@ const ExternalLinksSettingsPage = () => {
                                     {...field}
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
-                                    className="w-full md:w-[32ch]"
+                                    className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
                                 />
                             </FormItem>
                         )}
@@ -147,7 +147,7 @@ const ExternalLinksSettingsPage = () => {
                                     {...field}
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
-                                    className="w-full md:w-[32ch]"
+                                    className="w-full md:w-[48ch]"
                                 />
                             </FormItem>
                         )}

@@ -8,11 +8,11 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SPDX_LICENSE_LIST, { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
+import { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { updateProjectLicenseFormSchema } from "@shared/schemas/project";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -48,15 +48,26 @@ const LicenseSettingsPage = () => {
     };
 
     const currLicenseId = form.watch("id");
-    const selectedLicense = FEATURED_LICENSE_OPTIONS.find((license) => license.licenseId === currLicenseId);
-    const isCustomLicense =
-        showCustomLicenseInputFields || (currLicenseId && !SPDX_LICENSE_LIST.some((license) => license.licenseId === currLicenseId));
+    const currLicenseName = form.watch("name");
+    const selectedFeaturedLicense = FEATURED_LICENSE_OPTIONS.find((license) => license.licenseId === currLicenseId);
+    const isCustomLicense = showCustomLicenseInputFields || ((currLicenseId || currLicenseName) && !selectedFeaturedLicense);
 
     const formValues = form.getValues();
     const hasFormChanged =
         formValues.id !== (projectData?.licenseId || "") ||
         formValues.name !== (projectData?.licenseName || "") ||
         formValues.url !== (projectData?.licenseUrl || "");
+
+    useEffect(() => {
+        if (projectData?.licenseName && !projectData?.licenseId) {
+            setDoesNotHaveASpdxId(true);
+        }
+    }, [projectData]);
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (isCustomLicense && !showCustomLicenseInputFields) setShowCustomLicenseInputFields(true);
+    }, [isCustomLicense]);
 
     return (
         <Form {...form}>
@@ -112,7 +123,7 @@ const LicenseSettingsPage = () => {
                                                 }}
                                             >
                                                 <Button variant={"secondary"} className="w-full justify-between overflow-hidden">
-                                                    {isCustomLicense ? "Custom" : selectedLicense?.name || "Select license..."}
+                                                    {isCustomLicense ? "Custom" : selectedFeaturedLicense?.name || "Select license..."}
                                                     <ChevronDownIcon className="w-btn-icon h-btn-icon shrink-0" />
                                                 </Button>
                                             </ComboBox>
@@ -128,12 +139,16 @@ const LicenseSettingsPage = () => {
                                         checked={doesNotHaveASpdxId}
                                         onCheckedChange={(value) => {
                                             setDoesNotHaveASpdxId(value === true);
+                                            if (value === true) {
+                                                form.setValue("id", "");
+                                            } else {
+                                                form.setValue("name", "");
+                                            }
                                         }}
                                     >
                                         <span className="sm:text-nowrap">License does not have a SPDX identifier</span>
                                     </LabelledCheckbox>
-
-                                    {doesNotHaveASpdxId ? (
+                                    {doesNotHaveASpdxId && (
                                         <FormField
                                             control={form.control}
                                             name="name"
@@ -146,7 +161,9 @@ const LicenseSettingsPage = () => {
                                                 </FormItem>
                                             )}
                                         />
-                                    ) : (
+                                    )}
+
+                                    {!doesNotHaveASpdxId && (
                                         <FormField
                                             control={form.control}
                                             name="id"

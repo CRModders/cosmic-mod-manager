@@ -1,15 +1,7 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const Redirect = ({ redirectTo }: { redirectTo: string }) => {
-    const navigate = useNavigate();
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        navigate(redirectTo, { replace: true });
-    }, [navigate]);
-
-    return null;
+    return <Navigate to={redirectTo} replace={true} />;
 };
 
 export default Redirect;

@@ -46,6 +46,7 @@ const DescriptionSettings = lazy(() => import("@/src/pages/project/settings/desc
 const TagsSettingsPage = lazy(() => import("@/src/pages/project/settings/tags"));
 const ExternalLinksSettingsPage = lazy(() => import("@/src/pages/project/settings/links"));
 const LicenseSettingsPage = lazy(() => import("./pages/project/settings/license"));
+const ProjectMemberSettingsPage = lazy(() => import("./pages/project/settings/members/page"));
 
 // User's profile page
 const UserPageLayout = lazy(() => import("./pages/user/layout"));
@@ -192,6 +193,14 @@ const projectPageRoutes = () => {
                             element: (
                                 <Suspense fallback={<SuspenseFallback />}>
                                     <LicenseSettingsPage />
+                                </Suspense>
+                            ),
+                        },
+                        {
+                            path: "members",
+                            element: (
+                                <Suspense fallback={<SuspenseFallback />}>
+                                    <ProjectMemberSettingsPage />
                                 </Suspense>
                             ),
                         },

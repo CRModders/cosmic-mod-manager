@@ -40,6 +40,7 @@ export interface TeamMember {
     avatarUrl: string | null;
     role: string;
     isOwner: boolean;
+    accepted: boolean;
     permissions: ProjectPermissions[];
     organisationPermissions: OrganisationPermissions[];
 }
@@ -65,6 +66,8 @@ export interface GalleryItem {
 
 export interface ProjectDetailsData {
     id: string;
+    teamId: string;
+    orgId: string | null;
     name: string;
     slug: string;
     icon: string | null;

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { IconSvgProps } from "@/types";
-import { UserIcon, XIcon } from "lucide-react";
+import type { ProjectPublishingStatus } from "@shared/types";
+import { FileCheckIcon, FileClockIcon, FileQuestionIcon, FileText, UserIcon, XIcon } from "lucide-react";
 import type React from "react";
 
 export const DefaultSvgSize = "1rem";
@@ -570,3 +571,17 @@ export const CancelButtonIcon = XIcon;
 
 export const fallbackProjectIcon = <CubeIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
 export const fallbackUserIcon = <UserIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
+
+export const PROJECT_STATUS_ICONS = {
+    draft: <FileText className="h-full w-full" />,
+    scheduled: <FileClockIcon className="h-full w-full" />,
+    published: <FileCheckIcon className="h-full w-full" />,
+    unknown: <FileQuestionIcon className="h-full w-full" />,
+};
+
+export const ProjectStatusIcon = ({ status, className }: { status: ProjectPublishingStatus; className?: string }) => {
+    const icon = PROJECT_STATUS_ICONS[status] || PROJECT_STATUS_ICONS.unknown;
+
+    if (!icon) return null;
+    return <span className={cn("flex items-center justify-center w-btn-icon h-btn-icon text-muted-foreground", className)}>{icon}</span>;
+};

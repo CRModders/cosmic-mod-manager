@@ -1,4 +1,4 @@
-import { ctxReqBodyKey } from "@/../types";
+import { ctxReqBodyNamespace } from "@/../types";
 import { getOAuthSignInUrl } from "@/controllers/auth/commons";
 import { linkAuthProviderHandler, unlinkAuthProvider } from "@/controllers/auth/link-provider";
 import { logOutUserSession, revokeSessionFromAccessCode } from "@/controllers/auth/session";
@@ -71,7 +71,7 @@ authRouter.get(`/${AuthActionIntent.LINK_PROVIDER}/get-oauth-url/:authProvider`,
 
 authRouter.post(`/${AuthActionIntent.SIGN_IN}/${AuthProviders.CREDENTIAL}`, async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyKey));
+        const { data, error } = parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -161,7 +161,7 @@ authRouter.post("/session/logout", LoginProtectedRoute, async (ctx: Context) => 
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) return ctx.json({}, httpCode("bad_request"));
 
-        const targetSessionId = ctx.get(ctxReqBodyKey)?.sessionId || null;
+        const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || null;
 
         return await logOutUserSession(ctx, userSession, targetSessionId);
     } catch (error) {
@@ -172,7 +172,7 @@ authRouter.post("/session/logout", LoginProtectedRoute, async (ctx: Context) => 
 
 authRouter.post("/session/revoke-from-code", async (ctx: Context) => {
     try {
-        const code = ctx.get(ctxReqBodyKey)?.code;
+        const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) return ctx.json({ success: false }, httpCode("bad_request"));
 
         return await revokeSessionFromAccessCode(ctx, code);

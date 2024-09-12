@@ -8,11 +8,6 @@
         "sidebar";
 }
 
-.project-page-header {
-    display: grid;
-    grid-area: header;
-}
-
 @media (min-width: 64rem) {
     .project-page-layout {
         grid-template-rows: auto auto 1fr;
