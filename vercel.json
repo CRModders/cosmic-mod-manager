@@ -2,7 +2,7 @@
     "installCommand": "bun install",
     "devCommand": "bun run dev",
 
-    "outputDirectory": "./packages/frontend/dist",
+    "outputDirectory": "packages/frontend/dist",
     "buildCommand": "bun run build",
     "rewrites": [
         {
