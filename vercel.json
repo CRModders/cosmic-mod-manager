@@ -3,6 +3,7 @@
     "devCommand": "bun run dev",
 
     "buildCommand": "bun run build",
+    "outputDirectory": "dist",
     "rewrites": [
         {
             "source": "/(.*)",
