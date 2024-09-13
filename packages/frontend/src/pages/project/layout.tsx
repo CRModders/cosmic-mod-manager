@@ -53,7 +53,7 @@ const JoinProjectBanner = lazy(() => import("./join-project-banner"));
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { theme } = useTheme();
-    const { fetchingProjectData, projectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
+    const { fetchingProjectData, projectData, fetchProjectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
     if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
@@ -98,7 +98,12 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
             </Helmet>
 
             <div className="project-page-layout pb-12 gap-panel-cards">
-                <PageHeader projectData={projectData} projectType={projectType} currUsersMembership={currUsersMembership.data} />
+                <PageHeader
+                    projectData={projectData}
+                    fetchProjectData={fetchProjectData}
+                    projectType={projectType}
+                    currUsersMembership={currUsersMembership.data}
+                />
 
                 {/* SIDEBAR */}
                 <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
@@ -360,7 +365,13 @@ const PageHeader = ({
     projectData,
     projectType,
     currUsersMembership,
-}: { projectData: ProjectDetailsData; projectType: string; currUsersMembership: TeamMember | null }) => {
+    fetchProjectData,
+}: {
+    projectData: ProjectDetailsData;
+    projectType: string;
+    currUsersMembership: TeamMember | null;
+    fetchProjectData: () => Promise<void>;
+}) => {
     const { session } = useSession();
 
     let invitedMember = null;
@@ -471,7 +482,7 @@ const PageHeader = ({
             </div>
             {invitedMember && (
                 <Suspense>
-                    <JoinProjectBanner role={invitedMember.role} teamId="" />
+                    <JoinProjectBanner fetchProjectData={fetchProjectData} role={invitedMember.role} teamId={projectData.teamId} />
                 </Suspense>
             )}
         </div>

@@ -1,7 +1,7 @@
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { type DependencyData, LoadingStatus } from "@/types";
-import type { ProfilePageProjectsListData, ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
+import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -72,7 +72,7 @@ const getProjectDependencies = async (slug: string) => {
     try {
         const response = await useFetch(`/api/project/${slug}/dependencies`);
         return (await response.json()) as {
-            projects: ProfilePageProjectsListData[];
+            projects: ProjectListItem[];
             versions: ProjectVersionData[];
         } | null;
     } catch (err) {
@@ -116,7 +116,7 @@ export const ProjectContextProvider = ({
         data: projectDependencies,
         isLoading: isProjectDependenciesLoading,
         refetch: refetchProjectDependencies,
-    } = useQuery<{ projects: ProfilePageProjectsListData[]; versions: ProjectVersionData[] } | null>({
+    } = useQuery<{ projects: ProjectListItem[]; versions: ProjectVersionData[] } | null>({
         queryKey: [`${currProjectSlug}-project-dependencies`],
         queryFn: () => getProjectDependencies(currProjectSlug),
     });

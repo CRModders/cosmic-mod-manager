@@ -8,7 +8,7 @@ import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charg
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
 import type { LinkedProvidersListData, ProjectPublishingStatus, ProjectSupport, ProjectVisibility, UserSessionStates } from "@shared/types";
-import type { ProfilePageProjectsListData, SessionListData } from "@shared/types/api";
+import type { ProjectListItem, SessionListData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
 import type { z } from "zod";
@@ -199,7 +199,7 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
 
     if (!list) return ctx.json({ success: true, projects: [] }, httpCode("ok"));
 
-    const projectListData: ProfilePageProjectsListData[] = [];
+    const projectListData: ProjectListItem[] = [];
     for (const item of list) {
         const project = item.team.project;
         if (!project) continue;

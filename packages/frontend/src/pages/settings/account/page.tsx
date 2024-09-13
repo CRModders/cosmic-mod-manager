@@ -1,4 +1,5 @@
-import AvatarImg from "@/components/ui/avatar";
+import { fallbackUserIcon } from "@/components/icons";
+import { ImgWrapper } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +9,6 @@ import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { LinkedProvidersListData } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
-import { UserIcon } from "lucide-react";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import DeleteAccountDialog from "./delete-account";
@@ -70,11 +70,11 @@ const AccountSettingsPage = () => {
                         <CardContent>
                             <div className="w-full flex flex-col items-center justify-center my-2">
                                 <div className="w-full flex flex-wrap items-center justify-start gap-6">
-                                    <AvatarImg
-                                        url={session?.avatarUrl || ""}
+                                    <ImgWrapper
+                                        src={session?.avatarUrl || ""}
                                         alt={session?.userName}
-                                        fallback={<UserIcon className="w-1/2 h-1/2 text-muted-foreground" />}
-                                        wrapperClassName="h-24"
+                                        fallback={fallbackUserIcon}
+                                        className="rounded-full"
                                     />
 
                                     <div className="grow max-w-full flex flex-col items-start justify-center">

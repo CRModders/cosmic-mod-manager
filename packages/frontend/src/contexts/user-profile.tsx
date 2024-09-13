@@ -1,5 +1,5 @@
 import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
-import type { ProfilePageProjectsListData } from "@shared/types/api";
+import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import NotFoundPage from "../pages/not-found";
 
 interface UserProfileContext {
     userData: UserProfileData | null;
-    projectsList: ProfilePageProjectsListData[] | null;
+    projectsList: ProjectListItem[] | null;
 }
 
 export const userProfileContext = createContext<UserProfileContext>({ userData: null, projectsList: null });
@@ -31,7 +31,7 @@ const getProjectsListData = async (userName: string | undefined) => {
 
     try {
         const response = await useFetch(`/api/user/_/${userName}/projects`);
-        return ((await response.json())?.projects as ProfilePageProjectsListData[]) || null;
+        return ((await response.json())?.projects as ProjectListItem[]) || null;
     } catch (err) {
         console.error(err);
         return null;

@@ -1,3 +1,4 @@
+import { ctxReqBodyNamespace } from "@/../types";
 import {
     createNewVersion,
     deleteProjectVersion,
@@ -11,7 +12,6 @@ import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from 
 import { parseValueToSchema } from "@shared/schemas";
 import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
-import { ctxReqBodyNamespace } from "../../../types";
 
 const versionRouter = new Hono();
 

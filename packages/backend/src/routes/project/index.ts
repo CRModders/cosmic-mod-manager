@@ -1,13 +1,6 @@
 import { ctxReqBodyNamespace } from "@/../types";
+import { addNewGalleryImage, createNewProject, getProjectData, removeGalleryImage, updateGalleryImage } from "@/controllers/project";
 import { getProjectDependencies } from "@/controllers/project/dependency";
-import {
-    addNewGalleryImage,
-    createNewProject,
-    getAllUserProjects,
-    getProjectData,
-    removeGalleryImage,
-    updateGalleryImage,
-} from "@/controllers/project/project";
 import {
     updateProject,
     updateProjectDescription,
@@ -31,7 +24,6 @@ import {
 } from "@shared/schemas/project";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
-import projectMemberRouter from "./project-member";
 import versionRouter from "./version";
 
 const projectRouter = new Hono();
@@ -47,19 +39,6 @@ projectRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await createNewProject(ctx, userSession, data);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-projectRouter.get("/", LoginProtectedRoute, async (ctx: Context) => {
-    try {
-        const userSession = getUserSessionFromCtx(ctx);
-        const userId = ctx.req.query("userId") || userSession?.id;
-        if (!userId) return defaultInvalidReqResponse(ctx);
-
-        return await getAllUserProjects(ctx, userId, userSession);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -259,5 +238,4 @@ projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context)
 });
 
 projectRouter.route("/:projectSlug/version", versionRouter);
-projectRouter.route("/:projectSlug/member", projectMemberRouter);
 export default projectRouter;

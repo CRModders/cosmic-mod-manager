@@ -16,8 +16,8 @@ import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
-import { getFormattedTeamMember, requiredProjectMemberFields } from "./project";
-import { createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, getFilesFromId, isAnyDuplicateFile } from "./utils";
+import { getFormattedTeamMember, requiredProjectMemberFields } from "./../";
+import { createVersionFiles, deleteVersionFiles, deleteVersionStoreDirectory, getFilesFromId, isAnyDuplicateFile } from "./../utils";
 
 export const requiredVersionFields = {
     id: true,

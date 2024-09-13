@@ -5,7 +5,7 @@ import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
-import { ProjectTeamOwnerPermissionsList } from "@shared/config/project";
+import { ProjectPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { addNewGalleryImageFormSchema, newProjectFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project";
 import {
@@ -15,7 +15,7 @@ import {
     ProjectSupport,
     type ProjectVisibility,
 } from "@shared/types";
-import type { ProjectDetailsData, ProjectsListData, TeamMember } from "@shared/types/api";
+import type { ProjectDetailsData } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import { rsort } from "semver";
@@ -24,6 +24,7 @@ import { getFilesFromId } from "./utils";
 
 export const requiredProjectMemberFields = {
     id: true,
+    teamId: true,
     role: true,
     isOwner: true,
     permissions: true,
@@ -40,6 +41,7 @@ export const requiredProjectMemberFields = {
 
 export interface DBTeamMember {
     id: string;
+    teamId: string;
     role: string;
     isOwner: boolean;
     permissions: string[];
@@ -55,6 +57,7 @@ export interface DBTeamMember {
 export const getFormattedTeamMember = (dbMember: DBTeamMember) => ({
     id: dbMember.id,
     userId: dbMember.user.id,
+    teamId: dbMember.teamId,
     userName: dbMember.user.userName,
     avatarUrl: dbMember.user.avatarUrl,
     role: dbMember.role,
@@ -85,9 +88,10 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
             userId: userSession.id,
             role: "Owner",
             isOwner: true,
-            permissions: ProjectTeamOwnerPermissionsList,
+            permissions: ProjectPermissionsList,
             organisationPermissions: [],
             accepted: true,
+            dateAccepted: new Date(),
         },
     });
 
@@ -109,74 +113,6 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
         { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: inferProjectType([]) },
         httpCode("ok"),
     );
-};
-
-export const getAllUserProjects = async (ctx: Context, userId: string, userSession: ContextUserSession | undefined) => {
-    const data = await prisma.teamMember.findMany({
-        where: {
-            userId: userId,
-        },
-        select: {
-            team: {
-                select: {
-                    project: {
-                        select: {
-                            id: true,
-                            name: true,
-                            slug: true,
-                            status: true,
-                            iconFileId: true,
-                            visibility: true,
-                            loaders: true,
-                            organisation: {
-                                select: {
-                                    team: {
-                                        select: {
-                                            members: {
-                                                select: requiredProjectMemberFields,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    members: {
-                        select: requiredProjectMemberFields,
-                    },
-                },
-            },
-        },
-    });
-
-    const projectsList: ProjectsListData[] = [];
-
-    const projectMembersList: TeamMember[] = [];
-    for (const { team } of data) {
-        for (const member of team.members) {
-            projectMembersList.push(getFormattedTeamMember(member));
-        }
-        for (const member of team.project?.organisation?.team.members || []) {
-            projectMembersList.push(getFormattedTeamMember(member));
-        }
-    }
-
-    for (const item of data) {
-        const project = item.team.project;
-        if (!project?.id || !isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList))
-            continue;
-
-        projectsList.push({
-            id: project.id,
-            name: project.name,
-            slug: project.slug,
-            status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl(project.slug, project.iconFileId || ""),
-            type: inferProjectType(project.loaders),
-        });
-    }
-
-    return ctx.json({ success: true, projects: projectsList }, httpCode("ok"));
 };
 
 export const getProjectData = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
@@ -231,6 +167,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     id: true,
                     members: {
                         select: requiredProjectMemberFields,
+                        orderBy: { dateAccepted: "desc" },
                     },
                 },
             },
@@ -259,11 +196,12 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
 
     const projectMembersList = [
         ...project.team.members.map((member) => getFormattedTeamMember(member)),
-        ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
+        // ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
     ];
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList)) {
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
     }
+    const currSessionMember = projectMembersList.find((member) => member.userId === userSession?.id);
 
     const galleryFiles = await getFilesFromId(project.gallery.map((item) => item.imageFileId));
 
@@ -274,7 +212,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             project: {
                 id: project.id,
                 teamId: project.team.id,
-                orgId: project?.organisation?.id,
+                orgId: project.organisation?.id || null,
                 name: project.name,
                 icon: projectIconUrl(project.slug, project.iconFileId || ""),
                 status: project.status as ProjectPublishingStatus,
@@ -312,15 +250,14 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 members: project.team.members.map((member) => ({
                     id: member.id,
                     userId: member.user.id,
+                    teamId: member.teamId,
                     userName: member.user.userName,
                     avatarUrl: member.user.avatarUrl,
                     role: member.role,
                     isOwner: member.isOwner,
                     accepted: member.accepted,
-                    permissions: (member.user.id === userSession?.id ? member.permissions : []) as ProjectPermissions[],
-                    organisationPermissions: (member.user.id === userSession?.id
-                        ? member.organisationPermissions
-                        : []) as OrganisationPermissions[],
+                    permissions: currSessionMember?.id ? (member.permissions as ProjectPermissions[]) : [],
+                    organisationPermissions: currSessionMember?.id ? (member.organisationPermissions as OrganisationPermissions[]) : [],
                 })),
                 organisation: organisation
                     ? {

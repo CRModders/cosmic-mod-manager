@@ -116,7 +116,8 @@ model TeamMember {
     organisationPermissions String[]
 
     // Whether the member has joined the team or is just invited
-    accepted Boolean @default(false)
+    accepted     Boolean   @default(false)
+    dateAccepted DateTime?
 
     team Team @relation(name: "TeamMembers", fields: [teamId], references: [id], onDelete: Cascade)
     user User @relation(name: "TeamMemberships", fields: [userId], references: [id])

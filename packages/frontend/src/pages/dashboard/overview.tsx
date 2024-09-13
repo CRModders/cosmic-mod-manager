@@ -1,8 +1,9 @@
+import { fallbackUserIcon } from "@/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "@/components/layout/panel";
-import AvatarImg from "@/components/ui/avatar";
+import { ImgWrapper } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/link";
 import { useSession } from "@/src/contexts/auth";
-import { ChevronRightIcon, HistoryIcon, UserIcon } from "lucide-react";
+import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const OverviewPage = () => {
@@ -14,11 +15,11 @@ const OverviewPage = () => {
         <div className="w-full flex flex-col items-start justify-start gap-panel-cards">
             <ContentCardTemplate>
                 <div className="w-full flex flex-wrap gap-6">
-                    <AvatarImg
-                        url={session?.avatarUrl || ""}
+                    <ImgWrapper
+                        src={session?.avatarUrl || ""}
                         alt={session?.userName}
-                        fallback={<UserIcon className="w-1/2 h-1/2 text-muted-foreground" />}
-                        wrapperClassName="h-24"
+                        fallback={fallbackUserIcon}
+                        className="rounded-full"
                     />
 
                     <div className="flex flex-col items-start justify-center">

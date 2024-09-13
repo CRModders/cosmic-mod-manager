@@ -1,4 +1,5 @@
-import AvatarImg from "@/components/ui/avatar";
+import { fallbackUserIcon } from "@/components/icons";
+import { ImgWrapper } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import CopyBtn from "@/components/ui/copy-btn";
 import { ButtonLink } from "@/components/ui/link";
@@ -66,12 +67,11 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     aria-label="Profile icon"
                     className="p-0 m-0 h-fit rounded-full w-fit hover:bg-transparent dark:hover:bg-transparent no_neumorphic_shadow"
                 >
-                    <AvatarImg
-                        url={session?.avatarUrl || ""}
+                    <ImgWrapper
+                        src={session.avatarUrl || ""}
                         alt={session?.userName}
-                        fallback={<UserIcon className="w-1/2 h-1/2 text-muted-foreground" />}
-                        imgClassName="p-1"
-                        wrapperClassName="bg-transparent hover:bg-card-background h-nav-item"
+                        fallback={fallbackUserIcon}
+                        className="h-nav-item p-0.5 rounded-full"
                     />
                 </Button>
             </PopoverTrigger>
@@ -117,11 +117,11 @@ const ProfileDropDown = ({ session, isPopoverOpen }: { session: LoggedInUserData
     return (
         <div className="w-full flex flex-col items-center justify-center gap-3">
             <div className="w-full flex items-center justify-center gap-2">
-                <AvatarImg
-                    url={session?.avatarUrl || ""}
+                <ImgWrapper
+                    src={session?.avatarUrl || ""}
                     alt={session?.userName}
-                    fallback={<UserIcon className="w-1/2 h-1/2 text-muted-foreground" />}
-                    wrapperClassName="h-14"
+                    fallback={fallbackUserIcon}
+                    className="h-14 rounded-full"
                 />
 
                 <div className="w-full flex flex-col items-start justify-center overflow-x-auto">

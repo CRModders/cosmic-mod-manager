@@ -36,8 +36,6 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
     const { projectData, currUsersMembership } = useContext(projectContext);
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
 
-    console.log({ currUsersMembership });
-
     if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) {
         return null;
     }

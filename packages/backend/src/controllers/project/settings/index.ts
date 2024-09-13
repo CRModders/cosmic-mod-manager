@@ -46,9 +46,8 @@ export const updateProject = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
     if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project details" }, httpCode("unauthorized"));
     }
 
     // If the project slug has been updated
@@ -142,7 +141,10 @@ export const updateProjectDescription = async (
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json(
+            { success: false, message: "You don't have the permission to update project description" },
+            httpCode("unauthorized"),
+        );
     }
 
     await prisma.project.update({
@@ -180,9 +182,8 @@ export const updateProjectTags = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
     if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, httpCode("unauthorized"));
     }
 
     const projectType = inferProjectType(project.loaders);
@@ -226,9 +227,8 @@ export const updateProjectExternalLinks = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
     if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "You don't the permission to update links" }, httpCode("unauthorized"));
     }
 
     await prisma.project.update({
@@ -268,9 +268,8 @@ export const updateProjectLicense = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
     if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project license" }, httpCode("unauthorized"));
     }
 
     if (!formData.name && !formData.id) {

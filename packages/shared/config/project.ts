@@ -17,7 +17,7 @@ export const projectTypes = [
     ProjectType.SHADER,
 ];
 
-export const ProjectTeamOwnerPermissionsList = [
+export const ProjectPermissionsList = [
     ProjectPermissions.UPLOAD_VERSION,
     ProjectPermissions.DELETE_VERSION,
     ProjectPermissions.EDIT_DETAILS,

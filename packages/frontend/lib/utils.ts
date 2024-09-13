@@ -156,7 +156,7 @@ export const projectFileUrl = (pathname: string) => {
 
 export const imageUrl = (url: string | undefined | null) => {
     if (!url) return "";
-    if (url.startsWith("https")) return `https://wsrv.nl/?url=${encodeURIComponent(url)}`;
+    if (url.startsWith("https")) return `https://wsrv.nl/?url=${encodeURIComponent(url)}&n=-1`;
     return url;
 };
 

@@ -24,18 +24,10 @@ export interface SessionListData {
     userAgent: string | null;
 }
 
-export interface ProjectsListData {
-    id: string;
-    name: string;
-    slug: string;
-    status: ProjectPublishingStatus;
-    icon: string | null;
-    type: string[];
-}
-
 export interface TeamMember {
     id: string;
     userId: string;
+    teamId: string;
     userName: string;
     avatarUrl: string | null;
     role: string;
@@ -146,7 +138,7 @@ export interface ProjectVersionData {
     dependencies: DependencyListData[];
 }
 
-export interface ProfilePageProjectsListData {
+export interface ProjectListItem {
     id: string;
     slug: string;
     name: string;

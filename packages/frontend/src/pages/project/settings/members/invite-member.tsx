@@ -10,17 +10,25 @@ import { toast } from "sonner";
 import type { z } from "zod";
 
 interface Props {
-    projectSlug: string;
+    teamId: string;
+    canInviteMembers: boolean;
     fetchProjectData: () => Promise<void>;
 }
 
-const InviteMemberForm = ({ projectSlug, fetchProjectData }: Props) => {
+const InviteMemberForm = ({ teamId, canInviteMembers, fetchProjectData }: Props) => {
     const form = useForm<z.infer<typeof inviteProjectMemberFormSchema>>({
         resolver: zodResolver(inviteProjectMemberFormSchema),
+        defaultValues: {
+            userName: "",
+        },
     });
 
     const inviteMember = async (values: z.infer<typeof inviteProjectMemberFormSchema>) => {
-        const res = await useFetch(`/api/project/${projectSlug}/member/invite`, {
+        if (!canInviteMembers) {
+            return toast.error("You don't have access to manage member invites");
+        }
+
+        const res = await useFetch(`/api/team/${teamId}/invite`, {
             method: "POST",
             body: JSON.stringify({ userName: values.userName }),
         });
@@ -40,7 +48,7 @@ const InviteMemberForm = ({ projectSlug, fetchProjectData }: Props) => {
                 <div className="w-full flex flex-col gap-1.5">
                     <h3 className="leading-none text-lg font-bold">Invite a member</h3>
                     <span className="leading-none text-muted-foreground">
-                        Enter the Modrinth username of the person you'd like to invite to be a member of this project.
+                        Enter the username of the person you'd like to invite to be a member of this project.
                     </span>
                 </div>
 
@@ -55,7 +63,7 @@ const InviteMemberForm = ({ projectSlug, fetchProjectData }: Props) => {
 
                             <div className="w-full flex flex-wrap gap-x-4 gap-y-1">
                                 <Input {...field} className="w-full md:w-[32ch]" placeholder="Username" />
-                                <Button type="submit">
+                                <Button type="submit" disabled={!canInviteMembers}>
                                     <UserPlusIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.25} />
                                     Invite
                                 </Button>

@@ -3,7 +3,8 @@ import { RateLimiterMiddleware } from "@/middleware/rate-limiter";
 import { AuthenticationMiddleware } from "@/middleware/session";
 import { Hono } from "hono";
 import authRouter from "./auth";
-import projectRouter from "./project/project";
+import projectRouter from "./project";
+import teamRouter from "./team";
 import userRouter from "./user";
 
 const router = new Hono();
@@ -17,5 +18,6 @@ router.use("*", AuthenticationMiddleware);
 router.route("/auth", authRouter);
 router.route("/user", userRouter);
 router.route("/project", projectRouter);
+router.route("/team", teamRouter);
 
 export default router;

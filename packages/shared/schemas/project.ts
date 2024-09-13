@@ -21,7 +21,7 @@ import GAME_VERSIONS from "../config/game-versions";
 import { categories, loaders } from "../config/project";
 import { createURLSafeSlug, isValidUrl } from "../lib/utils";
 import { getFileType } from "../lib/utils/convertors";
-import { DependencyType, FileType, ProjectSupport, ProjectVisibility, VersionReleaseChannel } from "../types";
+import { DependencyType, FileType, ProjectPermissions, ProjectSupport, ProjectVisibility, VersionReleaseChannel } from "../types";
 
 export const newProjectFormSchema = z.object({
     name: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
@@ -313,4 +313,9 @@ export const updateProjectLicenseFormSchema = z.object({
 
 export const inviteProjectMemberFormSchema = z.object({
     userName: z.string().max(MAX_USERNAME_LENGTH),
+});
+
+export const updateProjectMemberFormSchema = z.object({
+    role: z.string().max(32),
+    permissions: z.nativeEnum(ProjectPermissions).array().optional(),
 });

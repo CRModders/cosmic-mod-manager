@@ -5,10 +5,11 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@/lib/utils";
+import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
-import type { ProjectsListData } from "@shared/types/api";
+import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import { Suspense, lazy } from "react";
@@ -17,11 +18,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CreateNewProjectDialog = lazy(() => import("./new-project"));
 
-const getAllUserProjects = async () => {
+const getAllUserProjects = async (userName: string) => {
+    if (!userName) return null;
     try {
-        const response = await useFetch("/api/project");
+        const response = await useFetch(`/api/user/_/${userName}/projects`);
         const result = await response.json();
-        return (result?.projects as ProjectsListData[]) || null;
+        return (result?.projects as ProjectListItem[]) || null;
     } catch (error) {
         console.error(error);
         return null;
@@ -29,7 +31,8 @@ const getAllUserProjects = async () => {
 };
 
 const ProjectsPage = () => {
-    const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects() });
+    const { session } = useSession();
+    const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects(session?.userName || "") });
     const navigate = useNavigate();
 
     const refetchProjectsList = async () => {
