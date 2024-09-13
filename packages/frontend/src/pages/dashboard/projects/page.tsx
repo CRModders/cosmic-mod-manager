@@ -103,7 +103,7 @@ const ProjectsPage = () => {
                                                     <Link
                                                         tabIndex={-1}
                                                         to={getProjectPagePathname(project.type[0], project.slug)}
-                                                        className="noClickRedirect flex shrink-0"
+                                                        className="noClickRedirect flex"
                                                         aria-label={`view ${project.name}`}
                                                     >
                                                         <ImgWrapper
@@ -151,10 +151,11 @@ const ProjectsPage = () => {
                                                 {/* ID */}
                                                 <TableCell className="hidden md:table-cell">
                                                     <div className="w-fit flex items-center justify-start font-mono text-sm noClickRedirect">
-                                                        <span className="cursor-text p-1.5">{project.id}</span>
                                                         <CopyBtn
                                                             id={`${project.slug}-${project.id}`}
                                                             text={project.id}
+                                                            label={project.id}
+                                                            maxLabelChars={10}
                                                             iconClassName="w-3 h-3"
                                                         />
                                                     </div>

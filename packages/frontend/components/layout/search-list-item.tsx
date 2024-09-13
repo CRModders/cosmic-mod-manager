@@ -16,9 +16,7 @@ interface SearchListItemProps {
     projectType: string;
     projectSlug: string;
     icon: string | null;
-    author?: {
-        userName: string;
-    };
+    author?: string;
     summary: string;
     clientSide: ProjectSupport;
     serverSide: ProjectSupport;
@@ -40,14 +38,12 @@ const SearchListItem = ({
     summary,
     featuredCategories,
     loaders,
-    clientSide,
-    serverSide,
     downloads,
     followers,
     dateUpdated,
     datePublished,
     showDatePublished,
-}: SearchListItemProps) => {
+}: Omit<SearchListItemProps, "clientSide" | "serverSide">) => {
     const projectCategoriesData = getProjectCategoriesDataFromNames(featuredCategories);
     const loadersData = getLoadersFromNames(loaders);
 
@@ -64,17 +60,17 @@ const SearchListItem = ({
                 <ImgWrapper src={imageUrl(icon)} alt={projectName} fallback={fallbackProjectIcon} className="h-24 rounded-xl" />
             </Link>
 
-            <div className="flex flex-wrap gap-2 items-baseline justify-start" style={{ gridArea: "title" }}>
+            <div className="h-fit flex flex-wrap gap-2 items-baseline justify-start" style={{ gridArea: "title" }}>
                 <Link to={getProjectPagePathname(projectType, projectSlug)}>
                     <h2 className="text-xl font-bold leading-none break-words sm:text-wrap">{projectName}</h2>
                 </Link>
 
-                {author?.userName ? (
+                {author ? (
                     <>
                         <p className="leading-none">
                             <span>by</span>
-                            <Link to={`/user/${author.userName}`} className="underline px-1">
-                                {author.userName}
+                            <Link to={`/user/${author}`} className="underline px-1">
+                                {author}
                             </Link>
                         </p>
                     </>
@@ -99,7 +95,7 @@ const SearchListItem = ({
                 })}
 
                 {loadersData.map((loader) => {
-                    if (loader.metadata.visibleInTagsList === false) return null;
+                    if (loader.metadata.visibleInCategoriesList === false) return null;
 
                     return (
                         <span key={loader.name} className="flex gap-1 items-center justify-center">

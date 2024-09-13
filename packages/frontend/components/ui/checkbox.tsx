@@ -11,7 +11,7 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-            "neumorphic_shadow peer relative h-4 w-4 shrink-0 rounded-md bg-shallow-background transition-opacity disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsla(var(--accent-background-dark))] data-[state=checked]:text-background",
+            "neumorphic_shadow peer relative h-4 w-4 shrink-0 rounded-md bg-shallower-background/85 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsla(var(--accent-background-dark))] data-[state=checked]:text-background",
             className,
         )}
         {...props}
@@ -24,7 +24,7 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 interface LabelledCheckboxProps {
-    checkBoxId: string;
+    checkBoxId?: string;
     checked: boolean;
     className?: string;
     checkBoxClassname?: string;
@@ -38,7 +38,6 @@ const LabelledCheckbox = React.forwardRef<
 >(({ checkBoxId, children, checked, className, checkBoxClassname, onCheckedChange, disabled }, ref) => {
     return (
         <Label
-            htmlFor={checkBoxId}
             className={cn(
                 "flex text-base font-normal py-[0.1rem] gap-x-2.5 items-center justify-start transition cursor-not-allowed text-muted-foreground opacity-75",
                 !disabled && "hover:brightness-[85%] cursor-pointer opacity-100",

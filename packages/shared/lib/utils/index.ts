@@ -1,4 +1,5 @@
 import { type CategoryType, categories } from "../../config/project";
+import type { TagHeaderTypes } from "../../types";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -94,12 +95,14 @@ export function parseFileSize(size: number): string {
     return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`;
 }
 
-export const getValidProjectCategories = (projectTypes: string[]) => {
+export const getValidProjectCategories = (projectTypes: string[], categoryType?: TagHeaderTypes) => {
     const alreadyAddedCategories = new Set<string>();
     const validCategories: CategoryType[] = [];
 
     // Loop over all categories and check if the project type is in the category's project types
     for (const category of categories) {
+        if (categoryType && categoryType !== category.header) continue;
+
         for (const type of category.projectTypes) {
             if (projectTypes.includes(type) && !alreadyAddedCategories.has(category.name)) {
                 alreadyAddedCategories.add(category.name);
@@ -130,4 +133,14 @@ export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
     }
 
     return categoriesData;
+};
+
+export const isNumber = (num: number | string) => {
+    if (typeof num === "number") {
+        return num - num === 0;
+    }
+    if (typeof num === "string" && num.trim() !== "") {
+        return Number.isFinite(+num);
+    }
+    return false;
 };

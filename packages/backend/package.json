@@ -7,7 +7,7 @@
         "@prisma/client": "^5.19.1",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",
-        "meilisearch": "^0.41.0",
+        "meilisearch": "^0.42.0",
         "nanoid": "^5.0.7",
         "nodemailer": "^6.9.14",
         "ua-parser-js": "^1.0.38"

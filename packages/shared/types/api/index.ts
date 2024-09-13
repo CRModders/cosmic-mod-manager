@@ -149,14 +149,14 @@ export interface ProjectListItem {
     followers: number;
     dateUpdated: Date;
     datePublished: Date;
-    status: ProjectPublishingStatus;
-    visibility: ProjectVisibility;
-    clientSide: ProjectSupport;
-    serverSide: ProjectSupport;
+    status?: ProjectPublishingStatus;
+    visibility?: ProjectVisibility;
+    clientSide?: ProjectSupport;
+    serverSide?: ProjectSupport;
     featuredCategories: string[];
     categories: string[];
     gameVersions: string[];
     loaders: string[];
 
-    // author: Author;
+    author?: string;
 }

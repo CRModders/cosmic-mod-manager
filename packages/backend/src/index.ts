@@ -5,6 +5,7 @@ import { cors } from "hono/cors";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
 import { watchFileDownloadsQueue } from "./services/queues/downloads-increment";
+import queueSearchDbSync from "./services/queues/searchdb-sync";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 
@@ -31,4 +32,8 @@ Bun.serve({
 
 (async () => {
     await watchFileDownloadsQueue();
+})();
+
+(async () => {
+    await queueSearchDbSync();
 })();

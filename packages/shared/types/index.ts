@@ -153,3 +153,11 @@ export enum TagHeaderTypes {
     CATEGORY = "category",
     PERFORMANCE_IMPACT = "performance_impact",
 }
+
+export enum SearchResultSortMethod {
+    RELEVANCE = "relevance",
+    DOWNLOADS = "downloads",
+    FOLLOW_COUNT = "follow_count",
+    RECENTLY_UPDATED = "recently_updated",
+    RECENTLY_PUBLISHED = "recently_published",
+}

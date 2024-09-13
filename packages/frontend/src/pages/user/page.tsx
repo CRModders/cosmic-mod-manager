@@ -22,8 +22,6 @@ const UserProfilePage = () => {
                         projectSlug={project.slug}
                         icon={project.icon}
                         summary={project.summary}
-                        clientSide={project.clientSide}
-                        serverSide={project.serverSide}
                         loaders={project.loaders}
                         featuredCategories={project.featuredCategories}
                         downloads={project.downloads}

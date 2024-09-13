@@ -1,4 +1,7 @@
 # deps
 node_modules/
-*.rdb
 uploads
+
+*.rdb
+data.ms
+dumps

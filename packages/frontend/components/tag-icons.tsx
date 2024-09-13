@@ -18,6 +18,7 @@ import {
     FilmIcon,
     FlipHorizontal2Icon,
     GlobeIcon,
+    HardDriveIcon,
     HeadphonesIcon,
     HexagonIcon,
     HomeIcon,
@@ -27,6 +28,7 @@ import {
     LayersIcon,
     LightbulbIcon,
     MessageCircleIcon,
+    MonitorIcon,
     MountainIcon,
     NetworkIcon,
     PaletteIcon,
@@ -282,6 +284,8 @@ const tagIcons = {
     utility: <BriefcaseIcon {...commonProps} />,
     "vanilla-like": <IceCreamConeIcon {...commonProps} />,
     worldgen: <EarthIcon {...commonProps} />,
+    client: <MonitorIcon {...commonProps} />,
+    server: <HardDriveIcon {...commonProps} />,
 };
 
 export default tagIcons;

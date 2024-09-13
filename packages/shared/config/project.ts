@@ -35,7 +35,7 @@ export type Loader = {
     supportedProjectTypes: ProjectType[];
     supportedFields: LoaderSupportedFields[];
     metadata: {
-        visibleInTagsList?: boolean;
+        visibleInCategoriesList?: boolean;
         accent?: {
             foreground: {
                 light: string;
@@ -89,7 +89,7 @@ export const loaders: Loader[] = [
         supportedProjectTypes: [ProjectType.DATAPACK],
         supportedFields: [LoaderSupportedFields.GAME_VERSIONS],
         metadata: {
-            visibleInTagsList: false,
+            visibleInCategoriesList: false,
         },
     },
     {
@@ -97,7 +97,7 @@ export const loaders: Loader[] = [
         supportedProjectTypes: [ProjectType.RESOURCE_PACK],
         supportedFields: [LoaderSupportedFields.GAME_VERSIONS],
         metadata: {
-            visibleInTagsList: false,
+            visibleInCategoriesList: false,
         },
     },
 ];

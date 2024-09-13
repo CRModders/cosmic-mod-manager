@@ -28,7 +28,6 @@ const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props)
 
         try {
             const data = await acceptTeamInvite(teamId);
-            console.log({ data, teamId });
             if (!data?.success) return toast.error(data?.message || "Error");
 
             await fetchProjectData();

@@ -52,171 +52,183 @@ const ProjectMemberSettingsPage = lazy(() => import("./pages/project/settings/me
 const UserPageLayout = lazy(() => import("./pages/user/layout"));
 const UserProfilePage = lazy(() => import("./pages/user/page"));
 
+// Search page
+const SearchPageLayout = lazy(() => import("@/src/pages/search/layout"));
+
 const projectPageRoutes = () => {
-    return ["project", ...projectTypes].map((type) => {
-        return {
-            path: `${type}/:slug`,
-            element: (
-                <ProjectContextProvider>
-                    <Outlet />
-                </ProjectContextProvider>
-            ),
-            children: [
-                {
-                    path: "",
-                    element: (
-                        <Suspense fallback={<SuspenseFallback />}>
-                            <ProjectPageLayout projectType={type} />
-                        </Suspense>
-                    ),
-                    children: [
-                        {
-                            path: "",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ProjectPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "gallery",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ProjectGallery />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "changelog",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <VersionChangelogs />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "versions",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ProjectVersionsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "version",
-                            element: (
-                                <>
-                                    <Outlet />
-                                </>
-                            ),
-                            children: [
-                                {
-                                    path: "new",
-                                    element: (
-                                        <Suspense fallback={<SuspenseFallback />}>
-                                            <UploadVersionPage />
-                                        </Suspense>
-                                    ),
-                                },
-                                {
-                                    path: ":versionSlug",
-                                    element: <Outlet />,
-                                    children: [
-                                        {
-                                            path: "",
-                                            element: (
-                                                <Suspense fallback={<SuspenseFallback />}>
-                                                    <VersionPage projectType={type} />
-                                                </Suspense>
-                                            ),
-                                        },
-                                        {
-                                            path: "edit",
-                                            element: (
-                                                <Suspense fallback={<SuspenseFallback />}>
-                                                    <EditVersionPage />
-                                                </Suspense>
-                                            ),
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    path: "settings",
-                    element: (
-                        <>
-                            <RedirectIfNotLoggedIn redirectTo="/login">
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ProjectSettingsLayout projectType={type} />
-                                </Suspense>
-                            </RedirectIfNotLoggedIn>
-                        </>
-                    ),
-                    children: [
-                        {
-                            path: "",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <GeneralSettingsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "description",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <DescriptionSettings />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "tags",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <TagsSettingsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "links",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ExternalLinksSettingsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "license",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <LicenseSettingsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "members",
-                            element: (
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <ProjectMemberSettingsPage />
-                                </Suspense>
-                            ),
-                        },
-                        {
-                            path: "*",
-                            element: <NotFoundPage />,
-                        },
-                    ],
-                },
-                {
-                    path: "*",
-                    element: <NotFoundPage />,
-                },
-            ],
-        };
-    });
+    return ["project", ...projectTypes].map((type) => ({
+        path: `${type}/:slug`,
+        element: (
+            <ProjectContextProvider>
+                <Outlet />
+            </ProjectContextProvider>
+        ),
+        children: [
+            {
+                path: "",
+                element: (
+                    <Suspense fallback={<SuspenseFallback />}>
+                        <ProjectPageLayout projectType={type} />
+                    </Suspense>
+                ),
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ProjectPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "gallery",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ProjectGallery />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "changelog",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <VersionChangelogs />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "versions",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ProjectVersionsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "version",
+                        element: (
+                            <>
+                                <Outlet />
+                            </>
+                        ),
+                        children: [
+                            {
+                                path: "new",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <UploadVersionPage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ":versionSlug",
+                                element: <Outlet />,
+                                children: [
+                                    {
+                                        path: "",
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <VersionPage projectType={type} />
+                                            </Suspense>
+                                        ),
+                                    },
+                                    {
+                                        path: "edit",
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <EditVersionPage />
+                                            </Suspense>
+                                        ),
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                path: "settings",
+                element: (
+                    <>
+                        <RedirectIfNotLoggedIn redirectTo="/login">
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ProjectSettingsLayout projectType={type} />
+                            </Suspense>
+                        </RedirectIfNotLoggedIn>
+                    </>
+                ),
+                children: [
+                    {
+                        path: "",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <GeneralSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "description",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <DescriptionSettings />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "tags",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <TagsSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "links",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ExternalLinksSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "license",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <LicenseSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "members",
+                        element: (
+                            <Suspense fallback={<SuspenseFallback />}>
+                                <ProjectMemberSettingsPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "*",
+                        element: <NotFoundPage />,
+                    },
+                ],
+            },
+            {
+                path: "*",
+                element: <NotFoundPage />,
+            },
+        ],
+    }));
+};
+
+const searchPageRoutes = () => {
+    return projectTypes.map((type) => ({
+        path: `${type}s`,
+        element: (
+            <Suspense fallback={<SuspenseFallback />}>
+                <SearchPageLayout type={type} />
+            </Suspense>
+        ),
+    }));
 };
 
 const router = createBrowserRouter([
@@ -299,6 +311,7 @@ const router = createBrowserRouter([
                             </Suspense>
                         ),
                     },
+                    ...searchPageRoutes(),
                     {
                         path: "user",
                         element: (

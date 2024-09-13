@@ -1,13 +1,13 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { getUserSessionFromCtx, inferProjectType } from "@/utils";
+import { getUserSessionFromCtx, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { projectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import type { LinkedProvidersListData, ProjectPublishingStatus, ProjectSupport, ProjectVisibility, UserSessionStates } from "@shared/types";
+import type { LinkedProvidersListData, UserSessionStates } from "@shared/types";
 import type { ProjectListItem, SessionListData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
@@ -156,9 +156,9 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
             userId: user.id,
             accepted: true,
         },
-        include: {
+        select: {
             team: {
-                include: {
+                select: {
                     project: {
                         select: {
                             id: true,
@@ -203,7 +203,9 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
     for (const item of list) {
         const project = item.team.project;
         if (!project) continue;
-        if (!project.team.members?.[0]?.id) continue;
+        if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, project.team.members)) continue;
+
+        // if (!project.team.members?.[0]?.id) continue;
 
         projectListData.push({
             id: project.id,
@@ -216,10 +218,6 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
             followers: project.followers,
             dateUpdated: project.dateUpdated,
             datePublished: project.datePublished,
-            status: project.status as ProjectPublishingStatus,
-            visibility: project.visibility as ProjectVisibility,
-            clientSide: project.clientSide as ProjectSupport,
-            serverSide: project.serverSide as ProjectSupport,
             featuredCategories: project.featuredCategories,
             categories: project.categories,
             gameVersions: project.gameVersions,
