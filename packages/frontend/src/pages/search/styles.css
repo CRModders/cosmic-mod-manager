@@ -1,0 +1,21 @@
+.search-page-grid-layout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "sidebar"
+        "content";
+}
+
+
+@media (min-width: 64rem) {
+    .search-page-grid-layout {
+        grid-template-rows: auto auto 1fr;
+        grid-template-columns: 19rem 1fr;
+        grid-template-areas:
+            "sidebar header"
+            "sidebar content"
+            "dummy content";
+    }
+}

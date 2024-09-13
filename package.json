@@ -1,20 +1,17 @@
 {
     "name": "crmm",
+    "module": "index.ts",
+    "type": "module",
     "devDependencies": {
-        "@biomejs/biome": "1.8.2",
-        "@types/semver": "^7.5.8",
-        "turbo": "latest"
+        "@biomejs/biome": "^1.8.3",
+        "@types/bun": "latest"
     },
-    "packageManager": "bun@1.1.8",
-    "private": true,
-    "scripts": {
-        "build": "turbo build",
-        "dev": "turbo dev",
-        "lint": "turbo lint"
+    "peerDependencies": {
+        "typescript": "^5.0.0"
     },
-    "workspaces": ["apps/*"],
+    "workspaces": ["packages/*"],
     "dependencies": {
-        "semver": "^7.6.2"
-    },
-    "trustedDependencies": ["@biomejs/biome", "@prisma/client"]
+        "react-hook-form": "^7.52.1",
+        "zod": "^3.23.8"
+    }
 }
