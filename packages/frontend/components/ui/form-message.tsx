@@ -17,7 +17,7 @@ export const FormErrorMessage = ({ text, className, labelClassName, children }: 
                 className,
             )}
         >
-            <TriangleAlertIcon className="w-btn-icon h-btn-icon" />
+            <TriangleAlertIcon className="w-btn-icon h-btn-icon shrink-0" />
             {children ? children : <p className={cn("leading-snug", labelClassName)}>{text}</p>}
         </div>
     );
@@ -31,7 +31,7 @@ export const FormSuccessMessage = ({ text, className, labelClassName, children }
                 className,
             )}
         >
-            <CheckCheckIcon className="w-btn-icon h-btn-icon" />
+            <CheckCheckIcon className="w-btn-icon h-btn-icon shrink-0" />
             {children ? children : <p className={cn("leading-snug", labelClassName)}>{text}</p>}
         </div>
     );

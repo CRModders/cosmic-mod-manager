@@ -1,7 +1,7 @@
 import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
 import httpCode from "@/utils/http";
-import { AUTHTOKEN_COOKIE_NAME, AUTH_COOKIE_MAX_AGE, SITE_NAME_SHORT } from "@shared/config";
+import { AUTHTOKEN_COOKIE_NAME, SITE_NAME_SHORT, USER_SESSION_VALIDITY } from "@shared/config";
 import { Capitalize } from "@shared/lib/utils";
 import type { Context } from "hono";
 import { getAuthProviderProfileData } from "../commons";
@@ -54,7 +54,7 @@ export const oAuthSignInHandler = async (ctx: Context, authProvider: string, tok
         ctx: ctx,
         user: expectedAuthAccount.user,
     });
-    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession), { maxAge: AUTH_COOKIE_MAX_AGE });
+    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession), { maxAge: USER_SESSION_VALIDITY });
 
     return ctx.json(
         { success: true, message: `Successfuly logged in using ${profileData.providerName} as ${expectedAuthAccount.user.name}` },

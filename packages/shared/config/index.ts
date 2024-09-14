@@ -11,10 +11,9 @@ export const BASE_API_ROUTE_PATH = "/api";
 // COOKIES
 export const CSRF_STATE_COOKIE_NAME = "csrfState";
 export const AUTHTOKEN_COOKIE_NAME = "auth-token";
-export const AUTH_COOKIE_MAX_AGE = 2592000000; // 30 days
 
 // AUTH
-export const USER_SESSION_VALIDITY = 2592000000; // 30 days
+export const USER_SESSION_VALIDITY = 2592000; // 30 days
 export const PASSWORD_HASH_SALT_ROUNDS = 8;
 
 // Confirmation email expiry durations
