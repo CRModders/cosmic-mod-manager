@@ -12,11 +12,9 @@ import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
-import { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
-
-const CreateNewProjectDialog = lazy(() => import("./new-project"));
+import CreateNewProjectDialog from "./new-project";
 
 const getAllUserProjects = async () => {
     try {
@@ -47,9 +45,7 @@ const ProjectsPage = () => {
             <Card className="w-full overflow-hidden">
                 <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">
                     <CardTitle>Projects</CardTitle>
-                    <Suspense>
-                        <CreateNewProjectDialog refetchProjectsList={refetchProjectsList} />
-                    </Suspense>
+                    <CreateNewProjectDialog refetchProjectsList={refetchProjectsList} />
                 </CardHeader>
                 <CardContent className="p-0">
                     {projectsList.data?.length === 0 ? (
