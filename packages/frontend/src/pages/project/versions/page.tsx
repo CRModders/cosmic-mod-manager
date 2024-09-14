@@ -116,7 +116,7 @@ const ProjectVersionsPage = () => {
             ) : null}
 
             {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible ? (
-                <div className="w-full flex items-center justify-start gap-2">
+                <div className="w-full flex flex-wrap items-center justify-start gap-2">
                     {loadersFilterVisible ? (
                         <MultiSelect
                             popupAlign="start"
