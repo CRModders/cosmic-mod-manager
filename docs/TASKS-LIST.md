@@ -54,6 +54,7 @@
 
 - [x] Add search page
 
+- [-] Update the overview page of dashboard to show real stats
 - [-] Fix session location not being shown
 - [-] Add notifications
 
@@ -61,6 +62,7 @@
 - [-] Fix user deletion
 
 - [-] Modify downloads queue to count valid downloads instantly by save the download details in redis cache for an interval for validations of other downloads
+- [-] Add a proper profile edit page
 
 <!-- Later stuff -->
 - [-] Add custom redirect after login

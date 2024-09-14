@@ -7,7 +7,7 @@ import { projectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import type { LinkedProvidersListData, UserSessionStates } from "@shared/types";
+import type { LinkedProvidersListData, ProjectPublishingStatus, UserSessionStates } from "@shared/types";
 import type { ProjectListItem, SessionListData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
@@ -205,14 +205,13 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
         if (!project) continue;
         if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, project.team.members)) continue;
 
-        // if (!project.team.members?.[0]?.id) continue;
-
         projectListData.push({
             id: project.id,
             slug: project.slug,
             name: project.name,
             summary: project.summary,
             type: inferProjectType(project.loaders),
+            status: project.status as ProjectPublishingStatus,
             icon: projectIconUrl(project.slug, project.iconFileId || ""),
             downloads: project.downloads,
             followers: project.followers,

@@ -9,6 +9,7 @@ import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
@@ -167,7 +168,7 @@ const ProjectsPage = () => {
                                                 {/* STATUS */}
                                                 <TableCell className="hidden md:table-cell">
                                                     <span className="flex items-center gap-1 leading-none font-medium">
-                                                        <ProjectStatusIcon status={project.status} />
+                                                        <ProjectStatusIcon status={project.status || ("" as ProjectPublishingStatus)} />
                                                         {CapitalizeAndFormatString(project.status)}
                                                     </span>
                                                 </TableCell>
