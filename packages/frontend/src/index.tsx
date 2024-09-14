@@ -31,7 +31,7 @@ const OverviewPage = lazy(() => import("@/src/pages/dashboard/overview"));
 const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
 
 // Project details
-const ProjectPage = lazy(() => import("@/src/pages/project/page"));
+import ProjectPage from "@/src/pages/project/page";
 const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
 const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
@@ -74,11 +74,7 @@ const projectPageRoutes = () => {
                 children: [
                     {
                         path: "",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectPage />
-                            </Suspense>
-                        ),
+                        element: <ProjectPage />,
                     },
                     {
                         path: "gallery",
