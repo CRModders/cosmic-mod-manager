@@ -54,6 +54,7 @@
 
 - [x] Add search page
 
+- [-] Add transfer ownership option
 - [-] Update the overview page of dashboard to show real stats
 - [-] Fix session location not being shown
 - [-] Add notifications

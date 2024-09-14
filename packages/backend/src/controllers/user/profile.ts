@@ -195,7 +195,7 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
                 },
             },
         },
-        orderBy: { team: { project: { datePublished: "desc" } } },
+        orderBy: { team: { project: { downloads: "desc" } } },
     });
 
     if (!list) return ctx.json({ success: true, projects: [] }, httpCode("ok"));
