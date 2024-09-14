@@ -13,7 +13,7 @@ import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -39,6 +39,13 @@ const ProjectsPage = () => {
     const refetchProjectsList = async () => {
         await projectsList.refetch();
     };
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (session?.userName && !projectsList.data) {
+            refetchProjectsList();
+        }
+    }, [session?.userName]);
 
     return (
         <>
