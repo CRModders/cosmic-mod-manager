@@ -47,7 +47,7 @@ const TagsSettingsPage = () => {
             }
 
             await fetchProjectData();
-            toast.error(data?.message || "Tags updated");
+            toast.success(data?.message || "Tags updated");
             return;
         } finally {
             setIsLoading(false);

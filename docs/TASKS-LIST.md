@@ -60,6 +60,7 @@
 - [-] Fix project deletion
 - [-] Fix user deletion
 
+- [-] Modify downloads queue to count valid downloads instantly by save the download details in redis cache for an interval for validations of other downloads
 
 <!-- Later stuff -->
 - [-] Add custom redirect after login
