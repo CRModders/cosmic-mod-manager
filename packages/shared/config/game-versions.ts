@@ -1,6 +1,11 @@
 import { VersionReleaseChannel } from "../types";
 
 const GAME_VERSIONS = [
+    { version: "0.2.5", releaseType: VersionReleaseChannel.ALPHA },
+    { version: "0.2.4", releaseType: VersionReleaseChannel.ALPHA },
+    { version: "0.2.3", releaseType: VersionReleaseChannel.ALPHA },
+    { version: "0.2.2", releaseType: VersionReleaseChannel.ALPHA },
+    { version: "0.2.1", releaseType: VersionReleaseChannel.ALPHA },
     { version: "0.2.0", releaseType: VersionReleaseChannel.ALPHA },
     { version: "0.1.50", releaseType: VersionReleaseChannel.ALPHA },
     { version: "0.1.49", releaseType: VersionReleaseChannel.ALPHA },
