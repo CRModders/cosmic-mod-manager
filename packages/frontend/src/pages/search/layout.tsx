@@ -76,15 +76,6 @@ const SearchPageLayout = ({ type }: Props) => {
                 className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-x-3 gap-y-2"
                 style={{ gridArea: "header" }}
             >
-                <Button
-                    className={cn("flex lg:hidden", showFilters && "!ring-[0.13rem] ring-accent-background/75")}
-                    variant="secondary"
-                    onClick={() => setShowFilters((prev) => !prev)}
-                >
-                    <FilterIcon className="w-btn-icon h-btn-icon" />
-                    Filters...
-                </Button>
-
                 <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
                     <SearchIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]" />
                     <Input
@@ -141,6 +132,15 @@ const SearchPageLayout = ({ type }: Props) => {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
+
+                <Button
+                    className={cn("flex lg:hidden", showFilters && "!ring-[0.13rem] ring-accent-background/75")}
+                    variant="secondary"
+                    onClick={() => setShowFilters((prev) => !prev)}
+                >
+                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                    Filters...
+                </Button>
             </Card>
 
             <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
