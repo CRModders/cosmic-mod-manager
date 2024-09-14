@@ -24,7 +24,7 @@ export const searchProjects = async (ctx: Context, props: Props) => {
 
     switch (props.sortBy) {
         case SearchResultSortMethod.RELEVANCE:
-            sortBy = null;
+            sortBy = props.query ? null : "downloads:desc";
             break;
         case SearchResultSortMethod.RECENTLY_PUBLISHED:
             sortBy = "datePublished:desc";
