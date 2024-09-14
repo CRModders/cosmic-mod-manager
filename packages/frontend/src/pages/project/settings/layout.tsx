@@ -39,7 +39,9 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
     if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) {
         return null;
     }
-    if (!currUsersMembership.data) return <Redirect redirectTo={`/${projectType}/${projectData.slug}`} />;
+    if (!currUsersMembership.data && currUsersMembership.status === LoadingStatus.LOADED) {
+        return <Redirect redirectTo={`/${projectType}/${projectData.slug}`} />;
+    }
 
     return (
         <>
