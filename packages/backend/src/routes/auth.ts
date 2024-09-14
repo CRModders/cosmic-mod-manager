@@ -35,7 +35,7 @@ authRouter.get("/me", async (ctx: Context) => {
             sessionToken: userSession.sessionToken,
         };
 
-        return ctx.json(formattedObject, httpCode("ok"));
+        return ctx.json({ data: formattedObject }, httpCode("ok"));
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

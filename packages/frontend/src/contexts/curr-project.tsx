@@ -154,14 +154,6 @@ export const ProjectContextProvider = ({
                 }
             }
 
-            // if (!valueSet) {
-            //     for (const member of projectData.organisation?.members || []) {
-            //         if (member.userId === session?.id) {
-            //             setCurrUsersMembership(member);
-            //         }
-            //     }
-            // }
-
             if (membership?.id) {
                 setCurrUsersMembership({ data: membership, status: LoadingStatus.LOADED });
             } else {

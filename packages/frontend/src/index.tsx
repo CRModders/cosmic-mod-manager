@@ -146,11 +146,10 @@ const projectPageRoutes = () => {
                 path: "settings",
                 element: (
                     <>
-                        <RedirectIfNotLoggedIn redirectTo="/login">
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectSettingsLayout projectType={type} />
-                            </Suspense>
-                        </RedirectIfNotLoggedIn>
+                        <RedirectIfNotLoggedIn redirectTo="/login" />
+                        <Suspense fallback={<SuspenseFallback />}>
+                            <ProjectSettingsLayout projectType={type} />
+                        </Suspense>
                     </>
                 ),
                 children: [
@@ -345,11 +344,12 @@ const router = createBrowserRouter([
                     {
                         path: "settings",
                         element: (
-                            <RedirectIfNotLoggedIn redirectTo="/login">
+                            <>
+                                <RedirectIfNotLoggedIn redirectTo="/login" />
                                 <Suspense fallback={<SuspenseFallback />}>
                                     <SettingsPageLayout />
                                 </Suspense>
-                            </RedirectIfNotLoggedIn>
+                            </>
                         ),
                         children: [
                             {
@@ -381,11 +381,12 @@ const router = createBrowserRouter([
                     {
                         path: "dashboard",
                         element: (
-                            <RedirectIfNotLoggedIn redirectTo="/login">
+                            <>
+                                <RedirectIfNotLoggedIn redirectTo="/login" />
                                 <Suspense fallback={<SuspenseFallback />}>
                                     <DashboardLayout />
                                 </Suspense>
-                            </RedirectIfNotLoggedIn>
+                            </>
                         ),
                         children: [
                             {

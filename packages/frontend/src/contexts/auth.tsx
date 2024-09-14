@@ -1,11 +1,10 @@
+import useFetch from "@/src/hooks/fetch";
 import type { LoggedInUserData } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useEffect, useState } from "react";
-import useFetch from "@/src/hooks/fetch";
+import { createContext, useContext } from "react";
 
 type AuthContextType = {
     session: LoggedInUserData | null | undefined;
-    setNewSession: (newSession: Partial<LoggedInUserData>) => void;
     logout: () => Promise<void>;
     validateSession: () => Promise<void>;
     isFetchingInitialData: boolean;
@@ -16,9 +15,6 @@ type AuthContextType = {
 // undefined state is initial, null is for when the context has been initialized but session is empty
 export const AuthContext = createContext<AuthContextType>({
     session: undefined,
-    setNewSession: (newSession: Partial<LoggedInUserData>) => {
-        newSession;
-    },
     logout: async () => {},
     validateSession: async () => {},
     isFetchingInitialData: true,
@@ -29,7 +25,7 @@ export const AuthContext = createContext<AuthContextType>({
 const getSessionData = async () => {
     try {
         const response = await useFetch("/api/auth/me");
-        return (await response.json()) || null;
+        return (await response.json())?.data || null;
     } catch (err) {
         console.error(err);
         return null;
@@ -37,25 +33,14 @@ const getSessionData = async () => {
 };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [session, setSession] = useState<LoggedInUserData | null | undefined>(undefined);
-
     const sessionData = useQuery({ queryKey: ["auth-session-data"], queryFn: () => getSessionData() });
-
-    const setNewSession = (newSession: Partial<LoggedInUserData>) => {
-        if (session && newSession) {
-            setSession({ ...session, ...newSession });
-        } else {
-            setSession(newSession as LoggedInUserData);
-        }
-    };
 
     const logout = async () => {
         await useFetch("/api/auth/session/logout", {
             method: "POST",
-            body: JSON.stringify(session),
+            body: JSON.stringify(sessionData.data),
         });
 
-        setSession(null);
         window.location.reload();
     };
 
@@ -63,15 +48,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await sessionData.refetch();
     };
 
-    useEffect(() => {
-        setSession(sessionData.data);
-    }, [sessionData.data]);
-
     return (
         <AuthContext.Provider
             value={{
-                session,
-                setNewSession,
+                session: sessionData.data,
                 logout,
                 validateSession,
                 isFetchingInitialData: sessionData.isLoading,

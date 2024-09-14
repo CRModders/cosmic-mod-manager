@@ -9,9 +9,9 @@ export const RedirectIfLoggedIn = ({ children, redirectTo }: { children?: React.
 };
 
 export const RedirectIfNotLoggedIn = ({ children, redirectTo }: { children?: React.ReactNode; redirectTo: string }) => {
-    const { session } = useSession();
+    const { session, isFetchingInitialData } = useSession();
 
-    if (session !== undefined && !session?.id) return <Redirect redirectTo={redirectTo} />;
+    if (!isFetchingInitialData && !session) return <Redirect redirectTo={redirectTo} />;
     return children;
 };
 
