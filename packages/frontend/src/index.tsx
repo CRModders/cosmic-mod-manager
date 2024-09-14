@@ -314,25 +314,33 @@ const router = createBrowserRouter([
                     ...searchPageRoutes(),
                     {
                         path: "user",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <UserProfileContextProvider>
-                                    <UserPageLayout />
-                                </UserProfileContextProvider>
-                            </Suspense>
-                        ),
+                        element: <Outlet />,
                         children: [
                             {
                                 path: ":userName",
-                                element: <Outlet />,
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <UserProfileContextProvider>
+                                            <UserPageLayout />
+                                        </UserProfileContextProvider>
+                                    </Suspense>
+                                ),
                                 children: [
                                     {
                                         path: "",
-                                        element: <UserProfilePage />,
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <UserProfilePage />
+                                            </Suspense>
+                                        ),
                                     },
                                     {
                                         path: ":projectType",
-                                        element: <UserProfilePage />,
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <UserProfilePage />
+                                            </Suspense>
+                                        ),
                                     },
                                 ],
                             },
