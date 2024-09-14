@@ -6,7 +6,7 @@ import prisma from "../prisma";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 250;
-const SYNC_INTERVAL = 2700_000; // 45 minutes
+const SYNC_INTERVAL = 1800_000; // 30 minutes
 let isSyncing = false;
 
 const requiredProjectFields = {
@@ -107,6 +107,7 @@ const _syncProjects = async (cursor: null | string) => {
             });
         }
 
+        await index.deleteAllDocuments();
         await index.addDocuments(formattedProjectsData);
 
         if (formattedProjectsData.length < SYNC_BATCH_SIZE) return null;

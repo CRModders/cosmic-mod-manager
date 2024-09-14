@@ -1,7 +1,7 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { addToDownloadsQueue } from "@/services/queues/downloads-increment";
+import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
 import { getFileFromStorage } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";

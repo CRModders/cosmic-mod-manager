@@ -2,6 +2,7 @@ import { getUserIpAddress } from "@/controllers/auth/commons";
 import { getUserSession } from "@/controllers/auth/session";
 import { deleteUserCookie, generateRandomString, getUserSessionFromCtx, setUserCookie } from "@/utils";
 import httpCode, { defaultServerErrorResponse } from "@/utils/http";
+import { GUEST_SESSION_ID_VALIDITY } from "@shared/config";
 import { PROTECTED_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { Context, Next } from "hono";
 import { getCookie } from "hono/cookie";
@@ -15,7 +16,7 @@ export const AuthenticationMiddleware = async (ctx: Context, next: Next) => {
     if (!user) {
         if (!getCookie(ctx, "guest-session")) {
             const randomId = generateRandomString(32);
-            setUserCookie(ctx, "guest-session", randomId);
+            setUserCookie(ctx, "guest-session", randomId, { maxAge: GUEST_SESSION_ID_VALIDITY });
             ctx.set("guest-session", randomId);
         } else {
             ctx.set("guest-session", getCookie(ctx, "guest-session"));
