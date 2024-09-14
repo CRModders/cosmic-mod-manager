@@ -10,10 +10,8 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ButtonLink } from "@/components/ui/link";
-import Redirect from "@/components/ui/redirect";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
-import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
@@ -36,11 +34,8 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
     const { projectData, currUsersMembership } = useContext(projectContext);
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
 
-    if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) {
+    if (!projectData || !currUsersMembership.data) {
         return null;
-    }
-    if (!currUsersMembership.data && currUsersMembership.status === LoadingStatus.LOADED) {
-        return <Redirect redirectTo={`/${projectType}/${projectData.slug}`} />;
     }
 
     return (
