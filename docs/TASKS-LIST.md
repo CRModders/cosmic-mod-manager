@@ -44,14 +44,17 @@
 - [x] Add filters on the changelog page
 - [x] Add filters on the versions page
 
-- [-] Add settings page
+- [x] Add settings page
   - [x] General settings page
   - [x] Description settings page
   - [x] Tags settings page
   - [x] License settings page
   - [x] Links settings page
-  - [-] Members settings page
+  - [x] Members settings page
 
+- [x] Add search page
+
+- [-] Fix session location not being shown
 - [-] Add notifications
 
 - [-] Fix project deletion

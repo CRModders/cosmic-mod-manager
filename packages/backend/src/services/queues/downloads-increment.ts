@@ -133,6 +133,5 @@ export const watchFileDownloadsQueue = async () => {
     }, QUEUE_PROCESS_INTERVAL);
 };
 
-process.on("exit", async () => {
-    await processDownloadsQueue();
-});
+// Process the queue on startup for any leftover items
+processDownloadsQueue();
