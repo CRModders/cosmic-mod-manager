@@ -8,9 +8,10 @@ export const STRING_ID_LENGTH = 18;
 export const BACKEND_PORT = 5500;
 export const BASE_API_ROUTE_PATH = "/api";
 
-// COOKIE NAMES
+// COOKIES
 export const CSRF_STATE_COOKIE_NAME = "csrfState";
 export const AUTHTOKEN_COOKIE_NAME = "auth-token";
+export const AUTH_COOKIE_MAX_AGE = 2592000000; // 30 days
 
 // AUTH
 export const USER_SESSION_VALIDITY = 2592000000; // 30 days

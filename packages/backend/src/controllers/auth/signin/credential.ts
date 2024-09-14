@@ -2,7 +2,7 @@ import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { matchPassword, setUserCookie } from "@/utils";
 import httpCode from "@/utils/http";
-import { AUTHTOKEN_COOKIE_NAME } from "@shared/config";
+import { AUTHTOKEN_COOKIE_NAME, AUTH_COOKIE_MAX_AGE } from "@shared/config";
 import { USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { LoginFormSchema } from "@shared/schemas/auth";
 import { AuthProviders } from "@shared/types";
@@ -37,7 +37,7 @@ const credentialSignIn = async (ctx: Context, formData: z.infer<typeof LoginForm
         isFirstSignIn: false,
         user: user,
     });
-    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession));
+    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession), { maxAge: AUTH_COOKIE_MAX_AGE });
 
     return ctx.json({ success: true, message: `Logged in as ${user.name}` }, httpCode("ok"));
 };

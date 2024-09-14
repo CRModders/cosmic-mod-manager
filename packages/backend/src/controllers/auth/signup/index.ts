@@ -1,7 +1,7 @@
 import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
 import httpCode from "@/utils/http";
-import { AUTHTOKEN_COOKIE_NAME, STRING_ID_LENGTH } from "@shared/config";
+import { AUTHTOKEN_COOKIE_NAME, AUTH_COOKIE_MAX_AGE, STRING_ID_LENGTH } from "@shared/config";
 import { GlobalUserRoles } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
@@ -81,7 +81,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
         isFirstSignIn: true,
         user: newUser,
     });
-    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession));
+    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession), { maxAge: AUTH_COOKIE_MAX_AGE });
 
     return ctx.json(
         {
