@@ -114,6 +114,7 @@ html body {
 ::-webkit-scrollbar-thumb,
 body * ::-webkit-scrollbar-thumb {
     background-color: hsla(var(--extra-muted-foreground), 0.5);
+    border-radius: 0.3rem;
 }
 
 ::-webkit-scrollbar-thumb:hover,
@@ -128,7 +129,8 @@ body * ::-webkit-scrollbar-thumb:active {
 
 ::-webkit-scrollbar-track,
 body * ::-webkit-scrollbar-track {
-    background-color: hsla(var(--card-background));
+    background-color: hsla(var(--background));
+    border-radius: 0.3rem;
 }
 
 body.navmenu-open,
