@@ -61,6 +61,19 @@ userRouter.get("/_/:slug/projects", async (ctx: Context) => {
     }
 });
 
+userRouter.get("/projects", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const userName = userSession?.userName;
+        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
+
+        return await getAllVisibleProjects(ctx, userSession, userName);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
 userRouter.post("/update-profile", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const { data, error } = parseValueToSchema(profileUpdateFormSchema, ctx.get(ctxReqBodyNamespace));

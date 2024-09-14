@@ -5,7 +5,6 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@/lib/utils";
-import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -13,16 +12,15 @@ import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateNewProjectDialog = lazy(() => import("./new-project"));
 
-const getAllUserProjects = async (userName: string) => {
-    if (!userName) return null;
+const getAllUserProjects = async () => {
     try {
-        const response = await useFetch(`/api/user/_/${userName}/projects`);
+        const response = await useFetch("/api/user/projects");
         const result = await response.json();
         return (result?.projects as ProjectListItem[]) || null;
     } catch (error) {
@@ -32,20 +30,12 @@ const getAllUserProjects = async (userName: string) => {
 };
 
 const ProjectsPage = () => {
-    const { session } = useSession();
-    const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects(session?.userName || "") });
+    const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects() });
     const navigate = useNavigate();
 
     const refetchProjectsList = async () => {
         await projectsList.refetch();
     };
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        if (session?.userName && !projectsList.data) {
-            refetchProjectsList();
-        }
-    }, [session?.userName]);
 
     return (
         <>
