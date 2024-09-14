@@ -10,6 +10,11 @@ import { nanoid } from "nanoid";
 import { sort } from "semver";
 import { type ContextUserSession, ctxReqAuthSessionNamespace } from "../../types";
 
+const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN;
+if (!COOKIE_DOMAIN) {
+    throw new Error("COOKIE_DOMAIN is not defined");
+}
+
 export const generateRandomString = (length = STRING_ID_LENGTH) => {
     let result = nanoid(16);
     while (result.length < length) {
@@ -23,7 +28,7 @@ export const generateRandomString = (length = STRING_ID_LENGTH) => {
 export const setUserCookie = (ctx: Context, name: string, value: string, options?: CookieOptions) => {
     return setCookie(ctx, name, value, {
         sameSite: "Strict",
-        domain: "localhost",
+        domain: COOKIE_DOMAIN,
         httpOnly: true,
         secure: true,
         ...options,
