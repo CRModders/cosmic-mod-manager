@@ -88,7 +88,7 @@ const TagsSettingsPage = () => {
                                     control={form.control}
                                     name="categories"
                                     render={({ field }) => (
-                                        <div className="w-full grid grid-cols-4 mt-2">
+                                        <div className="autofit-grid w-full grid mt-2">
                                             {allAvailableCategories.map((category) => {
                                                 return (
                                                     <LabelledCheckbox
@@ -136,12 +136,13 @@ const TagsSettingsPage = () => {
                                     control={form.control}
                                     name="featuredCategories"
                                     render={({ field }) => (
-                                        <div className="w-full grid grid-cols-4 mt-2">
+                                        <div className="autofit-grid w-full grid mt-2">
                                             {form.getValues().categories.map((tag) => {
                                                 return (
                                                     <LabelledCheckbox
                                                         key={tag}
                                                         checkBoxId={`featured-tag-${tag}`}
+                                                        className="w-fit"
                                                         checked={field.value.includes(tag)}
                                                         disabled={
                                                             field.value.length >= MAX_FEATURED_PROJECT_TAGS && !field.value.includes(tag)
