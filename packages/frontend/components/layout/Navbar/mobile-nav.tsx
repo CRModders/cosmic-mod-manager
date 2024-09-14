@@ -1,5 +1,6 @@
 import { useSession } from "@/src/contexts/auth";
-import { SignOutBtn } from "./nav-button";
+import { Link } from "react-router-dom";
+import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
 
 interface MobileNavProps {
@@ -91,6 +92,13 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                                     />
                                 </li>
                             </>
+                        )}
+                        {!session?.id && (
+                            <li className="w-full flex group">
+                                <Link to="/login" className="w-full">
+                                    <LoginButton onClick={() => toggleNavMenu(false)} className="w-full" />
+                                </Link>
+                            </li>
                         )}
                     </ul>
                 </div>
