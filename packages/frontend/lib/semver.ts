@@ -1,4 +1,4 @@
-import GAME_VERSIONS from "@shared/config/game-versions";
+import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
 import { rsort } from "semver";
 
 export const groupContinuousVersions = (versions: string[], referenceList: string[]): string[][] => {
@@ -28,7 +28,7 @@ export const getGroupedVersionsList = (list: string[]): string[] => {
     const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(
         list,
-        GAME_VERSIONS.map((version) => version.version),
+        GAME_VERSIONS.map((version) => version.version.value),
     );
 
     for (const versionGroup of groupedVersions) {
@@ -41,19 +41,38 @@ export const getGroupedVersionsList = (list: string[]): string[] => {
     return formattedList;
 };
 
-export const formatVersionsListString = (list: string[]): string => {
-    let formattedStr = "";
+export const formatGameVersionsList = (list: string[]): string[] => {
+    const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(
         list,
-        GAME_VERSIONS.map((version) => version.version),
+        GAME_VERSIONS.map((version) => version.version.value),
     );
 
     for (const versionGroup of groupedVersions) {
-        const firstItem = versionGroup[0].endsWith(".0") ? versionGroup[0].slice(0, -2) : versionGroup[0];
+        const firstItem = getGameVersionFromValue(versionGroup[0])?.version?.label;
+
+        if (firstItem && versionGroup.length === 1) formattedList.push(firstItem);
+        else {
+            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.version?.label;
+            formattedList.push(`${lastItem}–${firstItem}`);
+        }
+    }
+    return formattedList;
+};
+
+export const formatGameVersionsListString = (list: string[]): string => {
+    let formattedStr = "";
+    const groupedVersions = groupContinuousVersions(
+        list,
+        GAME_VERSIONS.map((version) => version.version.value),
+    );
+
+    for (const versionGroup of groupedVersions) {
+        const firstItem = getGameVersionFromValue(versionGroup[0])?.version?.label;
 
         if (versionGroup.length === 1) formattedStr += `${firstItem}, `;
         else {
-            const lastItem = versionGroup.at(-1)?.endsWith(".0") ? versionGroup.at(-1)?.slice(0, -2) : versionGroup.at(-1);
+            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.version?.label;
             formattedStr += `${lastItem}–${firstItem}, `;
         }
     }

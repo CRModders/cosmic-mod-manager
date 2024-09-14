@@ -251,10 +251,7 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
 
                         <MultiSelect
                             selectedOptions={field.value || []}
-                            options={GAME_VERSIONS.map((version) => ({
-                                label: CapitalizeAndFormatString(version.version) || "",
-                                value: version.version,
-                            }))}
+                            options={GAME_VERSIONS.map((version) => version.version)}
                             onChange={field.onChange}
                             classNames={{
                                 popupContent: "min-w-[15rem]",

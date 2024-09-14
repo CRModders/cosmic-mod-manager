@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import CopyBtn from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
-import { formatVersionsListString } from "@/lib/semver";
+import { formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
@@ -256,7 +256,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                             },
                             {
                                 label: "Game versions",
-                                content: <span className="leading-none"> {formatVersionsListString(versionData.gameVersions)} </span>,
+                                content: <span className="leading-none"> {formatGameVersionsListString(versionData.gameVersions)} </span>,
                             },
                             {
                                 label: "Publication date",

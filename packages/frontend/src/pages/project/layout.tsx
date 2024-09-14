@@ -8,7 +8,7 @@ import { ButtonLink, VariantButtonLink } from "@/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatVersionsListString, getGroupedVersionsList } from "@/lib/semver";
+import { formatGameVersionsList, formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
@@ -112,7 +112,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                         <div>
                             <span className="flex font-bold text-muted-foreground pb-1">Game versions</span>
                             <div className="w-full flex flex-wrap gap-1">
-                                {getGroupedVersionsList(projectData.gameVersions).map((version) => (
+                                {formatGameVersionsList(projectData.gameVersions).map((version) => (
                                     <Chip key={version} className="text-muted-foreground">
                                         {version}
                                     </Chip>
@@ -256,7 +256,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                             </Link>
                                             <p className="text-pretty leading-tight text-muted-foreground">
                                                 {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
-                                                {formatVersionsListString(version.gameVersions)}
+                                                {formatGameVersionsListString(version.gameVersions)}
                                             </p>
                                             <ReleaseChannelChip releaseChannel={version.releaseChannel} />
                                         </div>

@@ -26,8 +26,16 @@ interface Props {
     searchParams: URLSearchParams;
 }
 
-const matchesSearch = (value: string, query: string) => {
-    return value.includes(query) || query.includes(value);
+const matchesSearch = (strings: string[], query: string) => {
+    const queryLower = query.toLowerCase();
+    for (const str of strings) {
+        const strLower = str.toLowerCase();
+
+        if (strLower.includes(queryLower) || queryLower.includes(strLower)) {
+            return true;
+        }
+    }
+    return false;
 };
 
 const filtersKeyList = [
@@ -51,23 +59,43 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
 
+    // Filters list
+    // Project Loader filters
     const loaderFilters = getAllLoaderFilters(type);
-    const loaderFilterOptions = loaderFilters.map((loader) => loader.name).filter((loader) => matchesSearch(loader, query));
-    const gameVersionFilterOptions = GAME_VERSIONS.map((version) => version.version).filter((version) => matchesSearch(version, query));
-    const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch(env, query));
+    const loaderFilterOptions = loaderFilters.map((loader) => loader.name).filter((loader) => matchesSearch([loader], query));
+
+    // Game version filters
+    const gameVersionFilterOptions = GAME_VERSIONS.map(({ version }) => ({ value: version.value, label: version.label })).filter(
+        (version) => matchesSearch([version.label, version.value], query),
+    );
+
+    // Environment filters
+    const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env], query));
+
+    // Category filters
     const categoryFilterOptions = getValidProjectCategories([type], TagHeaderTypes.CATEGORY)
         .map((c) => c.name)
-        .filter((category) => matchesSearch(category, query));
+        .filter((category) => matchesSearch([category], query));
+
+    // Feature filters
     const featureFilterOptions = getValidProjectCategories([type], TagHeaderTypes.FEATURE)
         .map((f) => f.name)
-        .filter((feature) => matchesSearch(feature, query));
+        .filter((feature) => matchesSearch([feature], query));
+
+    // Resolution filters
     const resolutionFilterOptions = getValidProjectCategories([type], TagHeaderTypes.RESOLUTION)
         .map((r) => r.name)
-        .filter((resolution) => matchesSearch(resolution, query));
+        .filter((resolution) => matchesSearch([resolution], query));
+
+    // Performance impact filters
     const performanceFilterOptions = getValidProjectCategories([type], TagHeaderTypes.PERFORMANCE_IMPACT)
         .map((p) => p.name)
-        .filter((performance) => matchesSearch(performance, query));
-    const licenseFilterOptions = ["oss"].filter((license) => matchesSearch(license, query));
+        .filter((performance) => matchesSearch([performance], query));
+
+    // License filters
+    const licenseFilterOptions = [{ value: "oss", label: "Open source only" }].filter((license) =>
+        matchesSearch([license.label, license.value], query),
+    );
 
     return (
         <Card
@@ -214,7 +242,6 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                 items={licenseFilterOptions}
                 selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
                 label="License"
-                customLabel={"Open source only"}
                 className="pb-0 border-none"
                 onCheckedChange={(license) => {
                     const newUrl = updateSearchParam({
@@ -233,9 +260,13 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
 
 export default FilterSidebar;
 
+interface FilterItem {
+    value: string;
+    label: string;
+}
+
 interface FilterCategoryProps {
-    items: string[];
-    customLabel?: string;
+    items: FilterItem[] | string[];
     selectedItems: string[];
     label: string;
     onCheckedChange: (checked: string) => void;
@@ -243,15 +274,7 @@ interface FilterCategoryProps {
     className?: string;
 }
 
-const FilterCategory = ({
-    items,
-    selectedItems,
-    label,
-    customLabel,
-    onCheckedChange,
-    className,
-    listWrapperClassName,
-}: FilterCategoryProps) => {
+const FilterCategory = ({ items, selectedItems, label, onCheckedChange, className, listWrapperClassName }: FilterCategoryProps) => {
     if (!items.length) return null;
 
     return (
@@ -259,11 +282,17 @@ const FilterCategory = ({
             <h3 className="font-bold text-base">{label}</h3>
             <div className={cn("w-full flex flex-col", listWrapperClassName)}>
                 {items.map((item) => {
+                    const itemValue = typeof item === "string" ? item : item.value;
+
                     return (
-                        <LabelledCheckbox checked={selectedItems.includes(item)} onCheckedChange={() => onCheckedChange(item)} key={item}>
+                        <LabelledCheckbox
+                            checked={selectedItems.includes(itemValue)}
+                            onCheckedChange={() => onCheckedChange(itemValue)}
+                            key={itemValue}
+                        >
                             <span className="flex items-center justify-center gap-1">
-                                <TagIcon name={item} />
-                                {customLabel || CapitalizeAndFormatString(item)}
+                                <TagIcon name={itemValue} />
+                                {CapitalizeAndFormatString(typeof item === "string" ? item : item.label)}
                             </span>
                         </LabelledCheckbox>
                     );

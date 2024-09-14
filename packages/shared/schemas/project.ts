@@ -101,7 +101,7 @@ const SupportedGameVersions = z
     .min(1)
     .refine(
         (values) => {
-            const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version);
+            const gameVersionNumbersList = GAME_VERSIONS.map((version) => version.version.value);
             for (const value of values) {
                 if (!gameVersionNumbersList.includes(value)) return false;
             }

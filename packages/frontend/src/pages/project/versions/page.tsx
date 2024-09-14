@@ -8,7 +8,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import { ReleaseChannelBadge, releaseChannelBackgroundColor, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getGroupedVersionsList } from "@/lib/semver";
+import { formatGameVersionsList } from "@/lib/semver";
 import { cn, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
@@ -443,7 +443,7 @@ const VersionName = ({ title, number, url }: { title: string; number: string; ur
 const GameVersions = ({ gameVersions }: { gameVersions: string[] }) => {
     return (
         <>
-            {getGroupedVersionsList(gameVersions).map((version) => (
+            {formatGameVersionsList(gameVersions).map((version) => (
                 <Chip key={version} className="text-muted-foreground">
                     {version}
                 </Chip>
