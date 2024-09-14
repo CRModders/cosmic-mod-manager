@@ -189,13 +189,15 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                                     <Link to={redirectUrl} className="noClickRedirect font-bold">
                                                         {dependencyProject.name}
                                                     </Link>
-                                                    {dependencyVersion?.id ? (
-                                                        <span>
-                                                            Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
-                                                        </span>
-                                                    ) : (
-                                                        <span>{CapitalizeAndFormatString(dependency.dependencyType)}</span>
-                                                    )}
+                                                    <span className="text-muted-foreground/85">
+                                                        {dependencyVersion?.id ? (
+                                                            <>
+                                                                Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
+                                                            </>
+                                                        ) : (
+                                                            <>{CapitalizeAndFormatString(dependency.dependencyType)}</>
+                                                        )}
+                                                    </span>
                                                 </>
                                             }
                                         </div>

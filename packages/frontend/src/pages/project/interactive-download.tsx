@@ -274,7 +274,7 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
                                         {version.versionNumber}
                                     </Link>
                                 </DialogClose>
-                                <span className="text-sm font-medium text-muted-foreground leading-none">{version.title}</span>
+                                <span className="text-sm font-medium text-muted-foreground/85 leading-none">{version.title}</span>
                             </div>
                         </div>
 

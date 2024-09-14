@@ -22,7 +22,6 @@ const VersionChangelogs = () => {
     const { projectData, allProjectVersions } = useContext(projectContext);
 
     if (!projectData || !allProjectVersions?.length) return null;
-
     return <ChangelogsList projectData={projectData} versionsList={allProjectVersions} />;
 };
 

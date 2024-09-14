@@ -49,16 +49,14 @@ const ProjectVersionsPage = () => {
         return isUserAProjectMember(session?.id, projectData?.members);
     }, [session, projectData?.members]);
 
-    if (projectData === undefined || allProjectVersions === undefined) {
-        return <FullWidthSpinner />;
-    }
-
-    if (projectData === null || allProjectVersions === null) return null;
+    const resetFilters = () => {
+        setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
+    };
 
     const filteredItems = useMemo(() => {
         const filteredItems: ProjectVersionData[] = [];
 
-        for (const version of allProjectVersions) {
+        for (const version of allProjectVersions || []) {
             if (filters.loaders.length) {
                 let loaderMatch = false;
                 for (const loaderFilter of filters.loaders) {
@@ -93,16 +91,18 @@ const ProjectVersionsPage = () => {
         return filteredItems;
     }, [filters, allProjectVersions]);
 
+    if (projectData === undefined || allProjectVersions === undefined) {
+        return <FullWidthSpinner />;
+    }
+
+    if (projectData === null || allProjectVersions === null) return null;
+
     const availableReleaseChannels: string[] = [];
     for (const version of allProjectVersions) {
         if (!availableReleaseChannels.includes(version.releaseChannel)) {
             availableReleaseChannels.push(version.releaseChannel);
         }
     }
-
-    const resetFilters = () => {
-        setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
-    };
 
     const loadersFilterVisible = projectData.loaders.length > 1;
     const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
@@ -435,7 +435,7 @@ const VersionName = ({ title, number, url }: { title: string; number: string; ur
             >
                 {number}
             </Link>
-            <span className="leading-none font-medium text-muted-foreground text-sm">{title}</span>
+            <span className="leading-none font-medium text-muted-foreground/85 text-sm">{title}</span>
         </div>
     );
 };
