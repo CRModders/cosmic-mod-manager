@@ -170,7 +170,7 @@ model Version {
     id             String   @id @db.VarChar(32)
     projectId      String   @db.VarChar(32)
     authorId       String   @db.VarChar(32)
-    title          String   @db.VarChar(32)
+    title          String   @db.VarChar(64)
     versionNumber  String   @db.VarChar(32)
     changelog      String?  @db.VarChar(65256)
     slug           String   @db.VarChar(32)

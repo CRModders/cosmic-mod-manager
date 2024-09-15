@@ -25,7 +25,7 @@ export const MAX_LICENSE_URL_LENGTH = 256;
 
 // Version
 export const MIN_VERSION_TITLE_LENGTH = 2;
-export const MAX_VERSION_TITLE_LENGTH = 32;
+export const MAX_VERSION_TITLE_LENGTH = 64;
 export const MAX_VERSION_NUMBER_LENGTH = 32;
 export const MAX_VERSION_CHANGELOG_LENGTH = 65256;
 export const MAX_OPTIONAL_FILES = 10;
