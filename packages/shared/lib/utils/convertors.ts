@@ -82,17 +82,25 @@ export const getProjectVisibilityFromString = (visibility: string) => {
 export const getFileType = (strType: string) => {
     switch (strType) {
         case "image/jpeg":
-            return FileType.JPEG;
         case "image/jpg":
             return FileType.JPEG;
+
         case "image/webp":
             return FileType.WEBP;
+
         case "image/png":
             return FileType.PNG;
+
         case "application/java-archive":
             return FileType.JAR;
+
         case "application/zip":
+        case "application/x-zip":
+        case "application/x-zip-compressed":
+        case "application/x-compress":
+        case "application/x-compressed":
             return FileType.ZIP;
+
         default:
             return null;
     }

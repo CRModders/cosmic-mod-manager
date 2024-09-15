@@ -5,14 +5,15 @@ export const isVersionPrimaryFileValid = (fileType: FileType | null, projectType
     if (!fileType) return false;
 
     const allowedFileTypes: FileType[] = [];
-    for (let type of projectType) {
-        type = getProjectTypeFromString(type);
-        if (type === ProjectType.MOD || type === ProjectType.PLUGIN) allowedFileTypes.push(FileType.JAR);
+    for (const type of projectType) {
+        const projectType = getProjectTypeFromString(type);
+        if (projectType === ProjectType.MOD || projectType === ProjectType.PLUGIN) allowedFileTypes.push(FileType.JAR);
+
         if (
-            type === ProjectType.SHADER ||
-            type === ProjectType.RESOURCE_PACK ||
-            type === ProjectType.MODPACK ||
-            type === ProjectType.DATAPACK
+            projectType === ProjectType.SHADER ||
+            projectType === ProjectType.RESOURCE_PACK ||
+            projectType === ProjectType.MODPACK ||
+            projectType === ProjectType.DATAPACK
         ) {
             allowedFileTypes.push(FileType.ZIP);
         }
