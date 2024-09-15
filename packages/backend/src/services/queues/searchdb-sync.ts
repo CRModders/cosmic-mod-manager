@@ -17,6 +17,7 @@ const requiredProjectFields = {
     loaders: true,
     gameVersions: true,
     categories: true,
+    featuredCategories: true,
     summary: true,
     downloads: true,
     followers: true,
@@ -53,6 +54,7 @@ interface ProjectSearchDocument {
     type: string[];
     gameVersions: string[];
     categories: string[];
+    featuredCategories: string[];
     clientSide: boolean;
     serverSide: boolean;
     summary: string;
@@ -95,6 +97,7 @@ const _syncProjects = async (cursor: null | string) => {
                 type: inferProjectType(project.loaders),
                 gameVersions: project.gameVersions,
                 categories: project.categories,
+                featuredCategories: project.featuredCategories,
                 summary: project.summary,
                 downloads: project.downloads,
                 followers: project.followers,

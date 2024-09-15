@@ -58,6 +58,7 @@
 - [-] Update the overview page of dashboard to show real stats
 - [-] Fix session location not being shown
 - [-] Add notifications
+- [-] Add a separate rate limiter for the CDN
 
 - [-] Fix project deletion
 - [-] Fix user deletion

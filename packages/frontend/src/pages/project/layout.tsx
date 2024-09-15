@@ -210,7 +210,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                                     <div
                                         key={version.id}
-                                        className="w-full flex items-start justify-start p-1.5 pb-2 rounded cursor-pointer hover:bg-background/75 bg_hover_stagger gap-3"
+                                        className="w-full flex items-start justify-start p-1.5 pb-2 rounded cursor-pointer text-muted-foreground hover:bg-background/75 bg_hover_stagger gap-3"
                                         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                             if (
                                                 // @ts-expect-error
@@ -254,7 +254,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                             >
                                                 <p className="font-bold leading-none">{version.title}</p>
                                             </Link>
-                                            <p className="text-pretty leading-tight text-muted-foreground">
+                                            <p className="text-pretty leading-tight">
                                                 {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
                                                 {formatGameVersionsListString(version.gameVersions)}
                                             </p>

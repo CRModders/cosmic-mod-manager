@@ -241,7 +241,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                     <h2 className="leading-tight">
                                         <Link
                                             to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
-                                            className="text-xl font-bold"
+                                            className="text-[1.25rem] font-bold"
                                         >
                                             {version.title}
                                         </Link>
@@ -265,7 +265,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                     </a>
                                 ) : null}
                             </div>
-                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mt-2 mr-2" /> : null}
+                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mt-1 mr-2" /> : null}
                         </div>
                     );
                 })}
