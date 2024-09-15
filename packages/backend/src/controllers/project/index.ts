@@ -341,7 +341,7 @@ export const addNewGalleryImage = async (
             id: nanoid(STRING_ID_LENGTH),
             name: fileName,
             size: formData.image.size,
-            type: getFileType(formData.image.type) || "",
+            type: (await getFileType(formData.image)) || "",
             url: fileUrl?.path || "",
             storageService: FILE_STORAGE_SERVICES.IMGBB,
         },

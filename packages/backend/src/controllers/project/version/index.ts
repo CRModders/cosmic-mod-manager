@@ -118,7 +118,7 @@ export const createNewVersion = async (
     }
 
     // Check if the uploaded file is of valid type
-    const primaryFileType = getFileType(formData.primaryFile.type);
+    const primaryFileType = await getFileType(formData.primaryFile);
     if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType)) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });

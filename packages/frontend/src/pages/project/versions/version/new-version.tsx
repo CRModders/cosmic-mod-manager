@@ -190,12 +190,13 @@ const UploadVersionPage = () => {
                                                     type="file"
                                                     className="hidden"
                                                     hidden={true}
-                                                    onChange={(e) => {
+                                                    onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
-                                                        if (!isVersionPrimaryFileValid(getFileType(file.type))) {
+                                                        const fileType = await getFileType(file);
+                                                        if (!isVersionPrimaryFileValid(fileType)) {
                                                             return toast.error(
-                                                                `Invalid primary file "${file.name}" with type "${file.type}"`,
+                                                                `Invalid primary file "${file.name}" with type "${fileType}"`,
                                                             );
                                                         }
                                                         field.onChange(file);

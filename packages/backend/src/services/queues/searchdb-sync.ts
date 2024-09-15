@@ -110,7 +110,6 @@ const _syncProjects = async (cursor: null | string) => {
             });
         }
 
-        await index.deleteAllDocuments();
         await index.addDocuments(formattedProjectsData);
 
         if (formattedProjectsData.length < SYNC_BATCH_SIZE) return null;
@@ -126,6 +125,9 @@ const syncSearchDb = async () => {
 
     try {
         let cursor = null;
+        const index = meilisearch.index(projectSearchNamespace);
+        await index.deleteAllDocuments();
+
         while (true) {
             cursor = await _syncProjects(cursor);
             if (!cursor) break;

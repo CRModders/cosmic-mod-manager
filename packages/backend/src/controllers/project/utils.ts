@@ -75,7 +75,7 @@ export const createVersionFiles = async ({ versionId, projectId, files }: create
     const versionFilesToCreate: VersionFile[] = [];
 
     for (const { file, isPrimary, storageService } of files) {
-        const fileType = getFileType(file.type);
+        const fileType = await getFileType(file);
         if (!fileType) continue;
 
         const sha1_hash = await createHashFromFile(file, "sha1");

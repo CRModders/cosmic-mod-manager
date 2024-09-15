@@ -169,11 +169,11 @@ export const updateVersionFormSchema = z.object({
             { message: `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.` },
         )
         .refine(
-            (files) => {
+            async (files) => {
                 const fileNamesList: string[] = [];
                 for (const file of files || []) {
                     if (file instanceof File) {
-                        if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE || !getFileType(file.type)) return false;
+                        if (file.size > MAX_ADDITIONAL_VERSION_FILE_SIZE || !(await getFileType(file))) return false;
                     }
                     if (!fileNamesList.includes(file.name.toLowerCase())) {
                         fileNamesList.push(file.name.toLowerCase());
@@ -203,9 +203,9 @@ export const generalProjectSettingsFormSchema = z.object({
             { message: `Icon can only be a maximum of ${MAX_PROJECT_ICON_SIZE / 1024} KiB` },
         )
         .refine(
-            (file) => {
+            async (file) => {
                 if (file instanceof File) {
-                    const type = getFileType(file.type);
+                    const type = await getFileType(file);
                     if (type !== FileType.JPEG && type !== FileType.PNG) {
                         return false;
                     }
@@ -253,9 +253,9 @@ export const addNewGalleryImageFormSchema = z.object({
             { message: `Gallery image can only be a maximum of ${MAX_PROJECT_GALLERY_IMAGE_SIZE / 1024} KiB` },
         )
         .refine(
-            (file) => {
+            async (file) => {
                 if (file instanceof File) {
-                    const type = getFileType(file.type);
+                    const type = await getFileType(file);
                     if (!type || ![FileType.JPEG, FileType.PNG, FileType.WEBP].includes(type)) {
                         return false;
                     }

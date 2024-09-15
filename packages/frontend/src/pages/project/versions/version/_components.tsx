@@ -571,13 +571,14 @@ export const SelectAdditionalProjectFiles = ({ formControl }: { formControl: Con
                             multiple
                             id="additional-files-input"
                             className="hidden"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                                 e.preventDefault();
+
                                 const newFiles: File[] = [];
                                 mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
                                     const file = e.target.files?.[i];
                                     if (!file?.name) continue;
-                                    if (!getFileType(file.type)) {
+                                    if (!(await getFileType(file))) {
                                         toast.error(`Invalid file "${file.name}" with type "${file.type}"`);
                                         continue;
                                     }

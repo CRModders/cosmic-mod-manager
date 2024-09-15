@@ -1,5 +1,6 @@
 import { loaders } from "../../config/project";
 import { AuthProviders, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
+import { getTypeOfFile } from "./file-signature";
 
 export const getUserRoleFromString = (roleName: string) => {
     switch (roleName) {
@@ -79,8 +80,8 @@ export const getProjectVisibilityFromString = (visibility: string) => {
     }
 };
 
-export const getFileType = (strType: string) => {
-    switch (strType) {
+export const getFileTypeFromMimeStr = (mime: string) => {
+    switch (mime) {
         case "image/jpeg":
         case "image/jpg":
             return FileType.JPEG;
@@ -92,6 +93,8 @@ export const getFileType = (strType: string) => {
             return FileType.PNG;
 
         case "application/java-archive":
+        case "application/x-java-archive":
+        case "application/octet-stream":
             return FileType.JAR;
 
         case "application/zip":
@@ -104,6 +107,16 @@ export const getFileType = (strType: string) => {
         default:
             return null;
     }
+};
+
+export const getFileType = async (file: File) => {
+    const mimeType = getFileTypeFromMimeStr(file.type);
+    if (!mimeType) return null;
+
+    const fileSignatureType = await getTypeOfFile(file);
+    if (!fileSignatureType || !fileSignatureType.includes(mimeType)) return null;
+
+    return mimeType;
 };
 
 export const getLoaderFromString = (loaderName: string) => {

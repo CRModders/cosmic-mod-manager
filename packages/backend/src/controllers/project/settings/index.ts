@@ -83,7 +83,7 @@ export const updateProject = async (
                     id: nanoid(STRING_ID_LENGTH),
                     name: fileName,
                     size: formData.icon.size,
-                    type: getFileType(formData.icon.type) || "",
+                    type: (await getFileType(formData.icon)) || "",
                     storageService: FILE_STORAGE_SERVICES.IMGBB,
                     url: newFile.path,
                 },
