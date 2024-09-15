@@ -1,7 +1,7 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { aggregateProjectLoaderNames, aggregateVersions, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+import { aggregateProjectLoaderNames, aggregateVersions, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
 import type { File as DBFile, Dependency } from "@prisma/client";
@@ -119,7 +119,7 @@ export const createNewVersion = async (
 
     // Check if the uploaded file is of valid type
     const primaryFileType = getFileType(formData.primaryFile.type);
-    if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType, inferProjectType([...project.loaders, ...formData.loaders]))) {
+    if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType)) {
         await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });
     }

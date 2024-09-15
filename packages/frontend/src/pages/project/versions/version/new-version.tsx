@@ -193,7 +193,7 @@ const UploadVersionPage = () => {
                                                     onChange={(e) => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
-                                                        if (!isVersionPrimaryFileValid(getFileType(file.type), projectData.type)) {
+                                                        if (!isVersionPrimaryFileValid(getFileType(file.type))) {
                                                             return toast.error(
                                                                 `Invalid primary file "${file.name}" with type "${file.type}"`,
                                                             );
