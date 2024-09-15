@@ -100,7 +100,7 @@
 }
 
 .markdown-body img {
-    @apply max-w-full h-auto inline-block;
+    @apply max-w-full w-auto h-auto inline-block;
 }
 
 html:not(.dark).markdown-body img[src$='#gh-dark-mode-only'] {
@@ -128,7 +128,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body table {
-    @apply block w-max max-w-full overflow-auto border-separate border-spacing-0 leading-normal border-[0.1rem] border-shallow-background rounded;
+    @apply block w-fit max-w-full overflow-auto border-separate border-spacing-0 leading-normal border-[0.1rem] border-shallow-background rounded;
 }
 
 .markdown-body table th {
