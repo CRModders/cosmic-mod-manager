@@ -196,7 +196,12 @@ const ProjectMember = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="font-bold">Permissions</FormLabel>
-                                        <div className="w-full grid grid-cols-4 gap-x-4 gap-y-1">
+                                        <div
+                                            className="w-full grid gap-x-4 gap-y-1"
+                                            style={{
+                                                gridTemplateColumns: "repeat(auto-fit, minmax(12rem, 1fr))",
+                                            }}
+                                        >
                                             {ProjectPermissionsList.map((permissionName) => {
                                                 return (
                                                     <LabelledCheckbox
