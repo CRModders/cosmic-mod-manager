@@ -51,7 +51,7 @@ userRouter.get("/_/:slug", async (ctx: Context) => {
 userRouter.get("/_/:slug/projects", async (ctx: Context) => {
     try {
         const slug = ctx.req.param("slug");
-        const listedProjectsOnly = ctx.req.param("listedOnly") === "true";
+        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
         if (!slug) return defaultInvalidReqResponse(ctx);
         const userSession = getUserSessionFromCtx(ctx);
 
@@ -64,7 +64,7 @@ userRouter.get("/_/:slug/projects", async (ctx: Context) => {
 
 userRouter.get("/projects", async (ctx: Context) => {
     try {
-        const listedProjectsOnly = ctx.req.param("listedOnly") === "true";
+        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
         const userSession = getUserSessionFromCtx(ctx);
         const userName = userSession?.userName;
         if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
