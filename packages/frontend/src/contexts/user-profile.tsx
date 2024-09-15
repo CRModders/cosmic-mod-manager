@@ -30,7 +30,7 @@ const getProjectsListData = async (userName: string | undefined) => {
     if (!userName) return null;
 
     try {
-        const response = await useFetch(`/api/user/_/${userName}/projects`);
+        const response = await useFetch(`/api/user/_/${userName}/projects?listedOnly=true`);
         return ((await response.json())?.projects as ProjectListItem[]) || null;
     } catch (err) {
         console.error(err);

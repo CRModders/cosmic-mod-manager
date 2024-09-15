@@ -72,10 +72,7 @@ const SearchPageLayout = ({ type }: Props) => {
 
     return (
         <div className="search-page-grid-layout w-full grid gap-panel-cards">
-            <Card
-                className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-x-3 gap-y-2"
-                style={{ gridArea: "header" }}
-            >
+            <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2" style={{ gridArea: "header" }}>
                 <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
                     <SearchIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]" />
                     <Input

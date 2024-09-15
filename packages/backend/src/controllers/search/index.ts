@@ -37,6 +37,7 @@ export const searchProjects = async (ctx: Context, props: Props) => {
             break;
         case SearchResultSortMethod.RECENTLY_UPDATED:
             sortBy = "dateUpdated:desc";
+            break;
     }
 
     const offset = (props.page - 1) * defaultSearchLimit;

@@ -10,7 +10,8 @@ import {
     sortByParamNamespace,
 } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";
-import { ProjectType, type SearchResultSortMethod } from "@shared/types";
+import { getProjectTypeFromString } from "@shared/lib/utils/convertors";
+import type { SearchResultSortMethod } from "@shared/types";
 import { type Context, Hono } from "hono";
 
 const searchRouter = new Hono();
@@ -25,7 +26,7 @@ searchRouter.get("/", async (ctx: Context) => {
         const environments = ctx.req.queries("e") || [];
         const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss";
         const sortBy = ctx.req.query(sortByParamNamespace) || defaultSortBy;
-        const type = ctx.req.query("type") || ProjectType.MOD;
+        const type = getProjectTypeFromString(ctx.req.query("type") || "");
 
         let pageNumber = Number.parseInt(page);
         if (!isNumber(pageNumber)) pageNumber = 1;
@@ -39,7 +40,7 @@ searchRouter.get("/", async (ctx: Context) => {
             openSourceOnly,
             sortBy: sortBy as SearchResultSortMethod,
             page: pageNumber,
-            type: type as ProjectType,
+            type: type,
         });
     } catch (error) {
         console.error(error);

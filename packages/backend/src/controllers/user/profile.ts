@@ -7,7 +7,7 @@ import { projectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import type { LinkedProvidersListData, ProjectPublishingStatus, UserSessionStates } from "@shared/types";
+import { type LinkedProvidersListData, type ProjectPublishingStatus, ProjectVisibility, type UserSessionStates } from "@shared/types";
 import type { ProjectListItem, SessionListData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
@@ -142,7 +142,12 @@ export const getAllSessions = async (ctx: Context, userSession: ContextUserSessi
     return ctx.json({ success: true, sessions: sessions }, httpCode("ok"));
 };
 
-export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUserSession | undefined, slug: string) => {
+export const getAllVisibleProjects = async (
+    ctx: Context,
+    userSession: ContextUserSession | undefined,
+    slug: string,
+    listedProjectsOnly: boolean,
+) => {
     const user = await prisma.user.findFirst({
         where: {
             OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
@@ -204,6 +209,12 @@ export const getAllVisibleProjects = async (ctx: Context, userSession: ContextUs
     for (const item of list) {
         const project = item.team.project;
         if (!project) continue;
+        if (
+            listedProjectsOnly === true &&
+            ![ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility)
+        ) {
+            continue;
+        }
         if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, project.team.members)) continue;
 
         projectListData.push({

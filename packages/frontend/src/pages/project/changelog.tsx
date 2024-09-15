@@ -265,7 +265,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                     </a>
                                 ) : null}
                             </div>
-                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mt-1 mr-2" /> : null}
+                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mr-2" /> : null}
                         </div>
                     );
                 })}
