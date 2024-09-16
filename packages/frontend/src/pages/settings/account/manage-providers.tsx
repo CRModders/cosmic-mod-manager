@@ -75,67 +75,65 @@ const ManageAuthProviders = ({
                 </DialogHeader>
                 <DialogBody>
                     <Accordion type="single" collapsible className="w-full">
-                        <>
-                            {authProvidersList.map((authProvider) => {
-                                let additionalProviderDetails = null;
-                                for (const linkedProvider of linkedAuthProviders) {
-                                    if (getAuthProviderFromString(linkedProvider.providerName) === authProvider.name) {
-                                        additionalProviderDetails = linkedProvider;
-                                        break;
-                                    }
+                        {authProvidersList.map((authProvider) => {
+                            let additionalProviderDetails = null;
+                            for (const linkedProvider of linkedAuthProviders) {
+                                if (getAuthProviderFromString(linkedProvider.providerName) === authProvider.name) {
+                                    additionalProviderDetails = linkedProvider;
+                                    break;
                                 }
+                            }
 
-                                return (
-                                    <AccordionItem key={authProvider.name} value={authProvider.name} className="border-transparent">
-                                        <AccordionTrigger className="text-base">
-                                            <div className="flex items-center justify-start gap-2">
-                                                <i className="w-6 flex items-center justify-start">{authProvider.icon}</i>
-                                                {Capitalize(authProvider.name)}
-                                            </div>
-                                        </AccordionTrigger>
-                                        <AccordionContent className="w-full flex items-center justify-between">
-                                            <p className="text-muted-foreground">
-                                                {additionalProviderDetails ? (
-                                                    <span className="font-medium text-foreground">
-                                                        {additionalProviderDetails.providerAccountEmail}
-                                                    </span>
-                                                ) : (
-                                                    <>Link {Capitalize(authProvider.name)} to your account</>
-                                                )}
-                                            </p>
-
+                            return (
+                                <AccordionItem key={authProvider.name} value={authProvider.name} className="border-transparent">
+                                    <AccordionTrigger className="text-base">
+                                        <div className="flex items-center justify-start gap-2">
+                                            <i className="w-6 flex items-center justify-start">{authProvider.icon}</i>
+                                            {Capitalize(authProvider.name)}
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="w-full flex items-center justify-between">
+                                        <p className="text-muted-foreground">
                                             {additionalProviderDetails ? (
-                                                <Button
-                                                    variant={"secondary-destructive"}
-                                                    disabled={isLoading.value}
-                                                    onClick={() => removeAuthProvider(getAuthProviderFromString(authProvider.name))}
-                                                >
-                                                    {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
-                                                        <LoadingSpinner size="xs" />
-                                                    ) : (
-                                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                                    )}
-                                                    Remove
-                                                </Button>
+                                                <span className="font-medium text-foreground">
+                                                    {additionalProviderDetails.providerAccountEmail}
+                                                </span>
                                             ) : (
-                                                <Button
-                                                    variant={"secondary"}
-                                                    onClick={() => redirectToOauthPage(getAuthProviderFromString(authProvider.name))}
-                                                    disabled={isLoading.value}
-                                                >
-                                                    {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
-                                                        <LoadingSpinner size="xs" />
-                                                    ) : (
-                                                        <Link2Icon className="w-btn-icon h-btn-icon" />
-                                                    )}
-                                                    Link
-                                                </Button>
+                                                <>Link {Capitalize(authProvider.name)} to your account</>
                                             )}
-                                        </AccordionContent>
-                                    </AccordionItem>
-                                );
-                            })}
-                        </>
+                                        </p>
+
+                                        {additionalProviderDetails ? (
+                                            <Button
+                                                variant={"secondary-destructive"}
+                                                disabled={isLoading.value}
+                                                onClick={() => removeAuthProvider(getAuthProviderFromString(authProvider.name))}
+                                            >
+                                                {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
+                                                    <LoadingSpinner size="xs" />
+                                                ) : (
+                                                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                )}
+                                                Remove
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={"secondary"}
+                                                onClick={() => redirectToOauthPage(getAuthProviderFromString(authProvider.name))}
+                                                disabled={isLoading.value}
+                                            >
+                                                {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
+                                                    <LoadingSpinner size="xs" />
+                                                ) : (
+                                                    <Link2Icon className="w-btn-icon h-btn-icon" />
+                                                )}
+                                                Link
+                                            </Button>
+                                        )}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            );
+                        })}
                     </Accordion>
                 </DialogBody>
             </DialogContent>

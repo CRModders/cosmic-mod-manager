@@ -80,6 +80,11 @@ export enum VersionReleaseChannel {
     RELEASE = "release",
     BETA = "beta",
     ALPHA = "alpha",
+}
+
+export enum GameVersionReleaseType {
+    RELEASE = "release",
+    SNAPSHOT = "snapshot",
     PRE_ALPHA = "pre-alpha",
 }
 
