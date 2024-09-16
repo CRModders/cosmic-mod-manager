@@ -18,6 +18,7 @@ import { cn, getProjectPagePathname, getProjectVersionPagePathname, isCurrLinkAc
 import { projectContext } from "@/src/contexts/curr-project";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { getGameVersionFromValue, getGameVersionsFromValues } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
@@ -56,19 +57,19 @@ const InteractiveDownloadPopup = () => {
         if (!projectData || !allProjectVersions) return [];
 
         const list = [];
-        for (const gameVersion of projectData.gameVersions) {
-            const projectVersion = getVersionData(gameVersion, selectedLoader, allProjectVersions);
+        for (const gameVersion of getGameVersionsFromValues(projectData.gameVersions)) {
+            const projectVersion = getVersionData(gameVersion.value, selectedLoader, allProjectVersions);
 
             if (!projectVersion) continue;
             if (!selectedLoader) {
-                list.push({ label: gameVersion, value: gameVersion });
+                list.push({ label: gameVersion.label, value: gameVersion.value });
                 continue;
             }
             list.push({
-                label: gameVersion,
-                value: gameVersion,
+                label: gameVersion.label,
+                value: gameVersion.value,
                 disabled: !projectVersion.loaders.includes(selectedLoader),
-                disabledReason: `${projectData.name} does not support ${gameVersion} for ${CapitalizeAndFormatString(selectedLoader)}`,
+                disabledReason: `${projectData.name} does not support ${gameVersion.label} for ${CapitalizeAndFormatString(selectedLoader)}`,
             });
         }
         return list;
@@ -92,7 +93,7 @@ const InteractiveDownloadPopup = () => {
                 label: CapitalizeAndFormatString(loader) || "",
                 value: loader,
                 disabled: !projectVersion.loaders.includes(loader),
-                disabledReason: `${projectData.name} does not support ${CapitalizeAndFormatString(loader)} for ${selectedGameVersion}`,
+                disabledReason: `${projectData.name} does not support ${CapitalizeAndFormatString(loader)} for ${getGameVersionFromValue(selectedGameVersion)?.label}`,
             });
         }
         return list;
@@ -141,7 +142,10 @@ const InteractiveDownloadPopup = () => {
                                 <span className="text-muted-foreground">
                                     {selectedGameVersion ? (
                                         <>
-                                            Game version: <em className="not-italic text-foreground/90">{selectedGameVersion}</em>
+                                            Game version:{" "}
+                                            <em className="not-italic text-foreground/90">
+                                                {getGameVersionFromValue(selectedGameVersion)?.label}
+                                            </em>
                                         </>
                                     ) : (
                                         <>Select game version</>
