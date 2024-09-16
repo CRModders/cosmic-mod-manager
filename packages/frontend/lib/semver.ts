@@ -28,7 +28,7 @@ export const getGroupedVersionsList = (list: string[]): string[] => {
     const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(
         list,
-        GAME_VERSIONS.map((version) => version.version.value),
+        GAME_VERSIONS.map((version) => version.value),
     );
 
     for (const versionGroup of groupedVersions) {
@@ -45,15 +45,15 @@ export const formatGameVersionsList = (list: string[]): string[] => {
     const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(
         list,
-        GAME_VERSIONS.map((version) => version.version.value),
+        GAME_VERSIONS.map((version) => version.value),
     );
 
     for (const versionGroup of groupedVersions) {
-        const firstItem = getGameVersionFromValue(versionGroup[0])?.version?.label;
+        const firstItem = getGameVersionFromValue(versionGroup[0])?.label;
 
         if (firstItem && versionGroup.length === 1) formattedList.push(firstItem);
         else {
-            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.version?.label;
+            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.label;
             formattedList.push(`${lastItem}–${firstItem}`);
         }
     }
@@ -64,15 +64,15 @@ export const formatGameVersionsListString = (list: string[]): string => {
     let formattedStr = "";
     const groupedVersions = groupContinuousVersions(
         list,
-        GAME_VERSIONS.map((version) => version.version.value),
+        GAME_VERSIONS.map((version) => version.value),
     );
 
     for (const versionGroup of groupedVersions) {
-        const firstItem = getGameVersionFromValue(versionGroup[0])?.version?.label;
+        const firstItem = getGameVersionFromValue(versionGroup[0])?.label;
 
         if (versionGroup.length === 1) formattedStr += `${firstItem}, `;
         else {
-            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.version?.label;
+            const lastItem = getGameVersionFromValue(versionGroup.at(-1) || "")?.label;
             formattedStr += `${lastItem}–${firstItem}, `;
         }
     }

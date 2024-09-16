@@ -9,6 +9,7 @@ import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { SITE_NAME_SHORT } from "@shared/config";
+import { getGameVersionsFromValues } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { VersionReleaseChannel } from "@shared/types";
@@ -101,6 +102,8 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
     const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
     const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
 
+    const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions).map((ver) => ({ label: ver.label, value: ver.value }));
+
     return (
         <>
             <Helmet>
@@ -133,7 +136,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                     {gameVersionsFilterVisible ? (
                         <MultiSelect
                             selectedOptions={[...filters.gameVersions]}
-                            options={projectData.gameVersions.map((ver) => ({ label: ver, value: ver }))}
+                            options={gameVersionOptions}
                             onChange={(values) => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
                             }}
@@ -192,15 +195,15 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                         </ChipButton>
                     ))}
 
-                    {filters.gameVersions.map((version) => (
+                    {getGameVersionsFromValues(filters.gameVersions).map((version) => (
                         <ChipButton
-                            key={version}
+                            key={version.value}
                             onClick={() => {
-                                setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version) }));
+                                setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version.value) }));
                             }}
                         >
                             <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                            {CapitalizeAndFormatString(version)}
+                            {version.label}
                         </ChipButton>
                     ))}
 

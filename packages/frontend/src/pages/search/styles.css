@@ -19,3 +19,12 @@
             "dummy content";
     }
 }
+
+.filterCategory {
+    @apply pb-3 border-b border-shallow-background;
+}
+
+.filterCategory:last-child {
+    border: none;
+    padding-bottom: 0;
+}

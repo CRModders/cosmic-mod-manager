@@ -80,6 +80,7 @@ export enum VersionReleaseChannel {
     RELEASE = "release",
     BETA = "beta",
     ALPHA = "alpha",
+    PRE_ALPHA = "pre-alpha",
 }
 
 export enum ProjectPermissions {

@@ -21,7 +21,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
-import GAME_VERSIONS from "@shared/config/game-versions";
+import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
 import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
@@ -227,17 +227,20 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                         <FormLabel htmlFor="supported-game-versions-filter-input">Game versions</FormLabel>
                         {field.value?.length > 0 && (
                             <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((version: string) => {
+                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((versionNumber: string) => {
+                                    const version = getGameVersionFromValue(versionNumber);
+                                    if (!version) return null;
+
                                     return (
                                         <ChipButton
                                             variant="secondary"
-                                            key={version}
+                                            key={version.value}
                                             onClick={() => {
-                                                field.onChange(field.value?.filter((v: string) => v !== version));
+                                                field.onChange(field.value?.filter((v: string) => v !== version.value));
                                             }}
                                         >
                                             <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                            {version}
+                                            {version.label}
                                         </ChipButton>
                                     );
                                 })}
@@ -251,7 +254,7 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
 
                         <MultiSelect
                             selectedOptions={field.value || []}
-                            options={GAME_VERSIONS.map((version) => version.version)}
+                            options={GAME_VERSIONS.map((version) => ({ label: version.label, value: version.value }))}
                             onChange={field.onChange}
                             classNames={{
                                 popupContent: "min-w-[15rem]",

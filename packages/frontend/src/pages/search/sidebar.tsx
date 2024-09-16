@@ -38,6 +38,15 @@ const matchesSearch = (strings: string[], query: string) => {
     return false;
 };
 
+const loadersFilterLabel = "Loaders";
+const gameVersionsFilterLabel = "Game versions";
+const environmentFilterLabel = "Environment";
+const categoryFilterLabel = "Categories";
+const featureFilterLabel = "Features";
+const resolutionFilterLabel = "Resolutions";
+const performanceFilterLabel = "Performance impact";
+const licenseFilterLabel = "License";
+
 const filtersKeyList = [
     loaderFilterParamNamespace,
     gameVersionFilterParamNamespace,
@@ -62,39 +71,41 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     // Filters list
     // Project Loader filters
     const loaderFilters = getAllLoaderFilters(type);
-    const loaderFilterOptions = loaderFilters.map((loader) => loader.name).filter((loader) => matchesSearch([loader], query));
+    const loaderFilterOptions = loaderFilters
+        .map((loader) => loader.name)
+        .filter((loader) => matchesSearch([loader, loadersFilterLabel], query));
 
     // Game version filters
-    const gameVersionFilterOptions = GAME_VERSIONS.map(({ version }) => ({ value: version.value, label: version.label })).filter(
-        (version) => matchesSearch([version.label, version.value], query),
+    const gameVersionFilterOptions = GAME_VERSIONS.map((version) => ({ value: version.value, label: version.label })).filter((version) =>
+        matchesSearch([version.label, version.value, gameVersionsFilterLabel], query),
     );
 
     // Environment filters
-    const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env], query));
+    const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env, environmentFilterLabel], query));
 
     // Category filters
     const categoryFilterOptions = getValidProjectCategories([type], TagHeaderTypes.CATEGORY)
         .map((c) => c.name)
-        .filter((category) => matchesSearch([category], query));
+        .filter((category) => matchesSearch([category, categoryFilterLabel], query));
 
     // Feature filters
     const featureFilterOptions = getValidProjectCategories([type], TagHeaderTypes.FEATURE)
         .map((f) => f.name)
-        .filter((feature) => matchesSearch([feature], query));
+        .filter((feature) => matchesSearch([feature, featureFilterLabel], query));
 
     // Resolution filters
     const resolutionFilterOptions = getValidProjectCategories([type], TagHeaderTypes.RESOLUTION)
         .map((r) => r.name)
-        .filter((resolution) => matchesSearch([resolution], query));
+        .filter((resolution) => matchesSearch([resolution, resolutionFilterLabel], query));
 
     // Performance impact filters
     const performanceFilterOptions = getValidProjectCategories([type], TagHeaderTypes.PERFORMANCE_IMPACT)
         .map((p) => p.name)
-        .filter((performance) => matchesSearch([performance], query));
+        .filter((performance) => matchesSearch([performance, performanceFilterLabel], query));
 
     // License filters
     const licenseFilterOptions = [{ value: "oss", label: "Open source only" }].filter((license) =>
-        matchesSearch([license.label, license.value], query),
+        matchesSearch([license.label, license.value, licenseFilterLabel], query),
     );
 
     return (
@@ -128,7 +139,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={loaderFilterOptions}
                 selectedItems={searchParams.getAll(loaderFilterParamNamespace)}
-                label="Loaders"
+                label={loadersFilterLabel}
                 onCheckedChange={(loaderName) => {
                     const newUrl = updateSearchParam({
                         key: loaderFilterParamNamespace,
@@ -144,7 +155,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={gameVersionFilterOptions}
                 selectedItems={searchParams.getAll(gameVersionFilterParamNamespace)}
-                label="Game versions"
+                label={gameVersionsFilterLabel}
                 listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
                 onCheckedChange={(version) => {
                     const newUrl = updateSearchParam({
@@ -161,7 +172,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={environmentFilterOptions}
                 selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
-                label="Environment"
+                label={environmentFilterLabel}
                 onCheckedChange={(env) => {
                     const newUrl = updateSearchParam({
                         key: environmentFilterParamNamespace,
@@ -177,7 +188,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={categoryFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label="Categories"
+                label={categoryFilterLabel}
                 onCheckedChange={(category) => {
                     const newUrl = updateSearchParam({
                         key: categoryFilterParamNamespace,
@@ -193,7 +204,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={featureFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label="Features"
+                label={featureFilterLabel}
                 onCheckedChange={(feature) => {
                     const newUrl = updateSearchParam({
                         key: categoryFilterParamNamespace,
@@ -209,7 +220,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={resolutionFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label="Resolutions"
+                label={resolutionFilterLabel}
                 onCheckedChange={(feature) => {
                     const newUrl = updateSearchParam({
                         key: categoryFilterParamNamespace,
@@ -225,7 +236,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={performanceFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label="Performance impact"
+                label={performanceFilterLabel}
                 onCheckedChange={(feature) => {
                     const newUrl = updateSearchParam({
                         key: categoryFilterParamNamespace,
@@ -241,8 +252,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             <FilterCategory
                 items={licenseFilterOptions}
                 selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
-                label="License"
-                className="pb-0 border-none"
+                label={licenseFilterLabel}
                 onCheckedChange={(license) => {
                     const newUrl = updateSearchParam({
                         key: licenseFilterParamNamespace,
@@ -278,7 +288,7 @@ const FilterCategory = ({ items, selectedItems, label, onCheckedChange, classNam
     if (!items.length) return null;
 
     return (
-        <div className={cn("flex flex-col gap-0.5 pb-3 border-b border-shallow-background", className)}>
+        <div className={cn("filterCategory flex flex-col gap-0.5", className)}>
             <h3 className="font-bold text-base">{label}</h3>
             <div className={cn("w-full flex flex-col", listWrapperClassName)}>
                 {items.map((item) => {
