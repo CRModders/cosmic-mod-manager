@@ -120,7 +120,7 @@ const GeneralSettingsPage = () => {
                                             hidden
                                             className="hidden"
                                             id="project-icon-input"
-                                            accept={".jpg, .jpeg, .png"}
+                                            accept={".jpg, .jpeg, .png, .webp"}
                                             type="file"
                                             value={""}
                                             name={field.name}

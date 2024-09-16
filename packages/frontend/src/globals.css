@@ -54,6 +54,8 @@
 
 html,
 html body {
+    --accent-color-hue: 340;
+
     color: hsla(var(--foreground));
     background-color: hsla(var(--background));
     font-size: var(--font-base);
@@ -64,6 +66,8 @@ html body {
 
 .dark,
 .dark body {
+    --accent-color-hue: 345;
+
     --foreground: var(--foreground-dark);
     --foreground-bright: var(--foreground-bright-dark);
     --accent-foreground: var(--accent-foreground-dark);

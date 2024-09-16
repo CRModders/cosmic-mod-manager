@@ -20,14 +20,14 @@ export const generalProjectSettingsFormSchema = z.object({
             async (file) => {
                 if (file instanceof File) {
                     const type = await getFileType(file);
-                    if (type !== FileType.JPEG && type !== FileType.PNG) {
+                    if (!type || ![FileType.PNG, FileType.JPEG, FileType.WEBP].includes(type)) {
                         return false;
                     }
                 }
 
                 return true;
             },
-            { message: "Invalid file type only image files allowed" },
+            { message: "Invalid file type, only image files allowed" },
         )
         .or(z.string())
         .optional(),

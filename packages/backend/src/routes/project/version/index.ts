@@ -31,6 +31,19 @@ versionRouter.get("/", async (ctx: Context) => {
     }
 });
 
+versionRouter.get("/:versionSlug", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, versionSlug } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
+
+        return await getProjectVersionData(ctx, projectSlug, versionSlug, userSession);
+    } catch (error) {
+        console.trace(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
 versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
@@ -67,19 +80,6 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         }
 
         return await createNewVersion(ctx, userSession, projectSlug, data);
-    } catch (error) {
-        console.trace(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-versionRouter.get("/:versionSlug", async (ctx: Context) => {
-    try {
-        const userSession = getUserSessionFromCtx(ctx);
-        const { projectSlug, versionSlug } = ctx.req.param();
-        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
-
-        return await getProjectVersionData(ctx, projectSlug, versionSlug, userSession);
     } catch (error) {
         console.trace(error);
         return defaultServerErrorResponse(ctx);
