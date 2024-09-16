@@ -25,7 +25,7 @@ import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-vers
 import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
-import type { VersionDependencies } from "@shared/schemas/project";
+import type { VersionDependencies } from "@shared/schemas/project/version";
 import { DependencyType, DependsOn, type FileObjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";

@@ -10,7 +10,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
-import { updateProjectLicenseFormSchema } from "@shared/schemas/project";
+import { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

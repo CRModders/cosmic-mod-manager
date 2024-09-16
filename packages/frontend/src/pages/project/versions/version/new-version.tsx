@@ -8,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
-import { checkFormValidity } from "@shared/schemas";
-import { newVersionFormSchema } from "@shared/schemas/project";
+import { newVersionFormSchema } from "@shared/schemas/project/version";
+import { checkFormValidity } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import { PlusIcon } from "lucide-react";
 import { useContext, useState } from "react";
@@ -116,7 +116,7 @@ const UploadVersionPage = () => {
                         backUrl={versionsPageUrl}
                         onSubmitBtnClick={async () => {
                             await checkFormValidity(async () => {
-                                const formValues = newVersionFormSchema.parse(form.getValues());
+                                const formValues = await newVersionFormSchema.parseAsync(form.getValues());
                                 await handleSubmit(formValues);
                             });
                         }}

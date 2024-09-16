@@ -10,7 +10,7 @@ import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } f
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
-import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
+import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
 import { type DependencyType, ProjectPermissions, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";

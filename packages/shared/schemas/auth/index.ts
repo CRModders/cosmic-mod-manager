@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MIN_EMAIL_LENGTH, MIN_PASSWORD_LENGTH } from "../config/forms";
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MIN_EMAIL_LENGTH, MIN_PASSWORD_LENGTH } from "../../config/forms";
 
 export const LoginFormSchema = z.object({
     email: z.string().min(MIN_EMAIL_LENGTH, "Enter your email address").max(MAX_EMAIL_LENGTH, "Invalid email length"),

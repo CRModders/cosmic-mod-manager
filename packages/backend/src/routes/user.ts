@@ -23,13 +23,13 @@ import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA, USER_DELETE_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
-import { parseValueToSchema } from "@shared/schemas";
 import {
     profileUpdateFormSchema,
     removeAccountPasswordFormSchema,
     sendAccoutPasswordChangeLinkFormSchema,
     setNewPasswordFormSchema,
 } from "@shared/schemas/settings";
+import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
 import { ctxReqBodyNamespace } from "../../types";
 
@@ -78,7 +78,7 @@ userRouter.get("/projects", async (ctx: Context) => {
 
 userRouter.post("/update-profile", LoginProtectedRoute, async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(profileUpdateFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(profileUpdateFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -103,7 +103,7 @@ userRouter.get("/get-linked-auth-providers", LoginProtectedRoute, async (ctx: Co
 
 userRouter.post("/add-new-password", LoginProtectedRoute, async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -154,7 +154,7 @@ userRouter.post("/confirm-adding-new-password", async (ctx: Context) => {
 
 userRouter.post("/remove-account-password", LoginProtectedRoute, async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(removeAccountPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(removeAccountPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -171,7 +171,7 @@ userRouter.post("/remove-account-password", LoginProtectedRoute, async (ctx: Con
 
 userRouter.post("/send-password-change-email", async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
@@ -197,7 +197,7 @@ userRouter.post("/cancel-settings-new-password", async (ctx: Context) => {
 
 userRouter.post("/set-new-password", async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }

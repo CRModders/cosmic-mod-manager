@@ -10,8 +10,8 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MAX_FEATURED_PROJECT_TAGS } from "@shared/config/forms";
 import { CapitalizeAndFormatString, getValidProjectCategories } from "@shared/lib/utils";
-import { checkFormValidity } from "@shared/schemas";
-import { updateProjectTagsFormSchema } from "@shared/schemas/project";
+import { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
+import { checkFormValidity } from "@shared/schemas/utils";
 import { SaveIcon, StarIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -180,7 +180,7 @@ const TagsSettingsPage = () => {
                                     disabled={isLoading || isSubmitBtnDisabled}
                                     onClick={async () => {
                                         await checkFormValidity(async () => {
-                                            const formValues = updateProjectTagsFormSchema.parse(form.getValues());
+                                            const formValues = await updateProjectTagsFormSchema.parseAsync(form.getValues());
                                             await updateTags(formValues);
                                         });
                                     }}

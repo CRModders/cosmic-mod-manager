@@ -19,7 +19,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { updateGalleryImageFormSchema } from "@shared/schemas/project";
+import { updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
 import type { GalleryItem } from "@shared/types/api";
 import { Edit3Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";

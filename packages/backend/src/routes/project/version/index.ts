@@ -9,11 +9,13 @@ import {
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
-import { parseValueToSchema } from "@shared/schemas";
-import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project";
+import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
+import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
 
 const versionRouter = new Hono();
+
+// ?  PREFIX "/api/project/:projectSlug/version"
 
 versionRouter.get("/", async (ctx: Context) => {
     try {
@@ -55,7 +57,7 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
             }),
         };
 
-        const { data, error } = parseValueToSchema(newVersionFormSchema, schemaObj);
+        const { data, error } = await parseValueToSchema(newVersionFormSchema, schemaObj);
         if (error || !data) {
             // @ts-ignore
             const name = error?.issues?.[0]?.path?.[0];
@@ -71,7 +73,20 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
     }
 });
 
-versionRouter.patch("/:versionSlug", async (ctx: Context) => {
+versionRouter.get("/:versionSlug", async (ctx: Context) => {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const { projectSlug, versionSlug } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
+
+        return await getProjectVersionData(ctx, projectSlug, versionSlug, userSession);
+    } catch (error) {
+        console.trace(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+versionRouter.patch("/:versionSlug", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug } = ctx.req.param();
@@ -98,7 +113,7 @@ versionRouter.patch("/:versionSlug", async (ctx: Context) => {
             additionalFiles: additionalFiles,
         };
 
-        const { data, error } = parseValueToSchema(updateVersionFormSchema, schemaObj);
+        const { data, error } = await parseValueToSchema(updateVersionFormSchema, schemaObj);
         if (error || !data) {
             // @ts-ignore
             const name = error?.issues?.[0]?.path?.[0];
@@ -114,20 +129,7 @@ versionRouter.patch("/:versionSlug", async (ctx: Context) => {
     }
 });
 
-versionRouter.get("/:versionSlug", async (ctx: Context) => {
-    try {
-        const userSession = getUserSessionFromCtx(ctx);
-        const { projectSlug, versionSlug } = ctx.req.param();
-        if (!userSession || !projectSlug || !versionSlug) return defaultInvalidReqResponse(ctx);
-
-        return await getProjectVersionData(ctx, projectSlug, versionSlug, userSession);
-    } catch (error) {
-        console.trace(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-versionRouter.delete("/:versionSlug", async (ctx: Context) => {
+versionRouter.delete("/:versionSlug", LoginProtectedRoute, async (ctx: Context) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug } = ctx.req.param();

@@ -2,7 +2,7 @@ import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
-import type { updateProjectMemberFormSchema } from "@shared/schemas/project";
+import type { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { ProjectPermissions } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";

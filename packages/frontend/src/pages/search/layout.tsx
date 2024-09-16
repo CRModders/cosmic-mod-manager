@@ -71,7 +71,7 @@ const SearchPageLayout = ({ type }: Props) => {
     const sortBy = searchParams.get(sortByParamNamespace);
 
     return (
-        <div className="search-page-grid-layout w-full grid gap-panel-cards">
+        <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
             <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2" style={{ gridArea: "header" }}>
                 <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
                     <SearchIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]" />

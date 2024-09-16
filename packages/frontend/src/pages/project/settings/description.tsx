@@ -6,7 +6,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateDescriptionFormSchema } from "@shared/schemas/project";
+import { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
 import { SaveIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";

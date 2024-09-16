@@ -1,9 +1,9 @@
 import { toast } from "sonner";
 import type { ParseParams, z } from "zod";
 
-export const parseValueToSchema = <T extends z.Schema>(schema: T, data: unknown, params?: Partial<ParseParams>) => {
+export const parseValueToSchema = async <T extends z.Schema>(schema: T, data: unknown, params?: Partial<ParseParams>) => {
     try {
-        const parsedData = schema.parse(data, params) as z.infer<typeof schema>;
+        const parsedData = (await schema.parseAsync(data, params)) as z.infer<typeof schema>;
         return { data: parsedData, error: null };
     } catch (error) {
         // @ts-ignore

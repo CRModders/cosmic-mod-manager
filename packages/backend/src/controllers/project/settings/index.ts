@@ -7,13 +7,7 @@ import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
 import { getValidProjectCategories } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
-import type {
-    generalProjectSettingsFormSchema,
-    updateDescriptionFormSchema,
-    updateExternalLinksFormSchema,
-    updateProjectLicenseFormSchema,
-    updateProjectTagsFormSchema,
-} from "@shared/schemas/project";
+
 import { ProjectPermissions } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";

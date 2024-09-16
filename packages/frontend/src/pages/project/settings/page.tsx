@@ -14,7 +14,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Capitalize } from "@shared/lib/utils";
 import { getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
-import { generalProjectSettingsFormSchema } from "@shared/schemas/project";
+import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
 import { ProjectPublishingStatus, ProjectSupport, ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
@@ -124,12 +124,12 @@ const GeneralSettingsPage = () => {
                                             type="file"
                                             value={""}
                                             name={field.name}
-                                            onChange={(e) => {
+                                            onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
 
                                                 try {
-                                                    generalProjectSettingsFormSchema.parse({
+                                                    await generalProjectSettingsFormSchema.parseAsync({
                                                         ...form.getValues(),
                                                         icon: file,
                                                     });

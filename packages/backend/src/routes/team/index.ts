@@ -3,8 +3,8 @@ import { acceptTeamInvite, inviteMember, leaveTeam, removeMember, updateMember }
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
-import { parseValueToSchema } from "@shared/schemas";
-import { updateProjectMemberFormSchema } from "@shared/schemas/project";
+import { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
+import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
 
 const teamRouter = new Hono();
@@ -68,7 +68,7 @@ teamRouter.patch("/:teamId/member/:memberId", LoginProtectedRoute, async (ctx: C
         const userSession = getUserSessionFromCtx(ctx);
         if (!memberId || !userSession || !teamId) return defaultInvalidReqResponse(ctx);
 
-        const { data, error } = parseValueToSchema(updateProjectMemberFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(updateProjectMemberFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }

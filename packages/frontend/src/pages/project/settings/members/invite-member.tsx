@@ -3,7 +3,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { inviteProjectMemberFormSchema } from "@shared/schemas/project";
+import { inviteProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { UserPlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

@@ -8,8 +8,8 @@ import {
     MIN_NAME_LENGTH,
     MIN_PASSWORD_LENGTH,
     MIN_USERNAME_LENGTH,
-} from "../config/forms";
-import { AuthProviders } from "../types";
+} from "../../config/forms";
+import { AuthProviders } from "../../types";
 
 export const profileUpdateFormSchema = z.object({
     avatarUrlProvider: z.nativeEnum(AuthProviders),

@@ -10,8 +10,8 @@ import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { authProvidersList } from "@shared/config/project";
 import { getAuthProviderFromString, getUserRoleFromString } from "@shared/lib/utils/convertors";
-import { parseValueToSchema } from "@shared/schemas";
 import { LoginFormSchema } from "@shared/schemas/auth";
+import { parseValueToSchema } from "@shared/schemas/utils";
 import { AuthActionIntent, AuthProviders, type LoggedInUserData } from "@shared/types";
 import { type Context, Hono } from "hono";
 
@@ -71,7 +71,7 @@ authRouter.get(`/${AuthActionIntent.LINK_PROVIDER}/get-oauth-url/:authProvider`,
 
 authRouter.post(`/${AuthActionIntent.SIGN_IN}/${AuthProviders.CREDENTIAL}`, async (ctx: Context) => {
     try {
-        const { data, error } = parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyNamespace));
+        const { data, error } = await parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }

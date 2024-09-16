@@ -8,8 +8,8 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config/index";
 import { parseFileSize } from "@shared/lib/utils";
-import { checkFormValidity } from "@shared/schemas";
-import { updateVersionFormSchema } from "@shared/schemas/project";
+import { updateVersionFormSchema } from "@shared/schemas/project/version";
+import { checkFormValidity } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
@@ -146,7 +146,7 @@ const EditVersionPage = () => {
                         backUrl={currVersionPageUrl}
                         onSubmitBtnClick={async () => {
                             await checkFormValidity(async () => {
-                                const formValues = updateVersionFormSchema.parse(form.getValues());
+                                const formValues = await updateVersionFormSchema.parseAsync(form.getValues());
                                 await handleSubmit(formValues);
                             });
                         }}

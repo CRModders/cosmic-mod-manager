@@ -7,7 +7,8 @@ import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
-import type { addNewGalleryImageFormSchema, newProjectFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project";
+import type { newProjectFormSchema } from "@shared/schemas/project";
+import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
 import {
     type OrganisationPermissions,
     ProjectPermissions,

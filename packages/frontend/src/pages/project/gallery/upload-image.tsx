@@ -19,8 +19,8 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { checkFormValidity } from "@shared/schemas";
-import { addNewGalleryImageFormSchema } from "@shared/schemas/project";
+import { addNewGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
+import { checkFormValidity } from "@shared/schemas/utils";
 import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -103,7 +103,7 @@ const UploadGalleryImageForm = () => {
                             onSubmit={async (e) => {
                                 e.preventDefault();
                                 await checkFormValidity(async () => {
-                                    const formValues = addNewGalleryImageFormSchema.parse(form.getValues());
+                                    const formValues = await addNewGalleryImageFormSchema.parseAsync(form.getValues());
                                     await uploadGalleryImage(formValues);
                                 });
                             }}
