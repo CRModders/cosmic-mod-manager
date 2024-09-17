@@ -51,6 +51,10 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         if (!userSession || !projectSlug) return defaultInvalidReqResponse(ctx);
 
         const formData = ctx.get(ctxReqBodyNamespace);
+        if (!formData) {
+            return ctx.json({ success: false, message: "No form data found" }, httpCode("bad_request"));
+        }
+
         const dependencies = formData.get("dependencies");
         const loaders = formData.get("loaders");
         const gameVersions = formData.get("gameVersions");

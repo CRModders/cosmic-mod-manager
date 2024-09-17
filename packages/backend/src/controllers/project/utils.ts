@@ -1,12 +1,7 @@
-import type { FILE_STORAGE_SERVICES } from "@/../types";
+import { FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
-import {
-    createFilePathSafeString,
-    deleteDataFromLocalStorage,
-    deleteFile,
-    getProjectVersionStoragePath,
-    saveProjectVersionFile,
-} from "@/services/storage";
+import { deleteProjectVersionDirectory, deleteProjectVersionFile, saveProjectVersionFile } from "@/services/storage";
+import { createFilePathSafeString } from "@/services/storage/utils";
 import { createHashFromFile } from "@/utils/file";
 import type { File as DBFile, VersionFile } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
@@ -34,7 +29,7 @@ export interface CreateVersionFileProps {
     files: File[];
     versionId: string;
     projectId: string;
-    storageService: FILE_STORAGE_SERVICES;
+    storageService: FILE_STORAGE_SERVICE;
     isPrimary?: boolean;
 }
 
@@ -42,7 +37,7 @@ export const createVersionFile = async (
     file: File,
     versionId: string,
     projectId: string,
-    storageService: FILE_STORAGE_SERVICES,
+    storageService: FILE_STORAGE_SERVICE,
     isPrimaryFile = false,
 ) => {
     return await createVersionFiles({
@@ -64,7 +59,7 @@ interface createVersionFilesProps {
     files: {
         file: File;
         isPrimary: boolean;
-        storageService: FILE_STORAGE_SERVICES;
+        storageService: FILE_STORAGE_SERVICE;
     }[];
 }
 
@@ -80,8 +75,8 @@ export const createVersionFiles = async ({ versionId, projectId, files }: create
 
         const sha1_hash = await createHashFromFile(file, "sha1");
         const sha512_hash = await createHashFromFile(file, "sha512");
-        const path = await saveProjectVersionFile(projectId, versionId, file.name, storageService, file);
-        if (!path?.path) continue;
+        const path = await saveProjectVersionFile(storageService, projectId, versionId, file, file.name);
+        if (!path) continue;
 
         const fileId = nanoid(STRING_ID_LENGTH);
         filesToCreate.push({
@@ -90,7 +85,7 @@ export const createVersionFiles = async ({ versionId, projectId, files }: create
             size: file.size,
             type: fileType,
             storageService: storageService,
-            url: path.path,
+            url: path,
             sha1_hash: sha1_hash,
             sha512_hash: sha512_hash,
         });
@@ -119,9 +114,7 @@ export const deleteVersionFiles = async (projectId: string, versionId: string, f
     // Delete files from storage
     const promises = [];
     for (const file of filesData) {
-        promises.push(
-            deleteFile(getProjectVersionStoragePath(projectId, versionId, `/${file.name}`), file.storageService as FILE_STORAGE_SERVICES),
-        );
+        promises.push(deleteProjectVersionFile(file.storageService as FILE_STORAGE_SERVICE, projectId, versionId, `/${file.name}`));
     }
     await Promise.all(promises);
 
@@ -146,8 +139,7 @@ export const deleteVersionFiles = async (projectId: string, versionId: string, f
 };
 
 export const deleteVersionStoreDirectory = async (projectId: string, versionId: string) => {
-    const directoryPath = getProjectVersionStoragePath(projectId, versionId);
-    return await deleteDataFromLocalStorage(directoryPath);
+    return await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId);
 };
 
 interface isAnyDuplicateFileProps {

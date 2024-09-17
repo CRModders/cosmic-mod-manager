@@ -18,7 +18,7 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
+import { cn, imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
 import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
@@ -502,7 +502,7 @@ const DependencyItem = ({ dependencyData, versionId, projectId, dependencyType, 
     return (
         <div className="w-full flex items-center justify-between gap-x-4 gap-y-1 text-muted-foreground">
             <div className="flex items-center justify-start gap-2">
-                <ImgWrapper src={dependencyProject.icon || ""} alt={dependencyProject.name} className="h-12 rounded" />
+                <ImgWrapper src={imageUrl(dependencyProject.icon)} alt={dependencyProject.name} className="h-12 rounded" />
                 <div className="flex flex-col items-start justify-start">
                     <span className="font-bold text-foreground">{dependencyProject.name}</span>
                     <span>

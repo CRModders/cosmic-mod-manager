@@ -33,7 +33,8 @@ export interface ContextUserSession extends User {
     sessionToken: string;
 }
 
-export enum FILE_STORAGE_SERVICES {
+export enum FILE_STORAGE_SERVICE {
     LOCAL = "local",
     IMGBB = "imgbb",
+    GOOGLE_DRIVE = "google-drive",
 }

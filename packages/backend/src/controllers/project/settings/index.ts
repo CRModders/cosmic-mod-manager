@@ -1,14 +1,19 @@
-import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
+import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
-import { createFilePathSafeString, deleteProjectFile, saveProjectFile } from "@/services/storage";
-import { inferProjectType } from "@/utils";
+import { deleteProjectFile, saveProjectFile } from "@/services/storage";
+import { doesMemberHasAccess, inferProjectType } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
 import { getValidProjectCategories } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
+import type { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
+import type { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
+import type { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
+import type { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
+import type { updateExternalLinksFormSchema } from "@shared/schemas/project/settings/links";
 
-import { ProjectPermissions } from "@shared/types";
+import { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
@@ -31,6 +36,7 @@ export const updateProject = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -40,7 +46,12 @@ export const updateProject = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+
+    const currMember = project.team.members?.[0];
+    if (
+        !currMember ||
+        !doesMemberHasAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
+    ) {
         return ctx.json({ success: false, message: "You don't have the permission to update project details" }, httpCode("unauthorized"));
     }
 
@@ -62,15 +73,16 @@ export const updateProject = async (
     // if the icon is empty that means the icon is removed so delete the file also
     if ((formData.icon instanceof File || !formData.icon) && projectIcon) {
         try {
-            await deleteProjectFile(project.id, projectIcon, FILE_STORAGE_SERVICES.LOCAL);
-            await prisma.file.delete({ where: { id: projectIcon } });
+            const deletedDbFile = await prisma.file.delete({ where: { id: projectIcon } });
+            await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
         } catch (error) {}
     }
 
     if (formData.icon instanceof File) {
-        const fileName = createFilePathSafeString(formData.icon.name);
+        const fileExtension = await getFileType(formData.icon);
+        const fileName = `${nanoid(16)}.${fileExtension}`;
 
-        const newFile = await saveProjectFile(project.id, fileName, FILE_STORAGE_SERVICES.IMGBB, formData.icon);
+        const newFile = await saveProjectFile(FILE_STORAGE_SERVICE.IMGBB, project.id, formData.icon, fileName);
         if (newFile) {
             const newDbFile = await prisma.file.create({
                 data: {
@@ -78,8 +90,8 @@ export const updateProject = async (
                     name: fileName,
                     size: formData.icon.size,
                     type: (await getFileType(formData.icon)) || "",
-                    storageService: FILE_STORAGE_SERVICES.IMGBB,
-                    url: newFile.path,
+                    storageService: FILE_STORAGE_SERVICE.IMGBB,
+                    url: newFile,
                 },
             });
 
@@ -134,7 +146,7 @@ export const updateProjectDescription = async (
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DESCRIPTION)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DESCRIPTION)) {
         return ctx.json(
             { success: false, message: "You don't have the permission to update project description" },
             httpCode("unauthorized"),
@@ -176,7 +188,7 @@ export const updateProjectTags = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
         return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, httpCode("unauthorized"));
     }
 
@@ -221,7 +233,7 @@ export const updateProjectExternalLinks = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
         return ctx.json({ success: false, message: "You don't the permission to update links" }, httpCode("unauthorized"));
     }
 
@@ -262,7 +274,7 @@ export const updateProjectLicense = async (
     });
 
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
         return ctx.json({ success: false, message: "You don't have the permission to update project license" }, httpCode("unauthorized"));
     }
 

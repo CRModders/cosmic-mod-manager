@@ -16,12 +16,12 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { formatGameVersionsListString } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
+import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
-import { ProjectPermissions } from "@shared/types";
+import { ProjectPermission } from "@shared/types";
 import type { ProjectVersionData } from "@shared/types/api";
 import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
@@ -116,14 +116,14 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                         Report
                     </Button>
 
-                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermission.UPLOAD_VERSION) ? (
                         <VariantButtonLink url="edit">
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
                         </VariantButtonLink>
                     ) : null}
 
-                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermissions.DELETE_VERSION) ? (
+                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermission.DELETE_VERSION) ? (
                         <Suspense>
                             <DeleteVersionDialog
                                 projectSlug={projectData?.slug || ""}
@@ -178,7 +178,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                         }}
                                     >
                                         <ImgWrapper
-                                            src={dependencyProject.icon || ""}
+                                            src={imageUrl(dependencyProject.icon)}
                                             alt={dependencyProject.name}
                                             className="h-12"
                                             fallback={fallbackProjectIcon}

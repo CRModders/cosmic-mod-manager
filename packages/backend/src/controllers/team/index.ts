@@ -3,7 +3,7 @@ import prisma from "@/services/prisma";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import type { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
-import { ProjectPermissions } from "@shared/types";
+import { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
@@ -25,7 +25,7 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
     if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermissions.MANAGE_INVITES)) {
+    if (!currMember?.permissions.includes(ProjectPermission.MANAGE_INVITES)) {
         return ctx.json({ success: false, message: "You don't have access to manage member invites" }, httpCode("unauthorized"));
     }
 
@@ -120,7 +120,7 @@ export const removeMember = async (ctx: Context, userSession: ContextUserSession
     if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermissions.REMOVE_MEMBER)) {
+    if (!currMember?.permissions.includes(ProjectPermission.REMOVE_MEMBER)) {
         return ctx.json({ success: false, message: "You don't have access to remove members" }, httpCode("unauthorized"));
     }
 
@@ -164,7 +164,7 @@ export const updateMember = async (
     if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermissions.EDIT_MEMBER)) {
+    if (!currMember?.permissions.includes(ProjectPermission.EDIT_MEMBER)) {
         return ctx.json({ success: false, message: "You don't have access to edit members" }, httpCode("unauthorized"));
     }
 

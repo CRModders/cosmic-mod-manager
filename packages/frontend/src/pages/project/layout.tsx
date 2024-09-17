@@ -404,7 +404,7 @@ const PageHeader = ({
                                 </span>
                             ) : null}
                         </div>
-                        <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</p>
+                        <h2 className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</h2>
                         <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
                             <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                                 <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
@@ -502,7 +502,7 @@ export const ProjectMember = ({
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
             <ImgWrapper
-                src={avatarImageUrl}
+                src={imageUrl(avatarImageUrl)}
                 alt={userName}
                 className="h-10 rounded-full"
                 fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />}

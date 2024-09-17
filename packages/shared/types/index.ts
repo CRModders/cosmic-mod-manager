@@ -88,7 +88,7 @@ export enum GameVersionReleaseType {
     PRE_ALPHA = "pre-alpha",
 }
 
-export enum ProjectPermissions {
+export enum ProjectPermission {
     UPLOAD_VERSION = "upload_version",
     DELETE_VERSION = "delete_version",
     EDIT_DETAILS = "edit_details",
@@ -101,7 +101,7 @@ export enum ProjectPermissions {
     VIEW_REVENUE = "view_revenue",
 }
 
-export enum OrganisationPermissions {
+export enum OrganisationPermission {
     EDIT_DETAILS = "edit_details",
     MANAGE_INVITES = "manage_invites",
     REMOVE_MEMBER = "remove_member",
@@ -112,7 +112,7 @@ export enum OrganisationPermissions {
     EDIT_MEMBER_DEFAULT_PERMISSIONS = "edit_member_default_permissions",
 }
 
-export enum LoaderSupportedFields {
+export enum LoaderSupportedField {
     CLIENT_AND_SERVER = "client_and_server",
     SERVER_ONLY = "server_only",
     CLIENT_ONLY = "client_only",

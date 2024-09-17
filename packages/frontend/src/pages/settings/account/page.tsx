@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FullWidthSpinner } from "@/components/ui/spinner";
+import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
@@ -71,7 +72,7 @@ const AccountSettingsPage = () => {
                             <div className="w-full flex flex-col items-center justify-center my-2">
                                 <div className="w-full flex flex-wrap items-center justify-start gap-6">
                                     <ImgWrapper
-                                        src={session?.avatarUrl || ""}
+                                        src={imageUrl(session?.avatarUrl)}
                                         alt={session?.userName}
                                         fallback={fallbackUserIcon}
                                         className="rounded-full"

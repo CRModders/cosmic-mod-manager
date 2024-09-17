@@ -17,7 +17,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, isUserAProjectMember } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { ProjectPermissions, type VersionReleaseChannel } from "@shared/types";
+import { ProjectPermission, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
     CalendarIcon,
@@ -114,7 +114,7 @@ const ProjectVersionsPage = () => {
     return (
         <>
             {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
-            {projectMembership && projectMembership?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION) ? (
+            {projectMembership && projectMembership?.permissions?.includes(ProjectPermission.UPLOAD_VERSION) ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 

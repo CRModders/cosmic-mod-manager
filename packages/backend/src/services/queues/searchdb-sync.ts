@@ -1,5 +1,5 @@
+import { getFilesFromId } from "@/controllers/project/utils";
 import { inferProjectType } from "@/utils";
-import { projectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
 import meilisearch from "../meilisearch";
 import prisma from "../prisma";
@@ -85,14 +85,25 @@ const _syncProjects = async (cursor: null | string) => {
 
         if (projects.length === 0) return;
 
+        const projectIconIds = [];
+        for (const project of projects) {
+            if (project.iconFileId) projectIconIds.push(project.iconFileId);
+        }
+        const projectIconFiles = await getFilesFromId(projectIconIds);
+
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
             const author = project.team.members?.[0];
+            let iconUrl: string | null = null;
+            if (project.iconFileId) {
+                iconUrl = projectIconFiles.get(project.iconFileId)?.url || null;
+            }
+
             formattedProjectsData.push({
                 id: project.id,
                 name: project.name,
                 slug: project.slug,
-                iconUrl: project.iconFileId ? projectIconUrl(project.slug, project.iconFileId) : null,
+                iconUrl: iconUrl,
                 loaders: project.loaders,
                 type: inferProjectType(project.loaders),
                 gameVersions: project.gameVersions,

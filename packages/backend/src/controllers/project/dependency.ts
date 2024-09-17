@@ -4,7 +4,7 @@ import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { projectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
-import type { ProjectPermissions } from "@shared/types";
+import type { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
 import { getFilesFromId } from "./utils";
 
@@ -62,7 +62,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     const members = (project.team.members || []).map((member) => ({
         id: member.id,
         userId: member.userId,
-        permissions: member.permissions as ProjectPermissions[],
+        permissions: member.permissions as ProjectPermission[],
     }));
 
     if (project?.organisation?.team?.members) {
@@ -70,7 +70,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
             members.push({
                 id: member.id,
                 userId: member.userId,
-                permissions: member.permissions as ProjectPermissions[],
+                permissions: member.permissions as ProjectPermission[],
             });
         }
     }

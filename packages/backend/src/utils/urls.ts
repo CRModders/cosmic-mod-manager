@@ -7,7 +7,10 @@ if (CDN_SERVER_URL === undefined) {
 const CDN_PREFIX = `${CDN_SERVER_URL}/cdn/data`;
 
 export const projectIconUrl = (slug: string, icon: string) => {
-    return icon ? `${CDN_PREFIX}/${slug}/icon` : null;
+    if (!icon) return null;
+    if (icon.startsWith("http")) return icon;
+
+    return `${CDN_PREFIX}/${slug}/icon`;
 };
 
 export const projectGalleryFileUrl = (slug: string, galleryFile: string) => {

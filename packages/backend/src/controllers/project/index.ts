@@ -1,17 +1,18 @@
-import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
+import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
-import { createFilePathSafeString, saveProjectGalleryFile } from "@/services/storage";
-import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+
+import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
+import { doesMemberHasAccess, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
-import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
+import { projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { newProjectFormSchema } from "@shared/schemas/project";
 import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
 import {
-    type OrganisationPermissions,
-    ProjectPermissions,
+    type OrganisationPermission,
+    ProjectPermission,
     ProjectPublishingStatus,
     ProjectSupport,
     type ProjectVisibility,
@@ -64,8 +65,8 @@ export const getFormattedTeamMember = (dbMember: DBTeamMember) => ({
     role: dbMember.role,
     isOwner: dbMember.isOwner,
     accepted: dbMember.accepted,
-    permissions: dbMember.permissions as ProjectPermissions[],
-    organisationPermissions: dbMember.organisationPermissions as OrganisationPermissions[],
+    permissions: dbMember.permissions as ProjectPermission[],
+    organisationPermissions: dbMember.organisationPermissions as OrganisationPermission[],
 });
 
 export const createNewProject = async (ctx: Context, userSession: ContextUserSession, formData: z.infer<typeof newProjectFormSchema>) => {
@@ -204,7 +205,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
     }
     const currSessionMember = projectMembersList.find((member) => member.userId === userSession?.id);
 
-    const galleryFiles = await getFilesFromId(project.gallery.map((item) => item.imageFileId));
+    const galleryFileIds = project.gallery.map((item) => item.imageFileId);
+    const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
 
     const organisation = project.organisation;
     return ctx.json(
@@ -215,7 +217,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 teamId: project.team.id,
                 orgId: project.organisation?.id || null,
                 name: project.name,
-                icon: projectIconUrl(project.slug, project.iconFileId || ""),
+                icon: projectIconUrl(project.slug, filesMap.get(project?.iconFileId || "")?.url || ""),
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
@@ -243,7 +245,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     id: galleryItem.id,
                     name: galleryItem.name,
                     description: galleryItem.description,
-                    image: projectGalleryFileUrl(project.slug, galleryFiles.get(galleryItem.imageFileId)?.name || ""),
+                    image: filesMap.get(galleryItem.imageFileId)?.url || "",
                     featured: galleryItem.featured,
                     dateCreated: galleryItem.dateCreated,
                     orderIndex: galleryItem.orderIndex,
@@ -257,8 +259,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     role: member.role,
                     isOwner: member.isOwner,
                     accepted: member.accepted,
-                    permissions: currSessionMember?.id ? (member.permissions as ProjectPermissions[]) : [],
-                    organisationPermissions: currSessionMember?.id ? (member.organisationPermissions as OrganisationPermissions[]) : [],
+                    permissions: currSessionMember?.id ? (member.permissions as ProjectPermission[]) : [],
+                    organisationPermissions: currSessionMember?.id ? (member.organisationPermissions as OrganisationPermission[]) : [],
                 })),
                 organisation: organisation
                     ? {
@@ -315,7 +317,7 @@ export const addNewGalleryImage = async (
         }
     }
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -333,8 +335,11 @@ export const addNewGalleryImage = async (
         }
     }
 
-    const fileName = createFilePathSafeString(formData.image.name);
-    const fileUrl = await saveProjectGalleryFile(project.id, fileName, FILE_STORAGE_SERVICES.IMGBB, formData.image);
+    const fileType = await getFileType(formData.image);
+    const fileName = `${nanoid(STRING_ID_LENGTH)}.${fileType}`;
+    const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.IMGBB, project.id, formData.image, fileName);
+
+    if (!fileUrl) return ctx.json({ success: false, message: "Failed to upload the image" }, httpCode("bad_request"));
 
     // Create the generic file entry in the database
     const dbFile = await prisma.file.create({
@@ -343,8 +348,8 @@ export const addNewGalleryImage = async (
             name: fileName,
             size: formData.image.size,
             type: (await getFileType(formData.image)) || "",
-            url: fileUrl?.path || "",
-            storageService: FILE_STORAGE_SERVICES.IMGBB,
+            url: fileUrl || "",
+            storageService: FILE_STORAGE_SERVICE.IMGBB,
         },
     });
 
@@ -381,6 +386,7 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -391,7 +397,11 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
 
     if (!project?.id || !project.gallery?.[0]?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    const currMember = project.team.members?.[0];
+    if (
+        !currMember ||
+        !doesMemberHasAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
+    ) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -401,11 +411,14 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
     });
 
     // Delete the file from database
-    await prisma.file.delete({
+    const deletedDbFile = await prisma.file.delete({
         where: {
             id: project.gallery[0].imageFileId,
         },
     });
+
+    // Delete the file from storage
+    await deleteProjectGalleryFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
 
     return ctx.json({ success: true, message: "Gallery image deleted" }, httpCode("ok"));
 };
@@ -452,7 +465,7 @@ export const updateGalleryImage = async (
         }
     }
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermissions.EDIT_DETAILS)) {
+    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 

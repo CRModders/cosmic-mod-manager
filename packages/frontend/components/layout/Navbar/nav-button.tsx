@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
+import { cn, imageUrl } from "@/lib/utils";
 import { AuthContext } from "@/src/contexts/auth";
 import type { LoggedInUserData } from "@shared/types";
 import { LayoutDashboardIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
@@ -68,7 +68,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     className="p-0 m-0 h-fit rounded-full w-fit hover:bg-transparent dark:hover:bg-transparent no_neumorphic_shadow"
                 >
                     <ImgWrapper
-                        src={session.avatarUrl || ""}
+                        src={imageUrl(session.avatarUrl)}
                         alt={session?.userName}
                         fallback={fallbackUserIcon}
                         className="h-nav-item p-0.5 rounded-full"
@@ -118,8 +118,8 @@ const ProfileDropDown = ({ session, isPopoverOpen }: { session: LoggedInUserData
         <div className="w-full flex flex-col items-center justify-center gap-3">
             <div className="w-full flex items-center justify-center gap-2">
                 <ImgWrapper
-                    src={session?.avatarUrl || ""}
-                    alt={session?.userName}
+                    src={imageUrl(session?.avatarUrl)}
+                    alt={session.userName}
                     fallback={fallbackUserIcon}
                     className="h-14 rounded-full"
                 />

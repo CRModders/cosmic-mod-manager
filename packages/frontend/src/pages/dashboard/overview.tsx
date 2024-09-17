@@ -2,6 +2,7 @@ import { fallbackUserIcon } from "@/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/link";
+import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -16,7 +17,7 @@ const OverviewPage = () => {
             <ContentCardTemplate>
                 <div className="w-full flex flex-wrap gap-6">
                     <ImgWrapper
-                        src={session?.avatarUrl || ""}
+                        src={imageUrl(session?.avatarUrl)}
                         alt={session?.userName}
                         fallback={fallbackUserIcon}
                         className="rounded-full"

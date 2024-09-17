@@ -1,4 +1,4 @@
-import { AuthProviders, LoaderSupportedFields, ProjectPermissions, ProjectType, TagHeaderTypes } from "../types";
+import { AuthProviders, LoaderSupportedField, ProjectPermission, ProjectType, TagHeaderTypes } from "../types";
 
 export const authProvidersList = [
     AuthProviders.GITHUB,
@@ -18,22 +18,22 @@ export const projectTypes = [
 ];
 
 export const ProjectPermissionsList = [
-    ProjectPermissions.UPLOAD_VERSION,
-    ProjectPermissions.DELETE_VERSION,
-    ProjectPermissions.EDIT_DETAILS,
-    ProjectPermissions.EDIT_DESCRIPTION,
-    ProjectPermissions.MANAGE_INVITES,
-    ProjectPermissions.REMOVE_MEMBER,
-    ProjectPermissions.EDIT_MEMBER,
-    ProjectPermissions.DELETE_PROJECT,
-    ProjectPermissions.VIEW_ANALYTICS,
-    ProjectPermissions.VIEW_REVENUE,
+    ProjectPermission.UPLOAD_VERSION,
+    ProjectPermission.DELETE_VERSION,
+    ProjectPermission.EDIT_DETAILS,
+    ProjectPermission.EDIT_DESCRIPTION,
+    ProjectPermission.MANAGE_INVITES,
+    ProjectPermission.REMOVE_MEMBER,
+    ProjectPermission.EDIT_MEMBER,
+    ProjectPermission.DELETE_PROJECT,
+    ProjectPermission.VIEW_ANALYTICS,
+    ProjectPermission.VIEW_REVENUE,
 ];
 
 export type Loader = {
     name: string;
     supportedProjectTypes: ProjectType[];
-    supportedFields: LoaderSupportedFields[];
+    supportedFields: LoaderSupportedField[];
     metadata: {
         visibleInCategoriesList?: boolean;
         accent?: {
@@ -50,11 +50,11 @@ export const loaders: Loader[] = [
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD],
         supportedFields: [
-            LoaderSupportedFields.CLIENT_AND_SERVER,
-            LoaderSupportedFields.SERVER_ONLY,
-            LoaderSupportedFields.CLIENT_ONLY,
-            LoaderSupportedFields.SINGLEPLAYER,
-            LoaderSupportedFields.GAME_VERSIONS,
+            LoaderSupportedField.CLIENT_AND_SERVER,
+            LoaderSupportedField.SERVER_ONLY,
+            LoaderSupportedField.CLIENT_ONLY,
+            LoaderSupportedField.SINGLEPLAYER,
+            LoaderSupportedField.GAME_VERSIONS,
         ],
         metadata: {
             accent: {
@@ -69,11 +69,11 @@ export const loaders: Loader[] = [
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD],
         supportedFields: [
-            LoaderSupportedFields.CLIENT_AND_SERVER,
-            LoaderSupportedFields.SERVER_ONLY,
-            LoaderSupportedFields.CLIENT_ONLY,
-            LoaderSupportedFields.SINGLEPLAYER,
-            LoaderSupportedFields.GAME_VERSIONS,
+            LoaderSupportedField.CLIENT_AND_SERVER,
+            LoaderSupportedField.SERVER_ONLY,
+            LoaderSupportedField.CLIENT_ONLY,
+            LoaderSupportedField.SINGLEPLAYER,
+            LoaderSupportedField.GAME_VERSIONS,
         ],
         metadata: {
             accent: {
@@ -87,7 +87,7 @@ export const loaders: Loader[] = [
     {
         name: "datapack",
         supportedProjectTypes: [ProjectType.DATAPACK],
-        supportedFields: [LoaderSupportedFields.GAME_VERSIONS],
+        supportedFields: [LoaderSupportedField.GAME_VERSIONS],
         metadata: {
             visibleInCategoriesList: false,
         },
@@ -95,7 +95,7 @@ export const loaders: Loader[] = [
     {
         name: "resource_pack",
         supportedProjectTypes: [ProjectType.RESOURCE_PACK],
-        supportedFields: [LoaderSupportedFields.GAME_VERSIONS],
+        supportedFields: [LoaderSupportedField.GAME_VERSIONS],
         metadata: {
             visibleInCategoriesList: false,
         },

@@ -1,7 +1,7 @@
 import type {
     DependencyType,
-    OrganisationPermissions,
-    ProjectPermissions,
+    OrganisationPermission,
+    ProjectPermission,
     ProjectPublishingStatus,
     ProjectSupport,
     ProjectVisibility,
@@ -33,8 +33,8 @@ export interface TeamMember {
     role: string;
     isOwner: boolean;
     accepted: boolean;
-    permissions: ProjectPermissions[];
-    organisationPermissions: OrganisationPermissions[];
+    permissions: ProjectPermission[];
+    organisationPermissions: OrganisationPermission[];
 }
 
 export interface Organisation {

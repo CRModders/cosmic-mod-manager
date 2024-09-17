@@ -12,6 +12,7 @@ import type { ProjectListItem, SessionListData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { getFilesFromId } from "../project/utils";
 
 export const getUserProfileData = async (ctx: Context, userSession: ContextUserSession | undefined, slug: string) => {
     const user = await prisma.user.findFirst({
@@ -205,6 +206,13 @@ export const getAllVisibleProjects = async (
 
     if (!list) return ctx.json({ success: true, projects: [] }, httpCode("ok"));
 
+    const iconFileIds: string[] = [];
+    for (const item of list) {
+        const project = item.team.project;
+        if (project?.iconFileId) iconFileIds.push(project.iconFileId);
+    }
+    const iconFilesMap = await getFilesFromId(iconFileIds);
+
     const projectListData: ProjectListItem[] = [];
     for (const item of list) {
         const project = item.team.project;
@@ -224,7 +232,7 @@ export const getAllVisibleProjects = async (
             summary: project.summary,
             type: inferProjectType(project.loaders),
             status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl(project.slug, project.iconFileId || ""),
+            icon: projectIconUrl(project.slug, iconFilesMap.get(project?.iconFileId || "")?.url || ""),
             downloads: project.downloads,
             followers: project.followers,
             dateUpdated: project.dateUpdated,

@@ -1,3 +1,6 @@
+import { fallbackUserIcon } from "@/components/icons";
+import { ImgWrapper } from "@/components/ui/avatar";
+import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { Link } from "react-router-dom";
 import { LoginButton, SignOutBtn } from "./nav-button";
@@ -39,20 +42,20 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                         })}
                         {!!session?.id && (
                             <>
-                                <li className="w-full flex flex-col gap-1 items-center justify-center mt-4">
-                                    <div className="w-full flex items-center justify-center gap-4 h-nav-item">
-                                        {session?.avatarUrl ? (
-                                            <img
-                                                src={session?.avatarUrl}
-                                                alt={`${session?.name} `}
-                                                className="h-full aspect-square rounded-full bg-bg-hover"
-                                            />
-                                        ) : (
-                                            <span>{session?.name[0]}</span>
-                                        )}
+                                <li className="w-full flex flex-col gap-1 items-center justify-center mt-4 mb-1">
+                                    <div className="w-full flex items-center justify-center gap-2">
+                                        <ImgWrapper
+                                            src={imageUrl(session?.avatarUrl)}
+                                            alt={session.userName}
+                                            className="w-11 h-11 rounded-full"
+                                            fallback={fallbackUserIcon}
+                                        />
                                         <div className="flex flex-col items-start justify-center gap-1">
-                                            <span className="leading-none font-semibold text-foreground/90">{session?.name}</span>
-                                            <span className="leading-none text-muted-foreground">{session?.userName}</span>
+                                            <span className="leading-none font-semibold text-lg text-foreground/90">{session?.name}</span>
+                                            <span className="leading-none text-muted-foreground">
+                                                <em className="select-none not-italic text-extra-muted-foreground">@</em>
+                                                {session?.userName}
+                                            </span>
                                         </div>
                                     </div>
                                 </li>

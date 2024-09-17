@@ -93,7 +93,7 @@ const TagsSettingsPage = () => {
                                                 return (
                                                     <LabelledCheckbox
                                                         key={category.name}
-                                                        checkBoxId={`tag-${category.name}`}
+                                                        name={category.name}
                                                         checked={field.value.includes(category.name)}
                                                         onCheckedChange={(e) => {
                                                             if (e === true) {
@@ -141,7 +141,7 @@ const TagsSettingsPage = () => {
                                                 return (
                                                     <LabelledCheckbox
                                                         key={tag}
-                                                        checkBoxId={`featured-tag-${tag}`}
+                                                        name={tag}
                                                         className="w-fit"
                                                         checked={field.value.includes(tag)}
                                                         disabled={

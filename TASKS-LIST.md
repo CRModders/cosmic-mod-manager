@@ -54,6 +54,9 @@
 
 - [x] Add search page
 
+- [-] Add backups for user uploaded files
+- [-] Add database backups
+
 - [-] Add transfer ownership option
 - [-] Update the overview page of dashboard to show real stats
 - [-] Fix session location not being shown

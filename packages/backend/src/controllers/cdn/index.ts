@@ -1,8 +1,8 @@
-import type { ContextUserSession } from "@/../types";
+import type { ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
-import { getFileFromStorage } from "@/services/storage";
+import { getFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
@@ -82,8 +82,7 @@ export const serveVersionFile = async (
         return ctx.json({}, httpCode("not_found"));
     }
 
-    const file = await getFileFromStorage(versionFile.storageService, versionFile.url);
-
+    const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
     if (!file) return ctx.text("File not found", httpCode("not_found"));
 
     // Get corresponding file from version
@@ -99,7 +98,10 @@ export const serveVersionFile = async (
         });
     }
 
-    return new Response(file, { status: httpCode("ok") });
+    if (file instanceof File) return new Response(file, { status: httpCode("ok") });
+    if (typeof file === "string") return ctx.redirect(file);
+
+    return ctx.json({}, httpCode("not_found"));
 };
 
 export const serveProjectIconFile = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
@@ -117,7 +119,8 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
     });
     if (!iconFileData?.id) return ctx.json({}, httpCode("not_found"));
 
-    const iconFile = await getFileFromStorage(iconFileData.storageService, iconFileData.url);
+    const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
+
     // Respond accordingly
     if (iconFile instanceof File) return new Response(iconFile);
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
@@ -148,7 +151,7 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
 
     if (!dbFile) return ctx.json({}, httpCode("not_found"));
 
-    const imageFile = await getFileFromStorage(dbFile.storageService, dbFile.url);
+    const imageFile = await getFile(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.name);
     if (!imageFile) return ctx.json({}, httpCode("not_found"));
 
     if (imageFile instanceof File) return new Response(imageFile);

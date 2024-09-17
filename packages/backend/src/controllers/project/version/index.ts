@@ -1,4 +1,4 @@
-import { type ContextUserSession, FILE_STORAGE_SERVICES } from "@/../types";
+import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import { addToUsedRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { aggregateProjectLoaderNames, aggregateVersions, isProjectAccessibleToCurrSession } from "@/utils";
@@ -11,7 +11,7 @@ import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
-import { type DependencyType, ProjectPermissions, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
+import { type DependencyType, ProjectPermission, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
@@ -112,7 +112,7 @@ export const createNewVersion = async (
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -186,12 +186,12 @@ export const createNewVersion = async (
             ...(formData.additionalFiles || []).map((file) => ({
                 file: file,
                 isPrimary: false,
-                storageService: FILE_STORAGE_SERVICES.LOCAL,
+                storageService: FILE_STORAGE_SERVICE.LOCAL,
             })),
             {
                 file: formData.primaryFile,
                 isPrimary: true,
-                storageService: FILE_STORAGE_SERVICES.LOCAL,
+                storageService: FILE_STORAGE_SERVICE.LOCAL,
             },
         ],
     });
@@ -282,7 +282,7 @@ export const updateVersionData = async (
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to edit a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.UPLOAD_VERSION)) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -343,7 +343,7 @@ export const updateVersionData = async (
                 files: newAdditionalFiles.map((file) => ({
                     file: file,
                     isPrimary: false,
-                    storageService: FILE_STORAGE_SERVICES.LOCAL,
+                    storageService: FILE_STORAGE_SERVICE.LOCAL,
                 })),
             });
         }
@@ -818,7 +818,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermissions.DELETE_VERSION)) {
+    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.DELETE_VERSION)) {
         await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }

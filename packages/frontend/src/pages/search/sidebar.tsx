@@ -293,16 +293,18 @@ const FilterCategory = ({ items, selectedItems, label, onCheckedChange, classNam
             <div className={cn("w-full flex flex-col", listWrapperClassName)}>
                 {items.map((item) => {
                     const itemValue = typeof item === "string" ? item : item.value;
+                    const itemLabel = CapitalizeAndFormatString(typeof item === "string" ? item : item.label) || "";
 
                     return (
                         <LabelledCheckbox
                             checked={selectedItems.includes(itemValue)}
                             onCheckedChange={() => onCheckedChange(itemValue)}
                             key={itemValue}
+                            name={itemLabel}
                         >
                             <span className="flex items-center justify-center gap-1">
                                 <TagIcon name={itemValue} />
-                                {CapitalizeAndFormatString(typeof item === "string" ? item : item.label)}
+                                {itemLabel}
                             </span>
                         </LabelledCheckbox>
                     );

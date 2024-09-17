@@ -24,18 +24,19 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 interface LabelledCheckboxProps {
-    checkBoxId?: string;
     checked: boolean;
     className?: string;
     checkBoxClassname?: string;
     onCheckedChange: (e: CheckboxPrimitive.CheckedState) => void;
     disabled?: boolean;
+    checkBoxId?: string;
+    name?: string;
 }
 
 const LabelledCheckbox = React.forwardRef<
     React.ElementRef<typeof CheckboxPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & LabelledCheckboxProps
->(({ checkBoxId, children, checked, className, checkBoxClassname, onCheckedChange, disabled }, ref) => {
+>(({ checkBoxId, children, checked, className, checkBoxClassname, onCheckedChange, disabled, name }, ref) => {
     return (
         <Label
             className={cn(
@@ -51,6 +52,7 @@ const LabelledCheckbox = React.forwardRef<
                 className={checkBoxClassname}
                 disabled={disabled}
                 ref={ref}
+                name={name}
             />
             {children}
         </Label>

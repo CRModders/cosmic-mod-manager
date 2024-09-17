@@ -6,6 +6,7 @@ import { LabelledCheckbox } from "@/components/ui/checkbox";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/spinner";
+import { imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +14,7 @@ import { ProjectPermissionsList } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { checkFormValidity } from "@shared/schemas/utils";
-import { ProjectPermissions } from "@shared/types";
+import { ProjectPermission } from "@shared/types";
 import type { TeamMember } from "@shared/types/api";
 import { ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useContext, useState } from "react";
@@ -29,7 +30,7 @@ const ProjectMemberSettingsPage = () => {
     const currUsersMembershipData = currUsersMembership.data;
 
     if (!projectData || !currUsersMembershipData) return null;
-    const canInviteMembers = currUsersMembershipData.permissions.includes(ProjectPermissions.MANAGE_INVITES);
+    const canInviteMembers = currUsersMembershipData.permissions.includes(ProjectPermission.MANAGE_INVITES);
 
     return (
         <>
@@ -121,7 +122,7 @@ const ProjectMember = ({
                 {/* Member profile details */}
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
-                        src={member.avatarUrl || ""}
+                        src={imageUrl(member.avatarUrl)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}
                         className="h-12 rounded-full"
@@ -206,7 +207,7 @@ const ProjectMember = ({
                                                 return (
                                                     <LabelledCheckbox
                                                         key={permissionName}
-                                                        checkBoxId={`member-(${member.id})-permission-${permissionName}`}
+                                                        name={permissionName}
                                                         checked={(field?.value || []).includes(permissionName)}
                                                         onCheckedChange={(checked) => {
                                                             const currList = field.value || [];
@@ -243,7 +244,7 @@ const ProjectMember = ({
                                 Save changes
                             </Button>
 
-                            {!member.isOwner && currUsersMembership.permissions.includes(ProjectPermissions.REMOVE_MEMBER) && (
+                            {!member.isOwner && currUsersMembership.permissions.includes(ProjectPermission.REMOVE_MEMBER) && (
                                 <Button
                                     type="button"
                                     variant="secondary-destructive"
