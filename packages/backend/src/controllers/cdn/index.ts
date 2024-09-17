@@ -60,12 +60,7 @@ export const serveVersionFile = async (
         return ctx.status(httpCode("not_found"));
     }
 
-    if (
-        !isProjectAccessibleToCurrSession(projectData.visibility, projectData.status, userSession?.id, [
-            ...projectData.team.members,
-            ...(projectData.organisation?.team?.members || []),
-        ])
-    ) {
+    if (!isProjectAccessibleToCurrSession(projectData.visibility, projectData.status, userSession?.id, projectData.team.members)) {
         return ctx.json({}, httpCode("not_found"));
     }
 
@@ -79,11 +74,11 @@ export const serveVersionFile = async (
     });
 
     if (!versionFile?.id) {
-        return ctx.json({}, httpCode("not_found"));
+        return ctx.json({ message: "File not found" }, httpCode("not_found"));
     }
 
     const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
-    if (!file) return ctx.text("File not found", httpCode("not_found"));
+    if (!file) return ctx.json({ message: "File not found" }, httpCode("not_found"));
 
     // Get corresponding file from version
     const targetVersionFile = targetVersion.files.find((file) => file.fileId === versionFile.id);
@@ -98,10 +93,8 @@ export const serveVersionFile = async (
         });
     }
 
-    if (file instanceof File) return new Response(file, { status: httpCode("ok") });
     if (typeof file === "string") return ctx.redirect(file);
-
-    return ctx.json({}, httpCode("not_found"));
+    return new Response(file, { status: httpCode("ok") });
 };
 
 export const serveProjectIconFile = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
@@ -122,10 +115,8 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
     const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
 
     // Respond accordingly
-    if (iconFile instanceof File) return new Response(iconFile);
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
-
-    return ctx.json({}, httpCode("not_found"));
+    return new Response(iconFile);
 };
 
 export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, userSession: ContextUserSession | undefined) => {
@@ -154,8 +145,6 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
     const imageFile = await getFile(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.name);
     if (!imageFile) return ctx.json({}, httpCode("not_found"));
 
-    if (imageFile instanceof File) return new Response(imageFile);
     if (typeof imageFile === "string") return ctx.redirect(imageFile);
-
-    return ctx.json({}, httpCode("not_found"));
+    return new Response(imageFile);
 };

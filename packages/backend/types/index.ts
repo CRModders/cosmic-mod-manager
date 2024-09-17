@@ -36,5 +36,4 @@ export interface ContextUserSession extends User {
 export enum FILE_STORAGE_SERVICE {
     LOCAL = "local",
     IMGBB = "imgbb",
-    GOOGLE_DRIVE = "google-drive",
 }
