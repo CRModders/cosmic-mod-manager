@@ -140,7 +140,7 @@ export const getAllSessions = async (ctx: Context, userSession: ContextUserSessi
         });
     }
 
-    return ctx.json({ success: true, sessions: sessions }, httpCode("ok"));
+    return ctx.json({ success: true, sessions: list }, httpCode("ok"));
 };
 
 export const getAllVisibleProjects = async (

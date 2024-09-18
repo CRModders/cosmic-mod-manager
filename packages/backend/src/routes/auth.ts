@@ -161,7 +161,7 @@ authRouter.post("/session/logout", LoginProtectedRoute, async (ctx: Context) => 
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) return ctx.json({}, httpCode("bad_request"));
 
-        const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || null;
+        const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || userSession.sessionId;
 
         return await logOutUserSession(ctx, userSession, targetSessionId);
     } catch (error) {
