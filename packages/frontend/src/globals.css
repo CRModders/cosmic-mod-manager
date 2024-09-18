@@ -208,4 +208,9 @@ body.no-scrollbar {
         transition: font-size 150ms ease;
         @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
     }
+
+    .items-baseline-with-fallback {
+        align-items: center;
+        align-items: baseline;
+    }
 }

@@ -1,7 +1,8 @@
-import { BACKEND_PORT, BASE_API_ROUTE_PATH } from "@shared/config";
+import { BACKEND_PORT } from "@shared/config";
 import type { SocketAddress } from "bun";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
 import { queueDownloadsCounterQueueProcessing } from "./services/queues/downloads-queue";
@@ -9,6 +10,7 @@ import queueSearchDbSync from "./services/queues/searchdb-sync";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 
+app.use(logger());
 app.use(
     "*",
     cors({
@@ -20,7 +22,7 @@ app.use(
 app.get("/favicon.ico", async (ctx: Context) => {
     return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
 });
-app.route(BASE_API_ROUTE_PATH, router);
+app.route("/api", router);
 app.route("/cdn", cdnRouter);
 
 Bun.serve({

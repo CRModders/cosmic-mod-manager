@@ -263,10 +263,7 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
         <div className="w-full flex flex-col items-center justify-center gap-3">
             {versionsList.map((version) => {
                 return (
-                    <div
-                        key={version.id}
-                        className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-background p-2 rounded-lg"
-                    >
+                    <div key={version.id} className="w-full flex items-center justify-between gap-x-4 gap-y-2 bg-background p-2 rounded-lg">
                         <div className="flex gap-3 items-center justify-start">
                             <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
                             <div className="flex flex-col items-start justify-center gap-1">
@@ -282,17 +279,15 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
                             </div>
                         </div>
 
-                        <div className="flex gap-2 items-center justify-center">
-                            <VariantButtonLink
-                                url={version.primaryFile?.url || ""}
-                                size={"icon"}
-                                variant="default"
-                                className="shrink-0"
-                                label={`download ${version.title}`}
-                            >
-                                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                            </VariantButtonLink>
-                        </div>
+                        <VariantButtonLink
+                            url={version.primaryFile?.url || ""}
+                            size={"icon"}
+                            variant="default"
+                            className="shrink-0"
+                            label={`download ${version.title}`}
+                        >
+                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                        </VariantButtonLink>
                     </div>
                 );
             })}

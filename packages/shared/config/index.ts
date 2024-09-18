@@ -6,7 +6,6 @@ export const STRING_ID_LENGTH = 18;
 
 // PORTS
 export const BACKEND_PORT = 5500;
-export const BASE_API_ROUTE_PATH = "/api";
 
 // COOKIES
 export const CSRF_STATE_COOKIE_NAME = "csrfState";

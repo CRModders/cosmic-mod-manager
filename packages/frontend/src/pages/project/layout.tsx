@@ -508,12 +508,10 @@ export const ProjectMember = ({
                 fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />}
             />
             <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-baseline-with-fallback justify-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{userName}</span>
                     {isOwner === true && (
-                        <span className="flex items-center justify-center shrink-0" title="Owner">
-                            <CrownIcon className="w-[0.8rem] h-[0.8rem] text-orange-500 dark:text-orange-400" />
-                        </span>
+                        <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
                     )}
                 </div>
                 <span className="text-sm leading-tight">{role}</span>
