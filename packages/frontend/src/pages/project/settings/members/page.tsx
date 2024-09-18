@@ -177,7 +177,7 @@ const ProjectMember = ({
                             render={({ field }) => (
                                 <FormItem className="flex-col md:flex-row justify-between">
                                     <div className="flex flex-col items-start justify-center">
-                                        <FormLabel className="font-bold">
+                                        <FormLabel className="font-bold" htmlFor="member-role-input">
                                             Role
                                             <FormMessage />
                                         </FormLabel>
@@ -185,7 +185,7 @@ const ProjectMember = ({
                                             The title of the role that this member plays for this project.
                                         </span>
                                     </div>
-                                    <Input {...field} placeholder="Role" className="w-[24ch]" />
+                                    <Input {...field} placeholder="Role" className="w-[24ch]" id="member-role-input" />
                                 </FormItem>
                             )}
                         />

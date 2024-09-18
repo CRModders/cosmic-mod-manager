@@ -1,8 +1,8 @@
+import Navbar from "@/components/layout/Navbar/navbar";
 import ContextProviders from "@/src/providers";
-import { Suspense, lazy, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-const Navbar = lazy(() => import("@/components/layout/Navbar/navbar"));
 
 const RootLayout = () => {
     const [searchParams] = useSearchParams();
@@ -26,15 +26,7 @@ const RootLayout = () => {
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
             <div className="w-full relative">
-                <Suspense
-                    fallback={
-                        <div className="w-full flex items-center justify-center h-nav-item py-3 italic text-muted-foreground">
-                            LOADING...
-                        </div>
-                    }
-                >
-                    <Navbar />
-                </Suspense>
+                <Navbar />
                 <div className="full_page container px-4 sm:px-8">
                     <Outlet />
                 </div>

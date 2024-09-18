@@ -441,6 +441,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                     {/* Editor area */}
                     <div className={cn("flex w-full flex-col items-center justify-center gap-2", previewOn === true && "hidden")}>
                         <Textarea
+                            name="markdown-textarea"
                             placeholder={placeholder}
                             className={cn(
                                 "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground dark:text-foreground focus-within:!bg-background-shallow/10",

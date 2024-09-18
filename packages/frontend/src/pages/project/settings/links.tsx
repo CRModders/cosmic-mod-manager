@@ -58,7 +58,7 @@ const ExternalLinksSettingsPage = () => {
                         name="issueTracker"
                         render={({ field }) => (
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
-                                <FormLabel>
+                                <FormLabel htmlFor="issue-tracker-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
                                         <span className="font-bold">Issue tracker</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
@@ -70,6 +70,7 @@ const ExternalLinksSettingsPage = () => {
 
                                 <Input
                                     {...field}
+                                    id="issue-tracker-url-input"
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
                                     className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
@@ -83,7 +84,7 @@ const ExternalLinksSettingsPage = () => {
                         name="sourceCode"
                         render={({ field }) => (
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
-                                <FormLabel>
+                                <FormLabel htmlFor="source-code-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
                                         <span className="font-bold">Source code</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
@@ -95,6 +96,7 @@ const ExternalLinksSettingsPage = () => {
 
                                 <Input
                                     {...field}
+                                    id="source-code-url-input"
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
                                     className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
@@ -108,7 +110,7 @@ const ExternalLinksSettingsPage = () => {
                         name="wikiPage"
                         render={({ field }) => (
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
-                                <FormLabel>
+                                <FormLabel htmlFor="wiki-page-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
                                         <span className="font-bold">Wiki page</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
@@ -120,6 +122,7 @@ const ExternalLinksSettingsPage = () => {
 
                                 <Input
                                     {...field}
+                                    id="wiki-page-url-input"
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
                                     className="w-full md:w-[48ch] lg:w-[36ch] xl:w-[48ch]"
@@ -133,7 +136,7 @@ const ExternalLinksSettingsPage = () => {
                         name="discordServer"
                         render={({ field }) => (
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
-                                <FormLabel>
+                                <FormLabel htmlFor="discord-invite-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
                                         <span className="font-bold">Discord invite</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
@@ -145,6 +148,7 @@ const ExternalLinksSettingsPage = () => {
 
                                 <Input
                                     {...field}
+                                    id="discord-invite-url-input"
                                     value={field.value || ""}
                                     placeholder="Enter a valid URL"
                                     className="w-full md:w-[48ch]"

@@ -116,8 +116,9 @@ const SearchPageLayout = ({ type }: Props) => {
                             });
                             navigate(urlPathname);
                         }}
+                        name="sort-by"
                     >
-                        <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted">
+                        <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted" aria-label="sort-by">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

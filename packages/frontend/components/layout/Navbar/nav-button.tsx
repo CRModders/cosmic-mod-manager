@@ -104,7 +104,7 @@ export const SignOutBtn = ({ className, disabled = false }: Props) => {
             url="#"
             activityIndicator={false}
             onClick={handleClick}
-            tabIndex={0}
+            tabIndex={disabled ? -1 : 0}
             className={cn("h-nav-item text-danger-foreground items-center justify-start", className)}
         >
             {loading ? <LoadingSpinner size="xs" /> : <LogOutIcon className="w-btn-icon h-btn-icon" />}

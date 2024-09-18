@@ -44,6 +44,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
                 <title>
                     {projectData?.name || ""} - Settings | {SITE_NAME_SHORT}
                 </title>
+                <meta name="description" content="Project settings" />
             </Helmet>
 
             <Panel className="pb-12">

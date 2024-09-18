@@ -57,12 +57,12 @@ const InviteMemberForm = ({ teamId, canInviteMembers, fetchProjectData }: Props)
                     name="userName"
                     render={({ field }) => (
                         <FormItem className="w-fit mb-0">
-                            <FormLabel>
+                            <FormLabel htmlFor="username-input">
                                 <FormMessage />
                             </FormLabel>
 
                             <div className="w-full flex flex-wrap gap-x-4 gap-y-1">
-                                <Input {...field} className="w-full md:w-[32ch]" placeholder="Username" />
+                                <Input {...field} className="w-full md:w-[32ch]" placeholder="Username" id="username-input" />
                                 <Button type="submit" disabled={!canInviteMembers}>
                                     <UserPlusIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.25} />
                                     Invite

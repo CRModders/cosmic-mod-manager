@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import Chip from "@/components/ui/chip";
 import { ButtonLink, VariantButtonLink } from "@/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import ReleaseChannelChip from "@/components/ui/release-channel-pill";
+import { ReleaseChannelBadge } from "@/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsList, formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive, timeSince } from "@/lib/utils";
@@ -44,11 +44,11 @@ import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import NotFoundPage from "../not-found";
+import InteractiveDownloadPopup from "./interactive-download";
 import SecondaryNav from "./secondary-nav";
 import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
-const InteractiveDownloadPopup = lazy(() => import("./interactive-download"));
 const JoinProjectBanner = lazy(() => import("./join-project-banner"));
 
 const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
@@ -210,7 +210,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                                     <div
                                         key={version.id}
-                                        className="w-full flex items-start justify-start p-1.5 pb-2 rounded cursor-pointer text-muted-foreground hover:bg-background/75 bg_hover_stagger gap-3"
+                                        className="w-full flex items-start justify-start p-2 pb-2.5 rounded cursor-pointer text-muted-foreground hover:bg-background/75 bg_hover_stagger gap-2 group/card"
                                         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                                             if (
                                                 // @ts-expect-error
@@ -227,25 +227,36 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                             }
                                         }}
                                     >
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <a
-                                                    href={version.primaryFile?.url}
-                                                    className={cn(
-                                                        "noClickRedirect flex-shrink-0",
-                                                        isVersionDetailsPage
-                                                            ? buttonVariants({ variant: "secondary", size: "icon" })
-                                                            : buttonVariants({ variant: "default", size: "icon" }),
-                                                    )}
-                                                    aria-label={`download ${version.title}`}
+                                        <div className="relative flex items-center justify-center min-w-10">
+                                            <ReleaseChannelBadge
+                                                releaseChannel={version.releaseChannel}
+                                                className=" group-hover/card:hidden group-focus-within/card:hidden"
+                                            />
+                                            <Tooltip>
+                                                <TooltipTrigger
+                                                    asChild
+                                                    className="hidden group-hover/card:flex group-focus-within/card:flex"
                                                 >
-                                                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                                                </a>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                {version?.primaryFile?.name} ({parseFileSize(version.primaryFile?.size || 0)})
-                                            </TooltipContent>
-                                        </Tooltip>
+                                                    <a
+                                                        href={version.primaryFile?.url}
+                                                        className={cn(
+                                                            "noClickRedirect flex-shrink-0",
+                                                            isVersionDetailsPage
+                                                                ? buttonVariants({ variant: "secondary", size: "icon" })
+                                                                : buttonVariants({ variant: "default", size: "icon" }),
+                                                            "!w-10 !h-10 rounded-full",
+                                                        )}
+                                                        aria-label={`download ${version.title}`}
+                                                        download={version.primaryFile?.name}
+                                                    >
+                                                        <DownloadIcon className="w-btn-icon h-btn-icon" strokeWidth={2.5} />
+                                                    </a>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="hidden group-hover/card:flex group-focus-within/card:flex">
+                                                    {version?.primaryFile?.name} ({parseFileSize(version.primaryFile?.size || 0)})
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
 
                                         <div className="flex w-fit h-full grow flex-col select-text gap-1">
                                             <Link
@@ -258,7 +269,6 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                 {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
                                                 {formatGameVersionsListString(version.gameVersions)}
                                             </p>
-                                            <ReleaseChannelChip releaseChannel={version.releaseChannel} />
                                         </div>
                                     </div>
                                 ))}
@@ -432,9 +442,7 @@ const PageHeader = ({
 
                 <div className="flex flex-col justify-center gap-4">
                     <div className="flex flex-wrap items-center gap-2">
-                        <Suspense>
-                            <InteractiveDownloadPopup />
-                        </Suspense>
+                        <InteractiveDownloadPopup />
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
                             <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
                         </Button>
@@ -522,7 +530,7 @@ export const ProjectMember = ({
 
 const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
     return (
-        <Link to={url} className="flex items-center justify-start" target="_blank" referrerPolicy="no-referrer">
+        <Link to={url} className="w-fit flex items-center justify-start" target="_blank" referrerPolicy="no-referrer">
             <Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-2 text-muted-foreground">
                 {icon}
                 {label}

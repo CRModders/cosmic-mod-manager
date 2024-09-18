@@ -7,13 +7,15 @@ import { Label } from "./label";
 const Checkbox = React.forwardRef<
     React.ElementRef<typeof CheckboxPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className, name, ...props }, ref) => (
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
             "neumorphic_shadow peer relative h-4 w-4 shrink-0 rounded-md bg-shallower-background/85 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsla(var(--accent-background-dark))] data-[state=checked]:text-background",
             className,
         )}
+        name={name}
+        aria-label={name}
         {...props}
     >
         <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>

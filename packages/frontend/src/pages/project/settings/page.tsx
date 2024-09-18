@@ -193,11 +193,11 @@ const GeneralSettingsPage = () => {
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-foreground font-bold">
+                                    <FormLabel className="text-foreground font-bold" htmlFor="project-name-input">
                                         Name
                                         <FormMessage />
                                     </FormLabel>
-                                    <Input {...field} className="md:w-[32ch]" />
+                                    <Input {...field} className="md:w-[32ch]" id="project-name-input" autoComplete="off" />
                                 </FormItem>
                             )}
                         />
@@ -207,12 +207,12 @@ const GeneralSettingsPage = () => {
                             name="slug"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-foreground font-bold">
+                                    <FormLabel className="text-foreground font-bold" htmlFor="project-slug-input">
                                         URL
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
-                                        <Input {...field} className="md:w-[32ch]" />
+                                        <Input {...field} className="md:w-[32ch]" id="project-slug-input" autoComplete="off" />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
                                             {window.location.origin}/{projectData.type[0]}/
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
@@ -227,11 +227,16 @@ const GeneralSettingsPage = () => {
                             name="summary"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-foreground font-bold">
+                                    <FormLabel className="text-foreground font-bold" htmlFor="project-summary-input">
                                         Summary
                                         <FormMessage />
                                     </FormLabel>
-                                    <Textarea {...field} className="resize-none md:w-[48ch] min-h-32" spellCheck="false" />
+                                    <Textarea
+                                        {...field}
+                                        className="resize-none md:w-[48ch] min-h-32"
+                                        spellCheck="false"
+                                        id="project-summary-input"
+                                    />
                                 </FormItem>
                             )}
                         />
@@ -251,8 +256,8 @@ const GeneralSettingsPage = () => {
                                         </span>
                                     </div>
 
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full">
+                                    <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Client-side">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -282,8 +287,8 @@ const GeneralSettingsPage = () => {
                                         </span>
                                     </div>
 
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full">
+                                    <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Server-side">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -361,8 +366,8 @@ const GeneralSettingsPage = () => {
                                         </div>
                                     </div>
 
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full">
+                                    <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Visibility">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>

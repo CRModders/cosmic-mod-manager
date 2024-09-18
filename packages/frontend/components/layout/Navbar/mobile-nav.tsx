@@ -98,7 +98,7 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                         )}
                         {!session?.id && (
                             <li className="w-full flex group">
-                                <Link to="/login" className="w-full">
+                                <Link to="/login" className="w-full" tabIndex={!isNavMenuOpen ? -1 : 0}>
                                     <LoginButton onClick={() => toggleNavMenu(false)} className="w-full" />
                                 </Link>
                             </li>

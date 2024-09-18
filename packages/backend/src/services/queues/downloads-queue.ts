@@ -16,6 +16,8 @@ const HISTORY_VALIDITY = 5400_000; // 1.5 hours
 const DOWNLOADS_QUEUE_KEY = "downloads-counter-queue";
 const DOWNLOADS_HISTORY_KEY = "downloads-history";
 
+const MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW = 3;
+
 let isQueueProcessing = false;
 const maxQueueSize = 100_000;
 
@@ -23,7 +25,8 @@ const getDownloadsHistory = async () => {
     const list: DownloadsQueueItem[] = [];
     const historyItems = await redis.lrange(DOWNLOADS_HISTORY_KEY, 0, -1);
 
-    for (const item of historyItems) {
+    for (let i = 0; i < historyItems.length; i++) {
+        const item = historyItems[i];
         try {
             list.push(JSON.parse(item) as DownloadsQueueItem);
         } catch {}
@@ -58,7 +61,8 @@ const getDownloadsCounterQueue = async (flushQueue = false) => {
     if (flushQueue === true) await flushDownloadsCounterQueue();
 
     const listItems: DownloadsQueueItem[] = [];
-    for (const item of list) {
+    for (let i = 0; i < list.length; i++) {
+        const item = list[i];
         try {
             listItems.push(JSON.parse(item));
         } catch {}
@@ -82,13 +86,32 @@ const processDownloads = async () => {
         const versionDownloadsMap = new Map<string, number>();
         const projectDownloadsMap = new Map<string, number>();
 
-        for (const queueItem of downloadsQueue) {
+        // History counters
+        const userDownloadsHistory = new Map<string, number>();
+        const ipDownloadsHistory = new Map<string, number>();
+        const userDownloadsHistoryMapKey = (userId: string, projectId: string) => `${userId}:${projectId}`;
+        const ipDownloadsHistoryMapKey = (ipAddr: string, projectId: string) => `${ipAddr}:${projectId}`;
+
+        for (let i = 0; i < downloadsQueue.length; i++) {
+            const queueItem = downloadsQueue[i];
             let isDuplicateDownload = false;
-            for (const historyItem of downloadsHistory) {
+
+            for (let j = 0; j < downloadsHistory.length; j++) {
+                const historyItem = downloadsHistory[j];
+                const userDownloads =
+                    userDownloadsHistory.get(userDownloadsHistoryMapKey(queueItem.userId || "", queueItem.projectId)) || 0;
+                const ipDownloads = ipDownloadsHistory.get(ipDownloadsHistoryMapKey(queueItem.ipAddress, queueItem.projectId)) || 0;
+
+                userDownloadsHistory.set(userDownloadsHistoryMapKey(historyItem.userId || "", historyItem.projectId), userDownloads + 1);
+                ipDownloadsHistory.set(ipDownloadsHistoryMapKey(historyItem.ipAddress, historyItem.projectId), ipDownloads + 1);
+
                 if (
                     historyItem.id !== queueItem.id &&
                     historyItem.projectId === queueItem.projectId &&
-                    (historyItem.ipAddress === queueItem.ipAddress || (!!historyItem.userId && historyItem.userId === queueItem.userId))
+                    (historyItem.ipAddress === queueItem.ipAddress || (!!historyItem.userId && historyItem.userId === queueItem.userId)) &&
+                    (historyItem.versionId === queueItem.versionId ||
+                        userDownloads >= MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW ||
+                        ipDownloads >= MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW)
                 ) {
                     isDuplicateDownload = true;
                     break;

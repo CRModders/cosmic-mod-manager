@@ -126,7 +126,7 @@ export const NavMenuLink = ({
             url={href}
             activeClassName="bg-shallower-background dark:bg-shallow-background"
             className={cn("w-full", className)}
-            tabIndex={tabIndex || isDisabled ? -1 : 0}
+            tabIndex={isDisabled ? -1 : tabIndex}
             onClick={() => {
                 if (closeNavMenuOnLinkClick === true) {
                     toggleNavMenu?.(false);

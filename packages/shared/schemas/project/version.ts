@@ -155,6 +155,7 @@ export const updateVersionFormSchema = z.object({
                         return false;
                     }
                 }
+
                 if (fileNamesList.length < MAX_OPTIONAL_FILES) return true;
                 return false;
             },
