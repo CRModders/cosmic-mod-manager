@@ -14,7 +14,7 @@ import {
 import { VariantButtonLink } from "@/components/ui/link";
 import { ReleaseChannelBadge } from "@/components/ui/release-channel-pill";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn, getProjectPagePathname, getProjectVersionPagePathname, isCurrLinkActive } from "@/lib/utils";
+import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -123,7 +123,7 @@ const InteractiveDownloadPopup = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="flex flex-row gap-3 items-center justify-start pb-3">
-                    <ImgWrapper src={projectData.icon || ""} alt={projectData.name} className="h-9 rounded" />
+                    <ImgWrapper src={imageUrl(projectData.icon)} alt={projectData.name} className="h-9 rounded" />
                     <DialogTitle>Download {projectData.name}</DialogTitle>
                     <VisuallyHidden>
                         <DialogDescription>Downlad iris</DialogDescription>

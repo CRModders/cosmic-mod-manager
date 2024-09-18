@@ -6,8 +6,7 @@ import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { type AuthActionIntent, AuthProviders } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
-// @ts-ignore
-import UAParser from "ua-parser-js";
+import { UAParser } from "ua-parser-js";
 import { getDiscordUserProfileData } from "./discord";
 import { getGithubUserProfileData } from "./github";
 import { getGitlabUserProfileData } from "./gitlab";
@@ -128,7 +127,7 @@ export const getUserDeviceDetails = async (ctx: Context) => {
     // Gettings Geo data from the IP address
     if (ipAddr) {
         try {
-            const res = await fetch(`https://ipinfo.io/${ipAddr}?token=${process.env.IP_TO_GEO_API_KEY}`);
+            const res = await fetch(`https://ipinfo.io/${ipAddr}?token=${process.env.IP2GEO_API_KEY}`);
             const resJsonData = await res.json();
 
             if (resJsonData?.city || resJsonData?.region) {
