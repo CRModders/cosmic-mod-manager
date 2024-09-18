@@ -7,3 +7,10 @@ export const isVersionPrimaryFileValid = (fileType: FileType | null) => {
 
     return VALID_PRIMARY_FILE_TYPES.includes(fileType);
 };
+
+export const isImageFile = (fileType: FileType | null) => {
+    if (!fileType) return false;
+    const validImageTypes = [FileType.JPEG, FileType.PNG, FileType.WEBP];
+
+    return validImageTypes.includes(fileType);
+};

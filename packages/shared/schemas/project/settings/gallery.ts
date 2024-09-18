@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { MAX_PROJECT_GALLERY_IMAGE_SIZE } from "../../../config/forms";
 import { getFileType } from "../../../lib/utils/convertors";
-import { FileType } from "../../../types";
+import { isImageFile } from "../../../lib/validation";
 
 export const addNewGalleryImageFormSchema = z.object({
     image: z
@@ -19,14 +19,14 @@ export const addNewGalleryImageFormSchema = z.object({
             async (file) => {
                 if (file instanceof File) {
                     const type = await getFileType(file);
-                    if (!type || ![FileType.JPEG, FileType.PNG, FileType.WEBP].includes(type)) {
+                    if (!type || !isImageFile(type)) {
                         return false;
                     }
                 }
 
                 return true;
             },
-            { message: "Invalid file type! Only jpeg, webp and png files allowed" },
+            { message: "Invalid file type! Only image files allowed" },
         ),
 
     title: z.string().min(2).max(32),

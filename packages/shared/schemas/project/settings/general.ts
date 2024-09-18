@@ -2,7 +2,8 @@ import { z } from "zod";
 import { MAX_PROJECT_ICON_SIZE, MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "../../../config/forms";
 import { createURLSafeSlug } from "../../../lib/utils";
 import { getFileType } from "../../../lib/utils/convertors";
-import { FileType, ProjectSupport, ProjectVisibility } from "../../../types";
+import { isImageFile } from "../../../lib/validation";
+import { ProjectSupport, ProjectVisibility } from "../../../types";
 
 export const generalProjectSettingsFormSchema = z.object({
     icon: z
@@ -20,7 +21,7 @@ export const generalProjectSettingsFormSchema = z.object({
             async (file) => {
                 if (file instanceof File) {
                     const type = await getFileType(file);
-                    if (!type || ![FileType.PNG, FileType.JPEG, FileType.WEBP].includes(type)) {
+                    if (!type || !isImageFile(type)) {
                         return false;
                     }
                 }

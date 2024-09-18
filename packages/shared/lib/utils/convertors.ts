@@ -80,6 +80,32 @@ export const getProjectVisibilityFromString = (visibility: string) => {
     }
 };
 
+export const getFileTypeFromFileExtension = (fileName: string) => {
+    const fileExtension = fileName.split(".").pop();
+    if (!fileExtension) return null;
+
+    switch (fileExtension.toLowerCase()) {
+        case "jpg":
+        case "jpeg":
+            return FileType.JPEG;
+
+        case "webp":
+            return FileType.WEBP;
+
+        case "png":
+            return FileType.PNG;
+
+        case "jar":
+            return FileType.JAR;
+
+        case "zip":
+            return FileType.ZIP;
+
+        default:
+            return null;
+    }
+};
+
 export const getFileTypeFromMimeStr = (mime: string) => {
     switch (mime) {
         case "image/jpeg":
@@ -110,7 +136,8 @@ export const getFileTypeFromMimeStr = (mime: string) => {
 };
 
 export const getFileType = async (file: File) => {
-    const mimeType = getFileTypeFromMimeStr(file.type);
+    let mimeType = getFileTypeFromMimeStr(file.type);
+    if (!mimeType) mimeType = getFileTypeFromFileExtension(file.name);
     if (!mimeType) return null;
 
     const fileSignatureType = await getTypeOfFile(file);
