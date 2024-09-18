@@ -1,5 +1,5 @@
 import type { ContextUserSession } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
@@ -60,7 +60,7 @@ export const linkAuthProviderHandler = async (
         },
     });
     if (existingSameProvider?.id) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return defaultInvalidReqResponse(ctx);
     }
 
@@ -102,7 +102,7 @@ export const unlinkAuthProvider = async (ctx: Context, userSession: ContextUserS
     } catch (err) {}
 
     if (!deletedAuthAccount || deletedAuthAccount < 1) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return defaultInvalidReqResponse(ctx);
     }
 

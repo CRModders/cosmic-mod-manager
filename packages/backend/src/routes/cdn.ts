@@ -1,5 +1,5 @@
 import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "@/controllers/cdn";
-import { RateLimiterMiddleware } from "@/middleware/rate-limiter";
+import { apiRateLimiterMiddleware, cdn_assetsRateLimiterMiddleware, cdn_large_filesRateLimiterMiddleware } from "@/middleware/rate-limiter";
 import { AuthenticationMiddleware } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -7,7 +7,7 @@ import { Hono } from "hono";
 
 const cdnRouter = new Hono();
 
-cdnRouter.use("*", RateLimiterMiddleware);
+cdnRouter.use("*", cdn_assetsRateLimiterMiddleware);
 cdnRouter.use("*", AuthenticationMiddleware);
 
 cdnRouter.get("/data/:projectSlug/icon", async (ctx) => {
@@ -36,7 +36,7 @@ cdnRouter.get("/data/:projectSlug/gallery/:image", async (ctx) => {
     }
 });
 
-cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", async (ctx) => {
+cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", cdn_large_filesRateLimiterMiddleware, async (ctx) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug, fileName } = ctx.req.param();

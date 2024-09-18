@@ -1,5 +1,5 @@
 import type { ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
 import { getFile } from "@/services/storage";
@@ -56,7 +56,7 @@ export const serveVersionFile = async (
 
     const targetVersion = projectData?.versions?.[0];
     if (!projectData?.id || !targetVersion?.files?.[0]?.fileId) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.status(httpCode("not_found"));
     }
 
@@ -94,7 +94,11 @@ export const serveVersionFile = async (
     }
 
     if (typeof file === "string") return ctx.redirect(file);
-    return new Response(file, { status: httpCode("ok") });
+
+    const response = new Response(file, { status: httpCode("ok") });
+    response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    response.headers.set("Content-Type", file.type);
+    return response;
 };
 
 export const serveProjectIconFile = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
@@ -116,7 +120,9 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
 
     // Respond accordingly
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
-    return new Response(iconFile);
+    const response = new Response(iconFile);
+    response.headers.set("Cache-Control", "public, max-age=360");
+    return response;
 };
 
 export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, userSession: ContextUserSession | undefined) => {
@@ -146,5 +152,8 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
     if (!imageFile) return ctx.json({}, httpCode("not_found"));
 
     if (typeof imageFile === "string") return ctx.redirect(imageFile);
-    return new Response(imageFile);
+
+    const response = new Response(imageFile);
+    response.headers.set("Cache-Control", "public, max-age=31536000, immutable"); // 1 year
+    return response;
 };

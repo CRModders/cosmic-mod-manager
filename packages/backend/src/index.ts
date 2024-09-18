@@ -7,9 +7,12 @@ import router from "./routes";
 import cdnRouter from "./routes/cdn";
 import { queueDownloadsCounterQueueProcessing } from "./services/queues/downloads-queue";
 import queueSearchDbSync from "./services/queues/searchdb-sync";
+import { ddosPreventionRateLimiterMiddleware, searchApiRateLimiterMiddleware } from "./middleware/rate-limiter";
+import searchRouter from "./routes/search";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 
+app.use(ddosPreventionRateLimiterMiddleware);
 app.use(logger());
 app.use(
     "*",
@@ -22,6 +25,8 @@ app.use(
 app.get("/favicon.ico", async (ctx: Context) => {
     return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
 });
+
+app.route("/api/search", searchRouter);
 app.route("/api", router);
 app.route("/cdn", cdnRouter);
 

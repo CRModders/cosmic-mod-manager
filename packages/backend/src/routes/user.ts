@@ -18,7 +18,7 @@ import {
     getUserProfileData,
     updateUserProfile,
 } from "@/controllers/user/profile";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -216,7 +216,7 @@ userRouter.post("/delete-account", LoginProtectedRoute, async (ctx: Context) => 
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) {
-            await addToUsedRateLimit(ctx, USER_DELETE_ROUTE_ACCESS_ATTEMPT_CHARGE);
+            await addToUsedApiRateLimit(ctx, USER_DELETE_ROUTE_ACCESS_ATTEMPT_CHARGE);
             return defaultInvalidReqResponse(ctx);
         }
 
@@ -231,7 +231,7 @@ userRouter.post("/cancel-account-deletion", async (ctx: Context) => {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
-            await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
             return defaultInvalidReqResponse(ctx);
         }
 
@@ -246,7 +246,7 @@ userRouter.post("/confirm-account-deletion", async (ctx: Context) => {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
-            await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
             return defaultInvalidReqResponse(ctx);
         }
 

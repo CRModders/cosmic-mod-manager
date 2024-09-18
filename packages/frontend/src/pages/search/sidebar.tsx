@@ -13,12 +13,12 @@ import {
     loaderFilterParamNamespace,
 } from "@shared/config/search";
 import { CapitalizeAndFormatString, getValidProjectCategories } from "@shared/lib/utils";
-import { type ProjectType, TagHeaderTypes } from "@shared/types";
+import { ProjectType, TagHeaderTypes } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
-import { getAllLoaderFilters } from "./utils";
+import { getAllLoaderFilters } from "@shared/lib/utils";
 
 interface Props {
     type: ProjectType;
@@ -169,21 +169,23 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                 }}
             />
 
-            <FilterCategory
-                items={environmentFilterOptions}
-                selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
-                label={environmentFilterLabel}
-                onCheckedChange={(env) => {
-                    const newUrl = updateSearchParam({
-                        key: environmentFilterParamNamespace,
-                        value: env,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
+            {[ProjectType.MOD, ProjectType.MODPACK].includes(type) && (
+                <FilterCategory
+                    items={environmentFilterOptions}
+                    selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
+                    label={environmentFilterLabel}
+                    onCheckedChange={(env) => {
+                        const newUrl = updateSearchParam({
+                            key: environmentFilterParamNamespace,
+                            value: env,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
+            )}
 
             <FilterCategory
                 items={categoryFilterOptions}

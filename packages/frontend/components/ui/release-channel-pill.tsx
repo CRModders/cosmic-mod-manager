@@ -18,7 +18,7 @@ const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props
             )}
         >
             <div className="w-2 h-2 rounded-full bg-current" />
-            <span className={cn("text-current leading-none font-semibold", labelClassName)}>
+            <span className={cn("text-muted-foreground/90 leading-none font-semibold", labelClassName)}>
                 {CapitalizeAndFormatString(releaseChannel)}
             </span>
         </div>

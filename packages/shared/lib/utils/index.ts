@@ -1,5 +1,5 @@
-import { type CategoryType, categories } from "../../config/project";
-import type { TagHeaderTypes } from "../../types";
+import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
+import type { ProjectType, TagHeaderTypes } from "../../types";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -137,6 +137,18 @@ export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
     }
 
     return categoriesData;
+};
+
+export const getAllLoaderFilters = (projectType: ProjectType) => {
+    const allLoadersList = new Set<Loader>();
+
+    for (const loader of loaders) {
+        if (loader.supportedProjectTypes.includes(projectType) && loader?.metadata?.visibleInCategoriesList !== false) {
+            allLoadersList.add(loader);
+        }
+    }
+
+    return Array.from(allLoadersList);
 };
 
 export const isNumber = (num: number | string) => {

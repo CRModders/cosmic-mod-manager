@@ -259,6 +259,10 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                 content: <span className="leading-none"> {formatGameVersionsListString(versionData.gameVersions)} </span>,
                             },
                             {
+                                label: "Downloads",
+                                content: <span className="leading-none"> {versionData.downloads} </span>,
+                            },
+                            {
                                 label: "Publication date",
                                 content: <span className="leading-none"> {formatDate(new Date(versionData.datePublished))} </span>,
                             },

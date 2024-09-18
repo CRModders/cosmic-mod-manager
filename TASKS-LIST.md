@@ -59,14 +59,14 @@
 
 - [-] Add transfer ownership option
 - [-] Update the overview page of dashboard to show real stats
-- [-] Fix session location not being shown
+- [x] Fix session location not being shown
 - [-] Add notifications
-- [-] Add a separate rate limiter for the CDN
+- [x] Add a separate rate limiter for the CDN and search API
 
 - [-] Fix project deletion
 - [-] Fix user deletion
 
-- [-] Modify downloads queue to count valid downloads instantly by save the download details in redis cache for an interval for validations of other downloads
+- [x] Modify downloads queue to count valid downloads instantly but save the download details in redis cache for an interval for validations of other downloads
 - [-] Add a proper profile edit page
 
 <!-- Later stuff -->

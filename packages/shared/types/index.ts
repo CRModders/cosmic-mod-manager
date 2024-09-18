@@ -112,14 +112,6 @@ export enum OrganisationPermission {
     EDIT_MEMBER_DEFAULT_PERMISSIONS = "edit_member_default_permissions",
 }
 
-export enum LoaderSupportedField {
-    CLIENT_AND_SERVER = "client_and_server",
-    SERVER_ONLY = "server_only",
-    CLIENT_ONLY = "client_only",
-    SINGLEPLAYER = "singleplayer",
-    GAME_VERSIONS = "game_versions",
-}
-
 export type FileObjectType = {
     name: string;
     size: number;

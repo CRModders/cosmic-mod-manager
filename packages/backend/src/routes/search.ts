@@ -1,5 +1,7 @@
 import { searchProjects } from "@/controllers/search";
-import { defaultServerErrorResponse } from "@/utils/http";
+import { searchApiRateLimiterMiddleware } from "@/middleware/rate-limiter";
+import httpCode, { defaultServerErrorResponse } from "@/utils/http";
+import GAME_VERSIONS from "@shared/config/game-versions";
 import {
     categoryFilterParamNamespace,
     defaultSortBy,
@@ -9,12 +11,13 @@ import {
     pageOffsetParamNamespace,
     sortByParamNamespace,
 } from "@shared/config/search";
-import { isNumber } from "@shared/lib/utils";
+import { getAllLoaderFilters, getValidProjectCategories, isNumber } from "@shared/lib/utils";
 import { getProjectTypeFromString } from "@shared/lib/utils/convertors";
-import type { SearchResultSortMethod } from "@shared/types";
+import { SearchResultSortMethod, TagHeaderTypes } from "@shared/types";
 import { type Context, Hono } from "hono";
 
 const searchRouter = new Hono();
+searchRouter.use("*", searchApiRateLimiterMiddleware);
 
 searchRouter.get("/", async (ctx: Context) => {
     try {
@@ -42,6 +45,115 @@ searchRouter.get("/", async (ctx: Context) => {
             page: pageNumber,
             type: type,
         });
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/sort-by", async (ctx: Context) => {
+    try {
+        const list = [
+            SearchResultSortMethod.RELEVANCE,
+            SearchResultSortMethod.DOWNLOADS,
+            SearchResultSortMethod.FOLLOW_COUNT,
+            SearchResultSortMethod.RECENTLY_UPDATED,
+            SearchResultSortMethod.RECENTLY_PUBLISHED,
+        ];
+        return ctx.json({ success: true, queryKey: sortByParamNamespace, default: defaultSortBy, list: list }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/loaders", async (ctx: Context) => {
+    try {
+        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        if (!projectType) {
+            return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
+        }
+
+        const loaderFilters = getAllLoaderFilters(projectType);
+        return ctx.json({ success: true, queryKey: loaderFilterParamNamespace, list: loaderFilters }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/game-versions", async (ctx: Context) => {
+    try {
+        return ctx.json({ success: true, queryKey: gameVersionFilterParamNamespace, list: GAME_VERSIONS }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/categories", async (ctx: Context) => {
+    try {
+        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        if (!projectType) {
+            return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
+        }
+
+        const categories = getValidProjectCategories([projectType], TagHeaderTypes.CATEGORY).map((category) => category.name);
+        return ctx.json({ success: true, queryKey: categoryFilterParamNamespace, list: categories }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/features", async (ctx: Context) => {
+    try {
+        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        if (!projectType) {
+            return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
+        }
+
+        const categories = getValidProjectCategories([projectType], TagHeaderTypes.FEATURE).map((category) => category.name);
+        return ctx.json({ success: true, queryKey: categoryFilterParamNamespace, list: categories }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/resolutions", async (ctx: Context) => {
+    try {
+        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        if (!projectType) {
+            return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
+        }
+
+        const categories = getValidProjectCategories([projectType], TagHeaderTypes.RESOLUTION).map((category) => category.name);
+        return ctx.json({ success: true, queryKey: categoryFilterParamNamespace, list: categories }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/performance-impact", async (ctx: Context) => {
+    try {
+        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        if (!projectType) {
+            return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
+        }
+
+        const categories = getValidProjectCategories([projectType], TagHeaderTypes.PERFORMANCE_IMPACT).map((category) => category.name);
+        return ctx.json({ success: true, queryKey: categoryFilterParamNamespace, list: categories }, httpCode("ok"));
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+searchRouter.get("/filters/license", async (ctx: Context) => {
+    try {
+        return ctx.json({ success: true, queryKey: licenseFilterParamNamespace, list: ["oss"] }, httpCode("ok"));
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

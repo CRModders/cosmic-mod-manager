@@ -19,7 +19,6 @@ const DOWNLOADS_HISTORY_KEY = "downloads-history";
 const MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW = 3;
 
 let isQueueProcessing = false;
-const maxQueueSize = 100_000;
 
 const getDownloadsHistory = async () => {
     const list: DownloadsQueueItem[] = [];
@@ -174,11 +173,6 @@ export const queueDownloadsCounterQueueProcessing = async () => {
 
 export const addToDownloadsQueue = async (item: Omit<DownloadsQueueItem, "id">) => {
     await redis.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: nanoid(16) }));
-    const queueLength = await getDownloadsCounterQueueLength();
-
-    if (queueLength >= maxQueueSize) {
-        await processDownloads();
-    }
 };
 
 //

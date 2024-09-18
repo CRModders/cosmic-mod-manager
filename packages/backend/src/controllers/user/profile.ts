@@ -1,5 +1,5 @@
 import type { ContextUserSession } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { getUserSessionFromCtx, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
@@ -66,7 +66,7 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
         });
 
         if (!authAccount?.id) {
-            await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
             return ctx.json({ success: false, message: "Invalid profile provider" }, httpCode("bad_request"));
         }
 

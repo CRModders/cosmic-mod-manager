@@ -1,5 +1,5 @@
 import type { ContextUserSession } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import {
     deleteUserCookie,
@@ -148,13 +148,13 @@ export const removeAccountPassword = async (
     formData: z.infer<typeof removeAccountPasswordFormSchema>,
 ) => {
     if (!userSession?.password) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false }, httpCode("bad_request"));
     }
 
     const isCorrectPassword = await matchPassword(formData.password, userSession.password);
     if (!isCorrectPassword) {
-        await addToUsedRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
         return ctx.json({ success: false, message: "Incorrect password" }, httpCode("bad_request"));
     }
 
@@ -178,7 +178,7 @@ export const sendAccountPasswordChangeLink = async (ctx: Context, formData: z.in
     });
 
     if (!targetUser?.id) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json(
             {
                 success: true,
@@ -221,7 +221,7 @@ export const cancelSettingNewPassword = async (ctx: Context, code: string) => {
     });
 
     if (!confirmationEmail?.id) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return defaultInvalidReqResponse(ctx);
     }
 
@@ -246,7 +246,7 @@ export const setNewPassword = async (ctx: Context, code: string, formData: z.inf
     });
 
     if (!confirmationEmail?.id) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return defaultInvalidReqResponse(ctx);
     }
 

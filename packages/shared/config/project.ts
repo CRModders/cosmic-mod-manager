@@ -1,4 +1,4 @@
-import { AuthProviders, LoaderSupportedField, ProjectPermission, ProjectType, TagHeaderTypes } from "../types";
+import { AuthProviders, ProjectPermission, ProjectType, TagHeaderTypes } from "../types";
 
 export const authProvidersList = [
     AuthProviders.GITHUB,
@@ -33,7 +33,6 @@ export const ProjectPermissionsList = [
 export type Loader = {
     name: string;
     supportedProjectTypes: ProjectType[];
-    supportedFields: LoaderSupportedField[];
     metadata: {
         visibleInCategoriesList?: boolean;
         accent?: {
@@ -49,13 +48,6 @@ export const loaders: Loader[] = [
     {
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD],
-        supportedFields: [
-            LoaderSupportedField.CLIENT_AND_SERVER,
-            LoaderSupportedField.SERVER_ONLY,
-            LoaderSupportedField.CLIENT_ONLY,
-            LoaderSupportedField.SINGLEPLAYER,
-            LoaderSupportedField.GAME_VERSIONS,
-        ],
         metadata: {
             accent: {
                 foreground: {
@@ -68,13 +60,6 @@ export const loaders: Loader[] = [
     {
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD],
-        supportedFields: [
-            LoaderSupportedField.CLIENT_AND_SERVER,
-            LoaderSupportedField.SERVER_ONLY,
-            LoaderSupportedField.CLIENT_ONLY,
-            LoaderSupportedField.SINGLEPLAYER,
-            LoaderSupportedField.GAME_VERSIONS,
-        ],
         metadata: {
             accent: {
                 foreground: {
@@ -87,7 +72,6 @@ export const loaders: Loader[] = [
     {
         name: "datapack",
         supportedProjectTypes: [ProjectType.DATAPACK],
-        supportedFields: [LoaderSupportedField.GAME_VERSIONS],
         metadata: {
             visibleInCategoriesList: false,
         },
@@ -95,7 +79,6 @@ export const loaders: Loader[] = [
     {
         name: "resource_pack",
         supportedProjectTypes: [ProjectType.RESOURCE_PACK],
-        supportedFields: [LoaderSupportedField.GAME_VERSIONS],
         metadata: {
             visibleInCategoriesList: false,
         },

@@ -249,7 +249,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                         aria-label={`download ${version.title}`}
                                                         download={version.primaryFile?.name}
                                                     >
-                                                        <DownloadIcon className="w-btn-icon h-btn-icon" strokeWidth={2.5} />
+                                                        <DownloadIcon className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.5} />
                                                     </a>
                                                 </TooltipTrigger>
                                                 <TooltipContent className="hidden group-hover/card:flex group-focus-within/card:flex">
@@ -517,7 +517,9 @@ export const ProjectMember = ({
             />
             <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-2">
-                    <span className="font-semibold text-sm text-foreground">{userName}</span>
+                    <span className="font-semibold text-sm text-foreground" title={userName}>
+                        {userName}
+                    </span>
                     {isOwner === true && (
                         <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
                     )}

@@ -1,4 +1,4 @@
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { matchPassword, setUserCookie } from "@/utils";
 import httpCode from "@/utils/http";
@@ -20,13 +20,13 @@ const credentialSignIn = async (ctx: Context, formData: z.infer<typeof LoginForm
     });
 
     if (!user?.id || !user?.password) {
-        await addToUsedRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
         return ctx.json({ success: false, message: wrongCredsMsg }, httpCode("bad_request"));
     }
     const isCorrectPassword = await matchPassword(formData.password, user.password);
 
     if (!isCorrectPassword) {
-        await addToUsedRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE);
         return ctx.json({ success: false, message: wrongCredsMsg }, httpCode("bad_request"));
     }
 

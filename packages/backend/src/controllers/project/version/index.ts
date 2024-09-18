@@ -1,5 +1,5 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { aggregateProjectLoaderNames, aggregateVersions, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
@@ -68,7 +68,7 @@ export const createNewVersion = async (
     formData: z.infer<typeof newVersionFormSchema>,
 ) => {
     if (!formData?.primaryFile?.name || !(formData.primaryFile instanceof File)) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Primary version file is required" });
     }
 
@@ -113,14 +113,14 @@ export const createNewVersion = async (
 
     // Check if the user has permission to upload a version
     if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
-        await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
     // Check if the uploaded file is of valid type
     const primaryFileType = await getFileType(formData.primaryFile);
     if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType)) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });
     }
 
@@ -283,7 +283,7 @@ export const updateVersionData = async (
 
     // Check if the user has permission to edit a version
     if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
-        await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 
@@ -819,7 +819,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
 
     // Check if the user has permission to upload a version
     if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.DELETE_VERSION)) {
-        await addToUsedRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
+        await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 

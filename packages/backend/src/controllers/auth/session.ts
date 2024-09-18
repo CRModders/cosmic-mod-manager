@@ -1,5 +1,5 @@
 import type { ContextUserSession } from "@/../types";
-import { addToUsedRateLimit } from "@/middleware/rate-limiter";
+import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { deleteUserCookie } from "@/utils";
 import { sendNewSigninAlertEmail } from "@/utils/email";
@@ -62,38 +62,17 @@ export const createNewUserSession = async ({
         });
 
         if (userData?.newSignInAlerts === true) {
-            const allPreviousSessions = await prisma.session.findMany({
-                where: {
-                    userId: userId,
-                    id: {
-                        not: newSession.id,
-                    },
-                },
+            sendNewSigninAlertEmail({
+                fullName: user.name || "",
+                receiverEmail: user.email || "",
+                region: deviceDetails.city || "",
+                country: deviceDetails.country || "",
+                ip: deviceDetails.ipAddr || "",
+                browserName: deviceDetails.browserName || "",
+                osName: deviceDetails.os.name || "",
+                authProviderName: providerName || "",
+                revokeAccessCode: newSession.revokeAccessCode,
             });
-
-            const currIp = deviceDetails.ipAddr;
-            let isSignInFromUnknownLocation = true;
-
-            for (const prevSession of allPreviousSessions) {
-                if (prevSession.ip === currIp) {
-                    isSignInFromUnknownLocation = false;
-                    break;
-                }
-            }
-
-            if (isSignInFromUnknownLocation === true) {
-                sendNewSigninAlertEmail({
-                    fullName: user.name || "",
-                    receiverEmail: user.email || "",
-                    region: deviceDetails.city || "",
-                    country: deviceDetails.country || "",
-                    ip: deviceDetails.ipAddr || "",
-                    browserName: deviceDetails.browserName || "",
-                    osName: deviceDetails.os.name || "",
-                    authProviderName: providerName || "",
-                    revokeAccessCode: newSession.revokeAccessCode,
-                });
-            }
         }
     }
 
@@ -199,7 +178,7 @@ export const revokeSessionFromAccessCode = async (ctx: Context, code: string) =>
     } catch (err) {}
 
     if (!session?.id) {
-        await addToUsedRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+        await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid access code" }, httpCode("bad_request"));
     }
     return ctx.json({ success: true, message: "Successfully revoked the session access" }, httpCode("ok"));
