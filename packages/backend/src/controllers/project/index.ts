@@ -1,10 +1,10 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 
-import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
+import { deleteProjectGalleryFile, getFileUrl, saveProjectGalleryFile } from "@/services/storage";
 import { doesMemberHasAccess, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
-import { projectIconUrl } from "@/utils/urls";
+import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
@@ -241,15 +241,27 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 serverSide: project.serverSide as ProjectSupport,
                 loaders: project.loaders,
                 gameVersions: rsort(project.gameVersions || []),
-                gallery: project.gallery.map((galleryItem) => ({
-                    id: galleryItem.id,
-                    name: galleryItem.name,
-                    description: galleryItem.description,
-                    image: filesMap.get(galleryItem.imageFileId)?.url || "",
-                    featured: galleryItem.featured,
-                    dateCreated: galleryItem.dateCreated,
-                    orderIndex: galleryItem.orderIndex,
-                })),
+                gallery: project.gallery
+                    .map((galleryItem) => {
+                        const galleryFile = filesMap.get(galleryItem.imageFileId);
+                        if (!galleryFile) return null;
+                        const fileUrl = projectGalleryFileUrl(
+                            project.slug,
+                            getFileUrl(galleryFile.storageService as FILE_STORAGE_SERVICE, galleryFile.url, galleryFile.name) || "",
+                        );
+                        if (!fileUrl) return null;
+
+                        return {
+                            id: galleryItem.id,
+                            name: galleryItem.name,
+                            description: galleryItem.description,
+                            image: fileUrl,
+                            featured: galleryItem.featured,
+                            dateCreated: galleryItem.dateCreated,
+                            orderIndex: galleryItem.orderIndex,
+                        };
+                    })
+                    .filter((item) => item !== null),
                 members: project.team.members.map((member) => ({
                     id: member.id,
                     userId: member.user.id,
@@ -337,7 +349,7 @@ export const addNewGalleryImage = async (
 
     const fileType = await getFileType(formData.image);
     const fileName = `${nanoid(STRING_ID_LENGTH)}.${fileType}`;
-    const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.IMGBB, project.id, formData.image, fileName);
+    const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.LOCAL, project.id, formData.image, fileName);
 
     if (!fileUrl) return ctx.json({ success: false, message: "Failed to upload the image" }, httpCode("bad_request"));
 
@@ -349,7 +361,7 @@ export const addNewGalleryImage = async (
             size: formData.image.size,
             type: (await getFileType(formData.image)) || "",
             url: fileUrl || "",
-            storageService: FILE_STORAGE_SERVICE.IMGBB,
+            storageService: FILE_STORAGE_SERVICE.LOCAL,
         },
     });
 

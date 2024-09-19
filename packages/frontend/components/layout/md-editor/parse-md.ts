@@ -76,8 +76,6 @@ export const configuredXss = new FilterXSS({
                 }
 
                 const allowedHostnames = [
-                    "imgur.com",
-                    "i.imgur.com",
                     "github.com",
                     "raw.githubusercontent.com",
                     "img.shields.io",
@@ -85,6 +83,7 @@ export const configuredXss = new FilterXSS({
                     "cf.way2muchnoise.eu",
                     "bstats.org",
                     "crmm.tech",
+                    "crmm-cdn.global.ssl.fastly.net",
                     "wsrv.nl",
                     "localhost",
                 ];

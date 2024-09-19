@@ -1,5 +1,5 @@
 import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "@/controllers/cdn";
-import { apiRateLimiterMiddleware, cdn_assetsRateLimiterMiddleware, cdn_large_filesRateLimiterMiddleware } from "@/middleware/rate-limiter";
+import { cdn_assetsRateLimiterMiddleware, cdn_large_filesRateLimiterMiddleware } from "@/middleware/rate-limiter";
 import { AuthenticationMiddleware } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";

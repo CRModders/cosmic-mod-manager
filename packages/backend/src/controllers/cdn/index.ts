@@ -2,7 +2,7 @@ import type { ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
-import { getFile } from "@/services/storage";
+import { getFile, getProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
@@ -148,7 +148,7 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
 
     if (!dbFile) return ctx.json({}, httpCode("not_found"));
 
-    const imageFile = await getFile(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.name);
+    const imageFile = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, dbFile.name);
     if (!imageFile) return ctx.json({}, httpCode("not_found"));
 
     if (typeof imageFile === "string") return ctx.redirect(imageFile);

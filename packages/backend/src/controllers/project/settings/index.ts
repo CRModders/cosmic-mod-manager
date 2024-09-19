@@ -1,7 +1,7 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 import { deleteProjectFile, saveProjectFile } from "@/services/storage";
-import { doesMemberHasAccess, inferProjectType } from "@/utils";
+import { doesMemberHasAccess, generateRandomString, inferProjectType } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
@@ -80,9 +80,9 @@ export const updateProject = async (
 
     if (formData.icon instanceof File) {
         const fileExtension = await getFileType(formData.icon);
-        const fileName = `${nanoid(16)}.${fileExtension}`;
+        const fileName = `${generateRandomString(16)}.${fileExtension}`;
 
-        const newFile = await saveProjectFile(FILE_STORAGE_SERVICE.IMGBB, project.id, formData.icon, fileName);
+        const newFile = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, formData.icon, fileName);
         if (newFile) {
             const newDbFile = await prisma.file.create({
                 data: {
@@ -90,7 +90,7 @@ export const updateProject = async (
                     name: fileName,
                     size: formData.icon.size,
                     type: (await getFileType(formData.icon)) || "",
-                    storageService: FILE_STORAGE_SERVICE.IMGBB,
+                    storageService: FILE_STORAGE_SERVICE.LOCAL,
                     url: newFile,
                 },
             });

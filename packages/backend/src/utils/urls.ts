@@ -6,17 +6,24 @@ if (CDN_SERVER_URL === undefined) {
 
 const CDN_PREFIX = `${CDN_SERVER_URL}/cdn/data`;
 
+export const cdnUrl = (path: string) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+
+    return `${CDN_PREFIX}/${path}`;
+};
+
 export const projectIconUrl = (slug: string, icon: string) => {
     if (!icon) return null;
-    if (icon.startsWith("http")) return icon;
-
-    return `${CDN_PREFIX}/${slug}/icon`;
+    return cdnUrl(`${slug}/icon`);
 };
 
 export const projectGalleryFileUrl = (slug: string, galleryFile: string) => {
-    return `${CDN_PREFIX}/${slug}/gallery/${galleryFile}`;
+    if (galleryFile.startsWith("http")) return galleryFile;
+    return cdnUrl(`${slug}/gallery/${encodeURIComponent(galleryFile)}`);
 };
 
 export const versionFileUrl = (projectSlug: string, versionSlug: string, fileName: string) => {
-    return `${CDN_PREFIX}/${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`;
+    if (fileName.startsWith("http")) return fileName;
+    return cdnUrl(`${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`);
 };
