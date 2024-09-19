@@ -10,11 +10,11 @@ export const authProvidersList = [
 
 export const projectTypes = [
     ProjectType.MOD,
-    ProjectType.PLUGIN,
-    ProjectType.MODPACK,
     ProjectType.DATAPACK,
     ProjectType.RESOURCE_PACK,
+    ProjectType.MODPACK,
     ProjectType.SHADER,
+    ProjectType.PLUGIN,
 ];
 
 export const ProjectPermissionsList = [

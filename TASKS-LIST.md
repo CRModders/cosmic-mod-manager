@@ -55,8 +55,8 @@
 - [x] Add search page
 
 - [x] Add CDN for caching files
-- [-] Add backups for user uploaded files
 - [-] Add database backups
+- [-] Add backups for user uploaded files
 
 - [-] Add transfer ownership option
 - [-] Update the overview page of dashboard to show real stats

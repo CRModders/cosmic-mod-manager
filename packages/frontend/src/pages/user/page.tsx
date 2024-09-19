@@ -9,7 +9,11 @@ const UserProfilePage = () => {
     const { projectsList } = useContext(userProfileContext);
 
     if (!projectsList) return null;
-    const filteredProjects = projectType ? projectsList?.filter((project) => project.type.includes(projectType)) : projectsList;
+
+    const formattedProjectType = projectType?.slice(0, -1);
+    const filteredProjects = formattedProjectType
+        ? projectsList?.filter((project) => project.type.includes(formattedProjectType))
+        : projectsList;
 
     return (
         <>

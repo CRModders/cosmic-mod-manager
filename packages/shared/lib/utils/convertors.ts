@@ -1,4 +1,4 @@
-import { loaders } from "../../config/project";
+import { loaders, projectTypes } from "../../config/project";
 import { AuthProviders, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
 import { getTypeOfFile } from "./file-signature";
 
@@ -17,24 +17,19 @@ export const getUserRoleFromString = (roleName: string) => {
     }
 };
 
-export const getProjectTypeFromString = (type: string) => {
-    switch (type) {
-        case ProjectType.MOD:
-            return ProjectType.MOD;
-        case ProjectType.MODPACK:
-            return ProjectType.MODPACK;
-        case ProjectType.SHADER:
-            return ProjectType.SHADER;
-        case ProjectType.RESOURCE_PACK:
-            return ProjectType.RESOURCE_PACK;
-        case ProjectType.DATAPACK:
-            return ProjectType.DATAPACK;
-        case ProjectType.PLUGIN:
-            return ProjectType.PLUGIN;
-
-        default:
-            return ProjectType.MOD;
+export const getProjectTypesFromNames = (list: string[]) => {
+    const result = [];
+    for (const projectType of projectTypes) {
+        if (list.includes(projectType)) {
+            result.push(projectType);
+        }
     }
+
+    return result;
+};
+
+export const getProjectTypeFromName = (type: string) => {
+    return getProjectTypesFromNames([type])?.[0] || ProjectType.MOD;
 };
 
 export const getAuthProviderFromString = (providerName: string) => {

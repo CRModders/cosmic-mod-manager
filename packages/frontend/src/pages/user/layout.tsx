@@ -10,6 +10,7 @@ import { userProfileContext } from "@/src/contexts/user-profile";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon, MoreVertical } from "lucide-react";
 import { useContext } from "react";
@@ -56,7 +57,10 @@ const UserPageLayout = () => {
                             urlBase={`/user/${userData.userName}`}
                             links={[
                                 { label: "All", href: "" },
-                                ...projectTypesList.map((type) => ({ label: CapitalizeAndFormatString(type) || "", href: `/${type}` })),
+                                ...getProjectTypesFromNames(projectTypesList).map((type) => ({
+                                    label: `${CapitalizeAndFormatString(type)}s` || "",
+                                    href: `/${type}s`,
+                                })),
                             ]}
                         />
                     ) : null}
@@ -103,7 +107,7 @@ const ProfilePageHeader = ({ userData, totalProjects, totalDownloads }: ProfileP
                 <ImgWrapper
                     src={imageUrl(userData.avatarUrl)}
                     alt={userData.userName}
-                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-lg"
+                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-full"
                     fallback={fallbackUserIcon}
                 />
                 <div className="flex flex-col gap-1">

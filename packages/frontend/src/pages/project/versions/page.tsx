@@ -405,7 +405,7 @@ const ProjectVersionsListTable = ({
                                                 )}
                                                 aria-label={`download ${version.title}`}
                                             >
-                                                <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                                <DownloadIcon className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
                                             </a>
                                             <Button
                                                 variant="ghost"

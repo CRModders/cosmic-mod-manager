@@ -12,7 +12,7 @@ import {
     sortByParamNamespace,
 } from "@shared/config/search";
 import { getAllLoaderFilters, getValidProjectCategories, isNumber } from "@shared/lib/utils";
-import { getProjectTypeFromString } from "@shared/lib/utils/convertors";
+import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { SearchResultSortMethod, TagHeaderTypes } from "@shared/types";
 import { type Context, Hono } from "hono";
 
@@ -29,7 +29,7 @@ searchRouter.get("/", async (ctx: Context) => {
         const environments = ctx.req.queries("e") || [];
         const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss";
         const sortBy = ctx.req.query(sortByParamNamespace) || defaultSortBy;
-        const type = getProjectTypeFromString(ctx.req.query("type") || "");
+        const type = getProjectTypeFromName(ctx.req.query("type") || "");
 
         let pageNumber = Number.parseInt(page);
         if (!isNumber(pageNumber)) pageNumber = 1;
@@ -69,7 +69,7 @@ searchRouter.get("/filters/sort-by", async (ctx: Context) => {
 
 searchRouter.get("/filters/loaders", async (ctx: Context) => {
     try {
-        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }
@@ -93,7 +93,7 @@ searchRouter.get("/filters/game-versions", async (ctx: Context) => {
 
 searchRouter.get("/filters/categories", async (ctx: Context) => {
     try {
-        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }
@@ -108,7 +108,7 @@ searchRouter.get("/filters/categories", async (ctx: Context) => {
 
 searchRouter.get("/filters/features", async (ctx: Context) => {
     try {
-        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }
@@ -123,7 +123,7 @@ searchRouter.get("/filters/features", async (ctx: Context) => {
 
 searchRouter.get("/filters/resolutions", async (ctx: Context) => {
     try {
-        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }
@@ -138,7 +138,7 @@ searchRouter.get("/filters/resolutions", async (ctx: Context) => {
 
 searchRouter.get("/filters/performance-impact", async (ctx: Context) => {
     try {
-        const projectType = getProjectTypeFromString(ctx.req.query("type") || "");
+        const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }

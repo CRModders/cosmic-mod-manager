@@ -249,7 +249,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                         aria-label={`download ${version.title}`}
                                                         download={version.primaryFile?.name}
                                                     >
-                                                        <DownloadIcon className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.5} />
+                                                        <DownloadIcon className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
                                                     </a>
                                                 </TooltipTrigger>
                                                 <TooltipContent className="hidden group-hover/card:flex group-focus-within/card:flex">
