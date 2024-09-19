@@ -3,7 +3,7 @@ import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { getUserSessionFromCtx, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
-import { projectIconUrl } from "@/utils/urls";
+import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
@@ -224,6 +224,7 @@ export const getAllVisibleProjects = async (
             continue;
         }
         if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, project.team.members)) continue;
+        const projectIconUrl = getAppropriateProjectIconUrl(iconFilesMap.get(project?.iconFileId || ""), project.slug);
 
         projectListData.push({
             id: project.id,
@@ -232,7 +233,7 @@ export const getAllVisibleProjects = async (
             summary: project.summary,
             type: inferProjectType(project.loaders),
             status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl(project.slug, iconFilesMap.get(project?.iconFileId || "")?.url || ""),
+            icon: projectIconUrl,
             downloads: project.downloads,
             followers: project.followers,
             dateUpdated: project.dateUpdated,

@@ -1,10 +1,10 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 
-import { deleteProjectGalleryFile, getFileUrl, saveProjectGalleryFile } from "@/services/storage";
+import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
 import { doesMemberHasAccess, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
-import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
+import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
@@ -209,6 +209,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
     const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
 
     const organisation = project.organisation;
+    const projectIconFile = filesMap.get(project.iconFileId || "");
+    const projectIconUrl = getAppropriateProjectIconUrl(projectIconFile, project.slug);
     return ctx.json(
         {
             success: true,
@@ -217,7 +219,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 teamId: project.team.id,
                 orgId: project.organisation?.id || null,
                 name: project.name,
-                icon: projectIconUrl(project.slug, filesMap.get(project?.iconFileId || "")?.url || ""),
+                icon: projectIconUrl,
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
@@ -243,19 +245,14 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 gameVersions: rsort(project.gameVersions || []),
                 gallery: project.gallery
                     .map((galleryItem) => {
-                        const galleryFile = filesMap.get(galleryItem.imageFileId);
-                        if (!galleryFile) return null;
-                        const fileUrl = projectGalleryFileUrl(
-                            project.slug,
-                            getFileUrl(galleryFile.storageService as FILE_STORAGE_SERVICE, galleryFile.url, galleryFile.name) || "",
-                        );
-                        if (!fileUrl) return null;
+                        const galleryFileUrl = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.slug);
+                        if (!galleryFileUrl) return null;
 
                         return {
                             id: galleryItem.id,
                             name: galleryItem.name,
                             description: galleryItem.description,
-                            image: fileUrl,
+                            image: galleryFileUrl,
                             featured: galleryItem.featured,
                             dateCreated: galleryItem.dateCreated,
                             orderIndex: galleryItem.orderIndex,

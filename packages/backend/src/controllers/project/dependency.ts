@@ -2,7 +2,7 @@ import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
 import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
-import { projectIconUrl } from "@/utils/urls";
+import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
 import type { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
@@ -125,11 +125,15 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
 
     return ctx.json(
         {
-            projects: dependencyProjects.map((project) => ({
-                ...project,
-                icon: projectIconUrl(project.slug, project?.iconFileId ? projectIconFiles.get(project.iconFileId)?.url || "" : ""),
-                type: inferProjectType(project.loaders),
-            })),
+            projects: dependencyProjects.map((project) => {
+                const iconFile = projectIconFiles.get(project?.iconFileId || "");
+
+                return {
+                    ...project,
+                    icon: getAppropriateProjectIconUrl(iconFile, project.slug),
+                    type: inferProjectType(project.loaders),
+                };
+            }),
             versions: dependencyVersions,
         },
         httpCode("ok"),

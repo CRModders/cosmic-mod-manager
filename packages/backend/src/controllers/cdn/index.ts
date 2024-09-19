@@ -102,7 +102,7 @@ export const serveVersionFile = async (
     if (typeof file === "string") return ctx.redirect(file);
 
     const response = new Response(file, { status: httpCode("ok") });
-    response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    response.headers.set("Cache-Control", "public, max-age=31536000");
     response.headers.set("Content-Type", file.type);
 
     return response;
@@ -128,7 +128,7 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
     // Respond accordingly
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
     const response = new Response(iconFile);
-    response.headers.set("Cache-Control", "public, max-age=360");
+    response.headers.set("Cache-Control", "public, max-age=3600");
     return response;
 };
 
@@ -161,6 +161,6 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
     if (typeof imageFile === "string") return ctx.redirect(imageFile);
 
     const response = new Response(imageFile);
-    response.headers.set("Cache-Control", "public, max-age=31536000, immutable"); // 1 year
+    response.headers.set("Cache-Control", "public, max-age=31536000"); // 1 year
     return response;
 };

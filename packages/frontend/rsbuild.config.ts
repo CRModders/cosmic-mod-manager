@@ -28,7 +28,7 @@ export default defineConfig({
                 tag: "link",
                 attrs: {
                     rel: "preconnect",
-                    href: "https://wsrv.nl",
+                    href: "https://crmm-cdn.global.ssl.fastly.net",
                 },
                 head: true,
                 append: true,

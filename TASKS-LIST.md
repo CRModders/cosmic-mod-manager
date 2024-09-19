@@ -54,6 +54,7 @@
 
 - [x] Add search page
 
+- [x] Add CDN for caching files
 - [-] Add backups for user uploaded files
 - [-] Add database backups
 

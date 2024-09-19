@@ -1,5 +1,6 @@
 import { getFilesFromId } from "@/controllers/project/utils";
 import { inferProjectType } from "@/utils";
+import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
 import meilisearch from "../meilisearch";
 import prisma from "../prisma";
@@ -94,10 +95,7 @@ const _syncProjects = async (cursor: null | string) => {
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
             const author = project.team.members?.[0];
-            let iconUrl: string | null = null;
-            if (project.iconFileId) {
-                iconUrl = projectIconFiles.get(project.iconFileId)?.url || null;
-            }
+            const iconUrl = getAppropriateProjectIconUrl(projectIconFiles.get(project?.iconFileId || ""), project.slug);
 
             formattedProjectsData.push({
                 id: project.id,
