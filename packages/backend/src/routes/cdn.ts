@@ -36,15 +36,17 @@ cdnRouter.get("/data/:projectSlug/gallery/:image", async (ctx) => {
     }
 });
 
+const cdnUrlQueryKey = "isCdnReq";
 cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", cdn_large_filesRateLimiterMiddleware, async (ctx) => {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug, fileName } = ctx.req.param();
+        const isUserRequest = ctx.req.query(cdnUrlQueryKey) === "false";
         if (!projectSlug || !versionSlug || !fileName) {
             return defaultInvalidReqResponse(ctx);
         }
 
-        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession);
+        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, isUserRequest, cdnUrlQueryKey);
     } catch (error) {
         return defaultServerErrorResponse(ctx);
     }

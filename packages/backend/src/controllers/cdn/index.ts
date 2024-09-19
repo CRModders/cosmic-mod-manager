@@ -5,6 +5,7 @@ import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
 import { getFile, getProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
+import { versionFileUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import type { Context } from "hono";
 import { getUserIpAddress } from "../auth/commons";
@@ -15,6 +16,10 @@ export const serveVersionFile = async (
     versionSlug: string,
     fileName: string,
     userSession: ContextUserSession | undefined,
+    // True when the client requests for the CDN_URL of the file
+    // False means the request is coming from the CDN itself
+    isUserRequest = true,
+    cdnUrlQueryKey = "isCdnReq",
 ) => {
     const projectData = await prisma.project.findUnique({
         where: {
@@ -59,7 +64,6 @@ export const serveVersionFile = async (
         await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.status(httpCode("not_found"));
     }
-
     if (!isProjectAccessibleToCurrSession(projectData.visibility, projectData.status, userSession?.id, projectData.team.members)) {
         return ctx.json({}, httpCode("not_found"));
     }
@@ -72,18 +76,13 @@ export const serveVersionFile = async (
             name: fileName,
         },
     });
-
     if (!versionFile?.id) {
         return ctx.json({ message: "File not found" }, httpCode("not_found"));
     }
 
-    const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
-    if (!file) return ctx.json({ message: "File not found" }, httpCode("not_found"));
-
     // Get corresponding file from version
     const targetVersionFile = targetVersion.files.find((file) => file.fileId === versionFile.id);
-
-    if (targetVersionFile?.isPrimary === true) {
+    if (isUserRequest && targetVersionFile?.isPrimary === true) {
         // add download count
         await addToDownloadsQueue({
             ipAddress: getUserIpAddress(ctx) || "",
@@ -93,11 +92,19 @@ export const serveVersionFile = async (
         });
     }
 
+    if (isUserRequest) {
+        return ctx.redirect(`${versionFileUrl(projectSlug, versionSlug, fileName)}`);
+    }
+
+    const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
+    if (!file) return ctx.json({ message: "File not found" }, httpCode("not_found"));
+
     if (typeof file === "string") return ctx.redirect(file);
 
     const response = new Response(file, { status: httpCode("ok") });
     response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
     response.headers.set("Content-Type", file.type);
+
     return response;
 };
 

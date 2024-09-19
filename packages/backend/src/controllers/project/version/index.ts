@@ -625,7 +625,7 @@ export const getAllProjectVersions = async (
                 name: fileData.name,
                 size: fileData.size,
                 type: fileData.type,
-                url: versionFileUrl(project.slug, version.slug, fileData.name),
+                url: versionFileUrl(project.slug, version.slug, fileData.name, false) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
@@ -728,7 +728,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             name: fileData.name,
             size: fileData.size,
             type: fileData.type,
-            url: versionFileUrl(project.slug, version.slug, fileData.name),
+            url: versionFileUrl(project.slug, version.slug, fileData.name, false) || "",
             sha1_hash: fileData.sha1_hash,
             sha512_hash: fileData.sha512_hash,
         };
