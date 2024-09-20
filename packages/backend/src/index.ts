@@ -3,12 +3,12 @@ import type { SocketAddress } from "bun";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { ddosPreventionRateLimiterMiddleware } from "./middleware/rate-limiter";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
+import searchRouter from "./routes/search";
 import { queueDownloadsCounterQueueProcessing } from "./services/queues/downloads-queue";
 import queueSearchDbSync from "./services/queues/searchdb-sync";
-import { ddosPreventionRateLimiterMiddleware, searchApiRateLimiterMiddleware } from "./middleware/rate-limiter";
-import searchRouter from "./routes/search";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 

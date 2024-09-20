@@ -1,5 +1,12 @@
 import { ctxReqBodyNamespace } from "@/../types";
-import { addNewGalleryImage, createNewProject, getProjectData, removeGalleryImage, updateGalleryImage } from "@/controllers/project";
+import {
+    addNewGalleryImage,
+    checkProjectSlugValidity,
+    createNewProject,
+    getProjectData,
+    removeGalleryImage,
+    updateGalleryImage,
+} from "@/controllers/project";
 import { getProjectDependencies } from "@/controllers/project/dependency";
 import {
     updateProject,
@@ -50,6 +57,18 @@ projectRouter.get("/:slug", async (ctx: Context) => {
         const userSession = getUserSessionFromCtx(ctx);
 
         return await getProjectData(ctx, slug, userSession);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+});
+
+projectRouter.get("/:slug/check", async (ctx: Context) => {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+
+        return await checkProjectSlugValidity(ctx, slug);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

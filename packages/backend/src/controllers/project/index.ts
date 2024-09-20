@@ -287,6 +287,20 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
     );
 };
 
+export const checkProjectSlugValidity = async (ctx: Context, slug: string) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [{ id: slug }, { slug: slug }],
+        },
+    });
+
+    if (!project) {
+        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+    }
+
+    return ctx.json({ id: project.id }, httpCode("ok"));
+};
+
 export const addNewGalleryImage = async (
     ctx: Context,
     slug: string,

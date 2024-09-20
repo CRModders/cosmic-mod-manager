@@ -4,7 +4,6 @@ import { AuthenticationMiddleware } from "@/middleware/session";
 import { Hono } from "hono";
 import authRouter from "./auth";
 import projectRouter from "./project";
-import searchRouter from "./search";
 import teamRouter from "./team";
 import userRouter from "./user";
 
