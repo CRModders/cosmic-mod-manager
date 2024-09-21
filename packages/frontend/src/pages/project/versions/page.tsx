@@ -431,11 +431,8 @@ const ProjectVersionsListTable = ({
 
 const VersionName = ({ title, number, url }: { title: string; number: string; url: string }) => {
     return (
-        <div className="flex flex-col items-start justify-center gap-1">
-            <Link
-                to={url}
-                className="noClickRedirect leading-none font-bold text-foreground whitespace-pre-wrap max-w-[20ch] lg:max-w-[32ch] overflow-hidden"
-            >
+        <div className="flex flex-col items-start justify-center gap-1 overflow-hidden max-w-[24ch] lg:max-w-[32ch]">
+            <Link to={url} className="noClickRedirect leading-none font-bold text-foreground whitespace-pre-wrap">
                 {number}
             </Link>
             <span className="leading-none font-medium text-muted-foreground/85 text-sm">{title}</span>
