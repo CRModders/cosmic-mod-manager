@@ -33,7 +33,7 @@ model User {
 model Session {
     id               String   @id @db.VarChar(32)
     userId           String   @db.VarChar(32)
-    sessionToken     String   @db.VarChar(64)
+    sessionToken     String   @db.VarChar(128)
     dateCreated      DateTime @default(now())
     dateExpires      DateTime
     dateLastActive   DateTime @default(now())
@@ -42,10 +42,10 @@ model Session {
     revokeAccessCode String   @unique @db.VarChar(64)
 
     // Session device info
-    os        String? @db.VarChar(32)
-    browser   String? @db.VarChar(32)
-    city      String? @db.VarChar(32)
-    country   String? @db.VarChar(32)
+    os        String? @db.VarChar(64)
+    browser   String? @db.VarChar(64)
+    city      String? @db.VarChar(64)
+    country   String? @db.VarChar(64)
     ip        String  @db.VarChar(64)
     userAgent String  @db.VarChar(128)
 
