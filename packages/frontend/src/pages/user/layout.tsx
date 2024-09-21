@@ -15,11 +15,13 @@ import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon, MoreVertical } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SecondaryNav from "../project/secondary-nav";
+import UserProfilePage from "./page";
 import "./styles.css";
 
 const UserPageLayout = () => {
+    const { projectType } = useParams();
     const { userData, projectsList } = useContext(userProfileContext);
 
     if (!userData) return null;
@@ -64,7 +66,8 @@ const UserPageLayout = () => {
                             ]}
                         />
                     ) : null}
-                    <Outlet />
+
+                    <UserProfilePage projectType={projectType} projectsList={projectsList} />
                 </div>
                 <PageSidebar />
             </div>

@@ -50,7 +50,6 @@ const ProjectMemberSettingsPage = lazy(() => import("./pages/project/settings/me
 
 // User's profile page
 const UserPageLayout = lazy(() => import("./pages/user/layout"));
-const UserProfilePage = lazy(() => import("./pages/user/page"));
 
 // Search page
 const SearchPageLayout = lazy(() => import("@/src/pages/search/layout"));
@@ -314,18 +313,16 @@ const router = createBrowserRouter([
                             {
                                 path: ":userName",
                                 element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <UserProfileContextProvider>
-                                            <UserPageLayout />
-                                        </UserProfileContextProvider>
-                                    </Suspense>
+                                    <UserProfileContextProvider>
+                                        <Outlet />
+                                    </UserProfileContextProvider>
                                 ),
                                 children: [
                                     {
                                         path: "",
                                         element: (
                                             <Suspense fallback={<SuspenseFallback />}>
-                                                <UserProfilePage />
+                                                <UserPageLayout />
                                             </Suspense>
                                         ),
                                     },
@@ -333,7 +330,7 @@ const router = createBrowserRouter([
                                         path: ":projectType",
                                         element: (
                                             <Suspense fallback={<SuspenseFallback />}>
-                                                <UserProfilePage />
+                                                <UserPageLayout />
                                             </Suspense>
                                         ),
                                     },

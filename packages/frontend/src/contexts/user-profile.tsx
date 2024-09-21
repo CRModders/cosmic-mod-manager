@@ -12,7 +12,10 @@ interface UserProfileContext {
     projectsList: ProjectListItem[] | null;
 }
 
-export const userProfileContext = createContext<UserProfileContext>({ userData: null, projectsList: null });
+export const userProfileContext = createContext<UserProfileContext>({
+    userData: null,
+    projectsList: null,
+});
 
 const getUserProfileData = async (userName: string | undefined) => {
     if (!userName) return null;
@@ -46,7 +49,12 @@ export const UserProfileContextProvider = ({ children }: { children: React.React
     const isFetchingData = userData.isLoading && projectsList.isLoading;
 
     return (
-        <userProfileContext.Provider value={{ userData: userData.data || null, projectsList: projectsList.data || null }}>
+        <userProfileContext.Provider
+            value={{
+                userData: userData.data || null,
+                projectsList: projectsList.data || null,
+            }}
+        >
             {children}
             {isFetchingData ? <AbsolutePositionedSpinner /> : null}
             {!isFetchingData && !userData.data ? (

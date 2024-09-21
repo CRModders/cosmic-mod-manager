@@ -1,13 +1,13 @@
 import SearchListItem from "@/components/layout/search-list-item";
-import { userProfileContext } from "@/src/contexts/user-profile";
-import { useContext } from "react";
-import { useParams } from "react-router-dom";
+import type { ProjectListItem } from "@shared/types/api";
 import "./styles.css";
 
-const UserProfilePage = () => {
-    const { projectType } = useParams();
-    const { projectsList } = useContext(userProfileContext);
+interface Props {
+    projectType: string | undefined;
+    projectsList: ProjectListItem[] | null;
+}
 
+const UserProfilePage = ({ projectType, projectsList }: Props) => {
     if (!projectsList) return null;
 
     const formattedProjectType = projectType?.slice(0, -1);
