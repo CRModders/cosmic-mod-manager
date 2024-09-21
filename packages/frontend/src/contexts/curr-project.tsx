@@ -87,7 +87,6 @@ export const ProjectContextProvider = ({
     children: React.ReactNode;
 }) => {
     const { slug } = useParams();
-    const [loadingProjectData, setLoadingProjectData] = useState(true);
     const [currUsersMembership, setCurrUsersMembership] = useState<CurrUsersMembership>({ data: null, status: LoadingStatus.LOADING });
     const [currProjectSlug, setCurrProjectSlug] = useState(slug || "");
     const { session } = useSession();
@@ -171,10 +170,7 @@ export const ProjectContextProvider = ({
         }
     }, [allProjectVersions]);
 
-    useEffect(() => {
-        if (isProjectDataLoading || isAllProjectVersionsLoading || isProjectDependenciesLoading) setLoadingProjectData(true);
-        else setLoadingProjectData(false);
-    }, [isProjectDataLoading, isAllProjectVersionsLoading, isProjectDependenciesLoading]);
+    const loadingProjectData = isProjectDataLoading || isAllProjectVersionsLoading || isProjectDependenciesLoading;
 
     return (
         <projectContext.Provider
@@ -196,7 +192,11 @@ export const ProjectContextProvider = ({
             {slug === projectData?.slug || slug === projectData?.id ? children : null}
             {slug !== projectData?.slug && slug !== projectData?.id && loadingProjectData ? <AbsolutePositionedSpinner /> : null}
             {!loadingProjectData && !projectData?.id ? (
-                <NotFoundPage title="Project not found" description={`The project with the slug/ID "${slug}" does not exist.`} />
+                <NotFoundPage
+                    title="Project not found"
+                    description={`The project with the slug/ID "${slug}" does not exist.`}
+                    className=""
+                />
             ) : null}
         </projectContext.Provider>
     );

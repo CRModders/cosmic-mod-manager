@@ -21,9 +21,9 @@ export default function NotFoundPage({ className, title, description, linkHref, 
                 </title>
                 <meta name="description" content="We couldn't find the page you are looking for." />
             </Helmet>
-            <div className={cn("w-full full_page flex flex-col items-center justify-center gap-4", className)}>
-                <div className="headings">
-                    <h1 className="w-full text-5xl leading-tight font-bold flex items-center justify-center text-center">
+            <div className={cn("w-full full_page flex flex-col items-center justify-center", className)}>
+                <div className="w-full flex flex-col items-center justify-center">
+                    <h1 className="w-full text-5xl leading-snug font-extrabold flex items-center justify-center text-center">
                         {title || "404 | Page not found."}
                     </h1>
                 </div>

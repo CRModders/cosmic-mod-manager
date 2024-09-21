@@ -53,7 +53,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
         setVersionData(getVersionData());
     }, [versionSlug, allProjectVersions]);
 
-    if (fetchingProjectData === false && !versionData?.title) {
+    if (fetchingProjectData === false && !versionData) {
         return (
             <NotFoundPage
                 className="no_full_page py-16"
@@ -65,7 +65,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
         );
     }
 
-    if (!versionData?.title || !projectSlug || !versionSlug) return null;
+    if (!versionData || !projectSlug || !versionSlug) return null;
 
     return (
         <>

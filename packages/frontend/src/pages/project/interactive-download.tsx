@@ -1,3 +1,4 @@
+import { fallbackProjectIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import ComboBox from "@/components/ui/combobox";
@@ -123,7 +124,12 @@ const InteractiveDownloadPopup = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="flex flex-row gap-3 items-center justify-start pb-3">
-                    <ImgWrapper src={imageUrl(projectData.icon)} alt={projectData.name} className="h-9 rounded" />
+                    <ImgWrapper
+                        src={imageUrl(projectData.icon)}
+                        alt={projectData.name}
+                        className="h-9 rounded"
+                        fallback={fallbackProjectIcon}
+                    />
                     <DialogTitle>Download {projectData.name}</DialogTitle>
                     <VisuallyHidden>
                         <DialogDescription>Downlad iris</DialogDescription>
