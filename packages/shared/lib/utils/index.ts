@@ -144,11 +144,14 @@ export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
     return categoriesData;
 };
 
-export const getAllLoaderFilters = (projectType?: ProjectType) => {
+export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibility = true) => {
     const allLoadersList = new Set<Loader>();
 
     for (const loader of loaders) {
-        if ((!projectType || loader.supportedProjectTypes.includes(projectType)) && loader?.metadata?.visibleInCategoriesList !== false) {
+        if (
+            (!projectType || loader.supportedProjectTypes.includes(projectType)) &&
+            (!checkTagVisibility || loader?.metadata?.visibleInCategoriesList !== false)
+        ) {
             allLoadersList.add(loader);
         }
     }

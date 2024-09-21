@@ -89,7 +89,7 @@ const LicenseSettingsPage = () => {
                                         SPDX license identifier
                                     </a>{" "}
                                     in the marked area. If your license does not have a SPDX identifier (for example, if you created the
-                                    license yourself or if the license is Minecraft-specific), simply check the box and enter the name of
+                                    license yourself or if the license is Cosmic Reach specific), simply check the box and enter the name of
                                     the license instead.
                                 </span>
                             ) : null}

@@ -23,7 +23,7 @@ const ManageAuthProviders = ({
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
 
-            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK_PROVIDER}/${provider}`);
+            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK}/${provider}`);
             const result = await response.json();
 
             if (!response.ok || !result?.url) {
@@ -44,7 +44,7 @@ const ManageAuthProviders = ({
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
 
-            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK_PROVIDER}/${provider}`, {
+            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK}/${provider}`, {
                 method: "DELETE",
             });
             const result = await response.json();

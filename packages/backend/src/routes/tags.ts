@@ -3,7 +3,7 @@ import httpCode, { defaultServerErrorResponse } from "@/utils/http";
 import GAME_VERSIONS from "@shared/config/game-versions";
 import SPDX_LICENSE_LIST, { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { projectTypes } from "@shared/config/project";
-import { getAllLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
+import { getAllLoaderCategories, getValidProjectCategories } from "@shared/lib/utils";
 import type { ProjectType, TagHeaderTypes } from "@shared/types";
 import { type Context, Hono } from "hono";
 
@@ -56,7 +56,7 @@ async function allGameVersions(ctx: Context) {
 async function allLoaders(ctx: Context) {
     try {
         const projectType = (ctx.req.query("type")?.toLowerCase() as ProjectType) || undefined;
-        const loaders = getAllLoaderFilters(projectType);
+        const loaders = getAllLoaderCategories(projectType, false);
         return ctx.json({ loaders }, httpCode("ok"));
     } catch (error) {
         console.error(error);

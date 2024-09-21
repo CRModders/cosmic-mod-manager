@@ -49,6 +49,7 @@ export const loaders: Loader[] = [
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD],
         metadata: {
+            visibleInCategoriesList: true,
             accent: {
                 foreground: {
                     light: "#8B61B4",
@@ -61,6 +62,7 @@ export const loaders: Loader[] = [
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD],
         metadata: {
+            visibleInCategoriesList: true,
             accent: {
                 foreground: {
                     light: "#4A953F",
@@ -79,6 +81,13 @@ export const loaders: Loader[] = [
     {
         name: "resource_pack",
         supportedProjectTypes: [ProjectType.RESOURCE_PACK],
+        metadata: {
+            visibleInCategoriesList: false,
+        },
+    },
+    {
+        name: "shader",
+        supportedProjectTypes: [ProjectType.SHADER],
         metadata: {
             visibleInCategoriesList: false,
         },

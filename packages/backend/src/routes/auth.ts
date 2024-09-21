@@ -23,17 +23,15 @@ authRouter.get("/me", currSession_get);
 // Routes to get OAuth URL
 authRouter.get("/signin/:authProvider", async (ctx: Context) => getOAuthUrlRoute(ctx, AuthActionIntent.SIGN_IN));
 authRouter.get("/signup/:authProvider", async (ctx: Context) => getOAuthUrlRoute(ctx, AuthActionIntent.SIGN_UP));
-authRouter.get("/link-provider/:authProvider", LoginProtectedRoute, async (ctx: Context) =>
-    getOAuthUrlRoute(ctx, AuthActionIntent.LINK_PROVIDER),
-);
+authRouter.get("/link/:authProvider", LoginProtectedRoute, async (ctx: Context) => getOAuthUrlRoute(ctx, AuthActionIntent.LINK));
 
 authRouter.post("/signin/credential", credentialSignin_post); // Sign in with credentials
 authRouter.post("/signin/:authProvider", oAuthSignIn_post);
 authRouter.post("/signup/:authProvider", oAuthSignUp_post);
-authRouter.post("/link-provider/:authProvider", LoginProtectedRoute, oAuthLinkProvider_post);
-authRouter.delete("link-provider/:authProvider", LoginProtectedRoute, oAuthLinkProvider_delete);
-authRouter.get("/auth-providers", LoginProtectedRoute, oAuthProviders_get);
+authRouter.post("/link/:authProvider", LoginProtectedRoute, oAuthLinkProvider_post);
+authRouter.delete("/link/:authProvider", LoginProtectedRoute, oAuthLinkProvider_delete);
 authRouter.get("/sessions", LoginProtectedRoute, sessions_get);
+authRouter.get("/auth-providers", LoginProtectedRoute, oAuthProviders_get);
 authRouter.delete("/sessions", LoginProtectedRoute, sessions_delete);
 authRouter.delete("/sessions/:revokeCode", revokeSession_delete);
 

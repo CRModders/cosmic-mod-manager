@@ -12,13 +12,12 @@ import {
     licenseFilterParamNamespace,
     loaderFilterParamNamespace,
 } from "@shared/config/search";
-import { CapitalizeAndFormatString, getValidProjectCategories } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, getAllLoaderCategories, getValidProjectCategories } from "@shared/lib/utils";
 import { ProjectType, TagHeaderTypes } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
-import { getAllLoaderFilters } from "@shared/lib/utils";
 
 interface Props {
     type: ProjectType;
@@ -70,7 +69,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
 
     // Filters list
     // Project Loader filters
-    const loaderFilters = getAllLoaderFilters(type);
+    const loaderFilters = getAllLoaderCategories(type);
     const loaderFilterOptions = loaderFilters
         .map((loader) => loader.name)
         .filter((loader) => matchesSearch([loader, loadersFilterLabel], query));

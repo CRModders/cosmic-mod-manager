@@ -11,7 +11,7 @@ import {
     pageOffsetParamNamespace,
     sortByParamNamespace,
 } from "@shared/config/search";
-import { getAllLoaderFilters, getValidProjectCategories, isNumber } from "@shared/lib/utils";
+import { getAllLoaderCategories, getValidProjectCategories, isNumber } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { SearchResultSortMethod, TagHeaderTypes } from "@shared/types";
 import { type Context, Hono } from "hono";
@@ -84,7 +84,7 @@ async function loaderFilters(ctx: Context) {
             return ctx.json({ success: false, message: "Invalid project type" }, httpCode("bad_request"));
         }
 
-        const loaderFilters = getAllLoaderFilters(projectType);
+        const loaderFilters = getAllLoaderCategories(projectType);
         return ctx.json({ success: true, queryKey: loaderFilterParamNamespace, list: loaderFilters }, httpCode("ok"));
     } catch (error) {
         console.error(error);

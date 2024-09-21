@@ -18,10 +18,10 @@ router.use("*", AuthenticationMiddleware);
 router.get("/", apiDetails);
 
 // Routers
-router.route("/auth", authRouter);
-router.route("/user", userRouter);
 router.route("/project", projectRouter);
 router.route("/team", teamRouter);
+router.route("/user", userRouter);
+router.route("/auth", authRouter);
 
 async function apiDetails(ctx: Context) {
     return ctx.json(

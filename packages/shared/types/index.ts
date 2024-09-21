@@ -43,7 +43,7 @@ export enum ProjectType {
 export enum AuthActionIntent {
     SIGN_IN = "signin",
     SIGN_UP = "signup",
-    LINK_PROVIDER = "link-provider",
+    LINK = "link",
 }
 
 export interface LinkedProvidersListData {

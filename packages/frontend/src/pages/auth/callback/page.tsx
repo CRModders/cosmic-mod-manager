@@ -49,7 +49,7 @@ const OAuthCallbackPage = () => {
         ? AuthActionIntent.SIGN_IN
         : urlCsrfState?.startsWith(AuthActionIntent.SIGN_UP)
           ? AuthActionIntent.SIGN_UP
-          : AuthActionIntent.LINK_PROVIDER;
+          : AuthActionIntent.LINK;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
