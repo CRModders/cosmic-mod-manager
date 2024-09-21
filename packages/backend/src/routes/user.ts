@@ -9,7 +9,7 @@ import {
     removeAccountPassword,
     sendAccountPasswordChangeLink,
 } from "@/controllers/user/account";
-import { getUserProfileData, updateUserProfile } from "@/controllers/user/profile";
+import { getAllVisibleProjects, getUserProfileData, updateUserProfile } from "@/controllers/user/profile";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
@@ -29,6 +29,7 @@ const userRouter = new Hono();
 
 userRouter.get("/", user_get);
 userRouter.get("/:slug", user_get);
+userRouter.get("/:slug/projects", userProjects_get);
 userRouter.patch("/", LoginProtectedRoute, user_patch);
 userRouter.delete("/", user_delete);
 userRouter.post("/delete-account", LoginProtectedRoute, deleteAccountConfirmation_post);
@@ -51,6 +52,21 @@ async function user_get(ctx: Context) {
         if (!slug) return defaultInvalidReqResponse(ctx);
 
         return await getUserProfileData(ctx, userSession, slug);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+// Get all projects of the user
+async function userProjects_get(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
+        if (!slug) return defaultInvalidReqResponse(ctx);
+        const userSession = getUserSessionFromCtx(ctx);
+
+        return await getAllVisibleProjects(ctx, userSession, slug, listedProjectsOnly);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
