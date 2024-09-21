@@ -170,7 +170,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     id: true,
                     members: {
                         select: requiredProjectMemberFields,
-                        orderBy: { dateAccepted: "desc" },
+                        orderBy: { isOwner: "desc" },
                     },
                 },
             },
@@ -192,7 +192,6 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             },
         },
     });
-
     if (!project?.id) {
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
     }
