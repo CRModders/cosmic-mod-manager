@@ -1,3 +1,1 @@
 # CRMM
-
-[NOT REALLY DOCS](docs/NOTES.md)
