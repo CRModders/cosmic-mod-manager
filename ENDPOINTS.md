@@ -1,4 +1,4 @@
-Base URL: `https://api.crmm.tech/api`
+Base URL: `https://api.crmm.tech/api` <br />
 NOTE:- `/cdn` urls are not under the base `/api`
 
 ### Value Types
