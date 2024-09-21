@@ -20,7 +20,7 @@ import ManagePasswords from "./password/page";
 const getLinkedAuthProviders = async (userId?: string) => {
     if (!userId) return null;
     try {
-        const res = await useFetch("/api/user/get-linked-auth-providers");
+        const res = await useFetch("/api/auth/auth-providers");
         const providers: LinkedProvidersListData[] = (await res.json())?.providers || [];
         return providers;
     } catch (err) {

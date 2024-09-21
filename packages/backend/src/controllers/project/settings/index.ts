@@ -1,11 +1,11 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 import { deleteProjectFile, saveProjectFile } from "@/services/storage";
-import { doesMemberHasAccess, generateRandomString, inferProjectType } from "@/utils";
+import { generateRandomString, inferProjectType } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
-import { getValidProjectCategories } from "@shared/lib/utils";
+import { doesMemberHaveAccess, getValidProjectCategories } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
 import type { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
@@ -50,7 +50,7 @@ export const updateProject = async (
     const currMember = project.team.members?.[0];
     if (
         !currMember ||
-        !doesMemberHasAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
+        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
     ) {
         return ctx.json({ success: false, message: "You don't have the permission to update project details" }, httpCode("unauthorized"));
     }
@@ -136,6 +136,7 @@ export const updateProjectDescription = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -144,9 +145,15 @@ export const updateProjectDescription = async (
         },
     });
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DESCRIPTION)) {
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DESCRIPTION,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
         return ctx.json(
             { success: false, message: "You don't have the permission to update project description" },
             httpCode("unauthorized"),
@@ -179,6 +186,7 @@ export const updateProjectTags = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -186,9 +194,15 @@ export const updateProjectTags = async (
             },
         },
     });
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
         return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, httpCode("unauthorized"));
     }
 
@@ -224,6 +238,7 @@ export const updateProjectExternalLinks = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -231,9 +246,15 @@ export const updateProjectExternalLinks = async (
             },
         },
     });
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
         return ctx.json({ success: false, message: "You don't the permission to update links" }, httpCode("unauthorized"));
     }
 
@@ -265,6 +286,7 @@ export const updateProjectLicense = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -272,9 +294,15 @@ export const updateProjectLicense = async (
             },
         },
     });
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
         return ctx.json({ success: false, message: "You don't have the permission to update project license" }, httpCode("unauthorized"));
     }
 

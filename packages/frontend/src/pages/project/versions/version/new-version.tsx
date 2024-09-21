@@ -72,7 +72,7 @@ const UploadVersionPage = () => {
                 formData.append("additionalFiles", additionalFile);
             }
 
-            const response = await useFetch(`/api/project/${projectData.slug}/version/new`, {
+            const response = await useFetch(`/api/project/${projectData.slug}/version`, {
                 method: "POST",
                 body: formData,
             });

@@ -8,6 +8,7 @@ import type { Session, User } from "@prisma/client";
 import { AUTHTOKEN_COOKIE_NAME, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { UserSessionStates } from "@shared/types";
+import type { SessionListData } from "@shared/types/api";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { nanoid } from "nanoid";
@@ -147,7 +148,40 @@ export const getUserSession = async (ctx: Context): Promise<User | null> => {
     }
 };
 
-export const logOutUserSession = async (ctx: Context, userSession: ContextUserSession, sessionId: string) => {
+export const getUserSessions = async (ctx: Context, userSession: ContextUserSession) => {
+    const sessions = await prisma.session.findMany({
+        where: {
+            userId: userSession.id,
+        },
+        orderBy: { dateCreated: "desc" },
+    });
+
+    if (!sessions?.[0]?.id) {
+        return defaultInvalidReqResponse(ctx);
+    }
+
+    const list: SessionListData[] = [];
+    for (const session of sessions) {
+        list.push({
+            id: session.id,
+            userId: session.userId,
+            dateCreated: session.dateCreated,
+            dateLastActive: session.dateLastActive,
+            providerName: session.providerName || "",
+            status: session.status as UserSessionStates,
+            os: session.os,
+            browser: session.browser,
+            city: session.city,
+            country: session.country,
+            ip: session.ip,
+            userAgent: session.userAgent,
+        });
+    }
+
+    return ctx.json({ success: true, sessions: list }, httpCode("ok"));
+};
+
+export const deleteUserSession = async (ctx: Context, userSession: ContextUserSession, sessionId: string) => {
     try {
         const deletedSession = await prisma.session.delete({
             where: {

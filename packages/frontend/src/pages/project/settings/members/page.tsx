@@ -11,7 +11,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProjectPermissionsList } from "@shared/config/project";
-import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, doesMemberHaveAccess } from "@shared/lib/utils";
 import { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { checkFormValidity } from "@shared/schemas/utils";
 import { ProjectPermission } from "@shared/types";
@@ -30,7 +30,11 @@ const ProjectMemberSettingsPage = () => {
     const currUsersMembershipData = currUsersMembership.data;
 
     if (!projectData || !currUsersMembershipData) return null;
-    const canInviteMembers = currUsersMembershipData.permissions.includes(ProjectPermission.MANAGE_INVITES);
+    const canInviteMembers = doesMemberHaveAccess(
+        ProjectPermission.MANAGE_INVITES,
+        currUsersMembershipData.permissions,
+        currUsersMembershipData.isOwner,
+    );
 
     return (
         <>
@@ -244,18 +248,23 @@ const ProjectMember = ({
                                 Save changes
                             </Button>
 
-                            {!member.isOwner && currUsersMembership.permissions.includes(ProjectPermission.REMOVE_MEMBER) && (
-                                <Button
-                                    type="button"
-                                    variant="secondary-destructive"
-                                    size="sm"
-                                    disabled={isLoading}
-                                    onClick={removeTeamMember}
-                                >
-                                    <UserXIcon className="w-btn-icon h-btn-icon" />
-                                    Remove member
-                                </Button>
-                            )}
+                            {!member.isOwner &&
+                                doesMemberHaveAccess(
+                                    ProjectPermission.REMOVE_MEMBER,
+                                    currUsersMembership.permissions,
+                                    currUsersMembership.isOwner,
+                                ) && (
+                                    <Button
+                                        type="button"
+                                        variant="secondary-destructive"
+                                        size="sm"
+                                        disabled={isLoading}
+                                        onClick={removeTeamMember}
+                                    >
+                                        <UserXIcon className="w-btn-icon h-btn-icon" />
+                                        Remove member
+                                    </Button>
+                                )}
                         </div>
                     </form>
                 </Form>

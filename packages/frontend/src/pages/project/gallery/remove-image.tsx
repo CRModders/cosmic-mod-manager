@@ -27,9 +27,8 @@ const RemoveGalleryImage = ({ children, id }: { children: React.ReactNode; id: s
         setIsLoading(true);
 
         try {
-            const response = await useFetch(`/api/project/${projectData?.slug}/gallery`, {
+            const response = await useFetch(`/api/project/${projectData?.slug}/gallery/${id}`, {
                 method: "DELETE",
-                body: JSON.stringify({ id: id }),
             });
 
             const result = await response.json();

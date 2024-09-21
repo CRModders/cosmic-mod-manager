@@ -31,7 +31,7 @@ const ChangePasswordPage = () => {
             if (isLoading) return;
             setIsLoading(true);
 
-            const response = await useFetch("/api/user/send-password-change-email", {
+            const response = await useFetch("/api/user/change-password", {
                 method: "POST",
                 body: JSON.stringify(form.getValues()),
             });

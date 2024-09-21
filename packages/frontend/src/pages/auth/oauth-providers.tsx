@@ -2,27 +2,27 @@ import { DiscordIcon, GithubIcon, GitlabIcon, GoogleIcon } from "@/components/ic
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
-import { AuthActionIntent, AuthProviders } from "@shared/types";
+import { AuthActionIntent, AuthProvider } from "@shared/types";
 import React from "react";
 import { toast } from "sonner";
 
-export const ConfiguredAuthProviders = [AuthProviders.GITHUB, AuthProviders.DISCORD, AuthProviders.GOOGLE, AuthProviders.GITLAB];
+export const ConfiguredAuthProviders = [AuthProvider.GITHUB, AuthProvider.DISCORD, AuthProvider.GOOGLE, AuthProvider.GITLAB];
 
 export const authProvidersList = [
     {
-        name: AuthProviders.GITHUB,
+        name: AuthProvider.GITHUB,
         icon: <GithubIcon size="1.3rem" className="text-foreground" />,
     },
     {
-        name: AuthProviders.DISCORD,
+        name: AuthProvider.DISCORD,
         icon: <DiscordIcon size="1.4rem" className="text-foreground" />,
     },
     {
-        name: AuthProviders.GOOGLE,
+        name: AuthProvider.GOOGLE,
         icon: <GoogleIcon size="1.4rem" className="text-foreground" />,
     },
     {
-        name: AuthProviders.GITLAB,
+        name: AuthProvider.GITLAB,
         icon: <GitlabIcon size="1.5rem" className="text-foreground" />,
     },
 ];
@@ -37,21 +37,21 @@ const OAuthProvidersWidget = ({
     disabled?: boolean;
     isLoading: {
         value: boolean;
-        provider: AuthProviders | null;
+        provider: AuthProvider | null;
     };
     setIsLoading: React.Dispatch<
         React.SetStateAction<{
             value: boolean;
-            provider: AuthProviders | null;
+            provider: AuthProvider | null;
         }>
     >;
 }) => {
-    const redirectToOauthPage = async (provider: AuthProviders) => {
+    const redirectToOauthPage = async (provider: AuthProvider) => {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
 
-            const response = await useFetch(`/api/auth/${actionIntent}/get-oauth-url/${provider}`);
+            const response = await useFetch(`/api/auth/${actionIntent}/${provider}`);
             const result = await response.json();
 
             if (!response.ok || !result?.url) {

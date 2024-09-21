@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-const AddPasswordForm = () => {
+const AddPasswordForm = ({ email }: { email: string }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -44,7 +44,7 @@ const AddPasswordForm = () => {
         if (isLoading || !isFormSubmittable) return;
         setIsLoading(true);
 
-        const response = await useFetch("/api/user/add-new-password", {
+        const response = await useFetch("/api/user/password", {
             method: "POST",
             body: JSON.stringify(values),
         });
@@ -80,6 +80,8 @@ const AddPasswordForm = () => {
                             className="flex flex-col items-center justify-start gap-form-elements"
                             onSubmit={form.handleSubmit(addNewPassword)}
                         >
+                            <input type="email" name="email" readOnly hidden value={email} />
+
                             <FormField
                                 control={form.control}
                                 name="newPassword"

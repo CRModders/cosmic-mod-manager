@@ -8,6 +8,7 @@ import type { File as DBFile, Dependency } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
+import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
@@ -109,10 +110,16 @@ export const createNewVersion = async (
             },
         },
     });
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
+    const canUploadVersion = doesMemberHaveAccess(
+        ProjectPermission.UPLOAD_VERSION,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
     // Check if the user has permission to upload a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
+    if (!canUploadVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -279,10 +286,16 @@ export const updateVersionData = async (
     }
 
     // Return if project or target version not found
-    if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to edit a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.UPLOAD_VERSION)) {
+    const canUpdateVersion = doesMemberHaveAccess(
+        ProjectPermission.UPLOAD_VERSION,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!canUpdateVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -625,7 +638,8 @@ export const getAllProjectVersions = async (
                 name: fileData.name,
                 size: fileData.size,
                 type: fileData.type,
-                url: versionFileUrl(project.slug, version.slug, fileData.name, false) || "",
+                // ? Don't use cache cdn for primary files
+                url: versionFileUrl(project.slug, version.slug, fileData.name, !file.isPrimary) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
@@ -728,7 +742,8 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             name: fileData.name,
             size: fileData.size,
             type: fileData.type,
-            url: versionFileUrl(project.slug, version.slug, fileData.name, false) || "",
+            // ? Don't use cache cdn for primary files
+            url: versionFileUrl(project.slug, version.slug, fileData.name, !file.isPrimary) || "",
             sha1_hash: fileData.sha1_hash,
             sha512_hash: fileData.sha512_hash,
         };
@@ -815,10 +830,16 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         }
     }
 
-    if (!project?.id || !targetVersion?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the user has permission to upload a version
-    if (!project.team.members?.[0]?.permissions?.includes(ProjectPermission.DELETE_VERSION)) {
+    const canDeleteVersion = doesMemberHaveAccess(
+        ProjectPermission.DELETE_VERSION,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!canDeleteVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
     }

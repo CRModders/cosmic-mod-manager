@@ -1,5 +1,5 @@
 import { loaders, projectTypes } from "../../config/project";
-import { AuthProviders, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
+import { AuthProvider, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
 import { getTypeOfFile } from "./file-signature";
 
 export const getUserRoleFromString = (roleName: string) => {
@@ -34,18 +34,18 @@ export const getProjectTypeFromName = (type: string) => {
 
 export const getAuthProviderFromString = (providerName: string) => {
     switch (providerName.toLowerCase()) {
-        case AuthProviders.GITHUB:
-            return AuthProviders.GITHUB;
-        case AuthProviders.GITLAB:
-            return AuthProviders.GITLAB;
-        case AuthProviders.DISCORD:
-            return AuthProviders.DISCORD;
-        case AuthProviders.GOOGLE:
-            return AuthProviders.GOOGLE;
-        case AuthProviders.CREDENTIAL:
-            return AuthProviders.CREDENTIAL;
+        case AuthProvider.GITHUB:
+            return AuthProvider.GITHUB;
+        case AuthProvider.GITLAB:
+            return AuthProvider.GITLAB;
+        case AuthProvider.DISCORD:
+            return AuthProvider.DISCORD;
+        case AuthProvider.GOOGLE:
+            return AuthProvider.GOOGLE;
+        case AuthProvider.CREDENTIAL:
+            return AuthProvider.CREDENTIAL;
         default:
-            return AuthProviders.UNKNOWN;
+            return AuthProvider.UNKNOWN;
     }
 };
 

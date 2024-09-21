@@ -55,6 +55,7 @@
 - [x] Add search page
 
 - [x] Add CDN for caching files
+- [x] Separate route definitions from their handlers
 - [-] Add database backups
 - [-] Add backups for user uploaded files
 

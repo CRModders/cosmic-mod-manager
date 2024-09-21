@@ -9,7 +9,7 @@ import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { Capitalize } from "@shared/lib/utils";
-import { AuthProviders } from "@shared/types";
+import { AuthProvider } from "@shared/types";
 import type { SessionListData } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { KeyRoundIcon, XIcon } from "lucide-react";
@@ -20,7 +20,7 @@ import { authProvidersList } from "../../auth/oauth-providers";
 
 const getLoggedInSessions = async () => {
     try {
-        const response = await useFetch("/api/user/get-all-sessions");
+        const response = await useFetch("/api/auth/sessions");
         const sessions: SessionListData[] = (await response.json())?.sessions || [];
         return sessions;
     } catch (error) {
@@ -32,16 +32,19 @@ const getLoggedInSessions = async () => {
 const SessionsPage = () => {
     const [isLoading, setIsLoading] = useState<{ value: boolean; sessionId: string }>({ value: false, sessionId: "" });
     const { session: currSession } = useSession();
-    const loggedInSessions = useQuery({ queryKey: ["logged-in-sessions"], queryFn: getLoggedInSessions });
+    const loggedInSessions = useQuery({
+        queryKey: ["logged-in-sessions"],
+        queryFn: getLoggedInSessions,
+    });
 
     const revokeSession = async (sessionId: string) => {
         try {
             if (isLoading.value) return;
             setIsLoading({ value: true, sessionId: sessionId });
 
-            const response = await useFetch("/api/auth/session/logout", {
-                method: "POST",
-                body: JSON.stringify({ sessionId }),
+            const response = await useFetch("/api/auth/sessions", {
+                method: "DELETE",
+                body: JSON.stringify({ sessionId: sessionId }),
             });
             const result = await response.json();
 
@@ -132,7 +135,7 @@ const SessionsPage = () => {
                                               <div className="flex items-center justify-start mt-1">
                                                   <Tooltip>
                                                       <TooltipTrigger className="cursor-default flex gap-2 items-center justify-start text-muted-foreground">
-                                                          {session?.providerName !== AuthProviders.CREDENTIAL ? (
+                                                          {session?.providerName !== AuthProvider.CREDENTIAL ? (
                                                               authProvidersList?.map((authProvider) => {
                                                                   if (authProvider?.name.toLowerCase() === session?.providerName) {
                                                                       return (

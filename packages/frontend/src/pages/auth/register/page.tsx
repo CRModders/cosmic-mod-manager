@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { AuthActionIntent, type AuthProviders } from "@shared/types";
+import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import OAuthProvidersWidget from "../oauth-providers";
 const SignUpPage = () => {
     const [isLoading, setIsLoading] = useState<{
         value: boolean;
-        provider: AuthProviders | null;
+        provider: AuthProvider | null;
     }>({ value: false, provider: null });
 
     return (

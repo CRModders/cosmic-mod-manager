@@ -1,7 +1,7 @@
 import { PASSWORD_HASH_SALT_ROUNDS, STRING_ID_LENGTH } from "@shared/config";
 import { type Loader, loaders } from "@shared/config/project";
 import { isUserAProjectMember } from "@shared/lib/utils";
-import { type ConfirmationType, type ProjectPermission, type ProjectType, ProjectVisibility } from "@shared/types";
+import { type ConfirmationType, type ProjectType, ProjectVisibility } from "@shared/types";
 import type { TeamMember } from "@shared/types/api";
 import type { Context } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
@@ -84,11 +84,6 @@ export const isProjectAccessibleToCurrSession = (
         // isPublished &&
         !isPrivate || isMember
     );
-};
-
-export const doesMemberHasAccess = (requiredPermission: ProjectPermission, permissions: ProjectPermission[], isOwner = false) => {
-    if (isOwner === true) return true;
-    return permissions.includes(requiredPermission);
 };
 
 export const aggregateVersions = (versionsList: string[]) => {

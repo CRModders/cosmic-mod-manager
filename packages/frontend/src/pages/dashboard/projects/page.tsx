@@ -18,7 +18,7 @@ import CreateNewProjectDialog from "./new-project";
 
 const getAllUserProjects = async () => {
     try {
-        const response = await useFetch("/api/user/projects");
+        const response = await useFetch("/api/project");
         const result = await response.json();
         return (result?.projects as ProjectListItem[]) || null;
     } catch (error) {

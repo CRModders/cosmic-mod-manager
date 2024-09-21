@@ -5,7 +5,7 @@ import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { CSRF_STATE_COOKIE_NAME, SITE_NAME_SHORT } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
-import { AuthActionIntent, AuthProviders } from "@shared/types";
+import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -17,10 +17,13 @@ const OAuthCallbackPage = () => {
     const { authProvider } = useParams();
     const navigate = useNavigate();
 
-    const submitCode = async (code: string, provider: AuthProviders, actionIntent: AuthActionIntent) => {
+    const submitCode = async (code: string, provider: AuthProvider, actionIntent: AuthActionIntent) => {
         let redirectUrl = "/dashboard";
         try {
-            const response = await useFetch(`/api/auth/callback/${actionIntent}/${provider}?code=${code}`);
+            const response = await useFetch(`/api/auth/${actionIntent}/${provider}`, {
+                method: "POST",
+                body: JSON.stringify({ code: code }),
+            });
             const data = await response.json();
 
             redirectUrl = data?.redirect || redirectUrl;
@@ -55,7 +58,7 @@ const OAuthCallbackPage = () => {
             !authProvider ||
             !code ||
             !urlCsrfState ||
-            getAuthProviderFromString(authProvider) === AuthProviders.UNKNOWN
+            getAuthProviderFromString(authProvider) === AuthProvider.UNKNOWN
         ) {
             return navigate("/");
         }

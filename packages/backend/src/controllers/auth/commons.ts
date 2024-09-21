@@ -3,7 +3,7 @@ import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
 import { CSRF_STATE_COOKIE_NAME, STRING_ID_LENGTH } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
-import { type AuthActionIntent, AuthProviders } from "@shared/types";
+import { type AuthActionIntent, AuthProvider } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import { UAParser } from "ua-parser-js";
@@ -13,16 +13,16 @@ import { getGitlabUserProfileData } from "./gitlab";
 import { getGoogleUserProfileData } from "./google";
 
 const authUrlTemplates = {
-    [AuthProviders.GITHUB]: (clientId: string, redirectUri: string, csrfState: string) => {
+    [AuthProvider.GITHUB]: (clientId: string, redirectUri: string, csrfState: string) => {
         return `https://github.com/login/oauth/authorize?&response_type=code&client_id=${encodeURIComponent(clientId)}&redirect_uri=${redirectUri}&scope=${encodeURIComponent("read:user user:email")}&state=${csrfState}`;
     },
-    [AuthProviders.GITLAB]: (clientId: string, redirectUri: string, csrfState: string) => {
+    [AuthProvider.GITLAB]: (clientId: string, redirectUri: string, csrfState: string) => {
         return `https://gitlab.com/oauth/authorize?scope=read_user&response_type=code&client_id=${encodeURI(clientId)}&redirect_uri=${redirectUri}&state=${csrfState}`;
     },
-    [AuthProviders.DISCORD]: (clientId: string, redirectUri: string, csrfState: string) => {
+    [AuthProvider.DISCORD]: (clientId: string, redirectUri: string, csrfState: string) => {
         return `https://discord.com/oauth2/authorize?scope=identify+email&response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${csrfState}`;
     },
-    [AuthProviders.GOOGLE]: (clientId: string, redirectUri: string, csrfState: string) => {
+    [AuthProvider.GOOGLE]: (clientId: string, redirectUri: string, csrfState: string) => {
         return `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${encodeURIComponent(clientId)}&redirect_uri=${redirectUri}&state=${csrfState}&scope=openid+profile+email`;
     },
 };
@@ -34,14 +34,14 @@ export const getOAuthSignInUrl = (ctx: Context, authProvider: string, actionInte
     setUserCookie(ctx, CSRF_STATE_COOKIE_NAME, csrfState, { httpOnly: false });
 
     switch (authProvider) {
-        case AuthProviders.GITHUB:
-            return authUrlTemplates[AuthProviders.GITHUB](process.env.GITHUB_ID || "", redirectUri, csrfState);
-        case AuthProviders.GITLAB:
-            return authUrlTemplates[AuthProviders.GITLAB](process.env.GITLAB_ID || "", redirectUri, csrfState);
-        case AuthProviders.DISCORD:
-            return authUrlTemplates[AuthProviders.DISCORD](process.env.DISCORD_ID || "", redirectUri, csrfState);
-        case AuthProviders.GOOGLE:
-            return authUrlTemplates[AuthProviders.GOOGLE](process.env.GOOGLE_ID || "", redirectUri, csrfState);
+        case AuthProvider.GITHUB:
+            return authUrlTemplates[AuthProvider.GITHUB](process.env.GITHUB_ID || "", redirectUri, csrfState);
+        case AuthProvider.GITLAB:
+            return authUrlTemplates[AuthProvider.GITLAB](process.env.GITLAB_ID || "", redirectUri, csrfState);
+        case AuthProvider.DISCORD:
+            return authUrlTemplates[AuthProvider.DISCORD](process.env.DISCORD_ID || "", redirectUri, csrfState);
+        case AuthProvider.GOOGLE:
+            return authUrlTemplates[AuthProvider.GOOGLE](process.env.GOOGLE_ID || "", redirectUri, csrfState);
         default:
             return "";
     }
@@ -49,16 +49,16 @@ export const getOAuthSignInUrl = (ctx: Context, authProvider: string, actionInte
 
 export const getAuthProviderProfileData = async (authProvider: string, code: string) => {
     switch (getAuthProviderFromString(authProvider)) {
-        case AuthProviders.GITHUB:
+        case AuthProvider.GITHUB:
             return await getGithubUserProfileData(code);
 
-        case AuthProviders.GITLAB:
+        case AuthProvider.GITLAB:
             return await getGitlabUserProfileData(code);
 
-        case AuthProviders.DISCORD:
+        case AuthProvider.DISCORD:
             return await getDiscordUserProfileData(code);
 
-        case AuthProviders.GOOGLE:
+        case AuthProvider.GOOGLE:
             return await getGoogleUserProfileData(code);
 
         default:

@@ -1,9 +1,9 @@
+import { Button } from "@/components/ui/button";
 import type { LoggedInUserData } from "@shared/types";
-import AddPasswordForm from "./add-password";
-import RemovePasswordForm from "./remove-password";
 import { KeyRound } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import AddPasswordForm from "./add-password";
+import RemovePasswordForm from "./remove-password";
 
 interface Props {
     session: LoggedInUserData;
@@ -11,7 +11,7 @@ interface Props {
 
 const ManagePasswords = ({ session }: Props) => {
     if (!session?.hasAPassword) {
-        return <AddPasswordForm />;
+        return <AddPasswordForm email={session.email} />;
     }
 
     return (

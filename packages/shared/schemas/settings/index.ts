@@ -9,10 +9,10 @@ import {
     MIN_PASSWORD_LENGTH,
     MIN_USERNAME_LENGTH,
 } from "../../config/forms";
-import { AuthProviders } from "../../types";
+import { AuthProvider } from "../../types";
 
 export const profileUpdateFormSchema = z.object({
-    avatarUrlProvider: z.nativeEnum(AuthProviders),
+    avatarUrlProvider: z.nativeEnum(AuthProvider),
     userName: z
         .string()
         .min(MIN_USERNAME_LENGTH, "Enter your username")
@@ -40,5 +40,5 @@ export const removeAccountPasswordFormSchema = z.object({
 });
 
 export const sendAccoutPasswordChangeLinkFormSchema = z.object({
-    email: z.string().min(MIN_EMAIL_LENGTH).max(MAX_EMAIL_LENGTH),
+    email: z.string().email().min(MIN_EMAIL_LENGTH).max(MAX_EMAIL_LENGTH),
 });

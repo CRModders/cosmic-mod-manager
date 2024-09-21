@@ -2,7 +2,7 @@ import type { ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
-import { getFile, getProjectGalleryFile } from "@/services/storage";
+import { getFile, getFileUrl, getProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
@@ -19,7 +19,6 @@ export const serveVersionFile = async (
     // True when the client requests for the CDN_URL of the file
     // False means the request is coming from the CDN itself
     isUserRequest = true,
-    cdnUrlQueryKey = "isCdnReq",
 ) => {
     const projectData = await prisma.project.findUnique({
         where: {
@@ -108,7 +107,7 @@ export const serveVersionFile = async (
     return response;
 };
 
-export const serveProjectIconFile = async (ctx: Context, slug: string, userSession: ContextUserSession | undefined) => {
+export const serveProjectIconFile = async (ctx: Context, slug: string) => {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ slug: slug }, { id: slug }],
@@ -125,14 +124,15 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, userSessi
 
     const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
 
-    // Respond accordingly
+    // Redirect to the file if it's a URL
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
+
     const response = new Response(iconFile);
-    response.headers.set("Cache-Control", "public, max-age=3600");
+    response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
     return response;
 };
 
-export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, userSession: ContextUserSession | undefined) => {
+export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string) => {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ slug: slug }, { id: slug }],
@@ -140,6 +140,7 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
         select: {
             id: true,
             gallery: true,
+            slug: true,
         },
     });
     if (!project?.gallery?.[0]?.id) return ctx.json({}, httpCode("not_found"));
@@ -152,15 +153,20 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
             name: image,
         },
     });
-
     if (!dbFile) return ctx.json({}, httpCode("not_found"));
 
-    const imageFile = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, dbFile.name);
-    if (!imageFile) return ctx.json({}, httpCode("not_found"));
+    // Get the URL of the stored file
+    const imageFileUrl = getFileUrl(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.url, dbFile.name);
+    if (!imageFileUrl) return ctx.json({}, httpCode("not_found"));
 
-    if (typeof imageFile === "string") return ctx.redirect(imageFile);
+    // Get the file from the storage service
+    const file = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, imageFileUrl);
+    if (!file) return ctx.json({}, httpCode("not_found"));
 
-    const response = new Response(imageFile);
+    // If the file is a URL, redirect to it
+    if (typeof file === "string") return ctx.redirect(file);
+
+    const response = new Response(file);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // 1 year
     return response;
 };

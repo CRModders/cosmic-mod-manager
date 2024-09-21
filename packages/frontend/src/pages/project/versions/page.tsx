@@ -15,7 +15,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues } from "@shared/config/game-versions";
-import { CapitalizeAndFormatString, isUserAProjectMember } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, doesMemberHaveAccess, isUserAProjectMember } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { ProjectPermission, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
@@ -113,8 +113,8 @@ const ProjectVersionsPage = () => {
 
     return (
         <>
-            {/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
-            {projectMembership && projectMembership?.permissions?.includes(ProjectPermission.UPLOAD_VERSION) ? (
+            {projectMembership &&
+            doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, projectMembership.permissions, projectMembership.isOwner) ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 

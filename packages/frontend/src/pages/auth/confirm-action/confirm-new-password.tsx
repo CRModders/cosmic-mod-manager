@@ -22,8 +22,8 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "confirming" });
 
-            const response = await useFetch("/api/user/confirm-adding-new-password", {
-                method: "POST",
+            const response = await useFetch("/api/user/password", {
+                method: "PUT",
                 body: JSON.stringify({ code: code }),
             });
 
@@ -43,8 +43,8 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancelling" });
 
-            const response = await useFetch("/api/user/cancel-adding-new-password", {
-                method: "POST",
+            const response = await useFetch("/api/user/confirmation-action", {
+                method: "DELETE",
                 body: JSON.stringify({ code: code }),
             });
 

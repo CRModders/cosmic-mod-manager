@@ -15,9 +15,14 @@ import { type Context, Hono } from "hono";
 
 const versionRouter = new Hono();
 
-// ?  PREFIX "/api/project/:projectSlug/version"
+versionRouter.get("/", versions_get);
+versionRouter.get("/:versionSlug", version_get);
 
-versionRouter.get("/", async (ctx: Context) => {
+versionRouter.post("/", LoginProtectedRoute, version_post);
+versionRouter.patch("/:versionSlug", LoginProtectedRoute, version_patch);
+versionRouter.delete("/:versionSlug", LoginProtectedRoute, version_delete);
+
+async function versions_get(ctx: Context) {
     try {
         const projectSlug = ctx.req.param("projectSlug");
         if (!projectSlug) return defaultInvalidReqResponse(ctx);
@@ -29,9 +34,9 @@ versionRouter.get("/", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-versionRouter.get("/:versionSlug", async (ctx: Context) => {
+async function version_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug } = ctx.req.param();
@@ -42,9 +47,9 @@ versionRouter.get("/:versionSlug", async (ctx: Context) => {
         console.trace(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
+async function version_post(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const projectSlug = ctx.req.param("projectSlug");
@@ -88,9 +93,9 @@ versionRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         console.trace(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-versionRouter.patch("/:versionSlug", LoginProtectedRoute, async (ctx: Context) => {
+async function version_patch(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug } = ctx.req.param();
@@ -131,9 +136,9 @@ versionRouter.patch("/:versionSlug", LoginProtectedRoute, async (ctx: Context) =
         console.trace(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-versionRouter.delete("/:versionSlug", LoginProtectedRoute, async (ctx: Context) => {
+async function version_delete(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         const { projectSlug, versionSlug } = ctx.req.param();
@@ -144,6 +149,6 @@ versionRouter.delete("/:versionSlug", LoginProtectedRoute, async (ctx: Context) 
         console.trace(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
 export default versionRouter;

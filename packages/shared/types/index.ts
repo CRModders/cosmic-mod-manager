@@ -1,4 +1,4 @@
-export enum AuthProviders {
+export enum AuthProvider {
     GITHUB = "github",
     GITLAB = "gitlab",
     DISCORD = "discord",
@@ -26,10 +26,9 @@ export interface LoggedInUserData {
     userName: string;
     hasAPassword: boolean;
     avatarUrl?: string | null;
-    avatarProvider?: AuthProviders | null;
+    avatarProvider?: AuthProvider | null;
     role: GlobalUserRoles;
     sessionId: string;
-    sessionToken: string;
 }
 
 export enum ProjectType {
@@ -85,6 +84,8 @@ export enum VersionReleaseChannel {
 export enum GameVersionReleaseType {
     RELEASE = "release",
     SNAPSHOT = "snapshot",
+    BETA = "beta",
+    ALPHA = "alpha",
     PRE_ALPHA = "pre-alpha",
 }
 

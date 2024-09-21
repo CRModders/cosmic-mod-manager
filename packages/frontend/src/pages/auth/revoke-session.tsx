@@ -10,13 +10,12 @@ const RevokeSessionPage = () => {
     const [successMessage, setSuccessMessage] = useState("");
     const [searchParams] = useSearchParams();
 
-    const RevokeSession = async () => {
+    const RevokeSession = async (code: string) => {
         try {
             setIsLoading(true);
 
-            const response = await useFetch("/api/auth/session/revoke-from-code", {
-                method: "POST",
-                body: JSON.stringify({ code: searchParams.get("code") }),
+            const response = await useFetch(`/api/auth/sessions/${code}`, {
+                method: "DELETE",
             });
             const result = await response.json();
 
@@ -33,8 +32,9 @@ const RevokeSessionPage = () => {
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (searchParams) {
-            RevokeSession();
+        const code = searchParams.get("code");
+        if (code) {
+            RevokeSession(code);
         }
     }, [searchParams]);
 

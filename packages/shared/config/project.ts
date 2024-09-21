@@ -1,11 +1,11 @@
-import { AuthProviders, ProjectPermission, ProjectType, TagHeaderTypes } from "../types";
+import { AuthProvider, ProjectPermission, ProjectType, TagHeaderTypes } from "../types";
 
 export const authProvidersList = [
-    AuthProviders.GITHUB,
-    AuthProviders.GITLAB,
-    AuthProviders.DISCORD,
-    AuthProviders.GOOGLE,
-    AuthProviders.CREDENTIAL,
+    AuthProvider.GITHUB,
+    AuthProvider.GITLAB,
+    AuthProvider.DISCORD,
+    AuthProvider.GOOGLE,
+    AuthProvider.CREDENTIAL,
 ];
 
 export const projectTypes = [

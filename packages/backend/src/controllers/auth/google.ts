@@ -1,5 +1,5 @@
 import type { AuthUserProfile } from "@/../types";
-import { AuthProviders } from "@shared/types";
+import { AuthProvider } from "@shared/types";
 
 export const getGoogleUserProfileData = async (tokenExchangeCode: string) => {
     const clientId = process.env.GOOGLE_ID;
@@ -12,7 +12,7 @@ export const getGoogleUserProfileData = async (tokenExchangeCode: string) => {
     params.append("client_secret", clientSecret || "");
     params.append("code", tokenExchangeCode);
     params.append("grant_type", "authorization_code");
-    params.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProviders.GOOGLE}`);
+    params.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProvider.GOOGLE}`);
 
     const authTokenRes = await fetch(url, {
         method: "POST",
@@ -33,7 +33,7 @@ export const getGoogleUserProfileData = async (tokenExchangeCode: string) => {
         name: userData?.name || "",
         email: userData?.email || null,
         emailVerified: userData?.email_verified === true,
-        providerName: AuthProviders.GOOGLE,
+        providerName: AuthProvider.GOOGLE,
         providerAccountId: userData?.sub?.toString() || null,
         authType: "oauth",
         accessToken: accessToken,

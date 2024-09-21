@@ -19,7 +19,17 @@ import { type Context, Hono } from "hono";
 const searchRouter = new Hono();
 searchRouter.use("*", searchApiRateLimiterMiddleware);
 
-searchRouter.get("/", async (ctx: Context) => {
+searchRouter.get("/", searchProjectsRoute);
+searchRouter.get("/filters/sort-by", sortByFilters);
+searchRouter.get("/filters/loaders", loaderFilters);
+searchRouter.get("/filters/game-versions", gameVersionFilters);
+searchRouter.get("/filters/categories", categoryFilters);
+searchRouter.get("/filters/features", featureFilters);
+searchRouter.get("/filters/resolutions", resolutionFilters);
+searchRouter.get("/filters/performance-impact", performanceImpactFilters);
+searchRouter.get("/filters/license", licenseFilters);
+
+async function searchProjectsRoute(ctx: Context) {
     try {
         const query = ctx.req.query("q") || "";
         const categories = ctx.req.queries(categoryFilterParamNamespace) || [];
@@ -49,9 +59,9 @@ searchRouter.get("/", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/sort-by", async (ctx: Context) => {
+async function sortByFilters(ctx: Context) {
     try {
         const list = [
             SearchResultSortMethod.RELEVANCE,
@@ -65,9 +75,9 @@ searchRouter.get("/filters/sort-by", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/loaders", async (ctx: Context) => {
+async function loaderFilters(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -80,18 +90,18 @@ searchRouter.get("/filters/loaders", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/game-versions", async (ctx: Context) => {
+async function gameVersionFilters(ctx: Context) {
     try {
         return ctx.json({ success: true, queryKey: gameVersionFilterParamNamespace, list: GAME_VERSIONS }, httpCode("ok"));
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/categories", async (ctx: Context) => {
+async function categoryFilters(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -104,9 +114,9 @@ searchRouter.get("/filters/categories", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/features", async (ctx: Context) => {
+async function featureFilters(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -119,9 +129,9 @@ searchRouter.get("/filters/features", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/resolutions", async (ctx: Context) => {
+async function resolutionFilters(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -134,9 +144,9 @@ searchRouter.get("/filters/resolutions", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/performance-impact", async (ctx: Context) => {
+async function performanceImpactFilters(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -149,15 +159,15 @@ searchRouter.get("/filters/performance-impact", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-searchRouter.get("/filters/license", async (ctx: Context) => {
+async function licenseFilters(ctx: Context) {
     try {
         return ctx.json({ success: true, queryKey: licenseFilterParamNamespace, list: ["oss"] }, httpCode("ok"));
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
 export default searchRouter;

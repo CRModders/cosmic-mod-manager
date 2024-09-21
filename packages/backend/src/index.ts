@@ -7,6 +7,7 @@ import { ddosPreventionRateLimiterMiddleware } from "./middleware/rate-limiter";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
 import searchRouter from "./routes/search";
+import tagsRouter from "./routes/tags";
 import { queueDownloadsCounterQueueProcessing } from "./services/queues/downloads-queue";
 import queueSearchDbSync from "./services/queues/searchdb-sync";
 
@@ -22,11 +23,16 @@ app.use(
     }),
 );
 
+app.get("/", (ctx: Context) => {
+    return ctx.redirect("/api");
+});
+
 app.get("/favicon.ico", async (ctx: Context) => {
     return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
 });
 
 app.route("/api/search", searchRouter);
+app.route("/api/tag", tagsRouter);
 app.route("/api", router);
 app.route("/cdn", cdnRouter);
 

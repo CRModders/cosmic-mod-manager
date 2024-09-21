@@ -1,10 +1,11 @@
 import { ctxReqBodyNamespace } from "@/../types";
 import { getOAuthSignInUrl } from "@/controllers/auth/commons";
 import { linkAuthProviderHandler, unlinkAuthProvider } from "@/controllers/auth/link-provider";
-import { logOutUserSession, revokeSessionFromAccessCode } from "@/controllers/auth/session";
+import { deleteUserSession, getUserSessions, revokeSessionFromAccessCode } from "@/controllers/auth/session";
 import { oAuthSignInHandler } from "@/controllers/auth/signin";
 import credentialSignIn from "@/controllers/auth/signin/credential";
 import { oAuthSignUpHandler } from "@/controllers/auth/signup";
+import { getLinkedAuthProviders } from "@/controllers/user/profile";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
 import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
@@ -12,12 +13,31 @@ import { authProvidersList } from "@shared/config/project";
 import { getAuthProviderFromString, getUserRoleFromString } from "@shared/lib/utils/convertors";
 import { LoginFormSchema } from "@shared/schemas/auth";
 import { parseValueToSchema } from "@shared/schemas/utils";
-import { AuthActionIntent, AuthProviders, type LoggedInUserData } from "@shared/types";
+import { AuthActionIntent, AuthProvider, type LoggedInUserData } from "@shared/types";
 import { type Context, Hono } from "hono";
 
 const authRouter = new Hono();
 
-authRouter.get("/me", async (ctx: Context) => {
+authRouter.get("/me", currSession_get);
+
+// Routes to get OAuth URL
+authRouter.get("/signin/:authProvider", async (ctx: Context) => getOAuthUrlRoute(ctx, AuthActionIntent.SIGN_IN));
+authRouter.get("/signup/:authProvider", async (ctx: Context) => getOAuthUrlRoute(ctx, AuthActionIntent.SIGN_UP));
+authRouter.get("/link-provider/:authProvider", LoginProtectedRoute, async (ctx: Context) =>
+    getOAuthUrlRoute(ctx, AuthActionIntent.LINK_PROVIDER),
+);
+
+authRouter.post("/signin/credential", credentialSignin_post); // Sign in with credentials
+authRouter.post("/signin/:authProvider", oAuthSignIn_post);
+authRouter.post("/signup/:authProvider", oAuthSignUp_post);
+authRouter.post("/link-provider/:authProvider", LoginProtectedRoute, oAuthLinkProvider_post);
+authRouter.delete("link-provider/:authProvider", LoginProtectedRoute, oAuthLinkProvider_delete);
+authRouter.get("/auth-providers", LoginProtectedRoute, oAuthProviders_get);
+authRouter.get("/sessions", LoginProtectedRoute, sessions_get);
+authRouter.delete("/sessions", LoginProtectedRoute, sessions_delete);
+authRouter.delete("/sessions/:revokeCode", revokeSession_delete);
+
+async function currSession_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
 
@@ -32,7 +52,6 @@ authRouter.get("/me", async (ctx: Context) => {
             avatarUrl: userSession.avatarUrl,
             avatarProvider: getAuthProviderFromString(userSession?.avatarUrlProvider || ""),
             sessionId: userSession.sessionId,
-            sessionToken: userSession.sessionToken,
         };
 
         return ctx.json({ data: formattedObject }, httpCode("ok"));
@@ -40,36 +59,22 @@ authRouter.get("/me", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get(`/${AuthActionIntent.SIGN_IN}/get-oauth-url/:authProvider`, async (ctx: Context) => {
+async function getOAuthUrlRoute(ctx: Context, intent: AuthActionIntent) {
     try {
-        const url = getOAuthSignInUrl(ctx, ctx.req.param("authProvider"), AuthActionIntent.SIGN_IN);
-        return ctx.json({ url }, httpCode("ok"));
+        const authProvider = getAuthProviderFromString(ctx.req.param("authProvider"));
+        if (!authProvider || authProvider === AuthProvider.UNKNOWN)
+            return ctx.json({ success: false, message: "Invalid auth provider" }, httpCode("bad_request"));
+
+        const url = getOAuthSignInUrl(ctx, authProvider, intent);
+        return ctx.json({ success: true, url }, httpCode("ok"));
     } catch (error) {
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get(`/${AuthActionIntent.SIGN_UP}/get-oauth-url/:authProvider`, async (ctx: Context) => {
-    try {
-        const url = getOAuthSignInUrl(ctx, ctx.req.param("authProvider"), AuthActionIntent.SIGN_UP);
-        return ctx.json({ url }, httpCode("ok"));
-    } catch (error) {
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-authRouter.get(`/${AuthActionIntent.LINK_PROVIDER}/get-oauth-url/:authProvider`, LoginProtectedRoute, async (ctx: Context) => {
-    try {
-        const url = getOAuthSignInUrl(ctx, ctx.req.param("authProvider"), AuthActionIntent.LINK_PROVIDER);
-        return ctx.json({ url }, httpCode("ok"));
-    } catch (error) {
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-authRouter.post(`/${AuthActionIntent.SIGN_IN}/${AuthProviders.CREDENTIAL}`, async (ctx: Context) => {
+async function credentialSignin_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
@@ -81,16 +86,16 @@ authRouter.post(`/${AuthActionIntent.SIGN_IN}/${AuthProviders.CREDENTIAL}`, asyn
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get(`/callback/${AuthActionIntent.SIGN_IN}/:authProvider`, async (ctx: Context) => {
+async function oAuthSignIn_post(ctx: Context) {
     try {
         if (getUserSessionFromCtx(ctx)?.id) {
             return defaultInvalidReqResponse(ctx);
         }
 
         const authProvider = ctx.req.param("authProvider");
-        const code = decodeURIComponent(ctx.req.query("code") || "");
+        const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!authProvidersList.includes(getAuthProviderFromString(authProvider)) || !code) {
             return defaultInvalidReqResponse(ctx);
         }
@@ -100,16 +105,16 @@ authRouter.get(`/callback/${AuthActionIntent.SIGN_IN}/:authProvider`, async (ctx
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get(`/callback/${AuthActionIntent.SIGN_UP}/:authProvider`, async (ctx: Context) => {
+async function oAuthSignUp_post(ctx: Context) {
     try {
         if (getUserSessionFromCtx(ctx)?.id) {
             return defaultInvalidReqResponse(ctx);
         }
 
         const authProvider = ctx.req.param("authProvider");
-        const code = decodeURIComponent(ctx.req.query("code") || "");
+        const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!authProvidersList.includes(getAuthProviderFromString(authProvider)) || !code) {
             return defaultInvalidReqResponse(ctx);
         }
@@ -119,9 +124,9 @@ authRouter.get(`/callback/${AuthActionIntent.SIGN_UP}/:authProvider`, async (ctx
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get(`/callback/${AuthActionIntent.LINK_PROVIDER}/:authProvider`, LoginProtectedRoute, async (ctx: Context) => {
+async function oAuthLinkProvider_post(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) {
@@ -129,7 +134,7 @@ authRouter.get(`/callback/${AuthActionIntent.LINK_PROVIDER}/:authProvider`, Logi
         }
 
         const authProvider = ctx.req.param("authProvider");
-        const code = decodeURIComponent(ctx.req.query("code") || "");
+        const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!authProvidersList.includes(getAuthProviderFromString(authProvider)) || !code) {
             return defaultInvalidReqResponse(ctx);
         }
@@ -139,9 +144,9 @@ authRouter.get(`/callback/${AuthActionIntent.LINK_PROVIDER}/:authProvider`, Logi
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.get("/unlink-provider/:authProvider", LoginProtectedRoute, async (ctx: Context) => {
+async function oAuthLinkProvider_delete(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) {
@@ -154,25 +159,49 @@ authRouter.get("/unlink-provider/:authProvider", LoginProtectedRoute, async (ctx
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.post("/session/logout", LoginProtectedRoute, async (ctx: Context) => {
+async function oAuthProviders_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) return ctx.json({}, httpCode("bad_request"));
 
-        const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || userSession.sessionId;
+        return await getLinkedAuthProviders(ctx, userSession);
+    } catch (err) {
+        console.error(err);
+        return defaultServerErrorResponse(ctx);
+    }
+}
 
-        return await logOutUserSession(ctx, userSession, targetSessionId);
+async function sessions_get(ctx: Context) {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!userSession) return ctx.json([], httpCode("ok"));
+
+        return await getUserSessions(ctx, userSession);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-authRouter.post("/session/revoke-from-code", async (ctx: Context) => {
+async function sessions_delete(ctx: Context) {
     try {
-        const code = ctx.get(ctxReqBodyNamespace)?.code;
+        const userSession = getUserSessionFromCtx(ctx);
+        const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || userSession?.sessionId;
+        if (!userSession?.id || !targetSessionId)
+            return ctx.json({ success: false, message: "Session id is required" }, httpCode("bad_request"));
+
+        return await deleteUserSession(ctx, userSession, targetSessionId);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function revokeSession_delete(ctx: Context) {
+    try {
+        const code = ctx.req.param("revokeCode");
         if (!code) return ctx.json({ success: false }, httpCode("bad_request"));
 
         return await revokeSessionFromAccessCode(ctx, code);
@@ -180,6 +209,6 @@ authRouter.post("/session/revoke-from-code", async (ctx: Context) => {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
 export default authRouter;

@@ -3,27 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
+import { authProvidersList } from "@/src/pages/auth/oauth-providers";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Capitalize } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
-import { AuthActionIntent, type AuthProviders, type LinkedProvidersListData } from "@shared/types";
+import { AuthActionIntent, type AuthProvider, type LinkedProvidersListData } from "@shared/types";
 import { Link2Icon, SettingsIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { authProvidersList } from "../../auth/oauth-providers";
 
 const ManageAuthProviders = ({
     linkedAuthProviders,
     refetchLinkedAuthProviders,
 }: { linkedAuthProviders: LinkedProvidersListData[]; refetchLinkedAuthProviders: () => Promise<void> }) => {
-    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProviders | null }>({ value: false, provider: null });
+    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
 
-    const redirectToOauthPage = async (provider: AuthProviders) => {
+    const redirectToOauthPage = async (provider: AuthProvider) => {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
 
-            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK_PROVIDER}/get-oauth-url/${provider}`);
+            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK_PROVIDER}/${provider}`);
             const result = await response.json();
 
             if (!response.ok || !result?.url) {
@@ -39,12 +39,14 @@ const ManageAuthProviders = ({
         }
     };
 
-    const removeAuthProvider = async (provider: AuthProviders) => {
+    const removeAuthProvider = async (provider: AuthProvider) => {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
 
-            const response = await useFetch(`/api/auth/unlink-provider/${provider}`);
+            const response = await useFetch(`/api/auth/${AuthActionIntent.LINK_PROVIDER}/${provider}`, {
+                method: "DELETE",
+            });
             const result = await response.json();
 
             if (!response.ok || !result?.success) {

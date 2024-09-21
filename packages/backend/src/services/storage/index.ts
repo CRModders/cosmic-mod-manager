@@ -1,4 +1,5 @@
 import { FILE_STORAGE_SERVICE } from "@/../types";
+import { isUrl } from "@shared/lib/utils";
 import { uploadImageToImgbb } from "./imgbb-upload";
 import { deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
 import { projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
@@ -135,15 +136,18 @@ export const getProjectVersionFile = async (
 
 // ? Project Gallery Files
 export const getProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
+    if (isUrl(fileName)) return fileName;
     return await getFile(storageService, projectGalleryStoragePath(projectId, fileName));
 };
 
 export const saveProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, file: File, fileName: string) => {
+    if (isUrl(fileName)) return fileName;
     // TODO: Create backup
     return await saveFile(storageService, file, projectGalleryStoragePath(projectId, fileName));
 };
 
 export const deleteProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
+    if (isUrl(fileName)) return fileName;
     // TODO: Remove backup file
     return await deleteFile(storageService, projectGalleryStoragePath(projectId, fileName));
 };

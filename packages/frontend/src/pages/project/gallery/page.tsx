@@ -6,6 +6,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import { LoadingStatus } from "@/types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SITE_NAME_SHORT } from "@shared/config";
+import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { GalleryItem, TeamMember } from "@shared/types/api";
 import {
@@ -41,7 +42,8 @@ const ProjectGallery = () => {
                 </title>
             </Helmet>
 
-            {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermission.EDIT_DETAILS) ? (
+            {currUsersMembership.data?.id &&
+            doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currUsersMembership.data.permissions, currUsersMembership.data.isOwner) ? (
                 <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
                     <Suspense>
                         <UploadGalleryImageForm />
@@ -129,7 +131,8 @@ const GalleryItemCard = ({
                         <CalendarIcon className="w-btn-icon h-btn-icon" />
                         {formatDate(new Date(galleryItem.dateCreated), "${month} ${day}, ${year}")}
                     </p>
-                    {currUsersMembership?.id && currUsersMembership?.permissions.includes(ProjectPermission.EDIT_DETAILS) ? (
+                    {currUsersMembership?.id &&
+                    doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
                         <div className="w-full flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                             <Suspense>
                                 <EditGalleryImage galleryItem={galleryItem} />

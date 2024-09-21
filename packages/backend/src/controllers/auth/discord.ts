@@ -1,4 +1,4 @@
-import { AuthProviders } from "@shared/types";
+import { AuthProvider } from "@shared/types";
 import type { AuthUserProfile } from "../../../types";
 
 export const getDiscordUserProfileData = async (tokenExchangeCode: string) => {
@@ -10,7 +10,7 @@ export const getDiscordUserProfileData = async (tokenExchangeCode: string) => {
     formData.append("client_id", client_id);
     formData.append("client_secret", client_secret);
     formData.append("grant_type", "authorization_code");
-    formData.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProviders.DISCORD}`);
+    formData.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProvider.DISCORD}`);
     formData.append("code", tokenExchangeCode);
 
     const authTokenRes = await fetch(url, {
@@ -36,7 +36,7 @@ export const getDiscordUserProfileData = async (tokenExchangeCode: string) => {
         name: userProfile?.name || null,
         email: userProfile?.email || null,
         emailVerified: userProfile?.verified === true,
-        providerName: AuthProviders.DISCORD,
+        providerName: AuthProvider.DISCORD,
         providerAccountId: userProfile?.id?.toString() || null,
         authType: "oauth",
         accessToken: accessToken,

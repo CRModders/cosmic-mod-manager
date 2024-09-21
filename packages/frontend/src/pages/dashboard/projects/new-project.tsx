@@ -49,7 +49,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
 
-            const response = await useFetch("/api/project/new", {
+            const response = await useFetch("/api/project", {
                 method: "POST",
                 body: JSON.stringify(form.getValues()),
             });

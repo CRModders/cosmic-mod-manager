@@ -1,23 +1,15 @@
 import {
-    addNewPassword,
-    cancelAccountDeletion,
-    cancelAddingNewPassword,
-    cancelSettingNewPassword,
+    addNewPassword_ConfirmationEmail,
+    changeUserPassword,
     confirmAccountDeletion,
     confirmAddingNewPassword,
-    deleteUserAccount,
+    deleteConfirmationActionCode,
+    deleteUserAccountConfirmationEmail,
     getConfirmActionTypeFromCode,
     removeAccountPassword,
     sendAccountPasswordChangeLink,
-    setNewPassword,
 } from "@/controllers/user/account";
-import {
-    getAllSessions,
-    getAllVisibleProjects,
-    getLinkedAuthProviders,
-    getUserProfileData,
-    updateUserProfile,
-} from "@/controllers/user/profile";
+import { getUserProfileData, updateUserProfile } from "@/controllers/user/profile";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
@@ -35,48 +27,38 @@ import { ctxReqBodyNamespace } from "../../types";
 
 const userRouter = new Hono();
 
-userRouter.get("/_/:slug", async (ctx: Context) => {
+userRouter.get("/", user_get);
+userRouter.get("/:slug", user_get);
+userRouter.patch("/", LoginProtectedRoute, user_patch);
+userRouter.delete("/", user_delete);
+userRouter.post("/delete-account", LoginProtectedRoute, deleteAccountConfirmation_post);
+
+userRouter.post("/confirmation-action", userConfirmationAction_post);
+userRouter.delete("/confirmation-action", userConfirmationAction_delete);
+
+userRouter.post("/password", LoginProtectedRoute, addPasswordConfirmation_post);
+userRouter.put("/password", addPasswordConfirmation_put);
+userRouter.delete("/password", LoginProtectedRoute, userPassword_delete);
+
+userRouter.post("/change-password", changePasswordConfirmationEmail_post);
+userRouter.patch("/password", userPassword_patch);
+
+// Get currently logged in user
+async function user_get(ctx: Context) {
     try {
-        const slug = ctx.req.param("slug");
-        if (!slug) return defaultInvalidReqResponse(ctx);
         const userSession = getUserSessionFromCtx(ctx);
+        const slug = ctx.req.param("slug") || userSession?.id;
+        if (!slug) return defaultInvalidReqResponse(ctx);
 
         return await getUserProfileData(ctx, userSession, slug);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.get("/_/:slug/projects", async (ctx: Context) => {
-    try {
-        const slug = ctx.req.param("slug");
-        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
-        if (!slug) return defaultInvalidReqResponse(ctx);
-        const userSession = getUserSessionFromCtx(ctx);
-
-        return await getAllVisibleProjects(ctx, userSession, slug, listedProjectsOnly);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.get("/projects", async (ctx: Context) => {
-    try {
-        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
-        const userSession = getUserSessionFromCtx(ctx);
-        const userName = userSession?.userName;
-        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
-
-        return await getAllVisibleProjects(ctx, userSession, userName, listedProjectsOnly);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.post("/update-profile", LoginProtectedRoute, async (ctx: Context) => {
+// Update user profile
+async function user_patch(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(profileUpdateFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
@@ -87,34 +69,26 @@ userRouter.post("/update-profile", LoginProtectedRoute, async (ctx: Context) => 
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.get("/get-linked-auth-providers", LoginProtectedRoute, async (ctx: Context) => {
+// Delete user account
+async function user_delete(ctx: Context) {
     try {
-        const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession?.id) return ctx.json({}, httpCode("bad_request"));
-
-        return await getLinkedAuthProviders(ctx, userSession);
-    } catch (err) {
-        console.error(err);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.post("/add-new-password", LoginProtectedRoute, async (ctx: Context) => {
-    try {
-        const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        const code = ctx.get(ctxReqBodyNamespace)?.code;
+        if (!code) {
+            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
+            return defaultInvalidReqResponse(ctx);
         }
-        return await addNewPassword(ctx, data);
+
+        return await confirmAccountDeletion(ctx, code);
     } catch (err) {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/get-confirm-action-type", async (ctx: Context) => {
+// Get confirmation action type
+async function userConfirmationAction_post(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
@@ -125,22 +99,38 @@ userRouter.post("/get-confirm-action-type", async (ctx: Context) => {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/cancel-adding-new-password", async (ctx: Context) => {
+// Delete confirmation action code
+async function userConfirmationAction_delete(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
             return ctx.json({ success: false }, httpCode("bad_request"));
         }
-        return await cancelAddingNewPassword(ctx, code);
+        return await deleteConfirmationActionCode(ctx, code);
     } catch (err) {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/confirm-adding-new-password", async (ctx: Context) => {
+// Send new password confirmation email
+async function addPasswordConfirmation_post(ctx: Context) {
+    try {
+        const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+        }
+        return await addNewPassword_ConfirmationEmail(ctx, data);
+    } catch (err) {
+        console.error(err);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+// Add the new password
+async function addPasswordConfirmation_put(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) return ctx.json({ success: false }, httpCode("bad_request"));
@@ -150,9 +140,10 @@ userRouter.post("/confirm-adding-new-password", async (ctx: Context) => {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/remove-account-password", LoginProtectedRoute, async (ctx: Context) => {
+// Remove user password
+async function userPassword_delete(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(removeAccountPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
@@ -167,9 +158,10 @@ userRouter.post("/remove-account-password", LoginProtectedRoute, async (ctx: Con
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/send-password-change-email", async (ctx: Context) => {
+// Send change password confirmation email
+async function changePasswordConfirmationEmail_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
@@ -180,22 +172,10 @@ userRouter.post("/send-password-change-email", async (ctx: Context) => {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/cancel-settings-new-password", async (ctx: Context) => {
-    try {
-        const code = ctx.get(ctxReqBodyNamespace)?.code;
-        if (!code) {
-            return defaultInvalidReqResponse(ctx);
-        }
-        return await cancelSettingNewPassword(ctx, code);
-    } catch (err) {
-        console.error(err);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.post("/set-new-password", async (ctx: Context) => {
+// Change user password
+async function userPassword_patch(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
@@ -205,14 +185,15 @@ userRouter.post("/set-new-password", async (ctx: Context) => {
         if (!code) {
             return defaultInvalidReqResponse(ctx);
         }
-        return await setNewPassword(ctx, code, data);
+        return await changeUserPassword(ctx, code, data);
     } catch (err) {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-userRouter.post("/delete-account", LoginProtectedRoute, async (ctx: Context) => {
+// Send delete account confirmation email
+async function deleteAccountConfirmation_post(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession?.id) {
@@ -220,53 +201,11 @@ userRouter.post("/delete-account", LoginProtectedRoute, async (ctx: Context) => 
             return defaultInvalidReqResponse(ctx);
         }
 
-        return await deleteUserAccount(ctx, userSession);
+        return await deleteUserAccountConfirmationEmail(ctx, userSession);
     } catch (err) {
         console.error(err);
         return defaultServerErrorResponse(ctx);
     }
-});
-
-userRouter.post("/cancel-account-deletion", async (ctx: Context) => {
-    try {
-        const code = ctx.get(ctxReqBodyNamespace)?.code;
-        if (!code) {
-            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-            return defaultInvalidReqResponse(ctx);
-        }
-
-        return await cancelAccountDeletion(ctx, code);
-    } catch (err) {
-        console.error(err);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.post("/confirm-account-deletion", async (ctx: Context) => {
-    try {
-        const code = ctx.get(ctxReqBodyNamespace)?.code;
-        if (!code) {
-            await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-            return defaultInvalidReqResponse(ctx);
-        }
-
-        return await confirmAccountDeletion(ctx, code);
-    } catch (err) {
-        console.error(err);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-userRouter.get("/get-all-sessions", LoginProtectedRoute, async (ctx: Context) => {
-    try {
-        const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession) return ctx.json([], httpCode("ok"));
-
-        return await getAllSessions(ctx, userSession);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
+}
 
 export default userRouter;

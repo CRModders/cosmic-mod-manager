@@ -40,8 +40,8 @@ const RemovePasswordForm = () => {
             if (isLoading) return;
             setIsLoading(true);
 
-            const response = await useFetch("/api/user/remove-account-password", {
-                method: "POST",
+            const response = await useFetch("/api/user/password", {
+                method: "DELETE",
                 body: JSON.stringify(form.getValues()),
             });
 

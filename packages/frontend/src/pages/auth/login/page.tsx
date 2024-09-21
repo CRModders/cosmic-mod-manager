@@ -10,7 +10,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { LoginFormSchema } from "@shared/schemas/auth";
-import { AuthActionIntent, AuthProviders } from "@shared/types";
+import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
@@ -23,7 +23,7 @@ import OAuthProvidersWidget from "../oauth-providers";
 const LoginPage = () => {
     const { validateSession } = useSession();
     const [formError, setFormError] = useState("");
-    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProviders | null }>({ value: false, provider: null });
+    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
 
     const loginForm = useForm<z.infer<typeof LoginFormSchema>>({
         resolver: zodResolver(LoginFormSchema),
@@ -36,9 +36,9 @@ const LoginPage = () => {
     const handleCredentialLogin = async () => {
         try {
             if (isLoading.value === true) return;
-            setIsLoading({ value: true, provider: AuthProviders.CREDENTIAL });
+            setIsLoading({ value: true, provider: AuthProvider.CREDENTIAL });
 
-            const response = await useFetch(`/api/auth/${AuthActionIntent.SIGN_IN}/${AuthProviders.CREDENTIAL}`, {
+            const response = await useFetch(`/api/auth/${AuthActionIntent.SIGN_IN}/${AuthProvider.CREDENTIAL}`, {
                 method: "POST",
                 body: JSON.stringify(loginForm.getValues()),
             });
@@ -129,7 +129,7 @@ const LoginPage = () => {
                                 {formError && <FormErrorMessage text={formError} />}
 
                                 <Button type="submit" aria-label="Login" className="w-full h-form-submit-btn" disabled={isLoading.value}>
-                                    {isLoading.provider === AuthProviders.CREDENTIAL ? (
+                                    {isLoading.provider === AuthProvider.CREDENTIAL ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
                                         <LogInIcon className="w-[1.1rem] h-[1.1rem]" />

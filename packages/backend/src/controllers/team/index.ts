@@ -2,6 +2,7 @@ import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
+import { doesMemberHaveAccess } from "@shared/lib/utils";
 import type { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
@@ -16,16 +17,21 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
             members: {
                 select: {
                     userId: true,
+                    isOwner: true,
                     permissions: true,
                 },
             },
         },
     });
+    const currMember = team?.members.find((member) => member.userId === userSession.id);
+    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
-    const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermission.MANAGE_INVITES)) {
+    const canManageInvites = doesMemberHaveAccess(
+        ProjectPermission.MANAGE_INVITES,
+        currMember.permissions as ProjectPermission[],
+        currMember.isOwner,
+    );
+    if (!canManageInvites) {
         return ctx.json({ success: false, message: "You don't have access to manage member invites" }, httpCode("unauthorized"));
     }
 
@@ -110,17 +116,22 @@ export const removeMember = async (ctx: Context, userSession: ContextUserSession
             members: {
                 select: {
                     id: true,
+                    isOwner: true,
                     userId: true,
                     permissions: true,
                 },
             },
         },
     });
+    const currMember = team?.members.find((member) => member.userId === userSession.id);
+    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
-    const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermission.REMOVE_MEMBER)) {
+    const canRemoveMembers = doesMemberHaveAccess(
+        ProjectPermission.REMOVE_MEMBER,
+        currMember.permissions as ProjectPermission[],
+        currMember.isOwner,
+    );
+    if (!canRemoveMembers) {
         return ctx.json({ success: false, message: "You don't have access to remove members" }, httpCode("unauthorized"));
     }
 
@@ -161,10 +172,15 @@ export const updateMember = async (
             },
         },
     });
-    if (!team?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    const currMember = team?.members.find((member) => member.userId === userSession.id);
+    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
 
-    const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember?.permissions.includes(ProjectPermission.EDIT_MEMBER)) {
+    const canEditMembers = doesMemberHaveAccess(
+        ProjectPermission.EDIT_MEMBER,
+        currMember.permissions as ProjectPermission[],
+        currMember.isOwner,
+    );
+    if (!canEditMembers) {
         return ctx.json({ success: false, message: "You don't have access to edit members" }, httpCode("unauthorized"));
     }
 

@@ -255,7 +255,8 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
     if (!versionsList.length)
         return (
             <span className="w-full flex items-center justify-start py-3 px-1 italic text-extra-muted-foreground">
-                No versions available for {selectedGameVersion} on {CapitalizeAndFormatString(selectedLoader)}
+                No versions available for {getGameVersionFromValue(selectedGameVersion)?.label} on{" "}
+                {CapitalizeAndFormatString(selectedLoader)}
             </span>
         );
 

@@ -17,7 +17,7 @@ const ConfirmActionPage = () => {
     const getActionType = async () => {
         if (!code) return setActionType(null);
 
-        const response = await useFetch("/api/user/get-confirm-action-type", {
+        const response = await useFetch("/api/user/confirmation-action", {
             method: "POST",
             body: JSON.stringify({ code }),
         });

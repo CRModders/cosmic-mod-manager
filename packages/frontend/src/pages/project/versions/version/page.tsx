@@ -20,7 +20,7 @@ import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, 
 import { projectContext } from "@/src/contexts/curr-project";
 import NotFoundPage from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { ProjectVersionData } from "@shared/types/api";
 import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
@@ -116,14 +116,25 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                         Report
                     </Button>
 
-                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermission.UPLOAD_VERSION) ? (
+                    {currUsersMembership.data?.id &&
+                    currUsersMembership.data?.id &&
+                    doesMemberHaveAccess(
+                        ProjectPermission.UPLOAD_VERSION,
+                        currUsersMembership.data.permissions,
+                        currUsersMembership.data.isOwner,
+                    ) ? (
                         <VariantButtonLink url="edit">
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
                         </VariantButtonLink>
                     ) : null}
 
-                    {currUsersMembership.data?.id && currUsersMembership.data.permissions.includes(ProjectPermission.DELETE_VERSION) ? (
+                    {currUsersMembership.data?.id &&
+                    doesMemberHaveAccess(
+                        ProjectPermission.DELETE_VERSION,
+                        currUsersMembership.data.permissions,
+                        currUsersMembership.data.isOwner,
+                    ) ? (
                         <Suspense>
                             <DeleteVersionDialog
                                 projectSlug={projectData?.slug || ""}

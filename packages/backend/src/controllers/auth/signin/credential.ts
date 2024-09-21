@@ -5,7 +5,7 @@ import httpCode from "@/utils/http";
 import { AUTHTOKEN_COOKIE_NAME, USER_SESSION_VALIDITY } from "@shared/config";
 import { USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { LoginFormSchema } from "@shared/schemas/auth";
-import { AuthProviders } from "@shared/types";
+import { AuthProvider } from "@shared/types";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { createNewUserSession } from "../session";
@@ -32,7 +32,7 @@ const credentialSignIn = async (ctx: Context, formData: z.infer<typeof LoginForm
 
     const newSession = await createNewUserSession({
         userId: user.id,
-        providerName: AuthProviders.CREDENTIAL,
+        providerName: AuthProvider.CREDENTIAL,
         ctx: ctx,
         isFirstSignIn: false,
         user: user,

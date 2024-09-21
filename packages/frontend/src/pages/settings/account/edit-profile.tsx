@@ -54,8 +54,8 @@ const EditProfileDialog = ({
         if (isLoading || isFetchingData) return;
         setIsLoading(true);
 
-        const response = await useFetch("/api/user/update-profile", {
-            method: "POST",
+        const response = await useFetch("/api/user", {
+            method: "PATCH",
             body: JSON.stringify(form.getValues()),
         });
         const data = await response.json();

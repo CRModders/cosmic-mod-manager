@@ -2,11 +2,11 @@ import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
-import { doesMemberHasAccess, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
-import { ProjectPermissionsList } from "@shared/config/project";
+import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { newProjectFormSchema } from "@shared/schemas/project";
 import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
@@ -90,7 +90,8 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
             userId: userSession.id,
             role: "Owner",
             isOwner: true,
-            permissions: ProjectPermissionsList,
+            permissions: [],
+            // Owner does not need to have explicit permissions
             organisationPermissions: [],
             accepted: true,
             dateAccepted: new Date(),
@@ -323,6 +324,7 @@ export const addNewGalleryImage = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -340,8 +342,15 @@ export const addNewGalleryImage = async (
         }
     }
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+    // Check if the user has the required permissions
+    const memberObj = project.team.members?.[0];
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!memberObj || !hasEditAccess) {
+        return ctx.json({ success: false }, httpCode("bad_request"));
     }
 
     // Check if there's already a featured image
@@ -423,7 +432,7 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
     const currMember = project.team.members?.[0];
     if (
         !currMember ||
-        !doesMemberHasAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
+        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
     ) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
@@ -469,6 +478,7 @@ export const updateGalleryImage = async (
                     members: {
                         where: { userId: userSession.id },
                         select: {
+                            isOwner: true,
                             permissions: true,
                         },
                     },
@@ -480,15 +490,20 @@ export const updateGalleryImage = async (
     if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
 
     // Check if the order index is not already occupied
-    let isGalleryItemIdValid = false;
     for (const item of project.gallery) {
-        if (item.id === galleryItemId) isGalleryItemIdValid = true;
+        if (item.id === galleryItemId) continue;
         if (item.id !== galleryItemId && item.orderIndex === formData.orderIndex) {
             return ctx.json({ success: false, message: "An image with same order index already exists" }, httpCode("bad_request"));
         }
     }
 
-    if (!project.team.members?.[0]?.permissions.includes(ProjectPermission.EDIT_DETAILS)) {
+    const memberObj = project.team.members?.[0];
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!memberObj || !hasEditAccess) {
         return ctx.json({ success: false }, httpCode("not_found"));
     }
 

@@ -36,9 +36,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const sessionData = useQuery({ queryKey: ["auth-session-data"], queryFn: () => getSessionData() });
 
     const logout = async () => {
-        await useFetch("/api/auth/session/logout", {
-            method: "POST",
-            body: JSON.stringify(sessionData.data),
+        await useFetch("/api/auth/sessions", {
+            method: "DELETE",
         });
 
         window.location.reload();

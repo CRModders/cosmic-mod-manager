@@ -22,6 +22,7 @@ import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import versionRouter from "./version";
 
+import { getAllVisibleProjects } from "@/controllers/user/profile";
 import { newProjectFormSchema } from "@shared/schemas/project";
 import { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
@@ -33,7 +34,54 @@ import { parseValueToSchema } from "@shared/schemas/utils";
 
 const projectRouter = new Hono();
 
-projectRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
+// Get projects of the currently logged in user
+projectRouter.get("/", projects_get);
+
+projectRouter.get("/:slug", project_get);
+projectRouter.get("/:slug/dependencies", projectDependencies_get);
+projectRouter.get("/:slug/check", projectCheck_get);
+
+projectRouter.post("/", LoginProtectedRoute, project_post);
+projectRouter.patch("/:slug", LoginProtectedRoute, project_patch);
+projectRouter.patch("/:slug/description", LoginProtectedRoute, description_patch);
+projectRouter.patch("/:slug/tags", LoginProtectedRoute, tags_patch);
+projectRouter.patch("/:slug/external-links", LoginProtectedRoute, externalLinks_patch);
+projectRouter.patch("/:slug/license", LoginProtectedRoute, license_patch);
+
+projectRouter.post("/:slug/gallery", LoginProtectedRoute, gallery_post);
+projectRouter.patch("/:slug/gallery/:galleryId", LoginProtectedRoute, galleryItem_patch);
+projectRouter.delete("/:slug/gallery/:galleryId", LoginProtectedRoute, galleryItem_delete);
+
+projectRouter.route("/:projectSlug/version", versionRouter);
+
+async function projects_get(ctx: Context) {
+    try {
+        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
+        const userSession = getUserSessionFromCtx(ctx);
+        const userName = userSession?.userName;
+        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
+
+        return await getAllVisibleProjects(ctx, userSession, userName, listedProjectsOnly);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function project_get(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return defaultInvalidReqResponse(ctx);
+        const userSession = getUserSessionFromCtx(ctx);
+
+        return await getProjectData(ctx, slug, userSession);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function project_post(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
         if (!userSession) return defaultInvalidReqResponse(ctx);
@@ -48,22 +96,9 @@ projectRouter.post("/new", LoginProtectedRoute, async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.get("/:slug", async (ctx: Context) => {
-    try {
-        const slug = ctx.req.param("slug");
-        if (!slug) return defaultInvalidReqResponse(ctx);
-        const userSession = getUserSessionFromCtx(ctx);
-
-        return await getProjectData(ctx, slug, userSession);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-projectRouter.get("/:slug/check", async (ctx: Context) => {
+async function projectCheck_get(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         if (!slug) return defaultInvalidReqResponse(ctx);
@@ -73,9 +108,9 @@ projectRouter.get("/:slug/check", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
+async function project_patch(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         if (!slug) return defaultInvalidReqResponse(ctx);
@@ -103,9 +138,9 @@ projectRouter.patch("/:slug", LoginProtectedRoute, async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.get("/:slug/dependencies", async (ctx: Context) => {
+async function projectDependencies_get(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         const userSession = getUserSessionFromCtx(ctx);
@@ -116,9 +151,9 @@ projectRouter.get("/:slug/dependencies", async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug/description", LoginProtectedRoute, async (ctx: Context) => {
+async function description_patch(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         if (!slug) return defaultInvalidReqResponse(ctx);
@@ -136,9 +171,9 @@ projectRouter.patch("/:slug/description", LoginProtectedRoute, async (ctx: Conte
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug/tags", LoginProtectedRoute, async (ctx: Context) => {
+async function tags_patch(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         const userSession = getUserSessionFromCtx(ctx);
@@ -154,9 +189,9 @@ projectRouter.patch("/:slug/tags", LoginProtectedRoute, async (ctx: Context) => 
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug/external-links", LoginProtectedRoute, async (ctx: Context) => {
+async function externalLinks_patch(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         const userSession = getUserSessionFromCtx(ctx);
@@ -172,9 +207,9 @@ projectRouter.patch("/:slug/external-links", LoginProtectedRoute, async (ctx: Co
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug/license", LoginProtectedRoute, async (ctx: Context) => {
+async function license_patch(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         const userSession = getUserSessionFromCtx(ctx);
@@ -190,9 +225,9 @@ projectRouter.patch("/:slug/license", LoginProtectedRoute, async (ctx: Context) 
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
+async function gallery_post(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
         if (!slug) return defaultInvalidReqResponse(ctx);
@@ -219,40 +254,37 @@ projectRouter.post("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) =
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.patch("/:slug/gallery/:imageId", LoginProtectedRoute, async (ctx: Context) => {
+async function galleryItem_patch(ctx: Context) {
     try {
-        const { slug, imageId } = ctx.req.param();
+        const { slug, galleryId } = ctx.req.param();
         const userSession = getUserSessionFromCtx(ctx);
-        if (!slug || !imageId || !userSession) return defaultInvalidReqResponse(ctx);
+        if (!slug || !galleryId || !userSession) return defaultInvalidReqResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateGalleryImageFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, httpCode("bad_request"));
         }
 
-        return await updateGalleryImage(ctx, slug, userSession, imageId, data);
+        return await updateGalleryImage(ctx, slug, userSession, galleryId, data);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.delete("/:slug/gallery", LoginProtectedRoute, async (ctx: Context) => {
+async function galleryItem_delete(ctx: Context) {
     try {
-        const slug = ctx.req.param("slug");
-        const galleryItemId = ctx.get(ctxReqBodyNamespace)?.id;
+        const { slug, galleryId } = ctx.req.param();
         const userSession = getUserSessionFromCtx(ctx);
+        if (!slug || !userSession || !galleryId) return defaultInvalidReqResponse(ctx);
 
-        if (!slug || !userSession || !galleryItemId) return defaultInvalidReqResponse(ctx);
-
-        return await removeGalleryImage(ctx, slug, userSession, galleryItemId);
+        return await removeGalleryImage(ctx, slug, userSession, galleryId);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-projectRouter.route("/:projectSlug/version", versionRouter);
 export default projectRouter;

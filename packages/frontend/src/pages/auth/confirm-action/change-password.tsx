@@ -1,18 +1,18 @@
 import { Button, CancelButton } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormSuccessMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setNewPasswordFormSchema } from "@shared/schemas/settings";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
 import SessionsPageLink from "./sessions-page-link";
-import { LoadingSpinner } from "@/components/ui/spinner";
-import { FormSuccessMessage } from "@/components/ui/form-message";
-import { Link } from "react-router-dom";
 
 const ChangePasswordCard = ({ code }: { code: string }) => {
     const [isLoading, setIsLoading] = useState<{ value: boolean; action: null | "cancel" | "set" }>({ value: false, action: null });
@@ -32,8 +32,8 @@ const ChangePasswordCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "set" });
 
-            const response = await useFetch("/api/user/set-new-password", {
-                method: "POST",
+            const response = await useFetch("/api/user/password", {
+                method: "PATCH",
                 body: JSON.stringify({ code: code, ...form.getValues() }),
             });
             const result = await response.json();
@@ -53,8 +53,8 @@ const ChangePasswordCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancel" });
 
-            const response = await useFetch("/api/user/cancel-settings-new-password", {
-                method: "POST",
+            const response = await useFetch("/api/user/confirmation-action", {
+                method: "DELETE",
                 body: JSON.stringify({ code: code }),
             });
             const result = await response.json();

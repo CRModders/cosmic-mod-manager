@@ -2,13 +2,13 @@ import type { ContextUserSession } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { getUserSessionFromCtx, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import httpCode from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import { type LinkedProvidersListData, type ProjectPublishingStatus, ProjectVisibility, type UserSessionStates } from "@shared/types";
-import type { ProjectListItem, SessionListData } from "@shared/types/api";
+import { type LinkedProvidersListData, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
+import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
 import type { z } from "zod";
@@ -108,39 +108,6 @@ export const getLinkedAuthProviders = async (ctx: Context, userSession: ContextU
     }
 
     return ctx.json({ providers: providersList }, httpCode("ok"));
-};
-
-export const getAllSessions = async (ctx: Context, userSession: ContextUserSession) => {
-    const sessions = await prisma.session.findMany({
-        where: {
-            userId: userSession.id,
-        },
-        orderBy: { dateCreated: "desc" },
-    });
-
-    if (!sessions?.[0]?.id) {
-        return defaultInvalidReqResponse(ctx);
-    }
-
-    const list: SessionListData[] = [];
-    for (const session of sessions) {
-        list.push({
-            id: session.id,
-            userId: session.userId,
-            dateCreated: session.dateCreated,
-            dateLastActive: session.dateLastActive,
-            providerName: session.providerName || "",
-            status: session.status as UserSessionStates,
-            os: session.os,
-            browser: session.browser,
-            city: session.city,
-            country: session.country,
-            ip: session.ip,
-            userAgent: session.userAgent,
-        });
-    }
-
-    return ctx.json({ success: true, sessions: list }, httpCode("ok"));
 };
 
 export const getAllVisibleProjects = async (

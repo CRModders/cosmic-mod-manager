@@ -1,4 +1,4 @@
-import { AuthProviders } from "@shared/types";
+import { AuthProvider } from "@shared/types";
 import type { AuthUserProfile } from "../../../types";
 
 export const getGitlabUserProfileData = async (tokenExchangeCode: string) => {
@@ -8,7 +8,7 @@ export const getGitlabUserProfileData = async (tokenExchangeCode: string) => {
     const url = new URL("https://gitlab.com/oauth/token");
     url.searchParams.append("grant_type", "authorization_code");
     url.searchParams.append("code", tokenExchangeCode);
-    url.searchParams.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProviders.GITLAB}`);
+    url.searchParams.append("redirect_uri", `${process.env.OAUTH_REDIRECT_URI}/${AuthProvider.GITLAB}`);
 
     const authTokenRes = await fetch(url, {
         method: "POST",
@@ -33,7 +33,7 @@ export const getGitlabUserProfileData = async (tokenExchangeCode: string) => {
         name: userProfile?.name || null,
         email: userProfile?.email || null,
         emailVerified: userProfile?.bot === false && userProfile?.locked === false && userProfile?.can_create_project === true,
-        providerName: AuthProviders.GITLAB,
+        providerName: AuthProvider.GITLAB,
         providerAccountId: userProfile?.id?.toString() || null,
         authType: "oauth",
         accessToken: accessToken,

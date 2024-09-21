@@ -22,8 +22,8 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "confirming" });
 
-            const response = await useFetch("/api/user/confirm-account-deletion", {
-                method: "POST",
+            const response = await useFetch("/api/user", {
+                method: "DELETE",
                 body: JSON.stringify({ code: code }),
             });
 
@@ -43,8 +43,8 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancelling" });
 
-            const response = await useFetch("/api/user/cancel-account-deletion", {
-                method: "POST",
+            const response = await useFetch("/api/user/confirmation-action", {
+                method: "DELETE",
                 body: JSON.stringify({ code: code }),
             });
 

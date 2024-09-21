@@ -1,5 +1,5 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
-import type { ProjectType, TagHeaderTypes } from "../../types";
+import type { ProjectPermission, ProjectType, TagHeaderTypes } from "../../types";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -107,12 +107,17 @@ export const getValidProjectCategories = (projectTypes: string[], categoryType?:
     for (const category of categories) {
         if (categoryType && categoryType !== category.header) continue;
 
-        for (const type of category.projectTypes) {
-            if (projectTypes.includes(type) && !alreadyAddedCategories.has(category.name)) {
-                alreadyAddedCategories.add(category.name);
-                validCategories.push(category);
-                break;
+        if (projectTypes.length > 0) {
+            for (const type of category.projectTypes) {
+                if (projectTypes.includes(type) && !alreadyAddedCategories.has(category.name)) {
+                    alreadyAddedCategories.add(category.name);
+                    validCategories.push(category);
+                    break;
+                }
             }
+        } else if (!alreadyAddedCategories.has(category.name)) {
+            alreadyAddedCategories.add(category.name);
+            validCategories.push(category);
         }
     }
 
@@ -139,11 +144,11 @@ export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
     return categoriesData;
 };
 
-export const getAllLoaderFilters = (projectType: ProjectType) => {
+export const getAllLoaderFilters = (projectType?: ProjectType) => {
     const allLoadersList = new Set<Loader>();
 
     for (const loader of loaders) {
-        if (loader.supportedProjectTypes.includes(projectType) && loader?.metadata?.visibleInCategoriesList !== false) {
+        if ((!projectType || loader.supportedProjectTypes.includes(projectType)) && loader?.metadata?.visibleInCategoriesList !== false) {
             allLoadersList.add(loader);
         }
     }
@@ -159,4 +164,20 @@ export const isNumber = (num: number | string) => {
         return Number.isFinite(+num);
     }
     return false;
+};
+
+export const doesMemberHaveAccess = (requiredPermission: ProjectPermission, permissions: ProjectPermission[] = [], isOwner = false) => {
+    if (!requiredPermission) return false;
+    if (isOwner === true) return true;
+    return permissions.includes(requiredPermission);
+};
+
+export const isUrl = (str: string) => {
+    try {
+        new URL(str);
+
+        return true;
+    } catch (error) {
+        return false;
+    }
 };

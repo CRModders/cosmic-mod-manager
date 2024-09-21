@@ -9,7 +9,18 @@ import { type Context, Hono } from "hono";
 
 const teamRouter = new Hono();
 
-teamRouter.post("/:teamId/invite", LoginProtectedRoute, async (ctx: Context) => {
+// ? Planned
+// teamRouter.get("/:teamId/owner", teamOwner_get)
+// teamRouter.get("/:teamId/members", teamMembers_get)
+// teamRouter.get(":teamId/members/:memberSlug", teamMember_get)
+
+teamRouter.post("/:teamId/invite", LoginProtectedRoute, teamInvite_post);
+teamRouter.patch("/:teamId/invite", LoginProtectedRoute, teamInvite_patch);
+teamRouter.post("/:teamId/leave", LoginProtectedRoute, teamLeave_post);
+teamRouter.patch("/:teamId/member/:memberId", LoginProtectedRoute, teamMember_patch);
+teamRouter.delete("/:teamId/member/:memberId", LoginProtectedRoute, teamMember_delete);
+
+async function teamInvite_post(ctx: Context) {
     try {
         const teamId = ctx.req.param("teamId");
         const userName = ctx.get(ctxReqBodyNamespace)?.userName;
@@ -21,9 +32,9 @@ teamRouter.post("/:teamId/invite", LoginProtectedRoute, async (ctx: Context) => 
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-teamRouter.post("/:teamId/invite/accept", LoginProtectedRoute, async (ctx: Context) => {
+async function teamInvite_patch(ctx: Context) {
     try {
         const teamId = ctx.req.param("teamId");
         const userSession = getUserSessionFromCtx(ctx);
@@ -34,9 +45,9 @@ teamRouter.post("/:teamId/invite/accept", LoginProtectedRoute, async (ctx: Conte
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-teamRouter.post("/:teamId/leave", LoginProtectedRoute, async (ctx: Context) => {
+async function teamLeave_post(ctx: Context) {
     try {
         const teamId = ctx.req.param("teamId");
         const userSession = getUserSessionFromCtx(ctx);
@@ -47,22 +58,9 @@ teamRouter.post("/:teamId/leave", LoginProtectedRoute, async (ctx: Context) => {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
 
-teamRouter.delete("/:teamId/member/:memberId", LoginProtectedRoute, async (ctx: Context) => {
-    try {
-        const { teamId, memberId } = ctx.req.param();
-        const userSession = getUserSessionFromCtx(ctx);
-        if (!memberId || !userSession || !teamId) return defaultInvalidReqResponse(ctx);
-
-        return await removeMember(ctx, userSession, memberId, teamId);
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-});
-
-teamRouter.patch("/:teamId/member/:memberId", LoginProtectedRoute, async (ctx: Context) => {
+async function teamMember_patch(ctx: Context) {
     try {
         const { teamId, memberId } = ctx.req.param();
         const userSession = getUserSessionFromCtx(ctx);
@@ -78,6 +76,19 @@ teamRouter.patch("/:teamId/member/:memberId", LoginProtectedRoute, async (ctx: C
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
-});
+}
+
+async function teamMember_delete(ctx: Context) {
+    try {
+        const { teamId, memberId } = ctx.req.param();
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!memberId || !userSession || !teamId) return defaultInvalidReqResponse(ctx);
+
+        return await removeMember(ctx, userSession, memberId, teamId);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
 
 export default teamRouter;
