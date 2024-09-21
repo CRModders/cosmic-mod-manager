@@ -12,8 +12,8 @@ export const projectTypes = [
     ProjectType.MOD,
     ProjectType.DATAPACK,
     ProjectType.RESOURCE_PACK,
-    ProjectType.MODPACK,
     ProjectType.SHADER,
+    ProjectType.MODPACK,
     ProjectType.PLUGIN,
 ];
 
