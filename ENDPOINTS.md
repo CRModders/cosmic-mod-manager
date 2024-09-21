@@ -1,4 +1,5 @@
 Base URL: `https://api.crmm.tech/api`
+NOTE:- `/cdn` urls are not under the base `/api`
 
 ### Value Types
 * `AuthProvider` &ndash; github, gitlab, discord, google

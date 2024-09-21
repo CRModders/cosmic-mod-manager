@@ -19,17 +19,17 @@ import { type Context, Hono } from "hono";
 const searchRouter = new Hono();
 searchRouter.use("*", searchApiRateLimiterMiddleware);
 
-searchRouter.get("/", searchProjectsRoute);
-searchRouter.get("/filters/sort-by", sortByFilters);
-searchRouter.get("/filters/loaders", loaderFilters);
-searchRouter.get("/filters/game-versions", gameVersionFilters);
-searchRouter.get("/filters/categories", categoryFilters);
-searchRouter.get("/filters/features", featureFilters);
-searchRouter.get("/filters/resolutions", resolutionFilters);
-searchRouter.get("/filters/performance-impact", performanceImpactFilters);
-searchRouter.get("/filters/license", licenseFilters);
+searchRouter.get("/", search_get);
+searchRouter.get("/filters/sort-by", sortByFilters_get);
+searchRouter.get("/filters/loaders", loaders_get);
+searchRouter.get("/filters/game-versions", gameVersions_get);
+searchRouter.get("/filters/categories", categories_get);
+searchRouter.get("/filters/features", features_get);
+searchRouter.get("/filters/resolutions", resolutions_get);
+searchRouter.get("/filters/performance-impact", performanceImpacts_get);
+searchRouter.get("/filters/license", licenses_get);
 
-async function searchProjectsRoute(ctx: Context) {
+async function search_get(ctx: Context) {
     try {
         const query = ctx.req.query("q") || "";
         const categories = ctx.req.queries(categoryFilterParamNamespace) || [];
@@ -61,7 +61,7 @@ async function searchProjectsRoute(ctx: Context) {
     }
 }
 
-async function sortByFilters(ctx: Context) {
+async function sortByFilters_get(ctx: Context) {
     try {
         const list = [
             SearchResultSortMethod.RELEVANCE,
@@ -77,7 +77,7 @@ async function sortByFilters(ctx: Context) {
     }
 }
 
-async function loaderFilters(ctx: Context) {
+async function loaders_get(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -92,7 +92,7 @@ async function loaderFilters(ctx: Context) {
     }
 }
 
-async function gameVersionFilters(ctx: Context) {
+async function gameVersions_get(ctx: Context) {
     try {
         return ctx.json({ success: true, queryKey: gameVersionFilterParamNamespace, list: GAME_VERSIONS }, httpCode("ok"));
     } catch (error) {
@@ -101,7 +101,7 @@ async function gameVersionFilters(ctx: Context) {
     }
 }
 
-async function categoryFilters(ctx: Context) {
+async function categories_get(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -116,7 +116,7 @@ async function categoryFilters(ctx: Context) {
     }
 }
 
-async function featureFilters(ctx: Context) {
+async function features_get(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -131,7 +131,7 @@ async function featureFilters(ctx: Context) {
     }
 }
 
-async function resolutionFilters(ctx: Context) {
+async function resolutions_get(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -146,7 +146,7 @@ async function resolutionFilters(ctx: Context) {
     }
 }
 
-async function performanceImpactFilters(ctx: Context) {
+async function performanceImpacts_get(ctx: Context) {
     try {
         const projectType = getProjectTypeFromName(ctx.req.query("type") || "");
         if (!projectType) {
@@ -161,7 +161,7 @@ async function performanceImpactFilters(ctx: Context) {
     }
 }
 
-async function licenseFilters(ctx: Context) {
+async function licenses_get(ctx: Context) {
     try {
         return ctx.json({ success: true, queryKey: licenseFilterParamNamespace, list: ["oss"] }, httpCode("ok"));
     } catch (error) {

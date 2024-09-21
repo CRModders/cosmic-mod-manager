@@ -10,13 +10,13 @@ import { type Context, Hono } from "hono";
 const tagsRouter = new Hono();
 tagsRouter.use("*", searchApiRateLimiterMiddleware);
 
-tagsRouter.get("/categories", allCategories);
-tagsRouter.get("/game-versions", allGameVersions);
-tagsRouter.get("/loaders", allLoaders);
-tagsRouter.get("/licenses", allLicenses);
-tagsRouter.get("/licenses/featured", featuredLicenses);
-tagsRouter.get("/licenses/:id", licenseFromId);
-tagsRouter.get("/project-types", allProjectTypes);
+tagsRouter.get("/categories", categories_get);
+tagsRouter.get("/game-versions", gameVersions_get);
+tagsRouter.get("/loaders", loaders_get);
+tagsRouter.get("/licenses", licenses_get);
+tagsRouter.get("/licenses/featured", featuredLicenses_get);
+tagsRouter.get("/licenses/:id", licenses_get);
+tagsRouter.get("/project-types", projectTypes_get);
 
 const getCategories = ({
     projectType,
@@ -31,7 +31,7 @@ const getCategories = ({
     return list;
 };
 
-async function allCategories(ctx: Context) {
+async function categories_get(ctx: Context) {
     try {
         const projectType = (ctx.req.query("type")?.toLowerCase() as ProjectType) || undefined;
         const namesOnly = ctx.req.query("namesOnly") === "true";
@@ -44,7 +44,7 @@ async function allCategories(ctx: Context) {
     }
 }
 
-async function allGameVersions(ctx: Context) {
+async function gameVersions_get(ctx: Context) {
     try {
         return ctx.json(GAME_VERSIONS, httpCode("ok"));
     } catch (error) {
@@ -53,7 +53,7 @@ async function allGameVersions(ctx: Context) {
     }
 }
 
-async function allLoaders(ctx: Context) {
+async function loaders_get(ctx: Context) {
     try {
         const projectType = (ctx.req.query("type")?.toLowerCase() as ProjectType) || undefined;
         const loaders = getAllLoaderCategories(projectType, false);
@@ -64,7 +64,7 @@ async function allLoaders(ctx: Context) {
     }
 }
 
-async function featuredLicenses(ctx: Context) {
+async function featuredLicenses_get(ctx: Context) {
     try {
         return ctx.json(FEATURED_LICENSE_OPTIONS.slice(1), httpCode("ok"));
     } catch (error) {
@@ -73,8 +73,17 @@ async function featuredLicenses(ctx: Context) {
     }
 }
 
-async function allLicenses(ctx: Context) {
+async function licenses_get(ctx: Context) {
     try {
+        const licenseId = ctx.req.param("id")?.toLowerCase();
+        if (!licenseId) {
+            const license = SPDX_LICENSE_LIST.find((l) => l.licenseId.toLowerCase() === licenseId);
+            if (!license) {
+                return ctx.json({ success: false, message: "License not found" }, httpCode("not_found"));
+            }
+            return ctx.json(license, httpCode("ok"));
+        }
+
         return ctx.json(SPDX_LICENSE_LIST, httpCode("ok"));
     } catch (error) {
         console.error(error);
@@ -82,21 +91,7 @@ async function allLicenses(ctx: Context) {
     }
 }
 
-async function licenseFromId(ctx: Context) {
-    try {
-        const licenseId = ctx.req.param("id")?.toLowerCase();
-        const license = SPDX_LICENSE_LIST.find((l) => l.licenseId.toLowerCase() === licenseId);
-        if (!license) {
-            return ctx.json({ success: false, message: "License not found" }, httpCode("not_found"));
-        }
-        return ctx.json(license, httpCode("ok"));
-    } catch (error) {
-        console.error(error);
-        return defaultServerErrorResponse(ctx);
-    }
-}
-
-async function allProjectTypes(ctx: Context) {
+async function projectTypes_get(ctx: Context) {
     try {
         return ctx.json(projectTypes, httpCode("ok"));
     } catch (error) {
