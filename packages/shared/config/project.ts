@@ -92,6 +92,13 @@ export const loaders: Loader[] = [
             visibleInCategoriesList: false,
         },
     },
+    {
+        name: "modpack",
+        supportedProjectTypes: [ProjectType.MODPACK],
+        metadata: {
+            visibleInCategoriesList: false,
+        },
+    },
 ];
 
 export interface CategoryType {
