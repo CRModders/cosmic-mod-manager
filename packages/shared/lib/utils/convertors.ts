@@ -99,8 +99,6 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
             return FileType.SEVEN_Z;
         case "gz":
             return FileType.GZ;
-        case "tar.gz":
-            return FileType.TAR_GZ; // Possibly Redundant?
         case "tar":
             return FileType.TAR;
         default:

@@ -37,7 +37,7 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
     },
     {
         signature: [{offset: 0, signature: "1F 8B"}],
-        types: [FileType.GZ, FileType.TAR_GZ]
+        types: [FileType.GZ]
     },
     {
         signature: [{offset: 0, signature: "75 73 74 61 72 00 30 30"}],
