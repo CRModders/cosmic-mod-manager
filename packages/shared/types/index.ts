@@ -140,6 +140,7 @@ export enum FileType {
     SEVEN_Z = "7z",
     TAR_GZ = "tar.gz", // Possibly Redundant?
     GZ = "gz",
+    TAR = "tar",
 }
 
 export enum ProjectSupport {

@@ -101,7 +101,8 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
             return FileType.GZ;
         case "tar.gz":
             return FileType.TAR_GZ; // Possibly Redundant?
-
+        case "tar":
+            return FileType.TAR;
         default:
             return null;
     }
@@ -137,6 +138,9 @@ export const getFileTypeFromMimeStr = (mime: string) => {
         case "application/gzip":
         case "application/x-gzip":
             return FileType.GZ;
+
+        case "application/x-tar":
+            return FileType.TAR;
 
         default:
             return null;
