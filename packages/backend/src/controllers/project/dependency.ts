@@ -4,7 +4,6 @@ import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
-import type { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
 import { getFilesFromId } from "./utils";
 
@@ -24,23 +23,6 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
                         select: {
                             id: true,
                             userId: true,
-                            permissions: true,
-                        },
-                    },
-                },
-            },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: { userId: userSession?.id || "" },
-                                select: {
-                                    id: true,
-                                    userId: true,
-                                    permissions: true,
-                                },
-                            },
                         },
                     },
                 },
@@ -62,18 +44,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     const members = (project.team.members || []).map((member) => ({
         id: member.id,
         userId: member.userId,
-        permissions: member.permissions as ProjectPermission[],
     }));
-
-    if (project?.organisation?.team?.members) {
-        for (const member of project.organisation.team.members) {
-            members.push({
-                id: member.id,
-                userId: member.userId,
-                permissions: member.permissions as ProjectPermission[],
-            });
-        }
-    }
 
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, members)) {
         return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));

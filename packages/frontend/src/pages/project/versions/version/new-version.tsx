@@ -199,6 +199,15 @@ const UploadVersionPage = () => {
                                                                 `Invalid primary file "${file.name}" with type "${fileType}"`,
                                                             );
                                                         }
+
+                                                        // Check if the file name is duplicated
+                                                        const additionalFiles = form.getValues().additionalFiles || [];
+                                                        if (additionalFiles.find((f) => f.name === file.name)) {
+                                                            return toast.error(
+                                                                `File "${file.name}" already exists in the additional files`,
+                                                            );
+                                                        }
+
                                                         field.onChange(file);
                                                     }}
                                                     name={field.name}

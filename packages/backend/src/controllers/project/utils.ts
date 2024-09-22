@@ -66,6 +66,7 @@ interface createVersionFilesProps {
 export const createVersionFiles = async ({ versionId, projectId, files }: createVersionFilesProps) => {
     if (!files.length) return [];
 
+    const createdFiles: string[] = [];
     const filesToCreate: DBFile[] = [];
     const versionFilesToCreate: VersionFile[] = [];
 
@@ -74,6 +75,8 @@ export const createVersionFiles = async ({ versionId, projectId, files }: create
         if (!fileType) continue;
 
         const sha1_hash = await createHashFromFile(file, "sha1");
+        if (createdFiles.includes(sha1_hash)) continue;
+
         const sha512_hash = await createHashFromFile(file, "sha512");
         const path = await saveProjectVersionFile(storageService, projectId, versionId, file, file.name);
         if (!path) continue;
@@ -96,6 +99,8 @@ export const createVersionFiles = async ({ versionId, projectId, files }: create
             fileId: fileId,
             isPrimary: isPrimary,
         });
+
+        createdFiles.push(sha1_hash);
     }
 
     await prisma.$transaction([

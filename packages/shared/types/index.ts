@@ -36,7 +36,7 @@ export enum ProjectType {
     MODPACK = "modpack",
     SHADER = "shader",
     RESOURCE_PACK = "resource-pack",
-    DATAPACK = "datapack",
+    DATAMOD = "datamod",
     PLUGIN = "plugin",
 }
 

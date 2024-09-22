@@ -10,7 +10,7 @@ export const authProvidersList = [
 
 export const projectTypes = [
     ProjectType.MOD,
-    ProjectType.DATAPACK,
+    ProjectType.DATAMOD,
     ProjectType.RESOURCE_PACK,
     ProjectType.SHADER,
     ProjectType.MODPACK,
@@ -72,8 +72,8 @@ export const loaders: Loader[] = [
         },
     },
     {
-        name: "datapack",
-        supportedProjectTypes: [ProjectType.DATAPACK],
+        name: "datamod",
+        supportedProjectTypes: [ProjectType.DATAMOD],
         metadata: {
             visibleInCategoriesList: false,
         },
@@ -152,7 +152,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "adventure",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN, ProjectType.MODPACK],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.MODPACK],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -217,7 +217,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "cursed",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -227,12 +227,12 @@ export const categories: CategoryType[] = [
     },
     {
         name: "decoration",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "economy",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -252,7 +252,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "equipment",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -272,12 +272,12 @@ export const categories: CategoryType[] = [
     },
     {
         name: "food",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "game-mechanics",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -297,7 +297,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "library",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -317,22 +317,22 @@ export const categories: CategoryType[] = [
     },
     {
         name: "magic",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "management",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "minigame",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "mobs",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -352,7 +352,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "optimization",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -432,17 +432,17 @@ export const categories: CategoryType[] = [
     },
     {
         name: "social",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "storage",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
         name: "technology",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -457,7 +457,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "transportation",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -472,7 +472,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "utility",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
     {
@@ -487,7 +487,7 @@ export const categories: CategoryType[] = [
     },
     {
         name: "worldgen",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAPACK, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderTypes.CATEGORY,
     },
 ];

@@ -16,7 +16,7 @@ import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
-import SPDX_LICENSE_LIST, { LICNESE_REFERENCE_LINK } from "@shared/config/license-list";
+import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { ProjectPublishingStatus } from "@shared/types";
@@ -82,7 +82,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
             projectLicenseData.name = license.name;
             projectLicenseData.text = license?.text || "";
             if (!projectLicenseData.url) {
-                projectLicenseData.url = `${LICNESE_REFERENCE_LINK}/${license.licenseId}`;
+                projectLicenseData.url = license.link;
             }
             break;
         }
@@ -258,12 +258,12 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                             </Tooltip>
                                         </div>
 
-                                        <div className="flex w-fit h-full grow flex-col select-text gap-1">
+                                        <div className="flex w-fit h-full grow flex-col select-text">
                                             <Link
                                                 to={getProjectVersionPagePathname(projectData.type?.[0], projectData.slug, version.slug)}
                                                 className="noClickRedirect w-fit"
                                             >
-                                                <p className="font-bold leading-none">{version.title}</p>
+                                                <p className="font-bold leading-tight">{version.title}</p>
                                             </Link>
                                             <p className="text-pretty leading-tight">
                                                 {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}

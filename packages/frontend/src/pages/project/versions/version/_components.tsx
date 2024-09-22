@@ -288,8 +288,8 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
     // Data for the dependencies
     const [dependencyData, setDependencyData] = useState<DependencyData>(dependenciesData || { projects: [], versions: [] });
 
-    const isDependencyValid = (projectId: string, versionId: string) => {
-        return !dependencies?.some((dependency) => dependency.projectId === projectId && dependency.versionId === versionId);
+    const isDependencyValid = (projectId: string) => {
+        return !dependencies?.some((dependency) => dependency.projectId === projectId);
     };
 
     const addNewDependency = (projectId: string, versionId: string | null, type: DependencyType) => {
@@ -338,8 +338,8 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
             const project = await fetchProject(projectSlug);
             if (!project) return;
 
-            if (!isDependencyValid(project.id, "")) {
-                return toast.error("You have already added this project as a dependency");
+            if (!isDependencyValid(project.id)) {
+                return toast.error("You cannot add the same dependency twice");
             }
 
             addNewDependency(project.id, null, dependencyType);
@@ -370,8 +370,8 @@ export const AddDependencies = ({ dependencies, setDependencies, currProjectId, 
             const [project, version] = await Promise.all([fetchProject(projectSlug), fetchVersion(projectSlug, versionSlug)]);
             if (!project || !version) return;
 
-            if (!isDependencyValid(project.id, version.id)) {
-                return toast.error("You have already added this project as a dependency");
+            if (!isDependencyValid(project.id)) {
+                return toast.error("You cannot add the same dependency twice");
             }
 
             addNewDependency(project.id, version.id, dependencyType);
@@ -581,8 +581,10 @@ export const SelectAdditionalProjectFiles = ({ formControl }: { formControl: Con
                                 mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
                                     const file = e.target.files?.[i];
                                     if (!file?.name) continue;
-                                    if (!(await getFileType(file))) {
-                                        toast.error(`Invalid file "${file.name}" with type "${file.type}"`);
+
+                                    const fileType = await getFileType(file);
+                                    if (!fileType) {
+                                        toast.error(`Invalid file "${file.name}" with type "${fileType}"`);
                                         continue;
                                     }
 

@@ -132,7 +132,7 @@ export const createNewVersion = async (
     }
 
     // Check if duplicate files are not being uploaded
-    const isDuplicate = await isAnyDuplicateFile({
+    const duplicateFiles = await isAnyDuplicateFile({
         projectId: project.id,
         files: [
             formData.primaryFile,
@@ -142,7 +142,7 @@ export const createNewVersion = async (
         ],
     });
 
-    if (isDuplicate === true) {
+    if (duplicateFiles === true) {
         return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
     }
 
@@ -243,18 +243,6 @@ export const updateVersionData = async (
                     members: {
                         where: { userId: userSession.id },
                         select: requiredProjectMemberFields,
-                    },
-                },
-            },
-            organisation: {
-                select: {
-                    team: {
-                        select: {
-                            members: {
-                                where: { userId: userSession.id },
-                                select: requiredProjectMemberFields,
-                            },
-                        },
                     },
                 },
             },
@@ -507,9 +495,6 @@ export const updateVersionData = async (
 const createVersionDependencies = async (dependentVersionId: string, list: z.infer<typeof VersionDependencies>) => {
     if (!list?.length) return [];
 
-    const validProjectLevelDependencies: Dependency[] = [];
-    const validVersionLevelDependencies: Dependency[] = [];
-
     const projectIds = new Set<string>();
     const versionIds = new Set<string>();
 
@@ -548,7 +533,14 @@ const createVersionDependencies = async (dependentVersionId: string, list: z.inf
         versionMap.set(version.id, version.slug);
     }
 
+    const addedDependencies: string[] = [];
+    const validProjectLevelDependencies: Dependency[] = [];
+    const validVersionLevelDependencies: Dependency[] = [];
+
     for (const dependency of list) {
+        if (addedDependencies.includes(dependency.projectId)) continue;
+        addedDependencies.push(dependency.projectId);
+
         if (projectMap.has(dependency.projectId)) {
             // If the dependency is a version level dependency, check if the version exists
             if (dependency.versionId && versionMap.has(dependency.versionId)) {
