@@ -138,6 +138,8 @@ export enum FileType {
     WEBP = "webp",
     JPEG = "jpeg",
     SEVEN_Z = "7z",
+    TAR_GZ = "tar.gz", // Possibly Redundant?
+    GZ = "gz",
 }
 
 export enum ProjectSupport {

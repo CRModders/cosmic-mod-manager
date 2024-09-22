@@ -36,6 +36,10 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
         types: [FileType.SEVEN_Z]
     },
     {
+        signature: [{offset: 0, signature: "1F 8B"}],
+        types: [FileType.GZ, FileType.TAR_GZ]
+    },
+    {
         signature: [{ offset: 0, signature: "89 50 4E 47 0D 0A 1A 0A" }],
         types: [FileType.PNG],
     },
