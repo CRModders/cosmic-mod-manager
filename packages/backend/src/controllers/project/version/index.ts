@@ -607,7 +607,7 @@ export const getAllProjectVersions = async (
 
     const projectMembersList = [
         ...(project?.team.members || []).map((member) => getFormattedTeamMember(member)),
-        ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
+        // ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
     ];
 
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList)) {
@@ -624,6 +624,7 @@ export const getAllProjectVersions = async (
     const versionFilesMap = await getFilesFromId(idsList);
 
     const versionsList: ProjectVersionData[] = [];
+    const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
     for (const version of project.versions) {
         let primaryFile: VersionFile | null = null;
         const files: VersionFile[] = [];
@@ -631,6 +632,7 @@ export const getAllProjectVersions = async (
         for (const file of version.files) {
             const fileData = versionFilesMap.get(file.fileId);
             if (!fileData?.id) continue;
+            const useDirectCacheCdnUrl = !isProjectPrivate && !file.isPrimary;
 
             const formattedFile = {
                 id: file.id,
@@ -639,7 +641,7 @@ export const getAllProjectVersions = async (
                 size: fileData.size,
                 type: fileData.type,
                 // ? Don't use cache cdn for primary files
-                url: versionFileUrl(project.slug, version.slug, fileData.name, !file.isPrimary) || "",
+                url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl, !isProjectPrivate) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
@@ -730,11 +732,13 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
     // Format the data
     let primaryFile: VersionFile | null = null;
     const files: VersionFile[] = [];
+    const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
 
     // Get formatted files data
     for (const file of version.files) {
         const fileData = versionFilesMap.get(file.fileId);
         if (!fileData?.id) continue;
+        const useDirectCacheCdnUrl = !file.isPrimary && !isProjectPrivate;
 
         const formattedFile = {
             id: file.id,
@@ -743,7 +747,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
             size: fileData.size,
             type: fileData.type,
             // ? Don't use cache cdn for primary files
-            url: versionFileUrl(project.slug, version.slug, fileData.name, !file.isPrimary) || "",
+            url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl, !isProjectPrivate) || "",
             sha1_hash: fileData.sha1_hash,
             sha512_hash: fileData.sha512_hash,
         };

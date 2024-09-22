@@ -13,11 +13,11 @@ if (!CACHE_CDN_URL) {
 
 const CDN_PREFIX = (useCacheCdn?: boolean) => `${useCacheCdn ? CACHE_CDN_URL : CDN_SERVER_URL}/cdn/data`;
 
-export const cdnUrl = (path: string, useCacheCdn = true) => {
+export const cdnUrl = (path: string, useCacheCdn = true, redirectToCacheCdnIfUsingServerUrl = true) => {
     if (!path) return null;
     if (path.startsWith("http")) return path;
 
-    return `${CDN_PREFIX(useCacheCdn)}/${path}${!useCacheCdn ? "?isCdnReq=false" : ""}`;
+    return `${CDN_PREFIX(useCacheCdn)}/${path}${!useCacheCdn && redirectToCacheCdnIfUsingServerUrl ? "?isCdnReq=false" : ""}`;
 };
 
 export const projectIconUrl = (slug: string, icon: string) => {
@@ -32,9 +32,15 @@ export const projectGalleryFileUrl = (slug: string, galleryFile: string) => {
     return cdnUrl(`${slug}/gallery/${encodeURIComponent(galleryFile)}`);
 };
 
-export const versionFileUrl = (projectSlug: string, versionSlug: string, fileName: string, useCacheCdn?: boolean) => {
+export const versionFileUrl = (
+    projectSlug: string,
+    versionSlug: string,
+    fileName: string,
+    useCacheCdn?: boolean,
+    redirectToCacheCdnIfUsingServerUrl?: boolean,
+) => {
     if (fileName.startsWith("http")) return fileName;
-    return cdnUrl(`${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`, useCacheCdn);
+    return cdnUrl(`${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`, useCacheCdn, redirectToCacheCdnIfUsingServerUrl);
 };
 
 interface FileData {

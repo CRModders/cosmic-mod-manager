@@ -121,7 +121,6 @@ export const getAllVisibleProjects = async (
             OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
         },
     });
-
     if (!user) return ctx.json({ success: false, message: "user not found" }, httpCode("not_found"));
 
     const list = await prisma.teamMember.findMany({
@@ -159,6 +158,7 @@ export const getAllVisibleProjects = async (
                                         },
                                         select: {
                                             id: true,
+                                            userId: true,
                                         },
                                     },
                                 },
