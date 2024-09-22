@@ -137,6 +137,7 @@ export enum FileType {
     PNG = "png",
     WEBP = "webp",
     JPEG = "jpeg",
+    SEVEN_Z = "7z",
 }
 
 export enum ProjectSupport {

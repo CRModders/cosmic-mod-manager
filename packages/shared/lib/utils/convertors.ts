@@ -95,6 +95,8 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
 
         case "zip":
             return FileType.ZIP;
+        case "7z":
+            return FileType.SEVEN_Z;
 
         default:
             return null;
@@ -124,6 +126,9 @@ export const getFileTypeFromMimeStr = (mime: string) => {
         case "application/x-compress":
         case "application/x-compressed":
             return FileType.ZIP;
+        
+        case "application/x-7z-compressed":
+            return FileType.SEVEN_Z
 
         default:
             return null;

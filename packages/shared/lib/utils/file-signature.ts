@@ -32,6 +32,10 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
         types: [FileType.JAR, FileType.ZIP],
     },
     {
+        signature: [{ offset: 0, signature: "37 7A BC AF 27 1C" }],
+        types: [FileType.SEVEN_Z]
+    },
+    {
         signature: [{ offset: 0, signature: "89 50 4E 47 0D 0A 1A 0A" }],
         types: [FileType.PNG],
     },
