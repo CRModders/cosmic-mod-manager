@@ -161,6 +161,7 @@ const InteractiveDownloadPopup = () => {
                             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
                         </Button>
                     </ComboBox>
+
                     {(projectData.loaders?.length || 0) > 1 ? (
                         <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader}>
                             <Button
@@ -188,40 +189,42 @@ const InteractiveDownloadPopup = () => {
                             </Button>
                         </ComboBox>
                     ) : (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <div
-                                        className={cn(
-                                            buttonVariants({ variant: "outline" }),
-                                            "w-full flex items-center justify-between text-extra-muted-foreground hover:bg-transparent cursor-not-allowed opacity-50",
-                                        )}
-                                    >
-                                        <span className="flex items-center justify-start gap-2 font-medium">
-                                            <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
-                                            <span className="text-muted-foreground">
-                                                {selectedLoader ? (
-                                                    <>
-                                                        Platform:{" "}
-                                                        <em className="not-italic text-foreground/90">
-                                                            {CapitalizeAndFormatString(selectedLoader)}
-                                                        </em>
-                                                    </>
-                                                ) : (
-                                                    <>Select platform</>
-                                                )}
+                        (projectData.loaders?.length || 0) === 1 && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div
+                                            className={cn(
+                                                buttonVariants({ variant: "outline" }),
+                                                "w-full flex items-center justify-between text-extra-muted-foreground hover:bg-transparent cursor-not-allowed opacity-50",
+                                            )}
+                                        >
+                                            <span className="flex items-center justify-start gap-2 font-medium">
+                                                <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                <span className="text-muted-foreground">
+                                                    {selectedLoader ? (
+                                                        <>
+                                                            Platform:{" "}
+                                                            <em className="not-italic text-foreground/90">
+                                                                {CapitalizeAndFormatString(selectedLoader)}
+                                                            </em>
+                                                        </>
+                                                    ) : (
+                                                        <>Select platform</>
+                                                    )}
+                                                </span>
                                             </span>
-                                        </span>
-                                        <InfoIcon className="ml-2 h-4 w-4 shrink-0" />
-                                    </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    {projectData.name} is only available for {CapitalizeAndFormatString(projectData.loaders[0])}
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                                            <InfoIcon className="ml-2 h-4 w-4 shrink-0" />
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        {projectData.name} is only available for {CapitalizeAndFormatString(projectData.loaders[0])}
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )
                     )}
-                    {selectedGameVersion && selectedLoader ? (
+                    {selectedGameVersion && (selectedLoader || !loadersList.length) ? (
                         <AvailableVersionsList
                             selectedGameVersion={selectedGameVersion}
                             selectedLoader={selectedLoader}
@@ -239,7 +242,7 @@ export default InteractiveDownloadPopup;
 
 interface AvailableVersionsListProps {
     selectedGameVersion: string;
-    selectedLoader: string;
+    selectedLoader: string | null;
     allProjectVersions: ProjectVersionData[];
     projedata: ProjectDetailsData;
 }
@@ -249,7 +252,7 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
         if (!projedata || !allProjectVersions) return [];
         const list: ProjectVersionData[] = [];
         for (const version of allProjectVersions) {
-            if (version.gameVersions.includes(selectedGameVersion) && version.loaders.includes(selectedLoader)) {
+            if (version.gameVersions.includes(selectedGameVersion) && (!selectedLoader || version.loaders.includes(selectedLoader))) {
                 const lastItem = list[list.length - 1];
                 if (lastItem && lastItem.releaseChannel === VersionReleaseChannel.RELEASE) break;
                 list.push(version);

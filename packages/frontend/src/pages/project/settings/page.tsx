@@ -97,8 +97,6 @@ const GeneralSettingsPage = () => {
         }
     };
 
-    console.log({ values: form.getValues() });
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(projectData);
