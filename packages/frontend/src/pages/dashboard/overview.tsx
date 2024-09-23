@@ -45,8 +45,8 @@ const OverviewPage = () => {
     const { session } = useSession();
 
     const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects() });
-    const totalProjects = projectsList?.length || 0;
-    const totalDownloads = projectsList?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = projectsList.data?.length || 0;
+    const totalDownloads = projectsList.data?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalFollowers = 0;
 
     if (!session?.id) return null;
