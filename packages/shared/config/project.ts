@@ -49,7 +49,7 @@ export type Loader = {
 export const loaders: Loader[] = [
     {
         name: "quilt",
-        supportedProjectTypes: [ProjectType.MOD, ProjectType.SHADER],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.SHADER, ProjectType.MODPACK],
         metadata: {
             visibleInTagsList: true,
             visibleInLoadersList: true,
@@ -64,7 +64,7 @@ export const loaders: Loader[] = [
     },
     {
         name: "puzzle_loader",
-        supportedProjectTypes: [ProjectType.MOD, ProjectType.DATAMOD],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK],
         metadata: {
             visibleInTagsList: true,
             visibleInLoadersList: true,
