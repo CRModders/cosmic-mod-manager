@@ -8,7 +8,7 @@ import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ProjectListItem } from "@shared/types/api";
-import useFetch from "../hooks/fetch";
+import useFetch from "@/src/hooks/fetch";
 import { useQuery } from "@tanstack/react-query";
 
 interface UserProfileContext {
