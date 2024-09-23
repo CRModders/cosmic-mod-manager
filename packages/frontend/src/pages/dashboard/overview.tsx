@@ -10,8 +10,11 @@ import { useContext } from "react";
 import { ProjectListItem } from "@shared/types/api";
 import useFetch from "@/src/hooks/fetch";
 import { useQuery } from "@tanstack/react-query";
+import type { UserProfileData } from "@shared/types/api/user";
+import { useParams } from "react-router-dom";
 
 interface UserProfileContext {
+    userData: UserProfileData | null;
     projectsList: ProjectListItem[] | null;
 }
 
@@ -29,6 +32,8 @@ const OverviewPage = () => {
         }
     };
 
+    const { userName } = useParams();
+    
     const projectsList = useQuery({ queryKey: [`user-projects-${userName}`], queryFn: () => getProjectsListData(userName) });
     const totalProjects = projectsList?.length || 0;
     const totalDownloads = projectsList?.reduce((acc, project) => acc + project.downloads, 0) || 0;
