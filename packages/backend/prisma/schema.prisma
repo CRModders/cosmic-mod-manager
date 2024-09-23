@@ -129,6 +129,7 @@ model Project {
     organisationId String?   @db.VarChar(32)
     name           String    @db.VarChar(32)
     slug           String    @unique @db.VarChar(32)
+    type           String[]  @default(["project"])
     summary        String    @db.VarChar(384)
     description    String?   @db.VarChar(65256)
     datePublished  DateTime  @default(now())

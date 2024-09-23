@@ -124,7 +124,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                             <div className="w-full flex flex-wrap gap-1">
                                 {projectData.loaders.map((loader) => {
                                     const loaderData = getLoaderFromString(loader);
-                                    if (!loaderData) return null;
+                                    if (!loaderData || !loaderData.metadata.visibleInLoadersList) return null;
                                     const accentForeground = loaderData?.metadata?.accent?.foreground;
                                     // @ts-ignore
                                     const loaderIcon: React.ReactNode = tagIcons[loaderData.name];

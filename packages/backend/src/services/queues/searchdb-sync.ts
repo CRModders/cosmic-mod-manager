@@ -1,5 +1,4 @@
 import { getFilesFromId } from "@/controllers/project/utils";
-import { inferProjectType } from "@/utils";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
 import meilisearch from "../meilisearch";
@@ -14,6 +13,7 @@ const requiredProjectFields = {
     id: true,
     name: true,
     slug: true,
+    type: true,
     iconFileId: true,
     loaders: true,
     gameVersions: true,
@@ -67,7 +67,7 @@ interface ProjectSearchDocument {
     author: string;
 }
 
-const _syncProjects = async (cursor: null | string) => {
+const syncProjects = async (cursor: null | string) => {
     try {
         const index = meilisearch.index(projectSearchNamespace);
 
@@ -103,7 +103,7 @@ const _syncProjects = async (cursor: null | string) => {
                 slug: project.slug,
                 iconUrl: iconUrl,
                 loaders: project.loaders,
-                type: inferProjectType(project.loaders),
+                type: project.type,
                 gameVersions: project.gameVersions,
                 categories: project.categories,
                 featuredCategories: project.featuredCategories,
@@ -138,7 +138,7 @@ const syncSearchDb = async () => {
         await index.deleteAllDocuments();
 
         while (true) {
-            cursor = await _syncProjects(cursor);
+            cursor = await syncProjects(cursor);
             if (!cursor) break;
         }
     } catch (error) {

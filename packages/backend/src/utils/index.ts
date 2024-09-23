@@ -1,7 +1,7 @@
 import { PASSWORD_HASH_SALT_ROUNDS, STRING_ID_LENGTH } from "@shared/config";
 import { type Loader, loaders } from "@shared/config/project";
 import { isUserAProjectMember } from "@shared/lib/utils";
-import { type ConfirmationType, type ProjectType, ProjectVisibility } from "@shared/types";
+import { type ConfirmationType, ProjectVisibility } from "@shared/types";
 import type { TeamMember } from "@shared/types/api";
 import type { Context } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
@@ -89,26 +89,6 @@ export const isProjectAccessibleToCurrSession = (
 export const aggregateVersions = (versionsList: string[]) => {
     const uniqueItems = Array.from(new Set(versionsList));
     return sort(uniqueItems);
-};
-
-export const inferProjectType = (projectLoaders: string[]) => {
-    if (!projectLoaders.length) return ["project"];
-    const types: ProjectType[] = [];
-
-    for (const projectLoader of projectLoaders) {
-        for (const LOADER of loaders) {
-            if (LOADER.name === projectLoader) {
-                for (const supportedProjectType of LOADER.supportedProjectTypes) {
-                    if (!types.includes(supportedProjectType)) {
-                        types.push(supportedProjectType);
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    return types;
 };
 
 export const aggregateProjectLoaders = (projectLoaders: string[]) => {

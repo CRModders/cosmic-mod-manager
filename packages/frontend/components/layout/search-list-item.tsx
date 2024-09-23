@@ -95,7 +95,7 @@ const SearchListItem = ({
                 })}
 
                 {loadersData.map((loader) => {
-                    if (loader.metadata.visibleInCategoriesList === false) return null;
+                    if (loader.metadata.visibleInTagsList === false) return null;
 
                     return (
                         <span key={loader.name} className="flex gap-1 items-center justify-center">

@@ -2,8 +2,10 @@ import { fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { ChipButton } from "@/components/ui/chip";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,12 +14,14 @@ import { cn, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Capitalize } from "@shared/lib/utils";
-import { getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
+import { projectTypes } from "@shared/config/project";
+import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
+import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
 import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
-import { ProjectPublishingStatus, ProjectSupport, ProjectVisibility } from "@shared/types";
+import { checkFormValidity } from "@shared/schemas/utils";
+import { ProjectPublishingStatus, ProjectSupport, type ProjectType, ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
-import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,6 +33,7 @@ const getInitialValues = (projectData?: ProjectDetailsData | null) => {
         name: projectData?.name || "",
         slug: projectData?.slug || "",
         visibility: getProjectVisibilityFromString(projectData?.visibility || ""),
+        type: (projectData?.type || []) as ProjectType[],
         clientSide: projectData?.clientSide,
         serverSide: projectData?.serverSide,
         summary: projectData?.summary,
@@ -54,6 +59,7 @@ const GeneralSettingsPage = () => {
         form.setValue("name", projectData.name);
         form.setValue("slug", projectData.slug);
         form.setValue("visibility", projectData.visibility);
+        form.setValue("type", getProjectTypesFromNames(projectData.type));
         form.setValue("clientSide", projectData.clientSide);
         form.setValue("serverSide", projectData.serverSide);
         form.setValue("summary", projectData.summary);
@@ -69,6 +75,7 @@ const GeneralSettingsPage = () => {
             formData.append("name", values.name);
             formData.append("slug", values.slug);
             formData.append("visibility", values.visibility);
+            formData.append("type", JSON.stringify(values.type));
             formData.append("clientSide", values.clientSide);
             formData.append("serverSide", values.serverSide);
             formData.append("summary", values.summary);
@@ -90,6 +97,8 @@ const GeneralSettingsPage = () => {
         }
     };
 
+    console.log({ values: form.getValues() });
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(projectData);
@@ -103,7 +112,9 @@ const GeneralSettingsPage = () => {
             <ContentCardTemplate title="Project information">
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(saveSettings)}
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                        }}
                         className="w-full flex flex-col items-start justify-start gap-form-elements"
                     >
                         <FormField
@@ -237,6 +248,68 @@ const GeneralSettingsPage = () => {
                                         spellCheck="false"
                                         id="project-summary-input"
                                     />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                                <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
+                                    <div className="flex flex-col items-start justify-center gap-y-1.5">
+                                        <FormLabel className="text-foreground font-bold">
+                                            Project type
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <span className="text-muted-foreground">Select the appropriate type for your project</span>
+                                    </div>
+
+                                    <div className="flex gap-1 flex-col min-w-[15rem] max-w-full">
+                                        {field.value?.length > 0 && (
+                                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
+                                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                                    return (
+                                                        <ChipButton
+                                                            variant="secondary"
+                                                            key={loader}
+                                                            onClick={() => {
+                                                                field.onChange(field.value?.filter((l: string) => l !== loader));
+                                                            }}
+                                                        >
+                                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                                            {CapitalizeAndFormatString(loader)}
+                                                        </ChipButton>
+                                                    );
+                                                })}
+                                                {field.value?.length > 3 && (
+                                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
+                                                        and {field.value?.length - 3} more
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <MultiSelect
+                                            selectedOptions={[...(field.value || []), "project"] || []}
+                                            options={projectTypes.map((type) => ({
+                                                label: CapitalizeAndFormatString(type) || "",
+                                                value: type,
+                                            }))}
+                                            onChange={(values) => {
+                                                field.onChange(getProjectTypesFromNames(values));
+                                            }}
+                                            classNames={{
+                                                popupContent: "min-w-[15rem]",
+                                                listItem: "font-medium",
+                                            }}
+                                        >
+                                            <Button variant="secondary" className="justify-between text-extra-muted-foreground">
+                                                Choose...
+                                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
+                                            </Button>
+                                        </MultiSelect>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -391,6 +464,12 @@ const GeneralSettingsPage = () => {
                             <Button
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
+                                onClick={async () => {
+                                    await checkFormValidity(async () => {
+                                        const parsedValues = await generalProjectSettingsFormSchema.parseAsync(form.getValues());
+                                        saveSettings(parsedValues);
+                                    });
+                                }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                 Save changes

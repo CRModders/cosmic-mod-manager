@@ -12,7 +12,7 @@ import {
     licenseFilterParamNamespace,
     loaderFilterParamNamespace,
 } from "@shared/config/search";
-import { CapitalizeAndFormatString, getAllLoaderCategories, getValidProjectCategories } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
 import { ProjectType, TagHeaderTypes } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
@@ -69,7 +69,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
 
     // Filters list
     // Project Loader filters
-    const loaderFilters = getAllLoaderCategories(type);
+    const loaderFilters = getALlLoaderFilters(type);
     const loaderFilterOptions = loaderFilters
         .map((loader) => loader.name)
         .filter((loader) => matchesSearch([loader, loadersFilterLabel], query));

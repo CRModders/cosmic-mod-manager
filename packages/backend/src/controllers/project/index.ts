@@ -2,7 +2,7 @@ import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
-import { inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+import { isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
 import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
@@ -113,7 +113,7 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
     });
 
     return ctx.json(
-        { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: inferProjectType([]) },
+        { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: newProject.type },
         httpCode("ok"),
     );
 };
@@ -126,6 +126,8 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         select: {
             id: true,
             name: true,
+            slug: true,
+            type: true,
             status: true,
             summary: true,
             description: true,
@@ -136,7 +138,6 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             licenseUrl: true,
             datePublished: true,
             dateUpdated: true,
-            slug: true,
             visibility: true,
             downloads: true,
             followers: true,
@@ -223,7 +224,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
-                type: inferProjectType(project.loaders),
+                type: project.type,
                 categories: project.categories,
                 featuredCategories: project.featuredCategories,
                 licenseId: project.licenseId,

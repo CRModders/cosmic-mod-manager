@@ -1,7 +1,7 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
 import { deleteProjectFile, saveProjectFile } from "@/services/storage";
-import { generateRandomString, inferProjectType } from "@/utils";
+import { generateRandomString } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
@@ -111,6 +111,7 @@ export const updateProject = async (
             name: formData.name,
             slug: formData.slug,
             iconFileId: projectIcon,
+            type: formData.type,
             visibility: formData.visibility,
             clientSide: formData.clientSide,
             serverSide: formData.serverSide,
@@ -181,6 +182,7 @@ export const updateProjectTags = async (
         select: {
             id: true,
             loaders: true,
+            type: true,
             team: {
                 select: {
                     members: {
@@ -206,9 +208,7 @@ export const updateProjectTags = async (
         return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, httpCode("unauthorized"));
     }
 
-    const projectType = inferProjectType(project.loaders);
-    const availableCategories = getValidProjectCategories(projectType).map((category) => category.name);
-
+    const availableCategories = getValidProjectCategories(project.type).map((category) => category.name);
     const validatedTags = formData.categories.filter((tag) => availableCategories.includes(tag));
     const validatedFeaturedTags = formData.featuredCategories.filter((tag) => validatedTags.includes(tag));
 

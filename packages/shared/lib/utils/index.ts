@@ -1,5 +1,5 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
-import type { ProjectPermission, ProjectType, TagHeaderTypes } from "../../types";
+import { type ProjectPermission, ProjectType, type TagHeaderTypes } from "../../types";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -150,7 +150,7 @@ export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibi
     for (const loader of loaders) {
         if (
             (!projectType || loader.supportedProjectTypes.includes(projectType)) &&
-            (!checkTagVisibility || loader?.metadata?.visibleInCategoriesList !== false)
+            (!checkTagVisibility || loader.metadata.visibleInTagsList !== false)
         ) {
             allLoadersList.add(loader);
         }
@@ -159,14 +159,23 @@ export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibi
     return Array.from(allLoadersList);
 };
 
+export const getALlLoaderFilters = (projectType: ProjectType) => {
+    const list = new Set<Loader>();
+
+    for (const loader of loaders) {
+        if (loader.supportedProjectTypes.includes(projectType) && loader.metadata.isAFilter === true) {
+            list.add(loader);
+        }
+    }
+
+    return Array.from(list);
+};
+
 export const isNumber = (num: number | string) => {
     if (typeof num === "number") {
         return num - num === 0;
     }
-    if (typeof num === "string" && num.trim() !== "") {
-        return Number.isFinite(+num);
-    }
-    return false;
+    return Number.isFinite(+num);
 };
 
 export const doesMemberHaveAccess = (requiredPermission: ProjectPermission, permissions: ProjectPermission[] = [], isOwner = false) => {
@@ -183,4 +192,70 @@ export const isUrl = (str: string) => {
     } catch (error) {
         return false;
     }
+};
+
+export const compatibleProjectTypes = {
+    [ProjectType.MODPACK]: [],
+    [ProjectType.SHADER]: [ProjectType.RESOURCE_PACK],
+    [ProjectType.RESOURCE_PACK]: [ProjectType.SHADER],
+    [ProjectType.DATAMOD]: [ProjectType.MOD],
+    [ProjectType.MOD]: [ProjectType.DATAMOD, ProjectType.PLUGIN],
+    [ProjectType.PLUGIN]: [ProjectType.MOD],
+};
+
+export const filterInCompatibleProjectTypes = (primaryType: ProjectType, currTypes: ProjectType[]) => {
+    const filteredTypes = [primaryType];
+    const compatibleTypes: ProjectType[] = compatibleProjectTypes[primaryType];
+
+    for (const type of currTypes) {
+        if (compatibleTypes.includes(type)) {
+            filteredTypes.push(type);
+        }
+    }
+
+    return filteredTypes;
+};
+
+export const validateProjectTypesCompatibility = (types: ProjectType[]) => {
+    if (types.length < 2) return types;
+
+    if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
+    if (types.includes(ProjectType.SHADER)) return filterInCompatibleProjectTypes(ProjectType.SHADER, types);
+    if (types.includes(ProjectType.RESOURCE_PACK)) return filterInCompatibleProjectTypes(ProjectType.RESOURCE_PACK, types);
+    if (types.includes(ProjectType.DATAMOD)) return filterInCompatibleProjectTypes(ProjectType.DATAMOD, types);
+    if (types.includes(ProjectType.MOD)) return filterInCompatibleProjectTypes(ProjectType.MOD, types);
+    if (types.includes(ProjectType.PLUGIN)) return filterInCompatibleProjectTypes(ProjectType.PLUGIN, types);
+
+    return ["project"];
+};
+
+// ! No longer used
+export const inferProjectType = (projectLoaders: string[]) => {
+    if (!projectLoaders.length) return ["project"];
+    const types: ProjectType[] = [];
+
+    // Aggregate all supported project types
+    for (const projectLoader of projectLoaders) {
+        for (const LOADER of loaders) {
+            if (LOADER.name === projectLoader) {
+                for (const supportedProjectType of LOADER.supportedProjectTypes) {
+                    if (!types.includes(supportedProjectType)) {
+                        types.push(supportedProjectType);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    // Filter out incompatible project types
+    if (types.length < 2) return types;
+    if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
+    if (types.includes(ProjectType.SHADER)) return filterInCompatibleProjectTypes(ProjectType.SHADER, types);
+    if (types.includes(ProjectType.RESOURCE_PACK)) return filterInCompatibleProjectTypes(ProjectType.RESOURCE_PACK, types);
+    if (types.includes(ProjectType.DATAMOD)) return filterInCompatibleProjectTypes(ProjectType.DATAMOD, types);
+    if (types.includes(ProjectType.MOD)) return filterInCompatibleProjectTypes(ProjectType.MOD, types);
+    if (types.includes(ProjectType.PLUGIN)) return filterInCompatibleProjectTypes(ProjectType.PLUGIN, types);
+
+    return ["project"];
 };

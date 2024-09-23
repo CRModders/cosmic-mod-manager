@@ -123,6 +123,7 @@ async function project_patch(ctx: Context) {
             name: formData.get("name"),
             slug: formData.get("slug"),
             visibility: formData.get("visibility"),
+            type: JSON.parse(formData.get("type")),
             clientSide: formData.get("clientSide"),
             serverSide: formData.get("serverSide"),
             summary: formData.get("summary"),

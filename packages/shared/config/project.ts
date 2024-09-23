@@ -14,7 +14,7 @@ export const projectTypes = [
     ProjectType.RESOURCE_PACK,
     ProjectType.SHADER,
     ProjectType.MODPACK,
-    ProjectType.PLUGIN,
+    // ProjectType.PLUGIN,
 ];
 
 export const ProjectPermissionsList = [
@@ -34,7 +34,9 @@ export type Loader = {
     name: string;
     supportedProjectTypes: ProjectType[];
     metadata: {
-        visibleInCategoriesList?: boolean;
+        visibleInTagsList: boolean;
+        visibleInLoadersList: boolean;
+        isAFilter: boolean;
         accent?: {
             foreground: {
                 light: string;
@@ -49,7 +51,9 @@ export const loaders: Loader[] = [
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD],
         metadata: {
-            visibleInCategoriesList: true,
+            visibleInTagsList: true,
+            visibleInLoadersList: true,
+            isAFilter: true,
             accent: {
                 foreground: {
                     light: "#8B61B4",
@@ -62,7 +66,9 @@ export const loaders: Loader[] = [
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD],
         metadata: {
-            visibleInCategoriesList: true,
+            visibleInTagsList: true,
+            visibleInLoadersList: true,
+            isAFilter: true,
             accent: {
                 foreground: {
                     light: "#4A953F",
@@ -75,28 +81,36 @@ export const loaders: Loader[] = [
         name: "datamod",
         supportedProjectTypes: [ProjectType.DATAMOD],
         metadata: {
-            visibleInCategoriesList: false,
+            visibleInTagsList: false,
+            visibleInLoadersList: false,
+            isAFilter: false,
         },
     },
     {
         name: "resource_pack",
         supportedProjectTypes: [ProjectType.RESOURCE_PACK],
         metadata: {
-            visibleInCategoriesList: false,
+            visibleInTagsList: false,
+            visibleInLoadersList: false,
+            isAFilter: false,
         },
     },
     {
         name: "shader",
         supportedProjectTypes: [ProjectType.SHADER],
         metadata: {
-            visibleInCategoriesList: false,
+            visibleInTagsList: false,
+            visibleInLoadersList: false,
+            isAFilter: false,
         },
     },
     {
         name: "modpack",
         supportedProjectTypes: [ProjectType.MODPACK],
         metadata: {
-            visibleInCategoriesList: false,
+            visibleInTagsList: false,
+            visibleInLoadersList: false,
+            isAFilter: false,
         },
     },
 ];

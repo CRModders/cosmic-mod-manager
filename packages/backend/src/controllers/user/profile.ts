@@ -1,7 +1,7 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import { getUserSessionFromCtx, inferProjectType, isProjectAccessibleToCurrSession } from "@/utils";
+import { getUserSessionFromCtx, isProjectAccessibleToCurrSession } from "@/utils";
 import httpCode from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
@@ -134,8 +134,9 @@ export const getAllVisibleProjects = async (
                     project: {
                         select: {
                             id: true,
-                            slug: true,
                             name: true,
+                            slug: true,
+                            type: true,
                             summary: true,
                             iconFileId: true,
                             downloads: true,
@@ -198,7 +199,7 @@ export const getAllVisibleProjects = async (
             slug: project.slug,
             name: project.name,
             summary: project.summary,
-            type: inferProjectType(project.loaders),
+            type: project.type,
             status: project.status as ProjectPublishingStatus,
             icon: projectIconUrl,
             downloads: project.downloads,

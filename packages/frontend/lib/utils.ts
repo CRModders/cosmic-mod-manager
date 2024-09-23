@@ -163,7 +163,7 @@ export const imageUrl = (url: string | undefined | null) => {
 export const isLoaderVisibleInTagsList = (loaderName: string) => {
     for (const LOADER of loaders) {
         if (LOADER.name === loaderName) {
-            if (LOADER.metadata.visibleInCategoriesList === false) return false;
+            if (LOADER.metadata.visibleInTagsList === false) return false;
             return true;
         }
     }
