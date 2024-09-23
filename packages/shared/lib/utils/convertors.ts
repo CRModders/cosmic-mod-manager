@@ -101,44 +101,6 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
             return FileType.GZ;
         case "tar":
             return FileType.TAR;
-        default:
-            return null;
-    }
-};
-
-export const getFileTypeFromMimeStr = (mime: string) => {
-    switch (mime) {
-        case "image/jpeg":
-        case "image/jpg":
-            return FileType.JPEG;
-
-        case "image/webp":
-            return FileType.WEBP;
-
-        case "image/png":
-            return FileType.PNG;
-
-        case "application/java-archive":
-        case "application/x-java-archive":
-        case "application/octet-stream":
-            return FileType.JAR;
-
-        case "application/zip":
-        case "application/x-zip":
-        case "application/x-zip-compressed":
-        case "application/x-compress":
-        case "application/x-compressed":
-            return FileType.ZIP;
-        
-        case "application/x-7z-compressed":
-            return FileType.SEVEN_Z
-        
-        case "application/gzip":
-        case "application/x-gzip":
-            return FileType.GZ;
-
-        case "application/x-tar":
-            return FileType.TAR;
 
         default:
             return null;
@@ -146,14 +108,13 @@ export const getFileTypeFromMimeStr = (mime: string) => {
 };
 
 export const getFileType = async (file: File) => {
-    let mimeType = getFileTypeFromMimeStr(file.type);
-    if (!mimeType) mimeType = getFileTypeFromFileExtension(file.name);
-    if (!mimeType) return null;
+    const fileExtensionType = getFileTypeFromFileExtension(file.name);
+    if (!fileExtensionType) return null;
 
     const fileSignatureType = await getTypeOfFile(file);
-    if (!fileSignatureType || !fileSignatureType.includes(mimeType)) return null;
+    if (!fileSignatureType || !fileSignatureType.includes(fileExtensionType)) return null;
 
-    return mimeType;
+    return fileExtensionType;
 };
 
 export const getLoaderFromString = (loaderName: string) => {

@@ -1,6 +1,5 @@
 import { FILE_STORAGE_SERVICE } from "@/../types";
 import { isUrl } from "@shared/lib/utils";
-import { uploadImageToImgbb } from "./imgbb-upload";
 import { deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
 import { projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
 
@@ -35,8 +34,6 @@ export const saveFile = async (storageService: FILE_STORAGE_SERVICE, file: File,
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
                 return await saveFileToLocalStorage(path, file);
-            case FILE_STORAGE_SERVICE.IMGBB:
-                return await uploadImageToImgbb(file);
             default:
                 return null;
         }
