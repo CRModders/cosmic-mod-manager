@@ -6,24 +6,9 @@ import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
 import type { ProjectListItem } from "@shared/types/api";
 import useFetch from "@/src/hooks/fetch";
 import { useQuery } from "@tanstack/react-query";
-import type { UserProfileData } from "@shared/types/api/user";
-import { useParams } from "react-router-dom";
-
-const getProjectsListData = async (userName: string | undefined) => {
-    if (!userName) return null;
-
-    try {
-        const response = await useFetch(`/api/user/${userName}/projects?listedOnly=true`);
-        return ((await response.json())?.projects as ProjectListItem[]) || null;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
 
 const getAllUserProjects = async () => {
     try {
