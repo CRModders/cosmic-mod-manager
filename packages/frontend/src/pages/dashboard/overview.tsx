@@ -6,13 +6,30 @@ import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { userProfileContext } from "@/src/contexts/user-profile";
 import { useContext } from "react";
+import { ProjectListItem } from "@shared/types/api";
+import useFetch from "../hooks/fetch";
+import { useQuery } from "@tanstack/react-query";
+
+interface UserProfileContext {
+    projectsList: ProjectListItem[] | null;
+}
 
 const OverviewPage = () => {
     const { session } = useSession();
-    const { projectsList } = useContext(userProfileContext);
+    const getProjectsListData = async (userName: string | undefined) => { //Duplicate code from /packages/frontend/src/contexts/user-profile.tsx
+        if (!userName) return null;
+    
+        try {
+            const response = await useFetch(`/api/user/${userName}/projects?listedOnly=true`);
+            return ((await response.json())?.projects as ProjectListItem[]) || null;
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
+    };
 
+    const projectsList = useQuery({ queryKey: [`user-projects-${userName}`], queryFn: () => getProjectsListData(userName) });
     const totalProjects = projectsList?.length || 0;
     const totalDownloads = projectsList?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalFollowers = 0;
