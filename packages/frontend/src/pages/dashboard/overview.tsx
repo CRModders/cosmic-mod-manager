@@ -15,6 +15,7 @@ const OverviewPage = () => {
 
     const totalProjects = projectsList?.length || 0;
     const totalDownloads = projectsList?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalFollowers = 0;
 
     if (!session?.id) return null;
 
@@ -58,7 +59,7 @@ const OverviewPage = () => {
                     </div>
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
                         <span className="text-lg text-muted-foreground font-semibold mb-1">Total followers</span>
-                        <span className="text-2xl font-semibold">0</span>
+                        <span className="text-2xl font-semibold">{totalFollowers}</span>
                         <span className="text-muted-foreground">from {totalProjects} projects</span>
                     </div>
                 </ContentCardTemplate>
