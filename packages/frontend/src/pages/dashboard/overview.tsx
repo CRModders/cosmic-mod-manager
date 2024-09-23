@@ -2,13 +2,14 @@ import { fallbackUserIcon } from "@/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/link";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
+import useFetch from "@/src/hooks/fetch";
+import type { ProjectListItem } from "@shared/types/api";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { ProjectListItem } from "@shared/types/api";
-import useFetch from "@/src/hooks/fetch";
-import { useQuery } from "@tanstack/react-query";
 
 const getAllUserProjects = async () => {
     try {
@@ -64,16 +65,24 @@ const OverviewPage = () => {
                 </ContentCardTemplate>
 
                 <ContentCardTemplate title="Analytics" className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards">
-                    <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
-                        <span className="text-lg text-muted-foreground font-semibold mb-1">Total downloads</span>
-                        <span className="text-2xl font-semibold">{totalDownloads}</span>
-                        <span className="text-muted-foreground">from {totalProjects} projects</span>
-                    </div>
-                    <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
-                        <span className="text-lg text-muted-foreground font-semibold mb-1">Total followers</span>
-                        <span className="text-2xl font-semibold">{totalFollowers}</span>
-                        <span className="text-muted-foreground">from {totalProjects} projects</span>
-                    </div>
+                    {projectsList.isLoading ? (
+                        <div className="w-[14rem] h-full flex items-center justify-center p-4">
+                            <LoadingSpinner />
+                        </div>
+                    ) : (
+                        <>
+                            <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
+                                <span className="text-lg text-muted-foreground font-semibold mb-1">Total downloads</span>
+                                <span className="text-2xl font-semibold">{totalDownloads}</span>
+                                <span className="text-muted-foreground">from {totalProjects} projects</span>
+                            </div>
+                            <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
+                                <span className="text-lg text-muted-foreground font-semibold mb-1">Total followers</span>
+                                <span className="text-2xl font-semibold">{totalFollowers}</span>
+                                <span className="text-muted-foreground">from {totalProjects} projects</span>
+                            </div>
+                        </>
+                    )}
                 </ContentCardTemplate>
             </PanelContent_AsideCardLayout>
         </div>
