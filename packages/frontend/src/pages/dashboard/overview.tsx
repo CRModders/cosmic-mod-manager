@@ -18,23 +18,33 @@ interface UserProfileContext {
     projectsList: ProjectListItem[] | null;
 }
 
+const getProjectsListData = async (userName: string | undefined) => {
+    if (!userName) return null;
+
+    try {
+        const response = await useFetch(`/api/user/${userName}/projects?listedOnly=true`);
+        return ((await response.json())?.projects as ProjectListItem[]) || null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+};
+
+const getAllUserProjects = async () => {
+    try {
+        const response = await useFetch("/api/project");
+        const result = await response.json();
+        return (result?.projects as ProjectListItem[]) || null;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
 const OverviewPage = () => {
     const { session } = useSession();
-    const getProjectsListData = async (userName: string | undefined) => { //Duplicate code from /packages/frontend/src/contexts/user-profile.tsx
-        if (!userName) return null;
-    
-        try {
-            const response = await useFetch(`/api/user/${userName}/projects?listedOnly=true`);
-            return ((await response.json())?.projects as ProjectListItem[]) || null;
-        } catch (err) {
-            console.error(err);
-            return null;
-        }
-    };
 
-    const { userName } = useParams();
-    
-    const projectsList = useQuery({ queryKey: [`user-projects-${userName}`], queryFn: () => getProjectsListData(userName) });
+    const projectsList = useQuery({ queryKey: ["all-user-projects"], queryFn: () => getAllUserProjects() });
     const totalProjects = projectsList?.length || 0;
     const totalDownloads = projectsList?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalFollowers = 0;
