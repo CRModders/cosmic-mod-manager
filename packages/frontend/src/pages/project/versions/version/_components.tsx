@@ -22,11 +22,10 @@ import { cn, imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
 import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
-import { loaders } from "@shared/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug, parseFileSize } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug, getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project/version";
-import { DependencyType, DependsOn, type FileObjectType, VersionReleaseChannel } from "@shared/types";
+import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -126,9 +125,12 @@ export const UploadVersionPageTopCard = ({
 };
 
 interface MetadataInputCardProps {
+    projectType: ProjectType[];
     formControl: Control<FieldValues> | undefined;
 }
-export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
+export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCardProps) => {
+    const availableLoaders = getLoadersByProjectType(projectType);
+
     return (
         <ContentCardTemplate className="w-full min-w-[19rem] px-card-surround flex flex-col gap-form-elements" title="Metadata">
             <FormField
@@ -170,54 +172,59 @@ export const MetadataInputCard = ({ formControl }: MetadataInputCardProps) => {
                 )}
             />
 
-            <FormField
-                control={formControl}
-                name="loaders"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel htmlFor="supported-loaders-filter-input">Loaders</FormLabel>
+            {availableLoaders.length ? (
+                <FormField
+                    control={formControl}
+                    name="loaders"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel htmlFor="supported-loaders-filter-input">Loaders</FormLabel>
 
-                        {field.value?.length > 0 && (
-                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
-                                    return (
-                                        <ChipButton
-                                            variant="secondary"
-                                            key={loader}
-                                            onClick={() => {
-                                                field.onChange(field.value?.filter((l: string) => l !== loader));
-                                            }}
-                                        >
-                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                            {CapitalizeAndFormatString(loader)}
-                                        </ChipButton>
-                                    );
-                                })}
-                                {field.value?.length > 3 && (
-                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
-                                        and {field.value?.length - 3} more
-                                    </span>
-                                )}
-                            </div>
-                        )}
+                            {field.value?.length > 0 && (
+                                <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
+                                    {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                        return (
+                                            <ChipButton
+                                                variant="secondary"
+                                                key={loader}
+                                                onClick={() => {
+                                                    field.onChange(field.value?.filter((l: string) => l !== loader));
+                                                }}
+                                            >
+                                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                                {CapitalizeAndFormatString(loader)}
+                                            </ChipButton>
+                                        );
+                                    })}
+                                    {field.value?.length > 3 && (
+                                        <span className="text-extra-muted-foreground text-sm font-semibold italic">
+                                            and {field.value?.length - 3} more
+                                        </span>
+                                    )}
+                                </div>
+                            )}
 
-                        <MultiSelect
-                            selectedOptions={field.value || []}
-                            options={loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader.name) || "", value: loader.name }))}
-                            onChange={field.onChange}
-                            classNames={{
-                                popupContent: "min-w-[15rem]",
-                                listItem: "font-medium",
-                            }}
-                        >
-                            <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
-                                Choose loaders
-                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
-                            </Button>
-                        </MultiSelect>
-                    </FormItem>
-                )}
-            />
+                            <MultiSelect
+                                selectedOptions={field.value || []}
+                                options={availableLoaders.map((loader) => ({
+                                    label: CapitalizeAndFormatString(loader.name) || "",
+                                    value: loader.name,
+                                }))}
+                                onChange={field.onChange}
+                                classNames={{
+                                    popupContent: "min-w-[15rem]",
+                                    listItem: "font-medium",
+                                }}
+                            >
+                                <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
+                                    Choose loaders
+                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
+                                </Button>
+                            </MultiSelect>
+                        </FormItem>
+                    )}
+                />
+            ) : null}
 
             <FormField
                 control={formControl}

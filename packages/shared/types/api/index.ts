@@ -4,6 +4,7 @@ import type {
     ProjectPermission,
     ProjectPublishingStatus,
     ProjectSupport,
+    ProjectType,
     ProjectVisibility,
     UserSessionStates,
     VersionReleaseChannel,
@@ -65,7 +66,7 @@ export interface ProjectDetailsData {
     icon: string | null;
     summary: string;
     description: string | null;
-    type: string[];
+    type: ProjectType[];
     categories: string[];
     featuredCategories: string[];
     licenseId: string | null;

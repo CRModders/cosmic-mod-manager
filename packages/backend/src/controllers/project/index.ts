@@ -15,6 +15,7 @@ import {
     ProjectPermission,
     ProjectPublishingStatus,
     ProjectSupport,
+    type ProjectType,
     type ProjectVisibility,
 } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
@@ -224,7 +225,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
-                type: project.type,
+                type: project.type as ProjectType[],
                 categories: project.categories,
                 featuredCategories: project.featuredCategories,
                 licenseId: project.licenseId,

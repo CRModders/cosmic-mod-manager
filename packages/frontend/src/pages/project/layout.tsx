@@ -18,7 +18,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
-import { getLoaderFromString } from "@shared/lib/utils/convertors";
+import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
@@ -88,6 +88,8 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
         }
     }
 
+    const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
+
     return (
         <>
             <Helmet>
@@ -119,34 +121,36 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                 ))}
                             </div>
                         </div>
-                        <div>
-                            <span className="flex font-bold text-muted-foreground pb-1">Loaders</span>
-                            <div className="w-full flex flex-wrap gap-1">
-                                {projectData.loaders.map((loader) => {
-                                    const loaderData = getLoaderFromString(loader);
-                                    if (!loaderData || !loaderData.metadata.visibleInLoadersList) return null;
-                                    const accentForeground = loaderData?.metadata?.accent?.foreground;
-                                    // @ts-ignore
-                                    const loaderIcon: React.ReactNode = tagIcons[loaderData.name];
 
-                                    return (
-                                        <Chip
-                                            key={loaderData.name}
-                                            style={{
-                                                color: accentForeground
-                                                    ? theme === "dark"
-                                                        ? accentForeground?.dark
-                                                        : accentForeground?.light
-                                                    : "hsla(var(--muted-foreground))",
-                                            }}
-                                        >
-                                            {loaderIcon ? loaderIcon : null}
-                                            {CapitalizeAndFormatString(loaderData.name)}
-                                        </Chip>
-                                    );
-                                })}
+                        {listedLoaders.length ? (
+                            <div>
+                                <span className="flex font-bold text-muted-foreground pb-1">Loaders</span>
+                                <div className="w-full flex flex-wrap gap-1">
+                                    {listedLoaders.map((loader) => {
+                                        const accentForeground = loader?.metadata?.accent?.foreground;
+                                        // @ts-ignore
+                                        const loaderIcon: React.ReactNode = tagIcons[loader.name];
+
+                                        return (
+                                            <Chip
+                                                key={loader.name}
+                                                style={{
+                                                    color: accentForeground
+                                                        ? theme === "dark"
+                                                            ? accentForeground?.dark
+                                                            : accentForeground?.light
+                                                        : "hsla(var(--muted-foreground))",
+                                                }}
+                                            >
+                                                {loaderIcon ? loaderIcon : null}
+                                                {CapitalizeAndFormatString(loader.name)}
+                                            </Chip>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
+                        ) : null}
+
                         {projectEnvironments?.length ? (
                             <>
                                 <div className="flex flex-wrap items-start justify-start gap-1">

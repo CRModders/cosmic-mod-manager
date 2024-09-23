@@ -49,7 +49,7 @@ export type Loader = {
 export const loaders: Loader[] = [
     {
         name: "quilt",
-        supportedProjectTypes: [ProjectType.MOD],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.SHADER],
         metadata: {
             visibleInTagsList: true,
             visibleInLoadersList: true,
@@ -64,7 +64,7 @@ export const loaders: Loader[] = [
     },
     {
         name: "puzzle_loader",
-        supportedProjectTypes: [ProjectType.MOD],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.DATAMOD],
         metadata: {
             visibleInTagsList: true,
             visibleInLoadersList: true,
@@ -75,42 +75,6 @@ export const loaders: Loader[] = [
                     dark: "#A5E388",
                 },
             },
-        },
-    },
-    {
-        name: "datamod",
-        supportedProjectTypes: [ProjectType.DATAMOD],
-        metadata: {
-            visibleInTagsList: false,
-            visibleInLoadersList: false,
-            isAFilter: false,
-        },
-    },
-    {
-        name: "resource_pack",
-        supportedProjectTypes: [ProjectType.RESOURCE_PACK],
-        metadata: {
-            visibleInTagsList: false,
-            visibleInLoadersList: false,
-            isAFilter: false,
-        },
-    },
-    {
-        name: "shader",
-        supportedProjectTypes: [ProjectType.SHADER],
-        metadata: {
-            visibleInTagsList: false,
-            visibleInLoadersList: false,
-            isAFilter: false,
-        },
-    },
-    {
-        name: "modpack",
-        supportedProjectTypes: [ProjectType.MODPACK],
-        metadata: {
-            visibleInTagsList: false,
-            visibleInLoadersList: false,
-            isAFilter: false,
         },
     },
 ];

@@ -1,11 +1,36 @@
-import { FileType } from "../../types";
+import { FileType, ProjectType } from "../../types";
 
-const VALID_PRIMARY_FILE_TYPES = [FileType.JAR, FileType.ZIP, FileType.SEVEN_Z, FileType.GZ, FileType.TAR];
+export const allowedPrimaryFileTypes = (projectType: ProjectType[]) => {
+    const allowedFileTypes = new Set<FileType>();
+    if (projectType.includes(ProjectType.MOD) || projectType.includes(ProjectType.PLUGIN)) {
+        allowedFileTypes.add(FileType.JAR);
+    }
+    if (projectType.includes(ProjectType.SHADER)) {
+        allowedFileTypes.add(FileType.JAR);
+        allowedFileTypes.add(FileType.ZIP);
+        allowedFileTypes.add(FileType.SEVEN_Z);
+        allowedFileTypes.add(FileType.GZ);
+        allowedFileTypes.add(FileType.TAR);
+    }
+    if (
+        projectType.includes(ProjectType.RESOURCE_PACK) ||
+        projectType.includes(ProjectType.MODPACK) ||
+        projectType.includes(ProjectType.DATAMOD)
+    ) {
+        allowedFileTypes.add(FileType.ZIP);
+        allowedFileTypes.add(FileType.SEVEN_Z);
+        allowedFileTypes.add(FileType.GZ);
+        allowedFileTypes.add(FileType.TAR);
+    }
 
-export const isVersionPrimaryFileValid = (fileType: FileType | null) => {
+    return allowedFileTypes;
+};
+
+export const isVersionPrimaryFileValid = (projectType: ProjectType[], fileType: FileType | null) => {
     if (!fileType) return false;
+    const allowedFileTypes = allowedPrimaryFileTypes(projectType);
 
-    return VALID_PRIMARY_FILE_TYPES.includes(fileType);
+    return allowedFileTypes.has(fileType);
 };
 
 export const isImageFile = (fileType: FileType | null) => {

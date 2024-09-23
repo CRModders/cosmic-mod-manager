@@ -171,6 +171,21 @@ export const getALlLoaderFilters = (projectType: ProjectType) => {
     return Array.from(list);
 };
 
+export const getLoadersByProjectType = (projectType: ProjectType[]) => {
+    const loadersList = new Set<Loader>();
+
+    for (const loader of loaders) {
+        for (const type of projectType) {
+            if (loader.supportedProjectTypes.includes(type)) {
+                loadersList.add(loader);
+                break;
+            }
+        }
+    }
+
+    return Array.from(loadersList);
+};
+
 export const isNumber = (num: number | string) => {
     if (typeof num === "number") {
         return num - num === 0;

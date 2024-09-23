@@ -231,13 +231,19 @@ const EditVersionPage = () => {
                                     </Button>
                                 </div>
 
-                                {/* @ts-ignore */}
-                                <SelectAdditionalProjectFiles formControl={form.control} fieldName="existingAdditionalFiles" />
+                                <SelectAdditionalProjectFiles
+                                    fieldName="existingAdditionalFiles"
+                                    // @ts-ignore
+                                    formControl={form.control}
+                                />
                             </ContentCardTemplate>
                         </div>
 
-                        {/* @ts-ignore */}
-                        <MetadataInputCard formControl={form.control} />
+                        <MetadataInputCard
+                            projectType={projectData.type}
+                            // @ts-ignore
+                            formControl={form.control}
+                        />
                     </div>
                 </form>
             </Form>

@@ -7,7 +7,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
-import { isVersionPrimaryFileValid } from "@shared/lib/validation";
+import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
 import { checkFormValidity } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
@@ -194,9 +194,10 @@ const UploadVersionPage = () => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
                                                         const fileType = await getFileType(file);
-                                                        if (!isVersionPrimaryFileValid(fileType)) {
+                                                        if (!isVersionPrimaryFileValid(projectData.type, fileType)) {
+                                                            const allowedFileTypes = allowedPrimaryFileTypes(projectData.type);
                                                             return toast.error(
-                                                                `Invalid primary file "${file.name}" with type "${fileType}"`,
+                                                                `Invalid primary file "${file.name}" with type "${fileType}". Allowed types: .${Array.from(allowedFileTypes).join(" | .")}  `,
                                                             );
                                                         }
 
@@ -223,7 +224,7 @@ const UploadVersionPage = () => {
                         </div>
 
                         {/* @ts-ignore */}
-                        <MetadataInputCard formControl={form.control} />
+                        <MetadataInputCard projectType={projectData.type} formControl={form.control} />
                     </div>
                 </form>
             </Form>

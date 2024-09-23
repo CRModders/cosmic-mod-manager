@@ -259,11 +259,11 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                             },
                             {
                                 label: "Loaders",
-                                content: (
+                                content: versionData.loaders.length ? (
                                     <span className="leading-none">
                                         {versionData.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
                                     </span>
-                                ),
+                                ) : null,
                             },
                             {
                                 label: "Game versions",
@@ -292,12 +292,16 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                 label: "Version ID",
                                 content: <CopyBtn text={versionData.id} id="version-page-version-id" label={versionData.id} />,
                             },
-                        ].map((item) => (
-                            <div key={item.label} className="w-full flex flex-col items-start justify-start gap-1.5">
-                                <span className="font-bold leading-none">{item.label}</span>
-                                {item.content}
-                            </div>
-                        ))}
+                        ].map((item) => {
+                            if (!item.content) return null;
+
+                            return (
+                                <div key={item.label} className="w-full flex flex-col items-start justify-start gap-1.5">
+                                    <span className="font-bold leading-none">{item.label}</span>
+                                    {item.content}
+                                </div>
+                            );
+                        })}
                     </div>
                 </Card>
             </div>

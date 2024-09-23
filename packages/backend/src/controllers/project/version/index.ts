@@ -8,11 +8,11 @@ import type { File as DBFile, Dependency } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
-import { doesMemberHaveAccess } from "@shared/lib/utils";
+import { doesMemberHaveAccess, getLoadersByProjectType } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
-import { type DependencyType, ProjectPermission, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
+import { type DependencyType, ProjectPermission, type ProjectType, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData, TeamMember, VersionFile } from "@shared/types/api";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
@@ -80,6 +80,7 @@ export const createNewVersion = async (
         select: {
             id: true,
             loaders: true,
+            type: true,
             gameVersions: true,
             team: {
                 select: {
@@ -126,9 +127,20 @@ export const createNewVersion = async (
 
     // Check if the uploaded file is of valid type
     const primaryFileType = await getFileType(formData.primaryFile);
-    if (!primaryFileType || !isVersionPrimaryFileValid(primaryFileType)) {
+    if (!primaryFileType || !isVersionPrimaryFileValid(project.type as ProjectType[], primaryFileType)) {
         await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
         return ctx.json({ success: false, message: "Invalid primary file type" });
+    }
+
+    // Check the validity of loaders
+    const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
+    for (const loader of formData.loaders) {
+        if (!allowedLoaders.includes(loader)) {
+            return ctx.json(
+                { success: false, message: `Loader ${loader} not supported by current project type.` },
+                httpCode("bad_request"),
+            );
+        }
     }
 
     // Check if duplicate files are not being uploaded
@@ -237,6 +249,7 @@ export const updateVersionData = async (
         select: {
             id: true,
             loaders: true,
+            type: true,
             gameVersions: true,
             team: {
                 select: {
@@ -286,6 +299,17 @@ export const updateVersionData = async (
     if (!canUpdateVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
         return ctx.json({ success: false }, httpCode("not_found"));
+    }
+
+    // Check the validity of loaders
+    const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
+    for (const loader of formData.loaders) {
+        if (!allowedLoaders.includes(loader)) {
+            return ctx.json(
+                { success: false, message: `Loader ${loader} not supported by current project type.` },
+                httpCode("bad_request"),
+            );
+        }
     }
 
     // Delete removed files and add if there are new files uploaded

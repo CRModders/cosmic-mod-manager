@@ -55,20 +55,9 @@ const VersionNumber = z
         },
         { message: "Version number must be a URL safe string" },
     );
-const ProjectLoaders = z
-    .string()
-    .array()
-    .min(1)
-    .refine(
-        (values) => {
-            const loaderNamesList = loaders.map((loader) => loader.name);
-            for (const value of values) {
-                if (!loaderNamesList.includes(value)) return false;
-            }
-            return true;
-        },
-        { message: "Invalid loader" },
-    );
+
+const projectLoadersList = [...loaders.map((loader) => loader.name)] as const;
+const ProjectLoaders = z.enum([projectLoadersList[0], ...projectLoadersList.slice(1)]).array();
 const SupportedGameVersions = z
     .string()
     .array()
