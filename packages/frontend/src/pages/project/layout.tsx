@@ -1,4 +1,4 @@
-import { DiscordIcon, ProjectStatusIcon, fallbackProjectIcon } from "@/components/icons";
+import { DiscordIcon, fallbackProjectIcon } from "@/components/icons";
 import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -19,7 +19,6 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
-import { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
     BookOpenIcon,
@@ -411,12 +410,13 @@ const PageHeader = ({
                     <div className="flex flex-col gap-1">
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                             <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
-                            {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
+
+                            {/* {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
                                 <span className="flex items-center justify-center gap-1 text-muted-foreground font-medium">
                                     <ProjectStatusIcon status={projectData.status} />
                                     {CapitalizeAndFormatString(projectData.status)}
                                 </span>
-                            ) : null}
+                            ) : null} */}
                         </div>
                         <h2 className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</h2>
                         <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">

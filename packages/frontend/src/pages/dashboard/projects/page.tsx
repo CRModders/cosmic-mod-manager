@@ -154,10 +154,12 @@ const ProjectsPage = () => {
                                                         />
                                                     </div>
                                                 </TableCell>
+
                                                 {/* TYPE */}
                                                 <TableCell className="hidden md:table-cell">
                                                     <span className="leading-none">{FormatProjectTypes(project.type)}</span>
                                                 </TableCell>
+
                                                 {/* STATUS */}
                                                 <TableCell className="hidden md:table-cell">
                                                     <span className="flex items-center gap-1 leading-none font-medium">
