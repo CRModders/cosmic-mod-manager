@@ -13,11 +13,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useParams } from "react-router-dom";
 
-interface UserProfileContext {
-    userData: UserProfileData | null;
-    projectsList: ProjectListItem[] | null;
-}
-
 const getProjectsListData = async (userName: string | undefined) => {
     if (!userName) return null;
 
