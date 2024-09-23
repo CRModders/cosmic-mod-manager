@@ -6,9 +6,28 @@ import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { ProjectListItem } from "@shared/types/api";
+import useFetch from "@/src/hooks/fetch";
+import { useQuery } from "@tanstack/react-query";
+
+const getAllUserProjects = async () => {
+    try {
+        const response = await useFetch("/api/project");
+        const result = await response.json();
+        return (result?.projects as ProjectListItem[]) || null;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
 
 const OverviewPage = () => {
     const { session } = useSession();
+
+    const projectsList = useQuery({ queryKey: ["all-projects-logged-in-user"], queryFn: () => getAllUserProjects() });
+    const totalProjects = projectsList.data?.length || 0;
+    const totalDownloads = projectsList.data?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalFollowers = 0;
 
     if (!session?.id) return null;
 
@@ -47,13 +66,13 @@ const OverviewPage = () => {
                 <ContentCardTemplate title="Analytics" className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards">
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
                         <span className="text-lg text-muted-foreground font-semibold mb-1">Total downloads</span>
-                        <span className="text-2xl font-semibold">43,849</span>
-                        <span className="text-muted-foreground">from n projects</span>
+                        <span className="text-2xl font-semibold">{totalDownloads}</span>
+                        <span className="text-muted-foreground">from {totalProjects} projects</span>
                     </div>
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
                         <span className="text-lg text-muted-foreground font-semibold mb-1">Total followers</span>
-                        <span className="text-2xl font-semibold">4,227</span>
-                        <span className="text-muted-foreground">from n projects</span>
+                        <span className="text-2xl font-semibold">{totalFollowers}</span>
+                        <span className="text-muted-foreground">from {totalProjects} projects</span>
                     </div>
                 </ContentCardTemplate>
             </PanelContent_AsideCardLayout>
