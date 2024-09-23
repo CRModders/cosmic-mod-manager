@@ -7,7 +7,7 @@ import { useSession } from "@/src/contexts/auth";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { ProjectListItem } from "@shared/types/api";
+import type { ProjectListItem } from "@shared/types/api";
 import useFetch from "@/src/hooks/fetch";
 import { useQuery } from "@tanstack/react-query";
 import type { UserProfileData } from "@shared/types/api/user";
