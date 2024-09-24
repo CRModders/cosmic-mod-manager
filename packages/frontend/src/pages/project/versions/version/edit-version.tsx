@@ -82,7 +82,7 @@ const EditVersionPage = () => {
             formData.append("releaseChannel", values.releaseChannel);
             formData.append("featured", values.featured.toString());
             formData.append("versionNumber", values.versionNumber);
-            formData.append("loaders", JSON.stringify(values.loaders));
+            formData.append("loaders", JSON.stringify(values.loaders || []));
             formData.append("gameVersions", JSON.stringify(values.gameVersions));
             formData.append("dependencies", JSON.stringify(values.dependencies));
             for (const file of values.additionalFiles || []) {

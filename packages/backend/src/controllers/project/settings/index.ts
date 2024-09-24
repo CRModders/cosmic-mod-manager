@@ -1,6 +1,7 @@
 import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import prisma from "@/services/prisma";
-import { deleteProjectFile, saveProjectFile } from "@/services/storage";
+import { deleteDirectory, deleteProjectFile, saveProjectFile } from "@/services/storage";
+import { projectFileStoragePath } from "@/services/storage/utils";
 import { generateRandomString } from "@/utils";
 import httpCode from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
@@ -326,4 +327,121 @@ export const updateProjectLicense = async (
     });
 
     return ctx.json({ success: true, message: "Project license updated" }, httpCode("ok"));
+};
+
+export const deleteProject = async (ctx: Context, userSession: ContextUserSession, slug: string) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [{ id: slug }, { slug: slug }],
+        },
+        select: {
+            id: true,
+            iconFileId: true,
+            team: {
+                select: {
+                    id: true,
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            isOwner: true,
+                            permissions: true,
+                        },
+                    },
+                },
+            },
+            gallery: true,
+        },
+    });
+    const memberObj = project?.team.members?.[0];
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+
+    // Check if the user has the permission to delete the project
+    const hasDeleteAccess = doesMemberHaveAccess(
+        ProjectPermission.DELETE_PROJECT,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasDeleteAccess) {
+        return ctx.json({ success: false, message: "You don't have the permission to delete the project" }, httpCode("unauthorized"));
+    }
+
+    // Get all the project versions
+    const versions = await prisma.version.findMany({
+        where: { projectId: project.id },
+        include: {
+            files: true,
+        },
+    });
+    const versionIds = versions.map((version) => version.id);
+    const dbFileIds = versions.flatMap((version) => version.files.map((file) => file.fileId));
+
+    // Delete all the dbFiles
+    await prisma.file.deleteMany({
+        where: {
+            id: {
+                in: dbFileIds,
+            },
+        },
+    });
+
+    // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
+    // ? Same for version dependencies
+
+    // Delete all the project versions
+    await prisma.version.deleteMany({
+        where: {
+            id: {
+                in: versionIds,
+            },
+        },
+    });
+
+    // Delete the project gallery
+    const galleryFileIds = project.gallery.map((file) => file.imageFileId);
+
+    // Delete all the image files
+    if (galleryFileIds.length > 0) {
+        await prisma.file.deleteMany({
+            where: {
+                id: {
+                    in: galleryFileIds,
+                },
+            },
+        });
+    }
+
+    // Delete project icon file
+    if (project.iconFileId) {
+        await prisma.file.delete({
+            where: {
+                id: project.iconFileId,
+            },
+        });
+    }
+
+    // Delete the project
+    await prisma.project.delete({
+        where: {
+            id: project.id,
+        },
+    });
+
+    // Delete the project associated team
+    await prisma.team.delete({
+        where: {
+            id: project.team.id,
+        },
+    });
+    // ? All the teamMember tables will be automatically deleted
+
+    // Delete the project's storage folder
+    await deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectFileStoragePath(project.id));
+
+    return ctx.json(
+        {
+            success: true,
+            message: "Project deleted",
+        },
+        httpCode("ok"),
+    );
 };

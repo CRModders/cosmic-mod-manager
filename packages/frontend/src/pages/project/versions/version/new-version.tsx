@@ -29,7 +29,7 @@ import {
 } from "./_components";
 
 const UploadVersionPage = () => {
-    const { projectData, fetchAllProjectVersions } = useContext(projectContext);
+    const { projectData, fetchProjectData, fetchAllProjectVersions } = useContext(projectContext);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const UploadVersionPage = () => {
             formData.append("featured", `${data.featured === true}`);
             formData.append("releaseChannel", data.releaseChannel);
             formData.append("versionNumber", data.versionNumber);
-            formData.append("loaders", JSON.stringify(data.loaders));
+            formData.append("loaders", JSON.stringify(data.loaders || []));
             formData.append("gameVersions", JSON.stringify(data.gameVersions));
             formData.append("dependencies", JSON.stringify(data.dependencies || []));
             formData.append("primaryFile", data.primaryFile instanceof File ? data.primaryFile : "");
@@ -83,7 +83,7 @@ const UploadVersionPage = () => {
                 return;
             }
 
-            await fetchAllProjectVersions();
+            await Promise.all([fetchAllProjectVersions(), fetchProjectData()]);
             navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.slug));
             return;
         } finally {

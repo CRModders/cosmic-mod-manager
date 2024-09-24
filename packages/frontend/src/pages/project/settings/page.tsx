@@ -1,8 +1,19 @@
 import { fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, CancelButton, buttonVariants } from "@/components/ui/button";
 import { ChipButton } from "@/components/ui/chip";
+import {
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -14,6 +25,7 @@ import { cn, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
@@ -24,6 +36,7 @@ import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, ChevronDownIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
 
@@ -266,7 +279,7 @@ const GeneralSettingsPage = () => {
                                     <div className="flex gap-1 flex-col min-w-[15rem] max-w-full">
                                         {field.value?.length > 0 && (
                                             <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                                {field.value?.map((loader: string) => {
                                                     return (
                                                         <ChipButton
                                                             variant="secondary"
@@ -280,11 +293,6 @@ const GeneralSettingsPage = () => {
                                                         </ChipButton>
                                                     );
                                                 })}
-                                                {field.value?.length > 3 && (
-                                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
-                                                        and {field.value?.length - 3} more
-                                                    </span>
-                                                )}
                                             </div>
                                         )}
 
@@ -476,8 +484,94 @@ const GeneralSettingsPage = () => {
                     </form>
                 </Form>
             </ContentCardTemplate>
+
+            <DeleteProjectDialog name={projectData.name} slug={projectData.slug} />
         </div>
     );
 };
 
 export default GeneralSettingsPage;
+
+const DeleteProjectDialog = ({ name, slug }: { name: string; slug: string }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [submittable, setSubmittable] = useState(false);
+    const navigate = useNavigate();
+
+    const deleteProject = async () => {
+        if (!submittable || isLoading) return;
+        setIsLoading(true);
+        try {
+            const res = await useFetch(`/api/project/${slug}`, {
+                method: "DELETE",
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data?.success) {
+                return toast.error(data?.message || "Error");
+            }
+
+            toast.success(data?.message || "Success");
+            navigate("/dashboard/projects");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <ContentCardTemplate title="Delete project" className="w-full flex flex-col gap-4">
+            <p className="text-muted-foreground">
+                Removes your project from CRMM's servers and search. Clicking on this will delete your project, so be extra careful!
+            </p>
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="destructive">
+                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                        Delete project
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Are you sure you want to delete this project?</DialogTitle>
+                        <VisuallyHidden>
+                            <DialogDescription>Delete your project</DialogDescription>
+                        </VisuallyHidden>
+                    </DialogHeader>
+                    <DialogBody className="text-muted-foreground flex flex-col gap-4">
+                        <p className="leading-snug">
+                            If you proceed, all versions and any attached data will be removed from our servers. This may break other
+                            projects, so be careful.
+                        </p>
+
+                        <div className="w-full flex flex-col gap-1">
+                            <span className="font-bold flex items-center justify-start gap-1.5">
+                                To verify, type<em className="font-normal">{name}</em>below:
+                            </span>
+
+                            <Input
+                                placeholder="Type here..."
+                                className="w-full sm:w-[32ch]"
+                                onChange={(e) => {
+                                    if (e.target.value === name) {
+                                        setSubmittable(true);
+                                    } else if (submittable === true) {
+                                        setSubmittable(false);
+                                    }
+                                }}
+                            />
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <CancelButton />
+                            </DialogClose>
+                            <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteProject}>
+                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                                Delete project
+                            </Button>
+                        </DialogFooter>
+                    </DialogBody>
+                </DialogContent>
+            </Dialog>
+        </ContentCardTemplate>
+    );
+};

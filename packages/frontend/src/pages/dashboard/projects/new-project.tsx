@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -25,6 +25,7 @@ import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import { newProjectFormSchema } from "@shared/schemas/project";
+import { checkFormValidity } from "@shared/schemas/utils";
 import { ProjectVisibility } from "@shared/types";
 import { ArrowRightIcon, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -49,14 +50,14 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
         },
     });
 
-    const createProject = async () => {
+    const createProject = async (values: z.infer<typeof newProjectFormSchema>) => {
         try {
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
 
             const response = await useFetch("/api/project", {
                 method: "POST",
-                body: JSON.stringify(form.getValues()),
+                body: JSON.stringify(values),
             });
             const result = await response.json();
 
@@ -74,7 +75,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
 
     const isFormSubmittable = () => {
         const values = form.getValues();
-        const isFormInvalid = !values.name || !values.slug || !values.visibility || !values.summary;
+        const isFormInvalid = !values.name || !values.slug || !values.visibility || !values.summary || !values.type?.length;
         return !isFormInvalid;
     };
 
@@ -96,7 +97,9 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                 <DialogBody>
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(createProject)}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                            }}
                             className="w-full flex flex-col items-start justify-center gap-form-elements"
                         >
                             <FormField
@@ -153,17 +156,17 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                 render={({ field }) => (
                                     <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                         <div className="flex flex-col items-start justify-center">
-                                            <FormLabel className="text-foreground font-bold">
+                                            <FormLabel className="">
                                                 Project type
                                                 <FormMessage />
                                             </FormLabel>
-                                            <span className="text-muted-foreground">Select the appropriate type for your project</span>
+                                            <FormDescription>Select the appropriate type for your project</FormDescription>
                                         </div>
 
                                         <div className="flex gap-1 flex-col w-full">
                                             {field.value?.length > 0 && (
                                                 <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                                    {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                                    {field.value.map((loader: string) => {
                                                         return (
                                                             <ChipButton
                                                                 variant="secondary"
@@ -177,11 +180,6 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                                             </ChipButton>
                                                         );
                                                     })}
-                                                    {field.value?.length > 3 && (
-                                                        <span className="text-extra-muted-foreground text-sm font-semibold italic">
-                                                            and {field.value?.length - 3} more
-                                                        </span>
-                                                    )}
                                                 </div>
                                             )}
 
@@ -266,7 +264,15 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                 <DialogClose asChild>
                                     <CancelButton type="button" />
                                 </DialogClose>
-                                <Button disabled={isLoading || !isFormSubmittable()}>
+                                <Button
+                                    disabled={isLoading || !isFormSubmittable()}
+                                    onClick={async () => {
+                                        await checkFormValidity(async () => {
+                                            const parsedFormValues = await newProjectFormSchema.parseAsync(form.getValues());
+                                            await createProject(parsedFormValues);
+                                        });
+                                    }}
+                                >
                                     {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
                                     Continue
                                 </Button>

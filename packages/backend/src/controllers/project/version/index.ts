@@ -134,7 +134,7 @@ export const createNewVersion = async (
 
     // Check the validity of loaders
     const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
-    for (const loader of formData.loaders) {
+    for (const loader of formData.loaders || []) {
         if (!allowedLoaders.includes(loader)) {
             return ctx.json(
                 { success: false, message: `Loader ${loader} not supported by current project type.` },
@@ -174,7 +174,7 @@ export const createNewVersion = async (
             featured: formData.featured,
             releaseChannel: formData.releaseChannel,
             gameVersions: formData.gameVersions,
-            loaders: formData.loaders,
+            loaders: formData.loaders || [],
         },
     });
 
@@ -194,7 +194,7 @@ export const createNewVersion = async (
     // Add dependencies
     await createVersionDependencies(newVersion.id, formData.dependencies || []);
 
-    const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...formData.loaders]);
+    const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...(formData.loaders || [])]);
     const sortedUniqueGameVersions = aggregateVersions([...project.gameVersions, ...formData.gameVersions]);
 
     // Save all the files
@@ -303,7 +303,7 @@ export const updateVersionData = async (
 
     // Check the validity of loaders
     const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
-    for (const loader of formData.loaders) {
+    for (const loader of formData.loaders || []) {
         if (!allowedLoaders.includes(loader)) {
             return ctx.json(
                 { success: false, message: `Loader ${loader} not supported by current project type.` },
@@ -397,7 +397,7 @@ export const updateVersionData = async (
     for (const version of project.versions) {
         // Exclude the target version from the list, instead use the new data
         if (version.id === targetVersion.id) {
-            projectLoaders.push(...formData.loaders);
+            projectLoaders.push(...(formData.loaders || []));
             projectGameVersions.push(...formData.gameVersions);
             continue;
         }
@@ -469,7 +469,7 @@ export const updateVersionData = async (
             featured: formData.featured,
             releaseChannel: formData.releaseChannel,
             gameVersions: formData.gameVersions,
-            loaders: formData.loaders,
+            loaders: formData.loaders || [],
         },
     });
 

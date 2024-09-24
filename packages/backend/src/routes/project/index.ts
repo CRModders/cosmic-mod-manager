@@ -9,6 +9,7 @@ import {
 } from "@/controllers/project";
 import { getProjectDependencies } from "@/controllers/project/dependency";
 import {
+    deleteProject,
     updateProject,
     updateProjectDescription,
     updateProjectExternalLinks,
@@ -43,6 +44,7 @@ projectRouter.get("/:slug/check", projectCheck_get);
 
 projectRouter.post("/", LoginProtectedRoute, project_post);
 projectRouter.patch("/:slug", LoginProtectedRoute, project_patch);
+projectRouter.delete("/:slug", LoginProtectedRoute, project_delete);
 projectRouter.patch("/:slug/description", LoginProtectedRoute, description_patch);
 projectRouter.patch("/:slug/tags", LoginProtectedRoute, tags_patch);
 projectRouter.patch("/:slug/external-links", LoginProtectedRoute, externalLinks_patch);
@@ -135,6 +137,19 @@ async function project_patch(ctx: Context) {
         }
 
         return await updateProject(ctx, slug, userSession, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function project_delete(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        const userSession = getUserSessionFromCtx(ctx);
+        if (!userSession || !slug) return defaultInvalidReqResponse(ctx);
+
+        return await deleteProject(ctx, userSession, slug);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

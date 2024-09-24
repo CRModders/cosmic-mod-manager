@@ -57,7 +57,10 @@ const VersionNumber = z
     );
 
 const projectLoadersList = [...loaders.map((loader) => loader.name)] as const;
-const ProjectLoaders = z.enum([projectLoadersList[0], ...projectLoadersList.slice(1)]).array();
+const ProjectLoaders = z
+    .enum([projectLoadersList[0], ...projectLoadersList.slice(1)])
+    .array()
+    .optional();
 const SupportedGameVersions = z
     .string()
     .array()
