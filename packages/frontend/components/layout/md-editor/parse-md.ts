@@ -14,7 +14,7 @@ export const configuredXss = new FilterXSS({
         kbd: ["id"],
         input: ["checked", "disabled", "type"],
         iframe: ["width", "height", "allowfullscreen", "frameborder", "start", "end"],
-        img: [...(whiteList.img || []), "usemap", "style"],
+        img: [...(whiteList.img || []), "usemap", "style", "loading"],
         map: ["name"],
         area: [...(whiteList.a || []), "coords"],
         a: [...(whiteList.a || []), "rel"],
@@ -29,6 +29,11 @@ export const configuredXss = new FilterXSS({
             "text-align": /^center|left|right$/,
             float: /^left|right$/,
         },
+    },
+    onTag: (tag, html) => {
+        if (tag === "img") {
+            return `<${tag} loading="lazy" ${html.slice(5)}`;
+        }
     },
     onIgnoreTagAttr: (tag, name, value) => {
         // Allow iframes from acceptable sources
@@ -145,5 +150,3 @@ export const md = (options = {}) => {
 };
 
 export const renderString = (string: string) => configuredXss.process(md().render(string));
-
-// Any problems you can point out in this file?

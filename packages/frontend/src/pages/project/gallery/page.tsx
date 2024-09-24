@@ -110,6 +110,7 @@ const GalleryItemCard = ({
                 }}
             >
                 <img
+                    loading="lazy"
                     src={imageUrl(galleryItem.image)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
