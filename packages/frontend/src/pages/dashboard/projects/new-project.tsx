@@ -1,4 +1,5 @@
 import { Button, CancelButton } from "@/components/ui/button";
+import { ChipButton } from "@/components/ui/chip";
 import {
     Dialog,
     DialogBody,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,10 +21,12 @@ import { getProjectPagePathname } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Capitalize, createURLSafeSlug } from "@shared/lib/utils";
+import { projectTypes } from "@shared/config/project";
+import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
+import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import { newProjectFormSchema } from "@shared/schemas/project";
 import { ProjectVisibility } from "@shared/types";
-import { ArrowRightIcon, PlusIcon } from "lucide-react";
+import { ArrowRightIcon, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +43,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
         defaultValues: {
             name: "",
             slug: "",
+            type: [],
             visibility: ProjectVisibility.LISTED,
             summary: "",
         },
@@ -118,6 +123,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 name="slug"
                                 control={form.control}
@@ -137,6 +143,68 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                                 if (autoFillUrlSlug === true) setAutoFillUrlSlug(false);
                                             }}
                                         />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="type"
+                                render={({ field }) => (
+                                    <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
+                                        <div className="flex flex-col items-start justify-center">
+                                            <FormLabel className="text-foreground font-bold">
+                                                Project type
+                                                <FormMessage />
+                                            </FormLabel>
+                                            <span className="text-muted-foreground">Select the appropriate type for your project</span>
+                                        </div>
+
+                                        <div className="flex gap-1 flex-col w-full">
+                                            {field.value?.length > 0 && (
+                                                <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
+                                                    {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
+                                                        return (
+                                                            <ChipButton
+                                                                variant="secondary"
+                                                                key={loader}
+                                                                onClick={() => {
+                                                                    field.onChange(field.value?.filter((l: string) => l !== loader));
+                                                                }}
+                                                            >
+                                                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                                                {CapitalizeAndFormatString(loader)}
+                                                            </ChipButton>
+                                                        );
+                                                    })}
+                                                    {field.value?.length > 3 && (
+                                                        <span className="text-extra-muted-foreground text-sm font-semibold italic">
+                                                            and {field.value?.length - 3} more
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <MultiSelect
+                                                selectedOptions={[...(field.value || []), "project"] || []}
+                                                options={projectTypes.map((type) => ({
+                                                    label: CapitalizeAndFormatString(type) || "",
+                                                    value: type,
+                                                }))}
+                                                onChange={(values) => {
+                                                    field.onChange(getProjectTypesFromNames(values));
+                                                }}
+                                                classNames={{
+                                                    popupContent: "w-full",
+                                                    listItem: "font-medium",
+                                                }}
+                                            >
+                                                <Button variant="secondary" className="justify-between text-extra-muted-foreground">
+                                                    Choose...
+                                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                </Button>
+                                            </MultiSelect>
+                                        </div>
                                     </FormItem>
                                 )}
                             />

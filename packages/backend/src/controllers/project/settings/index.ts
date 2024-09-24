@@ -44,14 +44,10 @@ export const updateProject = async (
             },
         },
     });
+    const currMember = project?.team.members?.[0];
+    if (!project?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
-
-    const currMember = project.team.members?.[0];
-    if (
-        !currMember ||
-        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
-    ) {
+    if (!doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)) {
         return ctx.json({ success: false, message: "You don't have the permission to update project details" }, httpCode("unauthorized"));
     }
 

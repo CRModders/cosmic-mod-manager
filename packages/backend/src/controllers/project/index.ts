@@ -105,6 +105,7 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
             teamId: newTeam.id,
             name: formData.name,
             slug: formData.slug,
+            type: formData.type,
             summary: formData.summary,
             visibility: formData.visibility,
             status: ProjectPublishingStatus.DRAFT,
