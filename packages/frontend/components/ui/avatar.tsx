@@ -27,7 +27,7 @@ export const ImgWrapper = ({
             alt={alt}
             loading="lazy"
             className={cn(
-                "h-24 object-contain rounded shadow shadow-background/50 bg-shallow-background/50 border border-shallow-background aspect-square",
+                "h-24 object-cover rounded shadow shadow-background/50 bg-shallow-background/50 border border-shallow-background aspect-square",
                 className,
             )}
         />
