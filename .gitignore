@@ -1,8 +1,5 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
-# TEMP
-packages/docs
-
 # Logs
 logs
 _.log

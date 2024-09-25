@@ -159,5 +159,5 @@ export interface ProjectListItem {
     gameVersions: string[];
     loaders: string[];
 
-    author?: string;
+    author?: string; // The author's username
 }

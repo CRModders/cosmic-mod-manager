@@ -1,7 +1,6 @@
 import meilisearch from "@/services/meilisearch";
 import { projectSearchNamespace } from "@/services/queues/searchdb-sync";
 import httpCode from "@/utils/http";
-import { defaultSearchLimit } from "@shared/config/search";
 import { type ProjectType, SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { Context } from "hono";
@@ -14,7 +13,8 @@ interface Props {
     environments: string[];
     openSourceOnly: boolean;
     sortBy: SearchResultSortMethod;
-    page: number;
+    offset: number;
+    limit: number;
     type: ProjectType;
 }
 
@@ -40,7 +40,6 @@ export const searchProjects = async (ctx: Context, props: Props) => {
             break;
     }
 
-    const offset = (props.page - 1) * defaultSearchLimit;
     const environments = [];
     if (props.environments.includes("client")) {
         environments.push("clientSide = true");
@@ -51,8 +50,8 @@ export const searchProjects = async (ctx: Context, props: Props) => {
 
     const result = await index.search(props.query, {
         sort: sortBy ? [sortBy] : [],
-        limit: defaultSearchLimit,
-        offset: offset,
+        limit: props.limit,
+        offset: props.offset,
         filter: [
             props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
             props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),

@@ -3,12 +3,15 @@ import { searchApiRateLimiterMiddleware } from "@/middleware/rate-limiter";
 import httpCode, { defaultServerErrorResponse } from "@/utils/http";
 import GAME_VERSIONS from "@shared/config/game-versions";
 import {
+    MAX_SEARCH_LIMIT,
     categoryFilterParamNamespace,
+    defaultSearchLimit,
     defaultSortBy,
     gameVersionFilterParamNamespace,
     licenseFilterParamNamespace,
     loaderFilterParamNamespace,
     pageOffsetParamNamespace,
+    searchLimitParamNamespace,
     sortByParamNamespace,
 } from "@shared/config/search";
 import { getAllLoaderCategories, getValidProjectCategories, isNumber } from "@shared/lib/utils";
@@ -35,14 +38,26 @@ async function search_get(ctx: Context) {
         const categories = ctx.req.queries(categoryFilterParamNamespace) || [];
         const loaders = ctx.req.queries(loaderFilterParamNamespace) || [];
         const gameVersions = ctx.req.queries(gameVersionFilterParamNamespace) || [];
-        const page = ctx.req.query(pageOffsetParamNamespace) || "1";
+        const pageStr = ctx.req.query(pageOffsetParamNamespace) || "";
+        const offsetStr = ctx.req.query("offset") || "";
+        const limitStr = ctx.req.query(searchLimitParamNamespace) || `${defaultSearchLimit}`;
         const environments = ctx.req.queries("e") || [];
         const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss";
         const sortBy = ctx.req.query(sortByParamNamespace) || defaultSortBy;
         const type = getProjectTypeFromName(ctx.req.query("type") || "");
 
-        let pageNumber = Number.parseInt(page);
-        if (!isNumber(pageNumber)) pageNumber = 1;
+        let limit = Number.parseInt(limitStr);
+        if (!isNumber(limit)) limit = defaultSearchLimit;
+        else if (limit > MAX_SEARCH_LIMIT) limit = MAX_SEARCH_LIMIT;
+        else if (limit <= 0) limit = 1;
+
+        const page = Number.parseInt(pageStr);
+
+        let offset = Number.parseInt(offsetStr);
+        if (!isNumber(offset)) {
+            if (isNumber(page)) offset = (page - 1) * limit;
+            else offset = 0;
+        }
 
         return await searchProjects(ctx, {
             query,
@@ -52,7 +67,8 @@ async function search_get(ctx: Context) {
             environments,
             openSourceOnly,
             sortBy: sortBy as SearchResultSortMethod,
-            page: pageNumber,
+            offset: offset,
+            limit: limit,
             type: type,
         });
     } catch (error) {

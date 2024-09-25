@@ -12,19 +12,21 @@ export default function PaginatedNavigation({
     pagesCount,
     activePage,
     searchParamKey = "page",
-    offsetMultiplier = 1,
     includeHashInURL,
 }: {
     pagesCount: number;
     activePage: number;
     searchParamKey?: string;
-    offsetMultiplier?: number;
     includeHashInURL?: boolean;
 }) {
+    const isPageActive = (page: number | undefined) => {
+        return activePage === page;
+    };
+
     const generateLinkHref = (page: number) => {
         const currUrl = new URL(window.location.href);
         if (page === 1) currUrl.searchParams.delete(searchParamKey);
-        else currUrl.searchParams.set(searchParamKey, (page * offsetMultiplier).toString());
+        else currUrl.searchParams.set(searchParamKey, page.toString());
 
         return currUrl
             .toString()
@@ -50,7 +52,7 @@ export default function PaginatedNavigation({
                     pages.map((page) => {
                         return (
                             <PaginationItem key={page}>
-                                <PaginationLink to={generateLinkHref(page)} isActive={activePage === page}>
+                                <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
                                     {page.toString()}
                                 </PaginationLink>
                             </PaginationItem>
@@ -61,7 +63,7 @@ export default function PaginatedNavigation({
                         {pages.slice(0, 5).map((page) => {
                             return (
                                 <PaginationItem key={page}>
-                                    <PaginationLink to={generateLinkHref(page)} isActive={activePage === page}>
+                                    <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
                                         {page.toString()}
                                     </PaginationLink>
                                 </PaginationItem>
@@ -71,7 +73,7 @@ export default function PaginatedNavigation({
                             <PaginationEllipsis />
                         </PaginationItem>
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={activePage === pages.at(-1)}>
+                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
                                 {pages.at(-1)?.toString()}
                             </PaginationLink>
                         </PaginationItem>
@@ -79,7 +81,7 @@ export default function PaginatedNavigation({
                 ) : activePage >= 5 && activePage <= pagesCount - 4 ? (
                     <>
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(1)} isActive={activePage === 1}>
+                            <PaginationLink to={generateLinkHref(1)} isActive={isPageActive(1)}>
                                 1
                             </PaginationLink>
                         </PaginationItem>
@@ -91,7 +93,7 @@ export default function PaginatedNavigation({
                         {pages.slice(activePage - 2, activePage + 1).map((page) => {
                             return (
                                 <PaginationItem key={page}>
-                                    <PaginationLink to={generateLinkHref(page)} isActive={activePage === page}>
+                                    <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
                                         {page.toString()}
                                     </PaginationLink>
                                 </PaginationItem>
@@ -103,7 +105,7 @@ export default function PaginatedNavigation({
                         </PaginationItem>
 
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={activePage === pages.at(-1)}>
+                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
                                 {pages.at(-1)?.toString()}
                             </PaginationLink>
                         </PaginationItem>
@@ -111,7 +113,7 @@ export default function PaginatedNavigation({
                 ) : (
                     <>
                         <PaginationItem>
-                            <PaginationLink to={generateLinkHref(1)} isActive={activePage === 1}>
+                            <PaginationLink to={generateLinkHref(1)} isActive={isPageActive(1)}>
                                 1
                             </PaginationLink>
                         </PaginationItem>
@@ -123,7 +125,7 @@ export default function PaginatedNavigation({
                         {pages.slice(-5).map((item) => {
                             return (
                                 <PaginationItem key={item}>
-                                    <PaginationLink to={generateLinkHref(item)} isActive={activePage === item}>
+                                    <PaginationLink to={generateLinkHref(item)} isActive={isPageActive(item)}>
                                         {item.toString()}
                                     </PaginationLink>
                                 </PaginationItem>

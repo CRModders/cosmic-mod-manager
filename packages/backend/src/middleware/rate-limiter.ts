@@ -168,6 +168,7 @@ interface RateLimits {
     cdnLargeFiles: RateLimitItem;
 }
 
+// Number of requests in a time window (seconds)
 const rateLimits: RateLimits = {
     ddosProtection: {
         limit: 100,
