@@ -5,34 +5,33 @@ import { getFileType } from "../../../lib/utils/convertors";
 import { isImageFile } from "../../../lib/validation";
 import { ProjectSupport, ProjectVisibility } from "../../../types";
 
+export const projectIconFieldSchema = z
+    .instanceof(File)
+    .refine(
+        (file) => {
+            if (file instanceof File) {
+                if (file.size > MAX_PROJECT_ICON_SIZE) return false;
+            }
+            return true;
+        },
+        { message: `Icon can only be a maximum of ${MAX_PROJECT_ICON_SIZE / 1024} KiB` },
+    )
+    .refine(
+        async (file) => {
+            if (file instanceof File) {
+                const type = await getFileType(file);
+                if (!type || !isImageFile(type)) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        { message: "Invalid file type, only image files allowed" },
+    );
+
 export const generalProjectSettingsFormSchema = z.object({
-    icon: z
-        .instanceof(File)
-        .refine(
-            (file) => {
-                if (file instanceof File) {
-                    if (file.size > MAX_PROJECT_ICON_SIZE) return false;
-                }
-                return true;
-            },
-            { message: `Icon can only be a maximum of ${MAX_PROJECT_ICON_SIZE / 1024} KiB` },
-        )
-        .refine(
-            async (file) => {
-                if (file instanceof File) {
-                    const type = await getFileType(file);
-                    if (!type || !isImageFile(type)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            },
-            { message: "Invalid file type, only image files allowed" },
-        )
-        .or(z.string())
-        .optional(),
-
+    icon: projectIconFieldSchema.or(z.string()).optional(),
     name: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
     slug: ProjectSlugField,
     type: ProjectTypeField,

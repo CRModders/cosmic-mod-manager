@@ -445,3 +445,122 @@ export const deleteProject = async (ctx: Context, userSession: ContextUserSessio
         httpCode("ok"),
     );
 };
+
+export const updateProjectIcon = async (ctx: Context, userSession: ContextUserSession, slug: string, icon: File) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [{ id: slug }, { slug: slug }],
+        },
+        select: {
+            id: true,
+            iconFileId: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            isOwner: true,
+                            permissions: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+    const memberObj = project?.team.members?.[0];
+    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
+        return ctx.json({ success: false, message: "You don't have the permission to update project icon" }, httpCode("unauthorized"));
+    }
+
+    // Delete the previous icon if it exists
+    if (project.iconFileId) {
+        const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
+        await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+    }
+
+    const fileType = await getFileType(icon);
+    if (!fileType) return ctx.json({ success: false, message: "Invalid file type" }, httpCode("bad_request"));
+
+    const fileName = `${generateRandomString(16)}.${fileType}`;
+    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, icon, fileName);
+
+    if (!newFileUrl) return ctx.json({ success: false, message: "Failed to save the icon" }, httpCode("server_error"));
+    const newDbFile = await prisma.file.create({
+        data: {
+            id: nanoid(STRING_ID_LENGTH),
+            name: fileName,
+            size: icon.size,
+            type: fileType,
+            url: newFileUrl,
+            storageService: FILE_STORAGE_SERVICE.LOCAL,
+        },
+    });
+
+    await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            iconFileId: newDbFile.id,
+        },
+    });
+
+    return ctx.json({ success: true, message: "Project icon updated" }, httpCode("ok"));
+};
+
+export const deleteProjectIcon = async (ctx: Context, userSession: ContextUserSession, slug: string) => {
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [{ id: slug }, { slug: slug }],
+        },
+        select: {
+            id: true,
+            iconFileId: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id },
+                        select: {
+                            isOwner: true,
+                            permissions: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+    const memberObj = project?.team.members?.[0];
+    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+
+    if (!project.iconFileId) return ctx.json({ success: false, message: "Project does not have any icon" }, httpCode("bad_request"));
+
+    const hasEditAccess = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        memberObj.permissions as ProjectPermission[],
+        memberObj.isOwner,
+    );
+    if (!hasEditAccess) {
+        return ctx.json({ success: false, message: "You don't have the permission to delete project icon" }, httpCode("unauthorized"));
+    }
+
+    const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
+    await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+
+    await prisma.project.update({
+        where: {
+            id: project.id,
+        },
+        data: {
+            iconFileId: null,
+        },
+    });
+
+    return ctx.json({ success: true, message: "Project icon deleted" }, httpCode("ok"));
+};

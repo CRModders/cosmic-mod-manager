@@ -10,9 +10,11 @@ import {
 import { getProjectDependencies } from "@/controllers/project/dependency";
 import {
     deleteProject,
+    deleteProjectIcon,
     updateProject,
     updateProjectDescription,
     updateProjectExternalLinks,
+    updateProjectIcon,
     updateProjectLicense,
     updateProjectTags,
 } from "@/controllers/project/settings";
@@ -28,7 +30,7 @@ import { newProjectFormSchema } from "@shared/schemas/project";
 import { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
 import { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
-import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
+import { generalProjectSettingsFormSchema, projectIconFieldSchema } from "@shared/schemas/project/settings/general";
 import { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
 import { updateExternalLinksFormSchema } from "@shared/schemas/project/settings/links";
 import { parseValueToSchema } from "@shared/schemas/utils";
@@ -45,6 +47,8 @@ projectRouter.get("/:slug/check", projectCheck_get);
 projectRouter.post("/", LoginProtectedRoute, project_post);
 projectRouter.patch("/:slug", LoginProtectedRoute, project_patch);
 projectRouter.delete("/:slug", LoginProtectedRoute, project_delete);
+projectRouter.patch("/:slug/icon", LoginProtectedRoute, projectIcon_patch);
+projectRouter.delete("/:slug/icon", LoginProtectedRoute, projectIcon_delete);
 projectRouter.patch("/:slug/description", LoginProtectedRoute, description_patch);
 projectRouter.patch("/:slug/tags", LoginProtectedRoute, tags_patch);
 projectRouter.patch("/:slug/external-links", LoginProtectedRoute, externalLinks_patch);
@@ -150,6 +154,46 @@ async function project_delete(ctx: Context) {
         if (!userSession || !slug) return defaultInvalidReqResponse(ctx);
 
         return await deleteProject(ctx, userSession, slug);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function projectIcon_patch(ctx: Context) {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const slug = ctx.req.param("slug");
+        const formData = ctx.get(ctxReqBodyNamespace);
+        const icon = formData.get("icon");
+
+        if (!userSession || !slug || !icon || !(icon instanceof File)) return defaultInvalidReqResponse(ctx, "Invalid data");
+
+        const { data, error } = await parseValueToSchema(projectIconFieldSchema, icon);
+        if (error || !data) {
+            return ctx.json(
+                {
+                    success: false,
+                    message: error,
+                },
+                httpCode("bad_request"),
+            );
+        }
+
+        return await updateProjectIcon(ctx, userSession, slug, data);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function projectIcon_delete(ctx: Context) {
+    try {
+        const userSession = getUserSessionFromCtx(ctx);
+        const slug = ctx.req.param("slug");
+
+        if (!userSession || !slug) return defaultInvalidReqResponse(ctx, "Invalid data");
+        return await deleteProjectIcon(ctx, userSession, slug);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
