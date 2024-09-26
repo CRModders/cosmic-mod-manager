@@ -98,7 +98,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                 <meta name="description" content={projectData?.summary || " "} />
             </Helmet>
 
-            <div className="project-page-layout pb-12 gap-panel-cards">
+            <div className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
                 <PageHeader
                     projectData={projectData}
                     fetchProjectData={fetchProjectData}
@@ -342,7 +342,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                     </Card>
                 </div>
 
-                <div className="w-full flex flex-col gap-panel-cards [grid-area:_content]">
+                <div className="w-full max-w-full overflow-auto flex flex-col gap-panel-cards [grid-area:_content]">
                     <SecondaryNav
                         urlBase={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}
                         className="bg-card-background rounded-lg px-3 py-2"
@@ -365,6 +365,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                             },
                         ]}
                     />
+
                     <Outlet />
                 </div>
             </div>

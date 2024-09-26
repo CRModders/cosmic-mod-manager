@@ -15,7 +15,11 @@ export const PanelAside = ({ children, className }: { children: React.ReactNode;
 };
 
 export const PanelContent = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    return <section className={cn("w-full flex flex-col gap-panel-cards items-center justify-center", className)}>{children}</section>;
+    return (
+        <section className={cn("w-full overflow-auto flex flex-col gap-panel-cards items-center justify-center", className)}>
+            {children}
+        </section>
+    );
 };
 
 export const PanelAsideNavCard = ({ children, className, label }: { children: React.ReactNode; className?: string; label: string }) => {

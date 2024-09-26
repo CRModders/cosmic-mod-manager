@@ -147,7 +147,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
             </Card>
 
             <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
-                <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
+                <div className="overflow-auto flex flex-col gap-panel-cards items-start justify-start">
                     {versionData.changelog?.length ? (
                         <ContentCardTemplate title="Changelog">
                             <MarkdownRenderBox text={versionData.changelog} />

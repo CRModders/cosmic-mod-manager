@@ -516,7 +516,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                     {previewOn && (
                         <div
                             className={cn(
-                                "flex w-full items-center justify-center rounded border-2 border-shallow-background p-4",
+                                "flex w-full overflow-auto items-center justify-center rounded border-2 border-shallow-background p-4",
                                 !editorValue && "min-h-24",
                             )}
                         >

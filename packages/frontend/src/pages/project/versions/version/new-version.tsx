@@ -148,7 +148,7 @@ const UploadVersionPage = () => {
                     </UploadVersionPageTopCard>
 
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
-                        <div className="w-full flex flex-col gap-panel-cards">
+                        <div className="overflow-auto max-w-full flex flex-col gap-panel-cards">
                             <ContentCardTemplate title="Changelog">
                                 <FormField
                                     control={form.control}

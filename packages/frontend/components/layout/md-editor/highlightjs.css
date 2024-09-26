@@ -128,7 +128,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body table {
-    @apply block w-fit max-w-full overflow-auto border-separate border-spacing-0 leading-normal border-[0.1rem] border-shallow-background rounded;
+    @apply block w-max max-w-full overflow-auto border-separate border-spacing-0 leading-normal border-[0.1rem] border-shallow-background rounded;
 }
 
 .markdown-body table th {

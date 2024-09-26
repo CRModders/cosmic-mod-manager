@@ -60,7 +60,11 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
     return (
         <FormItemContext.Provider value={{ id }}>
-            <div ref={ref} className={cn("w-full flex flex-col items-start justify-center mb-1.5 gap-y-1.5", className)} {...props} />
+            <div
+                ref={ref}
+                className={cn("w-full max-w-full flex flex-col items-start justify-center mb-1.5 gap-y-1.5", className)}
+                {...props}
+            />
         </FormItemContext.Provider>
     );
 });

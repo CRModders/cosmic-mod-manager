@@ -15,7 +15,7 @@ const ProjectPage = () => {
 
     return (
         <Suspense fallback={<SuspenseFallback />}>
-            <ContentCardTemplate className="w-full gap-0 [grid-area:_content]">
+            <ContentCardTemplate className="w-full max-w-full gap-0 [grid-area:_content]">
                 <MarkdownRenderBox text={projectData.description || ""} />
             </ContentCardTemplate>
         </Suspense>

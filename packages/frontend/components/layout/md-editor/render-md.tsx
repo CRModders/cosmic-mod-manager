@@ -70,7 +70,7 @@ export const renderHighlightedString = (string: string) =>
 export const MarkdownRenderBox = ({ text, className }: { text: string; className?: string }) => {
     return (
         <div
-            className={cn("w-full markdown-body", className)}
+            className={cn("w-full overflow-auto markdown-body", className)}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: renderHighlightedString(text) }}
         />
