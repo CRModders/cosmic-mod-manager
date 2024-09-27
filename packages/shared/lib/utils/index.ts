@@ -30,7 +30,7 @@ export function CapitalizeAndFormatString(str: string | null | undefined) {
 }
 
 export function createURLSafeSlug(slug: string, additionalAllowedChars?: string) {
-    const allowedURLCharacters = `${lowerCaseAlphabets}${upperCaseAlphabets}${digits}\`!@$()-_.,"${additionalAllowedChars || ""}`;
+    const allowedURLCharacters = `${lowerCaseAlphabets}${upperCaseAlphabets}${digits}\`!@$()-+_.,"${additionalAllowedChars || ""}`;
 
     const result = {
         validInput: false,

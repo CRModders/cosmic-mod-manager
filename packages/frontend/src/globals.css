@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 :root {
-    --tint-hue: 210;
-    --bg-saturation: 14%;
-    --accent-color-hue: 345;
 
     /* FONT SIZES */
     --font-tiny: 0.75rem;
@@ -54,8 +51,6 @@
 
 html,
 html body {
-    --accent-color-hue: 340;
-
     color: hsla(var(--foreground));
     background-color: hsla(var(--background));
     font-size: var(--font-base);
@@ -69,6 +64,8 @@ html body {
 .dark,
 .dark body {
     --accent-color-hue: 345;
+    --tint-hue: 200;
+    --bg-saturation: 14%;
 
     --foreground: var(--foreground-dark);
     --foreground-bright: var(--foreground-bright-dark);
@@ -93,6 +90,10 @@ html body {
 
 .light,
 .light body {
+    --accent-color-hue: 343;
+    --tint-hue: 210;
+    --bg-saturation: 18%;
+
     --foreground: var(--foreground-light);
     --foreground-bright: var(--foreground-bright-light);
     --accent-foreground: var(--accent-foreground-light);

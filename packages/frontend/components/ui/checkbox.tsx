@@ -11,7 +11,7 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-            "neumorphic_shadow peer relative h-4 w-4 shrink-0 rounded-md bg-shallower-background/85 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsla(var(--accent-background-dark))] data-[state=checked]:text-background",
+            "neumorphic_shadow peer relative h-4 w-4 shrink-0 rounded-sm bg-shallower-background/85 transition-opacity disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsla(var(--accent-background-dark))] data-[state=checked]:text-background",
             className,
         )}
         name={name}

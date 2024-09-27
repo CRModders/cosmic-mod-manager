@@ -27,7 +27,7 @@ import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { projectTypes } from "@shared/config/project";
-import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
+import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
 import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
 import { checkFormValidity } from "@shared/schemas/utils";
@@ -234,7 +234,15 @@ const GeneralSettingsPage = () => {
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
-                                        <Input {...field} className="md:w-[32ch]" id="project-slug-input" autoComplete="off" />
+                                        <Input
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(createURLSafeSlug(e.target.value).value);
+                                            }}
+                                            className="md:w-[32ch]"
+                                            id="project-slug-input"
+                                            autoComplete="off"
+                                        />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
                                             {window.location.origin}/{projectData.type[0]}/
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>

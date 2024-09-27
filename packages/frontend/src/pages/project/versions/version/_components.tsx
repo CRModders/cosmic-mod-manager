@@ -165,7 +165,7 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                             placeholder="#"
                             {...field}
                             onChange={(e) => {
-                                field.onChange(createURLSafeSlug(e.target.value, "+").value);
+                                field.onChange(createURLSafeSlug(e.target.value).value);
                             }}
                         />
                     </FormItem>

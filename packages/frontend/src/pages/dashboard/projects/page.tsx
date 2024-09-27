@@ -114,7 +114,7 @@ const ProjectsPage = () => {
                                                     <div className="flex flex-col items-start justify-center gap-1">
                                                         <Link
                                                             to={getProjectPagePathname(project.type[0], project.slug)}
-                                                            className="noClickRedirect leading-none text-lg font-bold text-foreground hover:underline"
+                                                            className="noClickRedirect leading-none font-bold text-foreground hover:underline"
                                                         >
                                                             {project.name}
                                                         </Link>
