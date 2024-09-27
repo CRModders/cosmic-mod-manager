@@ -6,7 +6,7 @@ import ThemeSwitch from "../ui/theme-switcher";
 const Footer = () => {
     return (
         <div className="w-full bg-card-background py-8">
-            <div className="container grid grid-cols-[auto_1fr_auto]">
+            <div className="container flex items-center justify-between flex-wrap gap-3">
                 <span className="flex gap-2 items-center justify-center text-lg font-bold">
                     <BrandIcon size="2rem" />
                     CRMM
