@@ -110,14 +110,7 @@ const InteractiveDownloadPopup = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button
-                    variant={isVersionDetailsPage ? "secondary" : "default"}
-                    className={
-                        isVersionDetailsPage
-                            ? "bg-card-background hover:bg-card-background/70 dark:bg-shallow-background/75 dark:hover:bg-shallow-background"
-                            : ""
-                    }
-                >
+                <Button variant={isVersionDetailsPage ? "secondary-inverted" : "default"}>
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
                     Download
                 </Button>

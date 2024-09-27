@@ -148,10 +148,7 @@ const UploadGalleryImageForm = () => {
 
                                                 <label
                                                     htmlFor="gallery-image-input"
-                                                    className={cn(
-                                                        buttonVariants({ variant: "secondary" }),
-                                                        "cursor-pointer bg-card-background hover:bg-card-background/80",
-                                                    )}
+                                                    className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}
                                                 >
                                                     {field.value ? "Replace file" : "Choose file"}
                                                 </label>

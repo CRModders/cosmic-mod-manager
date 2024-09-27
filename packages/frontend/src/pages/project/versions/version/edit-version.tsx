@@ -225,7 +225,7 @@ const EditVersionPage = () => {
                                         </div>
                                     </div>
 
-                                    <Button disabled type="button" variant="secondary" className="bg-card-background">
+                                    <Button disabled type="button" variant="secondary-dark">
                                         <Trash2Icon className="w-btn-icon h-btn-icon" />
                                         Remove
                                     </Button>

@@ -553,10 +553,7 @@ export const SelectPrimaryFileInput = ({
                 )}
             </div>
 
-            <label
-                htmlFor={inputId}
-                className={cn(buttonVariants({ variant: "secondary" }), "cursor-pointer bg-card-background hover:bg-card-background/80")}
-            >
+            <label htmlFor={inputId} className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}>
                 {selectedFile ? "Replace file" : "Choose file"}
             </label>
         </div>
@@ -643,11 +640,7 @@ const AdditionalFiles = ({
                                 </span>
                             </div>
 
-                            <Button
-                                variant={"secondary"}
-                                className="bg-card-background hover:bg-card-background/75"
-                                onClick={() => deleteFileFromList(index)}
-                            >
+                            <Button variant={"secondary-dark"} onClick={() => deleteFileFromList(index)}>
                                 <Trash2Icon className="w-btn-icon h-btn-icon" />
                                 Remove
                             </Button>

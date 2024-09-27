@@ -341,12 +341,9 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink }: FileDe
             </div>
 
             <VariantButtonLink
-                variant={isPrimary ? "secondary" : "ghost"}
+                variant={isPrimary ? "secondary-dark" : "ghost"}
                 url={downloadLink}
-                className={cn(
-                    "no_neumorphic_shadow hover:bg-transparent hover:text-foreground",
-                    isPrimary && "bg-card-background hover:bg-card-background",
-                )}
+                className={cn(!isPrimary && "no_neumorphic_shadow hover:bg-transparent dark:hover:bg-transparent hover:text-foreground")}
             >
                 <DownloadIcon className="w-btn-icon h-btn-icon" />
                 Download

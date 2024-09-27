@@ -103,7 +103,7 @@ export const Navlink = ({ href, label, children, className }: Props) => {
     return (
         <ButtonLink
             url={href}
-            className={cn("hover:bg-card-background/80 dark:hover:bg-shallow-background/80 font-semibold", className)}
+            className={cn("hover:bg-card-background/70 dark:hover:bg-shallow-background/70 font-semibold", className)}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >
             {children ? children : label}
