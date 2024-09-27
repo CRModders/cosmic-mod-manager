@@ -55,13 +55,14 @@ const SearchListItem = ({
                 style={{
                     gridArea: "icon",
                 }}
+                title={projectName}
                 tabIndex={-1}
             >
                 <ImgWrapper src={imageUrl(icon)} alt={projectName} fallback={fallbackProjectIcon} className="h-24 rounded-xl" />
             </Link>
 
             <div className="h-fit flex flex-wrap gap-2 items-baseline justify-start" style={{ gridArea: "title" }}>
-                <Link to={getProjectPagePathname(projectType, projectSlug)}>
+                <Link to={getProjectPagePathname(projectType, projectSlug)} title={projectName}>
                     <h2 className="text-xl font-bold leading-none break-words sm:text-wrap">{projectName}</h2>
                 </Link>
 

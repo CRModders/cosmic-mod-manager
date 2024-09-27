@@ -90,7 +90,6 @@
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
-    /* text-decoration: underline; */
     @apply text-link-hover-foreground;
 }
 
@@ -112,7 +111,7 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body pre {
-    @apply mt-4 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/70 rounded overflow-x-auto whitespace-break-spaces;
+    @apply mt-4 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/70 rounded overflow-x-auto;
 }
 
 .markdown-body pre code {

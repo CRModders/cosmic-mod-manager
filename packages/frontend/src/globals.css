@@ -114,13 +114,14 @@ html body {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 9px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-thumb,
 body * ::-webkit-scrollbar-thumb {
     background-color: hsla(var(--extra-muted-foreground), 0.5);
-    border-radius: 0.3rem;
+    border-radius: 9px;
 }
 
 ::-webkit-scrollbar-thumb:hover,
@@ -136,7 +137,7 @@ body * ::-webkit-scrollbar-thumb:active {
 ::-webkit-scrollbar-track,
 body * ::-webkit-scrollbar-track {
     background-color: hsla(var(--background));
-    border-radius: 0.3rem;
+    border-radius: 9px;
 }
 
 body.navmenu-open,
