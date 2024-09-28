@@ -7,29 +7,94 @@
       <lastmod>2024-09-20</lastmod>
    </url>
 
+    <!-- MODS -->
    <url>
       <loc>https://www.crmm.tech/mods</loc>
       <lastmod>2024-09-20</lastmod>
    </url>
+   <url>
+      <loc>https://www.crmm.tech/mod/oreloader</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/mod/oreloader/gallery</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/mod/oreloader/versions</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/mod/oreloader/version/1.1.0</loc>
+   </url>
 
+    <!-- DATAMODS -->
    <url>
       <loc>https://www.crmm.tech/datamods</loc>
       <lastmod>2024-09-20</lastmod>
    </url>
+   <url>
+      <loc>https://www.crmm.tech/datamod/dice</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/datamod/dice/gallery</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/datamod/dice/versions</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/datamod/dice/version/7.2.0</loc>
+   </url>
 
+    <!-- RESOURCE PACKS -->
    <url>
       <loc>https://www.crmm.tech/resource-packs</loc>
       <lastmod>2024-09-20</lastmod>
    </url>
+   <url>
+      <loc>https://www.crmm.tech/resource-pack/jedos-simple-texture-pack</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/resource-pack/jedos-simple-texture-pack/gallery</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/resource-pack/jedos-simple-texture-pack/versions</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/resource-pack/jedos-simple-texture-pack/version/1.2.2</loc>
+   </url>
 
+    <!-- SHADERS -->
    <url>
       <loc>https://www.crmm.tech/shaders</loc>
       <lastmod>2024-09-20</lastmod>
    </url>
+   <url>
+      <loc>https://www.crmm.tech/shader/testshaders</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/shader/testshaders/gallery</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/shader/testshaders/versions</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/shader/testshaders/version/5</loc>
+   </url>
 
+    <!-- MODPACKS -->
    <url>
       <loc>https://www.crmm.tech/modpacks</loc>
       <lastmod>2024-09-20</lastmod>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/modpack/cosmic-fixes</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/modpack/cosmic-fixes/gallery</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/modpack/cosmic-fixes/versions</loc>
+   </url>
+   <url>
+      <loc>https://www.crmm.tech/modpack/cosmic-fixes/version/1.0.1</loc>
    </url>
 
 </urlset>
