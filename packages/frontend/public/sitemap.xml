@@ -10,7 +10,6 @@
     <!-- MODS -->
    <url>
       <loc>https://www.crmm.tech/mods</loc>
-      <lastmod>2024-09-20</lastmod>
    </url>
    <url>
       <loc>https://www.crmm.tech/mod/oreloader</loc>
@@ -28,7 +27,6 @@
     <!-- DATAMODS -->
    <url>
       <loc>https://www.crmm.tech/datamods</loc>
-      <lastmod>2024-09-20</lastmod>
    </url>
    <url>
       <loc>https://www.crmm.tech/datamod/dice</loc>
@@ -46,7 +44,6 @@
     <!-- RESOURCE PACKS -->
    <url>
       <loc>https://www.crmm.tech/resource-packs</loc>
-      <lastmod>2024-09-20</lastmod>
    </url>
    <url>
       <loc>https://www.crmm.tech/resource-pack/jedos-simple-texture-pack</loc>
@@ -64,7 +61,6 @@
     <!-- SHADERS -->
    <url>
       <loc>https://www.crmm.tech/shaders</loc>
-      <lastmod>2024-09-20</lastmod>
    </url>
    <url>
       <loc>https://www.crmm.tech/shader/testshaders</loc>
@@ -82,7 +78,6 @@
     <!-- MODPACKS -->
    <url>
       <loc>https://www.crmm.tech/modpacks</loc>
-      <lastmod>2024-09-20</lastmod>
    </url>
    <url>
       <loc>https://www.crmm.tech/modpack/cosmic-fixes</loc>
