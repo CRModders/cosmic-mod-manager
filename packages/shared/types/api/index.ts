@@ -124,10 +124,10 @@ export interface DependencyListData {
 export interface ProjectVersionData {
     id: string;
     title: string;
-    versionNumber: Date;
+    versionNumber: string;
     changelog: string | null;
     slug: string;
-    datePublished: string;
+    datePublished: Date;
     featured: boolean;
     downloads: number;
     releaseChannel: VersionReleaseChannel;
