@@ -120,7 +120,7 @@ const InteractiveDownloadPopup = () => {
                     <ImgWrapper
                         src={imageUrl(projectData.icon)}
                         alt={projectData.name}
-                        className="h-9 rounded-md"
+                        className="h-9 w-9 rounded-md"
                         fallback={fallbackProjectIcon}
                     />
                     <DialogTitle>Download {projectData.name}</DialogTitle>

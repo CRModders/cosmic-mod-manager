@@ -17,14 +17,8 @@ import { DependencyType, VersionReleaseChannel } from "../../types";
 const AdditionVersionFilesList = z
     .instanceof(File)
     .array()
+    .max(MAX_OPTIONAL_FILES, `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.`)
     .optional()
-    .refine(
-        (files) => {
-            if ((files?.length || 0) > MAX_OPTIONAL_FILES) return false;
-            return true;
-        },
-        { message: `You can upload up to ${MAX_OPTIONAL_FILES} additional files only.` },
-    )
     .refine(
         (files) => {
             const fileNamesList: string[] = [];

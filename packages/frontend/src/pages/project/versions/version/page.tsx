@@ -191,7 +191,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                         <ImgWrapper
                                             src={imageUrl(dependencyProject.icon)}
                                             alt={dependencyProject.name}
-                                            className="h-12"
+                                            className="h-12 w-12"
                                             fallback={fallbackProjectIcon}
                                         />
                                         <div className="flex flex-col items-start justify-center">

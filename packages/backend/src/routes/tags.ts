@@ -76,7 +76,7 @@ async function featuredLicenses_get(ctx: Context) {
 async function licenses_get(ctx: Context) {
     try {
         const licenseId = ctx.req.param("id")?.toLowerCase();
-        if (!licenseId) {
+        if (licenseId) {
             const license = SPDX_LICENSE_LIST.find((l) => l.licenseId.toLowerCase() === licenseId);
             if (!license) {
                 return ctx.json({ success: false, message: "License not found" }, httpCode("not_found"));

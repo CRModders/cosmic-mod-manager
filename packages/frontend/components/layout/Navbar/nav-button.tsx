@@ -71,7 +71,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         src={imageUrl(session.avatarUrl)}
                         alt={session?.userName}
                         fallback={fallbackUserIcon}
-                        className="h-nav-item p-0.5 rounded-full"
+                        className="h-nav-item w-nav-item p-0.5 rounded-full"
                     />
                 </Button>
             </PopoverTrigger>
@@ -121,7 +121,7 @@ const ProfileDropDown = ({ session, isPopoverOpen }: { session: LoggedInUserData
                     src={imageUrl(session?.avatarUrl)}
                     alt={session.userName}
                     fallback={fallbackUserIcon}
-                    className="h-14 rounded-full"
+                    className="h-14 w-14 rounded-full"
                 />
 
                 <div className="w-full flex flex-col items-start justify-center overflow-x-auto">

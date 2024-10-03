@@ -38,7 +38,7 @@ sidebar_position: 1
 "estimatedTotalHits": 2
 ```
 
-[Source code reference](https://github.com/CRModders/cosmic-mod-manager/blob/732a2be6807824867b05aa0df37ded53412078f4/packages/shared/types/api/index.ts#L142)
+[Source code reference](https://github.com/CRModders/cosmic-mod-manager/tree/main/packages/shared/types/api/index.ts#L142)
 </details>
 
 ### Query Parameters
@@ -173,6 +173,6 @@ For example, [`/tag/categories?type=mod`](https://api.crmm.tech/api/tag/categori
 }
 ```
 
-[Source code reference](https://github.com/CRModders/cosmic-mod-manager/blob/732a2be6807824867b05aa0df37ded53412078f4/packages/shared/types/api/index.ts#L60)
+[Source code reference](https://github.com/CRModders/cosmic-mod-manager/tree/main/packages/shared/types/api/index.ts#L60)
 
 </details>

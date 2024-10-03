@@ -73,7 +73,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
                                 src={imageUrl(projectData.icon)}
                                 alt={projectData.name}
                                 fallback={fallbackProjectIcon}
-                                className="rounded h-14"
+                                className="rounded h-14 w-14"
                             />
 
                             <div className="flex flex-col items-start justify-start">

@@ -129,7 +129,7 @@ const ProjectMember = ({
                         src={imageUrl(member.avatarUrl)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}
-                        className="h-12 rounded-full"
+                        className="h-12 w-12 rounded-full"
                     />
                     <div className="flex flex-col items-start justify-center gap-1.5">
                         <Link

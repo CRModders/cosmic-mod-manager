@@ -12,7 +12,7 @@ export const ImgWrapper = ({
             <div
                 aria-label={alt}
                 className={cn(
-                    "flex items-center justify-center h-24 aspect-square rounded bg-shallow-background/50 border border-shallow-background",
+                    "h-24 w-24 flex items-center justify-center rounded bg-shallow-background/50 border border-shallow-background",
                     className,
                 )}
             >
@@ -27,7 +27,7 @@ export const ImgWrapper = ({
             alt={alt}
             loading="lazy"
             className={cn(
-                "h-24 object-cover rounded shadow shadow-background/50 bg-shallow-background/50 border border-shallow-background aspect-square",
+                "h-24 w-24 object-cover rounded shadow shadow-background/50 bg-shallow-background/50 border border-shallow-background",
                 className,
             )}
         />

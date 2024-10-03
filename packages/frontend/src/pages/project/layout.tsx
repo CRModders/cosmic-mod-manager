@@ -1,4 +1,4 @@
-import { DiscordIcon, fallbackProjectIcon } from "@/components/icons";
+import { DiscordIcon, fallbackProjectIcon, fallbackUserIcon } from "@/components/icons";
 import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -245,7 +245,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                                                         className={cn(
                                                             "noClickRedirect flex-shrink-0",
                                                             isVersionDetailsPage
-                                                                ? buttonVariants({ variant: "secondary", size: "icon" })
+                                                                ? buttonVariants({ variant: "secondary-inverted", size: "icon" })
                                                                 : buttonVariants({ variant: "default", size: "icon" }),
                                                             "!w-10 !h-10 rounded-full",
                                                         )}
@@ -514,12 +514,7 @@ export const ProjectMember = ({
             url={`/user/${userName}`}
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
-            <ImgWrapper
-                src={imageUrl(avatarImageUrl)}
-                alt={userName}
-                className="h-10 rounded-full"
-                fallback={<UserIcon className="w-1/2 aspect-square text-muted-foreground" />}
-            />
+            <ImgWrapper src={imageUrl(avatarImageUrl)} alt={userName} className="h-10 w-10 rounded-full" fallback={fallbackUserIcon} />
             <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-2">
                     <span className="font-semibold text-sm text-foreground" title={userName}>

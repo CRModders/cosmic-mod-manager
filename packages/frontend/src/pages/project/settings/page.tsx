@@ -103,7 +103,7 @@ const GeneralSettingsPage = () => {
                 return toast.error(result?.message || "Error");
             }
 
-            await fetchProjectData(result?.data?.slug || projectData?.slug);
+            await fetchProjectData(result?.slug || projectData?.slug);
             toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
@@ -167,18 +167,14 @@ const GeneralSettingsPage = () => {
                                         <ImgWrapper
                                             alt={projectData.name}
                                             src={(() => {
-                                                const file = form.getValues().icon;
-                                                if (!file || !(file instanceof File)) {
-                                                    if (typeof field.value === "string") {
-                                                        return field.value ? imageUrl(projectData.icon || "") : "";
-                                                    }
+                                                const image = form.getValues()?.icon;
+                                                if (image instanceof File) {
+                                                    return URL.createObjectURL(image);
+                                                }
+                                                if (!image) {
                                                     return "";
                                                 }
-                                                try {
-                                                    return URL.createObjectURL(file);
-                                                } catch (error) {
-                                                    return "";
-                                                }
+                                                return imageUrl(projectData.icon || "");
                                             })()}
                                             className="rounded"
                                             fallback={fallbackProjectIcon}
@@ -197,7 +193,7 @@ const GeneralSettingsPage = () => {
                                                     variant={"secondary"}
                                                     type="button"
                                                     onClick={() => {
-                                                        form.setValue("icon", "");
+                                                        form.setValue("icon", undefined);
                                                     }}
                                                 >
                                                     <Trash2Icon className="w-btn-icon h-btn-icon" />

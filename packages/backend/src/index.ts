@@ -32,7 +32,7 @@ app.get("/favicon.ico", async (ctx: Context) => {
 });
 
 app.route("/api/search", searchRouter);
-app.route("/api/tag", tagsRouter);
+app.route("/api/tags", tagsRouter);
 app.route("/api", router);
 app.route("/cdn", cdnRouter);
 

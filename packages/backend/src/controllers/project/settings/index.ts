@@ -116,14 +116,14 @@ export const updateProject = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Project details updated", data: updatedProject }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project details updated", slug: updatedProject.slug }, httpCode("ok"));
 };
 
 export const updateProjectDescription = async (
     ctx: Context,
     slug: string,
     userSession: ContextUserSession,
-    data: z.infer<typeof updateDescriptionFormSchema>,
+    form: z.infer<typeof updateDescriptionFormSchema>,
 ) => {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
@@ -161,7 +161,7 @@ export const updateProjectDescription = async (
     await prisma.project.update({
         where: { id: project.id },
         data: {
-            description: data.description || "",
+            description: form.description || "",
         },
     });
 

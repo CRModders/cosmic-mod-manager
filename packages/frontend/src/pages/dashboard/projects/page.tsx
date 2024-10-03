@@ -104,7 +104,7 @@ const ProjectsPage = () => {
                                                             src={imageUrl(project.icon)}
                                                             alt={project.name}
                                                             fallback={fallbackProjectIcon}
-                                                            className="h-12 rounded"
+                                                            className="h-12 w-12 rounded"
                                                         />
                                                     </Link>
                                                 </TableCell>

@@ -117,6 +117,7 @@ export const MultiSelect = ({
                                 className={cn(
                                     "w-full flex items-center justify-start py-1.5 px-4 gap-x-4 rounded cursor-default text-muted-foreground",
                                     isFocused && "bg-shallow-background text-foreground",
+                                    isSelected && "text-foreground-bright",
                                     classNames?.listItem,
                                 )}
                                 id={`multiselect-option-${option.value}`}
