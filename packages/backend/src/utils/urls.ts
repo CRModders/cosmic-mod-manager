@@ -20,7 +20,7 @@ export const cdnUrl = (path: string, useCacheCdn = true, redirectToCacheCdnIfUsi
     return `${CDN_PREFIX(useCacheCdn)}/${path}${!useCacheCdn && redirectToCacheCdnIfUsingServerUrl ? "?isCdnReq=false" : ""}`;
 };
 
-export const projectIconUrl = (slug: string, icon: string) => {
+export const projectIconUrl = (slug: string, icon: string | null) => {
     if (!icon) return null;
     if (icon.startsWith("http")) return icon;
 

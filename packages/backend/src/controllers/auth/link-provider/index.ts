@@ -1,7 +1,7 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, status } from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { Capitalize } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
@@ -30,7 +30,7 @@ export const linkAuthProviderHandler = async (
                 data: profileData,
                 redirect: "/settings/account",
             },
-            httpCode("bad_request"),
+            status.BAD_REQUEST,
         );
     }
 
@@ -48,7 +48,7 @@ export const linkAuthProviderHandler = async (
                 message: `The ${Capitalize(profileData.providerName)} account is already linked to a user account`,
                 redirect: "/settings/account",
             },
-            httpCode("bad_request"),
+            status.BAD_REQUEST,
         );
     }
 
@@ -72,7 +72,7 @@ export const linkAuthProviderHandler = async (
             message: `Successfully linked ${Capitalize(profileData.providerName)} to your account`,
             redirect: "/settings/account",
         },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -84,7 +84,7 @@ export const unlinkAuthProvider = async (ctx: Context, userSession: ContextUserS
     });
 
     if (allLinkedProviders.length < 2) {
-        return ctx.json({ success: false, message: "You can't remove the only remaining auth provider" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "You can't remove the only remaining auth provider" }, status.BAD_REQUEST);
     }
 
     const providerName = getAuthProviderFromString(authProvider);

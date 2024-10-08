@@ -1,19 +1,19 @@
 import { loaders, projectTypes } from "../../config/project";
-import { AuthProvider, ConfirmationType, FileType, GlobalUserRoles, ProjectType, ProjectVisibility } from "../../types";
+import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "../../types";
 import { getTypeOfFile } from "./file-signature";
 
 export const getUserRoleFromString = (roleName: string) => {
     switch (roleName) {
-        case GlobalUserRoles.ADMIN:
-            return GlobalUserRoles.ADMIN;
-        case GlobalUserRoles.MODERATOR:
-            return GlobalUserRoles.MODERATOR;
-        case GlobalUserRoles.CREATOR:
-            return GlobalUserRoles.CREATOR;
-        case GlobalUserRoles.USER:
-            return GlobalUserRoles.USER;
+        case GlobalUserRole.ADMIN:
+            return GlobalUserRole.ADMIN;
+        case GlobalUserRole.MODERATOR:
+            return GlobalUserRole.MODERATOR;
+        case GlobalUserRole.CREATOR:
+            return GlobalUserRole.CREATOR;
+        case GlobalUserRole.USER:
+            return GlobalUserRole.USER;
         default:
-            return GlobalUserRoles.USER;
+            return GlobalUserRole.USER;
     }
 };
 

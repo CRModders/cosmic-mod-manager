@@ -2,7 +2,7 @@ import { ctxReqBodyNamespace } from "@/../types";
 import { acceptTeamInvite, inviteMember, leaveTeam, removeMember, updateMember } from "@/controllers/team";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { status, defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
@@ -68,7 +68,7 @@ async function teamMember_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateProjectMemberFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateMember(ctx, userSession, memberId, teamId, data);

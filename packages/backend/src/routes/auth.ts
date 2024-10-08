@@ -8,7 +8,7 @@ import { oAuthSignUpHandler } from "@/controllers/auth/signup";
 import { getLinkedAuthProviders } from "@/controllers/user/profile";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { status, defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { authProvidersList } from "@shared/config/project";
 import { getAuthProviderFromString, getUserRoleFromString } from "@shared/lib/utils/convertors";
 import { LoginFormSchema } from "@shared/schemas/auth";
@@ -39,7 +39,7 @@ async function currSession_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
 
-        if (!userSession) return ctx.json({ message: "You're not logged in!" }, httpCode("unauthenticated"));
+        if (!userSession) return ctx.json({ message: "You're not logged in!" }, status.UNAUTHENTICATED);
         const formattedObject: LoggedInUserData = {
             id: userSession.id,
             email: userSession.email,
@@ -52,7 +52,7 @@ async function currSession_get(ctx: Context) {
             sessionId: userSession.sessionId,
         };
 
-        return ctx.json({ data: formattedObject }, httpCode("ok"));
+        return ctx.json({ data: formattedObject }, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -63,10 +63,10 @@ async function getOAuthUrlRoute(ctx: Context, intent: AuthActionIntent) {
     try {
         const authProvider = getAuthProviderFromString(ctx.req.param("authProvider"));
         if (!authProvider || authProvider === AuthProvider.UNKNOWN)
-            return ctx.json({ success: false, message: "Invalid auth provider" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "Invalid auth provider" }, status.BAD_REQUEST);
 
         const url = getOAuthSignInUrl(ctx, authProvider, intent);
-        return ctx.json({ success: true, url }, httpCode("ok"));
+        return ctx.json({ success: true, url }, status.OK);
     } catch (error) {
         return defaultServerErrorResponse(ctx);
     }
@@ -76,7 +76,7 @@ async function credentialSignin_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(LoginFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await credentialSignIn(ctx, data);
@@ -162,7 +162,7 @@ async function oAuthLinkProvider_delete(ctx: Context) {
 async function oAuthProviders_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession?.id) return ctx.json({}, httpCode("bad_request"));
+        if (!userSession?.id) return ctx.json({}, status.BAD_REQUEST);
 
         return await getLinkedAuthProviders(ctx, userSession);
     } catch (err) {
@@ -174,7 +174,7 @@ async function oAuthProviders_get(ctx: Context) {
 async function sessions_get(ctx: Context) {
     try {
         const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession) return ctx.json([], httpCode("ok"));
+        if (!userSession) return ctx.json([], status.OK);
 
         return await getUserSessions(ctx, userSession);
     } catch (error) {
@@ -188,7 +188,7 @@ async function sessions_delete(ctx: Context) {
         const userSession = getUserSessionFromCtx(ctx);
         const targetSessionId = ctx.get(ctxReqBodyNamespace)?.sessionId || userSession?.sessionId;
         if (!userSession?.id || !targetSessionId)
-            return ctx.json({ success: false, message: "Session id is required" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "Session id is required" }, status.BAD_REQUEST);
 
         return await deleteUserSession(ctx, userSession, targetSessionId);
     } catch (error) {
@@ -200,7 +200,7 @@ async function sessions_delete(ctx: Context) {
 async function revokeSession_delete(ctx: Context) {
     try {
         const code = ctx.req.param("revokeCode");
-        if (!code) return ctx.json({ success: false }, httpCode("bad_request"));
+        if (!code) return ctx.json({ success: false }, status.BAD_REQUEST);
 
         return await revokeSessionFromAccessCode(ctx, code);
     } catch (err) {

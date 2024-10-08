@@ -7,7 +7,7 @@ export enum AuthProvider {
     UNKNOWN = "unknown",
 }
 
-export enum GlobalUserRoles {
+export enum GlobalUserRole {
     ADMIN = "admin",
     MODERATOR = "moderator",
     CREATOR = "creator",
@@ -27,7 +27,7 @@ export interface LoggedInUserData {
     hasAPassword: boolean;
     avatarUrl?: string | null;
     avatarProvider?: AuthProvider | null;
-    role: GlobalUserRoles;
+    role: GlobalUserRole;
     sessionId: string;
 }
 
@@ -109,7 +109,7 @@ export enum OrganisationPermission {
     EDIT_MEMBER = "edit_member",
     ADD_PROJECT = "add_project",
     REMOVE_PROJECT = "remove_project",
-    DELETE_ORGANIZATION = "delete_organisation",
+    DELETE_ORGANISATION = "delete_organisation",
     EDIT_MEMBER_DEFAULT_PERMISSIONS = "edit_member_default_permissions",
 }
 
@@ -149,7 +149,7 @@ export enum ProjectSupport {
     UNSUPPORTED = "unsupported",
 }
 
-export enum TagHeaderTypes {
+export enum TagHeaderType {
     RESOLUTION = "resolution",
     FEATURE = "feature",
     CATEGORY = "category",
@@ -162,4 +162,13 @@ export enum SearchResultSortMethod {
     FOLLOW_COUNT = "follow_count",
     RECENTLY_UPDATED = "recently_updated",
     RECENTLY_PUBLISHED = "recently_published",
+}
+
+export enum NotificationType {
+    PROJECT_UPDATE = "project_update",
+    TEAM_INVITE = "team_invite",
+    ORGANISATION_INVITE = "organisation_invite",
+    STATUS_CHANGE = "status_change",
+    MODERATOR_MESSAGE = "moderator_message",
+    UNKNOWN = "unknown",
 }

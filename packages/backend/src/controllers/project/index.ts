@@ -3,7 +3,7 @@ import prisma from "@/services/prisma";
 
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, status } from "@/utils/http";
 import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
@@ -116,7 +116,7 @@ export const createNewProject = async (ctx: Context, userSession: ContextUserSes
 
     return ctx.json(
         { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: newProject.type },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -196,7 +196,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         },
     });
     if (!project?.id) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
     const projectMembersList = [
@@ -204,7 +204,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
         // ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
     ];
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList)) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
     const currSessionMember = projectMembersList.find((member) => member.userId === userSession?.id);
 
@@ -286,7 +286,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     : null,
             } satisfies ProjectDetailsData,
         },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -298,10 +298,10 @@ export const checkProjectSlugValidity = async (ctx: Context, slug: string) => {
     });
 
     if (!project) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
-    return ctx.json({ id: project.id }, httpCode("ok"));
+    return ctx.json({ id: project.id }, status.OK);
 };
 
 export const addNewGalleryImage = async (
@@ -335,12 +335,12 @@ export const addNewGalleryImage = async (
         },
     });
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id) return ctx.json({ success: false }, status.NOT_FOUND);
 
     // Check if the order index is not already occupied
     for (const item of project.gallery) {
         if (item.orderIndex === formData.orderIndex) {
-            return ctx.json({ success: false, message: "An image with same order index already exists" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "An image with same order index already exists" }, status.BAD_REQUEST);
         }
     }
 
@@ -352,7 +352,7 @@ export const addNewGalleryImage = async (
         memberObj.isOwner,
     );
     if (!memberObj || !hasEditAccess) {
-        return ctx.json({ success: false }, httpCode("bad_request"));
+        return ctx.json({ success: false }, status.BAD_REQUEST);
     }
 
     // Check if there's already a featured image
@@ -365,7 +365,7 @@ export const addNewGalleryImage = async (
         });
 
         if (existingFeaturedImage?.id) {
-            return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "A featured gallery image already exists" }, status.BAD_REQUEST);
         }
     }
 
@@ -373,7 +373,7 @@ export const addNewGalleryImage = async (
     const fileName = `${nanoid(STRING_ID_LENGTH)}.${fileType}`;
     const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.LOCAL, project.id, formData.image, fileName);
 
-    if (!fileUrl) return ctx.json({ success: false, message: "Failed to upload the image" }, httpCode("bad_request"));
+    if (!fileUrl) return ctx.json({ success: false, message: "Failed to upload the image" }, status.BAD_REQUEST);
 
     // Create the generic file entry in the database
     const dbFile = await prisma.file.create({
@@ -400,7 +400,7 @@ export const addNewGalleryImage = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Added the new gallery image" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Added the new gallery image" }, status.OK);
 };
 
 export const removeGalleryImage = async (ctx: Context, slug: string, userSession: ContextUserSession, galleryItemId: string) => {
@@ -429,14 +429,14 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
         },
     });
 
-    if (!project?.id || !project.gallery?.[0]?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !project.gallery?.[0]?.id) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const currMember = project.team.members?.[0];
     if (
         !currMember ||
         !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
     ) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false }, status.NOT_FOUND);
     }
 
     // Delete gallery item from database
@@ -454,7 +454,7 @@ export const removeGalleryImage = async (ctx: Context, slug: string, userSession
     // Delete the file from storage
     await deleteProjectGalleryFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
 
-    return ctx.json({ success: true, message: "Gallery image deleted" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Gallery image deleted" }, status.OK);
 };
 
 export const updateGalleryImage = async (
@@ -489,13 +489,13 @@ export const updateGalleryImage = async (
         },
     });
 
-    if (!project?.id) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id) return ctx.json({ success: false }, status.NOT_FOUND);
 
     // Check if the order index is not already occupied
     for (const item of project.gallery) {
         if (item.id === galleryItemId) continue;
         if (item.id !== galleryItemId && item.orderIndex === formData.orderIndex) {
-            return ctx.json({ success: false, message: "An image with same order index already exists" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "An image with same order index already exists" }, status.BAD_REQUEST);
         }
     }
 
@@ -506,7 +506,7 @@ export const updateGalleryImage = async (
         memberObj.isOwner,
     );
     if (!memberObj || !hasEditAccess) {
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false }, status.NOT_FOUND);
     }
 
     // Check if there's already a featured image
@@ -522,7 +522,7 @@ export const updateGalleryImage = async (
         });
 
         if (existingFeaturedImage?.id)
-            return ctx.json({ success: false, message: "A featured gallery image already exists" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "A featured gallery image already exists" }, status.BAD_REQUEST);
     }
 
     try {
@@ -539,8 +539,8 @@ export const updateGalleryImage = async (
             },
         });
     } catch (error) {
-        return ctx.json({ success: false, message: "Something went wrong" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "Something went wrong" }, status.BAD_REQUEST);
     }
 
-    return ctx.json({ success: true, message: "Image updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Image updated" }, status.OK);
 };

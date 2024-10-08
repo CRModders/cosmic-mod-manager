@@ -1,6 +1,7 @@
 import { fallbackUserIcon } from "@/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/link";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
@@ -9,7 +10,10 @@ import useFetch from "@/src/hooks/fetch";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { NotificationsContext } from "./notifications/context";
+import { NotificationItem } from "./notifications/page";
 
 const getAllUserProjects = async () => {
     try {
@@ -24,6 +28,8 @@ const getAllUserProjects = async () => {
 
 const OverviewPage = () => {
     const { session } = useSession();
+    const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
+    const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
     const projectsList = useQuery({ queryKey: ["all-projects-logged-in-user"], queryFn: () => getAllUserProjects() });
     const totalProjects = projectsList.data?.length || 0;
@@ -54,15 +60,43 @@ const OverviewPage = () => {
             </ContentCardTemplate>
 
             <PanelContent_AsideCardLayout>
-                <ContentCardTemplate title="Notifications">
-                    <div className="w-full flex flex-col items-start justify-center gap-2">
-                        <span className="text-muted-foreground">You have no unread notifications.</span>
-                        <ButtonLink url="/dashboard/notifications" className="w-fit bg-shallow-background">
-                            <HistoryIcon className="w-btn-icon h-btn-icon" />
-                            View notification history
-                        </ButtonLink>
-                    </div>
-                </ContentCardTemplate>
+                <Card className="w-full">
+                    <CardHeader className="w-full flex flex-row items-center justify-between gap-x-6 gap-y-2">
+                        <CardTitle className="w-fit">Notifications</CardTitle>
+                        {(unreadNotifications?.length || 0) > 0 ? (
+                            <Link to="/dashboard/notifications" className="link_blue flex items-center justify-center">
+                                See all
+                                <ChevronRightIcon className="w-btn-icon-md h-btn-icon-md" />
+                            </Link>
+                        ) : null}
+                    </CardHeader>
+                    <CardContent>
+                        <div className="w-full flex flex-col items-start justify-center gap-2">
+                            {unreadNotifications?.map((notification) => (
+                                <NotificationItem
+                                    key={notification.id}
+                                    notification={notification}
+                                    relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
+                                    relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                                    refetchNotifications={refetchNotifications}
+                                    concise={true}
+                                    showMarkAsReadButton={false}
+                                />
+                            ))}
+
+                            {!unreadNotifications?.length && (
+                                <>
+                                    <span className="text-muted-foreground">You have no unread notifications.</span>
+
+                                    <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
+                                        <HistoryIcon className="w-btn-icon h-btn-icon" />
+                                        View notification history
+                                    </ButtonLink>
+                                </>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
 
                 <ContentCardTemplate title="Analytics" className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards">
                     {projectsList.isLoading ? (

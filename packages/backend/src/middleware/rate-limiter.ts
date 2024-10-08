@@ -1,6 +1,6 @@
 import { getUserIpAddress } from "@/controllers/auth/commons";
 import redis from "@/services/redis";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import type { Seconds } from "@shared/types/time";
 import type { Context, Next } from "hono";
 
@@ -71,7 +71,7 @@ export const ddosPreventionRateLimiterMiddleware = async (ctx: Context, next: Ne
     if (rateLimitResult.isRateLimited) {
         return ctx.json(
             { success: false, message: `Rate limit exceeded, please try again after ${rateLimitResult.timeWindow} seconds` },
-            httpCode("too_many_requests"),
+            status.TOO_MANY_REQUESTS,
         );
     }
 
@@ -83,7 +83,7 @@ export const apiRateLimiterMiddleware = async (ctx: Context, next: Next) => {
     if (rateLimitResult.isRateLimited) {
         return ctx.json(
             { success: false, message: `Rate limit exceeded, please try again after ${rateLimitResult.timeWindow / 60} minutes` },
-            httpCode("too_many_requests"),
+            status.TOO_MANY_REQUESTS,
         );
     }
 
@@ -95,7 +95,7 @@ export const searchApiRateLimiterMiddleware = async (ctx: Context, next: Next) =
     if (rateLimitResult.isRateLimited) {
         return ctx.json(
             { success: false, message: `Rate limit exceeded, please try again after ${rateLimitResult.timeWindow} seconds` },
-            httpCode("too_many_requests"),
+            status.TOO_MANY_REQUESTS,
         );
     }
 
@@ -112,7 +112,7 @@ export const cdn_assetsRateLimiterMiddleware = async (ctx: Context, next: Next) 
     if (rateLimitResult.isRateLimited) {
         return ctx.json(
             { success: false, message: `Rate limit exceeded, please try again after ${rateLimitResult.timeWindow} seconds` },
-            httpCode("too_many_requests"),
+            status.TOO_MANY_REQUESTS,
         );
     }
 
@@ -129,7 +129,7 @@ export const cdn_large_filesRateLimiterMiddleware = async (ctx: Context, next: N
     if (rateLimitResult.isRateLimited) {
         return ctx.json(
             { success: false, message: `Rate limit exceeded, please try again after ${rateLimitResult.timeWindow} seconds` },
-            httpCode("too_many_requests"),
+            status.TOO_MANY_REQUESTS,
         );
     }
 

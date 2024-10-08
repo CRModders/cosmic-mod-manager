@@ -1,5 +1,5 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
-import { type ProjectPermission, ProjectType, type TagHeaderTypes } from "../../types";
+import { type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
 import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
@@ -99,7 +99,7 @@ export function parseFileSize(size: number): string {
     return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`;
 }
 
-export const getValidProjectCategories = (projectTypes: string[], categoryType?: TagHeaderTypes) => {
+export const getValidProjectCategories = (projectTypes: string[], categoryType?: TagHeaderType) => {
     const alreadyAddedCategories = new Set<string>();
     const validCategories: CategoryType[] = [];
 

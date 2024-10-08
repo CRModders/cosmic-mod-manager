@@ -2,12 +2,12 @@ import type { ContextUserSession } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { getUserSessionFromCtx, isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import { type LinkedProvidersListData, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
+import { type GlobalUserRole, type LinkedProvidersListData, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { Context } from "hono";
@@ -21,23 +21,24 @@ export const getUserProfileData = async (ctx: Context, userSession: ContextUserS
         },
     });
 
-    if (!user) return ctx.json({ success: false, message: "user not found" }, httpCode("not_found"));
+    if (!user) return ctx.json({ success: false, message: "user not found" }, status.NOT_FOUND);
 
     const dataObj: UserProfileData = {
         id: user.id,
         name: user.name,
         userName: user.userName,
+        role: user.role as GlobalUserRole,
         avatarUrl: user.avatarUrl,
         bio: user.bio,
         dateJoined: user.dateJoined,
     };
 
-    return ctx.json({ success: true, user: dataObj }, httpCode("ok"));
+    return ctx.json({ success: true, user: dataObj }, status.OK);
 };
 
 export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeof profileUpdateFormSchema>) => {
     const userSession = getUserSessionFromCtx(ctx);
-    if (!userSession) return ctx.json({}, httpCode("bad_request"));
+    if (!userSession) return ctx.json({}, status.BAD_REQUEST);
 
     profileData.userName = formatUserName(profileData.userName);
     profileData.name = formatUserName(profileData.name, " ");
@@ -54,7 +55,7 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
                   })
               )?.id;
 
-    if (existingUserWithSameUserName) return ctx.json({ success: false, message: "Username already taken" }, httpCode("bad_request"));
+    if (existingUserWithSameUserName) return ctx.json({ success: false, message: "Username already taken" }, status.BAD_REQUEST);
 
     let avatarUrl = userSession.avatarUrl;
     if (userSession.avatarUrlProvider !== profileData.avatarUrlProvider) {
@@ -67,7 +68,7 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
 
         if (!authAccount?.id) {
             await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-            return ctx.json({ success: false, message: "Invalid profile provider" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "Invalid profile provider" }, status.BAD_REQUEST);
         }
 
         avatarUrl = authAccount?.avatarUrl;
@@ -86,7 +87,7 @@ export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeo
         },
     });
 
-    return ctx.json({ success: true, message: "Profile updated successfully", profileData }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Profile updated successfully", profileData }, status.OK);
 };
 
 export const getLinkedAuthProviders = async (ctx: Context, userSession: ContextUserSession) => {
@@ -107,7 +108,7 @@ export const getLinkedAuthProviders = async (ctx: Context, userSession: ContextU
         });
     }
 
-    return ctx.json({ providers: providersList }, httpCode("ok"));
+    return ctx.json({ providers: providersList }, status.OK);
 };
 
 export const getAllVisibleProjects = async (
@@ -121,7 +122,7 @@ export const getAllVisibleProjects = async (
             OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
         },
     });
-    if (!user) return ctx.json({ success: false, message: "user not found" }, httpCode("not_found"));
+    if (!user) return ctx.json({ success: false, message: "user not found" }, status.NOT_FOUND);
 
     const list = await prisma.teamMember.findMany({
         where: {
@@ -172,7 +173,7 @@ export const getAllVisibleProjects = async (
         orderBy: { team: { project: { downloads: "desc" } } },
     });
 
-    if (!list) return ctx.json({ success: true, projects: [] }, httpCode("ok"));
+    if (!list) return ctx.json({ success: true, projects: [] }, status.OK);
 
     const iconFileIds: string[] = [];
     for (const item of list) {
@@ -213,5 +214,5 @@ export const getAllVisibleProjects = async (
         });
     }
 
-    return ctx.json({ success: true, projects: projectListData }, httpCode("ok"));
+    return ctx.json({ success: true, projects: projectListData }, status.OK);
 };

@@ -3,7 +3,7 @@ import prisma from "@/services/prisma";
 import { deleteDirectory, deleteProjectFile, saveProjectFile } from "@/services/storage";
 import { projectFileStoragePath } from "@/services/storage/utils";
 import { generateRandomString } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
 import { doesMemberHaveAccess, getValidProjectCategories } from "@shared/lib/utils";
@@ -46,10 +46,10 @@ export const updateProject = async (
         },
     });
     const currMember = project?.team.members?.[0];
-    if (!project?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !currMember) return ctx.json({ success: false }, status.NOT_FOUND);
 
     if (!doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)) {
-        return ctx.json({ success: false, message: "You don't have the permission to update project details" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project details" }, status.UNAUTHORIZED);
     }
 
     // If the project slug has been updated
@@ -116,7 +116,7 @@ export const updateProject = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Project details updated", slug: updatedProject.slug }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project details updated", slug: updatedProject.slug }, status.OK);
 };
 
 export const updateProjectDescription = async (
@@ -144,7 +144,7 @@ export const updateProjectDescription = async (
     });
 
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DESCRIPTION,
@@ -152,10 +152,7 @@ export const updateProjectDescription = async (
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json(
-            { success: false, message: "You don't have the permission to update project description" },
-            httpCode("unauthorized"),
-        );
+        return ctx.json({ success: false, message: "You don't have the permission to update project description" }, status.UNAUTHORIZED);
     }
 
     await prisma.project.update({
@@ -165,7 +162,7 @@ export const updateProjectDescription = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Project description updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project description updated" }, status.OK);
 };
 
 export const updateProjectTags = async (
@@ -194,7 +191,7 @@ export const updateProjectTags = async (
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
@@ -202,7 +199,7 @@ export const updateProjectTags = async (
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project tags" }, status.UNAUTHORIZED);
     }
 
     const availableCategories = getValidProjectCategories(project.type).map((category) => category.name);
@@ -217,7 +214,7 @@ export const updateProjectTags = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Project tags updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project tags updated" }, status.OK);
 };
 
 export const updateProjectExternalLinks = async (
@@ -244,7 +241,7 @@ export const updateProjectExternalLinks = async (
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
@@ -252,7 +249,7 @@ export const updateProjectExternalLinks = async (
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json({ success: false, message: "You don't the permission to update links" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't the permission to update links" }, status.UNAUTHORIZED);
     }
 
     await prisma.project.update({
@@ -265,7 +262,7 @@ export const updateProjectExternalLinks = async (
         },
     });
 
-    return ctx.json({ success: true, message: "External links updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "External links updated" }, status.OK);
 };
 
 export const updateProjectLicense = async (
@@ -292,7 +289,7 @@ export const updateProjectLicense = async (
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
@@ -300,11 +297,11 @@ export const updateProjectLicense = async (
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json({ success: false, message: "You don't have the permission to update project license" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project license" }, status.UNAUTHORIZED);
     }
 
     if (!formData.name && !formData.id) {
-        return ctx.json({ success: false, message: "Either license name of a valid ID is required" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "Either license name of a valid ID is required" }, status.BAD_REQUEST);
     }
 
     let validSpdxData: SPDX_LICENSE | null = null;
@@ -326,7 +323,7 @@ export const updateProjectLicense = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Project license updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project license updated" }, status.OK);
 };
 
 export const deleteProject = async (ctx: Context, userSession: ContextUserSession, slug: string) => {
@@ -353,7 +350,7 @@ export const deleteProject = async (ctx: Context, userSession: ContextUserSessio
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     // Check if the user has the permission to delete the project
     const hasDeleteAccess = doesMemberHaveAccess(
@@ -362,7 +359,7 @@ export const deleteProject = async (ctx: Context, userSession: ContextUserSessio
         memberObj.isOwner,
     );
     if (!hasDeleteAccess) {
-        return ctx.json({ success: false, message: "You don't have the permission to delete the project" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to delete the project" }, status.UNAUTHORIZED);
     }
 
     // Get all the project versions
@@ -442,7 +439,7 @@ export const deleteProject = async (ctx: Context, userSession: ContextUserSessio
             success: true,
             message: "Project deleted",
         },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -468,7 +465,7 @@ export const updateProjectIcon = async (ctx: Context, userSession: ContextUserSe
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
@@ -476,7 +473,7 @@ export const updateProjectIcon = async (ctx: Context, userSession: ContextUserSe
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json({ success: false, message: "You don't have the permission to update project icon" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to update project icon" }, status.UNAUTHORIZED);
     }
 
     // Delete the previous icon if it exists
@@ -486,12 +483,12 @@ export const updateProjectIcon = async (ctx: Context, userSession: ContextUserSe
     }
 
     const fileType = await getFileType(icon);
-    if (!fileType) return ctx.json({ success: false, message: "Invalid file type" }, httpCode("bad_request"));
+    if (!fileType) return ctx.json({ success: false, message: "Invalid file type" }, status.BAD_REQUEST);
 
     const fileName = `${generateRandomString(16)}.${fileType}`;
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, icon, fileName);
 
-    if (!newFileUrl) return ctx.json({ success: false, message: "Failed to save the icon" }, httpCode("server_error"));
+    if (!newFileUrl) return ctx.json({ success: false, message: "Failed to save the icon" }, status.SERVER_ERROR);
     const newDbFile = await prisma.file.create({
         data: {
             id: nanoid(STRING_ID_LENGTH),
@@ -512,7 +509,7 @@ export const updateProjectIcon = async (ctx: Context, userSession: ContextUserSe
         },
     });
 
-    return ctx.json({ success: true, message: "Project icon updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project icon updated" }, status.OK);
 };
 
 export const deleteProjectIcon = async (ctx: Context, userSession: ContextUserSession, slug: string) => {
@@ -537,9 +534,9 @@ export const deleteProjectIcon = async (ctx: Context, userSession: ContextUserSe
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+    if (!project || !memberObj) return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
 
-    if (!project.iconFileId) return ctx.json({ success: false, message: "Project does not have any icon" }, httpCode("bad_request"));
+    if (!project.iconFileId) return ctx.json({ success: false, message: "Project does not have any icon" }, status.BAD_REQUEST);
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
@@ -547,7 +544,7 @@ export const deleteProjectIcon = async (ctx: Context, userSession: ContextUserSe
         memberObj.isOwner,
     );
     if (!hasEditAccess) {
-        return ctx.json({ success: false, message: "You don't have the permission to delete project icon" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have the permission to delete project icon" }, status.UNAUTHORIZED);
     }
 
     const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
@@ -562,5 +559,5 @@ export const deleteProjectIcon = async (ctx: Context, userSession: ContextUserSe
         },
     });
 
-    return ctx.json({ success: true, message: "Project icon deleted" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Project icon deleted" }, status.OK);
 };

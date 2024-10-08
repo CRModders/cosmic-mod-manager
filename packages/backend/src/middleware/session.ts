@@ -1,7 +1,7 @@
 import { getUserIpAddress } from "@/controllers/auth/commons";
 import { getUserSession } from "@/controllers/auth/session";
 import { deleteUserCookie, generateRandomString, getUserSessionFromCtx, setUserCookie } from "@/utils";
-import httpCode, { defaultServerErrorResponse } from "@/utils/http";
+import { status, defaultServerErrorResponse } from "@/utils/http";
 import { GUEST_SESSION_ID_VALIDITY } from "@shared/config";
 import { PROTECTED_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { Context, Next } from "hono";
@@ -35,7 +35,7 @@ export const LoginProtectedRoute = async (ctx: Context, next: Next) => {
         const session = getUserSessionFromCtx(ctx);
         if (!session?.id) {
             await addToUsedApiRateLimit(ctx, PROTECTED_ROUTE_ACCESS_ATTEMPT_CHARGE);
-            return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
+            return ctx.json({ success: false, message: "You're not logged in" }, status.UNAUTHENTICATED);
         }
 
         await next();

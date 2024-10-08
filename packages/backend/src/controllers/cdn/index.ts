@@ -4,7 +4,7 @@ import prisma from "@/services/prisma";
 import { addToDownloadsQueue } from "@/services/queues/downloads-queue";
 import { getFile, getFileUrl, getProjectGalleryFile } from "@/services/storage";
 import { isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import type { Context } from "hono";
@@ -61,10 +61,10 @@ export const serveVersionFile = async (
     const targetVersion = projectData?.versions?.[0];
     if (!projectData?.id || !targetVersion?.files?.[0]?.fileId) {
         await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-        return ctx.status(httpCode("not_found"));
+        return ctx.status(status.NOT_FOUND);
     }
     if (!isProjectAccessibleToCurrSession(projectData.visibility, projectData.status, userSession?.id, projectData.team.members)) {
-        return ctx.json({}, httpCode("not_found"));
+        return ctx.json({}, status.NOT_FOUND);
     }
 
     const versionFile = await prisma.file.findFirst({
@@ -76,7 +76,7 @@ export const serveVersionFile = async (
         },
     });
     if (!versionFile?.id) {
-        return ctx.json({ message: "File not found" }, httpCode("not_found"));
+        return ctx.json({ message: "File not found" }, status.NOT_FOUND);
     }
 
     // Get corresponding file from version
@@ -96,11 +96,11 @@ export const serveVersionFile = async (
     }
 
     const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
-    if (!file) return ctx.json({ message: "File not found" }, httpCode("not_found"));
+    if (!file) return ctx.json({ message: "File not found" }, status.NOT_FOUND);
 
     if (typeof file === "string") return ctx.redirect(file);
 
-    const response = new Response(file, { status: httpCode("ok") });
+    const response = new Response(file, { status: status.OK });
     response.headers.set("Cache-Control", "public, max-age=31536000");
     response.headers.set("Content-Type", file.type);
 
@@ -113,14 +113,14 @@ export const serveProjectIconFile = async (ctx: Context, slug: string) => {
             OR: [{ slug: slug }, { id: slug }],
         },
     });
-    if (!project?.iconFileId) return ctx.json({}, httpCode("not_found"));
+    if (!project?.iconFileId) return ctx.json({}, status.NOT_FOUND);
 
     const iconFileData = await prisma.file.findUnique({
         where: {
             id: project.iconFileId,
         },
     });
-    if (!iconFileData?.id) return ctx.json({}, httpCode("not_found"));
+    if (!iconFileData?.id) return ctx.json({}, status.NOT_FOUND);
 
     const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
 
@@ -143,7 +143,7 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
             slug: true,
         },
     });
-    if (!project?.gallery?.[0]?.id) return ctx.json({}, httpCode("not_found"));
+    if (!project?.gallery?.[0]?.id) return ctx.json({}, status.NOT_FOUND);
 
     const dbFile = await prisma.file.findFirst({
         where: {
@@ -153,15 +153,15 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
             name: image,
         },
     });
-    if (!dbFile) return ctx.json({}, httpCode("not_found"));
+    if (!dbFile) return ctx.json({}, status.NOT_FOUND);
 
     // Get the URL of the stored file
     const imageFileUrl = getFileUrl(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.url, dbFile.name);
-    if (!imageFileUrl) return ctx.json({}, httpCode("not_found"));
+    if (!imageFileUrl) return ctx.json({}, status.NOT_FOUND);
 
     // Get the file from the storage service
     const file = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, imageFileUrl);
-    if (!file) return ctx.json({}, httpCode("not_found"));
+    if (!file) return ctx.json({}, status.NOT_FOUND);
 
     // If the file is a URL, redirect to it
     if (typeof file === "string") return ctx.redirect(file);

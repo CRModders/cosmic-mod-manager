@@ -13,7 +13,7 @@ import {
     loaderFilterParamNamespace,
 } from "@shared/config/search";
 import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
-import { ProjectType, TagHeaderTypes } from "@shared/types";
+import { ProjectType, TagHeaderType } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -83,22 +83,22 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env, environmentFilterLabel], query));
 
     // Category filters
-    const categoryFilterOptions = getValidProjectCategories([type], TagHeaderTypes.CATEGORY)
+    const categoryFilterOptions = getValidProjectCategories([type], TagHeaderType.CATEGORY)
         .map((c) => c.name)
         .filter((category) => matchesSearch([category, categoryFilterLabel], query));
 
     // Feature filters
-    const featureFilterOptions = getValidProjectCategories([type], TagHeaderTypes.FEATURE)
+    const featureFilterOptions = getValidProjectCategories([type], TagHeaderType.FEATURE)
         .map((f) => f.name)
         .filter((feature) => matchesSearch([feature, featureFilterLabel], query));
 
     // Resolution filters
-    const resolutionFilterOptions = getValidProjectCategories([type], TagHeaderTypes.RESOLUTION)
+    const resolutionFilterOptions = getValidProjectCategories([type], TagHeaderType.RESOLUTION)
         .map((r) => r.name)
         .filter((resolution) => matchesSearch([resolution, resolutionFilterLabel], query));
 
     // Performance impact filters
-    const performanceFilterOptions = getValidProjectCategories([type], TagHeaderTypes.PERFORMANCE_IMPACT)
+    const performanceFilterOptions = getValidProjectCategories([type], TagHeaderType.PERFORMANCE_IMPACT)
         .map((p) => p.name)
         .filter((performance) => matchesSearch([performance, performanceFilterLabel], query));
 

@@ -28,10 +28,13 @@ const RevokeSessionPage = lazy(() => import("@/src/pages/auth/revoke-session"));
 
 // Dashboard
 const OverviewPage = lazy(() => import("@/src/pages/dashboard/overview"));
+const NotificationsPage = lazy(() => import("@/src/pages/dashboard/notifications/page"));
+const NotificationsHistory = lazy(() => import("@/src/pages/dashboard/notifications/history"));
 const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
 
 // Project details
 import ProjectPage from "@/src/pages/project/page";
+import NotificationsProvider from "./pages/dashboard/notifications/context";
 const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
 const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
@@ -393,10 +396,38 @@ const router = createBrowserRouter([
                             {
                                 path: "overview",
                                 element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <OverviewPage />
-                                    </Suspense>
+                                    <NotificationsProvider>
+                                        <Suspense fallback={<SuspenseFallback />}>
+                                            <OverviewPage />
+                                        </Suspense>
+                                    </NotificationsProvider>
                                 ),
+                            },
+                            {
+                                path: "notifications",
+                                element: (
+                                    <NotificationsProvider>
+                                        <Outlet />
+                                    </NotificationsProvider>
+                                ),
+                                children: [
+                                    {
+                                        path: "",
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <NotificationsPage />
+                                            </Suspense>
+                                        ),
+                                    },
+                                    {
+                                        path: "history",
+                                        element: (
+                                            <Suspense fallback={<SuspenseFallback />}>
+                                                <NotificationsHistory />
+                                            </Suspense>
+                                        ),
+                                    },
+                                ],
                             },
                             {
                                 path: "projects",

@@ -1,6 +1,6 @@
 import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { STRING_ID_LENGTH } from "@shared/config";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import type { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
@@ -8,6 +8,7 @@ import { ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import type { z } from "zod";
+import { createTeamInviteNotification } from "../user/notification/helpers";
 
 export const inviteMember = async (ctx: Context, userSession: ContextUserSession, userName: string, teamId: string) => {
     const team = await prisma.team.findUnique({
@@ -21,10 +22,15 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
                     permissions: true,
                 },
             },
+            project: {
+                select: {
+                    id: true,
+                },
+            },
         },
     });
     const currMember = team?.members.find((member) => member.userId === userSession.id);
-    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!team?.id || !currMember) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const canManageInvites = doesMemberHaveAccess(
         ProjectPermission.MANAGE_INVITES,
@@ -32,7 +38,7 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
         currMember.isOwner,
     );
     if (!canManageInvites) {
-        return ctx.json({ success: false, message: "You don't have access to manage member invites" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have access to manage member invites" }, status.UNAUTHORIZED);
     }
 
     const targetUser = await prisma.user.findUnique({
@@ -41,15 +47,12 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
         },
     });
 
-    if (!targetUser?.id) return ctx.json({ success: false, message: "Invalid username" }, httpCode("not_found"));
+    if (!targetUser?.id) return ctx.json({ success: false, message: "Invalid username" }, status.NOT_FOUND);
     if (team.members.some((member) => member.userId === targetUser.id)) {
-        return ctx.json(
-            { success: false, message: `"${targetUser.userName}" is already a member of this project` },
-            httpCode("bad_request"),
-        );
+        return ctx.json({ success: false, message: `"${targetUser.userName}" is already a member of this project` }, status.BAD_REQUEST);
     }
 
-    await prisma.teamMember.create({
+    const newMember = await prisma.teamMember.create({
         data: {
             id: nanoid(STRING_ID_LENGTH),
             teamId: team.id,
@@ -62,7 +65,16 @@ export const inviteMember = async (ctx: Context, userSession: ContextUserSession
         },
     });
 
-    return ctx.json({ success: true }, httpCode("ok"));
+    // Notify the user
+    await createTeamInviteNotification({
+        userId: targetUser.id,
+        teamId: team.id,
+        projectId: team.project?.id || "",
+        invitedBy: userSession.id,
+        role: newMember.role,
+    });
+
+    return ctx.json({ success: true }, status.OK);
 };
 
 export const acceptTeamInvite = async (ctx: Context, userSession: ContextUserSession, teamId: string) => {
@@ -73,7 +85,7 @@ export const acceptTeamInvite = async (ctx: Context, userSession: ContextUserSes
             accepted: false,
         },
     });
-    if (!targetTeamMember?.id) return ctx.json({ success: false, message: "Invalid request" }, httpCode("bad_request"));
+    if (!targetTeamMember?.id) return ctx.json({ success: false, message: "Invalid request" }, status.BAD_REQUEST);
 
     await prisma.teamMember.update({
         where: {
@@ -85,7 +97,7 @@ export const acceptTeamInvite = async (ctx: Context, userSession: ContextUserSes
         },
     });
 
-    return ctx.json({ success: true, message: "Joined successfully" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Joined successfully" }, status.OK);
 };
 
 export const leaveTeam = async (ctx: Context, userSession: ContextUserSession, teamId: string) => {
@@ -95,9 +107,9 @@ export const leaveTeam = async (ctx: Context, userSession: ContextUserSession, t
             userId: userSession.id,
         },
     });
-    if (!targetTeamMember?.id) return ctx.json({ success: false, message: "Invalid request" }, httpCode("bad_request"));
+    if (!targetTeamMember?.id) return ctx.json({ success: false, message: "Invalid request" }, status.BAD_REQUEST);
     if (targetTeamMember.isOwner !== false)
-        return ctx.json({ success: false, message: "You can't leave the team while you're the owner" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "You can't leave the team while you're the owner" }, status.BAD_REQUEST);
 
     await prisma.teamMember.delete({
         where: {
@@ -105,7 +117,7 @@ export const leaveTeam = async (ctx: Context, userSession: ContextUserSession, t
         },
     });
 
-    return ctx.json({ success: true, message: "Left team" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Left team" }, status.OK);
 };
 
 export const removeMember = async (ctx: Context, userSession: ContextUserSession, targetMemberId: string, teamId: string) => {
@@ -124,7 +136,7 @@ export const removeMember = async (ctx: Context, userSession: ContextUserSession
         },
     });
     const currMember = team?.members.find((member) => member.userId === userSession.id);
-    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!team?.id || !currMember) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const canRemoveMembers = doesMemberHaveAccess(
         ProjectPermission.REMOVE_MEMBER,
@@ -132,14 +144,14 @@ export const removeMember = async (ctx: Context, userSession: ContextUserSession
         currMember.isOwner,
     );
     if (!canRemoveMembers) {
-        return ctx.json({ success: false, message: "You don't have access to remove members" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have access to remove members" }, status.UNAUTHORIZED);
     }
 
     const targetMember = team.members.find((member) => member.id === targetMemberId);
-    if (!targetMember?.id) return ctx.json({ success: false, message: "Invalid username" }, httpCode("not_found"));
+    if (!targetMember?.id) return ctx.json({ success: false, message: "Invalid username" }, status.NOT_FOUND);
 
     if (!targetMember) {
-        return ctx.json({ success: false, message: "User is not a member of this project" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "User is not a member of this project" }, status.BAD_REQUEST);
     }
 
     await prisma.teamMember.delete({
@@ -148,7 +160,7 @@ export const removeMember = async (ctx: Context, userSession: ContextUserSession
         },
     });
 
-    return ctx.json({ success: true }, httpCode("ok"));
+    return ctx.json({ success: true }, status.OK);
 };
 
 export const updateMember = async (
@@ -173,7 +185,7 @@ export const updateMember = async (
         },
     });
     const currMember = team?.members.find((member) => member.userId === userSession.id);
-    if (!team?.id || !currMember) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!team?.id || !currMember) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const canEditMembers = doesMemberHaveAccess(
         ProjectPermission.EDIT_MEMBER,
@@ -181,11 +193,11 @@ export const updateMember = async (
         currMember.isOwner,
     );
     if (!canEditMembers) {
-        return ctx.json({ success: false, message: "You don't have access to edit members" }, httpCode("unauthorized"));
+        return ctx.json({ success: false, message: "You don't have access to edit members" }, status.UNAUTHORIZED);
     }
 
     const targetMember = team.members.find((member) => member.id === targetMemberId);
-    if (!targetMember?.id) return ctx.json({ success: false, message: "Invalid member id" }, httpCode("not_found"));
+    if (!targetMember?.id) return ctx.json({ success: false, message: "Invalid member id" }, status.NOT_FOUND);
 
     await prisma.teamMember.update({
         where: {
@@ -197,5 +209,5 @@ export const updateMember = async (
         },
     });
 
-    return ctx.json({ success: true, message: "Member updated" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Member updated" }, status.OK);
 };

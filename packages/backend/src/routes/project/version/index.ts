@@ -8,7 +8,7 @@ import {
 } from "@/controllers/project/version";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { status, defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { newVersionFormSchema, updateVersionFormSchema } from "@shared/schemas/project/version";
 import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
@@ -57,7 +57,7 @@ async function version_post(ctx: Context) {
 
         const formData = ctx.get(ctxReqBodyNamespace);
         if (!formData) {
-            return ctx.json({ success: false, message: "No form data found" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "No form data found" }, status.BAD_REQUEST);
         }
 
         const dependencies = formData.get("dependencies");
@@ -85,7 +85,7 @@ async function version_post(ctx: Context) {
             const name = error?.issues?.[0]?.path?.[0];
             // @ts-ignore
             const errMsg = error?.issues?.[0]?.message;
-            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, status.BAD_REQUEST);
         }
 
         return await createNewVersion(ctx, userSession, projectSlug, data);
@@ -128,7 +128,7 @@ async function version_patch(ctx: Context) {
             const name = error?.issues?.[0]?.path?.[0];
             // @ts-ignore
             const errMsg = error?.issues?.[0]?.message;
-            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, status.BAD_REQUEST);
         }
 
         return await updateVersionData(ctx, projectSlug, versionSlug, userSession, data);

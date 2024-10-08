@@ -1,7 +1,7 @@
 import type { ContextUserSession } from "@/../types";
 import prisma from "@/services/prisma";
 import { isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
 import type { Context } from "hono";
@@ -37,7 +37,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     });
 
     if (!project) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
     // CHECK PERMISSIONS
@@ -47,7 +47,7 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
     }));
 
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, members)) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
     // Aggregate all dependencies
@@ -106,6 +106,6 @@ export const getProjectDependencies = async (ctx: Context, slug: string, userSes
             }),
             versions: dependencyVersions,
         },
-        httpCode("ok"),
+        status.OK,
     );
 };

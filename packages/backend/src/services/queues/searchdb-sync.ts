@@ -5,7 +5,7 @@ import meilisearch from "../meilisearch";
 import prisma from "../prisma";
 
 export const projectSearchNamespace = "projects";
-const SYNC_BATCH_SIZE = 250;
+const SYNC_BATCH_SIZE = 1000;
 const SYNC_INTERVAL = 1800_000; // 30 minutes
 let isSyncing = false;
 

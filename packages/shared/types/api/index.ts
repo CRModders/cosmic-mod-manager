@@ -161,3 +161,14 @@ export interface ProjectListItem {
 
     author?: string; // The author's username
 }
+
+export interface Notification {
+    id: string;
+    userId: string;
+    dateCreated: Date;
+    read: boolean;
+    type: string;
+    body: {
+        [key: string]: string | number | boolean;
+    };
+}

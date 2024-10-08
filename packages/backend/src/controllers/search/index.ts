@@ -1,6 +1,6 @@
 import meilisearch from "@/services/meilisearch";
 import { projectSearchNamespace } from "@/services/queues/searchdb-sync";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { type ProjectType, SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { Context } from "hono";
@@ -85,5 +85,5 @@ export const searchProjects = async (ctx: Context, props: Props) => {
 
     result.hits = projects;
 
-    return ctx.json(result, httpCode("ok"));
+    return ctx.json(result, status.OK);
 };

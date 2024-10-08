@@ -51,7 +51,7 @@ const SearchListItem = ({
         <Card className="searchItemWrapperGrid w-full grid gap-x-3 gap-y-2 p-card-surround text-muted-foreground">
             <Link
                 to={getProjectPagePathname(projectType, projectSlug)}
-                className="w-max flex shrink-0 relative items-start justify-center"
+                className="w-max h-fit flex shrink-0 relative items-start justify-center"
                 style={{
                     gridArea: "icon",
                 }}

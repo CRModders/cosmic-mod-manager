@@ -1,10 +1,10 @@
 import { searchApiRateLimiterMiddleware } from "@/middleware/rate-limiter";
-import httpCode, { defaultServerErrorResponse } from "@/utils/http";
+import { defaultServerErrorResponse, status } from "@/utils/http";
 import GAME_VERSIONS from "@shared/config/game-versions";
 import SPDX_LICENSE_LIST, { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { projectTypes } from "@shared/config/project";
 import { getAllLoaderCategories, getValidProjectCategories } from "@shared/lib/utils";
-import type { ProjectType, TagHeaderTypes } from "@shared/types";
+import type { ProjectType, TagHeaderType } from "@shared/types";
 import { type Context, Hono } from "hono";
 
 const tagsRouter = new Hono();
@@ -22,7 +22,7 @@ const getCategories = ({
     projectType,
     headerType,
     namesOnly,
-}: { projectType?: ProjectType; headerType?: TagHeaderTypes; namesOnly?: boolean }) => {
+}: { projectType?: ProjectType; headerType?: TagHeaderType; namesOnly?: boolean }) => {
     const list = getValidProjectCategories(projectType ? [projectType] : [], headerType);
 
     if (namesOnly) {
@@ -37,7 +37,7 @@ async function categories_get(ctx: Context) {
         const namesOnly = ctx.req.query("namesOnly") === "true";
 
         const categories = await getCategories({ namesOnly, projectType: projectType });
-        return ctx.json({ categories }, httpCode("ok"));
+        return ctx.json(categories, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -46,7 +46,7 @@ async function categories_get(ctx: Context) {
 
 async function gameVersions_get(ctx: Context) {
     try {
-        return ctx.json(GAME_VERSIONS, httpCode("ok"));
+        return ctx.json(GAME_VERSIONS, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -57,7 +57,7 @@ async function loaders_get(ctx: Context) {
     try {
         const projectType = (ctx.req.query("type")?.toLowerCase() as ProjectType) || undefined;
         const loaders = getAllLoaderCategories(projectType, false);
-        return ctx.json({ loaders }, httpCode("ok"));
+        return ctx.json(loaders, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -66,7 +66,7 @@ async function loaders_get(ctx: Context) {
 
 async function featuredLicenses_get(ctx: Context) {
     try {
-        return ctx.json(FEATURED_LICENSE_OPTIONS.slice(1), httpCode("ok"));
+        return ctx.json(FEATURED_LICENSE_OPTIONS.slice(1), status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -79,12 +79,12 @@ async function licenses_get(ctx: Context) {
         if (licenseId) {
             const license = SPDX_LICENSE_LIST.find((l) => l.licenseId.toLowerCase() === licenseId);
             if (!license) {
-                return ctx.json({ success: false, message: "License not found" }, httpCode("not_found"));
+                return ctx.json({ success: false, message: "License not found" }, status.NOT_FOUND);
             }
-            return ctx.json(license, httpCode("ok"));
+            return ctx.json(license, status.OK);
         }
 
-        return ctx.json(SPDX_LICENSE_LIST, httpCode("ok"));
+        return ctx.json(SPDX_LICENSE_LIST, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -93,7 +93,7 @@ async function licenses_get(ctx: Context) {
 
 async function projectTypes_get(ctx: Context) {
     try {
-        return ctx.json(projectTypes, httpCode("ok"));
+        return ctx.json(projectTypes, status.OK);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

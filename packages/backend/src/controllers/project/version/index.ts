@@ -2,7 +2,7 @@ import { type ContextUserSession, FILE_STORAGE_SERVICE } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { aggregateProjectLoaderNames, aggregateVersions, isProjectAccessibleToCurrSession } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
 import type { File as DBFile, Dependency } from "@prisma/client";
 import { STRING_ID_LENGTH } from "@shared/config";
@@ -112,7 +112,7 @@ export const createNewVersion = async (
         },
     });
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     const canUploadVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
@@ -122,7 +122,7 @@ export const createNewVersion = async (
     // Check if the user has permission to upload a version
     if (!canUploadVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false }, status.NOT_FOUND);
     }
 
     // Check if the uploaded file is of valid type
@@ -136,10 +136,7 @@ export const createNewVersion = async (
     const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
     for (const loader of formData.loaders || []) {
         if (!allowedLoaders.includes(loader)) {
-            return ctx.json(
-                { success: false, message: `Loader ${loader} not supported by current project type.` },
-                httpCode("bad_request"),
-            );
+            return ctx.json({ success: false, message: `Loader ${loader} not supported by current project type.` }, status.BAD_REQUEST);
         }
     }
 
@@ -155,7 +152,7 @@ export const createNewVersion = async (
     });
 
     if (duplicateFiles === true) {
-        return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, status.BAD_REQUEST);
     }
 
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
@@ -233,7 +230,7 @@ export const createNewVersion = async (
             message: "Successfully created new version",
             slug: newVersion.slug,
         },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -288,7 +285,7 @@ export const updateVersionData = async (
 
     // Return if project or target version not found
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     // Check if the user has permission to edit a version
     const canUpdateVersion = doesMemberHaveAccess(
@@ -298,17 +295,14 @@ export const updateVersionData = async (
     );
     if (!canUpdateVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false }, status.NOT_FOUND);
     }
 
     // Check the validity of loaders
     const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
     for (const loader of formData.loaders || []) {
         if (!allowedLoaders.includes(loader)) {
-            return ctx.json(
-                { success: false, message: `Loader ${loader} not supported by current project type.` },
-                httpCode("bad_request"),
-            );
+            return ctx.json({ success: false, message: `Loader ${loader} not supported by current project type.` }, status.BAD_REQUEST);
         }
     }
 
@@ -357,7 +351,7 @@ export const updateVersionData = async (
         });
 
         if (isDuplicate === true) {
-            return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: "We do not allow upload of duplicate files" }, status.BAD_REQUEST);
         }
 
         // Save the new files
@@ -512,7 +506,7 @@ export const updateVersionData = async (
                 gameVersionsChanged,
             },
         },
-        httpCode("ok"),
+        status.OK,
     );
 };
 
@@ -619,7 +613,7 @@ export const getAllProjectVersions = async (
         },
     });
 
-    if (!project?.id) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+    if (!project?.id) return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
 
     const projectMembersList = [
         ...(project?.team.members || []).map((member) => getFormattedTeamMember(member)),
@@ -627,7 +621,7 @@ export const getAllProjectVersions = async (
     ];
 
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList)) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
     // Get all the filesData for each version
@@ -706,7 +700,7 @@ export const getAllProjectVersions = async (
         });
     }
 
-    return ctx.json({ success: true, data: versionsList }, httpCode("ok"));
+    return ctx.json({ success: true, data: versionsList }, status.OK);
 };
 
 export const getProjectVersionData = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession) => {
@@ -726,7 +720,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
     });
 
     const version = project?.versions?.[0];
-    if (!project?.id || !version?.id) return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+    if (!project?.id || !version?.id) return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
 
     const projectMembersList = [
         ...(project?.team.members || []).map((member) => getFormattedTeamMember(member)),
@@ -735,7 +729,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
 
     // Check if the project is publically available or is the user a member in the project
     if (!isProjectAccessibleToCurrSession(project.visibility, project.status, userSession?.id, projectMembersList)) {
-        return ctx.json({ success: false, message: "Project not found" }, httpCode("not_found"));
+        return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
     }
 
     // Get all the filesData for each version
@@ -812,7 +806,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
         })),
     } satisfies ProjectVersionData;
 
-    return ctx.json({ success: true, data: versionData }, httpCode("ok"));
+    return ctx.json({ success: true, data: versionData }, status.OK);
 };
 
 export const deleteProjectVersion = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserSession) => {
@@ -851,7 +845,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     }
 
     const memberObj = project?.team.members?.[0];
-    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, httpCode("not_found"));
+    if (!project?.id || !targetVersion?.id || !memberObj) return ctx.json({ success: false }, status.NOT_FOUND);
 
     // Check if the user has permission to upload a version
     const canDeleteVersion = doesMemberHaveAccess(
@@ -861,7 +855,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     );
     if (!canDeleteVersion) {
         await addToUsedApiRateLimit(ctx, UNAUTHORIZED_ACCESS_ATTEMPT_CHARGE);
-        return ctx.json({ success: false }, httpCode("not_found"));
+        return ctx.json({ success: false }, status.NOT_FOUND);
     }
 
     const filesData = await prisma.file.findMany({
@@ -908,5 +902,5 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         },
     });
 
-    return ctx.json({ success: true, message: `Version "${deletedVersion.title}" deleted successfully.` }, httpCode("ok"));
+    return ctx.json({ success: true, message: `Version "${deletedVersion.title}" deleted successfully.` }, status.OK);
 };

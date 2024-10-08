@@ -1,3 +1,4 @@
+import { ctxReqBodyNamespace } from "@/../types";
 import {
     addNewPassword_ConfirmationEmail,
     changeUserPassword,
@@ -13,7 +14,7 @@ import { getAllVisibleProjects, getUserProfileData, updateUserProfile } from "@/
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, defaultServerErrorResponse, status } from "@/utils/http";
 import { CHARGE_FOR_SENDING_INVALID_DATA, USER_DELETE_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import {
     profileUpdateFormSchema,
@@ -23,7 +24,7 @@ import {
 } from "@shared/schemas/settings";
 import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
-import { ctxReqBodyNamespace } from "../../types";
+import notificationRouter from "./notification";
 
 const userRouter = new Hono();
 
@@ -43,6 +44,8 @@ userRouter.delete("/password", LoginProtectedRoute, userPassword_delete);
 
 userRouter.post("/change-password", changePasswordConfirmationEmail_post);
 userRouter.patch("/password", userPassword_patch);
+
+userRouter.route("/:userId/notifications", notificationRouter);
 
 // Get currently logged in user
 async function user_get(ctx: Context) {
@@ -78,7 +81,7 @@ async function user_patch(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(profileUpdateFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
         return updateUserProfile(ctx, data);
     } catch (err) {
@@ -108,7 +111,7 @@ async function userConfirmationAction_post(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
-            return ctx.json({ success: false }, httpCode("bad_request"));
+            return ctx.json({ success: false }, status.BAD_REQUEST);
         }
         return await getConfirmActionTypeFromCode(ctx, code);
     } catch (err) {
@@ -122,7 +125,7 @@ async function userConfirmationAction_delete(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {
-            return ctx.json({ success: false }, httpCode("bad_request"));
+            return ctx.json({ success: false }, status.BAD_REQUEST);
         }
         return await deleteConfirmationActionCode(ctx, code);
     } catch (err) {
@@ -136,7 +139,7 @@ async function addPasswordConfirmation_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
         return await addNewPassword_ConfirmationEmail(ctx, data);
     } catch (err) {
@@ -149,7 +152,7 @@ async function addPasswordConfirmation_post(ctx: Context) {
 async function addPasswordConfirmation_put(ctx: Context) {
     try {
         const code = ctx.get(ctxReqBodyNamespace)?.code;
-        if (!code) return ctx.json({ success: false }, httpCode("bad_request"));
+        if (!code) return ctx.json({ success: false }, status.BAD_REQUEST);
 
         return await confirmAddingNewPassword(ctx, code);
     } catch (err) {
@@ -163,11 +166,11 @@ async function userPassword_delete(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(removeAccountPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession || !userSession?.password) return ctx.json({}, httpCode("bad_request"));
+        if (!userSession || !userSession?.password) return ctx.json({}, status.BAD_REQUEST);
 
         return await removeAccountPassword(ctx, userSession, data);
     } catch (err) {
@@ -181,7 +184,7 @@ async function changePasswordConfirmationEmail_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
         return await sendAccountPasswordChangeLink(ctx, data);
     } catch (err) {
@@ -195,7 +198,7 @@ async function userPassword_patch(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
         const code = ctx.get(ctxReqBodyNamespace)?.code;
         if (!code) {

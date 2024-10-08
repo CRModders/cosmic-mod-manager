@@ -236,8 +236,9 @@ model File {
 model Notification {
     id          String    @id @db.VarChar(32)
     userId      String    @db.VarChar(32)
-    read        Boolean   @default(false)
+    type        String    @db.VarChar(32)
     dateCreated DateTime  @default(now())
+    read        Boolean   @default(false)
     dateRead    DateTime?
     body        Json
 

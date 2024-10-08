@@ -96,13 +96,13 @@ Please note that the `page` value will be ignored if you provide an `offset` als
 
 - **Category** \
     key: `c` \
-    type: [`ENUM`](https://api.crmm.tech/api/tag/categories) \
+    type: [`ENUM`](https://api.crmm.tech/api/tags/categories) \
     Example: `c=realistic&c=64x`
 
 :::tip
 
-You can use the endpoint `/tag/categories` to get categories based on project types also. \
-For example, [`/tag/categories?type=mod`](https://api.crmm.tech/api/tag/categories?type=mod) returns all the categories applicable to mods.
+You can use the endpoint `/tags/categories` to get categories based on project types also. \
+For example, [`/tags/categories?type=mod`](https://api.crmm.tech/api/tags/categories?type=mod) returns all the categories applicable to mods.
 
 :::
 <br />

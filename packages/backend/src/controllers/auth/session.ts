@@ -3,7 +3,7 @@ import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
 import { deleteUserCookie } from "@/utils";
 import { sendNewSigninAlertEmail } from "@/utils/email";
-import httpCode, { defaultInvalidReqResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, status } from "@/utils/http";
 import type { Session, User } from "@prisma/client";
 import { AUTHTOKEN_COOKIE_NAME, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
@@ -115,13 +115,11 @@ export async function getLoggedInUser(sessionId: string, sessionToken: string): 
             },
         });
 
-        return (
-            {
-                ...session?.user,
-                sessionId,
-                sessionToken,
-            } || null
-        );
+        return {
+            ...session?.user,
+            sessionId,
+            sessionToken,
+        };
     } catch (error) {
         return null;
     }
@@ -178,7 +176,7 @@ export const getUserSessions = async (ctx: Context, userSession: ContextUserSess
         });
     }
 
-    return ctx.json({ success: true, sessions: list }, httpCode("ok"));
+    return ctx.json({ success: true, sessions: list }, status.OK);
 };
 
 export const deleteUserSession = async (ctx: Context, userSession: ContextUserSession, sessionId: string) => {
@@ -213,7 +211,7 @@ export const revokeSessionFromAccessCode = async (ctx: Context, code: string) =>
 
     if (!session?.id) {
         await addToUsedApiRateLimit(ctx, CHARGE_FOR_SENDING_INVALID_DATA);
-        return ctx.json({ success: false, message: "Invalid access code" }, httpCode("bad_request"));
+        return ctx.json({ success: false, message: "Invalid access code" }, status.BAD_REQUEST);
     }
-    return ctx.json({ success: true, message: "Successfully revoked the session access" }, httpCode("ok"));
+    return ctx.json({ success: true, message: "Successfully revoked the session access" }, status.OK);
 };

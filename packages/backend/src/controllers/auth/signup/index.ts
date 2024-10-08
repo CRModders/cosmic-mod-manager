@@ -1,8 +1,8 @@
 import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
-import httpCode from "@/utils/http";
+import { status } from "@/utils/http";
 import { AUTHTOKEN_COOKIE_NAME, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
-import { GlobalUserRoles } from "@shared/types";
+import { GlobalUserRole } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
 import { createNewAuthAccount, getAuthProviderProfileData } from "../commons";
@@ -24,7 +24,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
                 success: false,
                 data: profileData,
             },
-            httpCode("bad_request"),
+            status.BAD_REQUEST,
         );
     }
 
@@ -36,10 +36,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
         },
     });
     if (possiblyAlreadyExistingAuthAccount?.id) {
-        return ctx.json(
-            { success: false, message: "A user already exists with this account, try to login instead" },
-            httpCode("bad_request"),
-        );
+        return ctx.json({ success: false, message: "A user already exists with this account, try to login instead" }, status.BAD_REQUEST);
     }
 
     // Return if a user already exists with the same email
@@ -51,7 +48,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
     if (possiblyAlreadyExistingUser?.id) {
         return ctx.json(
             { success: false, message: "A user already exists with the email you are trying to sign up with." },
-            httpCode("bad_request"),
+            status.BAD_REQUEST,
         );
     }
 
@@ -65,7 +62,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
             userName: userName,
             lowerCaseUserName: userName.toLocaleLowerCase(),
             emailVerified: profileData.emailVerified === true,
-            role: GlobalUserRoles.USER,
+            role: GlobalUserRole.USER,
             newSignInAlerts: true,
             avatarUrl: profileData.avatarImage,
             avatarUrlProvider: profileData.providerName,
@@ -88,6 +85,6 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
             success: true,
             message: `Successfully signed up using ${authProvider} as ${newUser.name}`,
         },
-        httpCode("ok"),
+        status.OK,
     );
 };

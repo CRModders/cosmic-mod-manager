@@ -135,7 +135,7 @@ export const ProjectContextProvider = ({
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (slug !== currProjectSlug && slug !== projectData?.id) {
+        if (slug !== currProjectSlug && slug !== projectData?.slug && slug !== projectData?.id) {
             fetchProjectData(slug);
         }
     }, [slug]);

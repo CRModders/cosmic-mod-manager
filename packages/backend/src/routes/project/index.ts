@@ -20,7 +20,7 @@ import {
 } from "@/controllers/project/settings";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import httpCode, { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, defaultServerErrorResponse, status } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import versionRouter from "./version";
@@ -65,7 +65,7 @@ async function projects_get(ctx: Context) {
         const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
         const userSession = getUserSessionFromCtx(ctx);
         const userName = userSession?.userName;
-        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, httpCode("unauthenticated"));
+        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, status.UNAUTHENTICATED);
 
         return await getAllVisibleProjects(ctx, userSession, userName, listedProjectsOnly);
     } catch (error) {
@@ -94,7 +94,7 @@ async function project_post(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(newProjectFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await createNewProject(ctx, userSession, data);
@@ -137,7 +137,7 @@ async function project_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(generalProjectSettingsFormSchema, obj);
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateProject(ctx, slug, userSession, data);
@@ -176,7 +176,7 @@ async function projectIcon_patch(ctx: Context) {
                     success: false,
                     message: error,
                 },
-                httpCode("bad_request"),
+                status.BAD_REQUEST,
             );
         }
 
@@ -223,7 +223,7 @@ async function description_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateDescriptionFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateProjectDescription(ctx, slug, userSession, data);
@@ -241,7 +241,7 @@ async function tags_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateProjectTagsFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateProjectTags(ctx, slug, userSession, data);
@@ -259,7 +259,7 @@ async function externalLinks_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateExternalLinksFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateProjectExternalLinks(ctx, userSession, slug, data);
@@ -277,7 +277,7 @@ async function license_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateProjectLicenseFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateProjectLicense(ctx, userSession, slug, data);
@@ -306,7 +306,7 @@ async function gallery_post(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(addNewGalleryImageFormSchema, obj);
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await addNewGalleryImage(ctx, slug, userSession, data);
@@ -324,7 +324,7 @@ async function galleryItem_patch(ctx: Context) {
 
         const { data, error } = await parseValueToSchema(updateGalleryImageFormSchema, ctx.get(ctxReqBodyNamespace));
         if (error || !data) {
-            return ctx.json({ success: false, message: error }, httpCode("bad_request"));
+            return ctx.json({ success: false, message: error }, status.BAD_REQUEST);
         }
 
         return await updateGalleryImage(ctx, slug, userSession, galleryId, data);

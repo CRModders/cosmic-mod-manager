@@ -37,12 +37,10 @@ import {
     SettingsIcon,
     SquareArrowOutUpRightIcon,
     TagsIcon,
-    UserIcon,
 } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import NotFoundPage from "../not-found";
 import InteractiveDownloadPopup from "./interactive-download";
 import SecondaryNav from "./secondary-nav";
 import "./styles.css";
@@ -55,8 +53,9 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { fetchingProjectData, projectData, fetchProjectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
-    if (!projectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
-    if (projectData === null && fetchingProjectData === false) return <NotFoundPage />;
+    console.log({ ...projectData });
+
+    if (!projectData || fetchingProjectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
 
     const isVersionDetailsPage = isCurrLinkActive(
         getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"),
@@ -515,16 +514,14 @@ export const ProjectMember = ({
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
             <ImgWrapper src={imageUrl(avatarImageUrl)} alt={userName} className="h-10 w-10 rounded-full" fallback={fallbackUserIcon} />
-            <div className="w-full flex flex-col items-start justify-start overflow-x-hidden">
+            <div className="w-full flex flex-col items-start justify-start overflow-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-2">
-                    <span className="font-semibold text-sm text-foreground" title={userName}>
+                    <span className="font-semibold" title={userName}>
                         {userName}
                     </span>
-                    {isOwner === true && (
-                        <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
-                    )}
+                    {isOwner === true && <CrownIcon className="w-btn-icon h-btn-icon shrink-0 text-orange-500 dark:text-orange-400" />}
                 </div>
-                <span className="text-sm leading-tight">{role}</span>
+                <span className="text-sm font-medium leading-none text-muted-foreground/75">{role}</span>
             </div>
         </ButtonLink>
     );

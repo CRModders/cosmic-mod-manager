@@ -1,29 +1,21 @@
 import type { Context } from "hono";
+import type { StatusCode } from "hono/utils/http-status";
 
-type httpCodeType = "ok" | "bad_request" | "unauthenticated" | "unauthorized" | "not_found" | "too_many_requests" | "server_error";
+type statusCodeNames = "OK" | "BAD_REQUEST" | "UNAUTHENTICATED" | "UNAUTHORIZED" | "NOT_FOUND" | "TOO_MANY_REQUESTS" | "SERVER_ERROR";
 
-const httpCode = (codeType: httpCodeType) => {
-    switch (codeType) {
-        case "ok":
-            return 200;
-        case "bad_request":
-            return 400;
-        case "unauthenticated":
-            return 401;
-        case "unauthorized":
-            return 403;
-        case "not_found":
-            return 404;
-        case "too_many_requests":
-            return 429;
-        case "server_error":
-            return 500;
-        default:
-            return 200;
-    }
+type httpStatusCodes = {
+    [key in statusCodeNames]: StatusCode;
 };
 
-export default httpCode;
+export const status: httpStatusCodes = {
+    OK: 200,
+    BAD_REQUEST: 400,
+    UNAUTHENTICATED: 401,
+    UNAUTHORIZED: 403,
+    NOT_FOUND: 404,
+    TOO_MANY_REQUESTS: 429,
+    SERVER_ERROR: 500,
+};
 
 export const defaultServerErrorResponse = (ctx: Context, message?: string) => {
     return ctx.json(
@@ -31,7 +23,7 @@ export const defaultServerErrorResponse = (ctx: Context, message?: string) => {
             message: message || "Internal server error",
             succcess: false,
         },
-        httpCode("server_error"),
+        status.SERVER_ERROR,
     );
 };
 
@@ -41,6 +33,6 @@ export const defaultInvalidReqResponse = (ctx: Context, message?: string) => {
             message: message || "Invalid request",
             succcess: false,
         },
-        httpCode("bad_request"),
+        status.BAD_REQUEST,
     );
 };
