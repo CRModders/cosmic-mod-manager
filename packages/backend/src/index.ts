@@ -2,7 +2,7 @@ import { BACKEND_PORT } from "@shared/config";
 import type { SocketAddress } from "bun";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
+import { logger } from "./middleware/logger";
 import { ddosPreventionRateLimiterMiddleware } from "./middleware/rate-limiter";
 import router from "./routes";
 import cdnRouter from "./routes/cdn";
@@ -12,6 +12,10 @@ import { queueDownloadsCounterQueueProcessing } from "./services/queues/download
 import queueSearchDbSync from "./services/queues/searchdb-sync";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
+
+export const customLogger = (message: string, ...rest: string[]) => {
+    console.log(message, ...rest);
+};
 
 app.use(ddosPreventionRateLimiterMiddleware);
 app.use(logger());
