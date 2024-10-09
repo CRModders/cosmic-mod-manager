@@ -94,15 +94,15 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         await Promise.all([relatedProjects.refetch(), relatedUsers.refetch()]);
     };
 
-    const relatedProjectsList = new Map<string, ProjectListItem>();
-    if (relatedProjects.data) {
+    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : null;
+    if (relatedProjects.data && relatedProjectsList) {
         for (const project of relatedProjects.data || []) {
             relatedProjectsList.set(project.id, project);
         }
     }
 
-    const relatedUsersList = new Map<string, UserProfileData>();
-    if (relatedUsers.data) {
+    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : null;
+    if (relatedUsers.data && relatedUsersList) {
         for (const user of relatedUsers.data || []) {
             relatedUsersList.set(user.id, user);
         }
@@ -120,7 +120,12 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         <NotificationsContext.Provider
             value={{
                 notifications: notifications.data || null,
-                isLoading: notifications.isLoading || relatedProjects.isLoading || relatedUsers.isLoading,
+                isLoading:
+                    notifications.isLoading ||
+                    relatedProjects.isLoading ||
+                    relatedUsers.isLoading ||
+                    !relatedProjectsList ||
+                    !relatedUsersList,
                 relatedProjects: relatedProjectsList || null,
                 relatedUsers: relatedUsersList || null,
                 refetchNotifications: refetchNotifications,

@@ -310,34 +310,28 @@ const router = createBrowserRouter([
                     },
                     ...searchPageRoutes(),
                     {
-                        path: "user",
-                        element: <Outlet />,
+                        path: "user/:userName",
+                        element: (
+                            <UserProfileContextProvider>
+                                <Outlet />
+                            </UserProfileContextProvider>
+                        ),
                         children: [
                             {
-                                path: ":userName",
+                                path: "",
                                 element: (
-                                    <UserProfileContextProvider>
-                                        <Outlet />
-                                    </UserProfileContextProvider>
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <UserPageLayout />
+                                    </Suspense>
                                 ),
-                                children: [
-                                    {
-                                        path: "",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <UserPageLayout />
-                                            </Suspense>
-                                        ),
-                                    },
-                                    {
-                                        path: ":projectType",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <UserPageLayout />
-                                            </Suspense>
-                                        ),
-                                    },
-                                ],
+                            },
+                            {
+                                path: ":projectType",
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <UserPageLayout />
+                                    </Suspense>
+                                ),
                             },
                         ],
                     },
@@ -391,10 +385,6 @@ const router = createBrowserRouter([
                         children: [
                             {
                                 path: "",
-                                element: <RedirectIfLoggedIn redirectTo="/dashboard/overview" />,
-                            },
-                            {
-                                path: "overview",
                                 element: (
                                     <NotificationsProvider>
                                         <Suspense fallback={<SuspenseFallback />}>

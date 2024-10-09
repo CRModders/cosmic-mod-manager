@@ -55,7 +55,7 @@ const baseUrlPrefix = "/dashboard";
 const SidePanelLinks = [
     {
         name: "Overview",
-        href: `${baseUrlPrefix}/overview`,
+        href: `${baseUrlPrefix}`,
         icon: <LayoutDashboardIcon size="1rem" />,
     },
     {

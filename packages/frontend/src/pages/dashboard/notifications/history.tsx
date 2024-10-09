@@ -7,7 +7,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { FullWidthSpinner } from "@/components/ui/spinner";
 import { useContext } from "react";
 import { NotificationsContext } from "./context";
 import { NotificationItem } from "./page";
@@ -16,7 +16,7 @@ const NotificationsHistory = () => {
     const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
 
     if (isLoading) {
-        return <LoadingSpinner />;
+        return <FullWidthSpinner />;
     }
 
     return (

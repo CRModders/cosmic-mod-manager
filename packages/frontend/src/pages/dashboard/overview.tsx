@@ -3,7 +3,7 @@ import { ContentCardTemplate, PanelContent_AsideCardLayout } from "@/components/
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ButtonLink } from "@/components/ui/link";
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
@@ -28,7 +28,13 @@ const getAllUserProjects = async () => {
 
 const OverviewPage = () => {
     const { session } = useSession();
-    const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
+    const {
+        notifications,
+        relatedProjects,
+        relatedUsers,
+        isLoading: notificationsLoading,
+        refetchNotifications,
+    } = useContext(NotificationsContext);
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
     const projectsList = useQuery({ queryKey: ["all-projects-logged-in-user"], queryFn: () => getAllUserProjects() });
@@ -60,43 +66,47 @@ const OverviewPage = () => {
             </ContentCardTemplate>
 
             <PanelContent_AsideCardLayout>
-                <Card className="w-full">
-                    <CardHeader className="w-full flex flex-row items-center justify-between gap-x-6 gap-y-2">
-                        <CardTitle className="w-fit">Notifications</CardTitle>
-                        {(unreadNotifications?.length || 0) > 0 ? (
-                            <Link to="/dashboard/notifications" className="link_blue flex items-center justify-center">
-                                See all
-                                <ChevronRightIcon className="w-btn-icon-md h-btn-icon-md" />
-                            </Link>
-                        ) : null}
-                    </CardHeader>
-                    <CardContent>
-                        <div className="w-full flex flex-col items-start justify-center gap-2">
-                            {unreadNotifications?.map((notification) => (
-                                <NotificationItem
-                                    key={notification.id}
-                                    notification={notification}
-                                    relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
-                                    relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
-                                    refetchNotifications={refetchNotifications}
-                                    concise={true}
-                                    showMarkAsReadButton={false}
-                                />
-                            ))}
+                {notificationsLoading ? (
+                    <FullWidthSpinner />
+                ) : (
+                    <Card className="w-full">
+                        <CardHeader className="w-full flex flex-row items-center justify-between gap-x-6 gap-y-2">
+                            <CardTitle className="w-fit">Notifications</CardTitle>
+                            {(unreadNotifications?.length || 0) > 0 ? (
+                                <Link to="/dashboard/notifications" className="link_blue flex items-center justify-center">
+                                    See all
+                                    <ChevronRightIcon className="w-btn-icon-md h-btn-icon-md" />
+                                </Link>
+                            ) : null}
+                        </CardHeader>
+                        <CardContent>
+                            <div className="w-full flex flex-col items-start justify-center gap-2">
+                                {unreadNotifications?.map((notification) => (
+                                    <NotificationItem
+                                        key={notification.id}
+                                        notification={notification}
+                                        relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
+                                        relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                                        refetchNotifications={refetchNotifications}
+                                        concise={true}
+                                        showMarkAsReadButton={false}
+                                    />
+                                ))}
 
-                            {!unreadNotifications?.length && (
-                                <>
-                                    <span className="text-muted-foreground">You have no unread notifications.</span>
+                                {!unreadNotifications?.length && (
+                                    <>
+                                        <span className="text-muted-foreground">You have no unread notifications.</span>
 
-                                    <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
-                                        <HistoryIcon className="w-btn-icon h-btn-icon" />
-                                        View notification history
-                                    </ButtonLink>
-                                </>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
+                                        <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
+                                            <HistoryIcon className="w-btn-icon h-btn-icon" />
+                                            View notification history
+                                        </ButtonLink>
+                                    </>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 <ContentCardTemplate title="Analytics" className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards">
                     {projectsList.isLoading ? (

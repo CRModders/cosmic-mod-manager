@@ -3,16 +3,18 @@ import { ImgWrapper } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VariantButtonLink } from "@/components/ui/link";
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { constructProjectPageUrl, formatDate, getProjectPagePathname, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { NotificationType } from "@shared/types";
 import type { Notification, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, HistoryIcon, XIcon } from "lucide-react";
 import { useContext, useState } from "react";
+import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { acceptTeamInvite, leaveTeam } from "../../project/settings/members/utils";
@@ -23,8 +25,15 @@ const NotificationsPage = () => {
     const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
     const [markingAsRead, setMarkingAsRead] = useState(false);
 
+    console.log({
+        isLoading,
+        notifications,
+        relatedProjects,
+        relatedUsers,
+    });
+
     if (isLoading || !session) {
-        return <LoadingSpinner />;
+        return <FullWidthSpinner />;
     }
 
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
@@ -52,41 +61,54 @@ const NotificationsPage = () => {
     };
 
     return (
-        <Card className="w-full">
-            <CardHeader className="w-full flex flex-row flex-wrap gap-x-4 gap-y-2 items-center justify-between">
-                <CardTitle className="w-fit">Notifications</CardTitle>
+        <>
+            <Helmet>
+                <title>Notifications | {SITE_NAME_SHORT}</title>
+                <meta name="description" content="Your notifications" />
+            </Helmet>
 
-                {(notifications?.length || 0) > 0 && (
-                    <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
-                        <VariantButtonLink url="/dashboard/notifications/history" className="w-fit">
-                            <HistoryIcon className="w-btn-icon-md h-btn-icon-md" />
-                            View history
-                        </VariantButtonLink>
+            <Card className="w-full">
+                <CardHeader className="w-full flex flex-row flex-wrap gap-x-4 gap-y-2 items-center justify-between">
+                    <CardTitle className="w-fit">Notifications</CardTitle>
 
-                        {(unreadNotifications?.length || 0) > 1 && (
-                            <Button variant={"secondary-destructive"} disabled={markingAsRead} onClick={markAllAsRead}>
-                                {markingAsRead ? <LoadingSpinner size="xs" /> : <CheckCheckIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                Mark all as read
-                            </Button>
-                        )}
-                    </div>
-                )}
-            </CardHeader>
+                    {(notifications?.length || 0) > 0 && (
+                        <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
+                            <VariantButtonLink url="/dashboard/notifications/history" className="w-fit">
+                                <HistoryIcon className="w-btn-icon-md h-btn-icon-md" />
+                                View history
+                            </VariantButtonLink>
 
-            <CardContent className="flex flex-col gap-panel-cards">
-                {!unreadNotifications?.length && <span className="text-muted-foreground">You don't have any unread notifications.</span>}
+                            {(unreadNotifications?.length || 0) > 1 && (
+                                <Button variant={"secondary-destructive"} disabled={markingAsRead} onClick={markAllAsRead}>
+                                    {markingAsRead ? (
+                                        <LoadingSpinner size="xs" />
+                                    ) : (
+                                        <CheckCheckIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    )}
+                                    Mark all as read
+                                </Button>
+                            )}
+                        </div>
+                    )}
+                </CardHeader>
 
-                {unreadNotifications?.map((notification) => (
-                    <NotificationItem
-                        key={notification.id}
-                        notification={notification}
-                        relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
-                        relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
-                        refetchNotifications={refetchNotifications}
-                    />
-                ))}
-            </CardContent>
-        </Card>
+                <CardContent className="flex flex-col gap-panel-cards">
+                    {!unreadNotifications?.length && (
+                        <span className="text-muted-foreground">You don't have any unread notifications.</span>
+                    )}
+
+                    {unreadNotifications?.map((notification) => (
+                        <NotificationItem
+                            key={notification.id}
+                            notification={notification}
+                            relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
+                            relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                            refetchNotifications={refetchNotifications}
+                        />
+                    ))}
+                </CardContent>
+            </Card>
+        </>
     );
 };
 
@@ -106,6 +128,26 @@ export const NotificationItem = ({
     concise?: boolean;
     showMarkAsReadButton?: boolean;
 }) => {
+    const [markingAsRead, setMarkingAsRead] = useState(false);
+    const markNotificationAsRead = async () => {
+        if (markingAsRead) return;
+        setMarkingAsRead(true);
+        try {
+            const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
+                method: "PATCH",
+            });
+
+            if (!result.ok) {
+                toast.error("Failed to mark notifications as read");
+                return;
+            }
+
+            await refetchNotifications();
+        } finally {
+            setMarkingAsRead(false);
+        }
+    };
+
     switch (notification.type) {
         case NotificationType.TEAM_INVITE:
             return (
@@ -113,7 +155,8 @@ export const NotificationItem = ({
                     notification={notification}
                     relatedProject={relatedProject}
                     relatedUser={relatedUser}
-                    refetchNotifications={refetchNotifications}
+                    markNotificationAsRead={markNotificationAsRead}
+                    markingAsRead={markingAsRead}
                     {...props}
                 />
             );
@@ -124,20 +167,21 @@ export const TeamInviteNotification = ({
     notification,
     relatedProject,
     relatedUser,
-    refetchNotifications,
+    markNotificationAsRead,
+    markingAsRead,
     concise = false,
     showMarkAsReadButton = true,
 }: {
     notification: Notification;
     relatedProject: ProjectListItem | undefined;
     relatedUser: UserProfileData | undefined;
-    refetchNotifications: () => Promise<void>;
+    markNotificationAsRead: () => Promise<void>;
+    markingAsRead: boolean;
     concise?: boolean;
     showMarkAsReadButton?: boolean;
 }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean | "accept" | "decline">(false);
-    const [markingAsRead, setMarkingAsRead] = useState(false);
 
     const acceptInvite = async () => {
         if (!relatedProject || isLoading) return;
@@ -178,24 +222,6 @@ export const TeamInviteNotification = ({
         }
     };
 
-    const markNotificationAsRead = async () => {
-        if (markingAsRead) return;
-        setMarkingAsRead(true);
-        try {
-            const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
-                method: "PATCH",
-            });
-
-            if (!result.ok) {
-                return toast.error("Failed to mark notifications as read");
-            }
-
-            await refetchNotifications();
-        } finally {
-            setMarkingAsRead(false);
-        }
-    };
-
     const projectPageUrl = getProjectPagePathname(
         relatedProject?.type[0] || "project",
         relatedProject?.slug || (notification.body?.projectId as string),
@@ -204,7 +230,7 @@ export const TeamInviteNotification = ({
     return (
         <div className="w-full flex flex-col gap-2 bg-background/75 rounded p-card-surround">
             <div className="w-full flex flow-row items-center justify-between">
-                <div className="grow flex flex-wrap items-center justify-start gap-x-1">
+                <div className="grow flex flex-wrap items-center justify-start gap-1">
                     <Link to={projectPageUrl} className="mr-1.5">
                         <ImgWrapper
                             src={relatedProject?.icon || ""}
@@ -213,23 +239,25 @@ export const TeamInviteNotification = ({
                             className="w-11 h-11"
                         />
                     </Link>
-                    <Link
-                        to={`/user/${relatedUser?.userName}`}
-                        className="flex items-center justify-center gap-1 font-semibold hover:underline"
-                    >
-                        <ImgWrapper
-                            src={relatedUser?.avatarUrl || ""}
-                            alt={relatedUser?.userName || (notification.body?.invitedBy as string)}
-                            fallback={fallbackUserIcon}
-                            className="w-6 h-6 rounded-full"
-                        />
+                    <div className="flex items-center justify-start gap-x-1 flex-wrap">
+                        <Link
+                            to={`/user/${relatedUser?.userName}`}
+                            className="flex items-center justify-center gap-1 font-semibold hover:underline"
+                        >
+                            <ImgWrapper
+                                src={relatedUser?.avatarUrl || ""}
+                                alt={relatedUser?.userName || (notification.body?.invitedBy as string)}
+                                fallback={fallbackUserIcon}
+                                className="w-6 h-6 rounded-full"
+                            />
 
-                        {relatedUser?.userName || notification.body?.invitedBy}
-                    </Link>
-                    <span className="text-muted-foreground">has invited you to join</span>
-                    <Link to={projectPageUrl} className="font-semibold hover:underline">
-                        {relatedProject?.name || notification.body?.projectId}
-                    </Link>
+                            {relatedUser?.userName || notification.body?.invitedBy}
+                        </Link>
+                        <span className="text-muted-foreground">has invited you to join</span>
+                        <Link to={projectPageUrl} className="font-semibold hover:underline">
+                            {relatedProject?.name || notification.body?.projectId}
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="flex items-center justify-center gap-2">

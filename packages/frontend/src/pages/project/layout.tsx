@@ -364,7 +364,6 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
                             },
                         ]}
                     />
-
                     <Outlet />
                 </div>
             </div>
