@@ -53,8 +53,6 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     const { fetchingProjectData, projectData, fetchProjectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
-    console.log({ ...projectData });
-
     if (!projectData || fetchingProjectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
 
     const isVersionDetailsPage = isCurrLinkActive(

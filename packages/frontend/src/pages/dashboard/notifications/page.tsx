@@ -25,13 +25,6 @@ const NotificationsPage = () => {
     const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
     const [markingAsRead, setMarkingAsRead] = useState(false);
 
-    console.log({
-        isLoading,
-        notifications,
-        relatedProjects,
-        relatedUsers,
-    });
-
     if (isLoading || !session) {
         return <FullWidthSpinner />;
     }

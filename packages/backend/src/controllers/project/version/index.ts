@@ -720,7 +720,7 @@ export const getProjectVersionData = async (ctx: Context, projectSlug: string, v
     });
 
     const version = project?.versions?.[0];
-    if (!project?.id || !version?.id) return ctx.json({ success: false, message: "Project not found" }, status.NOT_FOUND);
+    if (!project?.id || !version?.id) return ctx.json({ success: false, message: "Project or version not found" }, status.NOT_FOUND);
 
     const projectMembersList = [
         ...(project?.team.members || []).map((member) => getFormattedTeamMember(member)),

@@ -19,18 +19,17 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
     const [showTickIcon, setShowTickIcon] = useState(false);
 
     const copyText = () => {
-        try {
-            const existingTimeout = timeoutRef.get(id);
-            if (existingTimeout) clearTimeout(existingTimeout);
-            navigator.clipboard.writeText(text.toString());
-            setShowTickIcon(true);
-            const timeoutId = window.setTimeout(() => {
-                setShowTickIcon(false);
-            }, 2_000);
-            timeoutRef.set(id, timeoutId);
-        } catch (error) {
-            console.error(error);
-        }
+        const existingTimeout = timeoutRef.get(id);
+        if (existingTimeout) clearTimeout(existingTimeout);
+
+        const success = copyTextToClipboard(text);
+        if (!success) return console.error("Unable to copy text to clipboard");
+
+        setShowTickIcon(true);
+        const timeoutId = window.setTimeout(() => {
+            setShowTickIcon(false);
+        }, 2_000);
+        timeoutRef.set(id, timeoutId);
     };
 
     return (
@@ -60,3 +59,13 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
 };
 
 export default CopyBtn;
+
+export const copyTextToClipboard = (text: unknown) => {
+    try {
+        navigator.clipboard.writeText(`${text}`);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};

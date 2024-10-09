@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import CopyBtn from "@/components/ui/copy-btn";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import CopyBtn, { copyTextToClipboard } from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { formatGameVersionsListString } from "@/lib/semver";
@@ -23,7 +24,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { ProjectVersionData } from "@shared/types/api";
-import { ChevronRightIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
+import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -225,6 +226,8 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                 fileSize={versionData.primaryFile.size}
                                 isPrimary={true}
                                 downloadLink={projectFileUrl(versionData.primaryFile.url)}
+                                sha1_hash={versionData.primaryFile.sha1_hash}
+                                sha512_hash={versionData.primaryFile.sha512_hash}
                             />
                         ) : null}
 
@@ -238,6 +241,8 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
                                           fileSize={file.size}
                                           isPrimary={false}
                                           downloadLink={projectFileUrl(file.url)}
+                                          sha1_hash={file.sha1_hash}
+                                          sha512_hash={file.sha512_hash}
                                       />
                                   );
                               })
@@ -316,38 +321,60 @@ interface FileDetailsItemProps {
     fileSize: number;
     isPrimary: boolean;
     downloadLink: string;
+    sha1_hash: string | null;
+    sha512_hash: string | null;
 }
 
-const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink }: FileDetailsItemProps) => {
+const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink, sha1_hash, sha512_hash }: FileDetailsItemProps) => {
     return (
-        <div
-            className={cn(
-                "w-full flex flex-wrap sm:flex-nowrap items-center justify-between rounded px-4 py-2.5 pr-3 gap-x-4 gap-y-2",
-                isPrimary ? "bg-shallow-background" : "bg-shallow-background/70",
-            )}
-        >
-            <div className="flex items-center justify-start gap-1.5">
-                <FileIcon
-                    className={cn("flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground", !isPrimary && "text-extra-muted-foreground")}
-                />
+        <ContextMenu>
+            <ContextMenuTrigger asChild>
+                <div
+                    className={cn(
+                        "w-full flex flex-wrap sm:flex-nowrap items-center justify-between rounded px-4 py-2.5 pr-3 gap-x-4 gap-y-2 cursor-context-menu",
+                        isPrimary ? "bg-shallow-background" : "bg-shallow-background/70",
+                    )}
+                >
+                    <div className="flex items-center justify-start gap-1.5">
+                        <FileIcon
+                            className={cn(
+                                "flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
+                                !isPrimary && "text-extra-muted-foreground",
+                            )}
+                        />
 
-                <div className="flex items-center flex-wrap justify-start gap-x-2">
-                    <span className={!isPrimary ? "text-muted-foreground" : ""}>
-                        <strong className="font-semibold">{fileName}</strong>{" "}
-                        <span className="whitespace-nowrap ml-0.5">({parseFileSize(fileSize)})</span>{" "}
-                        {isPrimary ? <span className="text-muted-foreground italic ml-1">Primary</span> : null}
-                    </span>
+                        <div className="flex items-center flex-wrap justify-start gap-x-2">
+                            <span className={!isPrimary ? "text-muted-foreground" : ""}>
+                                <strong className="font-semibold">{fileName}</strong>{" "}
+                                <span className="whitespace-nowrap ml-0.5">({parseFileSize(fileSize)})</span>{" "}
+                                {isPrimary ? <span className="text-muted-foreground italic ml-1">Primary</span> : null}
+                            </span>
+                        </div>
+                    </div>
+
+                    <VariantButtonLink
+                        variant={isPrimary ? "secondary-dark" : "ghost"}
+                        url={downloadLink}
+                        className={cn(
+                            !isPrimary && "no_neumorphic_shadow hover:bg-transparent dark:hover:bg-transparent hover:text-foreground",
+                        )}
+                    >
+                        <DownloadIcon className="w-btn-icon h-btn-icon" />
+                        Download
+                    </VariantButtonLink>
                 </div>
-            </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+                <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha1_hash)}>
+                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    Copy SHA1 hash
+                </ContextMenuItem>
 
-            <VariantButtonLink
-                variant={isPrimary ? "secondary-dark" : "ghost"}
-                url={downloadLink}
-                className={cn(!isPrimary && "no_neumorphic_shadow hover:bg-transparent dark:hover:bg-transparent hover:text-foreground")}
-            >
-                <DownloadIcon className="w-btn-icon h-btn-icon" />
-                Download
-            </VariantButtonLink>
-        </div>
+                <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha512_hash)}>
+                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    Copy SHA512 hash
+                </ContextMenuItem>
+            </ContextMenuContent>
+        </ContextMenu>
     );
 };
