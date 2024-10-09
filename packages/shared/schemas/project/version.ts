@@ -36,7 +36,7 @@ const AdditionVersionFilesList = z
             return true;
         },
         {
-            message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
+            message: `Error in additional files, Only .jar, .zip, .png and .jpeg file types are allowed. Max size (${MAX_ADDITIONAL_VERSION_FILE_SIZE / (1024 * 1024)} MiB)`,
         },
     );
 const VersionNumber = z
