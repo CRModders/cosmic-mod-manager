@@ -2,6 +2,7 @@ import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
+import { BellIcon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
@@ -42,17 +43,19 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                         })}
                         {!!session?.id && (
                             <>
-                                <li className="w-full flex flex-col gap-1 items-center justify-center mt-4 mb-1">
+                                <li className="w-full h-px bg-shallower-background dark:bg-shallow-background my-2"> </li>
+
+                                <li className="w-full flex flex-col gap-1 items-center justify-center mb-2">
                                     <div className="w-full flex items-center justify-center gap-2">
                                         <ImgWrapper
                                             src={imageUrl(session?.avatarUrl)}
                                             alt={session.userName}
-                                            className="w-11 h-11 rounded-full"
+                                            className="w-10 h-10 rounded-full"
                                             fallback={fallbackUserIcon}
                                         />
-                                        <div className="flex flex-col items-start justify-center gap-1">
-                                            <span className="leading-none font-semibold text-lg text-foreground/90">{session?.name}</span>
-                                            <span className="leading-none text-muted-foreground">
+                                        <div className="flex flex-col items-start justify-center gap-1.5">
+                                            <span className="leading-none font-semibold text-foreground/90">{session?.name}</span>
+                                            <span className="leading-none text-muted-foreground text-[0.93rem]">
                                                 <em className="select-none not-italic text-extra-muted-foreground">@</em>
                                                 {session?.userName}
                                             </span>
@@ -62,27 +65,36 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
 
                                 {[
                                     {
-                                        label: "Your profile",
-                                        href: `/user/${session?.userName}`,
+                                        icon: <UserIcon className="w-btn-icon h-btn-icon" />,
+                                        label: "Profile",
+                                        url: `/user/${session.userName}`,
                                     },
                                     {
-                                        label: "Dashboard",
-                                        href: "/dashboard",
+                                        icon: <BellIcon className="w-btn-icon h-btn-icon" />,
+                                        label: "Notifications",
+                                        url: "/dashboard/notifications",
                                     },
                                     {
+                                        icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
                                         label: "Settings",
-                                        href: "/settings",
+                                        url: "/settings/account",
+                                    },
+                                    {
+                                        icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
+                                        label: "Projects",
+                                        url: "/dashboard/projects",
                                     },
                                 ]?.map((link) => {
                                     return (
-                                        <li key={`${link.href}`} className="w-full group flex items-center justify-center">
+                                        <li key={`${link.url}`} className="w-full group flex items-center justify-center">
                                             <NavMenuLink
-                                                href={link.href}
+                                                href={link.url}
                                                 label={link.label}
                                                 isDisabled={!isNavMenuOpen}
                                                 toggleNavMenu={toggleNavMenu}
                                                 className="h-nav-item items-center justify-center hover:bg-shallower-background dark:hover:bg-shallow-background"
                                             >
+                                                {link?.icon || null}
                                                 {link.label}
                                             </NavMenuLink>
                                         </li>
@@ -123,7 +135,7 @@ export const HamMenu = ({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) => {
     return (
         <button
             type="button"
-            className="navItemHeight w-10 flex items-center justify-center hover:bg-card-background dark:hover:bg-shallow-background cursor-pointer rounded-lg text-foreground"
+            className="navItemHeight w-10 flex items-center justify-center hover:bg-card-background dark:hover:bg-shallow-background cursor-pointer rounded text-foreground"
             onClick={handleHamMenuClick}
             aria-label="Menu"
         >

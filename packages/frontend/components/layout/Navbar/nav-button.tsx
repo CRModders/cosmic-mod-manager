@@ -1,15 +1,12 @@
 import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import CopyBtn from "@/components/ui/copy-btn";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ButtonLink } from "@/components/ui/link";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, imageUrl } from "@/lib/utils";
 import { AuthContext } from "@/src/contexts/auth";
-import type { LoggedInUserData } from "@shared/types";
-import { LayoutDashboardIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { BellIcon, Building2Icon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -59,8 +56,8 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
     }
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-            <PopoverTrigger asChild>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
                 <Button
                     size="lg"
                     variant="ghost"
@@ -74,11 +71,56 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         className="h-nav-item w-nav-item p-0.5 rounded-full"
                     />
                 </Button>
-            </PopoverTrigger>
-            <PopoverContent className="max-w-md min-w-72 mx-[auto] mr-4" align="end">
-                <ProfileDropDown session={session} isPopoverOpen={isOpen} />
-            </PopoverContent>
-        </Popover>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-52 p-2 flex flex-col gap-1">
+                {[
+                    {
+                        icon: <UserIcon className="w-btn-icon h-btn-icon" />,
+                        label: "Profile",
+                        url: `/user/${session.userName}`,
+                    },
+                    {
+                        icon: <BellIcon className="w-btn-icon h-btn-icon" />,
+                        label: "Notifications",
+                        url: "/dashboard/notifications",
+                    },
+                    {
+                        icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
+                        label: "Settings",
+                        url: "/settings/account",
+                    },
+                ].map((item) => {
+                    return (
+                        <ButtonLink key={item.url} url={item.url} exactTailMatch={false}>
+                            {item.icon}
+                            {item.label}
+                        </ButtonLink>
+                    );
+                })}
+                <DropdownMenuSeparator />
+                {[
+                    {
+                        icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
+                        label: "Projects",
+                        url: "/dashboard/projects",
+                    },
+                    {
+                        icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
+                        label: "Organisations",
+                        url: "/dashboard/organisations",
+                    },
+                ].map((item) => {
+                    return (
+                        <ButtonLink key={item.url} url={item.url} exactTailMatch={false}>
+                            {item.icon}
+                            {item.label}
+                        </ButtonLink>
+                    );
+                })}
+                <DropdownMenuSeparator />
+                <SignOutBtn disabled={!isOpen} />
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
 
@@ -110,52 +152,5 @@ export const SignOutBtn = ({ className, disabled = false }: Props) => {
             {loading ? <LoadingSpinner size="xs" /> : <LogOutIcon className="w-btn-icon h-btn-icon" />}
             Sign out
         </ButtonLink>
-    );
-};
-
-const ProfileDropDown = ({ session, isPopoverOpen }: { session: LoggedInUserData; isPopoverOpen: boolean }) => {
-    return (
-        <div className="w-full flex flex-col items-center justify-center gap-3">
-            <div className="w-full flex items-center justify-center gap-2">
-                <ImgWrapper
-                    src={imageUrl(session?.avatarUrl)}
-                    alt={session.userName}
-                    fallback={fallbackUserIcon}
-                    className="h-14 w-14 rounded-full"
-                />
-
-                <div className="w-full flex flex-col items-start justify-center overflow-x-auto">
-                    <h2 className="text-lg leading-none font-semibold">{session.name}</h2>
-                    <div className="flex items-center justify-start gap-1">
-                        <p className="leading-none">
-                            <span className="leading-none select-none">@</span>
-                            {session.userName}
-                        </p>
-                        <CopyBtn text={session.userName} id={session.userName} />
-                    </div>
-                </div>
-            </div>
-
-            <Separator />
-
-            <div className="w-full flex flex-col items-center justify-center gap-1">
-                <ButtonLink url={`/user/${session.userName}`} exactTailMatch={false}>
-                    <UserIcon className="w-btn-icon h-btn-icon" />
-                    Your profile
-                </ButtonLink>
-                <ButtonLink url="/dashboard" exactTailMatch={false}>
-                    <LayoutDashboardIcon className="w-btn-icon h-btn-icon" />
-                    Dashboard
-                </ButtonLink>
-                <ButtonLink url="/settings" exactTailMatch={false}>
-                    <Settings2Icon className="w-btn-icon h-btn-icon" />
-                    Settings
-                </ButtonLink>
-            </div>
-
-            <Separator />
-
-            <SignOutBtn disabled={!isPopoverOpen} />
-        </div>
     );
 };
