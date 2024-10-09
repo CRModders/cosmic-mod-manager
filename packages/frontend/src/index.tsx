@@ -12,7 +12,6 @@ import { RedirectIfLoggedIn, RedirectIfNotLoggedIn } from "./pages/auth/guards";
 import DashboardLayout from "./pages/dashboard/layout";
 import ErrorView from "./pages/error-page";
 import NotFoundPage from "./pages/not-found";
-import ProjectPageLayout from "./pages/project/layout";
 import ContextProviders from "./providers";
 
 const HomePage = lazy(() => import("@/src/pages/page"));
@@ -27,6 +26,7 @@ const ChangePasswordPage = lazy(() => import("@/src/pages/auth/change-password/p
 const RevokeSessionPage = lazy(() => import("@/src/pages/auth/revoke-session"));
 
 // Dashboard
+import NotificationsProvider from "./pages/dashboard/notifications/context";
 const OverviewPage = lazy(() => import("@/src/pages/dashboard/overview"));
 const NotificationsPage = lazy(() => import("@/src/pages/dashboard/notifications/page"));
 const NotificationsHistory = lazy(() => import("@/src/pages/dashboard/notifications/history"));
@@ -34,7 +34,7 @@ const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
 
 // Project details
 import ProjectPage from "@/src/pages/project/page";
-import NotificationsProvider from "./pages/dashboard/notifications/context";
+import ProjectPageLayout from "./pages/project/layout";
 const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
 const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
@@ -62,7 +62,9 @@ const projectPageRoutes = () => {
         path: `${type}/:slug`,
         element: (
             <ProjectContextProvider>
-                <Outlet />
+                <Suspense fallback={<SuspenseFallback />}>
+                    <Outlet />
+                </Suspense>
             </ProjectContextProvider>
         ),
         children: [
