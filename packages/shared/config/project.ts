@@ -14,7 +14,7 @@ export const projectTypes = [
     ProjectType.RESOURCE_PACK,
     ProjectType.SHADER,
     ProjectType.MODPACK,
-    // ProjectType.PLUGIN,
+    ProjectType.PLUGIN,
 ];
 
 export const ProjectPermissionsList = [

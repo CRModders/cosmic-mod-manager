@@ -3,6 +3,7 @@ import prisma from "@/services/prisma";
 import { isProjectAccessibleToCurrSession } from "@/utils";
 import { status } from "@/utils/http";
 import { projectIconUrl } from "@/utils/urls";
+import { isNumber } from "@shared/lib/utils";
 import type { OrganisationPermission, ProjectPermission, ProjectPublishingStatus, ProjectSupport, ProjectVisibility } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { Context } from "hono";
@@ -59,4 +60,17 @@ export const getManyProjects = async (ctx: Context, userSession: ContextUserSess
     }
 
     return ctx.json(projectsList, status.OK);
+};
+
+export const getRandomProjects = async (ctx: Context, count: number) => {
+    let projectsCount = 20;
+    if (isNumber(count) && count > 0 && count <= 100) {
+        projectsCount = count;
+    }
+
+    const randomProjects: { id: string }[] =
+        await prisma.$queryRaw`SELECT id FROM "Project" TABLESAMPLE SYSTEM_ROWS(${projectsCount}) WHERE "visibility" = 'listed';`;
+
+    const idsArray = randomProjects?.map((project) => project.id);
+    return await getManyProjects(ctx, undefined, idsArray);
 };

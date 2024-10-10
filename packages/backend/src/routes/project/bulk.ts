@@ -1,4 +1,4 @@
-import { getManyProjects } from "@/controllers/project/bulk_actions";
+import { getManyProjects, getRandomProjects } from "@/controllers/project/bulk_actions";
 import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
@@ -6,6 +6,7 @@ import { type Context, Hono } from "hono";
 const bulkProjectsRouter = new Hono();
 
 bulkProjectsRouter.get("/", projects_get);
+bulkProjectsRouter.get("/random", projectsRandom_get);
 
 async function projects_get(ctx: Context) {
     try {
@@ -23,6 +24,16 @@ async function projects_get(ctx: Context) {
         }
 
         return await getManyProjects(ctx, userSession, idsArray);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function projectsRandom_get(ctx: Context) {
+    try {
+        const count = Number.parseInt(ctx.req.query("count") || "");
+        return await getRandomProjects(ctx, count);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);

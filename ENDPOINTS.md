@@ -25,6 +25,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/tags/project-types`](/packages/backend/src/routes/tags.ts#L19) |
 | GET    | [`/project`](/packages/backend/src/routes/project/index.ts#L41) |
 | GET    | [`/projects`](/packages/backend/src/routes/project/bulk.ts#L8) |
+| GET    | [`/projects/random`](/packages/backend/src/routes/project/bulk.ts#L9) |
 | GET    | [`/project/{ID\|slug}`](/packages/backend/src/routes/project/index.ts#L43) |
 | GET    | [`/project/{ID\|slug}/dependencies`](/packages/backend/src/routes/project/index.ts#L44) |
 | GET    | [`/project/{ID\|slug}/check`](/packages/backend/src/routes/project/index.ts#L45) |
