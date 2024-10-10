@@ -1,0 +1,38 @@
+.scrollMainContainer:focus-within .scrollContainer,
+.scrollMainContainer:focus-within .scrollContainerOffset,
+.scrollMainContainer:hover .scrollContainer,
+.scrollMainContainer:hover .scrollContainerOffset {
+    animation-play-state: paused !important;
+}
+
+.scrollContainer {
+    animation: scroll-horizontally linear infinite;
+}
+
+.scrollContainerOffset {
+    animation: scroll-horizontally linear infinite;
+}
+
+.carouselItemTitle {
+    display: block;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.carouselItemDescription {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+@keyframes scroll-horizontally {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}

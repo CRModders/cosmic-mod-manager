@@ -1,15 +1,20 @@
-import { BrandIcon } from "@/components/icons";
-import "@/src/styles.css";
-
+import { BrandIcon, fallbackProjectIcon } from "@/components/icons";
+import { ImgWrapper } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { VariantButtonLink } from "@/components/ui/link";
-import { LoadingSpinner } from "@/components/ui/spinner";
+import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
+import { cn, getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
+import "@/src/styles.css";
 import { SITE_NAME_SHORT } from "@shared/config";
+import type { ProjectListItem } from "@shared/types/api";
+import { useQuery } from "@tanstack/react-query";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import useFetch from "../hooks/fetch";
+import styles from "./styles.module.css";
 
 const HomePage = () => {
     const { session } = useSession();
@@ -19,9 +24,9 @@ const HomePage = () => {
     return (
         <>
             {createPortal(
-                <div className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden">
+                <div className="relative w-full h-[115vh] flex items-center justify-center overflow-hidden">
                     <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
-                        <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent to-background" />
+                        <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent via-transparent to-background" />
                     </div>
                 </div>,
                 document.body.querySelector("#hero_section_bg_portal") as Element,
@@ -103,8 +108,109 @@ const HomePage = () => {
                     </div>
                 </section>
             </main>
+
+            <ProjectsCarousel />
         </>
     );
 };
 
 export default HomePage;
+
+const getRandomProjects = async () => {
+    try {
+        const response = await useFetch("/api/projects/random?count=20");
+        const result = await response.json();
+        if (result?.length) {
+            return result as ProjectListItem[];
+        }
+        return null;
+    } catch (error) {
+        return null;
+    }
+};
+
+const ProjectsCarousel = () => {
+    const projects = useQuery({ queryKey: ["homepage-carousel"], queryFn: getRandomProjects });
+
+    if (!projects.data?.length) {
+        // Adjust its height according to the height of the carousel
+        return <FullWidthSpinner className="h-52" />;
+    }
+
+    const carousel1Items = projects.data.slice(0, Math.floor(projects.data.length / 2));
+    const carousel2Items = projects.data.slice(Math.floor(projects.data.length / 2));
+
+    return (
+        <div className="w-full flex flex-col gap-2">
+            <ScrollingCarousel items={carousel1Items} />
+            <ScrollingCarousel items={carousel2Items} reverse />
+        </div>
+    );
+};
+
+const ScrollingCarousel = ({ items, reverse = false }: { items: ProjectListItem[]; reverse?: boolean }) => {
+    const duration = 7.5 * items.length;
+
+    return (
+        <div className={cn(styles.scrollMainContainer, "w-full relative flex items-center justify-start h-24 overflow-hidden")}>
+            <CarouselRow items={items} className={cn(styles.scrollContainer)} duration={duration} reverse={reverse} />
+            <CarouselRow
+                items={items}
+                className={cn(styles.scrollContainerOffset)}
+                duration={duration}
+                delay={-1 * (duration / 2)}
+                reverse={reverse}
+            />
+        </div>
+    );
+};
+
+const CarouselRow = ({
+    items,
+    className,
+    duration,
+    delay = 0,
+    reverse = false,
+}: { items: ProjectListItem[]; className?: string; duration: number; delay?: number; reverse?: boolean }) => {
+    return (
+        <div
+            className={cn("absolute w-fit flex flex-row gap-6 px-3", className)}
+            style={{
+                animationDuration: `${duration}s`,
+                animationDelay: `${delay}s`,
+                animationDirection: reverse ? "reverse" : "normal",
+            }}
+        >
+            {items.map((item) => (
+                <CarouselItem key={item.id} item={item} />
+            ))}
+        </div>
+    );
+};
+
+const CarouselItem = ({ item }: { item: ProjectListItem }) => {
+    return (
+        <Link
+            to={getProjectPagePathname(item.type[0], item.slug)}
+            className={cn(
+                "shrink-0 border border-card-background rounded-lg w-72 h-[5.35rem] flex gap-x-3 items-start justify-start p-3",
+                "bg-card-background dark:bg-transparent hover:bg-card-background/35 dark:hover:bg-card-background/35 transition-colors duration-300",
+            )}
+        >
+            <ImgWrapper src={imageUrl(item.icon)} alt={item.name} fallback={fallbackProjectIcon} className="w-11 h-11" />
+            <div className="flex flex-col gap-1">
+                <span className="max-w-52 text-lg font-bold overflow-hidden whitespace-nowrap text-ellipsis leading-tight">
+                    {item.name}
+                </span>
+                <span
+                    className={cn(
+                        styles.carouselItemDescription,
+                        "max-w-52 text-[0.87rem] text-muted-foreground overflow-hidden leading-tight text-pretty",
+                    )}
+                >
+                    {item.summary}
+                </span>
+            </div>
+        </Link>
+    );
+};

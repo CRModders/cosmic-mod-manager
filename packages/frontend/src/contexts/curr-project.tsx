@@ -190,7 +190,7 @@ export const ProjectContextProvider = ({
             }}
         >
             {slug === projectData?.slug || slug === projectData?.id ? children : null}
-            {slug !== projectData?.slug && slug !== projectData?.id && loadingProjectData ? <AbsolutePositionedSpinner /> : null}
+            {(slug !== projectData?.slug && slug !== projectData?.id) || loadingProjectData ? <AbsolutePositionedSpinner /> : null}
             {!loadingProjectData && !projectData?.id ? (
                 <NotFoundPage
                     title="Project not found"
