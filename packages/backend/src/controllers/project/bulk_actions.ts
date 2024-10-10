@@ -69,7 +69,7 @@ export const getRandomProjects = async (ctx: Context, count: number) => {
     }
 
     const randomProjects: { id: string }[] =
-        await prisma.$queryRaw`SELECT id FROM "Project" TABLESAMPLE SYSTEM_ROWS(${projectsCount}) WHERE "visibility" = 'listed';`;
+        await prisma.$queryRaw`SELECT id FROM "Project" TABLESAMPLE SYSTEM_ROWS(${projectsCount}) WHERE "visibility" = 'listed' AND "downloads" > 0;`;
 
     const idsArray = randomProjects?.map((project) => project.id);
     return await getManyProjects(ctx, undefined, idsArray);
