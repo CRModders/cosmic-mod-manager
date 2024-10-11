@@ -150,7 +150,7 @@ const ProfilePageHeader = ({ userData, totalProjects, totalDownloads }: ProfileP
                                 <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
+                        <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
                             <Button variant="ghost-destructive" className="w-full">
                                 <FlagIcon className="w-btn-icon h-btn-icon" />
                                 Report

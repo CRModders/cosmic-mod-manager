@@ -48,6 +48,7 @@ const NotificationsHistory = () => {
                         relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
                         relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
                         refetchNotifications={refetchNotifications}
+                        showDeleteButton={true}
                     />
                 ))}
             </CardContent>

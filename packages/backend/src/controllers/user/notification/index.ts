@@ -60,3 +60,22 @@ export const markNotificationAsRead = async (
 
     return ctx.json({ success: true, message: "Notifications marked as read." }, status.OK);
 };
+
+export const deleteNotifications = async (ctx: Context, userSession: ContextUserSession, userSlug: string, notificationIds: string[]) => {
+    if (userSlug !== userSession.id) {
+        return ctx.json({ success: false }, status.UNAUTHORIZED);
+    }
+
+    try {
+        await prisma.notification.deleteMany({
+            where: {
+                id: {
+                    in: notificationIds,
+                },
+                userId: userSlug,
+            },
+        });
+    } catch {}
+
+    return ctx.json({ success: true, message: "Notifications deleted." }, status.OK);
+};

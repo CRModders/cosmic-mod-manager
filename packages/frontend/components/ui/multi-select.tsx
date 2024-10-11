@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 import { CheckIcon, SearchIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./dropdown-menu";
 import { Input } from "./input";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import "./styles.css";
 
 interface MultiSelectItem {
@@ -73,9 +73,9 @@ export const MultiSelect = ({
     };
 
     return (
-        <Popover>
-            <PopoverTrigger asChild>{children}</PopoverTrigger>
-            <PopoverContent
+        <DropdownMenu modal>
+            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+            <DropdownMenuContent
                 align={popupAlign || "center"}
                 className={cn(
                     "p-1 flex flex-col gap-1 w-fit min-w-max overscroll-contain border-shallower-background",
@@ -115,7 +115,7 @@ export const MultiSelect = ({
                             // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                             <li
                                 className={cn(
-                                    "w-full flex items-center justify-start py-1.5 px-4 gap-x-4 rounded cursor-default text-muted-foreground",
+                                    "w-full text-sm flex items-center justify-start py-1.5 px-4 gap-x-4 rounded cursor-default text-muted-foreground",
                                     isFocused && "bg-shallow-background text-foreground",
                                     isSelected && "text-foreground-bright",
                                     classNames?.listItem,
@@ -142,7 +142,7 @@ export const MultiSelect = ({
                         </li>
                     ) : null}
                 </ul>
-            </PopoverContent>
-        </Popover>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };

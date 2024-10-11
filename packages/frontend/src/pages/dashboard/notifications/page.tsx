@@ -12,7 +12,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { NotificationType } from "@shared/types";
 import type { Notification, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
-import { CalendarIcon, CheckCheckIcon, CheckIcon, HistoryIcon, XIcon } from "lucide-react";
+import { CalendarIcon, CheckCheckIcon, CheckIcon, HistoryIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
@@ -120,10 +120,13 @@ export const NotificationItem = ({
     relatedUser?: UserProfileData;
     concise?: boolean;
     showMarkAsReadButton?: boolean;
+    showDeleteButton?: boolean;
 }) => {
     const [markingAsRead, setMarkingAsRead] = useState(false);
+    const [deletingNotification, setDeletingNotification] = useState(false);
+
     const markNotificationAsRead = async () => {
-        if (markingAsRead) return;
+        if (deletingNotification || markingAsRead) return;
         setMarkingAsRead(true);
         try {
             const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
@@ -141,6 +144,25 @@ export const NotificationItem = ({
         }
     };
 
+    const deleteNotification = async () => {
+        if (markingAsRead) return;
+        setDeletingNotification(true);
+        try {
+            const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
+                method: "DELETE",
+            });
+
+            if (!result.ok) {
+                toast.error("Failed to delete notification");
+                return;
+            }
+
+            await refetchNotifications();
+        } finally {
+            setDeletingNotification(false);
+        }
+    };
+
     switch (notification.type) {
         case NotificationType.TEAM_INVITE:
             return (
@@ -149,7 +171,9 @@ export const NotificationItem = ({
                     relatedProject={relatedProject}
                     relatedUser={relatedUser}
                     markNotificationAsRead={markNotificationAsRead}
+                    deleteNotification={deleteNotification}
                     markingAsRead={markingAsRead}
+                    deletingNotification={deletingNotification}
                     {...props}
                 />
             );
@@ -161,17 +185,23 @@ export const TeamInviteNotification = ({
     relatedProject,
     relatedUser,
     markNotificationAsRead,
+    deleteNotification,
     markingAsRead,
+    deletingNotification,
     concise = false,
     showMarkAsReadButton = true,
+    showDeleteButton = false,
 }: {
     notification: Notification;
     relatedProject: ProjectListItem | undefined;
     relatedUser: UserProfileData | undefined;
     markNotificationAsRead: () => Promise<void>;
+    deleteNotification: () => Promise<void>;
     markingAsRead: boolean;
+    deletingNotification: boolean;
     concise?: boolean;
     showMarkAsReadButton?: boolean;
+    showDeleteButton?: boolean;
 }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean | "accept" | "decline">(false);
@@ -303,13 +333,31 @@ export const TeamInviteNotification = ({
                                         size="icon"
                                         variant="ghost-inverted"
                                         className="text-extra-muted-foreground"
-                                        disabled={markingAsRead}
+                                        disabled={deletingNotification || markingAsRead}
                                         onClick={markNotificationAsRead}
                                     >
                                         <CheckCheckIcon className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>Mark as read</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
+                    {showDeleteButton && (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant="ghost-inverted"
+                                        className="text-danger-foreground"
+                                        disabled={deletingNotification}
+                                        onClick={deleteNotification}
+                                    >
+                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Delete notification</TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
                     )}
@@ -327,7 +375,7 @@ export const TeamInviteNotification = ({
                         Accept
                     </Button>
 
-                    <Button variant={"secondary-destructive"} size="sm" disabled={!!isLoading} onClick={declineInvite}>
+                    <Button variant={"secondary-destructive-inverted"} size="sm" disabled={!!isLoading} onClick={declineInvite}>
                         {isLoading === "decline" ? <LoadingSpinner size="xs" /> : <XIcon className="w-btn-icon h-btn-icon" />}
                         Decline
                     </Button>

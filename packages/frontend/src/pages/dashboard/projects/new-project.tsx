@@ -184,7 +184,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                             )}
 
                                             <MultiSelect
-                                                selectedOptions={[...(field.value || []), "project"] || []}
+                                                selectedOptions={field.value || []}
                                                 options={projectTypes.map((type) => ({
                                                     label: CapitalizeAndFormatString(type) || "",
                                                     value: type,
@@ -196,6 +196,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                                                     popupContent: "w-full",
                                                     listItem: "font-medium",
                                                 }}
+                                                searchBar={false}
                                             >
                                                 <Button variant="secondary" className="justify-between text-extra-muted-foreground">
                                                     Choose...

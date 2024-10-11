@@ -467,11 +467,12 @@ const PageHeader = ({
                                     <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
+                            <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
                                 <Button variant="ghost-destructive" className="w-full">
                                     <FlagIcon className="w-btn-icon h-btn-icon" />
                                     Report
                                 </Button>
+
                                 <PopoverClose asChild>
                                     <Button
                                         className="w-full"
@@ -516,7 +517,9 @@ export const ProjectMember = ({
                     <span className="font-semibold" title={userName}>
                         {userName}
                     </span>
-                    {isOwner === true && <CrownIcon className="w-btn-icon h-btn-icon shrink-0 text-orange-500 dark:text-orange-400" />}
+                    {isOwner === true && (
+                        <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
+                    )}
                 </div>
                 <span className="text-sm font-medium leading-none text-muted-foreground/75">{role}</span>
             </div>

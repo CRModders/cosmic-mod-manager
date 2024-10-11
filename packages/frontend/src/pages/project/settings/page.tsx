@@ -301,7 +301,7 @@ const GeneralSettingsPage = () => {
                                         )}
 
                                         <MultiSelect
-                                            selectedOptions={[...(field.value || []), "project"] || []}
+                                            selectedOptions={field.value || []}
                                             options={projectTypes.map((type) => ({
                                                 label: CapitalizeAndFormatString(type) || "",
                                                 value: type,
@@ -313,6 +313,7 @@ const GeneralSettingsPage = () => {
                                                 popupContent: "min-w-[15rem]",
                                                 listItem: "font-medium",
                                             }}
+                                            searchBar={false}
                                         >
                                             <Button variant="secondary" className="justify-between text-extra-muted-foreground">
                                                 Choose...

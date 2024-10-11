@@ -20,6 +20,8 @@ const buttonVariants = cva(
                     "text-muted-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
                 "secondary-destructive":
                     "text-danger-foreground bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background neumorphic_shadow",
+                "secondary-destructive-inverted":
+                    "text-danger-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
                 "secondary-dark":
                     "text-muted-foreground bg-card-background dark:bg-card-background/70 hover:bg-card-background/70 hover:dark:bg-card-background neumorphic_shadow",
                 ghost: "text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background hover:neumorphic_shadow",
