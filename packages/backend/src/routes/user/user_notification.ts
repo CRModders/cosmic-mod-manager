@@ -9,24 +9,23 @@ import { getUserSessionFromCtx } from "@/utils";
 import { defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 
-const notificationRouter = new Hono();
+const userNotificationRouter = new Hono();
 
-notificationRouter.get("/", LoginProtectedRoute, userNotifications_get);
-notificationRouter.patch("/", LoginProtectedRoute, bulkNotifications_patch);
-notificationRouter.delete("/", LoginProtectedRoute, bulkNotifications_delete);
-notificationRouter.get("/:notifId", LoginProtectedRoute, notification_get);
-notificationRouter.patch("/:notifId", LoginProtectedRoute, notification_patch);
-notificationRouter.delete("/:notifId", LoginProtectedRoute, notification_delete);
+userNotificationRouter.get("/", LoginProtectedRoute, userNotifications_get);
+userNotificationRouter.patch("/", LoginProtectedRoute, bulkNotifications_patch);
+userNotificationRouter.delete("/", LoginProtectedRoute, bulkNotifications_delete);
+userNotificationRouter.get("/:notifId", LoginProtectedRoute, notification_get);
+userNotificationRouter.patch("/:notifId", LoginProtectedRoute, notification_patch);
+userNotificationRouter.delete("/:notifId", LoginProtectedRoute, notification_delete);
 
 async function userNotifications_get(ctx: Context) {
     try {
-        const userSlug = ctx.req.param("userId");
         const userSession = getUserSessionFromCtx(ctx);
-        if (!userSession || !userSlug) {
+        if (!userSession) {
             return defaultServerErrorResponse(ctx, "User session not found");
         }
 
-        return await getUserNotifications(ctx, userSession, userSlug);
+        return await getUserNotifications(ctx, userSession, userSession.id);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -37,7 +36,6 @@ async function notification_get(ctx: Context) {
     try {
         const notifId = ctx.req.param("notifId");
         const userSession = getUserSessionFromCtx(ctx);
-
         if (!userSession || !notifId) {
             return defaultInvalidReqResponse(ctx);
         }
@@ -51,15 +49,14 @@ async function notification_get(ctx: Context) {
 
 async function notification_patch(ctx: Context) {
     try {
-        const userSlug = ctx.req.param("userId");
         const notificationId = ctx.req.param("notifId");
         const userSession = getUserSessionFromCtx(ctx);
 
-        if (!userSession || !userSlug || !notificationId) {
+        if (!userSession || !notificationId) {
             return defaultInvalidReqResponse(ctx);
         }
 
-        return await markNotificationsAsRead(ctx, userSession, [notificationId], userSlug);
+        return await markNotificationsAsRead(ctx, userSession, [notificationId], userSession.id);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -68,11 +65,10 @@ async function notification_patch(ctx: Context) {
 
 async function bulkNotifications_patch(ctx: Context) {
     try {
-        const userSlug = ctx.req.param("userId");
         const userSession = getUserSessionFromCtx(ctx);
         const notificationIds = JSON.parse(ctx.req.query("ids") as string);
 
-        if (!userSession || !userSlug || !notificationIds.length) {
+        if (!userSession || !notificationIds.length) {
             return defaultInvalidReqResponse(ctx);
         }
 
@@ -80,7 +76,7 @@ async function bulkNotifications_patch(ctx: Context) {
             return defaultInvalidReqResponse(ctx, "Invalid notification ids list");
         }
 
-        return await markNotificationsAsRead(ctx, userSession, notificationIds, userSlug);
+        return await markNotificationsAsRead(ctx, userSession, notificationIds, userSession.id);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -89,15 +85,14 @@ async function bulkNotifications_patch(ctx: Context) {
 
 async function notification_delete(ctx: Context) {
     try {
-        const userSlug = ctx.req.param("userId");
         const notifId = ctx.req.param("notifId");
         const userSession = getUserSessionFromCtx(ctx);
 
-        if (!userSession || !userSlug || !notifId) {
+        if (!userSession || !notifId) {
             return defaultInvalidReqResponse(ctx);
         }
 
-        return await deleteNotifications(ctx, userSession, userSlug, [notifId]);
+        return await deleteNotifications(ctx, userSession, userSession.id, [notifId]);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
@@ -106,11 +101,10 @@ async function notification_delete(ctx: Context) {
 
 async function bulkNotifications_delete(ctx: Context) {
     try {
-        const userSlug = ctx.req.param("userId");
         const userSession = getUserSessionFromCtx(ctx);
         const notificationIds = JSON.parse(ctx.req.query("ids") as string);
 
-        if (!userSession || !userSlug || !notificationIds.length) {
+        if (!userSession || !notificationIds.length) {
             return defaultInvalidReqResponse(ctx);
         }
 
@@ -118,11 +112,11 @@ async function bulkNotifications_delete(ctx: Context) {
             return defaultInvalidReqResponse(ctx, "Invalid notification ids list");
         }
 
-        return await deleteNotifications(ctx, userSession, userSlug, notificationIds);
+        return await deleteNotifications(ctx, userSession, userSession.id, notificationIds);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
     }
 }
 
-export default notificationRouter;
+export default userNotificationRouter;

@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/link";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, imageUrl } from "@/lib/utils";
 import { AuthContext } from "@/src/contexts/auth";
-import { BellIcon, Building2Icon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -78,16 +78,19 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
                         label: "Profile",
                         url: `/user/${session.userName}`,
+                        matchExactUrl: false,
                     },
                     {
                         icon: <BellIcon className="w-btn-icon h-btn-icon" />,
                         label: "Notifications",
                         url: "/dashboard/notifications",
+                        matchExactUrl: false,
                     },
                     {
                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
                         label: "Settings",
                         url: "/settings/account",
+                        matchExactUrl: false,
                     },
                 ].map((item) => {
                     return (
@@ -103,15 +106,23 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
                         label: "Projects",
                         url: "/dashboard/projects",
+                        matchExactUrl: false,
                     },
                     {
                         icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
                         label: "Organisations",
                         url: "/dashboard/organisations",
+                        matchExactUrl: false,
+                    },
+                    {
+                        icon: <LayoutDashboardIcon className="w-btn-icon h-btn-icon" />,
+                        label: "Dashboard",
+                        url: "/dashboard",
+                        matchExactUrl: true,
                     },
                 ].map((item) => {
                     return (
-                        <ButtonLink key={item.url} url={item.url} exactTailMatch={false}>
+                        <ButtonLink key={item.url} url={item.url} exactTailMatch={item.matchExactUrl}>
                             {item.icon}
                             {item.label}
                         </ButtonLink>

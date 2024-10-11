@@ -9,6 +9,7 @@ import bulkProjectsRouter from "./project/bulk";
 import teamRouter from "./team";
 import userRouter from "./user";
 import bulkUsersRouter from "./user/bulk";
+import userNotificationRouter from "./user/user_notification";
 
 const router = new Hono();
 
@@ -20,13 +21,15 @@ router.use("*", AuthenticationMiddleware);
 router.get("/", apiDetails);
 
 // Routers
+router.route("/auth", authRouter);
+
 router.route("/project", projectRouter);
 router.route("/projects", bulkProjectsRouter);
 
 router.route("/team", teamRouter);
 router.route("/user", userRouter);
 router.route("/users", bulkUsersRouter);
-router.route("/auth", authRouter);
+router.route("/notifications", userNotificationRouter);
 
 async function apiDetails(ctx: Context) {
     return ctx.json(

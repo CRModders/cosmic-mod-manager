@@ -6,7 +6,6 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { constructProjectPageUrl, formatDate, getProjectPagePathname, timeSince } from "@/lib/utils";
-import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { NotificationType } from "@shared/types";
@@ -21,11 +20,10 @@ import { acceptTeamInvite, leaveTeam } from "../../project/settings/members/util
 import { NotificationsContext } from "./context";
 
 const NotificationsPage = () => {
-    const { session } = useSession();
     const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
     const [markingAsRead, setMarkingAsRead] = useState(false);
 
-    if (isLoading || !session) {
+    if (isLoading) {
         return <FullWidthSpinner />;
     }
 
@@ -36,12 +34,9 @@ const NotificationsPage = () => {
         setMarkingAsRead(true);
         try {
             const unreadNotificationIds = unreadNotifications.map((n) => n.id);
-            const result = await useFetch(
-                `/api/user/${session.id}/notifications?ids=${encodeURIComponent(JSON.stringify(unreadNotificationIds))}`,
-                {
-                    method: "PATCH",
-                },
-            );
+            const result = await useFetch(`/api/notifications?ids=${encodeURIComponent(JSON.stringify(unreadNotificationIds))}`, {
+                method: "PATCH",
+            });
 
             if (!result.ok) {
                 return toast.error("Failed to mark notifications as read");
@@ -129,7 +124,7 @@ export const NotificationItem = ({
         if (deletingNotification || markingAsRead) return;
         setMarkingAsRead(true);
         try {
-            const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
+            const result = await useFetch(`/api/notifications/${notification.id}`, {
                 method: "PATCH",
             });
 
@@ -148,7 +143,7 @@ export const NotificationItem = ({
         if (markingAsRead) return;
         setDeletingNotification(true);
         try {
-            const result = await useFetch(`/api/user/${notification.userId}/notifications/${notification.id}`, {
+            const result = await useFetch(`/api/notifications/${notification.id}`, {
                 method: "DELETE",
             });
 

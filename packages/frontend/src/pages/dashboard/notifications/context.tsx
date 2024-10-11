@@ -21,11 +21,9 @@ export const NotificationsContext = createContext<NotificationsContext>({
     refetchNotifications: async () => {},
 });
 
-const getNotifications = async (userName: string) => {
-    if (!userName) return null;
-
+const getNotifications = async () => {
     try {
-        const response = await useFetch(`/api/user/${userName}/notifications`);
+        const response = await useFetch("/api/notifications");
         const result = await response.json();
         return result as Notification[];
     } catch (error) {
@@ -77,8 +75,8 @@ const getRelatedUsers = async (notifications: Notification[]) => {
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     const { session } = useSession();
     const notifications = useQuery({
-        queryKey: [`notifications-${session?.userName}`],
-        queryFn: () => getNotifications(session?.userName || ""),
+        queryKey: ["user-notifications"],
+        queryFn: getNotifications,
     });
     const relatedProjects = useQuery({
         queryKey: [`notification-relatedProjects-${session?.userName}`],
@@ -108,6 +106,9 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    const isNotificationsLoading =
+        notifications.isLoading || relatedProjects.isLoading || relatedUsers.isLoading || !relatedProjectsList || !relatedUsersList;
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (notifications.data) {
@@ -120,12 +121,7 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         <NotificationsContext.Provider
             value={{
                 notifications: notifications.data || null,
-                isLoading:
-                    notifications.isLoading ||
-                    relatedProjects.isLoading ||
-                    relatedUsers.isLoading ||
-                    !relatedProjectsList ||
-                    !relatedUsersList,
+                isLoading: isNotificationsLoading,
                 relatedProjects: relatedProjectsList || null,
                 relatedUsers: relatedUsersList || null,
                 refetchNotifications: refetchNotifications,

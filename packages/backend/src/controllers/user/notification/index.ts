@@ -23,13 +23,10 @@ export const getUserNotifications = async (ctx: Context, userSession: ContextUse
     return ctx.json(notifications, status.OK);
 };
 
-export const getNotificationById = async (ctx: Context, userSession: ContextUserSession, notifId: string, notifUserId: string) => {
+export const getNotificationById = async (ctx: Context, userSession: ContextUserSession, notifId: string) => {
     const notification = await prisma.notification.findFirst({
         where: {
             id: notifId,
-            user: {
-                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
-            },
         },
     });
 
@@ -38,7 +35,7 @@ export const getNotificationById = async (ctx: Context, userSession: ContextUser
     }
 
     // Check permission
-    if (!hasNotificationAccess(userSession, notifUserId)) {
+    if (!hasNotificationAccess(userSession, notification.userId)) {
         return ctx.json({ success: false }, status.UNAUTHORIZED);
     }
 
