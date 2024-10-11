@@ -3,11 +3,11 @@ import prisma from "@/services/prisma";
 import { status } from "@/utils/http";
 import type { Context } from "hono";
 
-export const getUserNotifications = async (ctx: Context, userSession: ContextUserSession, slug: string) => {
+export const getUserNotifications = async (ctx: Context, userSession: ContextUserSession, notifUserId: string) => {
     const notifications = await prisma.notification.findMany({
         where: {
             user: {
-                OR: [{ lowerCaseUserName: slug.toLowerCase() }, { id: slug }],
+                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
             },
         },
         orderBy: {
@@ -16,11 +16,33 @@ export const getUserNotifications = async (ctx: Context, userSession: ContextUse
     });
 
     // Check if the user has access to the notifications
-    if (notifications.length > 0 && notifications[0].userId !== userSession.id) {
-        return ctx.json({ success: false, message: "You don't have access to these notifications" }, status.UNAUTHORIZED);
+    if (!hasNotificationAccess(userSession, notifUserId)) {
+        return ctx.json({ success: false }, status.UNAUTHORIZED);
     }
 
     return ctx.json(notifications, status.OK);
+};
+
+export const getNotificationById = async (ctx: Context, userSession: ContextUserSession, notifId: string, notifUserId: string) => {
+    const notification = await prisma.notification.findFirst({
+        where: {
+            id: notifId,
+            user: {
+                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
+            },
+        },
+    });
+
+    if (!notification) {
+        return ctx.json({ success: false, message: "Notification not found" }, status.NOT_FOUND);
+    }
+
+    // Check permission
+    if (!hasNotificationAccess(userSession, notifUserId)) {
+        return ctx.json({ success: false }, status.UNAUTHORIZED);
+    }
+
+    return ctx.json(notification, status.OK);
 };
 
 export const markNotificationAsRead = async (
@@ -34,7 +56,9 @@ export const markNotificationAsRead = async (
             id: {
                 in: notificationIds,
             },
-            userId: notifUserId,
+            user: {
+                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
+            },
         },
     });
     if (!notifications.length) {
@@ -42,7 +66,7 @@ export const markNotificationAsRead = async (
     }
 
     // Check permission
-    if (notifications[0].userId !== userSession.id) {
+    if (!hasNotificationAccess(userSession, notifUserId)) {
         return ctx.json({ success: false }, status.UNAUTHORIZED);
     }
 
@@ -62,7 +86,7 @@ export const markNotificationAsRead = async (
 };
 
 export const deleteNotifications = async (ctx: Context, userSession: ContextUserSession, userSlug: string, notificationIds: string[]) => {
-    if (userSlug !== userSession.id) {
+    if (!hasNotificationAccess(userSession, userSlug)) {
         return ctx.json({ success: false }, status.UNAUTHORIZED);
     }
 
@@ -72,10 +96,17 @@ export const deleteNotifications = async (ctx: Context, userSession: ContextUser
                 id: {
                     in: notificationIds,
                 },
-                userId: userSlug,
+                user: {
+                    OR: [{ lowerCaseUserName: userSlug.toLowerCase() }, { id: userSlug }],
+                },
             },
         });
     } catch {}
 
     return ctx.json({ success: true, message: "Notifications deleted." }, status.OK);
 };
+
+// Helpers
+export function hasNotificationAccess(session: ContextUserSession, notificationUser: string) {
+    return session.id === notificationUser || session.userName.toLowerCase() === notificationUser.toLowerCase();
+}

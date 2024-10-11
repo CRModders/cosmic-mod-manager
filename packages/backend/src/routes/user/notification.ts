@@ -1,5 +1,6 @@
 import {
     deleteNotifications,
+    getNotificationById,
     getUserNotifications,
     markNotificationAsRead as markNotificationsAsRead,
 } from "@/controllers/user/notification";
@@ -10,13 +11,14 @@ import { type Context, Hono } from "hono";
 
 const notificationRouter = new Hono();
 
-notificationRouter.get("/", LoginProtectedRoute, notifications_get);
+notificationRouter.get("/", LoginProtectedRoute, userNotifications_get);
 notificationRouter.patch("/", LoginProtectedRoute, bulkNotifications_patch);
 notificationRouter.delete("/", LoginProtectedRoute, bulkNotifications_delete);
+notificationRouter.get("/:notifId", LoginProtectedRoute, notification_get);
 notificationRouter.patch("/:notifId", LoginProtectedRoute, notification_patch);
 notificationRouter.delete("/:notifId", LoginProtectedRoute, notification_delete);
 
-async function notifications_get(ctx: Context) {
+async function userNotifications_get(ctx: Context) {
     try {
         const userSlug = ctx.req.param("userId");
         const userSession = getUserSessionFromCtx(ctx);
@@ -25,6 +27,23 @@ async function notifications_get(ctx: Context) {
         }
 
         return await getUserNotifications(ctx, userSession, userSlug);
+    } catch (error) {
+        console.error(error);
+        return defaultServerErrorResponse(ctx);
+    }
+}
+
+async function notification_get(ctx: Context) {
+    try {
+        const notifId = ctx.req.param("notifId");
+        const userSlug = ctx.req.param("userId");
+        const userSession = getUserSessionFromCtx(ctx);
+
+        if (!userSession || !userSlug || !notifId) {
+            return defaultInvalidReqResponse(ctx);
+        }
+
+        return await getNotificationById(ctx, userSession, notifId, userSlug);
     } catch (error) {
         console.error(error);
         return defaultServerErrorResponse(ctx);
