@@ -48,12 +48,16 @@ export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
     );
 }
 
-export const WanderingCubesSpinner = () => {
+export const WanderingCubesSpinner = ({ className }: { className?: string }) => {
     return (
-        <span className="wandering_cubes_animation flex items-center justify-center" role="presentation" aria-label="Loading">
+        <span
+            className={cn("wandering_cubes_animation flex items-center justify-center text-muted-foreground", className)}
+            role="presentation"
+            aria-label="Loading"
+        >
             <span className="flex items-center justify-center relative contain-paint size-[var(--frame-size)]">
-                <span className="wandering_cube cube1 bg-muted-foreground" />
-                <span className="wandering_cube cube2 bg-muted-foreground" />
+                <span className="wandering_cube cube1 bg-current" />
+                <span className="wandering_cube cube2 bg-current" />
             </span>
         </span>
     );
@@ -79,10 +83,10 @@ export const FullWidthSpinner = ({
     );
 };
 
-export const SuspenseFallback = () => {
+export const SuspenseFallback = ({ className, spinnerClassName }: { className?: string; spinnerClassName?: string }) => {
     return (
-        <div className="w-full flex items-center justify-center py-12">
-            <WanderingCubesSpinner />
+        <div className={cn("w-full flex items-center justify-center py-12", className)}>
+            <WanderingCubesSpinner className={spinnerClassName} />
         </div>
     );
 };

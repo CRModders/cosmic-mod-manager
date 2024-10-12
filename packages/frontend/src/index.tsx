@@ -1,7 +1,6 @@
 import { SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import { projectTypes } from "@shared/config/project";
-import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
@@ -134,11 +133,7 @@ const router = createBrowserRouter([
         path: "",
         element: <ContextProviders />,
         loader: sessionDataLoader(reactQueryClient),
-        errorElement: (
-            <Suspense fallback={<SuspenseFallback />}>
-                <ErrorView />
-            </Suspense>
-        ),
+        errorElement: <ErrorView />,
         children: [
             {
                 path: "auth/callback/:authProvider",
@@ -267,7 +262,7 @@ if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
     root.render(
         // <StrictMode>
-        <RouterProvider router={router} />,
+        <RouterProvider router={router} fallbackElement={<SuspenseFallback className="py-32" />} />,
         // </StrictMode>,
     );
 }

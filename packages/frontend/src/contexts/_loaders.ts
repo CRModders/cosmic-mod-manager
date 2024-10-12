@@ -28,7 +28,7 @@ export const getSessionDataQuery = () => {
         queryFn: getSessionData,
     };
 };
-export const sessionDataLoader = routeLoader(getSessionDataQuery(), undefined, true);
+export const sessionDataLoader = routeLoader(getSessionDataQuery(), undefined);
 
 // User Profile Data Loader
 const getUserProfileData = async (userName: string | undefined) => {
@@ -78,9 +78,14 @@ export const getProjectsListDataQuery = (userName: string | undefined) => {
 };
 
 const profilePageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+    const data = await Promise.all([
+        queryClient.ensureQueryData(getUserProfileDataQuery(params.userName)),
+        queryClient.ensureQueryData(getProjectsListDataQuery(params.userName)),
+    ]);
+
     return {
-        userData: await queryClient.ensureQueryData(getUserProfileDataQuery(params.userName)),
-        projectsList: await queryClient.ensureQueryData(getProjectsListDataQuery(params.userName)),
+        userData: data[0],
+        projectsList: data[1],
     };
 };
 export const userProfilePageLoader = routeLoader(null, profilePageQueries);
@@ -153,10 +158,16 @@ export const getProjectDependenciesQuery = (slug: string | undefined) => {
 };
 
 const projectPageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+    const data = await Promise.all([
+        queryClient.ensureQueryData(getProjectDataQuery(params.slug)),
+        queryClient.ensureQueryData(getAllProjectVersionsQuery(params.slug)),
+        queryClient.ensureQueryData(getProjectDependenciesQuery(params.slug)),
+    ]);
+
     return {
-        projectData: await queryClient.ensureQueryData(getProjectDataQuery(params.slug)),
-        projectVersions: await queryClient.ensureQueryData(getAllProjectVersionsQuery(params.slug)),
-        projectDependencies: await queryClient.ensureQueryData(getProjectDependenciesQuery(params.slug)),
+        projectData: data[0],
+        projectVersions: data[1],
+        projectDependencies: data[2],
     };
 };
 export const projectPageLoader = routeLoader(null, projectPageQueries);
