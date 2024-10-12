@@ -36,19 +36,33 @@ export const RootLayout = () => {
 
 export const Component = RootLayout;
 
+let previousPath: string | undefined = undefined;
+let loadingStartPath: string | undefined = undefined;
+
 export function NavigationLoadingBar() {
     const navigation = useNavigation();
     const ref = useRef<LoadingBarRef>(null);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (navigation.state === "loading" || navigation.state === "submitting") {
+        // ? These seemingly purposeless checks prevent showing the loader when the url has changed but the path hasn't actually changed
+        // ? I myself don't know how this works, but it works :)
+        const currPath = window.location.pathname;
+        const newPath = navigation.location?.pathname;
+
+        if ((navigation.state === "loading" || navigation.state === "submitting") && newPath && previousPath !== newPath) {
             ref.current?.continuousStart();
+            loadingStartPath = newPath;
         }
 
-        if (navigation.state === "idle") {
+        if (navigation.state === "idle" && (loadingStartPath || !previousPath)) {
             ref.current?.complete();
+            loadingStartPath = undefined;
         }
-    }, [navigation.state]);
+
+        console.log({ startPath: loadingStartPath, newPath, currPath });
+        if (newPath) previousPath = newPath;
+    }, [navigation.location?.pathname]);
 
     return <LoadingBar ref={ref} color="#EE3A76" shadow={false} height={2.5} transitionTime={300} waitingTime={300} />;
 }
