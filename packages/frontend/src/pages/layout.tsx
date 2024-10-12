@@ -1,7 +1,7 @@
 import Navbar from "@/components/layout/Navbar/navbar";
 import Footer from "@/components/layout/footer";
 import { useEffect, useRef } from "react";
-import { Outlet, useNavigation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
 import { toast } from "sonner";
 
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
@@ -18,6 +18,7 @@ export const RootLayout = () => {
     return (
         <>
             <NavigationLoadingBar />
+            <ScrollRestoration />
 
             {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />

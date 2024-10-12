@@ -15,6 +15,7 @@ const getSessionData = async () => {
         if (!response.ok || !result?.data) {
             return null;
         }
+
         return result?.data as LoggedInUserData;
     } catch (err) {
         console.error(err);
@@ -27,7 +28,7 @@ export const getSessionDataQuery = () => {
         queryFn: getSessionData,
     };
 };
-export const sessionDataLoader = routeLoader(getSessionDataQuery());
+export const sessionDataLoader = routeLoader(getSessionDataQuery(), undefined, true);
 
 // User Profile Data Loader
 const getUserProfileData = async (userName: string | undefined) => {

@@ -1,7 +1,9 @@
 import { Toaster } from "@/components/ui/sonner";
+import { SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet } from "react-router-dom";
+import { Suspense } from "react";
+import { Await, Outlet, useLoaderData } from "react-router-dom";
 import AuthProvider from "./contexts/auth";
 import { ThemeProvider } from "./hooks/use-theme";
 
@@ -16,11 +18,16 @@ export const reactQueryClient = new QueryClient({
 });
 
 export const ContextProviders = ({ children }: { children?: React.ReactNode }) => {
+    const data = useLoaderData();
+
     return (
         <QueryClientProvider client={reactQueryClient}>
             <AuthProvider>
                 <ThemeProvider>
-                    {children ? children : <Outlet />}
+                    <Suspense fallback={<SuspenseFallback />}>
+                        {/* @ts-ignore */}
+                        <Await resolve={data?.data}>{children ? children : <Outlet />}</Await>
+                    </Suspense>
                     <Toaster />
                 </ThemeProvider>
             </AuthProvider>
