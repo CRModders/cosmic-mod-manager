@@ -43,6 +43,6 @@ export const searchResultsLoader = (queryClient: QueryClient, type: ProjectType)
         return getSearchResultsQuery(searchParams.toString(), type);
     };
 
-    const _loader = routeLoader(queryFn, undefined);
+    const _loader = routeLoader(queryFn, undefined, true);
     return _loader(queryClient);
 };
