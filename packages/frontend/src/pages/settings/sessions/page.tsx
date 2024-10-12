@@ -177,4 +177,4 @@ const SessionsPage = () => {
     );
 };
 
-export default SessionsPage;
+export const Component = SessionsPage;

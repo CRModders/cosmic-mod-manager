@@ -132,4 +132,4 @@ const AccountSettingsPage = () => {
     );
 };
 
-export default AccountSettingsPage;
+export const Component = AccountSettingsPage;

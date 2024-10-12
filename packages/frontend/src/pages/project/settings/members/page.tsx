@@ -60,7 +60,7 @@ const ProjectMemberSettingsPage = () => {
     );
 };
 
-export default ProjectMemberSettingsPage;
+export const Component = ProjectMemberSettingsPage;
 
 const ProjectMember = ({
     member,

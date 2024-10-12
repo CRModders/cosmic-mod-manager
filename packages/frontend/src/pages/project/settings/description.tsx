@@ -80,4 +80,4 @@ const DescriptionSettings = () => {
     );
 };
 
-export default DescriptionSettings;
+export const Component = DescriptionSettings;

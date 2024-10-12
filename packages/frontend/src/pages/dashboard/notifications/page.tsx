@@ -100,7 +100,7 @@ const NotificationsPage = () => {
     );
 };
 
-export default NotificationsPage;
+export const Component = NotificationsPage;
 
 export const NotificationItem = ({
     notification,

@@ -53,4 +53,4 @@ const RevokeSessionPage = () => {
     );
 };
 
-export default RevokeSessionPage;
+export const Component = RevokeSessionPage;

@@ -13,7 +13,7 @@ type Props = {
     type: ProjectType;
 };
 
-const SearchResults = ({ type }: Props) => {
+export const SearchResults = ({ type }: Props) => {
     const currUrl = new URL(window.location.href);
     const searchParams = currUrl.searchParams;
     const searchResult = useQuery(getSearchResultsQuery(searchParams.toString(), type));
@@ -76,5 +76,3 @@ const SearchResults = ({ type }: Props) => {
         </>
     );
 };
-
-export default SearchResults;

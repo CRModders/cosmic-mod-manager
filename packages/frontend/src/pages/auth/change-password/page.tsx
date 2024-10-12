@@ -96,4 +96,4 @@ const ChangePasswordPage = () => {
     );
 };
 
-export default ChangePasswordPage;
+export const Component = ChangePasswordPage;

@@ -1,10 +1,9 @@
-import { AbsolutePositionedSpinner } from "@/components/ui/spinner";
 import { type DependencyData, LoadingStatus } from "@/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import NotFoundPage from "../pages/not-found";
+import { NotFoundPage } from "../pages/not-found";
 import { getAllProjectVersionsQuery, getProjectDataQuery, getProjectDependenciesQuery } from "./_loaders";
 import { useSession } from "./auth";
 
@@ -53,7 +52,7 @@ export const ProjectContextProvider = ({
     children: React.ReactNode;
 }) => {
     const { slug } = useParams();
-    const [currUsersMembership, setCurrUsersMembership] = useState<CurrUsersMembership>({ data: null, status: LoadingStatus.LOADING });
+    // const [currUsersMembership, setCurrUsersMembership] = useState<CurrUsersMembership>({ data: null, status: LoadingStatus.LOADING });
     const [currProjectSlug, setCurrProjectSlug] = useState(slug || "");
     const { session } = useSession();
 
@@ -62,8 +61,6 @@ export const ProjectContextProvider = ({
         isLoading: isProjectDataLoading,
         refetch: refetchProjectData,
     } = useQuery(getProjectDataQuery(currProjectSlug));
-
-    const [featuredProjectVersions, setFeaturedProjectVersions] = useState<ProjectVersionData[]>([]);
 
     const {
         data: allProjectVersions,
@@ -97,35 +94,33 @@ export const ProjectContextProvider = ({
         }
     }, [slug]);
 
-    useEffect(() => {
-        if (!projectData?.id) setCurrUsersMembership({ data: null, status: LoadingStatus.LOADING });
-        else {
-            // let valueSet = false;
-            let membership = null;
-            for (const member of projectData.members) {
-                if (member.userId === session?.id && member.accepted === true) {
-                    // valueSet = true;
-                    membership = member;
-                    break;
-                }
-            }
+    let currUsersMembership: CurrUsersMembership = { data: null, status: LoadingStatus.LOADING };
 
-            if (membership?.id) {
-                setCurrUsersMembership({ data: membership, status: LoadingStatus.LOADED });
-            } else {
-                setCurrUsersMembership({ data: null, status: LoadingStatus.LOADED });
+    if (!projectData?.id) currUsersMembership = { data: null, status: LoadingStatus.LOADING };
+    else {
+        // let valueSet = false;
+        let membership = null;
+        for (const member of projectData.members) {
+            if (member.userId === session?.id && member.accepted === true) {
+                // valueSet = true;
+                membership = member;
+                break;
             }
         }
-    }, [session, projectData]);
 
-    useEffect(() => {
-        if (allProjectVersions) {
-            const featuredVersions = allProjectVersions.filter((version) => version.featured === true);
-            setFeaturedProjectVersions(featuredVersions);
+        if (membership?.id) {
+            currUsersMembership = { data: membership, status: LoadingStatus.LOADED };
         } else {
-            setFeaturedProjectVersions([]);
+            currUsersMembership = { data: null, status: LoadingStatus.LOADED };
         }
-    }, [allProjectVersions]);
+    }
+
+    let featuredProjectVersions: ProjectVersionData[] = [];
+    if (allProjectVersions) {
+        featuredProjectVersions = allProjectVersions.filter((version) => version.featured === true);
+    } else {
+        featuredProjectVersions = [];
+    }
 
     const loadingProjectData = isProjectDataLoading || isAllProjectVersionsLoading || isProjectDependenciesLoading;
 
@@ -146,8 +141,7 @@ export const ProjectContextProvider = ({
                 },
             }}
         >
-            {slug === projectData?.slug || slug === projectData?.id ? children : null}
-            {(slug !== projectData?.slug && slug !== projectData?.id) || loadingProjectData ? <AbsolutePositionedSpinner /> : null}
+            {children}
             {!loadingProjectData && !projectData?.id ? (
                 <NotFoundPage
                     title="Project not found"

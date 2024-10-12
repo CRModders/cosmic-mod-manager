@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { RedirectIfLoggedIn } from "../guards";
 import OAuthProvidersWidget from "../oauth-providers";
 
 const LoginPage = () => {
@@ -61,6 +62,8 @@ const LoginPage = () => {
                 <title>Login | {SITE_NAME_SHORT}</title>
                 <meta name="description" content="Log into your CRMM account" />
             </Helmet>
+
+            <RedirectIfLoggedIn redirectTo="/dashboard" />
 
             <main className="full_page w-full flex items-center justify-center py-12">
                 <Card className="w-full max-w-md relative">
@@ -181,4 +184,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export const Component = LoginPage;

@@ -4,4 +4,4 @@ const SettingsPage = () => {
     return <Redirect redirectTo="/settings/account" />;
 };
 
-export default SettingsPage;
+export const Component = SettingsPage;

@@ -12,7 +12,7 @@ interface Props {
     className?: string;
 }
 
-export default function NotFoundPage({ className, title, description, linkHref, linkLabel }: Props) {
+export function NotFoundPage({ className, title, description, linkHref, linkLabel }: Props) {
     return (
         <>
             <Helmet>
@@ -40,3 +40,5 @@ export default function NotFoundPage({ className, title, description, linkHref, 
         </>
     );
 }
+
+export const Component = NotFoundPage;

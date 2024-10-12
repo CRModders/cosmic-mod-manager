@@ -1,9 +1,10 @@
 import Navbar from "@/components/layout/Navbar/navbar";
 import Footer from "@/components/layout/footer";
-import ContextProviders from "@/src/providers";
-import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Outlet, useNavigation } from "react-router-dom";
 import { toast } from "sonner";
+
+import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 
 const RootLayout = () => {
     useEffect(() => {
@@ -15,7 +16,9 @@ const RootLayout = () => {
     }, []);
 
     return (
-        <ContextProviders>
+        <>
+            <NavigationLoadingBar />
+
             {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
@@ -27,8 +30,25 @@ const RootLayout = () => {
 
                 <Footer />
             </div>
-        </ContextProviders>
+        </>
     );
 };
 
-export default RootLayout;
+export const Component = RootLayout;
+
+export function NavigationLoadingBar() {
+    const navigation = useNavigation();
+    const ref = useRef<LoadingBarRef>(null);
+
+    useEffect(() => {
+        if (navigation.state === "loading" || navigation.state === "submitting") {
+            ref.current?.continuousStart();
+        }
+
+        if (navigation.state === "idle") {
+            ref.current?.complete();
+        }
+    }, [navigation.state]);
+
+    return <LoadingBar ref={ref} color="#EE3A76" shadow={false} height={2.5} transitionTime={300} waitingTime={300} />;
+}

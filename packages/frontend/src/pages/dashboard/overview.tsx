@@ -121,4 +121,4 @@ const OverviewPage = () => {
     );
 };
 
-export default OverviewPage;
+export const Component = OverviewPage;

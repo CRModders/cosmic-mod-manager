@@ -232,4 +232,4 @@ const UploadVersionPage = () => {
     );
 };
 
-export default UploadVersionPage;
+export const Component = UploadVersionPage;

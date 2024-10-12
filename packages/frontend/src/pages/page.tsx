@@ -10,6 +10,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -18,19 +19,27 @@ import styles from "./styles.module.css";
 
 const HomePage = () => {
     const { session } = useSession();
+    const [gridBgPortal, setGridBgPortal] = useState<Element | null>(null);
+
     // The animation keyframes in "@/app/styles.css" need to be updated according to the number of items in the list
     const showcaseItems = ["Mods", "Plugins", "Resource Packs", "Modpacks", "Shaders", "Mods"];
 
+    useEffect(() => {
+        setGridBgPortal(document.querySelector("#hero_section_bg_portal"));
+    }, []);
+
     return (
         <>
-            {createPortal(
-                <div className="relative w-full h-[115vh] flex items-center justify-center overflow-hidden">
-                    <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
-                        <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent via-transparent to-background" />
-                    </div>
-                </div>,
-                document.body.querySelector("#hero_section_bg_portal") as Element,
-            )}
+            {gridBgPortal
+                ? createPortal(
+                      <div className="relative w-full h-[115vh] flex items-center justify-center overflow-hidden">
+                          <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
+                              <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent via-transparent to-background" />
+                          </div>
+                      </div>,
+                      gridBgPortal,
+                  )
+                : null}
 
             <Helmet>
                 <title>{SITE_NAME_SHORT}</title>
@@ -114,7 +123,8 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+// Component Export
+export const Component = HomePage;
 
 const ProjectsCarousel = ({ className }: { className?: string }) => {
     const projects = useQuery(getRandomProjectsQuery());

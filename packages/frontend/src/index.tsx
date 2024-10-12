@@ -1,138 +1,61 @@
 import { SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
-import RootLayout from "@/src/pages/layout";
 import { projectTypes } from "@shared/config/project";
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import { RedirectIfLoggedIn, RedirectIfNotLoggedIn } from "./pages/auth/guards";
-import ErrorView from "./pages/error-page";
-import NotFoundPage from "./pages/not-found";
-import ContextProviders, { reactQueryClient } from "./providers";
-
-const HomePage = lazy(() => import("@/src/pages/page"));
-
-// Auth
-const LoginPage = lazy(() => import("@/src/pages/auth/login/page"));
-const SignUpPage = lazy(() => import("@/src/pages/auth/register/page"));
-const OAuthCallbackPage = lazy(() => import("@/src/pages/auth/callback/page"));
-const ConfirmActionPage = lazy(() => import("@/src/pages/auth/confirm-action/page"));
-const ChangePasswordPage = lazy(() => import("@/src/pages/auth/change-password/page"));
-const RevokeSessionPage = lazy(() => import("@/src/pages/auth/revoke-session"));
-
-// Settings page
-import SettingsPageLayout from "@/src/pages/settings/layout";
-import SettingsPage from "./pages/settings/page";
-const AccountSettingsPage = lazy(() => import("@/src/pages/settings/account/page"));
-const SessionsPage = lazy(() => import("@/src/pages/settings/sessions/page"));
-
-// Dashboard
-import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/loader";
-import DashboardLayout from "./pages/dashboard/layout";
-const NotificationsProvider = lazy(() => import("./pages/dashboard/notifications/context"));
-const OverviewPage = lazy(() => import("@/src/pages/dashboard/overview"));
-const NotificationsPage = lazy(() => import("@/src/pages/dashboard/notifications/page"));
-const NotificationsHistory = lazy(() => import("@/src/pages/dashboard/notifications/history"));
-const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
-const OrganisationDashboardPage = lazy(() => import("@/src/pages/dashboard/organisation/page"));
-
-// Project details
-import ProjectPage from "@/src/pages/project/page";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
-import ProjectContextProvider from "./contexts/curr-project";
-import { UserProfileContextProvider } from "./contexts/user-profile";
+import ErrorView from "./pages/error-page";
+import { reactQueryClient } from "./providers";
+
+// Home page Loader
 import { homePageLoader } from "./pages/_loader";
+
+// Dashboard page Loaders
+import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/loader";
 import { overviewPageLoader } from "./pages/dashboard/_loader";
 import { notificationsPageLoader } from "./pages/dashboard/notifications/_loader";
 import userProjectsLoader from "./pages/dashboard/projects/loader";
-import ProjectPageLayout from "./pages/project/layout";
-import { searchResultsLoader } from "./pages/search/_loader";
+
+// Project settings Loaders
 import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
-const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
-const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
-const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
-const VersionPage = lazy(() => import("@/src/pages/project/versions/version/page"));
-const UploadVersionPage = lazy(() => import("@/src/pages/project/versions/version/new-version"));
-const EditVersionPage = lazy(() => import("@/src/pages/project/versions/version/edit-version"));
 
-// Project settings
-const ProjectSettingsLayout = lazy(() => import("@/src/pages/project/settings/layout"));
-const GeneralSettingsPage = lazy(() => import("@/src/pages/project/settings/page"));
-const DescriptionSettings = lazy(() => import("@/src/pages/project/settings/description"));
-const TagsSettingsPage = lazy(() => import("@/src/pages/project/settings/tags"));
-const ExternalLinksSettingsPage = lazy(() => import("@/src/pages/project/settings/links"));
-const LicenseSettingsPage = lazy(() => import("./pages/project/settings/license"));
-const ProjectMemberSettingsPage = lazy(() => import("./pages/project/settings/members/page"));
-
-// User's profile page
-const UserPageLayout = lazy(() => import("./pages/user/layout"));
-
-// Search page
-const SearchPageLayout = lazy(() => import("@/src/pages/search/layout"));
+// Search page Loader
+import { searchResultsLoader } from "./pages/search/_loader";
 
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => ({
         path: `${type}/:slug`,
         loader: projectPageLoader(reactQueryClient),
-        element: (
-            <ProjectContextProvider>
-                <Suspense fallback={<SuspenseFallback />}>
-                    <Outlet />
-                </Suspense>
-            </ProjectContextProvider>
-        ),
+        lazy: () => import("@/src/pages/project/wrapper-context"),
         children: [
             {
                 path: "",
-                element: (
-                    <Suspense fallback={<SuspenseFallback />}>
-                        <ProjectPageLayout projectType={type} />
-                    </Suspense>
-                ),
+                lazy: () => import("@/src/pages/project/layout"),
                 children: [
                     {
                         path: "",
-                        element: <ProjectPage />,
+                        lazy: () => import("@/src/pages/project/page"),
                     },
                     {
                         path: "gallery",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectGallery />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/gallery/page"),
                     },
                     {
                         path: "changelog",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <VersionChangelogs />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/changelog"),
                     },
                     {
                         path: "versions",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectVersionsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/versions/page"),
                     },
                     {
                         path: "version",
-                        element: (
-                            <>
-                                <Outlet />
-                            </>
-                        ),
+                        element: <Outlet />,
                         children: [
                             {
                                 path: "new",
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <UploadVersionPage />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/project/versions/version/new-version"),
                             },
                             {
                                 path: ":versionSlug",
@@ -140,19 +63,11 @@ const projectPageRoutes = () => {
                                 children: [
                                     {
                                         path: "",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <VersionPage projectType={type} />
-                                            </Suspense>
-                                        ),
+                                        lazy: () => import("@/src/pages/project/versions/version/page"),
                                     },
                                     {
                                         path: "edit",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <EditVersionPage />
-                                            </Suspense>
-                                        ),
+                                        lazy: () => import("@/src/pages/project/versions/version/edit-version"),
                                     },
                                 ],
                             },
@@ -162,72 +77,41 @@ const projectPageRoutes = () => {
             },
             {
                 path: "settings",
-                element: (
-                    <>
-                        <RedirectIfNotLoggedIn redirectTo="/login" />
-                        <Suspense fallback={<SuspenseFallback />}>
-                            <ProjectSettingsLayout projectType={type} />
-                        </Suspense>
-                    </>
-                ),
+                lazy: () => import("@/src/pages/project/settings/layout"),
                 children: [
                     {
                         path: "",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <GeneralSettingsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/page"),
                     },
                     {
                         path: "description",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <DescriptionSettings />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/description"),
                     },
                     {
                         path: "tags",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <TagsSettingsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/tags"),
                     },
                     {
                         path: "links",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ExternalLinksSettingsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/links"),
                     },
                     {
                         path: "license",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <LicenseSettingsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/license"),
                     },
                     {
                         path: "members",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ProjectMemberSettingsPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/project/settings/members/page"),
                     },
                     {
                         path: "*",
-                        element: <NotFoundPage />,
+                        lazy: () => import("@/src/pages/not-found"),
                     },
                 ],
             },
             {
                 path: "*",
-                element: <NotFoundPage />,
+                lazy: () => import("@/src/pages/not-found"),
             },
         ],
     }));
@@ -237,18 +121,19 @@ const searchPageRoutes = () => {
     return projectTypes.map((type) => ({
         path: `${type}s`,
         loader: searchResultsLoader(reactQueryClient, type),
-        element: (
-            <Suspense fallback={<SuspenseFallback />}>
-                <SearchPageLayout type={type} />
-            </Suspense>
-        ),
+        lazy: async () => {
+            const mod = await import("@/src/pages/search/layout");
+            return {
+                element: <mod.Component type={type} />,
+            };
+        },
     }));
 };
 
 const router = createBrowserRouter([
     {
         path: "",
-        element: <Outlet />,
+        lazy: () => import("@/src/providers"),
         loader: sessionDataLoader(reactQueryClient),
         errorElement: (
             <Suspense fallback={<SuspenseFallback />}>
@@ -258,133 +143,70 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "auth/callback/:authProvider",
-                element: (
-                    <Suspense fallback={<SuspenseFallback />}>
-                        <ContextProviders>
-                            <OAuthCallbackPage />
-                        </ContextProviders>
-                    </Suspense>
-                ),
+                lazy: () => import("@/src/pages/auth/callback/page"),
             },
             {
                 path: "auth/revoke-session",
-                element: (
-                    <Suspense fallback={<SuspenseFallback />}>
-                        <ContextProviders>
-                            <RevokeSessionPage />
-                        </ContextProviders>
-                    </Suspense>
-                ),
+                lazy: () => import("@/src/pages/auth/revoke-session"),
             },
             {
                 path: "auth/confirm-action",
-                element: (
-                    <Suspense fallback={<SuspenseFallback />}>
-                        <ContextProviders>
-                            <ConfirmActionPage />
-                        </ContextProviders>
-                    </Suspense>
-                ),
+                lazy: () => import("@/src/pages/auth/confirm-action/page"),
             },
             {
                 path: "",
-                element: <RootLayout />,
+                lazy: () => import("@/src/pages/layout"),
                 children: [
                     {
                         path: "",
                         loader: homePageLoader(reactQueryClient),
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <HomePage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/page"),
                     },
                     {
                         path: "login",
-                        element: (
-                            <RedirectIfLoggedIn redirectTo="/dashboard">
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <LoginPage />
-                                </Suspense>
-                            </RedirectIfLoggedIn>
-                        ),
+                        lazy: () => import("@/src/pages/auth/login/page"),
                     },
                     {
                         path: "signup",
-                        element: (
-                            <RedirectIfLoggedIn redirectTo="/dashboard">
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <SignUpPage />
-                                </Suspense>
-                            </RedirectIfLoggedIn>
-                        ),
+                        lazy: () => import("@/src/pages/auth/register/page"),
                     },
                     {
                         path: "change-password",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <ChangePasswordPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/auth/change-password/page"),
                     },
                     ...searchPageRoutes(),
                     {
                         path: "user/:userName",
                         loader: userProfilePageLoader(reactQueryClient),
-                        element: (
-                            <UserProfileContextProvider>
-                                <Outlet />
-                            </UserProfileContextProvider>
-                        ),
+                        lazy: () => import("@/src/pages/user/layout-wrapper"),
                         children: [
                             {
                                 path: "",
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <UserPageLayout />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/user/layout"),
                             },
                             {
                                 path: ":projectType",
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <UserPageLayout />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/user/layout"),
                             },
                         ],
                     },
                     {
                         path: "settings",
-                        element: (
-                            <>
-                                <RedirectIfNotLoggedIn redirectTo="/login" />
-                                <SettingsPageLayout />
-                            </>
-                        ),
+                        lazy: () => import("@/src/pages/settings/layout"),
                         children: [
                             {
                                 path: "",
-                                element: <SettingsPage />,
+                                lazy: () => import("@/src/pages/settings/page"),
                             },
                             {
                                 path: "account",
                                 loader: accountSettingsPageLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <AccountSettingsPage />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/settings/account/page"),
                             },
                             {
                                 path: "sessions",
                                 loader: userSessionsPageLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <SessionsPage />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/settings/sessions/page"),
                             },
                         ],
                     },
@@ -392,79 +214,48 @@ const router = createBrowserRouter([
                         path: "dashboard",
                         // Loading overview data on dashboard load
                         loader: overviewPageLoader(reactQueryClient),
-                        element: (
-                            <>
-                                <RedirectIfNotLoggedIn redirectTo="/login" />
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <DashboardLayout />
-                                </Suspense>
-                            </>
-                        ),
+                        lazy: () => import("@/src/pages/dashboard/layout"),
                         children: [
                             {
                                 path: "",
                                 loader: notificationsPageLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <NotificationsProvider>
-                                            <OverviewPage />
-                                        </NotificationsProvider>
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/dashboard/overview"),
                             },
                             {
                                 path: "notifications",
                                 loader: notificationsPageLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <NotificationsProvider>
-                                            <Outlet />
-                                        </NotificationsProvider>
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/dashboard/notifications/layout"),
                                 children: [
                                     {
                                         path: "",
-                                        element: <NotificationsPage />,
+                                        lazy: () => import("@/src/pages/dashboard/notifications/page"),
                                     },
                                     {
                                         path: "history",
-                                        element: <NotificationsHistory />,
+                                        lazy: () => import("@/src/pages/dashboard/notifications/history"),
                                     },
                                 ],
                             },
                             {
                                 path: "projects",
                                 loader: userProjectsLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <ProjectsPage />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/dashboard/projects/page"),
                             },
                             {
                                 path: "organisations",
                                 loader: dashboardOrgsLoader(reactQueryClient),
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <OrganisationDashboardPage />
-                                    </Suspense>
-                                ),
+                                lazy: () => import("@/src/pages/dashboard/organisation/page"),
                             },
                             {
                                 path: "*",
-                                element: <NotFoundPage />,
+                                lazy: () => import("@/src/pages/not-found"),
                             },
                         ],
                     },
                     ...projectPageRoutes(),
                     {
                         path: "*",
-                        element: (
-                            <Suspense fallback={<SuspenseFallback />}>
-                                <NotFoundPage />
-                            </Suspense>
-                        ),
+                        lazy: () => import("@/src/pages/not-found"),
                     },
                 ],
             },

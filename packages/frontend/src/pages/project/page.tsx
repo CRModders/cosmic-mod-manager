@@ -1,9 +1,7 @@
+import MarkdownRenderBox from "@/components/layout/md-editor/render-md";
 import { ContentCardTemplate } from "@/components/layout/panel";
-import { SuspenseFallback } from "@/components/ui/spinner";
 import { projectContext } from "@/src/contexts/curr-project";
-import { Suspense, lazy, useContext } from "react";
-
-const MarkdownRenderBox = lazy(() => import("@/components/layout/md-editor/render-md"));
+import { useContext } from "react";
 
 const ProjectPage = () => {
     const { projectData } = useContext(projectContext);
@@ -14,12 +12,10 @@ const ProjectPage = () => {
     }
 
     return (
-        <Suspense fallback={<SuspenseFallback />}>
-            <ContentCardTemplate className="w-full max-w-full gap-0 [grid-area:_content]">
-                <MarkdownRenderBox text={projectData.description || ""} />
-            </ContentCardTemplate>
-        </Suspense>
+        <ContentCardTemplate className="w-full max-w-full gap-0 [grid-area:_content]">
+            <MarkdownRenderBox text={projectData.description || ""} />
+        </ContentCardTemplate>
     );
 };
 
-export default ProjectPage;
+export const Component = ProjectPage;

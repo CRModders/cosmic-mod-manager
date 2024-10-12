@@ -4,6 +4,7 @@ import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { RedirectIfLoggedIn } from "../guards";
 import OAuthProvidersWidget from "../oauth-providers";
 
 const SignUpPage = () => {
@@ -18,6 +19,8 @@ const SignUpPage = () => {
                 <title>Signup | {SITE_NAME_SHORT}</title>
                 <meta name="description" content="Signup for a CRMM account" />
             </Helmet>
+
+            <RedirectIfLoggedIn redirectTo="/dashboard" />
 
             <main className="w-full flex items-center justify-center py-12 min-h-[100vh]">
                 <Card className="w-full max-w-md relative">
@@ -55,4 +58,4 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+export const Component = SignUpPage;

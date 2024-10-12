@@ -76,10 +76,10 @@ export const getProjectsListDataQuery = (userName: string | undefined) => {
     };
 };
 
-const profilePageQueries = (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+const profilePageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
     return {
-        userData: queryClient.ensureQueryData(getUserProfileDataQuery(params.userName)),
-        projectsList: queryClient.ensureQueryData(getProjectsListDataQuery(params.userName)),
+        userData: await queryClient.ensureQueryData(getUserProfileDataQuery(params.userName)),
+        projectsList: await queryClient.ensureQueryData(getProjectsListDataQuery(params.userName)),
     };
 };
 export const userProfilePageLoader = routeLoader(null, profilePageQueries);
@@ -151,11 +151,11 @@ export const getProjectDependenciesQuery = (slug: string | undefined) => {
     };
 };
 
-const projectPageQueries = (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+const projectPageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
     return {
-        projectData: queryClient.ensureQueryData(getProjectDataQuery(params.slug)),
-        projectVersions: queryClient.ensureQueryData(getAllProjectVersionsQuery(params.slug)),
-        projectDependencies: queryClient.ensureQueryData(getProjectDependenciesQuery(params.slug)),
+        projectData: await queryClient.ensureQueryData(getProjectDataQuery(params.slug)),
+        projectVersions: await queryClient.ensureQueryData(getAllProjectVersionsQuery(params.slug)),
+        projectDependencies: await queryClient.ensureQueryData(getProjectDependenciesQuery(params.slug)),
     };
 };
 export const projectPageLoader = routeLoader(null, projectPageQueries);

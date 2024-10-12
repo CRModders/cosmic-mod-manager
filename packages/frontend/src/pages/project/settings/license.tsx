@@ -204,4 +204,4 @@ const LicenseSettingsPage = () => {
     );
 };
 
-export default LicenseSettingsPage;
+export const Component = LicenseSettingsPage;

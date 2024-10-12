@@ -48,7 +48,7 @@ import { ProjectSupprotedEnvironments } from "./supported-env";
 
 const JoinProjectBanner = lazy(() => import("./join-project-banner"));
 
-const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
+const ProjectPageLayout = () => {
     const { theme } = useTheme();
     const { fetchingProjectData, projectData, fetchProjectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
@@ -85,6 +85,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     }
 
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
+    const projectType = projectData.type?.[0] || "project";
 
     return (
         <>
@@ -369,7 +370,7 @@ const ProjectPageLayout = ({ projectType }: { projectType: string }) => {
     );
 };
 
-export default ProjectPageLayout;
+export const Component = ProjectPageLayout;
 
 const PageHeader = ({
     projectData,

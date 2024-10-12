@@ -104,4 +104,4 @@ const OAuthCallbackPage = () => {
     );
 };
 
-export default OAuthCallbackPage;
+export const Component = OAuthCallbackPage;

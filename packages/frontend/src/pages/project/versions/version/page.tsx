@@ -19,7 +19,7 @@ import ReleaseChannelChip from "@/components/ui/release-channel-pill";
 import { formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
-import NotFoundPage from "@/src/pages/not-found";
+import { NotFoundPage } from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
@@ -32,7 +32,7 @@ import { ProjectMember } from "../../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
-const VersionPage = ({ projectType }: { projectType: string }) => {
+const VersionPage = () => {
     const { slug: projectSlug, versionSlug } = useParams();
     const navigate = useNavigate();
     const { projectData, currUsersMembership, allProjectVersions, projectDependencies, fetchingProjectData } = useContext(projectContext);
@@ -47,6 +47,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
         return null;
     };
     const [versionData, setVersionData] = useState<ProjectVersionData | null>(getVersionData());
+    const projectType = projectData?.type[0] || "";
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
@@ -314,7 +315,7 @@ const VersionPage = ({ projectType }: { projectType: string }) => {
     );
 };
 
-export default VersionPage;
+export const Component = VersionPage;
 
 interface FileDetailsItemProps {
     fileName: string;

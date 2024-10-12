@@ -56,4 +56,4 @@ const NotificationsHistory = () => {
     );
 };
 
-export default NotificationsHistory;
+export const Component = NotificationsHistory;

@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
+import { RedirectIfNotLoggedIn } from "../auth/guards";
+import NotificationsProvider from "./notifications/context";
 
 const DashboardLayout = () => {
     return (
@@ -21,6 +23,8 @@ const DashboardLayout = () => {
                 <title>Dashboard | {SITE_NAME_SHORT}</title>
                 <meta name="description" content="Dashboard" />
             </Helmet>
+
+            <RedirectIfNotLoggedIn redirectTo="/login" />
 
             <Panel className="pb-12">
                 <PanelAside>
@@ -42,14 +46,16 @@ const DashboardLayout = () => {
                     </PanelAsideNavCard>
                 </PanelAside>
                 <PanelContent>
-                    <Outlet />
+                    <NotificationsProvider>
+                        <Outlet />
+                    </NotificationsProvider>
                 </PanelContent>
             </Panel>
         </>
     );
 };
 
-export default DashboardLayout;
+export const Component = DashboardLayout;
 
 const baseUrlPrefix = "/dashboard";
 const SidePanelLinks = [

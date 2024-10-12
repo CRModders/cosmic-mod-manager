@@ -3,8 +3,8 @@ import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext } from "react";
-import { useParams } from "react-router-dom";
-import NotFoundPage from "../pages/not-found";
+import { Outlet, useParams } from "react-router-dom";
+import { NotFoundPage } from "../pages/not-found";
 import { getProjectsListDataQuery, getUserProfileDataQuery } from "./_loaders";
 
 interface UserProfileContext {
@@ -31,7 +31,7 @@ export const UserProfileContextProvider = ({ children }: { children: React.React
                 projectsList: projectsList.data || null,
             }}
         >
-            {children}
+            {children ? children : <Outlet />}
             {isFetchingData ? <AbsolutePositionedSpinner /> : null}
             {!isFetchingData && !userData.data ? (
                 <NotFoundPage title="User not found" description={`No user exists with username or ID of "${userName}"`} />

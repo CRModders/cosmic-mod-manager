@@ -84,7 +84,7 @@ const ProjectGallery = () => {
     );
 };
 
-export default ProjectGallery;
+export const Component = ProjectGallery;
 
 const GalleryItemCard = ({
     galleryItem,

@@ -26,7 +26,7 @@ const VersionChangelogs = () => {
     return <ChangelogsList projectData={projectData} versionsList={allProjectVersions} />;
 };
 
-export default VersionChangelogs;
+export const Component = VersionChangelogs;
 
 interface FilterItems {
     loaders: string[];

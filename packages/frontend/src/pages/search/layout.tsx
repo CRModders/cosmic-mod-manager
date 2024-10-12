@@ -11,7 +11,7 @@ import { FilterIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import SearchResults from "./page";
+import { SearchResults } from "./page";
 import FilterSidebar from "./sidebar";
 import "./styles.css";
 
@@ -161,4 +161,4 @@ const SearchPageLayout = ({ type }: Props) => {
     );
 };
 
-export default SearchPageLayout;
+export const Component = SearchPageLayout;

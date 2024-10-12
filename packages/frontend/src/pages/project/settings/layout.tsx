@@ -12,6 +12,7 @@ import {
 import { ButtonLink } from "@/components/ui/link";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
+import { RedirectIfNotLoggedIn } from "@/src/pages/auth/guards";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
@@ -30,11 +31,11 @@ import { useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 
-const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
-    const { projectData, currUsersMembership } = useContext(projectContext);
-    const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || projectType, projectData.slug) : "";
+const ProjectSettingsLayout = () => {
+    const { projectData } = useContext(projectContext);
+    const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || "project", projectData.slug) : "";
 
-    if (!projectData || !currUsersMembership.data) {
+    if (!projectData) {
         return null;
     }
 
@@ -46,6 +47,8 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
                 </title>
                 <meta name="description" content="Project settings" />
             </Helmet>
+
+            <RedirectIfNotLoggedIn redirectTo="/login" />
 
             <Panel className="pb-12">
                 <PanelAside className="flex flex-col gap-panel-cards lg:w-80">
@@ -127,7 +130,7 @@ const ProjectSettingsLayout = ({ projectType }: { projectType: string }) => {
     );
 };
 
-export default ProjectSettingsLayout;
+export const Component = ProjectSettingsLayout;
 
 const SidePanelLinks = [
     {

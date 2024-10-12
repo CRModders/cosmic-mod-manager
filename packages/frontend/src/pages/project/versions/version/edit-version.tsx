@@ -251,4 +251,4 @@ const EditVersionPage = () => {
     );
 };
 
-export default EditVersionPage;
+export const Component = EditVersionPage;

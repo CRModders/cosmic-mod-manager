@@ -68,4 +68,4 @@ const ActionCard = ({ actionType, code }: { actionType: ConfirmationType; code: 
     }
 };
 
-export default ConfirmActionPage;
+export const Component = ConfirmActionPage;

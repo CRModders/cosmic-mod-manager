@@ -24,4 +24,4 @@ const OrganisationDashboardPage = () => {
     );
 };
 
-export default OrganisationDashboardPage;
+export const Component = OrganisationDashboardPage;

@@ -246,7 +246,7 @@ const ProjectVersionsPage = () => {
     );
 };
 
-export default ProjectVersionsPage;
+export const Component = ProjectVersionsPage;
 
 const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => {
     return (
@@ -484,7 +484,7 @@ const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
     );
 };
 
-const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string; iconVisible?: boolean }) => {
+const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string | Date; iconVisible?: boolean }) => {
     const date = new Date(dateStr);
 
     if (!date) {

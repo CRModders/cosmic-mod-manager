@@ -75,7 +75,7 @@ const UserPageLayout = () => {
     );
 };
 
-export default UserPageLayout;
+export const Component = UserPageLayout;
 
 const PageSidebar = () => {
     return (

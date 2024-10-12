@@ -495,7 +495,7 @@ const GeneralSettingsPage = () => {
     );
 };
 
-export default GeneralSettingsPage;
+export const Component = GeneralSettingsPage;
 
 const DeleteProjectDialog = ({ name, slug }: { name: string; slug: string }) => {
     const [isLoading, setIsLoading] = useState(false);

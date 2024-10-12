@@ -199,4 +199,4 @@ const TagsSettingsPage = () => {
     );
 };
 
-export default TagsSettingsPage;
+export const Component = TagsSettingsPage;

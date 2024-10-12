@@ -169,4 +169,4 @@ const ExternalLinksSettingsPage = () => {
     );
 };
 
-export default ExternalLinksSettingsPage;
+export const Component = ExternalLinksSettingsPage;
