@@ -12,7 +12,7 @@ type CustomDataLoaderFunction = (
     args: LoaderFunctionArgs,
 ) => Record<string, unknown> | Promise<Record<string, unknown>>;
 
-export function routeLoader<T>(query: routeLoaderQueryArg<T> | null, customData?: CustomDataLoaderFunction) {
+export function routeLoader<T>(query: routeLoaderQueryArg<T> | null, customData?: CustomDataLoaderFunction, noStaleData?: boolean) {
     return (queryClient: QueryClient) => {
         return async (args: LoaderFunctionArgs) => {
             if (customData) {
@@ -22,7 +22,7 @@ export function routeLoader<T>(query: routeLoaderQueryArg<T> | null, customData?
 
             const _query = buildQueryObj(query, args);
             return defer({
-                data: await queryClient.ensureQueryData(_query),
+                data: noStaleData ? await queryClient.fetchQuery(_query) : await queryClient.ensureQueryData(_query),
             });
         };
     };
