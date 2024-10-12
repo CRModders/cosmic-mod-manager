@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
 import ErrorView from "./pages/error-page";
+import { RootLayout } from "./pages/layout";
 import { ContextProviders, reactQueryClient } from "./providers";
 
 // Home page Loader
@@ -17,12 +18,9 @@ import { overviewPageLoader } from "./pages/dashboard/_loader";
 import { notificationsPageLoader } from "./pages/dashboard/notifications/_loader";
 import userProjectsLoader from "./pages/dashboard/projects/loader";
 
+import { searchResultsLoader } from "./pages/search/_loader";
 // Project settings Loaders
 import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
-
-import { RootLayout } from "./pages/layout";
-// Search page Loader
-import { searchResultsLoader } from "./pages/search/_loader";
 
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => ({

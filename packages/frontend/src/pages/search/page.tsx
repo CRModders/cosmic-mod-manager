@@ -7,16 +7,18 @@ import { type ProjectType, SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getSearchResultsQuery } from "./_loader";
+import { getSearchResults } from "./_loader";
 
 type Props = {
     type: ProjectType;
+    searchParams: URLSearchParams;
 };
 
-export const SearchResults = ({ type }: Props) => {
-    const currUrl = new URL(window.location.href);
-    const searchParams = currUrl.searchParams;
-    const searchResult = useQuery(getSearchResultsQuery(searchParams.toString(), type));
+export const SearchResults = ({ type, searchParams }: Props) => {
+    const searchResult = useQuery({
+        queryKey: ["search-results", type],
+        queryFn: () => getSearchResults(window.location.search.replace("?", ""), type),
+    });
 
     const refetchSearchResults = async () => {
         await searchResult.refetch();
@@ -35,7 +37,7 @@ export const SearchResults = ({ type }: Props) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         refetchSearchResults();
-    }, [searchParams.toString()]);
+    }, [searchParams]);
 
     return (
         <>

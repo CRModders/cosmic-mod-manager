@@ -47,7 +47,6 @@ export function NavigationLoadingBar() {
     useEffect(() => {
         // ? These seemingly purposeless checks prevent showing the loader when the url has changed but the path hasn't actually changed
         // ? I myself don't know how this works, but it works :)
-        const currPath = window.location.pathname;
         const newPath = navigation.location?.pathname;
 
         if ((navigation.state === "loading" || navigation.state === "submitting") && newPath && previousPath !== newPath) {
@@ -60,7 +59,6 @@ export function NavigationLoadingBar() {
             loadingStartPath = undefined;
         }
 
-        console.log({ startPath: loadingStartPath, newPath, currPath });
         if (newPath) previousPath = newPath;
     }, [navigation.location?.pathname]);
 

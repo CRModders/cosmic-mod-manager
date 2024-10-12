@@ -33,7 +33,8 @@ export const getSearchResultsQuery = (params: string, type: ProjectType) => {
     return {
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(params, type),
-        staleTime: 10 * 1000,
+        refetchOnMount: true,
+        staleTime: 5 * 1000,
     } satisfies UseQueryOptions;
 };
 
@@ -43,6 +44,6 @@ export const searchResultsLoader = (queryClient: QueryClient, type: ProjectType)
         return getSearchResultsQuery(searchParams.toString(), type);
     };
 
-    const _loader = routeLoader(queryFn, undefined, true);
+    const _loader = routeLoader(queryFn, undefined);
     return _loader(queryClient);
 };

@@ -154,7 +154,7 @@ const SearchPageLayout = ({ type }: Props) => {
                 <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
 
                 <div className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
-                    <SearchResults type={type} />
+                    <SearchResults type={type} searchParams={searchParams} />
                 </div>
             </div>
         </>
