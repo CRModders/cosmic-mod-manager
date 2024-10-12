@@ -6,7 +6,7 @@ import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
 import ErrorView from "./pages/error-page";
-import { reactQueryClient } from "./providers";
+import { ContextProviders, reactQueryClient } from "./providers";
 
 // Home page Loader
 import { homePageLoader } from "./pages/_loader";
@@ -20,6 +20,7 @@ import userProjectsLoader from "./pages/dashboard/projects/loader";
 // Project settings Loaders
 import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
 
+import { RootLayout } from "./pages/layout";
 // Search page Loader
 import { searchResultsLoader } from "./pages/search/_loader";
 
@@ -133,7 +134,7 @@ const searchPageRoutes = () => {
 const router = createBrowserRouter([
     {
         path: "",
-        lazy: () => import("@/src/providers"),
+        element: <ContextProviders />,
         loader: sessionDataLoader(reactQueryClient),
         errorElement: (
             <Suspense fallback={<SuspenseFallback />}>
@@ -155,7 +156,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "",
-                lazy: () => import("@/src/pages/layout"),
+                element: <RootLayout />,
                 children: [
                     {
                         path: "",

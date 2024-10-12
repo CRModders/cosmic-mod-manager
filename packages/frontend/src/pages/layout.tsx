@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 
-const RootLayout = () => {
+export const RootLayout = () => {
     useEffect(() => {
         const currUrl = new URL(window.location.href);
         const announcement = currUrl.searchParams.get("announce");
