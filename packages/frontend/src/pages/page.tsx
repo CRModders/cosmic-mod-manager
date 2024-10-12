@@ -13,7 +13,7 @@ import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import useFetch from "../hooks/fetch";
+import { getRandomProjectsQuery } from "./_loader";
 import styles from "./styles.module.css";
 
 const HomePage = () => {
@@ -38,7 +38,7 @@ const HomePage = () => {
             </Helmet>
 
             <main className="w-full">
-                <section className="full_page w-full flex flex-col items-center justify-center">
+                <section className="w-full flex flex-col items-center justify-center py-28">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center gap-1">
                         <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">Cosmic Reach Mod Manager</h1>
@@ -107,30 +107,17 @@ const HomePage = () => {
                         )}
                     </div>
                 </section>
-            </main>
 
-            <ProjectsCarousel />
+                <ProjectsCarousel />
+            </main>
         </>
     );
 };
 
 export default HomePage;
 
-const getRandomProjects = async () => {
-    try {
-        const response = await useFetch("/api/projects/random?count=20");
-        const result = await response.json();
-        if (result?.length) {
-            return result as ProjectListItem[];
-        }
-        return null;
-    } catch (error) {
-        return null;
-    }
-};
-
-const ProjectsCarousel = () => {
-    const projects = useQuery({ queryKey: ["homepage-carousel"], queryFn: getRandomProjects });
+const ProjectsCarousel = ({ className }: { className?: string }) => {
+    const projects = useQuery(getRandomProjectsQuery());
 
     if (!projects.data?.length) {
         // Adjust its height according to the height of the carousel
@@ -141,7 +128,7 @@ const ProjectsCarousel = () => {
     const carousel2Items = projects.data.slice(Math.floor(projects.data.length / 2));
 
     return (
-        <div className="w-full flex flex-col gap-2">
+        <div className={cn("w-full flex flex-col gap-2", className)}>
             <ScrollingCarousel items={carousel1Items} />
             <ScrollingCarousel items={carousel2Items} reverse />
         </div>

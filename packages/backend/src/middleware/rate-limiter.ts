@@ -179,7 +179,7 @@ const rateLimits: RateLimits = {
         timeWindow: 300,
     },
     searchApi: {
-        limit: 600,
+        limit: 1000,
         timeWindow: 300,
     },
     cdnAssets: {

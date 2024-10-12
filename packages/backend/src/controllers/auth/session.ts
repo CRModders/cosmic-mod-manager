@@ -176,7 +176,7 @@ export const getUserSessions = async (ctx: Context, userSession: ContextUserSess
         });
     }
 
-    return ctx.json({ success: true, sessions: list }, status.OK);
+    return ctx.json(list, status.OK);
 };
 
 export const deleteUserSession = async (ctx: Context, userSession: ContextUserSession, sessionId: string) => {

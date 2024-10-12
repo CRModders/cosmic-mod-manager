@@ -177,22 +177,6 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     },
                 },
             },
-            organisation: {
-                select: {
-                    id: true,
-                    name: true,
-                    slug: true,
-                    description: true,
-                    icon: true,
-                    team: {
-                        select: {
-                            members: {
-                                select: requiredProjectMemberFields,
-                            },
-                        },
-                    },
-                },
-            },
         },
     });
     if (!project?.id) {
@@ -211,7 +195,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
     const galleryFileIds = project.gallery.map((item) => item.imageFileId);
     const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
 
-    const organisation = project.organisation;
+    // const organisation = project.organisation;
     const projectIconFile = filesMap.get(project.iconFileId || "");
     const projectIconUrl = getAppropriateProjectIconUrl(projectIconFile, project.slug);
     return ctx.json(
@@ -220,7 +204,7 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
             project: {
                 id: project.id,
                 teamId: project.team.id,
-                orgId: project.organisation?.id || null,
+                orgId: null,
                 name: project.name,
                 icon: projectIconUrl,
                 status: project.status as ProjectPublishingStatus,
@@ -274,16 +258,17 @@ export const getProjectData = async (ctx: Context, slug: string, userSession: Co
                     permissions: currSessionMember?.id ? (member.permissions as ProjectPermission[]) : [],
                     organisationPermissions: currSessionMember?.id ? (member.organisationPermissions as OrganisationPermission[]) : [],
                 })),
-                organisation: organisation
-                    ? {
-                          id: organisation.id,
-                          name: organisation.name,
-                          slug: organisation.slug,
-                          description: organisation.description,
-                          icon: organisation.icon || "",
-                          members: [],
-                      }
-                    : null,
+                organisation: null,
+                // organisation
+                //     ? {
+                //           id: organisation.id,
+                //           name: organisation.name,
+                //           slug: organisation.slug,
+                //           description: organisation.description,
+                //           icon: organisation.icon || "",
+                //           members: [],
+                //       }
+                //     : null,
             } satisfies ProjectDetailsData,
         },
         status.OK,

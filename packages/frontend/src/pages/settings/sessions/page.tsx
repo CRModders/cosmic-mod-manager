@@ -10,32 +10,18 @@ import useFetch from "@/src/hooks/fetch";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { Capitalize } from "@shared/lib/utils";
 import { AuthProvider } from "@shared/types";
-import type { SessionListData } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { KeyRoundIcon, XIcon } from "lucide-react";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { toast } from "sonner";
 import { authProvidersList } from "../../auth/oauth-providers";
-
-const getLoggedInSessions = async () => {
-    try {
-        const response = await useFetch("/api/auth/sessions");
-        const sessions: SessionListData[] = (await response.json())?.sessions || [];
-        return sessions;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
+import { getLoggedInSessionsQuery } from "../_loaders";
 
 const SessionsPage = () => {
     const [isLoading, setIsLoading] = useState<{ value: boolean; sessionId: string }>({ value: false, sessionId: "" });
     const { session: currSession } = useSession();
-    const loggedInSessions = useQuery({
-        queryKey: ["logged-in-sessions"],
-        queryFn: getLoggedInSessions,
-    });
+    const loggedInSessions = useQuery(getLoggedInSessionsQuery());
 
     const revokeSession = async (sessionId: string) => {
         try {

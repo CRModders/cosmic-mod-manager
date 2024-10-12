@@ -4,11 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AuthProvider from "./contexts/auth";
 import { ThemeProvider } from "./hooks/use-theme";
 
-const reactQueryClient = new QueryClient({
+export const reactQueryClient = new QueryClient({
     defaultOptions: {
         queries: {
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
+            staleTime: 5000, // 5 seconds default stale time
         },
     },
 });

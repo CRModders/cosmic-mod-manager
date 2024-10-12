@@ -2,6 +2,7 @@ import useFetch from "@/src/hooks/fetch";
 import type { LoggedInUserData } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
+import { getSessionDataQuery } from "./_loaders";
 
 type AuthContextType = {
     session: LoggedInUserData | null | undefined;
@@ -22,18 +23,8 @@ export const AuthContext = createContext<AuthContextType>({
     isRefetchingData: false,
 });
 
-const getSessionData = async () => {
-    try {
-        const response = await useFetch("/api/auth/me");
-        return (await response.json())?.data || null;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
-
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const sessionData = useQuery({ queryKey: ["auth-session-data"], queryFn: () => getSessionData() });
+    const sessionData = useQuery(getSessionDataQuery());
 
     const logout = async () => {
         await useFetch("/api/auth/sessions", {

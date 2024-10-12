@@ -1,40 +1,53 @@
 import { SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import RootLayout from "@/src/pages/layout";
-import SettingsPageLayout from "@/src/pages/settings/layout";
 import { projectTypes } from "@shared/config/project";
 import { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import ProjectContextProvider from "./contexts/curr-project";
-import { UserProfileContextProvider } from "./contexts/user-profile";
 import { RedirectIfLoggedIn, RedirectIfNotLoggedIn } from "./pages/auth/guards";
-import DashboardLayout from "./pages/dashboard/layout";
 import ErrorView from "./pages/error-page";
 import NotFoundPage from "./pages/not-found";
-import ContextProviders from "./providers";
+import ContextProviders, { reactQueryClient } from "./providers";
 
 const HomePage = lazy(() => import("@/src/pages/page"));
+
+// Auth
 const LoginPage = lazy(() => import("@/src/pages/auth/login/page"));
 const SignUpPage = lazy(() => import("@/src/pages/auth/register/page"));
 const OAuthCallbackPage = lazy(() => import("@/src/pages/auth/callback/page"));
-const SettingsPage = lazy(() => import("@/src/pages/settings/page"));
-const AccountSettingsPage = lazy(() => import("@/src/pages/settings/account/page"));
-const SessionsPage = lazy(() => import("@/src/pages/settings/sessions/page"));
 const ConfirmActionPage = lazy(() => import("@/src/pages/auth/confirm-action/page"));
 const ChangePasswordPage = lazy(() => import("@/src/pages/auth/change-password/page"));
 const RevokeSessionPage = lazy(() => import("@/src/pages/auth/revoke-session"));
 
+// Settings page
+import SettingsPageLayout from "@/src/pages/settings/layout";
+import SettingsPage from "./pages/settings/page";
+const AccountSettingsPage = lazy(() => import("@/src/pages/settings/account/page"));
+const SessionsPage = lazy(() => import("@/src/pages/settings/sessions/page"));
+
 // Dashboard
-import NotificationsProvider from "./pages/dashboard/notifications/context";
+import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/loader";
+import DashboardLayout from "./pages/dashboard/layout";
+const NotificationsProvider = lazy(() => import("./pages/dashboard/notifications/context"));
 const OverviewPage = lazy(() => import("@/src/pages/dashboard/overview"));
 const NotificationsPage = lazy(() => import("@/src/pages/dashboard/notifications/page"));
 const NotificationsHistory = lazy(() => import("@/src/pages/dashboard/notifications/history"));
 const ProjectsPage = lazy(() => import("@/src/pages/dashboard/projects/page"));
+const OrganisationDashboardPage = lazy(() => import("@/src/pages/dashboard/organisation/page"));
 
 // Project details
 import ProjectPage from "@/src/pages/project/page";
+import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
+import ProjectContextProvider from "./contexts/curr-project";
+import { UserProfileContextProvider } from "./contexts/user-profile";
+import { homePageLoader } from "./pages/_loader";
+import { overviewPageLoader } from "./pages/dashboard/_loader";
+import { notificationsPageLoader } from "./pages/dashboard/notifications/_loader";
+import userProjectsLoader from "./pages/dashboard/projects/loader";
 import ProjectPageLayout from "./pages/project/layout";
+import { searchResultsLoader } from "./pages/search/_loader";
+import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
 const ProjectGallery = lazy(() => import("@/src/pages/project/gallery/page"));
 const ProjectVersionsPage = lazy(() => import("@/src/pages/project/versions/page"));
 const VersionChangelogs = lazy(() => import("@/src/pages/project/changelog"));
@@ -60,6 +73,7 @@ const SearchPageLayout = lazy(() => import("@/src/pages/search/layout"));
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => ({
         path: `${type}/:slug`,
+        loader: projectPageLoader(reactQueryClient),
         element: (
             <ProjectContextProvider>
                 <Suspense fallback={<SuspenseFallback />}>
@@ -222,6 +236,7 @@ const projectPageRoutes = () => {
 const searchPageRoutes = () => {
     return projectTypes.map((type) => ({
         path: `${type}s`,
+        loader: searchResultsLoader(reactQueryClient, type),
         element: (
             <Suspense fallback={<SuspenseFallback />}>
                 <SearchPageLayout type={type} />
@@ -234,6 +249,7 @@ const router = createBrowserRouter([
     {
         path: "",
         element: <Outlet />,
+        loader: sessionDataLoader(reactQueryClient),
         errorElement: (
             <Suspense fallback={<SuspenseFallback />}>
                 <ErrorView />
@@ -276,6 +292,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "",
+                        loader: homePageLoader(reactQueryClient),
                         element: (
                             <Suspense fallback={<SuspenseFallback />}>
                                 <HomePage />
@@ -313,6 +330,7 @@ const router = createBrowserRouter([
                     ...searchPageRoutes(),
                     {
                         path: "user/:userName",
+                        loader: userProfilePageLoader(reactQueryClient),
                         element: (
                             <UserProfileContextProvider>
                                 <Outlet />
@@ -342,22 +360,17 @@ const router = createBrowserRouter([
                         element: (
                             <>
                                 <RedirectIfNotLoggedIn redirectTo="/login" />
-                                <Suspense fallback={<SuspenseFallback />}>
-                                    <SettingsPageLayout />
-                                </Suspense>
+                                <SettingsPageLayout />
                             </>
                         ),
                         children: [
                             {
                                 path: "",
-                                element: (
-                                    <Suspense fallback={<SuspenseFallback />}>
-                                        <SettingsPage />
-                                    </Suspense>
-                                ),
+                                element: <SettingsPage />,
                             },
                             {
                                 path: "account",
+                                loader: accountSettingsPageLoader(reactQueryClient),
                                 element: (
                                     <Suspense fallback={<SuspenseFallback />}>
                                         <AccountSettingsPage />
@@ -366,6 +379,7 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: "sessions",
+                                loader: userSessionsPageLoader(reactQueryClient),
                                 element: (
                                     <Suspense fallback={<SuspenseFallback />}>
                                         <SessionsPage />
@@ -376,6 +390,8 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "dashboard",
+                        // Loading overview data on dashboard load
+                        loader: overviewPageLoader(reactQueryClient),
                         element: (
                             <>
                                 <RedirectIfNotLoggedIn redirectTo="/login" />
@@ -387,45 +403,51 @@ const router = createBrowserRouter([
                         children: [
                             {
                                 path: "",
+                                loader: notificationsPageLoader(reactQueryClient),
                                 element: (
-                                    <NotificationsProvider>
-                                        <Suspense fallback={<SuspenseFallback />}>
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <NotificationsProvider>
                                             <OverviewPage />
-                                        </Suspense>
-                                    </NotificationsProvider>
+                                        </NotificationsProvider>
+                                    </Suspense>
                                 ),
                             },
                             {
                                 path: "notifications",
+                                loader: notificationsPageLoader(reactQueryClient),
                                 element: (
-                                    <NotificationsProvider>
-                                        <Outlet />
-                                    </NotificationsProvider>
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <NotificationsProvider>
+                                            <Outlet />
+                                        </NotificationsProvider>
+                                    </Suspense>
                                 ),
                                 children: [
                                     {
                                         path: "",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <NotificationsPage />
-                                            </Suspense>
-                                        ),
+                                        element: <NotificationsPage />,
                                     },
                                     {
                                         path: "history",
-                                        element: (
-                                            <Suspense fallback={<SuspenseFallback />}>
-                                                <NotificationsHistory />
-                                            </Suspense>
-                                        ),
+                                        element: <NotificationsHistory />,
                                     },
                                 ],
                             },
                             {
                                 path: "projects",
+                                loader: userProjectsLoader(reactQueryClient),
                                 element: (
                                     <Suspense fallback={<SuspenseFallback />}>
                                         <ProjectsPage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: "organisations",
+                                loader: dashboardOrgsLoader(reactQueryClient),
+                                element: (
+                                    <Suspense fallback={<SuspenseFallback />}>
+                                        <OrganisationDashboardPage />
                                     </Suspense>
                                 ),
                             },

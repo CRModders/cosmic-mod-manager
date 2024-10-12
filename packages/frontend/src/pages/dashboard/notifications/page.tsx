@@ -278,50 +278,50 @@ export const TeamInviteNotification = ({
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2">
-                    {concise === true && relatedProject && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        size="icon"
-                                        variant={"ghost-inverted"}
-                                        className="text-success-foreground"
-                                        disabled={!!isLoading}
-                                        onClick={acceptInvite}
-                                    >
-                                        {isLoading === "accept" ? (
-                                            <LoadingSpinner size="xs" />
-                                        ) : (
-                                            <CheckIcon strokeWidth={2.2} className="w-btn-icon-md h-btn-icon-md" />
-                                        )}
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Accept</TooltipContent>
-                            </Tooltip>
+                <TooltipProvider>
+                    <div className="flex items-center justify-center gap-2">
+                        {concise === true && relatedProject && (
+                            <>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            size="icon"
+                                            variant={"ghost-inverted"}
+                                            className="text-success-foreground"
+                                            disabled={!!isLoading}
+                                            onClick={acceptInvite}
+                                        >
+                                            {isLoading === "accept" ? (
+                                                <LoadingSpinner size="xs" />
+                                            ) : (
+                                                <CheckIcon strokeWidth={2.2} className="w-btn-icon-md h-btn-icon-md" />
+                                            )}
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Accept</TooltipContent>
+                                </Tooltip>
 
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        variant={"ghost-inverted"}
-                                        size="icon"
-                                        className="text-danger-foreground"
-                                        disabled={!!isLoading}
-                                        onClick={declineInvite}
-                                    >
-                                        {isLoading === "decline" ? (
-                                            <LoadingSpinner size="xs" />
-                                        ) : (
-                                            <XIcon className="w-btn-icon-md h-btn-icon-md" />
-                                        )}
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Decline</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    )}
-                    {showMarkAsReadButton && !notification.read && (
-                        <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant={"ghost-inverted"}
+                                            size="icon"
+                                            className="text-danger-foreground"
+                                            disabled={!!isLoading}
+                                            onClick={declineInvite}
+                                        >
+                                            {isLoading === "decline" ? (
+                                                <LoadingSpinner size="xs" />
+                                            ) : (
+                                                <XIcon className="w-btn-icon-md h-btn-icon-md" />
+                                            )}
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Decline</TooltipContent>
+                                </Tooltip>
+                            </>
+                        )}
+                        {showMarkAsReadButton && !notification.read && (
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
@@ -336,10 +336,8 @@ export const TeamInviteNotification = ({
                                 </TooltipTrigger>
                                 <TooltipContent>Mark as read</TooltipContent>
                             </Tooltip>
-                        </TooltipProvider>
-                    )}
-                    {showDeleteButton && (
-                        <TooltipProvider>
+                        )}
+                        {showDeleteButton && (
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
@@ -354,9 +352,9 @@ export const TeamInviteNotification = ({
                                 </TooltipTrigger>
                                 <TooltipContent>Delete notification</TooltipContent>
                             </Tooltip>
-                        </TooltipProvider>
-                    )}
-                </div>
+                        )}
+                    </div>
+                </TooltipProvider>
             </div>
 
             {concise === false && relatedProject && (

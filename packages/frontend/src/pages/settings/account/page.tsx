@@ -6,47 +6,25 @@ import { Label } from "@/components/ui/label";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
-import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
-import type { LinkedProvidersListData } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { getLinkedAuthProvidersQuery } from "../_loaders";
 import DeleteAccountDialog from "./delete-account";
 import EditProfileDialog from "./edit-profile";
 import ManageAuthProviders from "./manage-providers";
 import ManagePasswords from "./password/page";
 
-const getLinkedAuthProviders = async (userId?: string) => {
-    if (!userId) return null;
-    try {
-        const res = await useFetch("/api/auth/auth-providers");
-        const providers: LinkedProvidersListData[] = (await res.json())?.providers || [];
-        return providers;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
-
 const AccountSettingsPage = () => {
     const { session, isFetchingData, validateSession } = useSession();
-    const linkedAuthProviders = useQuery({
-        queryKey: ["linked-auth-providers"],
-        queryFn: async () => getLinkedAuthProviders(session?.id),
-    });
+    const linkedAuthProviders = useQuery(getLinkedAuthProvidersQuery());
 
     const refetchLinkedAuthProviders = async () => {
         await linkedAuthProviders.refetch();
         return;
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        if (session?.id && !linkedAuthProviders.data?.length) linkedAuthProviders.refetch();
-    }, [session, linkedAuthProviders.data]);
-
-    if (session === null) return null;
+    if (!session) return null;
 
     return (
         <>
@@ -54,7 +32,7 @@ const AccountSettingsPage = () => {
                 <title>Account settings | {SITE_NAME_SHORT}</title>
                 <meta name="description" content={`Your ${SITE_NAME_SHORT} account settings`} />
             </Helmet>
-            {session === undefined || linkedAuthProviders.isLoading ? (
+            {linkedAuthProviders.isLoading ? (
                 <FullWidthSpinner />
             ) : (
                 <>

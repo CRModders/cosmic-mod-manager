@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import "./styles.css";
 import { useEffect } from "react";
+import "./styles.css";
 
 type LoaderSizes = "xs" | "sm" | "default" | "lg" | "xl" | "2xl";
 
@@ -67,10 +67,14 @@ export const FullPageSpinner = ({ size, className }: { size?: LoaderSizes; class
     );
 };
 
-export const FullWidthSpinner = ({ size, className }: { size?: LoaderSizes; className?: string }) => {
+export const FullWidthSpinner = ({
+    size,
+    className,
+    customSpinner,
+}: { size?: LoaderSizes; className?: string; customSpinner?: React.ReactNode }) => {
     return (
         <div className={cn("w-full flex items-center justify-center py-12", className)}>
-            <LoadingSpinner size={size} />
+            {customSpinner ? customSpinner : <LoadingSpinner size={size} />}
         </div>
     );
 };

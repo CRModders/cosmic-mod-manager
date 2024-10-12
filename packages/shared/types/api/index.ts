@@ -38,15 +38,6 @@ export interface TeamMember {
     organisationPermissions: OrganisationPermission[];
 }
 
-export interface Organisation {
-    id: string;
-    name: string;
-    slug: string;
-    description: string | null;
-    icon: string | null;
-    members: TeamMember[];
-}
-
 export interface GalleryItem {
     id: string;
     name: string;
@@ -92,7 +83,13 @@ export interface ProjectDetailsData {
 
     gallery: GalleryItem[];
     members: TeamMember[];
-    organisation: Organisation | null;
+    organisation: {
+        id: string;
+        name: string;
+        slug: string;
+        icon: string | null;
+        description: string | null;
+    } | null;
 }
 
 export interface VersionFile {
@@ -171,4 +168,14 @@ export interface Notification {
     body: {
         [key: string]: string | number | boolean;
     };
+}
+
+export interface Organisation {
+    id: string;
+    teamId: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    description: string | null;
+    members: TeamMember[];
 }

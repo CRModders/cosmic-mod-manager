@@ -1,9 +1,8 @@
-import { useSession } from "@/src/contexts/auth";
-import useFetch from "@/src/hooks/fetch";
 import type { Notification, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect } from "react";
+import { getNotificationsQuery, getRelatedProjectsQuery, getRelatedUsersQuery } from "./_loader";
 
 interface NotificationsContext {
     isLoading: boolean;
@@ -21,71 +20,10 @@ export const NotificationsContext = createContext<NotificationsContext>({
     refetchNotifications: async () => {},
 });
 
-const getNotifications = async () => {
-    try {
-        const response = await useFetch("/api/notifications");
-        const result = await response.json();
-        return result as Notification[];
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
-
-const getRelatedProjects = async (notifications: Notification[]) => {
-    if (!notifications.length) return null;
-    const projectIds: string[] = [];
-    for (const notification of notifications) {
-        const projectId = notification.body?.projectId;
-        if (projectId && typeof projectId === "string") projectIds.push(projectId);
-    }
-
-    try {
-        const response = await useFetch(`/api/projects?ids=${encodeURIComponent(JSON.stringify(projectIds))}`);
-        const result = await response.json();
-        if (result?.success === false) return null;
-
-        return result as ProjectListItem[];
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
-
-const getRelatedUsers = async (notifications: Notification[]) => {
-    if (!notifications.length) return null;
-    const userIds: string[] = [];
-    for (const notification of notifications) {
-        const userId = notification.body?.invitedBy;
-        if (userId && typeof userId === "string") userIds.push(userId);
-    }
-
-    try {
-        const response = await useFetch(`/api/users?ids=${encodeURIComponent(JSON.stringify(userIds))}`);
-        const result = await response.json();
-        if (!result?.success === false) return null;
-
-        return result as UserProfileData[];
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
-
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
-    const { session } = useSession();
-    const notifications = useQuery({
-        queryKey: ["user-notifications"],
-        queryFn: getNotifications,
-    });
-    const relatedProjects = useQuery({
-        queryKey: [`notification-relatedProjects-${session?.userName}`],
-        queryFn: () => getRelatedProjects(notifications.data || []),
-    });
-    const relatedUsers = useQuery({
-        queryKey: [`notification-relatedUsers-${session?.userName}`],
-        queryFn: () => getRelatedUsers(notifications.data || []),
-    });
+    const notifications = useQuery(getNotificationsQuery());
+    const relatedProjects = useQuery(getRelatedProjectsQuery(notifications.data || []));
+    const relatedUsers = useQuery(getRelatedUsersQuery(notifications.data || []));
 
     const refetchNotifications = async () => {
         await notifications.refetch();

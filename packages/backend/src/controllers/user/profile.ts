@@ -33,7 +33,7 @@ export const getUserProfileData = async (ctx: Context, userSession: ContextUserS
         dateJoined: user.dateJoined,
     };
 
-    return ctx.json({ success: true, user: dataObj }, status.OK);
+    return ctx.json(dataObj, status.OK);
 };
 
 export const updateUserProfile = async (ctx: Context, profileData: z.infer<typeof profileUpdateFormSchema>) => {
@@ -108,83 +108,61 @@ export const getLinkedAuthProviders = async (ctx: Context, userSession: ContextU
         });
     }
 
-    return ctx.json({ providers: providersList }, status.OK);
+    return ctx.json(providersList, status.OK);
 };
 
 export const getAllVisibleProjects = async (
     ctx: Context,
     userSession: ContextUserSession | undefined,
-    slug: string,
+    userSlug: string,
     listedProjectsOnly: boolean,
 ) => {
     const user = await prisma.user.findFirst({
         where: {
-            OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
+            OR: [{ id: userSlug }, { lowerCaseUserName: userSlug.toLowerCase() }],
         },
     });
     if (!user) return ctx.json({ success: false, message: "user not found" }, status.NOT_FOUND);
 
-    const list = await prisma.teamMember.findMany({
+    const userProjects = await prisma.project.findMany({
         where: {
-            userId: user.id,
-            accepted: true,
+            team: {
+                members: {
+                    some: {
+                        userId: user.id,
+                        accepted: true,
+                    },
+                },
+            },
         },
-        select: {
+        include: {
             team: {
                 select: {
-                    project: {
+                    members: {
+                        where: {
+                            userId: userSession?.id,
+                        },
                         select: {
                             id: true,
-                            name: true,
-                            slug: true,
-                            type: true,
-                            summary: true,
-                            iconFileId: true,
-                            downloads: true,
-                            followers: true,
-                            dateUpdated: true,
-                            datePublished: true,
-                            status: true,
-                            visibility: true,
-                            clientSide: true,
-                            serverSide: true,
-                            featuredCategories: true,
-                            categories: true,
-                            gameVersions: true,
-                            loaders: true,
-                            team: {
-                                select: {
-                                    members: {
-                                        where: {
-                                            userId: userSession?.id,
-                                        },
-                                        select: {
-                                            id: true,
-                                            userId: true,
-                                        },
-                                    },
-                                },
-                            },
+                            userId: true,
                         },
                     },
                 },
             },
         },
-        orderBy: { team: { project: { downloads: "desc" } } },
+        orderBy: { downloads: "desc" },
     });
 
-    if (!list) return ctx.json({ success: true, projects: [] }, status.OK);
+    if (!userProjects?.length) return ctx.json({ success: true, projects: [] }, status.OK);
 
     const iconFileIds: string[] = [];
-    for (const item of list) {
-        const project = item.team.project;
+    for (const project of userProjects) {
         if (project?.iconFileId) iconFileIds.push(project.iconFileId);
     }
     const iconFilesMap = await getFilesFromId(iconFileIds);
 
     const projectListData: ProjectListItem[] = [];
-    for (const item of list) {
-        const project = item.team.project;
+    for (const project of userProjects) {
         if (!project) continue;
         if (
             listedProjectsOnly === true &&
@@ -214,5 +192,5 @@ export const getAllVisibleProjects = async (
         });
     }
 
-    return ctx.json({ success: true, projects: projectListData }, status.OK);
+    return ctx.json(projectListData, status.OK);
 };

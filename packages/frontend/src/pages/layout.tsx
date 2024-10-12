@@ -2,24 +2,17 @@ import Navbar from "@/components/layout/Navbar/navbar";
 import Footer from "@/components/layout/footer";
 import ContextProviders from "@/src/providers";
 import { useEffect } from "react";
-import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { toast } from "sonner";
 
 const RootLayout = () => {
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        const announcement = searchParams.get("announce");
+        const currUrl = new URL(window.location.href);
+        const announcement = currUrl.searchParams.get("announce");
         if (announcement) {
             toast(announcement);
-
-            const url = new URL(window.location.href);
-            url.searchParams.delete("announce");
-            navigate(url.href.replace(url.origin, ""));
         }
-    }, [searchParams]);
+    }, []);
 
     return (
         <ContextProviders>

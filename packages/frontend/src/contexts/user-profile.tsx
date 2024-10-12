@@ -4,8 +4,8 @@ import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext } from "react";
 import { useParams } from "react-router-dom";
-import useFetch from "../hooks/fetch";
 import NotFoundPage from "../pages/not-found";
+import { getProjectsListDataQuery, getUserProfileDataQuery } from "./_loaders";
 
 interface UserProfileContext {
     userData: UserProfileData | null;
@@ -17,35 +17,11 @@ export const userProfileContext = createContext<UserProfileContext>({
     projectsList: null,
 });
 
-const getUserProfileData = async (userName: string | undefined) => {
-    if (!userName) return null;
-
-    try {
-        const response = await useFetch(`/api/user/${userName}`);
-        return ((await response.json())?.user as UserProfileData) || null;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
-
-const getProjectsListData = async (userName: string | undefined) => {
-    if (!userName) return null;
-
-    try {
-        const response = await useFetch(`/api/user/${userName}/projects?listedOnly=true`);
-        return ((await response.json())?.projects as ProjectListItem[]) || null;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
-
 export const UserProfileContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { userName } = useParams();
 
-    const userData = useQuery({ queryKey: [`user-profile-${userName}`], queryFn: () => getUserProfileData(userName) });
-    const projectsList = useQuery({ queryKey: [`user-projects-${userName}`], queryFn: () => getProjectsListData(userName) });
+    const userData = useQuery(getUserProfileDataQuery(userName));
+    const projectsList = useQuery(getProjectsListDataQuery(userName));
     const isFetchingData = userData.isLoading && projectsList.isLoading;
 
     return (

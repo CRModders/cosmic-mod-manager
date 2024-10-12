@@ -6,25 +6,13 @@ import { ButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
-import useFetch from "@/src/hooks/fetch";
-import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { getAllUserProjectsQuery } from "./_loader";
 import { NotificationsContext } from "./notifications/context";
 import { NotificationItem } from "./notifications/page";
-
-const getAllUserProjects = async () => {
-    try {
-        const response = await useFetch("/api/project");
-        const result = await response.json();
-        return (result?.projects as ProjectListItem[]) || null;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-};
 
 const OverviewPage = () => {
     const { session } = useSession();
@@ -37,7 +25,7 @@ const OverviewPage = () => {
     } = useContext(NotificationsContext);
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
-    const projectsList = useQuery({ queryKey: ["all-projects-logged-in-user"], queryFn: () => getAllUserProjects() });
+    const projectsList = useQuery(getAllUserProjectsQuery());
     const totalProjects = projectsList.data?.length || 0;
     const totalDownloads = projectsList.data?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalFollowers = 0;

@@ -1,46 +1,22 @@
 import SearchListItem from "@/components/layout/search-list-item";
 import PaginatedNavigation from "@/components/pagination-nav";
 import { LoadingSpinner } from "@/components/ui/spinner";
-import useFetch from "@/src/hooks/fetch";
 import { defaultSearchLimit, pageOffsetParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";
 import { type ProjectType, SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-
-interface SearchResult {
-    estimatedTotalHits: number;
-    hits: ProjectListItem[];
-    limit: number;
-    offset: number;
-    processingTimeMs: number;
-    query: string;
-}
-
-let searchResultsFetchReqAbortController: AbortController;
-
-const getSearchResults = async (params: string, type: ProjectType) => {
-    if (searchResultsFetchReqAbortController) searchResultsFetchReqAbortController.abort();
-    searchResultsFetchReqAbortController = new AbortController();
-
-    const defaultParams = `${params ? "&" : "?"}type=${type}`;
-    const res = await useFetch(`/api/search${params}${defaultParams}`, {
-        signal: searchResultsFetchReqAbortController.signal,
-    });
-    const data = await res.json();
-
-    return (data || {}) as SearchResult;
-};
+import { getSearchResultsQuery } from "./_loader";
 
 type Props = {
     type: ProjectType;
-    searchParams: URLSearchParams;
 };
 
-const SearchResults = ({ type, searchParams }: Props) => {
-    const params = window.location.href.replace(window.location.origin, "").replace(window.location.pathname, "");
-    const searchResult = useQuery({ queryKey: [`${type}-search`], queryFn: () => getSearchResults(params, type) });
+const SearchResults = ({ type }: Props) => {
+    const currUrl = new URL(window.location.href);
+    const searchParams = currUrl.searchParams;
+    const searchResult = useQuery(getSearchResultsQuery(searchParams.toString(), type));
 
     const refetchSearchResults = async () => {
         await searchResult.refetch();
@@ -59,7 +35,7 @@ const SearchResults = ({ type, searchParams }: Props) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         refetchSearchResults();
-    }, [params]);
+    }, [searchParams.toString()]);
 
     return (
         <>

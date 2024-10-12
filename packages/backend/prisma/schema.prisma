@@ -84,7 +84,7 @@ model UserConfirmation {
 model Organisation {
     id          String  @id @db.VarChar(32)
     teamId      String  @unique @db.VarChar(32)
-    slug        String  @db.VarChar(32)
+    slug        String  @unique @db.VarChar(32)
     name        String  @db.VarChar(32)
     description String? @db.VarChar(256)
     icon        String? @db.VarChar(32)
@@ -142,7 +142,7 @@ model Project {
     visibility     String    @db.VarChar(32)
     iconFileId     String?   @db.VarChar(32)
 
-    // null for custom licenses
+    // licenseId maybe null for custom licenses
     licenseId   String? @db.VarChar(64)
     licenseName String? @db.VarChar(128)
     licenseUrl  String? @db.VarChar(256)
@@ -165,8 +165,8 @@ model Project {
 
     versions     Version[]     @relation(name: "ProjectVersions")
     team         Team          @relation(name: "ProjectTeam", fields: [teamId], references: [id])
-    organisation Organisation? @relation(name: "OrganisationProjects", fields: [organisationId], references: [id])
     gallery      GalleryItem[] @relation(name: "ProjectGallery")
+    organisation Organisation? @relation(name: "OrganisationProjects", fields: [organisationId], references: [id])
 }
 
 model Version {
