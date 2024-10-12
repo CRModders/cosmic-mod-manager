@@ -33,7 +33,7 @@ export const getSearchResultsQuery = (params: string, type: ProjectType) => {
     return {
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(params, type),
-        staleTime: 1000,
+        staleTime: 10 * 1000,
     } satisfies UseQueryOptions;
 };
 

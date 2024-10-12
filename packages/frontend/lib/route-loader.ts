@@ -22,6 +22,7 @@ export function routeLoader<T>(query: routeLoaderQueryArg<T> | null, customData?
 
             const _query = buildQueryObj(query, args);
             return defer({
+                // Fetch the data for the query
                 data: noStaleData ? await queryClient.fetchQuery(_query) : await queryClient.ensureQueryData(_query),
             });
         };
