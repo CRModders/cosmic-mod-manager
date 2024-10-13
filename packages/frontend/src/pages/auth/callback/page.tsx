@@ -9,9 +9,10 @@ import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const OAuthCallbackPage = () => {
-    const { validateSession } = useSession();
+    const { invalidateSessionQuery } = useSession();
     const [errorMsg, setErrorMsg] = useState("");
     const [searchParams] = useSearchParams();
     const { authProvider } = useParams();
@@ -26,15 +27,15 @@ const OAuthCallbackPage = () => {
             });
             const data = await response.json();
 
-            redirectUrl = data?.redirect || redirectUrl;
-            redirectUrl += `?announce=${encodeURIComponent(data?.message)}`;
-
             if (!response?.ok) {
                 setErrorMsg(data?.message || "Something went wrong!");
                 return;
             }
 
-            await validateSession();
+            invalidateSessionQuery();
+            toast.success(data?.message || "Success!");
+
+            redirectUrl = data?.redirect || redirectUrl;
             navigate(redirectUrl);
         } catch (error) {
             console.error(error);

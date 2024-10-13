@@ -1,4 +1,3 @@
-import { routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
 import type { Notification, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
@@ -23,8 +22,6 @@ export const getNotificationsQuery = () => {
         staleTime: 10 * 1000,
     } satisfies UseQueryOptions;
 };
-
-export const notificationsPageLoader = routeLoader(getNotificationsQuery());
 
 // Additional queries for related projects and users
 const getRelatedProjects = async (notifications: Notification[]) => {

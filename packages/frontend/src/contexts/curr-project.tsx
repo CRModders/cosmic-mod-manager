@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { NotFoundPage } from "../pages/not-found";
+import { reactQueryClient } from "../providers";
 import { getAllProjectVersionsQuery, getProjectDataQuery, getProjectDependenciesQuery } from "./_loaders";
 import { useSession } from "./auth";
 
@@ -19,9 +20,9 @@ type ProjectContext = {
     fetchingProjectData: boolean;
     featuredProjectVersions: ProjectVersionData[] | undefined | null;
     allProjectVersions: ProjectVersionData[] | undefined | null;
-    fetchAllProjectVersions: () => Promise<void>;
     currUsersMembership: CurrUsersMembership;
     projectDependencies: DependencyData;
+    invalidateAllQueries: () => Promise<void>;
 };
 
 export const projectContext = createContext<ProjectContext>({
@@ -35,7 +36,6 @@ export const projectContext = createContext<ProjectContext>({
     },
     featuredProjectVersions: undefined,
     allProjectVersions: undefined,
-    fetchAllProjectVersions: async () => {},
     currUsersMembership: {
         data: null,
         status: LoadingStatus.LOADING,
@@ -44,7 +44,16 @@ export const projectContext = createContext<ProjectContext>({
         projects: [],
         versions: [],
     },
+    invalidateAllQueries: async () => {},
 });
+
+export const invalidateAllProjectQueries = async (slug: string) => {
+    await Promise.all([
+        reactQueryClient.invalidateQueries(getProjectDataQuery(slug)),
+        reactQueryClient.invalidateQueries(getAllProjectVersionsQuery(slug)),
+        reactQueryClient.invalidateQueries(getProjectDependenciesQuery(slug)),
+    ]);
+};
 
 export const ProjectContextProvider = ({
     children,
@@ -52,7 +61,6 @@ export const ProjectContextProvider = ({
     children: React.ReactNode;
 }) => {
     const { slug } = useParams();
-    // const [currUsersMembership, setCurrUsersMembership] = useState<CurrUsersMembership>({ data: null, status: LoadingStatus.LOADING });
     const [currProjectSlug, setCurrProjectSlug] = useState(slug || "");
     const { session } = useSession();
 
@@ -62,17 +70,9 @@ export const ProjectContextProvider = ({
         refetch: refetchProjectData,
     } = useQuery(getProjectDataQuery(currProjectSlug));
 
-    const {
-        data: allProjectVersions,
-        isLoading: isAllProjectVersionsLoading,
-        refetch: refetchAllProjectVersions,
-    } = useQuery(getAllProjectVersionsQuery(currProjectSlug));
+    const { data: allProjectVersions, isLoading: isAllProjectVersionsLoading } = useQuery(getAllProjectVersionsQuery(currProjectSlug));
 
-    const {
-        data: projectDependencies,
-        isLoading: isProjectDependenciesLoading,
-        refetch: refetchProjectDependencies,
-    } = useQuery(getProjectDependenciesQuery(currProjectSlug));
+    const { data: projectDependencies, isLoading: isProjectDependenciesLoading } = useQuery(getProjectDependenciesQuery(currProjectSlug));
 
     const fetchProjectData = async (slug?: string) => {
         if (slug && currProjectSlug !== slug) {
@@ -80,11 +80,6 @@ export const ProjectContextProvider = ({
         } else {
             await refetchProjectData();
         }
-    };
-
-    const fetchAllProjectVersions = async () => {
-        await refetchAllProjectVersions();
-        await refetchProjectDependencies();
     };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -133,12 +128,12 @@ export const ProjectContextProvider = ({
                 alterProjectSlug: setCurrProjectSlug,
                 featuredProjectVersions,
                 allProjectVersions,
-                fetchAllProjectVersions,
                 currUsersMembership: currUsersMembership,
                 projectDependencies: projectDependencies || {
                     projects: [],
                     versions: [],
                 },
+                invalidateAllQueries: async () => await invalidateAllProjectQueries(currProjectSlug),
             }}
         >
             {children}

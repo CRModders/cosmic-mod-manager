@@ -8,7 +8,7 @@ import { oAuthSignUpHandler } from "@/controllers/auth/signup";
 import { getLinkedAuthProviders } from "@/controllers/user/profile";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";
-import { status, defaultInvalidReqResponse, defaultServerErrorResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, defaultServerErrorResponse, status } from "@/utils/http";
 import { authProvidersList } from "@shared/config/project";
 import { getAuthProviderFromString, getUserRoleFromString } from "@shared/lib/utils/convertors";
 import { LoginFormSchema } from "@shared/schemas/auth";

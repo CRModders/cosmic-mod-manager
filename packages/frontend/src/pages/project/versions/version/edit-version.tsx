@@ -15,7 +15,7 @@ import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSubmit } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
 import {
@@ -28,11 +28,12 @@ import {
 } from "./_components";
 
 const EditVersionPage = () => {
-    const { projectData, allProjectVersions, fetchProjectData, fetchAllProjectVersions, projectDependencies } = useContext(projectContext);
-
+    const { projectData, allProjectVersions, projectDependencies, invalidateAllQueries } = useContext(projectContext);
     const { slug: projectSlug, versionSlug } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const submit = useSubmit();
+
     const versionData = allProjectVersions?.filter((version) => {
         if (version.slug === versionSlug || version.id === versionSlug) return version;
     })[0];
@@ -72,7 +73,7 @@ const EditVersionPage = () => {
     form.watch();
 
     const handleSubmit = async (values: z.infer<typeof updateVersionFormSchema>) => {
-        if (isLoading) return;
+        if (isLoading || !projectData) return;
         setIsLoading(true);
 
         try {
@@ -103,14 +104,7 @@ const EditVersionPage = () => {
                 return toast.error(result?.message || "Failed to update version");
             }
 
-            // Reload project data if project loaders or game versions have changed due to the version update
-            if (result?.data?.projectLoadersChanged === true || result?.data?.projectGameVersionsChanged === true) {
-                await Promise.all([fetchAllProjectVersions(), fetchProjectData()]);
-            } else {
-                await fetchAllProjectVersions();
-            }
-
-            if (!projectData) return;
+            await invalidateAllQueries();
             navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.data?.slug || versionData?.slug));
         } finally {
             setIsLoading(false);

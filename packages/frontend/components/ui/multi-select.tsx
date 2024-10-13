@@ -73,7 +73,7 @@ export const MultiSelect = ({
     };
 
     return (
-        <DropdownMenu modal>
+        <DropdownMenu>
             <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
             <DropdownMenuContent
                 align={popupAlign || "center"}

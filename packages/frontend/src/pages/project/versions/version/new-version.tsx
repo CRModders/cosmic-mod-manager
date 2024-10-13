@@ -29,7 +29,7 @@ import {
 } from "./_components";
 
 const UploadVersionPage = () => {
-    const { projectData, fetchProjectData, fetchAllProjectVersions } = useContext(projectContext);
+    const { projectData, invalidateAllQueries } = useContext(projectContext);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -83,7 +83,7 @@ const UploadVersionPage = () => {
                 return;
             }
 
-            await Promise.all([fetchAllProjectVersions(), fetchProjectData()]);
+            await invalidateAllQueries();
             navigate(getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.slug));
             return;
         } finally {

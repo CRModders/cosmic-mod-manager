@@ -24,7 +24,7 @@ const getSessionData = async () => {
 };
 export const getSessionDataQuery = () => {
     return {
-        queryKey: ["auth-session-data"],
+        queryKey: ["user-session"],
         queryFn: getSessionData,
     };
 };
@@ -49,7 +49,7 @@ const getUserProfileData = async (userName: string | undefined) => {
 };
 export const getUserProfileDataQuery = (userName: string | undefined) => {
     return {
-        queryKey: [`user-profile-${userName}`],
+        queryKey: ["user-profile", userName],
         queryFn: () => getUserProfileData(userName),
     };
 };
@@ -72,7 +72,7 @@ const getProjectsListData = async (userName: string | undefined) => {
 };
 export const getProjectsListDataQuery = (userName: string | undefined) => {
     return {
-        queryKey: [`user-projects-list-${userName}`],
+        queryKey: ["user-projects-list", userName],
         queryFn: () => getProjectsListData(userName),
     };
 };

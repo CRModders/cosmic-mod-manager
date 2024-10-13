@@ -1,5 +1,6 @@
 import { routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
+import { reactQueryClient } from "@/src/providers";
 import type { ProjectListItem } from "@shared/types/api";
 import type { UseQueryOptions } from "@tanstack/react-query";
 
@@ -16,9 +17,13 @@ const getUserProjects = async () => {
 
 export const getUserProjectsQuery = () => {
     return {
-        queryKey: ["user-projects"],
+        queryKey: ["session-user-projects"],
         queryFn: getUserProjects,
     } satisfies UseQueryOptions;
+};
+
+export const invalidateUserProjectsQuery = async () => {
+    await reactQueryClient.invalidateQueries(getUserProjectsQuery());
 };
 
 const userProjectsLoader = routeLoader(getUserProjectsQuery());

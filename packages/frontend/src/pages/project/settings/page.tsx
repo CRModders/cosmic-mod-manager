@@ -24,6 +24,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
+import { invalidateUserProjectsQuery } from "@/src/pages/dashboard/projects/loader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { projectTypes } from "@shared/config/project";
@@ -52,7 +53,6 @@ const getInitialValues = (projectData?: ProjectDetailsData | null) => {
         summary: projectData?.summary,
     };
 };
-
 const GeneralSettingsPage = () => {
     const { projectData, fetchProjectData } = useContext(projectContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -516,6 +516,7 @@ const DeleteProjectDialog = ({ name, slug }: { name: string; slug: string }) => 
             }
 
             toast.success(data?.message || "Success");
+            invalidateUserProjectsQuery();
             navigate("/dashboard/projects");
         } finally {
             setIsLoading(false);

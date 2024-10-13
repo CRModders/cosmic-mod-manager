@@ -2,12 +2,15 @@ import useFetch from "@/src/hooks/fetch";
 import type { LoggedInUserData } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { reactQueryClient } from "../providers";
 import { getSessionDataQuery } from "./_loaders";
 
 type AuthContextType = {
     session: LoggedInUserData | null | undefined;
     logout: () => Promise<void>;
     validateSession: () => Promise<void>;
+    invalidateSessionQuery: () => Promise<void>;
     isFetchingInitialData: boolean;
     isFetchingData: boolean;
     isRefetchingData: boolean;
@@ -18,6 +21,7 @@ export const AuthContext = createContext<AuthContextType>({
     session: undefined,
     logout: async () => {},
     validateSession: async () => {},
+    invalidateSessionQuery: async () => {},
     isFetchingInitialData: true,
     isFetchingData: true,
     isRefetchingData: false,
@@ -25,18 +29,24 @@ export const AuthContext = createContext<AuthContextType>({
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const sessionData = useQuery(getSessionDataQuery());
+    const navigate = useNavigate();
 
     const logout = async () => {
         await useFetch("/api/auth/sessions", {
             method: "DELETE",
         });
 
-        window.location.reload();
+        invalidateSessionQuery();
+        navigate(window.location.href.replace(window.location.origin, ""));
     };
 
-    const validateSession = async () => {
+    async function validateSession() {
         await sessionData.refetch();
-    };
+    }
+
+    async function invalidateSessionQuery() {
+        await reactQueryClient.invalidateQueries(getSessionDataQuery());
+    }
 
     return (
         <AuthContext.Provider
@@ -44,6 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 session: sessionData.data,
                 logout,
                 validateSession,
+                invalidateSessionQuery,
                 isFetchingInitialData: sessionData.isLoading,
                 isFetchingData: sessionData.isFetching,
                 isRefetchingData: sessionData.isRefetching,

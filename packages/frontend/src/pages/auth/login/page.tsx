@@ -15,16 +15,17 @@ import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { RedirectIfLoggedIn } from "../guards";
 import OAuthProvidersWidget from "../oauth-providers";
 
 const LoginPage = () => {
-    const { validateSession } = useSession();
+    const { invalidateSessionQuery } = useSession();
     const [formError, setFormError] = useState("");
     const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
+    const navigate = useNavigate();
 
     const loginForm = useForm<z.infer<typeof LoginFormSchema>>({
         resolver: zodResolver(LoginFormSchema),
@@ -34,14 +35,14 @@ const LoginPage = () => {
         },
     });
 
-    const handleCredentialLogin = async () => {
+    const handleCredentialLogin = async (formData: z.infer<typeof LoginFormSchema>) => {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: AuthProvider.CREDENTIAL });
 
             const response = await useFetch(`/api/auth/${AuthActionIntent.SIGN_IN}/${AuthProvider.CREDENTIAL}`, {
                 method: "POST",
-                body: JSON.stringify(loginForm.getValues()),
+                body: JSON.stringify(formData),
             });
             const result = await response.json();
 
@@ -49,8 +50,9 @@ const LoginPage = () => {
                 return toast.error(result?.message || "Error");
             }
 
-            await validateSession();
-            return toast.success(result?.message || "Success");
+            invalidateSessionQuery();
+            toast.success(result?.message || "Success");
+            navigate("/dashboard");
         } finally {
             setIsLoading({ value: false, provider: null });
         }
@@ -63,123 +65,128 @@ const LoginPage = () => {
                 <meta name="description" content="Log into your CRMM account" />
             </Helmet>
 
-            <RedirectIfLoggedIn redirectTo="/dashboard" />
+            <RedirectIfLoggedIn redirectTo="/dashboard">
+                <main className="full_page w-full flex items-center justify-center py-12">
+                    <Card className="w-full max-w-md relative">
+                        <CardHeader className="mb-1">
+                            <CardTitle>Log In</CardTitle>
+                        </CardHeader>
+                        <CardContent className="w-full flex flex-col items-start justify-start gap-4">
+                            <Form {...loginForm}>
+                                <form
+                                    onSubmit={loginForm.handleSubmit(handleCredentialLogin)}
+                                    name="Login"
+                                    className="w-full flex flex-col items-center justify-center gap-form-elements"
+                                >
+                                    <FormField
+                                        control={loginForm.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <>
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Email
+                                                        <FormMessage />
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            type="email"
+                                                            placeholder="example@abc.com"
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                field.onChange(e);
+                                                                setFormError("");
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            </>
+                                        )}
+                                    />
 
-            <main className="full_page w-full flex items-center justify-center py-12">
-                <Card className="w-full max-w-md relative">
-                    <CardHeader className="mb-1">
-                        <CardTitle>Log In</CardTitle>
-                    </CardHeader>
-                    <CardContent className="w-full flex flex-col items-start justify-start gap-4">
-                        <Form {...loginForm}>
-                            <form
-                                onSubmit={loginForm.handleSubmit(handleCredentialLogin)}
-                                name="Login"
-                                className="w-full flex flex-col items-center justify-center gap-form-elements"
-                            >
-                                <FormField
-                                    control={loginForm.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <>
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Email
-                                                    <FormMessage />
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        type="email"
-                                                        placeholder="example@abc.com"
-                                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                            field.onChange(e);
-                                                            setFormError("");
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        </>
-                                    )}
-                                />
+                                    <FormField
+                                        control={loginForm.control}
+                                        name="password"
+                                        render={({ field }) => (
+                                            <>
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Password
+                                                        <FormMessage />
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            placeholder="********"
+                                                            type="password"
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                field.onChange(e);
+                                                                setFormError("");
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            </>
+                                        )}
+                                    />
 
-                                <FormField
-                                    control={loginForm.control}
-                                    name="password"
-                                    render={({ field }) => (
-                                        <>
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Password
-                                                    <FormMessage />
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        placeholder="********"
-                                                        type="password"
-                                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                            field.onChange(e);
-                                                            setFormError("");
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        </>
-                                    )}
-                                />
+                                    {formError && <FormErrorMessage text={formError} />}
 
-                                {formError && <FormErrorMessage text={formError} />}
+                                    <Button
+                                        type="submit"
+                                        aria-label="Login"
+                                        className="w-full h-form-submit-btn"
+                                        disabled={isLoading.value}
+                                    >
+                                        {isLoading.provider === AuthProvider.CREDENTIAL ? (
+                                            <LoadingSpinner size="xs" />
+                                        ) : (
+                                            <LogInIcon className="w-[1.1rem] h-[1.1rem]" />
+                                        )}
+                                        Login
+                                    </Button>
+                                </form>
+                            </Form>
 
-                                <Button type="submit" aria-label="Login" className="w-full h-form-submit-btn" disabled={isLoading.value}>
-                                    {isLoading.provider === AuthProvider.CREDENTIAL ? (
-                                        <LoadingSpinner size="xs" />
-                                    ) : (
-                                        <LogInIcon className="w-[1.1rem] h-[1.1rem]" />
-                                    )}
-                                    Login
-                                </Button>
-                            </form>
-                        </Form>
+                            <HorizontalSeparator />
 
-                        <HorizontalSeparator />
-
-                        <div className="w-full flex flex-col items-start justify-start gap-2">
-                            <p>Login using:</p>
-                            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <OAuthProvidersWidget
-                                    actionIntent={AuthActionIntent.SIGN_IN}
-                                    isLoading={isLoading}
-                                    setIsLoading={setIsLoading}
-                                />
+                            <div className="w-full flex flex-col items-start justify-start gap-2">
+                                <p>Login using:</p>
+                                <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <OAuthProvidersWidget
+                                        actionIntent={AuthActionIntent.SIGN_IN}
+                                        isLoading={isLoading}
+                                        setIsLoading={setIsLoading}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="w-full flex flex-col items-center justify-center gap-1 mt-4">
-                            <p className="text-center text-foreground">
-                                <span className="text-foreground-muted">Don't have an account?&nbsp;</span>
-                                <Link
-                                    to="/signup"
-                                    aria-label="Sign up"
-                                    className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
-                                >
-                                    Sign up
-                                </Link>
-                            </p>
-                            <p className="text-center">
-                                <span className="text-foreground-muted">Forgot password?&nbsp;</span>
-                                <Link
-                                    to="/change-password"
-                                    aria-label="Change password"
-                                    className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
-                                >
-                                    Change password
-                                </Link>
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-            </main>
+                            <div className="w-full flex flex-col items-center justify-center gap-1 mt-4">
+                                <p className="text-center text-foreground">
+                                    <span className="text-foreground-muted">Don't have an account?&nbsp;</span>
+                                    <Link
+                                        to="/signup"
+                                        aria-label="Sign up"
+                                        className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
+                                    >
+                                        Sign up
+                                    </Link>
+                                </p>
+                                <p className="text-center">
+                                    <span className="text-foreground-muted">Forgot password?&nbsp;</span>
+                                    <Link
+                                        to="/change-password"
+                                        aria-label="Change password"
+                                        className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
+                                    >
+                                        Change password
+                                    </Link>
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </main>
+            </RedirectIfLoggedIn>
         </>
     );
 };

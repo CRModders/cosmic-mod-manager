@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const DeleteVersionDialog = ({ projectSlug, versionSlug, featured }: { projectSlug: string; versionSlug: string; featured: boolean }) => {
-    const { projectData, fetchAllProjectVersions } = useContext(projectContext);
+    const { projectData, invalidateAllQueries } = useContext(projectContext);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -37,8 +37,8 @@ const DeleteVersionDialog = ({ projectSlug, versionSlug, featured }: { projectSl
                 return toast.error(result?.message || "Error");
             }
 
+            await invalidateAllQueries();
             navigate(`/${projectData?.type[0]}/${projectSlug}/versions`);
-            await fetchAllProjectVersions();
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);

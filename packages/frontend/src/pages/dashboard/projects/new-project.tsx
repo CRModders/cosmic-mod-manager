@@ -33,8 +33,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { invalidateUserProjectsQuery } from "./loader";
 
-const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: () => Promise<void> }) => {
+const CreateNewProjectDialog = () => {
     const [autoFillUrlSlug, setAutoFillUrlSlug] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -65,7 +66,7 @@ const CreateNewProjectDialog = ({ refetchProjectsList }: { refetchProjectsList: 
                 return toast.error(result?.message || "Error");
             }
 
-            await refetchProjectsList();
+            invalidateUserProjectsQuery();
             navigate(getProjectPagePathname(result?.type?.[0], result?.urlSlug));
             return toast.success(result?.message || "Success");
         } finally {

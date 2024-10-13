@@ -19,10 +19,6 @@ const ProjectsPage = () => {
     const projectsList = useQuery(getUserProjectsQuery());
     const navigate = useNavigate();
 
-    const refetchProjectsList = async () => {
-        await projectsList.refetch();
-    };
-
     return (
         <>
             <Helmet>
@@ -36,7 +32,7 @@ const ProjectsPage = () => {
                 <Card className="w-full overflow-hidden">
                     <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">
                         <CardTitle>Projects</CardTitle>
-                        <CreateNewProjectDialog refetchProjectsList={refetchProjectsList} />
+                        <CreateNewProjectDialog />
                     </CardHeader>
                     <CardContent className="p-0">
                         {projectsList.data?.length === 0 ? (

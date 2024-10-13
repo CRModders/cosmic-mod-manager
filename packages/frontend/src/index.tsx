@@ -14,7 +14,6 @@ import { homePageLoader } from "./pages/_loader";
 // Dashboard page Loaders
 import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/loader";
 import { overviewPageLoader } from "./pages/dashboard/_loader";
-import { notificationsPageLoader } from "./pages/dashboard/notifications/_loader";
 import userProjectsLoader from "./pages/dashboard/projects/loader";
 
 import { searchResultsLoader } from "./pages/search/_loader";
@@ -206,18 +205,16 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "dashboard",
-                        // Loading overview data on dashboard load
+                        // Loading overview data and notifications on dashboard load
                         loader: overviewPageLoader(reactQueryClient),
                         lazy: () => import("@/src/pages/dashboard/layout"),
                         children: [
                             {
                                 path: "",
-                                loader: notificationsPageLoader(reactQueryClient),
                                 lazy: () => import("@/src/pages/dashboard/overview"),
                             },
                             {
                                 path: "notifications",
-                                loader: notificationsPageLoader(reactQueryClient),
                                 lazy: () => import("@/src/pages/dashboard/notifications/layout"),
                                 children: [
                                     {

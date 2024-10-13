@@ -1,6 +1,8 @@
 import { routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
 import type { ProjectListItem } from "@shared/types/api";
+import type { QueryClient } from "@tanstack/react-query";
+import { getNotificationsQuery } from "./notifications/_loader";
 
 const getAllUserProjects = async () => {
     try {
@@ -16,10 +18,21 @@ const getAllUserProjects = async () => {
 };
 export const getAllUserProjectsQuery = () => {
     return {
-        queryKey: ["all-projects-logged-in-user"],
+        queryKey: ["session-user-projects"],
         queryFn: getAllUserProjects,
         staleTime: Number.POSITIVE_INFINITY,
     };
 };
 
-export const overviewPageLoader = routeLoader(getAllUserProjectsQuery());
+const overViewPageQueries = async (queryClient: QueryClient) => {
+    const data = await Promise.all([
+        queryClient.ensureQueryData(getAllUserProjectsQuery()),
+        queryClient.ensureQueryData(getNotificationsQuery()),
+    ]);
+
+    return {
+        projects: data[0],
+        notifications: data[1],
+    };
+};
+export const overviewPageLoader = routeLoader(null, overViewPageQueries);
