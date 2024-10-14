@@ -2,7 +2,7 @@ import { routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
 import type { ProjectType } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
-import type { QueryClient, UseQueryOptions } from "@tanstack/react-query";
+import type { UseQueryOptions } from "@tanstack/react-query";
 import type { LoaderFunctionArgs } from "react-router-dom";
 
 interface SearchResult {
@@ -38,12 +38,12 @@ export const getSearchResultsQuery = (params: string, type: ProjectType) => {
     } satisfies UseQueryOptions;
 };
 
-export const searchResultsLoader = (queryClient: QueryClient, type: ProjectType) => {
+export const searchResultsLoader = (type: ProjectType) => {
     const queryFn = ({ params, request, context }: LoaderFunctionArgs) => {
         const searchParams = new URL(request.url).searchParams;
         return getSearchResultsQuery(searchParams.toString(), type);
     };
 
     const _loader = routeLoader(queryFn, undefined);
-    return _loader(queryClient);
+    return _loader;
 };

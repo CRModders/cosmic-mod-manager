@@ -33,15 +33,14 @@ model User {
 }
 
 model Session {
-    id               String   @id @db.VarChar(32)
+    id               String   @id @db.VarChar(256)
     userId           String   @db.VarChar(32)
-    sessionToken     String   @db.VarChar(128)
     dateCreated      DateTime @default(now())
     dateExpires      DateTime
     dateLastActive   DateTime @default(now())
     providerName     String?  @db.VarChar(32)
     status           String   @db.VarChar(32)
-    revokeAccessCode String   @unique @db.VarChar(64)
+    revokeAccessCode String   @unique @db.VarChar(256)
 
     // Session device info
     os        String? @db.VarChar(64)

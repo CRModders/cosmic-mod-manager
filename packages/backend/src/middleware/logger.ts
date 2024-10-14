@@ -1,6 +1,6 @@
 // Copy pasted from https://github.com/honojs/hono/blob/main/src/middleware/logger/index.ts just so that i can simply add IP to the logs
 
-import { getUserIpAddress } from "@/controllers/auth/commons";
+import { getUserIpAddress } from "@/controllers/auth/helpers";
 import type { Context, Next } from "hono";
 
 enum LogPrefix {

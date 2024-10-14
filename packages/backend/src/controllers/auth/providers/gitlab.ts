@@ -1,5 +1,5 @@
+import type { AuthUserProfile } from "@/../types";
 import { AuthProvider } from "@shared/types";
-import type { AuthUserProfile } from "../../../types";
 
 export const getGitlabUserProfileData = async (tokenExchangeCode: string) => {
     const client_id = process.env.GITLAB_ID;

@@ -8,7 +8,7 @@ import { status } from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
 import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charges";
 import type { Context } from "hono";
-import { getUserIpAddress } from "../auth/commons";
+import { getUserIpAddress } from "../auth/helpers";
 
 export const serveVersionFile = async (
     ctx: Context,

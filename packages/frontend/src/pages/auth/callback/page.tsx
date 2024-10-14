@@ -3,7 +3,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { getCookie } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
-import { CSRF_STATE_COOKIE_NAME, SITE_NAME_SHORT } from "@shared/config";
+import { CSRF_STATE_COOKIE_NAMESPACE, SITE_NAME_SHORT } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
@@ -55,7 +55,7 @@ const OAuthCallbackPage = () => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (
-            urlCsrfState !== getCookie(CSRF_STATE_COOKIE_NAME) ||
+            urlCsrfState !== getCookie(CSRF_STATE_COOKIE_NAMESPACE) ||
             !authProvider ||
             !code ||
             !urlCsrfState ||

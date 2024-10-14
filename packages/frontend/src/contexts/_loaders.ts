@@ -1,8 +1,7 @@
-import { routeLoader } from "@/lib/route-loader";
+import { ensureQueryData, routeLoader } from "@/lib/route-loader";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
-import type { QueryClient } from "@tanstack/react-query";
 import type { LoaderFunctionArgs } from "react-router-dom";
 import useFetch from "../hooks/fetch";
 
@@ -77,10 +76,10 @@ export const getProjectsListDataQuery = (userName: string | undefined) => {
     };
 };
 
-const profilePageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+const profilePageQueries = async ({ params }: LoaderFunctionArgs) => {
     const data = await Promise.all([
-        queryClient.ensureQueryData(getUserProfileDataQuery(params.userName)),
-        queryClient.ensureQueryData(getProjectsListDataQuery(params.userName)),
+        ensureQueryData(getUserProfileDataQuery(params.userName)),
+        ensureQueryData(getProjectsListDataQuery(params.userName)),
     ]);
 
     return {
@@ -157,11 +156,11 @@ export const getProjectDependenciesQuery = (slug: string | undefined) => {
     };
 };
 
-const projectPageQueries = async (queryClient: QueryClient, { params }: LoaderFunctionArgs) => {
+const projectPageQueries = async ({ params }: LoaderFunctionArgs) => {
     const data = await Promise.all([
-        queryClient.ensureQueryData(getProjectDataQuery(params.slug)),
-        queryClient.ensureQueryData(getAllProjectVersionsQuery(params.slug)),
-        queryClient.ensureQueryData(getProjectDependenciesQuery(params.slug)),
+        ensureQueryData(getProjectDataQuery(params.slug)),
+        ensureQueryData(getAllProjectVersionsQuery(params.slug)),
+        ensureQueryData(getProjectDependenciesQuery(params.slug)),
     ]);
 
     return {

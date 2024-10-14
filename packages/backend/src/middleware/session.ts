@@ -1,16 +1,16 @@
-import { getUserIpAddress } from "@/controllers/auth/commons";
-import { getUserSession } from "@/controllers/auth/session";
+import { ctxReqAuthSessionNamespace } from "@/../types";
+import { getUserIpAddress } from "@/controllers/auth/helpers";
+import { validateContextSession } from "@/controllers/auth/helpers/session";
 import { deleteUserCookie, generateRandomString, getUserSessionFromCtx, setUserCookie } from "@/utils";
-import { status, defaultServerErrorResponse } from "@/utils/http";
+import { defaultServerErrorResponse, status } from "@/utils/http";
 import { GUEST_SESSION_ID_VALIDITY } from "@shared/config";
 import { PROTECTED_ROUTE_ACCESS_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
 import type { Context, Next } from "hono";
 import { getCookie } from "hono/cookie";
-import { ctxReqAuthSessionNamespace } from "../../types";
 import { addToUsedApiRateLimit } from "./rate-limiter";
 
 export const AuthenticationMiddleware = async (ctx: Context, next: Next) => {
-    const user = await getUserSession(ctx);
+    const user = await validateContextSession(ctx);
     const ipAddr = getUserIpAddress(ctx);
 
     if (!user) {

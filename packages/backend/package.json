@@ -4,6 +4,7 @@
         "dev": "bun run --hot src/index.ts"
     },
     "dependencies": {
+        "@oslojs/encoding": "^1.1.0",
         "@prisma/client": "^5.20.0",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",

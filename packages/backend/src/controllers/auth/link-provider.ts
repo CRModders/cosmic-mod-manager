@@ -6,7 +6,7 @@ import { CHARGE_FOR_SENDING_INVALID_DATA } from "@shared/config/rate-limit-charg
 import { Capitalize } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import type { Context } from "hono";
-import { createNewAuthAccount, getAuthProviderProfileData } from "../commons";
+import { createNewAuthAccount, getAuthProviderProfileData } from "./helpers";
 
 export const linkAuthProviderHandler = async (
     ctx: Context,

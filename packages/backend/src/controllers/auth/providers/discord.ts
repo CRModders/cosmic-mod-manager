@@ -1,5 +1,5 @@
+import type { AuthUserProfile } from "@/../types";
 import { AuthProvider } from "@shared/types";
-import type { AuthUserProfile } from "../../../types";
 
 export const getDiscordUserProfileData = async (tokenExchangeCode: string) => {
     const client_id = process.env.DISCORD_ID || "";

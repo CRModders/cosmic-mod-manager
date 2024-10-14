@@ -1,12 +1,12 @@
 import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
 import { status } from "@/utils/http";
-import { AUTHTOKEN_COOKIE_NAME, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
+import { AUTHTOKEN_COOKIE_NAMESPACE, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
 import { GlobalUserRole } from "@shared/types";
 import type { Context } from "hono";
 import { nanoid } from "nanoid";
-import { createNewAuthAccount, getAuthProviderProfileData } from "../commons";
-import { createNewUserSession } from "../session";
+import { createNewAuthAccount, getAuthProviderProfileData } from "./helpers";
+import { createUserSession } from "./helpers/session";
 
 export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tokenExchangeCode: string) => {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
@@ -71,14 +71,14 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
 
     await createNewAuthAccount(newUser.id, profileData);
 
-    const newSession = await createNewUserSession({
+    const newSession = await createUserSession({
         userId: newUser.id,
         providerName: authProvider,
         ctx,
         isFirstSignIn: true,
         user: newUser,
     });
-    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAME, JSON.stringify(newSession), { maxAge: USER_SESSION_VALIDITY });
+    setUserCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE, newSession, { maxAge: USER_SESSION_VALIDITY });
 
     return ctx.json(
         {

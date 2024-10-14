@@ -27,7 +27,7 @@ export const generateRandomString = (length = STRING_ID_LENGTH) => {
 // Cookie things
 export const setUserCookie = (ctx: Context, name: string, value: string, options?: CookieOptions) => {
     return setCookie(ctx, name, value, {
-        sameSite: "Strict",
+        sameSite: "Lax",
         domain: COOKIE_DOMAIN,
         httpOnly: true,
         secure: true,
@@ -77,7 +77,7 @@ export const isProjectAccessibleToCurrSession = (
     members: Partial<TeamMember>[],
 ) => {
     const isMember = isUserAProjectMember(userSessionId, members);
-    // const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
+    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
     const isPrivate = visibility === ProjectVisibility.PRIVATE;
 
     return (

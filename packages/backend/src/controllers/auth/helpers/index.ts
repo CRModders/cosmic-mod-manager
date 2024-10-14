@@ -1,16 +1,18 @@
 import type { AuthUserProfile } from "@/../types";
 import prisma from "@/services/prisma";
 import { setUserCookie } from "@/utils";
-import { CSRF_STATE_COOKIE_NAME, STRING_ID_LENGTH } from "@shared/config";
+import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
+import { AUTHTOKEN_COOKIE_NAMESPACE, CSRF_STATE_COOKIE_NAMESPACE, STRING_ID_LENGTH } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { type AuthActionIntent, AuthProvider } from "@shared/types";
 import type { Context } from "hono";
+import { getCookie } from "hono/cookie";
 import { nanoid } from "nanoid";
 import { UAParser } from "ua-parser-js";
-import { getDiscordUserProfileData } from "./discord";
-import { getGithubUserProfileData } from "./github";
-import { getGitlabUserProfileData } from "./gitlab";
-import { getGoogleUserProfileData } from "./google";
+import { getDiscordUserProfileData } from "../providers/discord";
+import { getGithubUserProfileData } from "../providers/github";
+import { getGitlabUserProfileData } from "../providers/gitlab";
+import { getGoogleUserProfileData } from "../providers/google";
 
 const authUrlTemplates = {
     [AuthProvider.GITHUB]: (clientId: string, redirectUri: string, csrfState: string) => {
@@ -31,7 +33,7 @@ export const getOAuthSignInUrl = (ctx: Context, authProvider: string, actionInte
     const redirectUri = `${process.env.OAUTH_REDIRECT_URI}/${authProvider}`;
     const csrfState = `${actionIntent}-${nanoid(24)}`;
 
-    setUserCookie(ctx, CSRF_STATE_COOKIE_NAME, csrfState, { httpOnly: false });
+    setUserCookie(ctx, CSRF_STATE_COOKIE_NAMESPACE, csrfState, { httpOnly: false });
 
     switch (authProvider) {
         case AuthProvider.GITHUB:
@@ -148,4 +150,35 @@ export const getUserDeviceDetails = async (ctx: Context) => {
         userAgent,
         ...geoData,
     };
+};
+
+const secretKey = process.env.HASH_SECRET_KEY;
+if (!secretKey) {
+    throw new Error("HASH_SECRET_KEY is not defined");
+}
+
+export function generateSessionToken(): string {
+    const bytes = new Uint8Array(20);
+    crypto.getRandomValues(bytes);
+    const token = encodeBase32LowerCaseNoPadding(bytes);
+    return token;
+}
+
+export async function hashString(str: string) {
+    return (await new Promise((resolve) => {
+        const hasher = new Bun.CryptoHasher("sha256", secretKey);
+        hasher.update(str);
+        resolve(hasher.digest("hex") as string);
+    })) as string;
+}
+
+export const getUserSessionCookie = (ctx: Context) => {
+    try {
+        const cookie = getCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
+        if (!cookie) {
+            return null;
+        }
+        return cookie;
+    } catch (error) {}
+    return null;
 };

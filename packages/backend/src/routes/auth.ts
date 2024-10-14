@@ -1,10 +1,10 @@
 import { ctxReqBodyNamespace } from "@/../types";
-import { getOAuthSignInUrl } from "@/controllers/auth/commons";
+import { getOAuthSignInUrl } from "@/controllers/auth/helpers";
 import { linkAuthProviderHandler, unlinkAuthProvider } from "@/controllers/auth/link-provider";
-import { deleteUserSession, getUserSessions, revokeSessionFromAccessCode } from "@/controllers/auth/session";
 import { oAuthSignInHandler } from "@/controllers/auth/signin";
 import credentialSignIn from "@/controllers/auth/signin/credential";
 import { oAuthSignUpHandler } from "@/controllers/auth/signup";
+import { deleteUserSession, getUserSessions, revokeSessionFromAccessCode } from "@/controllers/auth/user-session";
 import { getLinkedAuthProviders } from "@/controllers/user/profile";
 import { LoginProtectedRoute } from "@/middleware/session";
 import { getUserSessionFromCtx } from "@/utils";

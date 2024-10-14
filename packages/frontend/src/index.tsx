@@ -6,7 +6,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
 import ErrorView from "./pages/error-page";
 import { RootLayout } from "./pages/layout";
-import { ContextProviders, reactQueryClient } from "./providers";
+import { ContextProviders } from "./providers";
 
 // Home page Loader
 import { homePageLoader } from "./pages/_loader";
@@ -23,7 +23,7 @@ import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/setti
 const projectPageRoutes = () => {
     return ["project", ...projectTypes].map((type) => ({
         path: `${type}/:slug`,
-        loader: projectPageLoader(reactQueryClient),
+        loader: projectPageLoader,
         lazy: () => import("@/src/pages/project/wrapper-context"),
         children: [
             {
@@ -117,7 +117,7 @@ const projectPageRoutes = () => {
 const searchPageRoutes = () => {
     return projectTypes.map((type) => ({
         path: `${type}s`,
-        loader: searchResultsLoader(reactQueryClient, type),
+        loader: searchResultsLoader(type),
         lazy: async () => {
             const mod = await import("@/src/pages/search/layout");
             return {
@@ -131,7 +131,7 @@ const router = createBrowserRouter([
     {
         path: "",
         element: <ContextProviders />,
-        loader: sessionDataLoader(reactQueryClient),
+        loader: sessionDataLoader,
         errorElement: <ErrorView />,
         children: [
             {
@@ -152,7 +152,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: "",
-                        loader: homePageLoader(reactQueryClient),
+                        loader: homePageLoader,
                         lazy: () => import("@/src/pages/page"),
                     },
                     {
@@ -170,7 +170,7 @@ const router = createBrowserRouter([
                     ...searchPageRoutes(),
                     {
                         path: "user/:userName",
-                        loader: userProfilePageLoader(reactQueryClient),
+                        loader: userProfilePageLoader,
                         lazy: () => import("@/src/pages/user/layout-wrapper"),
                         children: [
                             {
@@ -193,12 +193,12 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: "account",
-                                loader: accountSettingsPageLoader(reactQueryClient),
+                                loader: accountSettingsPageLoader,
                                 lazy: () => import("@/src/pages/settings/account/page"),
                             },
                             {
                                 path: "sessions",
-                                loader: userSessionsPageLoader(reactQueryClient),
+                                loader: userSessionsPageLoader,
                                 lazy: () => import("@/src/pages/settings/sessions/page"),
                             },
                         ],
@@ -206,7 +206,7 @@ const router = createBrowserRouter([
                     {
                         path: "dashboard",
                         // Loading overview data and notifications on dashboard load
-                        loader: overviewPageLoader(reactQueryClient),
+                        loader: overviewPageLoader,
                         lazy: () => import("@/src/pages/dashboard/layout"),
                         children: [
                             {
@@ -229,12 +229,12 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: "projects",
-                                loader: userProjectsLoader(reactQueryClient),
+                                loader: userProjectsLoader,
                                 lazy: () => import("@/src/pages/dashboard/projects/page"),
                             },
                             {
                                 path: "organisations",
-                                loader: dashboardOrgsLoader(reactQueryClient),
+                                loader: dashboardOrgsLoader,
                                 lazy: () => import("@/src/pages/dashboard/organisation/page"),
                             },
                             {

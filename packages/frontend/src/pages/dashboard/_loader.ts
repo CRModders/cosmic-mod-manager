@@ -1,7 +1,6 @@
-import { routeLoader } from "@/lib/route-loader";
+import { ensureQueryData, routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
 import type { ProjectListItem } from "@shared/types/api";
-import type { QueryClient } from "@tanstack/react-query";
 import { getNotificationsQuery } from "./notifications/_loader";
 
 const getAllUserProjects = async () => {
@@ -24,11 +23,8 @@ export const getAllUserProjectsQuery = () => {
     };
 };
 
-const overViewPageQueries = async (queryClient: QueryClient) => {
-    const data = await Promise.all([
-        queryClient.ensureQueryData(getAllUserProjectsQuery()),
-        queryClient.ensureQueryData(getNotificationsQuery()),
-    ]);
+const overViewPageQueries = async () => {
+    const data = await Promise.all([ensureQueryData(getAllUserProjectsQuery()), ensureQueryData(getNotificationsQuery())]);
 
     return {
         projects: data[0],

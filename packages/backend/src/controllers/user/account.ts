@@ -1,22 +1,13 @@
 import type { ContextUserSession } from "@/../types";
 import { addToUsedApiRateLimit } from "@/middleware/rate-limiter";
 import prisma from "@/services/prisma";
-import {
-    deleteUserCookie,
-    generateConfirmationEmailCode,
-    getUserSessionFromCtx,
-    hashPassword,
-    isConfirmationCodeValid,
-    matchPassword,
-} from "@/utils";
+import { generateConfirmationEmailCode, getUserSessionFromCtx, hashPassword, isConfirmationCodeValid, matchPassword } from "@/utils";
 import { sendChangePasswordEmail, sendConfirmNewPasswordEmail, sendDeleteUserAccountEmail } from "@/utils/email";
-import { status, defaultInvalidReqResponse } from "@/utils/http";
+import { defaultInvalidReqResponse, status } from "@/utils/http";
 import {
-    AUTHTOKEN_COOKIE_NAME,
     CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms,
     CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms,
     DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
-    SITE_NAME_SHORT,
     STRING_ID_LENGTH,
 } from "@shared/config";
 import { CHARGE_FOR_SENDING_INVALID_DATA, USER_WRONG_CREDENTIAL_ATTEMPT_CHARGE } from "@shared/config/rate-limit-charges";
@@ -268,28 +259,30 @@ export const deleteUserAccountConfirmationEmail = async (ctx: Context, userSessi
 };
 
 export const confirmAccountDeletion = async (ctx: Context, code: string) => {
-    const confirmationEmail = await prisma.userConfirmation.findUnique({
-        where: { accessCode: code, confirmationType: ConfirmationType.DELETE_USER_ACCOUNT },
-    });
+    // const confirmationEmail = await prisma.userConfirmation.findUnique({
+    //     where: { accessCode: code, confirmationType: ConfirmationType.DELETE_USER_ACCOUNT },
+    // });
 
-    if (!confirmationEmail?.id || !isConfirmationCodeValid(confirmationEmail.dateCreated, DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms)) {
-        return ctx.json({ success: false, message: "Expired or invalid code" }, status.BAD_REQUEST);
-    }
+    // if (!confirmationEmail?.id || !isConfirmationCodeValid(confirmationEmail.dateCreated, DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms)) {
+    //     return ctx.json({ success: false, message: "Expired or invalid code" }, status.BAD_REQUEST);
+    // }
 
-    await prisma.user.delete({
-        where: {
-            id: confirmationEmail.userId,
-        },
-    });
+    // await prisma.user.delete({
+    //     where: {
+    //         id: confirmationEmail.userId,
+    //     },
+    // });
 
-    await prisma.userConfirmation.deleteMany({
-        where: {
-            userId: confirmationEmail.userId,
-            confirmationType: ConfirmationType.DELETE_USER_ACCOUNT,
-        },
-    });
+    // await prisma.userConfirmation.deleteMany({
+    //     where: {
+    //         userId: confirmationEmail.userId,
+    //         confirmationType: ConfirmationType.DELETE_USER_ACCOUNT,
+    //     },
+    // });
 
-    deleteUserCookie(ctx, AUTHTOKEN_COOKIE_NAME);
+    // deleteUserCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
 
-    return ctx.json({ success: true, message: `Successfully deleted your ${SITE_NAME_SHORT} account` }, status.OK);
+    // return ctx.json({ success: true, message: `Successfully deleted your ${SITE_NAME_SHORT} account` }, status.OK);
+
+    return ctx.json({ success: false, message: "Method not implemented" }, status.SERVER_ERROR);
 };

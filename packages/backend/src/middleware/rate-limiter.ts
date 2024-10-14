@@ -1,4 +1,4 @@
-import { getUserIpAddress } from "@/controllers/auth/commons";
+import { getUserIpAddress } from "@/controllers/auth/helpers";
 import redis from "@/services/redis";
 import { status } from "@/utils/http";
 import type { Seconds } from "@shared/types/time";
