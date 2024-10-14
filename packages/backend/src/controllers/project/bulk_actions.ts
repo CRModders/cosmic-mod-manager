@@ -27,7 +27,7 @@ export const getManyProjects = async (ctx: Context, userSession: ContextUserSess
     const projectsList: ProjectListItem[] = [];
 
     for (const project of list) {
-        const { team, ...projectData } = project;
+        const team = project.team;
         const members = team.members.map((member) => ({
             ...member,
             permissions: member.permissions as ProjectPermission[],

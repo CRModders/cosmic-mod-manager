@@ -153,7 +153,7 @@ export const getAllVisibleProjects = async (
         orderBy: { downloads: "desc" },
     });
 
-    if (!userProjects?.length) return ctx.json({ success: true, projects: [] }, status.OK);
+    if (!userProjects?.length) return ctx.json([], status.OK);
 
     const iconFileIds: string[] = [];
     for (const project of userProjects) {
