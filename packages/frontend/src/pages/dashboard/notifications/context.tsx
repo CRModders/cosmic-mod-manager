@@ -30,14 +30,14 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         await Promise.all([relatedProjects.refetch(), relatedUsers.refetch()]);
     };
 
-    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : null;
+    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : undefined;
     if (relatedProjects.data && relatedProjectsList) {
         for (const project of relatedProjects.data || []) {
             relatedProjectsList.set(project.id, project);
         }
     }
 
-    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : null;
+    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : undefined;
     if (relatedUsers.data && relatedUsersList) {
         for (const user of relatedUsers.data || []) {
             relatedUsersList.set(user.id, user);
@@ -45,7 +45,11 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const isNotificationsLoading =
-        notifications.isLoading || relatedProjects.isLoading || relatedUsers.isLoading || !relatedProjectsList || !relatedUsersList;
+        notifications.isLoading ||
+        relatedProjects.isLoading ||
+        relatedUsers.isLoading ||
+        relatedProjectsList === undefined ||
+        relatedUsersList === undefined;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
