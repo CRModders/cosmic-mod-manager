@@ -48,8 +48,7 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         notifications.isLoading ||
         relatedProjects.isLoading ||
         relatedUsers.isLoading ||
-        relatedProjectsList === undefined ||
-        relatedUsersList === undefined;
+        (!notifications.data?.length && (!relatedProjectsList || !relatedUsersList));
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
