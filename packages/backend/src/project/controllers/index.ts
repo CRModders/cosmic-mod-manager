@@ -219,7 +219,6 @@ export async function getRandomProjects(
     if (cached) {
         const cachedData = tryJsonParse((await redis.get(`random-projects-cache:${count}`)) || "");
         if (cachedData) {
-            console.log("Returning cached random projects");
             return { data: cachedData, status: HTTP_STATUS.OK };
         }
     }
