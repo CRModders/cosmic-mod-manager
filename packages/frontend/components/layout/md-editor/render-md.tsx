@@ -18,6 +18,8 @@ import scala from "highlight.js/lib/languages/scala";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { configuredXss, md } from "./parse-md";
 
 /* REGISTRATION */
@@ -68,6 +70,32 @@ export const renderHighlightedString = (string: string) =>
     );
 
 export const MarkdownRenderBox = ({ text, className }: { text: string; className?: string }) => {
+    const navigate = useNavigate();
+
+    // Use React router to handle internal links
+    function handleNavigate(e: MouseEvent) {
+        try {
+            if (!(e.target instanceof HTMLAnchorElement)) return;
+
+            const target = e.target as HTMLAnchorElement;
+            const targetUrl = new URL(target.href);
+
+            if (targetUrl.origin !== window.location.origin) return;
+
+            e.preventDefault();
+            navigate(`${target.pathname}${target.search}`);
+        } catch {}
+    }
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        document.addEventListener("click", handleNavigate);
+
+        return () => {
+            document.removeEventListener("click", handleNavigate);
+        };
+    }, []);
+
     return (
         <div
             className={cn("w-full overflow-auto markdown-body", className)}

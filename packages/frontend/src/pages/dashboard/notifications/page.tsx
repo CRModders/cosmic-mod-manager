@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VariantButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { constructProjectPageUrl, formatDate, getProjectPagePathname, timeSince } from "@/lib/utils";
+import { formatDate, getProjectPagePathname, timeSince } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { NotificationType } from "@shared/types";
@@ -215,7 +215,7 @@ export const TeamInviteNotification = ({
             }
 
             toast.success(result?.message || "");
-            navigate(constructProjectPageUrl(relatedProject.type[0], relatedProject.slug));
+            navigate(getProjectPagePathname(relatedProject.type[0], relatedProject.slug));
         } finally {
             setIsLoading(false);
         }

@@ -77,7 +77,7 @@ const VersionPage = () => {
                 </title>
             </Helmet>
 
-            <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-3">
+            <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-4">
                 <Breadcrumb>
                     <BreadcrumbList className="flex items-center">
                         <BreadcrumbItem>

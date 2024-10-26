@@ -6,7 +6,7 @@ import type { SessionListData } from "@shared/types/api";
 // Account settings page loader
 const getLinkedAuthProviders = async () => {
     try {
-        const res = await useFetch("/api/auth/auth-providers");
+        const res = await useFetch("/api/auth/linked-providers");
         const data = await res.json();
         if (!res.ok || !data) return null;
 

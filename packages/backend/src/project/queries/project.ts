@@ -1,0 +1,192 @@
+import type { Prisma, TeamMember } from "@prisma/client";
+import type { OrganisationPermission, ProjectPermission } from "@shared/types";
+
+export function projectDetailsFields() {
+    return {
+        ...projectFields(),
+
+        gallery: galleryFields(),
+        team: {
+            select: {
+                id: true,
+                members: teamMembersSelect(),
+            },
+        },
+        organisation: {
+            select: {
+                team: {
+                    select: {
+                        members: teamMembersSelect(),
+                    },
+                },
+            },
+        },
+    } satisfies Prisma.ProjectSelect;
+}
+
+export function projectFields() {
+    return {
+        id: true,
+        teamId: true,
+        organisationId: true,
+        name: true,
+        slug: true,
+        type: true,
+        summary: true,
+        description: true,
+        datePublished: true,
+        dateUpdated: true,
+        dateQueued: true,
+        dateApproved: true,
+        status: true,
+        visibility: true,
+        iconFileId: true,
+        licenseId: true,
+        licenseName: true,
+        licenseUrl: true,
+        downloads: true,
+        followers: true,
+        categories: true,
+        featuredCategories: true,
+        loaders: true,
+        gameVersions: true,
+        clientSide: true,
+        serverSide: true,
+        issueTrackerUrl: true,
+        projectSourceUrl: true,
+        projectWikiUrl: true,
+        discordInviteUrl: true,
+    } satisfies Prisma.ProjectSelect;
+}
+
+export function projectListFields() {
+    return {
+        ...projectFields(),
+        gallery: galleryFields(),
+    } satisfies Prisma.ProjectSelect;
+}
+
+export function galleryFields() {
+    return {
+        select: {
+            id: true,
+            imageFileId: true,
+            projectId: true,
+            name: true,
+            description: true,
+            featured: true,
+            dateCreated: true,
+            orderIndex: true,
+        },
+        orderBy: { orderIndex: "desc" },
+    } satisfies Prisma.Project$galleryArgs;
+}
+
+export function projectMemberPermissionsSelect(where?: Prisma.TeamMemberWhereInput) {
+    return {
+        team: {
+            select: {
+                id: true,
+                members: {
+                    where: where,
+                    select: {
+                        id: true,
+                        userId: true,
+                        isOwner: true,
+                        permissions: true,
+                    },
+                },
+            },
+        },
+        organisation: {
+            select: {
+                id: true,
+                team: {
+                    select: {
+                        id: true,
+                        members: {
+                            where: where,
+                            select: {
+                                id: true,
+                                userId: true,
+                                isOwner: true,
+                                permissions: true,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    } satisfies Prisma.ProjectSelect;
+}
+
+export function projectMembersSelect() {
+    return {
+        team: {
+            select: {
+                members: teamMembersSelect(),
+            },
+        },
+        organisation: {
+            select: {
+                team: {
+                    select: {
+                        members: teamMembersSelect(),
+                    },
+                },
+            },
+        },
+    } satisfies Prisma.ProjectSelect;
+}
+
+export function teamMembersSelect() {
+    return {
+        select: teamMemberFields(),
+        orderBy: { dateAccepted: "asc" },
+    } satisfies Prisma.Team$membersArgs;
+}
+
+export function teamMemberFields() {
+    return {
+        id: true,
+        teamId: true,
+        userId: true,
+        role: true,
+        isOwner: true,
+        permissions: true,
+        organisationPermissions: true,
+        accepted: true,
+        dateAccepted: true,
+
+        user: {
+            select: {
+                id: true,
+                userName: true,
+                avatarUrl: true,
+            },
+        },
+    } satisfies Prisma.TeamMemberSelect;
+}
+
+// Formatters
+interface FormatTeamMemberDataProps extends TeamMember {
+    user: {
+        id: string;
+        userName: string;
+        avatarUrl: string | null;
+    };
+}
+export function formatTeamMemberData(member: FormatTeamMemberDataProps) {
+    return {
+        id: member.id,
+        userId: member.userId,
+        teamId: member.teamId,
+        userName: member.user.userName,
+        avatarUrl: member.user.avatarUrl,
+        role: member.role,
+        isOwner: member.isOwner,
+        accepted: member.accepted,
+        permissions: member.permissions as ProjectPermission[],
+        organisationPermissions: member.organisationPermissions as OrganisationPermission[],
+    };
+}

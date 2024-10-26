@@ -1,5 +1,5 @@
 import { loaders } from "@shared/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
+import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -120,21 +120,6 @@ export const getProjectVersionPagePathname = (type: string, projectSlug: string,
     let pathname = `${getProjectPagePathname(type, projectSlug)}/version/${versionSlug}`;
     if (extra) pathname += `${extra}`;
     return pathname;
-};
-
-export const constructProjectPageUrl = (type: string, projectUrlSlug: string) => {
-    const pathnameFragments = window.location.href.replace(window.location.origin, "").split("/"); // ? Example pathname => /mod/sodium/version/0.1.1?param=param_value
-    if (type.toLowerCase()) pathnameFragments[1] = createURLSafeSlug(type).value;
-    if (projectUrlSlug) pathnameFragments[2] = projectUrlSlug;
-
-    return pathnameFragments.join("/");
-};
-
-export const constructVersionPageUrl = (versionUrlSlug: string) => {
-    const pathnameFragments = window.location.href.replace(window.location.origin, "").split("/");
-    if (versionUrlSlug) pathnameFragments[4] = versionUrlSlug;
-
-    return pathnameFragments.join("/");
 };
 
 export const FormatProjectTypes = (types: string[]) => {

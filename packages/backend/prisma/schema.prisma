@@ -33,7 +33,8 @@ model User {
 }
 
 model Session {
-    id               String   @id @db.VarChar(256)
+    id               String   @id @db.VarChar(32)
+    tokenHash        String   @unique @db.VarChar(256)
     userId           String   @db.VarChar(32)
     dateCreated      DateTime @default(now())
     dateExpires      DateTime

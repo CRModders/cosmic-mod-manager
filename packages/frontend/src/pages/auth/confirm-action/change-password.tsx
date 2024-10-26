@@ -131,7 +131,6 @@ const ChangePasswordCard = ({ code }: { code: string }) => {
                             />
                             <Button
                                 type="submit"
-                                className="h-form-submit-btn"
                                 disabled={
                                     isLoading.value ||
                                     !form.getValues().newPassword ||

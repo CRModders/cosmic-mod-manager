@@ -1,6 +1,5 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
 import { type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
-import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
 export const upperCaseAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -63,7 +62,11 @@ export function isValidUrl(url: string) {
     return !!regex.exec(url);
 }
 
-export const isUserAProjectMember = (userId?: string, membersList?: Partial<TeamMember>[]) => {
+interface TeamMember {
+    userId?: string;
+}
+
+export function isUserAProjectMember(userId?: string, membersList?: TeamMember[]) {
     try {
         if (!userId || !membersList?.length) return false;
 
@@ -74,7 +77,7 @@ export const isUserAProjectMember = (userId?: string, membersList?: Partial<Team
     } catch {
         return false;
     }
-};
+}
 
 const fileSizeSuffixes = {
     bytes: "Bytes",

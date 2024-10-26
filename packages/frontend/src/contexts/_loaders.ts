@@ -11,11 +11,11 @@ const getSessionData = async () => {
         const response = await useFetch("/api/auth/me");
         const result = await response.json();
 
-        if (!response.ok || !result?.data) {
+        if (!response.ok || !result) {
             return null;
         }
 
-        return result?.data as LoggedInUserData;
+        return result as LoggedInUserData;
     } catch (err) {
         console.error(err);
         return null;

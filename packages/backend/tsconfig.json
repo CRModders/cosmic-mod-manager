@@ -4,9 +4,19 @@
         "jsx": "react-jsx",
         "jsxImportSource": "hono/jsx",
         "paths": {
-            "@/*": ["./src/*"],
-            "@shared/*": ["./../shared/*"]
+            "@/*": [
+                "./*"
+            ],
+            "@src/*": [
+                "./src/*"
+            ],
+            "@shared/*": [
+                "./../shared/*"
+            ]
         }
     },
-    "include": [".", "./../shared"]
+    "include": [
+        ".",
+        "./../shared"
+    ]
 }

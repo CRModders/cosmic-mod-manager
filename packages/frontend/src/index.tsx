@@ -124,6 +124,7 @@ const searchPageRoutes = () => {
                 element: <mod.Component type={type} />,
             };
         },
+        errorElement: <ErrorView />,
     }));
 };
 

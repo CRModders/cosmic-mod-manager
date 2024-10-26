@@ -4,3 +4,8 @@ uploads
 
 meilisearch
 private
+
+# redis files
+dump.rdb
+dumps
+data.ms

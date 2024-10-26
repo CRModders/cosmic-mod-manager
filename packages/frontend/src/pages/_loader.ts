@@ -5,7 +5,7 @@ import useFetch from "../hooks/fetch";
 
 const getRandomProjects = async () => {
     try {
-        const response = await useFetch("/api/projects/random?count=20");
+        const response = await useFetch("/api/projects/home-page-carousel");
         const result = await response.json();
         if (result?.length) {
             return result as ProjectListItem[];

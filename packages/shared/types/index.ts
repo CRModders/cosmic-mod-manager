@@ -166,8 +166,8 @@ export enum SearchResultSortMethod {
 
 export enum NotificationType {
     PROJECT_UPDATE = "project_update",
-    TEAM_INVITE = "team_invite",
-    ORGANISATION_INVITE = "organisation_invite",
+    TEAM_INVITE = "team_invite", // Project team invite
+    ORGANISATION_INVITE = "organisation_invite", // Organisation team invite
     STATUS_CHANGE = "status_change",
     MODERATOR_MESSAGE = "moderator_message",
     UNKNOWN = "unknown",

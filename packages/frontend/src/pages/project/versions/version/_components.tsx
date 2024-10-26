@@ -91,7 +91,7 @@ export const UploadVersionPageTopCard = ({
     onSubmitBtnClick,
 }: UploadVersionPageTopCardProps) => {
     return (
-        <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-panel-cards">
+        <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-3">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
