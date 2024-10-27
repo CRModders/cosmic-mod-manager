@@ -8,6 +8,7 @@ import type { SocketAddress } from "bun";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import authRouter from "./auth/router";
+import { queueDownloadsCounterQueueProcessing } from "./cdn/downloads-counter";
 import cdnRouter from "./cdn/router";
 import bulkProjectsRouter from "./project/bulk_router";
 import projectRouter from "./project/router";
@@ -66,8 +67,9 @@ Bun.serve({
     },
 });
 
-// Start the search sync queue
+// Start the sync queues
 queueSearchDbSync();
+queueDownloadsCounterQueueProcessing();
 
 async function apiDetails(ctx: Context) {
     return ctx.json(
