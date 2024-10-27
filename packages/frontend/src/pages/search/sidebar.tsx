@@ -13,7 +13,7 @@ import {
     loaderFilterParamNamespace,
 } from "@shared/config/search";
 import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
-import { ProjectType, TagHeaderType } from "@shared/types";
+import { GameVersionReleaseType, ProjectType, TagHeaderType } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -64,6 +64,7 @@ const clearFilters = () => {
 };
 
 const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
+    const [showAllVersions, setShowAllVersions] = useState(false);
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
 
@@ -75,9 +76,15 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
         .filter((loader) => matchesSearch([loader, loadersFilterLabel], query));
 
     // Game version filters
-    const gameVersionFilterOptions = GAME_VERSIONS.map((version) => ({ value: version.value, label: version.label })).filter((version) =>
-        matchesSearch([version.label, version.value, gameVersionsFilterLabel], query),
-    );
+    const gameVersionFilterOptions = GAME_VERSIONS.filter((version) => {
+        if (!showAllVersions && [GameVersionReleaseType.SNAPSHOT].includes(version.releaseType)) return false;
+        return true;
+    })
+        .map((version) => ({ value: version.value, label: version.label }))
+        .filter((version) => {
+            if (!version) return false;
+            return matchesSearch([version.label, version.value, gameVersionsFilterLabel], query);
+        });
 
     // Environment filters
     const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env, environmentFilterLabel], query));
@@ -156,6 +163,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                 selectedItems={searchParams.getAll(gameVersionFilterParamNamespace)}
                 label={gameVersionsFilterLabel}
                 listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
+                formatLabel={false}
                 onCheckedChange={(version) => {
                     const newUrl = updateSearchParam({
                         key: gameVersionFilterParamNamespace,
@@ -166,6 +174,17 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                footerItem={
+                    <LabelledCheckbox
+                        checked={showAllVersions}
+                        onCheckedChange={(checked) => {
+                            setShowAllVersions(checked === true);
+                        }}
+                        className="mt-3 ml-0.5 text-extra-muted-foreground"
+                    >
+                        Show all versions
+                    </LabelledCheckbox>
+                }
             />
 
             {[ProjectType.MOD, ProjectType.MODPACK].includes(type) && (
@@ -283,9 +302,20 @@ interface FilterCategoryProps {
     onCheckedChange: (checked: string) => void;
     listWrapperClassName?: string;
     className?: string;
+    formatLabel?: boolean;
+    footerItem?: React.ReactNode;
 }
 
-const FilterCategory = ({ items, selectedItems, label, onCheckedChange, className, listWrapperClassName }: FilterCategoryProps) => {
+const FilterCategory = ({
+    items,
+    selectedItems,
+    label,
+    onCheckedChange,
+    className,
+    listWrapperClassName,
+    formatLabel = true,
+    footerItem,
+}: FilterCategoryProps) => {
     if (!items.length) return null;
 
     return (
@@ -294,7 +324,8 @@ const FilterCategory = ({ items, selectedItems, label, onCheckedChange, classNam
             <div className={cn("w-full flex flex-col", listWrapperClassName)}>
                 {items.map((item) => {
                     const itemValue = typeof item === "string" ? item : item.value;
-                    const itemLabel = CapitalizeAndFormatString(typeof item === "string" ? item : item.label) || "";
+                    const _itemLabel = typeof item === "string" ? item : item.label;
+                    const itemLabel = formatLabel ? CapitalizeAndFormatString(_itemLabel) || "" : _itemLabel;
 
                     return (
                         <LabelledCheckbox
@@ -311,6 +342,7 @@ const FilterCategory = ({ items, selectedItems, label, onCheckedChange, classNam
                     );
                 })}
             </div>
+            {footerItem}
         </div>
     );
 };

@@ -47,6 +47,8 @@ interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     url: string;
     className?: string;
     label?: string;
+    target?: string;
+    onClick?: () => void | Promise<void>;
 }
 
 export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLinkProps>(

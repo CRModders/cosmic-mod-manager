@@ -1,5 +1,6 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
 import { type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
+import type { TeamMember } from "../../types/api";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
 export const upperCaseAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -60,10 +61,6 @@ export function isValidUrl(url: string) {
     const regex =
         /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%\/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
     return !!regex.exec(url);
-}
-
-interface TeamMember {
-    userId?: string;
 }
 
 export function isUserAProjectMember(userId?: string, membersList?: TeamMember[]) {

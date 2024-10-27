@@ -306,12 +306,15 @@ const ProjectPageLayout = () => {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             href={projectLicenseData.url}
-                                            className="font-bold link_blue"
+                                            className="font-bold link_blue hover:underline"
+                                            title={projectLicenseData.url}
                                         >
                                             {projectLicenseData.id || projectLicenseData.name}
                                         </a>
                                     ) : (
-                                        <span className="font-bold">{projectLicenseData.id || projectLicenseData.name}</span>
+                                        <span className="font-bold" title={projectLicenseData.text}>
+                                            {projectLicenseData.id || projectLicenseData.name}
+                                        </span>
                                     )}
                                 </p>
                             </div>

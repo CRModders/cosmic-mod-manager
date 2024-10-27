@@ -16,6 +16,8 @@ const buttonVariants = cva(
                 outline: "border border-shallow-background hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
                 secondary:
                     "bg-shallow-background dark:bg-shallow-background/70 text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background neumorphic_shadow",
+                "secondary-no-shadow":
+                    "bg-shallow-background dark:bg-shallow-background/70 text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
                 "secondary-inverted":
                     "text-muted-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
                 "secondary-destructive":
@@ -24,11 +26,10 @@ const buttonVariants = cva(
                     "text-danger-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
                 "secondary-dark":
                     "text-muted-foreground bg-card-background dark:bg-card-background/70 hover:bg-card-background/70 hover:dark:bg-card-background neumorphic_shadow",
-                ghost: "text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background hover:neumorphic_shadow",
-                "ghost-inverted":
-                    "text-muted-foreground hover:bg-card-background/70 dark:hover:bg-shallow-background hover:neumorphic_shadow",
-                "ghost-destructive":
-                    "text-danger-foreground hover:bg-shallow-background/70 dark:hover:bg-shallow-background hover:neumorphic_shadow",
+                ghost: "text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background ",
+                "ghost-no-shadow": "text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
+                "ghost-inverted": "text-muted-foreground hover:bg-card-background/70 dark:hover:bg-shallow-background ",
+                "ghost-destructive": "text-danger-foreground hover:bg-shallow-background/70 dark:hover:bg-shallow-background ",
                 link: "text-foreground underline-offset-4 hover:underline",
             },
             size: {

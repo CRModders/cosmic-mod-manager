@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { LabelledCheckbox } from "@/components/ui/checkbox";
 import { ChipButton } from "@/components/ui/chip";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,14 @@ import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-vers
 import { CapitalizeAndFormatString, createURLSafeSlug, getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project/version";
-import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@shared/types";
+import {
+    DependencyType,
+    DependsOn,
+    type FileObjectType,
+    GameVersionReleaseType,
+    type ProjectType,
+    VersionReleaseChannel,
+} from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -129,6 +137,7 @@ interface MetadataInputCardProps {
     formControl: Control<FieldValues> | undefined;
 }
 export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCardProps) => {
+    const [showAllVersions, setShowAllVersions] = useState(false);
     const availableLoaders = getLoadersByProjectType(projectType);
 
     return (
@@ -261,7 +270,9 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
 
                         <MultiSelect
                             selectedOptions={field.value || []}
-                            options={GAME_VERSIONS.map((version) => ({ label: version.label, value: version.value }))}
+                            options={GAME_VERSIONS.filter(
+                                (version) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(version.releaseType),
+                            ).map((version) => ({ label: version.label, value: version.value }))}
                             onChange={field.onChange}
                             classNames={{
                                 popupContent: "min-w-[15rem]",
@@ -272,6 +283,14 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                                 <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
                             </Button>
                         </MultiSelect>
+
+                        <LabelledCheckbox
+                            checked={showAllVersions}
+                            onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                            className="text-extra-muted-foreground ml-0.5"
+                        >
+                            List all versions
+                        </LabelledCheckbox>
                     </FormItem>
                 )}
             />

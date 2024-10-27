@@ -1,9 +1,12 @@
 import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
-import { rsort } from "semver";
+
+const sortVersionsWithReference = (versions: string[], referenceList: string[]): string[] => {
+    return versions.sort((a, b) => referenceList.indexOf(a) - referenceList.indexOf(b));
+};
 
 export const groupContinuousVersions = (versions: string[], referenceList: string[]): string[][] => {
     const groupedList: string[][] = [[]];
-    const sortedVersions = rsort(versions);
+    const sortedVersions = sortVersionsWithReference(versions, referenceList);
     let refListIndex = referenceList.indexOf(sortedVersions[0]);
 
     if (refListIndex === -1) return groupedList;

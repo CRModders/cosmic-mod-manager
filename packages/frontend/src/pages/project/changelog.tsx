@@ -2,6 +2,7 @@ import MarkdownRenderBox from "@/components/layout/md-editor/render-md";
 import PaginatedNavigation from "@/components/pagination-nav";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { LabelledCheckbox } from "@/components/ui/checkbox";
 import { ChipButton } from "@/components/ui/chip";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { releaseChannelBackgroundColor, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
@@ -12,7 +13,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { VersionReleaseChannel } from "@shared/types";
+import { GameVersionReleaseType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, DownloadIcon, FilterIcon, XCircleIcon, XIcon } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
@@ -42,7 +43,9 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
     const pagesCount = Math.ceil((versionsList?.length || 0) / perPageLimit);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
+
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
+    const [showAllVersions, setShowAllVersions] = useState(false);
 
     const Pagination =
         (versionsList.length || 0) > perPageLimit ? (
@@ -102,7 +105,9 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
     const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
     const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
 
-    const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions).map((ver) => ({ label: ver.label, value: ver.value }));
+    const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
+        .filter((ver) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType))
+        .map((ver) => ({ label: ver.label, value: ver.value }));
 
     return (
         <>
@@ -140,6 +145,15 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                             onChange={(values) => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
                             }}
+                            footerItem={
+                                <LabelledCheckbox
+                                    checked={showAllVersions}
+                                    onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                    className="text-extra-muted-foreground px-2 py-1"
+                                >
+                                    Show all versions
+                                </LabelledCheckbox>
+                            }
                         >
                             <Button variant="secondary-inverted">
                                 <FilterIcon className="w-btn-icon h-btn-icon" />

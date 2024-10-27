@@ -24,6 +24,7 @@ interface MultiSelectProps {
         popupContent?: string;
         listItem?: string;
     };
+    footerItem?: React.ReactNode;
 }
 
 export const MultiSelect = ({
@@ -36,6 +37,7 @@ export const MultiSelect = ({
     hideSelectedItems,
     children,
     classNames,
+    footerItem,
 }: MultiSelectProps) => {
     const [focusedItem, setFocusedItem] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
@@ -142,6 +144,7 @@ export const MultiSelect = ({
                         </li>
                     ) : null}
                 </ul>
+                {footerItem}
             </DropdownMenuContent>
         </DropdownMenu>
     );

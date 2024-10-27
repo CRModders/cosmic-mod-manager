@@ -16,6 +16,7 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import CopyBtn, { copyTextToClipboard } from "@/components/ui/copy-btn";
 import { VariantButtonLink } from "@/components/ui/link";
 import ReleaseChannelChip from "@/components/ui/release-channel-pill";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
@@ -105,13 +106,22 @@ const VersionPage = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-x-2 gap-y-1.5">
-                    <VariantButtonLink
-                        variant={"default"}
-                        url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
-                    >
-                        <DownloadIcon className="w-btn-icon h-btn-icon" />
-                        Download
-                    </VariantButtonLink>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <VariantButtonLink
+                                    variant={"default"}
+                                    url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
+                                >
+                                    <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                    Download
+                                </VariantButtonLink>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {versionData.primaryFile?.name} ({parseFileSize(versionData.primaryFile?.size || 0)})
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
 
                     <Button variant={"secondary"}>
                         <FlagIcon className="w-btn-icon h-btn-icon" />
@@ -374,6 +384,11 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink, sha1_has
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha512_hash)}>
                     <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
                     Copy SHA512 hash
+                </ContextMenuItem>
+
+                <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(downloadLink)}>
+                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    Copy file URL
                 </ContextMenuItem>
             </ContextMenuContent>
         </ContextMenu>

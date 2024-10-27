@@ -9,6 +9,66 @@ export interface GameVersion {
 
 const GAME_VERSIONS: GameVersion[] = [
     {
+        label: "0.3.2-pre10",
+        value: "0.3.2-pre10",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre9",
+        value: "0.3.2-pre9",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre8",
+        value: "0.3.2-pre8",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre7",
+        value: "0.3.2-pre7",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre6",
+        value: "0.3.2-pre6",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre5",
+        value: "0.3.2-pre5",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre4",
+        value: "0.3.2-pre4",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre3",
+        value: "0.3.2-pre3",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre2",
+        value: "0.3.2-pre2",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
+        label: "0.3.2-pre1",
+        value: "0.3.2-pre1",
+        releaseType: GameVersionReleaseType.SNAPSHOT,
+        major: false,
+    },
+    {
         label: "0.3.1",
         value: "0.3.1-pre-alpha",
         releaseType: GameVersionReleaseType.PRE_ALPHA,

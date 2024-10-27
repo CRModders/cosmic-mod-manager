@@ -30,9 +30,27 @@ export const configuredXss = new FilterXSS({
             float: /^left|right$/,
         },
     },
-    onTag: (tag, html) => {
-        if (tag === "img") {
+    onTag: (tag, html, { isClosing }) => {
+        if (tag === "img" && !isClosing) {
             return `<${tag} loading="lazy" ${html.slice(5)}`;
+        }
+
+        if (tag === "a" && !isClosing) {
+            const startIndex = html.indexOf("href=");
+            if (startIndex === -1) return html;
+
+            const strSlice = html.slice(startIndex + 6);
+            const endIndex = strSlice.indexOf('"') || strSlice.indexOf('\\"');
+            const url = strSlice.slice(0, endIndex);
+
+            try {
+                new URL(url); // Just to check if it's a valid URL
+                return `<${tag} title="${url}" ${html.slice(3)}`;
+            } catch (error) {
+                console.log("");
+                console.error(`Invalid URL: "${url}"`);
+                console.error(error);
+            }
         }
     },
     onIgnoreTagAttr: (tag, name, value) => {
@@ -84,7 +102,10 @@ export const configuredXss = new FilterXSS({
                     "github.com",
                     "raw.githubusercontent.com",
                     "img.shields.io",
+                    "imgur.com",
+                    "i.imgur.com",
                     "i.postimg.cc",
+                    "i.ibb.co",
                     "cf.way2muchnoise.eu",
                     "bstats.org",
                     "crmm.tech",

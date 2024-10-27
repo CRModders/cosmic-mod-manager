@@ -70,7 +70,7 @@ const SearchListItem = ({
                     <>
                         <p className="leading-none">
                             <span>by</span>
-                            <Link to={`/user/${author}`} className="underline px-1">
+                            <Link to={`/user/${author}`} className="underline hover:brightness-110 px-1">
                                 {author}
                             </Link>
                         </p>
