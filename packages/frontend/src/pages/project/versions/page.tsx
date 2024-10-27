@@ -116,6 +116,9 @@ const ProjectVersionsPage = () => {
     const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
     const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
 
+    const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
+        [GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType),
+    );
     const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
         .filter((ver) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType))
         .map((ver) => ({ label: ver.label, value: ver.value }));
@@ -157,13 +160,15 @@ const ProjectVersionsPage = () => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
                             }}
                             footerItem={
-                                <LabelledCheckbox
-                                    checked={showAllVersions}
-                                    onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                    className="text-extra-muted-foreground px-2 py-1"
-                                >
-                                    Show all versions
-                                </LabelledCheckbox>
+                                hasSnapshotVersion ? (
+                                    <LabelledCheckbox
+                                        checked={showAllVersions}
+                                        onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                        className="text-extra-muted-foreground px-2 py-1"
+                                    >
+                                        Show all versions
+                                    </LabelledCheckbox>
+                                ) : null
                             }
                         >
                             <Button variant="secondary-inverted">
