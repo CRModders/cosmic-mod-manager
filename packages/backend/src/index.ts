@@ -25,9 +25,8 @@ const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 app.use(ddosProtectionRateLimiter);
 app.use(logger());
 app.use(
-    "*",
     cors({
-        origin: (env.CORS_ALLOWED_URLS || "").split(" "),
+        origin: env.CORS_ALLOWED_URLS.split(" "),
         credentials: true,
     }),
 );
