@@ -272,13 +272,17 @@ const ImageDialog = ({
                                 )}
                             </Button>
 
-                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={previous}>
-                                <ArrowLeftIcon className="w-btn-icon h-btn-icon" />
-                            </Button>
+                            {totalItems > 1 ? (
+                                <>
+                                    <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={previous}>
+                                        <ArrowLeftIcon className="w-btn-icon h-btn-icon" />
+                                    </Button>
 
-                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={next}>
-                                <ArrowRightIcon className="w-btn-icon h-btn-icon" />
-                            </Button>
+                                    <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={next}>
+                                        <ArrowRightIcon className="w-btn-icon h-btn-icon" />
+                                    </Button>
+                                </>
+                            ) : null}
                         </div>
                     </div>
                 </div>

@@ -25,7 +25,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { ProjectVersionData } from "@shared/types/api";
-import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, StarIcon } from "lucide-react";
+import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -387,7 +387,7 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink, sha1_has
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(downloadLink)}>
-                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
                     Copy file URL
                 </ContextMenuItem>
             </ContextMenuContent>

@@ -43,17 +43,18 @@ async function galleryImage_get(ctx: Context) {
     }
 }
 
-const cdnUrlQueryKey = "isCdnReq";
+const cdnUrlQueryKey = "cdnReq";
 async function versionFile_get(ctx: Context) {
     try {
+        let isCdnRequest = true;
         const userSession = getUserFromCtx(ctx);
         const { projectSlug, versionSlug, fileName } = ctx.req.param();
-        const isUserRequest = ctx.req.query(cdnUrlQueryKey) === "false";
         if (!projectSlug || !versionSlug || !fileName) {
             return invalidReqestResponse(ctx);
         }
+        if (env.NODE_ENV === "production") isCdnRequest = ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
 
-        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, isUserRequest);
+        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, isCdnRequest);
     } catch (error) {
         return serverErrorResponse(ctx);
     }

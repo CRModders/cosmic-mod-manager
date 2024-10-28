@@ -1,8 +1,9 @@
 import prisma from "@/services/prisma";
 import { getFile, getFileUrl, getProjectGalleryFile } from "@/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
-import { HTTP_STATUS } from "@/utils/http";
+import { HTTP_STATUS, notFoundResponse } from "@/utils/http";
 import { versionFileUrl } from "@/utils/urls";
+import { ProjectVisibility } from "@shared/types";
 import { getUserIpAddress } from "@src/auth/helpers";
 import { isProjectAccessible } from "@src/project/utils";
 import type { Context } from "hono";
@@ -17,7 +18,7 @@ export const serveVersionFile = async (
     userSession: ContextUserData | undefined,
     // True when the client requests for the CDN_URL of the file
     // False means the request is coming from the CACHE CDN itself
-    isUserRequest = true,
+    isCdnRequest = false,
 ) => {
     const projectData = await prisma.project.findUnique({
         where: {
@@ -42,9 +43,10 @@ export const serveVersionFile = async (
 
     const targetVersion = projectData?.versions?.[0];
     if (!projectData?.id || !targetVersion?.files?.[0]?.fileId) {
-        return ctx.status(HTTP_STATUS.NOT_FOUND);
+        return notFoundResponse(ctx);
     }
 
+    const isProjectPrivate = projectData.visibility === ProjectVisibility.PRIVATE;
     const projectAccessible = isProjectAccessible({
         visibility: projectData.visibility,
         publishingStatus: projectData.status,
@@ -53,7 +55,7 @@ export const serveVersionFile = async (
         orgMembers: [],
     });
     if (!projectAccessible) {
-        return ctx.json({}, HTTP_STATUS.NOT_FOUND);
+        return notFoundResponse(ctx);
     }
 
     const versionFile = await prisma.file.findFirst({
@@ -70,7 +72,9 @@ export const serveVersionFile = async (
 
     // Get corresponding file from version
     const targetVersionFile = targetVersion.files.find((file) => file.fileId === versionFile.id);
-    if (isUserRequest && targetVersionFile?.isPrimary === true) {
+
+    // If the request was not made from the CDN, add the download count
+    if (!isCdnRequest && targetVersionFile?.isPrimary === true) {
         // add download count
         await addToDownloadsQueue({
             ipAddress: getUserIpAddress(ctx) || "",
@@ -80,7 +84,8 @@ export const serveVersionFile = async (
         });
     }
 
-    if (isUserRequest) {
+    // Redirect to the cdn url if the project is public
+    if (!isCdnRequest && !isProjectPrivate) {
         return ctx.redirect(`${versionFileUrl(projectSlug, versionSlug, fileName)}`);
     }
 

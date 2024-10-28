@@ -97,14 +97,14 @@ export const MultiSelect = ({
                     }
                 }}
             >
-                {(options.length > 5 || searchBar === true) && searchBar !== false ? (
-                    <div className="w-full flex relative items-center justify-center">
+                {(options.length > 5 && searchBar !== false) || searchBar === true ? (
+                    <div className="w-full grid relative items-center place-items-center">
                         <SearchIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground absolute top-[50%] left-2.5 translate-y-[-50%]" />
                         <Input
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value || "")}
                             placeholder={searchInputPlaceholder || "Search..."}
-                            className="w-auto max-w-full !pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
+                            className="w-full !pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
                         />
                     </div>
                 ) : null}

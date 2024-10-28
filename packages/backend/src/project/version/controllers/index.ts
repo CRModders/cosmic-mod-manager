@@ -95,7 +95,7 @@ export async function getAllProjectVersions(
                 size: fileData.size,
                 type: fileData.type,
                 // ? Don't use cache cdn for primary files
-                url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl, !isProjectPrivate) || "",
+                url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
@@ -216,7 +216,7 @@ export async function getProjectVersionData(
             size: fileData.size,
             type: fileData.type,
             // ? Don't use cache cdn for primary files
-            url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl, !isProjectPrivate) || "",
+            url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl) || "",
             sha1_hash: fileData.sha1_hash,
             sha512_hash: fileData.sha512_hash,
         };
