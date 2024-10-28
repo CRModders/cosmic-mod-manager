@@ -1,3 +1,4 @@
+import { DownloadAnimationContext } from "@/components/download-ripple";
 import PaginatedNavigation from "@/components/pagination-nav";
 import loaderIcons from "@/components/tag-icons";
 import { Button } from "@/components/ui/button";
@@ -300,6 +301,7 @@ const ProjectVersionsListTable = ({
     const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
     const navigate = useNavigate();
+    const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const versionPagePathname = (versionSlug: string) => getProjectVersionPagePathname(projectData.type[0], projectData.slug, versionSlug);
 
@@ -431,6 +433,7 @@ const ProjectVersionsListTable = ({
                                                             size={"icon"}
                                                             className="noClickRedirect shrink-0 !w-10 !h-10 rounded-full"
                                                             aria-label={`download ${version.title}`}
+                                                            onClick={() => showDownloadAnimation()}
                                                         >
                                                             <DownloadIcon className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
                                                         </VariantButtonLink>
@@ -569,7 +572,7 @@ const ThreeDotMenu = ({ version, versionPageUrl }: { version: ProjectVersionData
                     size={"sm"}
                     className="justify-start"
                     onClick={() => {
-                        copyTextToClipboard(version.primaryFile?.url || "");
+                        copyTextToClipboard(`${window.location.origin}${versionPageUrl}`);
                         setDropDownOpen(false);
                     }}
                 >

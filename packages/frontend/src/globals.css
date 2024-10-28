@@ -210,3 +210,19 @@ body.no-scrollbar {
         align-items: baseline;
     }
 }
+
+
+.thin-scrollbar ::-webkit-scrollbar,
+.thin-scrollbar ::-webkit-scrollbar-thumb,
+.thin-scrollbar ::-webkit-scrollbar-track {
+    width: var(--scrollbar-width, 0.3rem);
+    background-color: hsla(var(--card-background), 1);
+}
+
+.thin-scrollbar ::-webkit-scrollbar-thumb {
+    background-color: hsla(var(--shallower-background), 1);
+}
+
+.thin-scrollbar.medium {
+    --scrollbar-width: 0.5rem;
+}

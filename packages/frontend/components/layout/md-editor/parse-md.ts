@@ -47,7 +47,7 @@ export const configuredXss = new FilterXSS({
                 new URL(url); // Just to check if it's a valid URL
                 return `<${tag} title="${url}" ${html.slice(3)}`;
             } catch (error) {
-                console.log("");
+                console.error("");
                 console.error(`Invalid URL: "${url}"`);
                 console.error(error);
             }

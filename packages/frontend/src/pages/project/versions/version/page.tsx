@@ -1,3 +1,4 @@
+import { DownloadAnimationContext } from "@/components/download-ripple";
 import { fallbackProjectIcon } from "@/components/icons";
 import MarkdownRenderBox from "@/components/layout/md-editor/render-md";
 import { ContentCardTemplate } from "@/components/layout/panel";
@@ -37,6 +38,7 @@ const VersionPage = () => {
     const { slug: projectSlug, versionSlug } = useParams();
     const navigate = useNavigate();
     const { projectData, currUsersMembership, allProjectVersions, projectDependencies, fetchingProjectData } = useContext(projectContext);
+    const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const getVersionData = () => {
         for (const version of allProjectVersions || []) {
@@ -112,6 +114,7 @@ const VersionPage = () => {
                                 <VariantButtonLink
                                     variant={"default"}
                                     url={versionData.primaryFile?.url ? projectFileUrl(versionData.primaryFile?.url) : ""}
+                                    onClick={showDownloadAnimation}
                                 >
                                     <DownloadIcon className="w-btn-icon h-btn-icon" />
                                     Download
@@ -239,6 +242,7 @@ const VersionPage = () => {
                                 downloadLink={projectFileUrl(versionData.primaryFile.url)}
                                 sha1_hash={versionData.primaryFile.sha1_hash}
                                 sha512_hash={versionData.primaryFile.sha512_hash}
+                                showDownloadAnimation={showDownloadAnimation}
                             />
                         ) : null}
 
@@ -254,6 +258,7 @@ const VersionPage = () => {
                                           downloadLink={projectFileUrl(file.url)}
                                           sha1_hash={file.sha1_hash}
                                           sha512_hash={file.sha512_hash}
+                                          showDownloadAnimation={showDownloadAnimation}
                                       />
                                   );
                               })
@@ -334,9 +339,18 @@ interface FileDetailsItemProps {
     downloadLink: string;
     sha1_hash: string | null;
     sha512_hash: string | null;
+    showDownloadAnimation?: () => void;
 }
 
-const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink, sha1_hash, sha512_hash }: FileDetailsItemProps) => {
+const FileDetailsItem = ({
+    fileName,
+    fileSize,
+    isPrimary,
+    downloadLink,
+    sha1_hash,
+    sha512_hash,
+    showDownloadAnimation,
+}: FileDetailsItemProps) => {
     return (
         <ContextMenu>
             <ContextMenuTrigger asChild>
@@ -369,6 +383,7 @@ const FileDetailsItem = ({ fileName, fileSize, isPrimary, downloadLink, sha1_has
                         className={cn(
                             !isPrimary && "no_neumorphic_shadow hover:bg-transparent dark:hover:bg-transparent hover:text-foreground",
                         )}
+                        onClick={showDownloadAnimation}
                     >
                         <DownloadIcon className="w-btn-icon h-btn-icon" />
                         Download

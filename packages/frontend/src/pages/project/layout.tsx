@@ -1,3 +1,4 @@
+import { DownloadAnimationContext } from "@/components/download-ripple";
 import { DiscordIcon, fallbackProjectIcon, fallbackUserIcon } from "@/components/icons";
 import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
@@ -50,6 +51,7 @@ const JoinProjectBanner = lazy(() => import("./join-project-banner"));
 
 const ProjectPageLayout = () => {
     const { theme } = useTheme();
+    const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
     const { fetchingProjectData, projectData, fetchProjectData, featuredProjectVersions, currUsersMembership } = useContext(projectContext);
     const navigate = useNavigate();
 
@@ -249,6 +251,7 @@ const ProjectPageLayout = () => {
                                                         )}
                                                         aria-label={`download ${version.title}`}
                                                         download={version.primaryFile?.name}
+                                                        onClick={showDownloadAnimation}
                                                     >
                                                         <DownloadIcon className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
                                                     </a>

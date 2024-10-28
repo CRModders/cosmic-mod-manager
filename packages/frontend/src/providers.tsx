@@ -1,3 +1,4 @@
+import { DownloadAnimationProvider } from "@/components/download-ripple";
 import { Toaster } from "@/components/ui/sonner";
 import "@/src/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,7 +21,7 @@ export const ContextProviders = ({ children }: { children?: React.ReactNode }) =
         <QueryClientProvider client={reactQueryClient}>
             <AuthProvider>
                 <ThemeProvider>
-                    {children ? children : <Outlet />}
+                    <DownloadAnimationProvider>{children ? children : <Outlet />}</DownloadAnimationProvider>
                     <Toaster />
                 </ThemeProvider>
             </AuthProvider>

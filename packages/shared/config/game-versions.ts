@@ -434,3 +434,7 @@ export const getGameVersionsFromLabels = (labels: string[]): GameVersion[] => {
 export const getGameVersionsFromValues = (values: string[]): GameVersion[] => {
     return values.map((value) => getGameVersionFromValue(value)).filter((version) => version !== null) as GameVersion[];
 };
+
+export const isExperimentalGameVersion = (version: GameVersionReleaseType) => {
+    return version === GameVersionReleaseType.SNAPSHOT;
+};

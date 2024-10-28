@@ -116,7 +116,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
 
     return (
         <Card
-            className={cn("h-fit flex flex-col gap-3 p-card-surround", showFilters === false && "hidden lg:flex")}
+            className={cn("thin-scrollbar medium h-fit flex flex-col gap-3 p-card-surround", showFilters === false && "hidden lg:flex")}
             style={{ gridArea: "sidebar" }}
         >
             <div className="flex items-center justify-center gap-2">

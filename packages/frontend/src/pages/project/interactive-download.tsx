@@ -1,6 +1,8 @@
+import { DownloadAnimationContext } from "@/components/download-ripple";
 import { fallbackProjectIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { LabelledCheckbox } from "@/components/ui/checkbox";
 import ComboBox from "@/components/ui/combobox";
 import {
     Dialog,
@@ -19,7 +21,7 @@ import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, is
 import { projectContext } from "@/src/contexts/curr-project";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { getGameVersionFromValue, getGameVersionsFromValues } from "@shared/config/game-versions";
+import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
@@ -49,8 +51,16 @@ const getVersionData = (gameVersion: string, loader: string, versionsList: Proje
 };
 
 const InteractiveDownloadPopup = () => {
+    const [showAllVersions, setShowAllVersions] = useState(false);
     const { projectData, allProjectVersions } = useContext(projectContext);
-    const [selectedGameVersion, setSelectedGameVersion] = useState<string>(projectData?.gameVersions[0] || "");
+
+    const supportedGameVersionsList = getGameVersionsFromValues(projectData?.gameVersions || []).filter(
+        (version) => !isExperimentalGameVersion(version.releaseType) || showAllVersions,
+    );
+    const hasExperimentalGameVersion = getGameVersionsFromValues(projectData?.gameVersions || []).some((ver) =>
+        isExperimentalGameVersion(ver.releaseType),
+    );
+    const [selectedGameVersion, setSelectedGameVersion] = useState<string>(supportedGameVersionsList?.[0].value || "");
     const [selectedLoader, setSelectedLoader] = useState<string>(projectData?.loaders[0] || "");
     const location = useLocation();
 
@@ -58,7 +68,7 @@ const InteractiveDownloadPopup = () => {
         if (!projectData || !allProjectVersions) return [];
 
         const list = [];
-        for (const gameVersion of getGameVersionsFromValues(projectData.gameVersions)) {
+        for (const gameVersion of supportedGameVersionsList) {
             const projectVersion = getVersionData(gameVersion.value, selectedLoader, allProjectVersions);
 
             if (!projectVersion) continue;
@@ -74,7 +84,7 @@ const InteractiveDownloadPopup = () => {
             });
         }
         return list;
-    }, [projectData, selectedLoader, allProjectVersions]);
+    }, [projectData, selectedLoader, allProjectVersions, supportedGameVersionsList]);
 
     const loadersList = useMemo(() => {
         if (!projectData || !allProjectVersions) return [];
@@ -129,7 +139,22 @@ const InteractiveDownloadPopup = () => {
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody className="flex flex-col items-center justify-center gap-3">
-                    <ComboBox options={gameVersionsList} value={selectedGameVersion} setValue={setSelectedGameVersion}>
+                    <ComboBox
+                        options={gameVersionsList}
+                        value={selectedGameVersion}
+                        setValue={setSelectedGameVersion}
+                        footerItem={
+                            hasExperimentalGameVersion ? (
+                                <LabelledCheckbox
+                                    checked={showAllVersions}
+                                    onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                    className="text-extra-muted-foreground px-2 py-1 ml-2"
+                                >
+                                    Show all versions
+                                </LabelledCheckbox>
+                            ) : null
+                        }
+                    >
                         <Button
                             variant="outline"
                             role="combobox"
@@ -241,6 +266,8 @@ interface AvailableVersionsListProps {
 }
 
 const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProjectVersions, projedata }: AvailableVersionsListProps) => {
+    const { show: showDownloadAnimation, isVisible: isDownloadAnimationVisible } = useContext(DownloadAnimationContext);
+
     const versionsList = useMemo(() => {
         if (!projedata || !allProjectVersions) return [];
         const list: ProjectVersionData[] = [];
@@ -286,8 +313,9 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
                             url={version.primaryFile?.url || ""}
                             size={"icon"}
                             variant="default"
-                            className="shrink-0"
+                            className={cn("shrink-0", isDownloadAnimationVisible && "pointer-events-none")}
                             label={`download ${version.title}`}
+                            onClick={showDownloadAnimation}
                         >
                             <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
                         </VariantButtonLink>

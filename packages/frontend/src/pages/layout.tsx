@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
 import { toast } from "sonner";
 
+import { DownloadRipple } from "@/components/download-ripple";
 import { projectTypes } from "@shared/config/project";
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 
@@ -32,6 +33,8 @@ export const RootLayout = () => {
 
                 <Footer />
             </div>
+
+            <DownloadRipple />
         </>
     );
 };

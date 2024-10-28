@@ -80,7 +80,7 @@ export const MultiSelect = ({
             <DropdownMenuContent
                 align={popupAlign || "center"}
                 className={cn(
-                    "p-1 flex flex-col gap-1 w-max min-w-40 max-w-md overscroll-contain border-shallower-background",
+                    "p-1 flex flex-col gap-1 w-max min-w-40 max-w-md overscroll-contain border-shallow-background thin-scrollbar",
                     classNames?.popupContent,
                 )}
                 onKeyDown={(e) => {
@@ -101,10 +101,11 @@ export const MultiSelect = ({
                     <div className="w-full grid relative items-center place-items-center">
                         <SearchIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground absolute top-[50%] left-2.5 translate-y-[-50%]" />
                         <Input
+                            size={1}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value || "")}
                             placeholder={searchInputPlaceholder || "Search..."}
-                            className="w-full !pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
+                            className="w-full !h-9 !pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
                         />
                     </div>
                 ) : null}

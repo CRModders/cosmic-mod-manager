@@ -18,15 +18,16 @@ interface ComboBoxProps {
     children: React.ReactNode;
     inputLabel?: string;
     setValue: (value: string) => void;
+    footerItem?: React.ReactNode;
 }
 
-function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxProps) {
+function ComboBox({ options, value, setValue, inputLabel, children, footerItem }: ComboBoxProps) {
     const [open, setOpen] = useState(false);
 
     return (
         <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
-            <PopoverContent className="p-0 sm:min-w-[28rem]">
+            <PopoverContent className="p-0 sm:min-w-[28rem] thin-scrollbar">
                 <Command>
                     <CommandInput placeholder={inputLabel || "Search..."} />
                     <TooltipProvider delayDuration={200}>
@@ -63,6 +64,7 @@ function ComboBox({ options, value, setValue, inputLabel, children }: ComboBoxPr
                             </CommandGroup>
                         </CommandList>
                     </TooltipProvider>
+                    {footerItem}
                 </Command>
             </PopoverContent>
         </Popover>
