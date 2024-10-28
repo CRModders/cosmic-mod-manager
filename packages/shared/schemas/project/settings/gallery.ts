@@ -19,6 +19,7 @@ export const addNewGalleryImageFormSchema = z.object({
             async (file) => {
                 if (file instanceof File) {
                     const type = await getFileType(file);
+                    console.log(type);
                     if (!type || !isImageFile(type)) {
                         return false;
                     }

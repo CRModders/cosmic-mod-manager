@@ -15,6 +15,7 @@ interface FileSignatureListItem {
 }
 
 const fileTypeSignaturesList: FileSignatureListItem[] = [
+    // .jar, .zip (octet-stream)
     {
         signature: [{ offset: 0, signature: "50 4B 03 04" }],
         types: [FileType.JAR, FileType.ZIP],
@@ -31,26 +32,36 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
         signature: [{ offset: 0, signature: "50 4B 53 70" }],
         types: [FileType.JAR, FileType.ZIP],
     },
+
+    // .7z
     {
         signature: [{ offset: 0, signature: "37 7A BC AF 27 1C" }],
-        types: [FileType.SEVEN_Z]
+        types: [FileType.SEVEN_Z],
+    },
+
+    // .gz
+    {
+        signature: [{ offset: 0, signature: "1F 8B" }],
+        types: [FileType.GZ],
+    },
+
+    // .tar
+    {
+        signature: [{ offset: 0, signature: "75 73 74 61 72 00 30 30" }],
+        types: [FileType.TAR],
     },
     {
-        signature: [{offset: 0, signature: "1F 8B"}],
-        types: [FileType.GZ]
+        signature: [{ offset: 0, signature: "75 73 74 61 72 20 20 00" }],
+        types: [FileType.TAR],
     },
-    {
-        signature: [{offset: 0, signature: "75 73 74 61 72 00 30 30"}],
-        types: [FileType.TAR]
-    },
-    {
-        signature: [{offset: 0, signature: "75 73 74 61 72 20 20 00"}],
-        types: [FileType.TAR]
-    },
+
+    // .png
     {
         signature: [{ offset: 0, signature: "89 50 4E 47 0D 0A 1A 0A" }],
         types: [FileType.PNG],
     },
+
+    // .webp
     {
         signature: [
             { offset: 0, signature: "52 49 46 46" },
@@ -58,9 +69,21 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
         ],
         types: [FileType.WEBP],
     },
+
+    // .jpeg
     {
         signature: [{ offset: 0, signature: "FF D8 FF" }],
         types: [FileType.JPEG],
+    },
+
+    // .gif
+    {
+        signature: [{ offset: 0, signature: "47 49 46 38 37 61" }],
+        types: [FileType.GIF],
+    },
+    {
+        signature: [{ offset: 0, signature: "47 49 46 38 39 61" }],
+        types: [FileType.GIF],
     },
 ];
 

@@ -83,12 +83,12 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
         case "jpg":
         case "jpeg":
             return FileType.JPEG;
-
         case "webp":
             return FileType.WEBP;
-
         case "png":
             return FileType.PNG;
+        case "gif":
+            return FileType.GIF;
 
         case "jar":
             return FileType.JAR;

@@ -154,6 +154,7 @@ const ProjectVersionsPage = () => {
 
                     {gameVersionsFilterVisible ? (
                         <MultiSelect
+                            popupAlign="start"
                             selectedOptions={[...filters.gameVersions]}
                             options={gameVersionOptions}
                             onChange={(values) => {
@@ -181,6 +182,7 @@ const ProjectVersionsPage = () => {
 
                     {releaseChannelsFilterVisible ? (
                         <MultiSelect
+                            popupAlign="start"
                             selectedOptions={[...filters.releaseChannels]}
                             options={availableReleaseChannels.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",

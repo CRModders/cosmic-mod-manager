@@ -80,7 +80,7 @@ export const MultiSelect = ({
             <DropdownMenuContent
                 align={popupAlign || "center"}
                 className={cn(
-                    "p-1 flex flex-col gap-1 w-fit min-w-max overscroll-contain border-shallower-background",
+                    "p-1 flex flex-col gap-1 w-max min-w-40 max-w-md overscroll-contain border-shallower-background",
                     classNames?.popupContent,
                 )}
                 onKeyDown={(e) => {
@@ -104,7 +104,7 @@ export const MultiSelect = ({
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value || "")}
                             placeholder={searchInputPlaceholder || "Search..."}
-                            className="!pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
+                            className="w-auto max-w-full !pl-8 no_focus_ring border border-shallow-background no_neumorphic_shadow"
                         />
                     </div>
                 ) : null}
@@ -117,7 +117,7 @@ export const MultiSelect = ({
                             // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                             <li
                                 className={cn(
-                                    "w-full text-sm flex items-center justify-start py-1.5 px-4 gap-x-4 rounded cursor-default text-muted-foreground",
+                                    "w-full text-sm flex items-center justify-start py-1.5 pl-3 pr-2 gap-x-4 rounded cursor-default text-muted-foreground",
                                     isFocused && "bg-shallow-background text-foreground",
                                     isSelected && "text-foreground-bright",
                                     classNames?.listItem,

@@ -143,10 +143,14 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
 
                     {gameVersionsFilterVisible ? (
                         <MultiSelect
+                            popupAlign="start"
                             selectedOptions={[...filters.gameVersions]}
                             options={gameVersionOptions}
                             onChange={(values) => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
+                            }}
+                            classNames={{
+                                popupContent: "w-fit",
                             }}
                             footerItem={
                                 hasSnapshotVersion ? (
@@ -170,6 +174,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
 
                     {releaseChannelsFilterVisible ? (
                         <MultiSelect
+                            popupAlign="start"
                             selectedOptions={[...filters.releaseChannels]}
                             options={availableReleaseChannels.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",

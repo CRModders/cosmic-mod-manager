@@ -128,7 +128,7 @@ const UploadGalleryImageForm = () => {
                                                         name={field.name}
                                                         id="gallery-image-input"
                                                         className="hidden"
-                                                        accept={".jpg, .jpeg, .png, .webp"}
+                                                        accept={".jpg, .jpeg, .png, .webp, .gif"}
                                                         onChange={(e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
