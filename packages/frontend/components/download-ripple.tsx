@@ -9,7 +9,7 @@ export const DownloadRipple = () => {
     return (
         <div
             className={cn(
-                "download-animation z-[9999] inset-0 hidden fixed top-0 left-0 w-full h-full lg:grid place-items-center",
+                "download-animation z-[9999] inset-0 fixed top-0 left-0 w-full h-full grid place-items-center",
                 !isAnimationPlaying && "animation-hidden",
                 !isVisible && "-z-50",
             )}
