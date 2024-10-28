@@ -7,6 +7,8 @@ import { cors } from "hono/cors";
 import { getUserFromCtx } from "../auth/helpers/session";
 import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
+const cdnUrlQueryKey = "cdnReq";
+
 const cdnRouter = new Hono();
 export const corsAllowCdn = cors({
     origin: [env.CDN_SERVER_URL, env.CACHE_CDN_URL],
@@ -25,7 +27,8 @@ async function projectFile_get(ctx: Context) {
         if (!projectSlug) {
             return invalidReqestResponse(ctx);
         }
-        return await serveProjectIconFile(ctx, projectSlug);
+
+        return await serveProjectIconFile(ctx, projectSlug, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
@@ -37,27 +40,30 @@ async function galleryImage_get(ctx: Context) {
         if (!projectSlug || !image) {
             return invalidReqestResponse(ctx);
         }
-        return await serveProjectGalleryImage(ctx, projectSlug, image);
+
+        return await serveProjectGalleryImage(ctx, projectSlug, image, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
 }
 
-const cdnUrlQueryKey = "cdnReq";
 async function versionFile_get(ctx: Context) {
     try {
-        let isCdnRequest = ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
         const userSession = getUserFromCtx(ctx);
         const { projectSlug, versionSlug, fileName } = ctx.req.param();
         if (!projectSlug || !versionSlug || !fileName) {
             return invalidReqestResponse(ctx);
         }
-        if (env.NODE_ENV === "development") isCdnRequest = true;
 
-        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, isCdnRequest);
+        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
+}
+
+function IsCdnRequest(ctx: Context) {
+    if (env.NODE_ENV === "development") return true;
+    return ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
 }
 
 export default cdnRouter;

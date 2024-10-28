@@ -99,7 +99,7 @@ export const serveVersionFile = async (
     return response;
 };
 
-export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequest = true) => {
+export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequest: boolean) => {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ slug: slug }, { id: slug }],
@@ -128,7 +128,7 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequ
     return response;
 };
 
-export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, isCdnRequest = true) => {
+export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, isCdnRequest: boolean) => {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ slug: slug }, { id: slug }],
