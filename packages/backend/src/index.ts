@@ -4,17 +4,17 @@ import { ddosProtectionRateLimiter } from "@/middleware/rate-limit/ddos";
 import env from "@/utils/env";
 import { HTTP_STATUS } from "@/utils/http";
 import { BACKEND_PORT } from "@shared/config";
+import { queueDownloadsCounterQueueProcessing } from "@src/cdn/downloads-counter";
+import queueSearchDbSync from "@src/search/sync-queue";
 import type { SocketAddress } from "bun";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import authRouter from "./auth/router";
-import { queueDownloadsCounterQueueProcessing } from "./cdn/downloads-counter";
-import cdnRouter from "./cdn/router";
+import cdnRouter, { corsAllowCdn } from "./cdn/router";
 import bulkProjectsRouter from "./project/bulk_router";
 import projectRouter from "./project/router";
 import teamRouter from "./project/team/router";
 import searchRouter from "./search/router";
-import queueSearchDbSync from "./search/sync-queue";
 import tagsRouter from "./tags";
 import bulkUserActionsRouter from "./user/bulk_actions/router";
 import notificationRouter from "./user/notification/router";
@@ -51,13 +51,13 @@ app.route("/api/team", teamRouter);
 app.route("/cdn", cdnRouter);
 
 // Redirect to /api
-app.get("/", (ctx: Context) => {
+app.get("/", corsAllowCdn, (ctx: Context) => {
     return ctx.redirect("/api");
 });
-app.get("/favicon.ico", async (ctx: Context) => {
+app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
     return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
 });
-app.get("/api", apiDetails);
+app.get("/api", corsAllowCdn, apiDetails);
 
 Bun.serve({
     port: BACKEND_PORT,
@@ -67,8 +67,8 @@ Bun.serve({
 });
 
 // Start the sync queues
-queueSearchDbSync();
 queueDownloadsCounterQueueProcessing();
+queueSearchDbSync();
 
 async function apiDetails(ctx: Context) {
     return ctx.json(

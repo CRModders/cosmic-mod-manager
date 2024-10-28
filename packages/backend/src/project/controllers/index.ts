@@ -34,7 +34,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
 
     const projectMembersList = [
         ...project.team.members.map((member) => formatTeamMemberData(member)),
-        // ...(project.organisation?.team.members || []).map((member) => getFormattedTeamMember(member)),
+        ...(project.organisation?.team.members || []).map((member) => formatTeamMemberData(member)),
     ];
 
     const projectAccessible = isProjectAccessible({

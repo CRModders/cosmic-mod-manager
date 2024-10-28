@@ -8,12 +8,12 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnRouter = new Hono();
-cdnRouter.use(
-    cors({
-        origin: [env.CDN_SERVER_URL, env.CACHE_CDN_URL],
-        credentials: true,
-    }),
-);
+export const corsAllowCdn = cors({
+    origin: [env.CDN_SERVER_URL, env.CACHE_CDN_URL],
+    credentials: true,
+});
+
+cdnRouter.use(corsAllowCdn);
 
 cdnRouter.get("/data/:projectSlug/:file", cdnAssetRateLimiter, projectFile_get);
 cdnRouter.get("/data/:projectSlug/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
@@ -46,13 +46,13 @@ async function galleryImage_get(ctx: Context) {
 const cdnUrlQueryKey = "cdnReq";
 async function versionFile_get(ctx: Context) {
     try {
-        let isCdnRequest = true;
+        let isCdnRequest = ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
         const userSession = getUserFromCtx(ctx);
         const { projectSlug, versionSlug, fileName } = ctx.req.param();
         if (!projectSlug || !versionSlug || !fileName) {
             return invalidReqestResponse(ctx);
         }
-        if (env.NODE_ENV === "production") isCdnRequest = ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
+        if (env.NODE_ENV === "development") isCdnRequest = true;
 
         return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, isCdnRequest);
     } catch (error) {
