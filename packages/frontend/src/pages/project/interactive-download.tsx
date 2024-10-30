@@ -60,7 +60,9 @@ const InteractiveDownloadPopup = () => {
     const hasExperimentalGameVersion = getGameVersionsFromValues(projectData?.gameVersions || []).some((ver) =>
         isExperimentalGameVersion(ver.releaseType),
     );
-    const [selectedGameVersion, setSelectedGameVersion] = useState<string>(supportedGameVersionsList?.[0].value || "");
+
+    const latestSupportedGameVersion = supportedGameVersionsList?.[0];
+    const [selectedGameVersion, setSelectedGameVersion] = useState<string>(latestSupportedGameVersion?.value || "");
     const [selectedLoader, setSelectedLoader] = useState<string>(projectData?.loaders[0] || "");
     const location = useLocation();
 
