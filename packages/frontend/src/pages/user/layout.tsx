@@ -86,6 +86,11 @@ const UserPageLayout = () => {
 export const Component = UserPageLayout;
 
 const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId: string; orgsList: Organisation[] }) => {
+    const joinedOrgs = orgsList.filter((org) => {
+        const member = org.members.find((member) => member.id === userId);
+        return member?.accepted === true;
+    });
+
     return (
         <div
             style={{
@@ -94,32 +99,27 @@ const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId:
             className="w-full flex flex-col gap-panel-cards"
         >
             <ContentCardTemplate title="Organizations" titleClassName="text-lg">
-                {!orgsList.length ? (
+                {!joinedOrgs.length ? (
                     <span className="text-muted-foreground/75 italic">{userName} is not a member of any Organization</span>
                 ) : null}
 
                 <div className="flex flex-wrap gap-2 items-start justify-start">
                     <TooltipProvider>
-                        {orgsList.map((org) => {
-                            const member = org.members.find((member) => member.id === userId);
-                            if (member?.accepted !== true) return null;
-
-                            return (
-                                <Tooltip key={org.id}>
-                                    <TooltipTrigger asChild>
-                                        <Link to={getOrgPagePathname(org.slug)}>
-                                            <ImgWrapper
-                                                src={imageUrl(org.icon)}
-                                                alt={org.name}
-                                                fallback={fallbackOrgIcon}
-                                                className="w-14 h-14"
-                                            />
-                                        </Link>
-                                    </TooltipTrigger>
-                                    <TooltipContent>{org.name}</TooltipContent>
-                                </Tooltip>
-                            );
-                        })}
+                        {joinedOrgs.map((org) => (
+                            <Tooltip key={org.id}>
+                                <TooltipTrigger asChild>
+                                    <Link to={getOrgPagePathname(org.slug)}>
+                                        <ImgWrapper
+                                            src={imageUrl(org.icon)}
+                                            alt={org.name}
+                                            fallback={fallbackOrgIcon}
+                                            className="w-14 h-14"
+                                        />
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>{org.name}</TooltipContent>
+                            </Tooltip>
+                        ))}
                     </TooltipProvider>
                 </div>
             </ContentCardTemplate>
