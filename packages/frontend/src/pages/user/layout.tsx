@@ -87,7 +87,7 @@ export const Component = UserPageLayout;
 
 const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId: string; orgsList: Organisation[] }) => {
     const joinedOrgs = orgsList.filter((org) => {
-        const member = org.members.find((member) => member.id === userId);
+        const member = org.members.find((member) => member.userId === userId);
         return member?.accepted === true;
     });
 
