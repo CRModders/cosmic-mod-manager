@@ -11,7 +11,8 @@ interface Props {
     teamId: string;
     role: string;
     className?: string;
-    fetchProjectData: () => Promise<void>;
+    refreshData: () => Promise<void>;
+    isOrg?: boolean;
 }
 
 interface LoadingData {
@@ -19,7 +20,7 @@ interface LoadingData {
     action: "accept" | "decline" | null;
 }
 
-const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props) => {
+const TeamInvitationBanner = ({ teamId, role, className, refreshData, isOrg }: Props) => {
     const [isLoading, setIsLoading] = useState<LoadingData>({ value: false, action: null });
 
     const handleAcceptInvite = async () => {
@@ -30,7 +31,7 @@ const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props)
             const data = await acceptTeamInvite(teamId);
             if (!data?.success) return toast.error(data?.message || "Error");
 
-            await fetchProjectData();
+            await refreshData();
             return toast.success(data?.message || "Success");
         } finally {
             setIsLoading({ value: false, action: null });
@@ -45,7 +46,7 @@ const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props)
             const data = await leaveTeam(teamId);
             if (!data?.success) return toast.error(data?.message || "Error");
 
-            await fetchProjectData();
+            await refreshData();
             return toast.success("Declined invitation");
         } finally {
             setIsLoading({ value: false, action: null });
@@ -54,9 +55,9 @@ const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props)
 
     return (
         <Card className={cn("w-full p-card-surround flex flex-col gap-4", className)}>
-            <CardTitle className="text-muted-foreground">Invitation to join project</CardTitle>
-            <span className="text-muted-foregroundProjectDetailsData">
-                You've been invited be a member of this project with the role of '{role}'.
+            <CardTitle className="text-muted-foreground">Invitation to join {isOrg ? "organization" : "project"}</CardTitle>
+            <span className="text-muted-foreground ProjectDetailsData">
+                You've been invited be a member of this {isOrg ? "organization" : "project"} with the role of '{role}'.
             </span>
             <div className="flex  flex-wrap items-center justify-start gap-3">
                 <Button className="" size="sm" onClick={handleAcceptInvite} disabled={isLoading.value}>
@@ -81,4 +82,4 @@ const JoinProjectBanner = ({ teamId, role, className, fetchProjectData }: Props)
     );
 };
 
-export default JoinProjectBanner;
+export default TeamInvitationBanner;

@@ -1,28 +1,30 @@
-import { CubeIcon, fallbackUserIcon } from "@/components/icons";
+import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "@/components/icons";
+import { PageHeader } from "@/components/layout/page-header";
 import { ContentCardTemplate } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { VariantButtonLink } from "@/components/ui/link";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { imageUrl, timeSince } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getOrgPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { userProfileContext } from "@/src/contexts/user-profile";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
+import type { Organisation } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
-import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon, MoreVertical } from "lucide-react";
+import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SecondaryNav from "../project/secondary-nav";
 import UserProfilePage from "./page";
 import "./styles.css";
 
 const UserPageLayout = () => {
     const { projectType } = useParams();
-    const { userData, projectsList } = useContext(userProfileContext);
+    const { userData, projectsList, orgsList } = useContext(userProfileContext);
 
     if (!userData) return null;
 
@@ -69,7 +71,7 @@ const UserPageLayout = () => {
 
                     <UserProfilePage projectType={projectType} projectsList={projectsList} />
                 </div>
-                <PageSidebar />
+                <PageSidebar userName={userData.userName} orgsList={orgsList || []} />
             </div>
         </>
     );
@@ -77,7 +79,7 @@ const UserPageLayout = () => {
 
 export const Component = UserPageLayout;
 
-const PageSidebar = () => {
+const PageSidebar = ({ userName, orgsList }: { userName: string; orgsList: Organisation[] }) => {
     return (
         <div
             style={{
@@ -85,12 +87,34 @@ const PageSidebar = () => {
             }}
             className="w-full flex flex-col gap-panel-cards"
         >
-            <ContentCardTemplate title="Organisations" titleClassName="text-lg">
-                <span className="text-muted-foreground italic">List of organisations</span>
+            <ContentCardTemplate title="Organizations" titleClassName="text-lg">
+                {!orgsList.length ? (
+                    <span className="text-muted-foreground/75 italic">{userName} is not a member of any Organization</span>
+                ) : null}
+
+                <div className="flex flex-wrap gap-2 items-start justify-start">
+                    <TooltipProvider>
+                        {orgsList.map((org) => (
+                            <Tooltip key={org.id}>
+                                <TooltipTrigger asChild>
+                                    <Link to={getOrgPagePathname(org.slug)}>
+                                        <ImgWrapper
+                                            src={imageUrl(org.icon)}
+                                            alt={org.name}
+                                            fallback={fallbackOrgIcon}
+                                            className="w-14 h-14"
+                                        />
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>{org.name}</TooltipContent>
+                            </Tooltip>
+                        ))}
+                    </TooltipProvider>
+                </div>
             </ContentCardTemplate>
-            <ContentCardTemplate title="Badges" titleClassName="text-lg">
+            {/* <ContentCardTemplate title="Badges" titleClassName="text-lg">
                 <span className="text-muted-foreground italic">List of badges the user has earned</span>
-            </ContentCardTemplate>
+            </ContentCardTemplate> */}
         </div>
     );
 };
@@ -105,72 +129,53 @@ const ProfilePageHeader = ({ userData, totalProjects, totalDownloads }: ProfileP
     const { session } = useSession();
 
     return (
-        <div className="profile-page-header w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background">
-            <div className="flex gap-5">
-                <ImgWrapper
-                    src={imageUrl(userData.avatarUrl)}
-                    alt={userData.userName}
-                    className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-full"
-                    fallback={fallbackUserIcon}
-                />
-                <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{userData.userName}</h1>
-                    </div>
-                    <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{userData.bio}</p>
-                    <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
-                        <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                            <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                            <span className="font-semibold">{totalProjects} projects</span>
-                        </div>
-                        <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                            <span className="font-semibold">{totalDownloads} downloads</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />
-                            <span className="font-semibold">Joined {timeSince(new Date(userData.dateJoined))}</span>
-                        </div>
-                    </div>
-                </div>
+        <PageHeader
+            icon={imageUrl(userData.avatarUrl)}
+            iconClassName="rounded-full"
+            fallbackIcon={fallbackUserIcon}
+            title={userData.userName}
+            description={userData.bio || ""}
+            threeDotMenu={
+                <>
+                    <Button variant="ghost-destructive" className="w-full">
+                        <FlagIcon className="w-btn-icon h-btn-icon" />
+                        Report
+                    </Button>
+                    <PopoverClose asChild>
+                        <Button
+                            className="w-full"
+                            variant="ghost"
+                            onClick={() => {
+                                navigator.clipboard.writeText(userData.id);
+                            }}
+                        >
+                            <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                            Copy ID
+                        </Button>
+                    </PopoverClose>
+                </>
+            }
+            actionBtns={
+                userData.id === session?.id ? (
+                    <VariantButtonLink variant="secondary-inverted" url="/settings">
+                        <EditIcon className="w-btn-icon h-btn-icon" />
+                        Edit
+                    </VariantButtonLink>
+                ) : null
+            }
+        >
+            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                <span className="font-semibold">{totalProjects} projects</span>
             </div>
-
-            <div className="flex flex-col justify-center gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                    {userData.id === session?.id ? (
-                        <VariantButtonLink variant="secondary-inverted" url="/settings">
-                            <EditIcon className="w-btn-icon h-btn-icon" />
-                            Edit
-                        </VariantButtonLink>
-                    ) : null}
-
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
-                                <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
-                            <Button variant="ghost-destructive" className="w-full">
-                                <FlagIcon className="w-btn-icon h-btn-icon" />
-                                Report
-                            </Button>
-                            <PopoverClose asChild>
-                                <Button
-                                    className="w-full"
-                                    variant="ghost"
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(userData.id);
-                                    }}
-                                >
-                                    <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
-                                    Copy ID
-                                </Button>
-                            </PopoverClose>
-                        </PopoverContent>
-                    </Popover>
-                </div>
+            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                <span className="font-semibold">{totalDownloads} downloads</span>
             </div>
-        </div>
+            <div className="flex items-center gap-2">
+                <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />
+                <span className="font-semibold">Joined {timeSince(new Date(userData.dateJoined))}</span>
+            </div>
+        </PageHeader>
     );
 };

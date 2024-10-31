@@ -1,9 +1,9 @@
 import prisma from "@/services/prisma";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
-import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
+import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@shared/config/license-list";
-import { doesMemberHaveAccess, getValidProjectCategories } from "@shared/lib/utils";
+import { doesMemberHaveAccess, getCurrMember, getValidProjectCategories } from "@shared/lib/utils";
 import type { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
 import type { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
 import type { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
@@ -25,20 +25,15 @@ export async function updateProjectDescription(
         },
     });
 
-    const memberObj = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !memberObj) return notFoundResponseData();
 
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DESCRIPTION,
-        memberObj?.permissions as ProjectPermission[],
+        memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
     );
-    if (!hasEditAccess) {
-        return {
-            data: { success: false, message: "You don't have the permission to update project description" },
-            status: HTTP_STATUS.UNAUTHORIZED,
-        };
-    }
+    if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project description");
 
     await prisma.project.update({
         where: { id: project.id },
@@ -63,7 +58,7 @@ export async function updateProjectTags(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !memberObj) return notFoundResponseData();
 
     const hasEditAccess = doesMemberHaveAccess(
@@ -105,7 +100,7 @@ export async function updateProjectExternalLinks(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !memberObj) return notFoundResponseData();
 
     const hasEditAccess = doesMemberHaveAccess(
@@ -142,7 +137,7 @@ export async function updateProjectLicense(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !memberObj) return notFoundResponseData();
 
     const hasEditAccess = doesMemberHaveAccess(

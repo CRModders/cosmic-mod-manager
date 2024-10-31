@@ -1,6 +1,7 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
-import { type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
+import { type OrganisationPermission, type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
 import type { TeamMember } from "../../types/api";
+import { type PartialTeamMember, combineProjectMembers } from "./project";
 
 export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
 export const upperCaseAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -199,6 +200,21 @@ export const doesMemberHaveAccess = (requiredPermission: ProjectPermission, perm
     return permissions.includes(requiredPermission);
 };
 
+export const doesOrgMemberHaveAccess = (
+    requiredPermission: OrganisationPermission,
+    permissions: OrganisationPermission[] = [],
+    isOwner = false,
+) => {
+    if (!requiredPermission) return false;
+    if (isOwner === true) return true;
+    return permissions.includes(requiredPermission);
+};
+
+export const getCurrMember = <T extends PartialTeamMember>(userId: string, teamMembers: T[], orgMembers: T[]) => {
+    const combinedMembers = combineProjectMembers(teamMembers, orgMembers);
+    return combinedMembers.get(userId);
+};
+
 export const isUrl = (str: string) => {
     try {
         new URL(str);
@@ -234,37 +250,6 @@ export const filterInCompatibleProjectTypes = (primaryType: ProjectType, currTyp
 export const validateProjectTypesCompatibility = (types: ProjectType[]) => {
     if (types.length < 2) return types;
 
-    if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
-    if (types.includes(ProjectType.SHADER)) return filterInCompatibleProjectTypes(ProjectType.SHADER, types);
-    if (types.includes(ProjectType.RESOURCE_PACK)) return filterInCompatibleProjectTypes(ProjectType.RESOURCE_PACK, types);
-    if (types.includes(ProjectType.DATAMOD)) return filterInCompatibleProjectTypes(ProjectType.DATAMOD, types);
-    if (types.includes(ProjectType.MOD)) return filterInCompatibleProjectTypes(ProjectType.MOD, types);
-    if (types.includes(ProjectType.PLUGIN)) return filterInCompatibleProjectTypes(ProjectType.PLUGIN, types);
-
-    return ["project"];
-};
-
-// ! No longer used
-export const inferProjectType = (projectLoaders: string[]) => {
-    if (!projectLoaders.length) return ["project"];
-    const types: ProjectType[] = [];
-
-    // Aggregate all supported project types
-    for (const projectLoader of projectLoaders) {
-        for (const LOADER of loaders) {
-            if (LOADER.name === projectLoader) {
-                for (const supportedProjectType of LOADER.supportedProjectTypes) {
-                    if (!types.includes(supportedProjectType)) {
-                        types.push(supportedProjectType);
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    // Filter out incompatible project types
-    if (types.length < 2) return types;
     if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
     if (types.includes(ProjectType.SHADER)) return filterInCompatibleProjectTypes(ProjectType.SHADER, types);
     if (types.includes(ProjectType.RESOURCE_PACK)) return filterInCompatibleProjectTypes(ProjectType.RESOURCE_PACK, types);

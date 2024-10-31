@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SITE_NAME_SHORT } from "@shared/config/index";
 import { parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
-import { checkFormValidity } from "@shared/schemas/utils";
+import { handleFormError } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
@@ -138,7 +138,7 @@ const EditVersionPage = () => {
                         versionTitle={form.getValues().title}
                         backUrl={currVersionPageUrl}
                         onSubmitBtnClick={async () => {
-                            await checkFormValidity(async () => {
+                            await handleFormError(async () => {
                                 const formValues = await updateVersionFormSchema.parseAsync(form.getValues());
                                 await handleSubmit(formValues);
                             });

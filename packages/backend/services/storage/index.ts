@@ -1,7 +1,7 @@
 import { FILE_STORAGE_SERVICE } from "@/types";
 import { isUrl } from "@shared/lib/utils";
 import { deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
-import { projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
+import { orgFileStoragePath, projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
 
 export const getFileUrl = (storageService: FILE_STORAGE_SERVICE, path: string, fileName: string) => {
     switch (storageService) {
@@ -147,4 +147,24 @@ export const deleteProjectGalleryFile = async (storageService: FILE_STORAGE_SERV
     if (isUrl(fileName)) return fileName;
     // TODO: Remove backup file
     return await deleteFile(storageService, projectGalleryStoragePath(projectId, fileName));
+};
+
+// ? Organization Files
+export const saveOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, file: File, fileName: string) => {
+    // TODO: Create backup
+    return await saveFile(storageService, file, orgFileStoragePath(orgId, fileName));
+};
+
+export const deleteOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) => {
+    // TODO: Remove backup file
+    return await deleteFile(storageService, orgFileStoragePath(orgId, fileName));
+};
+
+export const deleteOrgDirectory = async (storageService: FILE_STORAGE_SERVICE, orgId: string) => {
+    // TODO: Remove backup directory
+    return await deleteDirectory(storageService, orgFileStoragePath(orgId));
+};
+
+export const getOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) => {
+    return await getFile(storageService, orgFileStoragePath(orgId, fileName));
 };

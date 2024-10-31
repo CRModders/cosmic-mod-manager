@@ -3,10 +3,17 @@ import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { getUserFromCtx } from "@/src/auth/helpers/session";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "@/utils/http";
-import { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
+import { overrideOrgMemberFormSchema, updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
-import { acceptProjectTeamInvite, editProjectMember, inviteToProjectTeam, leaveProjectTeam, removeProjectMember } from "./controllers";
+import {
+    acceptProjectTeamInvite,
+    editProjectMember,
+    inviteToProjectTeam,
+    leaveProjectTeam,
+    overrideOrgMember,
+    removeProjectMember,
+} from "./controllers";
 
 const teamRouter = new Hono();
 teamRouter.use(AuthenticationMiddleware);
@@ -19,6 +26,8 @@ teamRouter.use(AuthenticationMiddleware);
 teamRouter.post("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_post);
 teamRouter.patch("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_patch);
 teamRouter.post("/:teamId/leave", critModifyReqRateLimiter, LoginProtectedRoute, teamLeave_post);
+
+teamRouter.post(":teamId/members", critModifyReqRateLimiter, LoginProtectedRoute, teamMembers_post);
 teamRouter.patch("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_patch);
 teamRouter.delete("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_delete);
 
@@ -65,13 +74,32 @@ async function teamLeave_post(ctx: Context) {
     }
 }
 
+async function teamMembers_post(ctx: Context) {
+    try {
+        const { teamId } = ctx.req.param();
+        const userSession = getUserFromCtx(ctx);
+        if (!userSession || !teamId) return invalidReqestResponse(ctx);
+
+        const { data, error } = await parseValueToSchema(overrideOrgMemberFormSchema, ctx.get(REQ_BODY_NAMESPACE));
+        if (error || !data) {
+            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
+        }
+
+        const res = await overrideOrgMember(ctx, userSession, teamId, data);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
 async function teamMember_patch(ctx: Context) {
     try {
         const { teamId, memberId } = ctx.req.param();
         const userSession = getUserFromCtx(ctx);
         if (!memberId || !userSession || !teamId) return invalidReqestResponse(ctx);
 
-        const { data, error } = await parseValueToSchema(updateProjectMemberFormSchema, ctx.get(REQ_BODY_NAMESPACE));
+        const { data, error } = await parseValueToSchema(updateTeamMemberFormSchema, ctx.get(REQ_BODY_NAMESPACE));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
         }

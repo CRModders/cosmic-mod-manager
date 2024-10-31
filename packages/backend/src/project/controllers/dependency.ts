@@ -5,7 +5,7 @@ import { HTTP_STATUS } from "@/utils/http";
 import { getAppropriateProjectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
 import { getFilesFromId } from "../queries/file";
-import { projectListFields } from "../queries/project";
+import { ListItemProjectFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
 export async function getProjectDependencies(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
@@ -17,23 +17,13 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
             id: true,
             visibility: true,
             status: true,
-            team: {
-                select: {
-                    members: {
-                        where: { userId: userSession?.id || "" },
-                        select: {
-                            id: true,
-                            userId: true,
-                        },
-                    },
-                },
-            },
             versions: {
                 select: {
                     id: true,
                     dependencies: true,
                 },
             },
+            ...projectMemberPermissionsSelect(),
         },
     });
 
@@ -47,7 +37,7 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
         publishingStatus: project.status,
         userId: userSession?.id,
         teamMembers: project.team.members,
-        orgMembers: [],
+        orgMembers: project.organisation?.team.members || [],
     });
     if (!projectAccessible) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
@@ -82,7 +72,7 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
             },
         },
         select: {
-            ...projectListFields(),
+            ...ListItemProjectFields(),
         },
     });
 

@@ -110,8 +110,8 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     },
                     {
                         icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
-                        label: "Organisations",
-                        url: "/dashboard/organisations",
+                        label: "Organizations",
+                        url: "/dashboard/organizations",
                         matchExactUrl: false,
                     },
                     {

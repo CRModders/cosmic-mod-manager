@@ -7,7 +7,7 @@ import { newProjectFormSchema } from "@shared/schemas/project";
 import { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
 import { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
-import { generalProjectSettingsFormSchema, projectIconFieldSchema } from "@shared/schemas/project/settings/general";
+import { generalProjectSettingsFormSchema, iconFieldSchema } from "@shared/schemas/project/settings/general";
 import { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
 import { updateExternalLinksFormSchema } from "@shared/schemas/project/settings/links";
 import { parseValueToSchema } from "@shared/schemas/utils";
@@ -183,15 +183,9 @@ async function projectIcon_patch(ctx: Context) {
 
         if (!userSession || !slug || !icon || !(icon instanceof File)) return invalidReqestResponse(ctx, "Invalid data");
 
-        const { data, error } = await parseValueToSchema(projectIconFieldSchema, icon);
+        const { data, error } = await parseValueToSchema(iconFieldSchema, icon);
         if (error || !data) {
-            return ctx.json(
-                {
-                    success: false,
-                    message: error,
-                },
-                HTTP_STATUS.BAD_REQUEST,
-            );
+            return invalidReqestResponse(ctx, error as string);
         }
 
         const res = await updateProjectIcon(userSession, slug, data);

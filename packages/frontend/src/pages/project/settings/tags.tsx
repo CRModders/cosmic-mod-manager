@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MAX_FEATURED_PROJECT_TAGS } from "@shared/config/forms";
 import { CapitalizeAndFormatString, getValidProjectCategories } from "@shared/lib/utils";
 import { updateProjectTagsFormSchema } from "@shared/schemas/project/settings/categories";
-import { checkFormValidity } from "@shared/schemas/utils";
+import { handleFormError } from "@shared/schemas/utils";
 import { SaveIcon, StarIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -179,7 +179,7 @@ const TagsSettingsPage = () => {
                                     type="submit"
                                     disabled={isLoading || isSubmitBtnDisabled}
                                     onClick={async () => {
-                                        await checkFormValidity(async () => {
+                                        await handleFormError(async () => {
                                             const formValues = await updateProjectTagsFormSchema.parseAsync(form.getValues());
                                             await updateTags(formValues);
                                         });

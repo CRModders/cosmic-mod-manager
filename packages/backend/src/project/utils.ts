@@ -4,26 +4,31 @@ import { createFilePathSafeString } from "@/services/storage/utils";
 import { FILE_STORAGE_SERVICE } from "@/types";
 import { createHashFromFile } from "@/utils/file";
 import { generateRandomId } from "@/utils/str";
-import type { File as DBFile, TeamMember, VersionFile } from "@prisma/client";
+import type { File as DBFile, VersionFile } from "@prisma/client";
 import { type Loader, loaders } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
+import { type PartialTeamMember, combineProjectMembers } from "@shared/lib/utils/project";
 import { ProjectVisibility } from "@shared/types";
 import { sort } from "semver";
 
-interface PartialTeamMemberData extends Partial<TeamMember> {
-    userId: string;
-}
-
-interface IsProjectAccessible {
+interface IsProjectAccessible<T> {
     visibility: string;
     publishingStatus: string;
     userId: string | undefined;
-    teamMembers: PartialTeamMemberData[];
-    orgMembers: PartialTeamMemberData[];
+    teamMembers: T[];
+    orgMembers: T[];
 }
 
-export function isProjectAccessible({ visibility, publishingStatus, userId, teamMembers, orgMembers }: IsProjectAccessible) {
-    const isMember = teamMembers.some((member) => member.userId === userId) || orgMembers.some((member) => member.userId === userId);
+export function isProjectAccessible<T extends PartialTeamMember>({
+    visibility,
+    publishingStatus,
+    userId,
+    teamMembers,
+    orgMembers,
+}: IsProjectAccessible<T>) {
+    const combinedMembers = combineProjectMembers(teamMembers, orgMembers);
+
+    const isMember = userId ? combinedMembers.has(userId) : false;
     const isPrivate = visibility === ProjectVisibility.PRIVATE;
     // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
 
@@ -111,12 +116,12 @@ export async function createVersionFiles({ versionId, projectId, files }: create
         createdFiles.push(sha1_hash);
     }
 
-    await prisma.$transaction([
-        prisma.file.createMany({
-            data: filesToCreate,
-        }),
+    await Promise.all([
         prisma.versionFile.createMany({
             data: versionFilesToCreate,
+        }),
+        prisma.file.createMany({
+            data: filesToCreate,
         }),
     ]);
 

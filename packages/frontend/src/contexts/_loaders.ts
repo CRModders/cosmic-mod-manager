@@ -1,6 +1,6 @@
 import { ensureQueryData, routeLoader } from "@/lib/route-loader";
 import type { LoggedInUserData } from "@shared/types";
-import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
+import type { Organisation, ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { LoaderFunctionArgs } from "react-router-dom";
 import useFetch from "../hooks/fetch";
@@ -76,15 +76,40 @@ export const getProjectsListDataQuery = (userName: string | undefined) => {
     };
 };
 
+const getUserOrgsList = async (userName: string | undefined) => {
+    if (!userName) return null;
+
+    try {
+        const response = await useFetch(`/api/user/${userName}/organization`);
+        const data = await response.json();
+        if (!response.ok) {
+            return null;
+        }
+
+        return data as Organisation[];
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+};
+export const getUserOrgsListQuery = (userName: string | undefined) => {
+    return {
+        queryKey: ["user-orgs", userName],
+        queryFn: () => getUserOrgsList(userName),
+    };
+};
+
 const profilePageQueries = async ({ params }: LoaderFunctionArgs) => {
     const data = await Promise.all([
         ensureQueryData(getUserProfileDataQuery(params.userName)),
         ensureQueryData(getProjectsListDataQuery(params.userName)),
+        ensureQueryData(getUserOrgsListQuery(params.userName)),
     ]);
 
     return {
         userData: data[0],
         projectsList: data[1],
+        orgs: data[2],
     };
 };
 export const userProfilePageLoader = routeLoader(null, profilePageQueries);

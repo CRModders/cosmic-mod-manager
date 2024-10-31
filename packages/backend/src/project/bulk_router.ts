@@ -1,3 +1,4 @@
+import { AuthenticationMiddleware } from "@/middleware/auth";
 import { getReqRateLimiter, strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
 import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
@@ -5,6 +6,7 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { getManyProjects, getRandomProjects } from "./controllers";
 
 const bulkProjectsRouter = new Hono();
+bulkProjectsRouter.use(AuthenticationMiddleware);
 
 bulkProjectsRouter.get("/", strictGetReqRateLimiter, projects_get);
 bulkProjectsRouter.get("/random", strictGetReqRateLimiter, projectsRandom_get);

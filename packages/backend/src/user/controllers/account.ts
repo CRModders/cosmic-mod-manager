@@ -8,11 +8,11 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { generateConfirmationEmailCode, isConfirmationCodeValid } from "@/utils";
 import { sendChangePasswordEmail, sendConfirmNewPasswordEmail, sendDeleteUserAccountEmail } from "@/utils/email";
 import { HTTP_STATUS, invalidReqestResponse, invalidReqestResponseData } from "@/utils/http";
+import { generateDbId } from "@/utils/str";
 import {
     CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms,
     CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms,
     DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
-    STRING_ID_LENGTH,
 } from "@shared/config";
 import { getConfirmActionTypeFromStringName } from "@shared/lib/utils/convertors";
 import type {
@@ -22,7 +22,6 @@ import type {
 } from "@shared/schemas/settings";
 import { ConfirmationType } from "@shared/types";
 import type { Context } from "hono";
-import { nanoid } from "nanoid";
 import type { z } from "zod";
 
 const confirmationEmailValidityDict = {
@@ -46,7 +45,7 @@ export async function addNewPassword_ConfirmationEmail(
 
     const confirmationEmail = await prisma.userConfirmation.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             userId: userSession.id,
             confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD,
             accessCode: code,
@@ -189,7 +188,7 @@ export const sendAccountPasswordChangeLink = async (ctx: Context, formData: z.in
 
     const changePasswordConfirmationEmail = await prisma.userConfirmation.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             userId: targetUser.id,
             confirmationType: ConfirmationType.CHANGE_ACCOUNT_PASSWORD,
             accessCode: generateConfirmationEmailCode(ConfirmationType.CHANGE_ACCOUNT_PASSWORD, targetUser.id),
@@ -255,7 +254,7 @@ export const changeUserPassword = async (ctx: Context, code: string, formData: z
 export const deleteUserAccountConfirmationEmail = async (ctx: Context, userSession: ContextUserData) => {
     const accountDeletionEmail = await prisma.userConfirmation.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             userId: userSession.id,
             confirmationType: ConfirmationType.DELETE_USER_ACCOUNT,
             accessCode: generateConfirmationEmailCode(ConfirmationType.DELETE_USER_ACCOUNT, userSession.id),

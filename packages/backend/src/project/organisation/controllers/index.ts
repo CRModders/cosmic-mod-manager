@@ -3,9 +3,18 @@ import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
+import { orgIconUrl, projectIconUrl } from "@/utils/urls";
 import type { createOrganisationFormSchema } from "@shared/schemas/organisation";
-import type { OrganisationPermission, ProjectPermission } from "@shared/types";
-import type { Organisation } from "@shared/types/api";
+import {
+    type OrganisationPermission,
+    type ProjectPermission,
+    type ProjectPublishingStatus,
+    type ProjectSupport,
+    ProjectVisibility,
+} from "@shared/types";
+import type { Organisation, ProjectListItem } from "@shared/types/api";
+import { ListItemProjectFields, projectMemberPermissionsSelect, teamMembersSelect } from "@src/project/queries/project";
+import { isProjectAccessible } from "@src/project/utils";
 import type { z } from "zod";
 
 export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string): Promise<RouteHandlerResponse> {
@@ -15,8 +24,10 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
         },
         include: {
             team: {
-                include: {
-                    members: true,
+                select: {
+                    members: {
+                        ...teamMembersSelect(),
+                    },
                 },
             },
         },
@@ -25,10 +36,47 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
         return notFoundResponseData("Organisation not found");
     }
 
-    return { data: organisation, status: HTTP_STATUS.OK };
+    const formattedData = {
+        id: organisation.id,
+        teamId: organisation.teamId,
+        name: organisation.name,
+        slug: organisation.slug,
+        icon: orgIconUrl(organisation.slug, organisation.iconFileId),
+        description: organisation.description,
+        members: organisation.team.members.map((member) => {
+            return {
+                id: member.id,
+                userId: member.userId,
+                teamId: member.teamId,
+                userName: member.user.userName,
+                avatarUrl: member.user.avatarUrl,
+                role: member.role,
+                isOwner: member.isOwner,
+                accepted: member.accepted,
+                permissions: member.permissions as ProjectPermission[],
+                organisationPermissions: member.organisationPermissions as OrganisationPermission[],
+            };
+        }),
+    } satisfies Organisation;
+
+    return { data: formattedData, status: HTTP_STATUS.OK };
 }
 
-export async function getUserOrganisations(userSession: ContextUserData | undefined, userId: string): Promise<RouteHandlerResponse> {
+export async function getUserOrganisations(userSession: ContextUserData | undefined, userSlug: string): Promise<RouteHandlerResponse> {
+    let userId = userSlug.toLowerCase() === userSession?.lowerCaseUserName ? userSession.id : null;
+    if (!userId) {
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [{ id: userSlug }, { lowerCaseUserName: userSlug.toLowerCase() }],
+            },
+        });
+
+        if (!user) {
+            return notFoundResponseData("User not found");
+        }
+        userId = user.id;
+    }
+
     const organisations = await prisma.organisation.findMany({
         where: {
             team: {
@@ -63,7 +111,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
             name: org.name,
             slug: org.slug,
             description: org.description,
-            icon: org.icon,
+            icon: orgIconUrl(org.slug, org.iconFileId),
             members: org.team.members.map((member) => ({
                 id: member.id,
                 userId: member.userId,
@@ -82,7 +130,10 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
     return { data: organisationsList, status: HTTP_STATUS.OK };
 }
 
-export const createOrganisation = async (userSession: ContextUserData, formData: z.infer<typeof createOrganisationFormSchema>) => {
+export async function createOrganisation(
+    userSession: ContextUserData,
+    formData: z.infer<typeof createOrganisationFormSchema>,
+): Promise<RouteHandlerResponse> {
     const possiblyExistingOrgWithSameSlug = await prisma.organisation.findUnique({
         where: {
             slug: formData.slug.toLowerCase(),
@@ -121,4 +172,67 @@ export const createOrganisation = async (userSession: ContextUserData, formData:
     });
 
     return { data: { success: true, slug: newOrganisation.slug }, status: HTTP_STATUS.OK };
-};
+}
+
+export async function getOrganisationProjects(
+    userSession: ContextUserData | undefined,
+    slug: string,
+    listedOnly = false,
+): Promise<RouteHandlerResponse> {
+    const org = await prisma.organisation.findFirst({
+        where: {
+            OR: [{ id: slug }, { slug: slug }],
+        },
+        include: {
+            projects: {
+                select: {
+                    ...ListItemProjectFields(),
+                    ...projectMemberPermissionsSelect(),
+                },
+            },
+        },
+    });
+    if (!org) {
+        return notFoundResponseData("Organisation not found");
+    }
+    if (!org.projects) {
+        return { data: [], status: HTTP_STATUS.OK };
+    }
+
+    const formattedProjects: ProjectListItem[] = [];
+    for (const project of org.projects) {
+        if (listedOnly && project.visibility !== ProjectVisibility.LISTED) continue;
+
+        const projectAccessible = isProjectAccessible({
+            visibility: project.visibility,
+            publishingStatus: project.status,
+            userId: userSession?.id,
+            teamMembers: project.team.members,
+            orgMembers: project.organisation?.team.members || [],
+        });
+        if (!projectAccessible) continue;
+
+        formattedProjects.push({
+            id: project.id,
+            slug: project.slug,
+            name: project.name,
+            summary: project.summary,
+            type: project.type,
+            icon: projectIconUrl(project.slug, project.iconFileId),
+            downloads: project.downloads,
+            followers: project.followers,
+            dateUpdated: project.dateUpdated,
+            datePublished: project.datePublished,
+            featuredCategories: project.featuredCategories,
+            categories: project.categories,
+            gameVersions: project.gameVersions,
+            loaders: project.loaders,
+            status: project.status as ProjectPublishingStatus,
+            visibility: project.visibility as ProjectVisibility,
+            clientSide: project.clientSide as ProjectSupport,
+            serverSide: project.serverSide as ProjectSupport,
+        });
+    }
+
+    return { data: formattedProjects, status: HTTP_STATUS.OK };
+}

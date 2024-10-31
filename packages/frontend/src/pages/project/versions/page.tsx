@@ -18,9 +18,10 @@ import { cn, getProjectPagePathname, getProjectVersionPagePathname, timeSince } 
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
+import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues } from "@shared/config/game-versions";
-import { CapitalizeAndFormatString, doesMemberHaveAccess, isUserAProjectMember, parseFileSize } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { GameVersionReleaseType, ProjectPermission, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
@@ -52,11 +53,8 @@ const ProjectVersionsPage = () => {
     const { theme } = useTheme();
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
-    const { projectData, allProjectVersions } = useContext(projectContext);
+    const { projectData, allProjectVersions, currUsersMembership } = useContext(projectContext);
     const { session } = useSession();
-    const projectMembership = useMemo(() => {
-        return isUserAProjectMember(session?.id, projectData?.members);
-    }, [session, projectData?.members]);
 
     const resetFilters = () => {
         setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
@@ -126,8 +124,12 @@ const ProjectVersionsPage = () => {
 
     return (
         <>
-            {projectMembership &&
-            doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, projectMembership.permissions, projectMembership.isOwner) ? (
+            {currUsersMembership.status === LoadingStatus.LOADED &&
+            doesMemberHaveAccess(
+                ProjectPermission.UPLOAD_VERSION,
+                currUsersMembership.data?.permissions,
+                currUsersMembership.data?.isOwner,
+            ) ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 

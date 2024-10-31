@@ -5,8 +5,9 @@
 :root {
     /* FONT SIZES */
     --font-tiny: 0.75rem;
-    --font-sm: 0.85rem;
+    --font-sm: 0.87rem;
     --font-base: 1rem;
+    --font-md: 1.125rem;
     --font-lg: 1.17rem;
     --font-xl: 1.5rem;
     --font-2xl: 2.17rem;

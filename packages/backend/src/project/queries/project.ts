@@ -14,6 +14,11 @@ export function projectDetailsFields() {
         },
         organisation: {
             select: {
+                id: true,
+                iconFileId: true,
+                name: true,
+                slug: true,
+                description: true,
                 team: {
                     select: {
                         members: teamMembersSelect(),
@@ -59,10 +64,26 @@ export function projectFields() {
     } satisfies Prisma.ProjectSelect;
 }
 
-export function projectListFields() {
+export function ListItemProjectFields() {
     return {
-        ...projectFields(),
-        gallery: galleryFields(),
+        id: true,
+        slug: true,
+        name: true,
+        summary: true,
+        type: true,
+        iconFileId: true,
+        downloads: true,
+        followers: true,
+        dateUpdated: true,
+        datePublished: true,
+        status: true,
+        visibility: true,
+        clientSide: true,
+        serverSide: true,
+        featuredCategories: true,
+        categories: true,
+        gameVersions: true,
+        loaders: true,
     } satisfies Prisma.ProjectSelect;
 }
 
@@ -82,7 +103,7 @@ export function galleryFields() {
     } satisfies Prisma.Project$galleryArgs;
 }
 
-export function projectMemberPermissionsSelect(where?: Prisma.TeamMemberWhereInput) {
+export function teamPermsSelectObj(where?: Prisma.TeamMemberWhereInput) {
     return {
         team: {
             select: {
@@ -94,27 +115,22 @@ export function projectMemberPermissionsSelect(where?: Prisma.TeamMemberWhereInp
                         userId: true,
                         isOwner: true,
                         permissions: true,
+                        organisationPermissions: true,
+                        accepted: true,
                     },
                 },
-            },
+            } satisfies Prisma.TeamSelect,
         },
+    };
+}
+
+export function projectMemberPermissionsSelect(where?: Prisma.TeamMemberWhereInput) {
+    return {
+        ...teamPermsSelectObj(where),
         organisation: {
             select: {
                 id: true,
-                team: {
-                    select: {
-                        id: true,
-                        members: {
-                            where: where,
-                            select: {
-                                id: true,
-                                userId: true,
-                                isOwner: true,
-                                permissions: true,
-                            },
-                        },
-                    },
-                },
+                ...teamPermsSelectObj(where),
             },
         },
     } satisfies Prisma.ProjectSelect;

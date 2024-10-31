@@ -89,10 +89,12 @@ export const MarkdownRenderBox = ({ text, className }: { text: string; className
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        document.addEventListener("click", handleNavigate);
+        const mdBox = document.querySelector(".markdown-body") as HTMLDivElement | undefined;
+        if (!mdBox) return;
 
+        mdBox.addEventListener("click", handleNavigate);
         return () => {
-            document.removeEventListener("click", handleNavigate);
+            mdBox.removeEventListener("click", handleNavigate);
         };
     }, []);
 

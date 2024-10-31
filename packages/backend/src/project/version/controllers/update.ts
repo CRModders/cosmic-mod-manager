@@ -4,7 +4,7 @@ import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import type { File as DBFile } from "@prisma/client";
-import { doesMemberHaveAccess, getLoadersByProjectType } from "@shared/lib/utils";
+import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@shared/lib/utils";
 import type { VersionDependencies, updateVersionFormSchema } from "@shared/schemas/project/version";
 import { ProjectPermission, type ProjectType } from "@shared/types";
 import { getFilesFromId } from "@src/project/queries/file";
@@ -64,7 +64,7 @@ export const updateVersionData = async (
     }
 
     // Return if project or target version not found
-    const memberObj = project?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !targetVersion?.id || !memberObj) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to edit a version
@@ -318,7 +318,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         }
     }
 
-    const memberObj = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !targetVersion?.id || !memberObj) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to upload a version

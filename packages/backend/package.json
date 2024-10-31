@@ -5,7 +5,7 @@
     },
     "dependencies": {
         "@oslojs/encoding": "^1.1.0",
-        "@prisma/client": "^5.20.0",
+        "@prisma/client": "^5.21.1",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",
         "meilisearch": "^0.42.0",
@@ -18,6 +18,6 @@
         "@types/ioredis": "^5.0.0",
         "@types/nodemailer": "^6.4.15",
         "@types/ua-parser-js": "^0.7.39",
-        "prisma": "^5.20.0"
+        "prisma": "^5.21.1"
     }
 }

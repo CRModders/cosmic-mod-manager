@@ -1,6 +1,5 @@
 import SearchListItem from "@/components/layout/search-list-item";
 import type { ProjectListItem } from "@shared/types/api";
-import "./styles.css";
 
 interface Props {
     projectType: string | undefined;

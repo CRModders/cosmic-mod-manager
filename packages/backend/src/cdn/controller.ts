@@ -2,7 +2,7 @@ import prisma from "@/services/prisma";
 import { getFile, getFileUrl, getProjectGalleryFile } from "@/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import { HTTP_STATUS, notFoundResponse } from "@/utils/http";
-import { projectGalleryFileUrl, projectIconUrl, versionFileUrl } from "@/utils/urls";
+import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, versionFileUrl } from "@/utils/urls";
 import { ProjectVisibility } from "@shared/types";
 import { getUserIpAddress } from "@src/auth/helpers";
 import { isProjectAccessible } from "@src/project/utils";
@@ -49,8 +49,8 @@ export const serveVersionFile = async (
         visibility: projectData.visibility,
         publishingStatus: projectData.status,
         userId: userSession?.id,
-        teamMembers: projectData.team?.members || [],
-        orgMembers: [],
+        teamMembers: projectData.team.members,
+        orgMembers: projectData.organisation?.team.members || [],
     });
     if (!projectAccessible) {
         return notFoundResponse(ctx);
@@ -171,5 +171,34 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
 
     const response = new Response(file);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // 1 year
+    return response;
+};
+
+export const serveOrgIconFile = async (ctx: Context, slug: string, isCdnRequest: boolean) => {
+    const org = await prisma.organisation.findFirst({
+        where: {
+            OR: [{ slug: slug }, { id: slug }],
+        },
+    });
+    if (!org?.iconFileId) return notFoundResponse(ctx);
+
+    const iconFileData = await prisma.file.findUnique({
+        where: {
+            id: org.iconFileId,
+        },
+    });
+    if (!iconFileData?.id) return notFoundResponse(ctx);
+
+    if (!isCdnRequest) {
+        return ctx.redirect(`${orgIconUrl(org.slug, org.iconFileId)}`);
+    }
+
+    const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
+
+    // Redirect to the file if it's a URL
+    if (typeof iconFile === "string") return ctx.redirect(iconFile);
+
+    const response = new Response(iconFile);
+    response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
     return response;
 };

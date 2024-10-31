@@ -25,6 +25,8 @@ interface MultiSelectProps {
         listItem?: string;
     };
     footerItem?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
 export const MultiSelect = ({
@@ -38,7 +40,11 @@ export const MultiSelect = ({
     children,
     classNames,
     footerItem,
+    open,
+    onOpenChange,
 }: MultiSelectProps) => {
+    const [_open, set_open] = useState(false);
+
     const [focusedItem, setFocusedItem] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
     const listableItems = hideSelectedItems === true ? options.filter((option) => !selectedOptions.includes(option.value)) : options;
@@ -74,8 +80,11 @@ export const MultiSelect = ({
         }
     };
 
+    const isOpen = open === undefined ? _open : open;
+    const handleOpenChange = onOpenChange === undefined ? set_open : onOpenChange;
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
             <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
             <DropdownMenuContent
                 align={popupAlign || "center"}

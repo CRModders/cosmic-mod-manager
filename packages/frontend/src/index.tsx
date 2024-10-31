@@ -12,10 +12,12 @@ import { ContextProviders } from "./providers";
 import { homePageLoader } from "./pages/_loader";
 
 // Dashboard page Loaders
-import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/loader";
+import dashboardOrgsLoader from "@/src/pages/dashboard/organisation/_loader";
 import { overviewPageLoader } from "./pages/dashboard/_loader";
-import userProjectsLoader from "./pages/dashboard/projects/loader";
+import userProjectsLoader from "./pages/dashboard/projects/_loader";
 
+import { NotFoundPage } from "@/src/pages/not-found";
+import { orgPageLoader } from "./pages/organisation/_loader";
 import { searchResultsLoader } from "./pages/search/_loader";
 // Project settings Loaders
 import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
@@ -185,6 +187,49 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
+                        path: "organization/:slug",
+                        loader: orgPageLoader,
+                        lazy: () => import("@/src/pages/organisation/layout-wrapper"),
+                        children: [
+                            {
+                                path: "",
+                                element: <Outlet />,
+                                children: [
+                                    {
+                                        path: "",
+                                        lazy: () => import("@/src/pages/organisation/layout"),
+                                    },
+                                    {
+                                        path: ":projectType",
+                                        lazy: () => import("@/src/pages/organisation/layout"),
+                                    },
+                                ],
+                            },
+                            {
+                                path: "settings",
+                                lazy: () => import("@/src/pages/organisation/settings/layout"),
+                                children: [
+                                    {
+                                        path: "",
+                                        lazy: () => import("@/src/pages/organisation/settings/page"),
+                                    },
+                                    {
+                                        path: "members",
+                                        lazy: () => import("@/src/pages/organisation/settings/members/page"),
+                                    },
+                                    {
+                                        path: "projects",
+                                        lazy: () => import("@/src/pages/organisation/settings/projects/page"),
+                                    },
+                                    {
+                                        path: "*",
+                                        element: <NotFoundPage />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
                         path: "settings",
                         lazy: () => import("@/src/pages/settings/layout"),
                         children: [
@@ -234,7 +279,7 @@ const router = createBrowserRouter([
                                 lazy: () => import("@/src/pages/dashboard/projects/page"),
                             },
                             {
-                                path: "organisations",
+                                path: "organizations",
                                 loader: dashboardOrgsLoader,
                                 lazy: () => import("@/src/pages/dashboard/organisation/page"),
                             },

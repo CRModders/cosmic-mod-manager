@@ -89,6 +89,7 @@ export interface ProjectDetailsData {
         slug: string;
         icon: string | null;
         description: string | null;
+        members: TeamMember[];
     } | null;
 }
 
@@ -178,4 +179,13 @@ export interface Organisation {
     icon: string | null;
     description: string | null;
     members: TeamMember[];
+}
+
+export interface OrganisationListItem {
+    id: string;
+    teamId: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    description: string | null;
 }

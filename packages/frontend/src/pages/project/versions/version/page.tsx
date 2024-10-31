@@ -305,7 +305,7 @@ const VersionPage = () => {
                                         userName={versionData.author.userName}
                                         avatarImageUrl={versionData.author.avatarUrl || ""}
                                         isOwner={false}
-                                        role={versionData.author.role}
+                                        roleName={versionData.author.role}
                                     />
                                 ),
                             },

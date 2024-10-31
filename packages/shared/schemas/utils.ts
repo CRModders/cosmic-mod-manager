@@ -14,7 +14,7 @@ export const parseValueToSchema = async <T extends z.Schema>(schema: T, data: un
     }
 };
 
-export const checkFormValidity = async (callback: () => void | Promise<void>) => {
+export const handleFormError = async (callback: () => void | Promise<void>) => {
     try {
         await callback();
         return true;

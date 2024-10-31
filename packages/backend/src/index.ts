@@ -12,6 +12,8 @@ import { cors } from "hono/cors";
 import authRouter from "./auth/router";
 import cdnRouter, { corsAllowCdn } from "./cdn/router";
 import bulkProjectsRouter from "./project/bulk_router";
+import bulkOrgsRouter from "./project/organisation/bulk_router";
+import orgRouter from "./project/organisation/router";
 import projectRouter from "./project/router";
 import teamRouter from "./project/team/router";
 import searchRouter from "./search/router";
@@ -39,14 +41,17 @@ app.route("/api/tags", tagsRouter);
 
 app.route("/api/user", userRouter);
 app.route("/api/users", bulkUserActionsRouter);
-app.route("/api/users/:userId/notifications", notificationRouter);
+
 app.route("/api/notifications", notificationRouter); // Uses the userSession's userId instead of getting it from the URL
+app.route("/api/user/:userId/notifications", notificationRouter);
 
 app.route("/api/project", projectRouter);
 app.route("/api/projects", bulkProjectsRouter);
 
 app.route("/api/team", teamRouter);
-// app.route("/api/organisation", orgRouter);
+app.route("/api/organization", orgRouter);
+app.route("/api/organizations", bulkOrgsRouter);
+app.route("/api/user/:userId/organization", orgRouter);
 
 app.route("/cdn", cdnRouter);
 

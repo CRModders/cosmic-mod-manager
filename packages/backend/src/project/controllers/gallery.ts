@@ -9,12 +9,11 @@ import {
     serverErrorResponseData,
     unauthorizedReqResponseData,
 } from "@/utils/http";
-import { STRING_ID_LENGTH } from "@shared/config";
-import { doesMemberHaveAccess } from "@shared/lib/utils";
+import { generateDbId } from "@/utils/str";
+import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
 import { ProjectPermission } from "@shared/types";
-import { nanoid } from "nanoid";
 import type { z } from "zod";
 import { projectMemberPermissionsSelect } from "../queries/project";
 
@@ -37,7 +36,6 @@ export async function addNewGalleryImage(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-
     if (!project?.id) return notFoundResponseData();
 
     // Check if the order index is not already occupied
@@ -48,14 +46,14 @@ export async function addNewGalleryImage(
     }
 
     // Check if the user has the required permissions
-    const memberObj = project.team.members?.[0] || project.organisation?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team?.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        (memberObj?.permissions || []) as ProjectPermission[],
+        memberObj?.isOwner === true,
     );
     if (!memberObj || !hasEditAccess) {
-        return { data: { success: false }, status: HTTP_STATUS.UNAUTHORIZED };
+        return unauthorizedReqResponseData();
     }
 
     // Check if there's already a featured image
@@ -73,7 +71,7 @@ export async function addNewGalleryImage(
     }
 
     const fileType = await getFileType(formData.image);
-    const fileName = `${nanoid(STRING_ID_LENGTH)}.${fileType}`;
+    const fileName = `${generateDbId()}.${fileType}`;
     const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.LOCAL, project.id, formData.image, fileName);
 
     if (!fileUrl) return serverErrorResponseData("Failed to upload the image");
@@ -81,7 +79,7 @@ export async function addNewGalleryImage(
     // Create the generic file entry in the database
     const dbFile = await prisma.file.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             name: fileName,
             size: formData.image.size,
             type: (await getFileType(formData.image)) || "",
@@ -93,7 +91,7 @@ export async function addNewGalleryImage(
     // Create the gallery item
     await prisma.galleryItem.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             projectId: project.id,
             name: formData.title,
             description: formData.description || "",
@@ -123,7 +121,7 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
     });
     if (!project?.id || !project.gallery?.[0]?.id) return notFoundResponseData();
 
-    const currMember = project.team.members?.[0] || project.organisation?.team.members?.[0];
+    const currMember = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
         !currMember ||
         !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
@@ -180,13 +178,11 @@ export async function updateGalleryImage(
         }
     }
 
-    const memberObj = project.team.members?.[0];
-    const hasEditAccess = doesMemberHaveAccess(
-        ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
-    );
-    if (!memberObj || !hasEditAccess) {
+    const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
+    if (
+        !memberObj ||
+        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, memberObj.permissions as ProjectPermission[], memberObj.isOwner)
+    ) {
         return notFoundResponseData();
     }
 

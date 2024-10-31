@@ -5,7 +5,7 @@ import { getFileType } from "../../../lib/utils/convertors";
 import { isImageFile } from "../../../lib/validation";
 import { ProjectSupport, ProjectVisibility } from "../../../types";
 
-export const projectIconFieldSchema = z
+export const iconFieldSchema = z
     .instanceof(File)
     .refine(
         (file) => {
@@ -31,7 +31,7 @@ export const projectIconFieldSchema = z
     );
 
 export const generalProjectSettingsFormSchema = z.object({
-    icon: projectIconFieldSchema.or(z.string()).optional(),
+    icon: iconFieldSchema.or(z.string()).optional(),
     name: z.string().min(MIN_PROJECT_NAME_LENGTH).max(MAX_PROJECT_NAME_LENGTH),
     slug: ProjectSlugField,
     type: ProjectTypeField,

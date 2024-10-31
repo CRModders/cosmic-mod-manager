@@ -13,7 +13,7 @@ import { NotificationsContext } from "./context";
 import { NotificationItem } from "./page";
 
 const NotificationsHistory = () => {
-    const { notifications, relatedProjects, relatedUsers, isLoading, refetchNotifications } = useContext(NotificationsContext);
+    const { notifications, relatedProjects, relatedUsers, relatedOrgs, isLoading, refetchNotifications } = useContext(NotificationsContext);
 
     if (isLoading) {
         return <FullWidthSpinner />;
@@ -47,6 +47,7 @@ const NotificationsHistory = () => {
                         notification={notification}
                         relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
                         relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                        relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
                         refetchNotifications={refetchNotifications}
                         showDeleteButton={true}
                     />

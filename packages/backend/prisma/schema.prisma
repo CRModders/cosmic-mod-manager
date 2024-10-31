@@ -87,7 +87,7 @@ model Organisation {
     slug        String  @unique @db.VarChar(32)
     name        String  @db.VarChar(32)
     description String? @db.VarChar(256)
-    icon        String? @db.VarChar(32)
+    iconFileId  String? @db.VarChar(32)
 
     team     Team      @relation(name: "OrganisationTeam", fields: [teamId], references: [id])
     projects Project[] @relation(name: "OrganisationProjects")

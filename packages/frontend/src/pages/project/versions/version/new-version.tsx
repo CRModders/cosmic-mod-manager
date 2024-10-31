@@ -9,7 +9,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
-import { checkFormValidity } from "@shared/schemas/utils";
+import { handleFormError } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import { PlusIcon } from "lucide-react";
 import { useContext, useState } from "react";
@@ -115,7 +115,7 @@ const UploadVersionPage = () => {
                         versionTitle={form.getValues().title}
                         backUrl={versionsPageUrl}
                         onSubmitBtnClick={async () => {
-                            await checkFormValidity(async () => {
+                            await handleFormError(async () => {
                                 const formValues = await newVersionFormSchema.parseAsync(form.getValues());
                                 await handleSubmit(formValues);
                             });

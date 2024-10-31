@@ -122,6 +122,12 @@ export const getProjectVersionPagePathname = (type: string, projectSlug: string,
     return pathname;
 };
 
+export const getOrgPagePathname = (orgSlug: string, extra?: string) => {
+    let pathname = `/organization/${orgSlug}`;
+    if (extra) pathname += `${extra}`;
+    return pathname;
+};
+
 export const FormatProjectTypes = (types: string[]) => {
     if (types.length === 1) return CapitalizeAndFormatString(types[0]);
     if (types.length === 2) return `${CapitalizeAndFormatString(types[0])} and ${CapitalizeAndFormatString(types[1])}`;
@@ -139,7 +145,7 @@ export const projectFileUrl = (pathname: string) => {
     return `${pathname}`;
 };
 
-export const imageUrl = (url: string | undefined | null) => {
+export const imageUrl = (url: string | undefined | null): string => {
     if (!url) return "";
 
     return url;

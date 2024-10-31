@@ -24,14 +24,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
-import { invalidateUserProjectsQuery } from "@/src/pages/dashboard/projects/loader";
+import { invalidateUserProjectsQuery } from "@/src/pages/dashboard/projects/_loader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
 import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
-import { checkFormValidity } from "@shared/schemas/utils";
+import { handleFormError } from "@shared/schemas/utils";
 import { ProjectPublishingStatus, ProjectSupport, type ProjectType, ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, ChevronDownIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
@@ -240,7 +240,7 @@ const GeneralSettingsPage = () => {
                                             autoComplete="off"
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
-                                            {window.location.origin}/{projectData.type[0]}/
+                                            {window.location.origin}/{form.getValues().type?.[0] || "project"}/
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
@@ -476,7 +476,7 @@ const GeneralSettingsPage = () => {
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                                 onClick={async () => {
-                                    await checkFormValidity(async () => {
+                                    await handleFormError(async () => {
                                         const parsedValues = await generalProjectSettingsFormSchema.parseAsync(form.getValues());
                                         saveSettings(parsedValues);
                                     });

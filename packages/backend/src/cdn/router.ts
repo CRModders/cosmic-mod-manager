@@ -5,7 +5,7 @@ import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { getUserFromCtx } from "../auth/helpers/session";
-import { serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
+import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
 
@@ -20,6 +20,8 @@ cdnRouter.use(corsAllowCdn);
 cdnRouter.get("/data/:projectSlug/:file", cdnAssetRateLimiter, projectFile_get);
 cdnRouter.get("/data/:projectSlug/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
 cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
+
+cdnRouter.get("/data/organization/:orgSlug/:file", cdnAssetRateLimiter, orgFile_get);
 
 async function projectFile_get(ctx: Context) {
     try {
@@ -56,6 +58,19 @@ async function versionFile_get(ctx: Context) {
         }
 
         return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, IsCdnRequest(ctx));
+    } catch (error) {
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function orgFile_get(ctx: Context) {
+    try {
+        const { orgSlug } = ctx.req.param();
+        if (!orgSlug) {
+            return invalidReqestResponse(ctx);
+        }
+
+        return await serveOrgIconFile(ctx, orgSlug, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }

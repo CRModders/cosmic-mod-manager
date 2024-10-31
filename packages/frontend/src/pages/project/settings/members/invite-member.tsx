@@ -3,7 +3,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { inviteProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
+import { inviteTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { UserPlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,18 +12,19 @@ import type { z } from "zod";
 interface Props {
     teamId: string;
     canInviteMembers: boolean;
-    fetchProjectData: () => Promise<void>;
+    dataRefetch: () => Promise<void>;
+    isOrg?: boolean;
 }
 
-const InviteMemberForm = ({ teamId, canInviteMembers, fetchProjectData }: Props) => {
-    const form = useForm<z.infer<typeof inviteProjectMemberFormSchema>>({
-        resolver: zodResolver(inviteProjectMemberFormSchema),
+const InviteMemberForm = ({ teamId, canInviteMembers, dataRefetch, isOrg }: Props) => {
+    const form = useForm<z.infer<typeof inviteTeamMemberFormSchema>>({
+        resolver: zodResolver(inviteTeamMemberFormSchema),
         defaultValues: {
             userName: "",
         },
     });
 
-    const inviteMember = async (values: z.infer<typeof inviteProjectMemberFormSchema>) => {
+    const inviteMember = async (values: z.infer<typeof inviteTeamMemberFormSchema>) => {
         if (!canInviteMembers) {
             return toast.error("You don't have access to manage member invites");
         }
@@ -38,7 +39,7 @@ const InviteMemberForm = ({ teamId, canInviteMembers, fetchProjectData }: Props)
             return toast.error(data?.message || "Error");
         }
 
-        await fetchProjectData();
+        await dataRefetch();
         return;
     };
 
@@ -48,7 +49,7 @@ const InviteMemberForm = ({ teamId, canInviteMembers, fetchProjectData }: Props)
                 <div className="w-full flex flex-col gap-1.5">
                     <h3 className="leading-none text-lg font-bold">Invite a member</h3>
                     <span className="leading-none text-muted-foreground">
-                        Enter the username of the person you'd like to invite to be a member of this project.
+                        Enter the username of the person you'd like to invite to be a member of this {isOrg ? "organization" : "project"}.
                     </span>
                 </div>
 

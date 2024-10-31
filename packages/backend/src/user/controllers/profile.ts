@@ -1,7 +1,7 @@
 import { deleteUserDataCache } from "@/cache/session";
 import prisma from "@/services/prisma";
 import { getFilesFromId } from "@/src/project/queries/file";
-import { projectListFields, projectMembersSelect } from "@/src/project/queries/project";
+import { ListItemProjectFields, projectMembersSelect } from "@/src/project/queries/project";
 import { isProjectAccessible } from "@/src/project/utils";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
@@ -103,7 +103,7 @@ export async function getAllVisibleProjects(
     });
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
-    const userProjects = await prisma.project.findMany({
+    const teamProjects = prisma.project.findMany({
         where: {
             team: {
                 members: {
@@ -115,22 +115,42 @@ export async function getAllVisibleProjects(
             },
         },
         select: {
-            ...projectListFields(),
+            ...ListItemProjectFields(),
             ...projectMembersSelect(),
         },
-        orderBy: { downloads: "desc" },
     });
+    // const orgProjects = prisma.project.findMany({
+    //     where: {
+    //         organisation: {
+    //             team: {
+    //                 members: {
+    //                     some: {
+    //                         userId: user.id,
+    //                         accepted: true,
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //     },
+    //     select: {
+    //         ...ListItemProjectFields(),
+    //         ...projectMembersSelect(),
+    //     },
+    // });
 
-    if (!userProjects?.length) return { data: [], status: HTTP_STATUS.OK };
+    const queryResults = await Promise.all([teamProjects]);
+    const allProjects = [...queryResults[0]].toSorted((a, b) => b.downloads - a.downloads);
+
+    if (!allProjects?.length) return { data: [], status: HTTP_STATUS.OK };
 
     const iconFileIds: string[] = [];
-    for (const project of userProjects) {
+    for (const project of allProjects) {
         if (project?.iconFileId) iconFileIds.push(project.iconFileId);
     }
     const iconFilesMap = await getFilesFromId(iconFileIds);
 
     const projectListData: ProjectListItem[] = [];
-    for (const project of userProjects) {
+    for (const project of allProjects) {
         if (!project) continue;
 
         const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility);
@@ -141,7 +161,7 @@ export async function getAllVisibleProjects(
             publishingStatus: project.status as ProjectPublishingStatus,
             userId: userSession?.id,
             teamMembers: project.team.members,
-            orgMembers: [],
+            orgMembers: project.organisation?.team.members || [],
         });
         if (!projectAccessible) continue;
 

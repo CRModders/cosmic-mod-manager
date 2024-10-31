@@ -1,16 +1,26 @@
 import { DownloadAnimationContext } from "@/components/download-ripple";
-import { DiscordIcon, fallbackProjectIcon, fallbackUserIcon } from "@/components/icons";
+import { DiscordIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@/components/icons";
+import { PageHeader } from "@/components/layout/page-header";
 import tagIcons from "@/components/tag-icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Chip from "@/components/ui/chip";
 import { ButtonLink, VariantButtonLink } from "@/components/ui/link";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ReleaseChannelBadge } from "@/components/ui/release-channel-pill";
+import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsList, formatGameVersionsListString } from "@/lib/semver";
-import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive, timeSince } from "@/lib/utils";
+import {
+    cn,
+    formatDate,
+    getOrgPagePathname,
+    getProjectPagePathname,
+    getProjectVersionPagePathname,
+    imageUrl,
+    isCurrLinkActive,
+    timeSince,
+} from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
@@ -34,11 +44,11 @@ import {
     FlagIcon,
     GitCommitHorizontalIcon,
     HeartIcon,
-    MoreVertical,
     SettingsIcon,
     SquareArrowOutUpRightIcon,
     TagsIcon,
 } from "lucide-react";
+import type React from "react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -58,7 +68,7 @@ const ProjectPageLayout = () => {
     if (!projectData || fetchingProjectData || currUsersMembership.status === LoadingStatus.LOADING) return null;
 
     const isVersionDetailsPage = isCurrLinkActive(
-        getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"),
+        getProjectPagePathname(projectData?.type[0], projectData.slug, "/version/"),
         location.pathname,
         false,
     );
@@ -99,7 +109,7 @@ const ProjectPageLayout = () => {
             </Helmet>
 
             <div className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
-                <PageHeader
+                <ProjectInfoHeader
                     projectData={projectData}
                     fetchProjectData={fetchProjectData}
                     projectType={projectType}
@@ -282,6 +292,22 @@ const ProjectPageLayout = () => {
 
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
                         <h3 className="text-lg font-bold pb-1">Creators</h3>
+                        {projectData.organisation?.id ? (
+                            <>
+                                <ProjectMember
+                                    url={getOrgPagePathname(projectData.organisation.slug)}
+                                    userName={projectData.organisation.name}
+                                    isOwner={false}
+                                    roleName={"Organization"}
+                                    avatarImageUrl={imageUrl(projectData.organisation.icon)}
+                                    avatarClassName="rounded"
+                                    fallbackIcon={fallbackOrgIcon}
+                                />
+
+                                {projectData.members.length ? <Separator className="my-1" /> : null}
+                            </>
+                        ) : null}
+
                         {projectData.members?.map((member) => {
                             if (member.accepted !== true) return null;
                             return (
@@ -289,7 +315,7 @@ const ProjectPageLayout = () => {
                                     key={member.userId}
                                     userName={member.userName}
                                     isOwner={member.isOwner}
-                                    role={member.role || ""}
+                                    roleName={member.role || ""}
                                     avatarImageUrl={member.avatarUrl || ""}
                                 />
                             );
@@ -378,7 +404,7 @@ const ProjectPageLayout = () => {
 
 export const Component = ProjectPageLayout;
 
-const PageHeader = ({
+const ProjectInfoHeader = ({
     projectData,
     projectType,
     currUsersMembership,
@@ -403,53 +429,14 @@ const PageHeader = ({
 
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
-            <div className="w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background">
-                <div className="flex gap-5">
-                    <ImgWrapper
-                        src={imageUrl(projectData.icon)}
-                        alt={projectData.name}
-                        className="bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black rounded-lg"
-                        fallback={fallbackProjectIcon}
-                    />
-                    <div className="flex flex-col gap-1">
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <h1 className="m-0 text-xl font-extrabold leading-none text-foreground-bright">{projectData.name}</h1>
-
-                            {/* {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
-                                <span className="flex items-center justify-center gap-1 text-muted-foreground font-medium">
-                                    <ProjectStatusIcon status={projectData.status} />
-                                    {CapitalizeAndFormatString(projectData.status)}
-                                </span>
-                            ) : null} */}
-                        </div>
-                        <h2 className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{projectData.summary}</h2>
-                        <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">
-                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                                <span className="font-semibold">{projectData.downloads}</span>
-                            </div>
-                            <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                                <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
-                                <span className="font-semibold">{projectData.followers}</span>
-                            </div>
-                            {(projectData.featuredCategories?.length || 0) > 0 ? (
-                                <div className="hidden md:flex items-center gap-3 pr-4">
-                                    <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                                    <div className="flex items-center gap-2">
-                                        {projectData.featuredCategories.map((category) => (
-                                            <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
-                                                {Capitalize(category)}
-                                            </Chip>
-                                        ))}
-                                    </div>
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-col justify-center gap-4">
-                    <div className="flex flex-wrap items-center gap-2">
+            <PageHeader
+                icon={imageUrl(projectData.icon)}
+                iconClassName="rounded"
+                fallbackIcon={fallbackProjectIcon}
+                title={projectData.name}
+                description={projectData.summary}
+                actionBtns={
+                    <>
                         <InteractiveDownloadPopup />
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
                             <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
@@ -467,39 +454,55 @@ const PageHeader = ({
                                 <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
                             </VariantButtonLink>
                         ) : null}
+                    </>
+                }
+                threeDotMenu={
+                    <>
+                        <Button variant="ghost-destructive" className="w-full">
+                            <FlagIcon className="w-btn-icon h-btn-icon" />
+                            Report
+                        </Button>
 
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
-                                    <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
-                                <Button variant="ghost-destructive" className="w-full">
-                                    <FlagIcon className="w-btn-icon h-btn-icon" />
-                                    Report
-                                </Button>
-
-                                <PopoverClose asChild>
-                                    <Button
-                                        className="w-full"
-                                        variant="ghost"
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(projectData.id);
-                                        }}
-                                    >
-                                        <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
-                                        Copy ID
-                                    </Button>
-                                </PopoverClose>
-                            </PopoverContent>
-                        </Popover>
-                    </div>
+                        <PopoverClose asChild>
+                            <Button
+                                className="w-full"
+                                variant="ghost"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(projectData.id);
+                                }}
+                            >
+                                <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                                Copy ID
+                            </Button>
+                        </PopoverClose>
+                    </>
+                }
+            >
+                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <span className="font-semibold">{projectData.downloads}</span>
                 </div>
-            </div>
+                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                    <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <span className="font-semibold">{projectData.followers}</span>
+                </div>
+                {(projectData.featuredCategories?.length || 0) > 0 ? (
+                    <div className="hidden md:flex items-center gap-3 pr-4">
+                        <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                        <div className="flex items-center gap-2">
+                            {projectData.featuredCategories.map((category) => (
+                                <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
+                                    {Capitalize(category)}
+                                </Chip>
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
+            </PageHeader>
+
             {invitedMember && (
                 <Suspense>
-                    <JoinProjectBanner fetchProjectData={fetchProjectData} role={invitedMember.role} teamId={projectData.teamId} />
+                    <JoinProjectBanner refreshData={fetchProjectData} role={invitedMember.role} teamId={projectData.teamId} />
                 </Suspense>
             )}
         </div>
@@ -509,18 +512,35 @@ const PageHeader = ({
 export const ProjectMember = ({
     userName,
     isOwner,
-    role,
+    roleName,
     avatarImageUrl,
     className,
-}: { userName: string; isOwner: boolean; role: string; avatarImageUrl: string; className?: string }) => {
+    url,
+    avatarClassName,
+    fallbackIcon,
+}: {
+    userName: string;
+    isOwner: boolean;
+    roleName: string;
+    avatarImageUrl: string;
+    className?: string;
+    url?: string;
+    avatarClassName?: string;
+    fallbackIcon?: React.ReactNode;
+}) => {
     return (
         <ButtonLink
-            url={`/user/${userName}`}
+            url={url || `/user/${userName}`}
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
-            <ImgWrapper src={imageUrl(avatarImageUrl)} alt={userName} className="h-10 w-10 rounded-full" fallback={fallbackUserIcon} />
+            <ImgWrapper
+                src={imageUrl(avatarImageUrl)}
+                alt={userName}
+                className={cn("h-10 w-10 rounded-full", avatarClassName)}
+                fallback={fallbackIcon || fallbackUserIcon}
+            />
             <div className="w-full flex flex-col items-start justify-start overflow-hidden">
-                <div className="flex items-baseline-with-fallback justify-center gap-2">
+                <div className="flex items-baseline-with-fallback justify-center gap-1">
                     <span className="font-semibold" title={userName}>
                         {userName}
                     </span>
@@ -528,7 +548,7 @@ export const ProjectMember = ({
                         <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
                     )}
                 </div>
-                <span className="text-sm font-medium leading-none text-muted-foreground/75">{role}</span>
+                <span className="text-sm font-medium leading-tight text-muted-foreground/75">{roleName}</span>
             </div>
         </ButtonLink>
     );

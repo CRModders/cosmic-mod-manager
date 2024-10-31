@@ -1,5 +1,5 @@
 import useFetch from "@/src/hooks/fetch";
-import type { Notification, ProjectListItem } from "@shared/types/api";
+import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { UseQueryOptions } from "@tanstack/react-query";
 
@@ -45,8 +45,35 @@ const getRelatedProjects = async (notifications: Notification[]) => {
 };
 export const getRelatedProjectsQuery = (notifications: Notification[]) => {
     return {
-        queryKey: ["notification-related-projects"],
+        queryKey: ["notifications", "projects"],
         queryFn: async () => await getRelatedProjects(notifications),
+        staleTime: 10 * 1000,
+    } satisfies UseQueryOptions;
+};
+
+const getRelatedOrgs = async (notifications: Notification[]) => {
+    if (!notifications.length) return null;
+    const orgIds: string[] = [];
+    for (const notification of notifications) {
+        const orgId = notification.body?.orgId;
+        if (orgId && typeof orgId === "string") orgIds.push(orgId);
+    }
+
+    try {
+        const response = await useFetch(`/api/organizations?ids=${encodeURIComponent(JSON.stringify(orgIds))}`);
+        const data = await response.json();
+        if (data?.success === false) return null;
+
+        return data as OrganisationListItem[];
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+export const getRelatedOrgsQuery = (notifications: Notification[]) => {
+    return {
+        queryKey: ["notifications", "organizations"],
+        queryFn: async () => await getRelatedOrgs(notifications),
         staleTime: 10 * 1000,
     } satisfies UseQueryOptions;
 };
@@ -72,7 +99,7 @@ const getRelatedUsers = async (notifications: Notification[]) => {
 };
 export const getRelatedUsersQuery = (notifications: Notification[]) => {
     return {
-        queryKey: ["notification-related-users"],
+        queryKey: ["notifications", "users"],
         queryFn: async () => await getRelatedUsers(notifications),
         staleTime: 10 * 1000,
     } satisfies UseQueryOptions;

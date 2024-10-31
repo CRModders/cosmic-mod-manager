@@ -5,7 +5,9 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { isNumber } from "@/utils";
 import { HTTP_STATUS } from "@/utils/http";
 import { tryJsonParse } from "@/utils/str";
-import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl, projectIconUrl } from "@/utils/urls";
+import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl, orgIconUrl, projectIconUrl } from "@/utils/urls";
+import type { TeamMember as DBTeamMember } from "@prisma/client";
+import { combineProjectMembers } from "@shared/lib/utils/project";
 import type {
     OrganisationPermission,
     ProjectPermission,
@@ -17,7 +19,7 @@ import type {
 import type { ProjectDetailsData, ProjectListItem } from "@shared/types/api";
 import { rsort } from "semver";
 import { getFilesFromId } from "../queries/file";
-import { formatTeamMemberData, projectDetailsFields } from "../queries/project";
+import { projectDetailsFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
 export async function getProjectData(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
@@ -32,22 +34,19 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
     }
 
-    const projectMembersList = [
-        ...project.team.members.map((member) => formatTeamMemberData(member)),
-        ...(project.organisation?.team.members || []).map((member) => formatTeamMemberData(member)),
-    ];
+    const allMembers = combineProjectMembers(project.team.members, project.organisation?.team.members || []);
 
     const projectAccessible = isProjectAccessible({
         visibility: project.visibility,
         publishingStatus: project.status,
         userId: userSession?.id,
-        teamMembers: projectMembersList,
-        orgMembers: [],
+        teamMembers: project.team.members,
+        orgMembers: project.organisation?.team.members || [],
     });
     if (!projectAccessible) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
     }
-    const currSessionMember = projectMembersList.find((member) => member.userId === userSession?.id);
+    const currSessionMember = allMembers.get(userSession?.id || "");
 
     const galleryFileIds = project.gallery.map((item) => item.imageFileId);
     const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
@@ -55,6 +54,8 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
     // const organisation = project.organisation;
     const projectIconFile = filesMap.get(project.iconFileId || "");
     const projectIconUrl = getAppropriateProjectIconUrl(projectIconFile, project.slug);
+    const org = project.organisation;
+
     return {
         data: {
             success: true,
@@ -103,32 +104,43 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                         };
                     })
                     .filter((item) => item !== null),
-                members: project.team.members.map((member) => ({
-                    id: member.id,
-                    userId: member.user.id,
-                    teamId: member.teamId,
-                    userName: member.user.userName,
-                    avatarUrl: member.user.avatarUrl,
-                    role: member.role,
-                    isOwner: member.isOwner,
-                    accepted: member.accepted,
-                    permissions: currSessionMember?.id ? (member.permissions as ProjectPermission[]) : [],
-                    organisationPermissions: currSessionMember?.id ? (member.organisationPermissions as OrganisationPermission[]) : [],
-                })),
-                organisation: null,
-                // organisation
-                //     ? {
-                //           id: organisation.id,
-                //           name: organisation.name,
-                //           slug: organisation.slug,
-                //           description: organisation.description,
-                //           icon: organisation.icon || "",
-                //           members: [],
-                //       }
-                //     : null,
+                members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+                organisation: org
+                    ? {
+                          id: org.id,
+                          name: org.name,
+                          slug: org.slug,
+                          description: org.description,
+                          icon: orgIconUrl(org.slug, org.iconFileId),
+                          members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+                      }
+                    : null,
             } satisfies ProjectDetailsData,
         },
         status: HTTP_STATUS.OK,
+    };
+}
+
+interface FormatMemberProps extends DBTeamMember {
+    user: {
+        id: string;
+        userName: string;
+        avatarUrl: string | null;
+    };
+}
+
+function formatProjectMember<T extends FormatMemberProps>(member: T, currMember?: { id?: string }) {
+    return {
+        id: member.id,
+        userId: member.user.id,
+        teamId: member.teamId,
+        userName: member.user.userName,
+        avatarUrl: member.user.avatarUrl,
+        role: member.role,
+        isOwner: member.isOwner,
+        accepted: member.accepted,
+        permissions: currMember?.id ? (member.permissions as ProjectPermission[]) : [],
+        organisationPermissions: currMember?.id ? (member.organisationPermissions as OrganisationPermission[]) : [],
     };
 }
 
@@ -154,30 +166,19 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             },
         },
         include: {
-            team: {
-                include: {
-                    members: true,
-                },
-            },
+            ...projectMemberPermissionsSelect(),
         },
     });
 
     const projectsList: ProjectListItem[] = [];
 
     for (const project of list) {
-        const team = project.team;
-        const members = team.members.map((member) => ({
-            ...member,
-            permissions: member.permissions as ProjectPermission[],
-            organisationPermissions: member.permissions as OrganisationPermission[],
-        }));
-
         const projectAccessible = isProjectAccessible({
             visibility: project.visibility,
             publishingStatus: project.status,
             userId: userSession?.id,
-            teamMembers: members,
-            orgMembers: [],
+            teamMembers: project.team.members,
+            orgMembers: project.organisation?.team.members || [],
         });
         if (!projectAccessible) continue;
 

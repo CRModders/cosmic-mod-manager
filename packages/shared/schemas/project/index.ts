@@ -48,4 +48,5 @@ export const newProjectFormSchema = z.object({
     type: ProjectTypeField,
     visibility: z.nativeEnum(ProjectVisibility),
     summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
+    orgId: z.string().max(32).optional(),
 });

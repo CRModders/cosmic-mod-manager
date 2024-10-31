@@ -2,7 +2,7 @@ import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
-import { BellIcon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
@@ -83,6 +83,11 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
                                         label: "Projects",
                                         url: "/dashboard/projects",
+                                    },
+                                    {
+                                        icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
+                                        label: "Organizations",
+                                        url: "/dashboard/organizations",
                                     },
                                 ]?.map((link) => {
                                     return (

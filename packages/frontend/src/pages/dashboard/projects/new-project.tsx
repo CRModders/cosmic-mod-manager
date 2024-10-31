@@ -25,7 +25,7 @@ import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import { newProjectFormSchema } from "@shared/schemas/project";
-import { checkFormValidity } from "@shared/schemas/utils";
+import { handleFormError } from "@shared/schemas/utils";
 import { ProjectVisibility } from "@shared/types";
 import { ArrowRightIcon, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -33,9 +33,11 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { invalidateUserProjectsQuery } from "./loader";
 
-const CreateNewProjectDialog = () => {
+const CreateNewProjectDialog = ({ orgId, invalidateProjectsData }: { orgId?: string; invalidateProjectsData: () => Promise<void> }) => {
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
+    const [typeSelectorOpen, setTypeSelectorOpen] = useState(false);
+
     const [autoFillUrlSlug, setAutoFillUrlSlug] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -48,6 +50,7 @@ const CreateNewProjectDialog = () => {
             type: [],
             visibility: ProjectVisibility.LISTED,
             summary: "",
+            orgId: orgId,
         },
     });
 
@@ -66,7 +69,7 @@ const CreateNewProjectDialog = () => {
                 return toast.error(result?.message || "Error");
             }
 
-            invalidateUserProjectsQuery();
+            invalidateProjectsData();
             navigate(getProjectPagePathname(result?.type?.[0], result?.urlSlug));
             return toast.success(result?.message || "Success");
         } finally {
@@ -81,7 +84,13 @@ const CreateNewProjectDialog = () => {
     };
 
     return (
-        <Dialog>
+        <Dialog
+            open={createDialogOpen}
+            onOpenChange={(isOpen) => {
+                if (typeSelectorOpen) return setTypeSelectorOpen(false);
+                setCreateDialogOpen(isOpen);
+            }}
+        >
             <DialogTrigger asChild>
                 <Button className="space-y-0">
                     <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
@@ -90,9 +99,9 @@ const CreateNewProjectDialog = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Create a project</DialogTitle>
+                    <DialogTitle>Creating a project</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Create a new project</DialogDescription>
+                        <DialogDescription>Creating a new project</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody>
@@ -185,6 +194,8 @@ const CreateNewProjectDialog = () => {
                                             )}
 
                                             <MultiSelect
+                                                open={typeSelectorOpen}
+                                                onOpenChange={setTypeSelectorOpen}
                                                 selectedOptions={field.value || []}
                                                 options={projectTypes.map((type) => ({
                                                     label: CapitalizeAndFormatString(type) || "",
@@ -269,7 +280,7 @@ const CreateNewProjectDialog = () => {
                                 <Button
                                     disabled={isLoading || !isFormSubmittable()}
                                     onClick={async () => {
-                                        await checkFormValidity(async () => {
+                                        await handleFormError(async () => {
                                             const parsedFormValues = await newProjectFormSchema.parseAsync(form.getValues());
                                             await createProject(parsedFormValues);
                                         });

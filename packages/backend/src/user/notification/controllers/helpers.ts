@@ -10,15 +10,15 @@ interface CreateNotificationData {
     body: JsonObject;
 }
 
-export const createNotification = async (notification: CreateNotificationData) => {
+export async function createNotification(notification: CreateNotificationData) {
     return await createNotifications([notification]);
-};
+}
 
-export const createNotifications = async (notifications: CreateNotificationData[]) => {
+export async function createNotifications(notifications: CreateNotificationData[]) {
     return await prisma.notification.createMany({
         data: notifications,
     });
-};
+}
 
 interface TeamInviteNotificationData {
     userId: string;
@@ -28,7 +28,7 @@ interface TeamInviteNotificationData {
     role: string;
 }
 
-export const createProjectTeamInviteNotification = async (data: TeamInviteNotificationData) => {
+export async function createProjectTeamInviteNotification(data: TeamInviteNotificationData) {
     return await createNotification({
         id: generateRandomId(),
         userId: data.userId,
@@ -41,4 +41,27 @@ export const createProjectTeamInviteNotification = async (data: TeamInviteNotifi
             type: NotificationType.TEAM_INVITE,
         },
     });
-};
+}
+
+interface OrgTeamInviteNotificationData {
+    userId: string;
+    teamId: string;
+    orgId: string;
+    invitedBy: string;
+    role: string;
+}
+
+export async function createOrgTeamInviteNotification(data: OrgTeamInviteNotificationData) {
+    return await createNotification({
+        id: generateRandomId(),
+        userId: data.userId,
+        type: NotificationType.ORGANIZATION_INVITE,
+        body: {
+            invitedBy: data.invitedBy,
+            teamId: data.teamId,
+            orgId: data.orgId,
+            role: data.role,
+            type: NotificationType.ORGANIZATION_INVITE,
+        },
+    });
+}

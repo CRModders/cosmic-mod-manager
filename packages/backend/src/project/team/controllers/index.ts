@@ -1,21 +1,21 @@
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "@/services/prisma";
-import { createProjectTeamInviteNotification } from "@/src/user/notification/controllers/helpers";
+import { createOrgTeamInviteNotification, createProjectTeamInviteNotification } from "@/src/user/notification/controllers/helpers";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
-import { STRING_ID_LENGTH } from "@shared/config";
-import { doesMemberHaveAccess } from "@shared/lib/utils";
-import type { updateProjectMemberFormSchema } from "@shared/schemas/project/settings/members";
-import { ProjectPermission } from "@shared/types";
+import { generateDbId } from "@/utils/str";
+import { doesMemberHaveAccess, doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
+import type { overrideOrgMemberFormSchema, updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
+import { OrganisationPermission, ProjectPermission } from "@shared/types";
 import type { Context } from "hono";
-import { nanoid } from "nanoid";
 import type { z } from "zod";
+import { teamPermsSelectObj } from "../../queries/project";
 
 export async function inviteToProjectTeam(
     ctx: Context,
     userSession: ContextUserData,
-    userName: string,
+    userSlug: string,
     teamId: string,
 ): Promise<RouteHandlerResponse> {
     const team = await prisma.team.findUnique({
@@ -27,60 +27,115 @@ export async function inviteToProjectTeam(
                     userId: true,
                     isOwner: true,
                     permissions: true,
+                    organisationPermissions: true,
+                    accepted: true,
                 },
             },
             project: {
+                select: {
+                    id: true,
+                    organisation: {
+                        select: {
+                            ...teamPermsSelectObj({ userId: userSession.id }),
+                        },
+                    },
+                },
+            },
+            organisation: {
                 select: {
                     id: true,
                 },
             },
         },
     });
-    const currMember = team?.members.find((member) => member.userId === userSession.id);
-    if (!team?.id || !currMember || !team.project) return notFoundResponseData();
+    if (!team || (!team.project && !team.organisation)) return notFoundResponseData();
 
-    const canManageInvites = doesMemberHaveAccess(
-        ProjectPermission.MANAGE_INVITES,
-        currMember.permissions as ProjectPermission[],
-        currMember.isOwner,
-    );
+    let canManageInvites = false;
+    // Handle organiszation team invite
+    if (team?.organisation?.id) {
+        const currMember = team.members.find((member) => member.userId === userSession.id);
+        if (!currMember) return invalidReqestResponseData();
+
+        canManageInvites = doesOrgMemberHaveAccess(
+            OrganisationPermission.MANAGE_INVITES,
+            currMember.organisationPermissions as OrganisationPermission[],
+            currMember.isOwner,
+        );
+    }
+    // Handle project team invite
+    else {
+        const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
+        if (!team?.id || !currMember) return invalidReqestResponseData();
+
+        canManageInvites = doesMemberHaveAccess(
+            ProjectPermission.MANAGE_INVITES,
+            currMember.permissions as ProjectPermission[],
+            currMember.isOwner,
+        );
+    }
     if (!canManageInvites) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to manage member invites");
     }
 
-    const targetUser = await prisma.user.findUnique({
+    const targetUser = await prisma.user.findFirst({
         where: {
-            lowerCaseUserName: userName.toLowerCase(),
+            OR: [{ lowerCaseUserName: userSlug.toLowerCase() }, { id: userSlug }],
         },
     });
 
     if (!targetUser?.id) return notFoundResponseData("User not found");
-    if (team.members.some((member) => member.userId === targetUser.id)) {
-        return invalidReqestResponseData(`"${targetUser.userName}" is already a member of this project`);
+    const existingMember = team.members.find((member) => member.userId === targetUser.id);
+    if (existingMember) {
+        if (existingMember.accepted === false)
+            return invalidReqestResponseData(`"${targetUser.userName}" has already been invited to this team`);
+        return invalidReqestResponseData(`"${targetUser.userName}" is already a member of this team`);
     }
 
+    let isAlreadyProjectOrgMember = false;
+    if (team?.project?.organisation) {
+        const orgMembership = team.project.organisation?.team?.members.find((member) => member.userId === targetUser.id);
+        isAlreadyProjectOrgMember = !!orgMembership?.id && orgMembership.accepted;
+
+        if (orgMembership?.isOwner === true) {
+            return invalidReqestResponseData("You cannot override the permissions of organization's owner in a project team");
+        }
+    }
+
+    // No need to send an invite if the user is already a member of the organisation which the project belongs to
+    const defaultAccepted = isAlreadyProjectOrgMember;
     const newMember = await prisma.teamMember.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             teamId: team.id,
             userId: targetUser.id,
             role: "Member",
             isOwner: false,
             permissions: [],
             organisationPermissions: [],
-            accepted: false,
+            accepted: defaultAccepted === true,
         },
     });
 
-    // Notify the user
-    await createProjectTeamInviteNotification({
-        userId: targetUser.id,
-        teamId: team.id,
-        projectId: team.project?.id || "",
-        invitedBy: userSession.id,
-        role: newMember.role,
-    });
+    if (defaultAccepted) return { data: { success: true }, status: HTTP_STATUS.OK };
+
+    if (team.organisation?.id) {
+        await createOrgTeamInviteNotification({
+            userId: targetUser.id,
+            teamId: team.id,
+            orgId: team.organisation.id,
+            invitedBy: userSession.id,
+            role: newMember.role,
+        });
+    } else if (team?.project) {
+        await createProjectTeamInviteNotification({
+            userId: targetUser.id,
+            teamId: team.id,
+            projectId: team.project.id,
+            invitedBy: userSession.id,
+            role: newMember.role,
+        });
+    }
 
     return { data: { success: true }, status: HTTP_STATUS.OK };
 }
@@ -93,7 +148,7 @@ export async function acceptProjectTeamInvite(ctx: Context, userSession: Context
             accepted: false,
         },
     });
-    if (!targetTeamMember?.id) {
+    if (!targetTeamMember?.id || targetTeamMember.accepted) {
         await addInvalidAuthAttempt(ctx);
         return invalidReqestResponseData();
     }
@@ -120,9 +175,9 @@ export async function leaveProjectTeam(ctx: Context, userSession: ContextUserDat
     });
     if (!targetTeamMember?.id) {
         await addInvalidAuthAttempt(ctx);
-        return invalidReqestResponseData();
+        return invalidReqestResponseData("You're not a member of this project team");
     }
-    if (targetTeamMember.isOwner !== false) invalidReqestResponseData("You can't leave the team while you're the owner");
+    if (targetTeamMember.isOwner === true) invalidReqestResponseData("You can't leave the team while you're the owner");
 
     await prisma.teamMember.delete({
         where: {
@@ -138,7 +193,7 @@ export async function editProjectMember(
     userSession: ContextUserData,
     targetMemberId: string,
     teamId: string,
-    formData: z.infer<typeof updateProjectMemberFormSchema>,
+    formData: z.infer<typeof updateTeamMemberFormSchema>,
 ): Promise<RouteHandlerResponse> {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
@@ -152,9 +207,19 @@ export async function editProjectMember(
                     isOwner: true,
                 },
             },
+            project: {
+                select: {
+                    id: true,
+                    organisation: {
+                        select: {
+                            ...teamPermsSelectObj({ userId: userSession.id }),
+                        },
+                    },
+                },
+            },
         },
     });
-    const currMember = team?.members.find((member) => member.userId === userSession.id);
+    const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
     if (!team?.id || !currMember?.id) return notFoundResponseData();
 
     const canEditMembers = doesMemberHaveAccess(
@@ -183,6 +248,88 @@ export async function editProjectMember(
     return { data: { success: true, message: "Member updated" }, status: HTTP_STATUS.OK };
 }
 
+export async function overrideOrgMember(
+    ctx: Context,
+    userSession: ContextUserData,
+    teamId: string,
+    formData: z.infer<typeof overrideOrgMemberFormSchema>,
+): Promise<RouteHandlerResponse> {
+    const team = await prisma.team.findUnique({
+        where: { id: teamId },
+        select: {
+            id: true,
+            members: {
+                select: {
+                    id: true,
+                    userId: true,
+                    isOwner: true,
+                    permissions: true,
+                },
+            },
+            project: {
+                select: {
+                    id: true,
+                    organisation: {
+                        select: {
+                            id: true,
+                            ...teamPermsSelectObj(),
+                        },
+                    },
+                },
+            },
+        },
+    });
+    if (!team) return notFoundResponseData();
+    if (!team?.project?.id || !team.project.organisation?.id) return invalidReqestResponseData();
+
+    const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
+    if (!currMember) {
+        await addInvalidAuthAttempt(ctx);
+        return notFoundResponseData();
+    }
+
+    const canOverrideMembers = doesMemberHaveAccess(
+        ProjectPermission.EDIT_MEMBER,
+        currMember.permissions as ProjectPermission[],
+        currMember.isOwner,
+    );
+    if (!canOverrideMembers) {
+        await addInvalidAuthAttempt(ctx);
+        return unauthorizedReqResponseData("You don't have access to override members");
+    }
+
+    // Check if the user is a member of the organisation
+    const orgMember = team.project.organisation.team.members.find((member) => member.userId === formData.userId);
+    if (!orgMember) return notFoundResponseData("User is not a part of this project's organisation");
+    if (!orgMember.accepted) return invalidReqestResponseData("User is still a pending member of the organisation");
+
+    // Check if the user is already a member of the project team
+    const existingMember = team.members.find((member) => member.userId === formData.userId);
+    if (existingMember) return invalidReqestResponseData("User is already a member of this project's team");
+
+    const targetUser = await prisma.user.findUnique({
+        where: {
+            id: formData.userId,
+        },
+    });
+    if (!targetUser) return notFoundResponseData("User not found");
+
+    await prisma.teamMember.create({
+        data: {
+            id: generateDbId(),
+            teamId: team.id,
+            userId: targetUser.id,
+            role: formData.role,
+            isOwner: false,
+            permissions: orgMember.isOwner ? [] : formData.permissions,
+            accepted: true,
+            dateAccepted: new Date(),
+        },
+    });
+
+    return { data: { success: true }, status: HTTP_STATUS.OK };
+}
+
 export const removeProjectMember = async (ctx: Context, userSession: ContextUserData, targetMemberId: string, teamId: string) => {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
@@ -196,9 +343,19 @@ export const removeProjectMember = async (ctx: Context, userSession: ContextUser
                     permissions: true,
                 },
             },
+            project: {
+                select: {
+                    id: true,
+                    organisation: {
+                        select: {
+                            ...teamPermsSelectObj({ userId: userSession.id }),
+                        },
+                    },
+                },
+            },
         },
     });
-    const currMember = team?.members.find((member) => member.userId === userSession.id);
+    const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
     if (!team?.id || !currMember) return notFoundResponseData();
 
     const canRemoveMembers = doesMemberHaveAccess(
@@ -212,12 +369,11 @@ export const removeProjectMember = async (ctx: Context, userSession: ContextUser
     }
 
     const targetMember = team.members.find((member) => member.id === targetMemberId);
-    if (!targetMember?.id) return notFoundResponseData("Member not found");
-
     if (!targetMember) {
         await addInvalidAuthAttempt(ctx);
         return invalidReqestResponseData("Member not found");
     }
+    if (targetMember.isOwner === true) return invalidReqestResponseData("You can't remove the owner of the team");
 
     await prisma.teamMember.delete({
         where: {

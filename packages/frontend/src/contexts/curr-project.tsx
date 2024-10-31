@@ -1,4 +1,5 @@
 import { type DependencyData, LoadingStatus } from "@/types";
+import { getCurrMember } from "@shared/lib/utils";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
@@ -91,17 +92,9 @@ export const ProjectContextProvider = ({
 
     let currUsersMembership: CurrUsersMembership = { data: null, status: LoadingStatus.LOADING };
 
-    if (!projectData?.id) currUsersMembership = { data: null, status: LoadingStatus.LOADING };
+    if (!projectData?.id || !session?.id) currUsersMembership = { data: null, status: LoadingStatus.LOADING };
     else {
-        // let valueSet = false;
-        let membership = null;
-        for (const member of projectData.members) {
-            if (member.userId === session?.id && member.accepted === true) {
-                // valueSet = true;
-                membership = member;
-                break;
-            }
-        }
+        const membership = getCurrMember(session.id, projectData.members, projectData.organisation?.members || []);
 
         if (membership?.id) {
             currUsersMembership = { data: membership, status: LoadingStatus.LOADED };

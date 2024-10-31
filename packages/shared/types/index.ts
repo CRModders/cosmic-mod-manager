@@ -109,7 +109,7 @@ export enum OrganisationPermission {
     EDIT_MEMBER = "edit_member",
     ADD_PROJECT = "add_project",
     REMOVE_PROJECT = "remove_project",
-    DELETE_ORGANISATION = "delete_organisation",
+    DELETE_ORGANIZATION = "delete_organization",
     EDIT_MEMBER_DEFAULT_PERMISSIONS = "edit_member_default_permissions",
 }
 
@@ -168,7 +168,7 @@ export enum SearchResultSortMethod {
 export enum NotificationType {
     PROJECT_UPDATE = "project_update",
     TEAM_INVITE = "team_invite", // Project team invite
-    ORGANISATION_INVITE = "organisation_invite", // Organisation team invite
+    ORGANIZATION_INVITE = "organization_invite", // Organisation team invite
     STATUS_CHANGE = "status_change",
     MODERATOR_MESSAGE = "moderator_message",
     UNKNOWN = "unknown",

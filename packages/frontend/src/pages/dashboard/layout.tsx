@@ -88,8 +88,8 @@ const ManagementPagesLinks = [
         icon: <LayoutListIcon size="1rem" />,
     },
     {
-        name: "Organisations",
-        href: `${baseUrlPrefix}/organisations`,
+        name: "Organizations",
+        href: `${baseUrlPrefix}/organizations`,
         icon: <Building2Icon size="1rem" />,
     },
     {

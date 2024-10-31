@@ -9,6 +9,23 @@ const SYNC_BATCH_SIZE = 1000;
 const SYNC_INTERVAL = 1800_000; // 30 minutes
 let isSyncing = false;
 
+const teamSelect = {
+    team: {
+        select: {
+            members: {
+                where: { isOwner: true },
+                select: {
+                    user: {
+                        select: {
+                            userName: true,
+                        },
+                    },
+                },
+            },
+        },
+    },
+};
+
 const requiredProjectFields = {
     id: true,
     name: true,
@@ -26,23 +43,10 @@ const requiredProjectFields = {
     dateUpdated: true,
     clientSide: true,
     serverSide: true,
-
     projectSourceUrl: true,
-    team: {
-        select: {
-            members: {
-                where: {
-                    isOwner: true,
-                },
-                select: {
-                    user: {
-                        select: {
-                            userName: true,
-                        },
-                    },
-                },
-            },
-        },
+    ...teamSelect,
+    organisation: {
+        select: teamSelect,
     },
 };
 
@@ -94,7 +98,7 @@ const syncProjects = async (cursor: null | string) => {
 
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
-            const author = project.team.members?.[0];
+            const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
             const iconUrl = getAppropriateProjectIconUrl(projectIconFiles.get(project?.iconFileId || ""), project.slug);
 
             formattedProjectsData.push({

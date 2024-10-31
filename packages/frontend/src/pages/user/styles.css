@@ -8,11 +8,6 @@
         "sidebar";
 }
 
-.profile-page-header {
-    display: grid;
-    grid-area: header;
-}
-
 @media (min-width: 64rem) {
     .profile-page-layout {
         grid-template-rows: auto auto 1fr;

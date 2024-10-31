@@ -1,27 +1,32 @@
-import type { Notification, ProjectListItem } from "@shared/types/api";
+import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect } from "react";
-import { getNotificationsQuery, getRelatedProjectsQuery, getRelatedUsersQuery } from "./_loader";
+import { getNotificationsQuery, getRelatedOrgsQuery, getRelatedProjectsQuery, getRelatedUsersQuery } from "./_loader";
 
 interface NotificationsContext {
     isLoading: boolean;
     notifications: Notification[] | null;
-    relatedProjects: Map<string, ProjectListItem> | null;
-    relatedUsers: Map<string, UserProfileData> | null;
     refetchNotifications: () => Promise<void>;
+
+    relatedProjects: Map<string, ProjectListItem> | null;
+    relatedOrgs: Map<string, OrganisationListItem> | null;
+    relatedUsers: Map<string, UserProfileData> | null;
 }
 
 export const NotificationsContext = createContext<NotificationsContext>({
     isLoading: true,
+    refetchNotifications: async () => {},
+
     notifications: null,
     relatedProjects: null,
+    relatedOrgs: null,
     relatedUsers: null,
-    refetchNotifications: async () => {},
 });
 
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     const notifications = useQuery(getNotificationsQuery());
+    const relatedOrgs = useQuery(getRelatedOrgsQuery(notifications.data || []));
     const relatedProjects = useQuery(getRelatedProjectsQuery(notifications.data || []));
     const relatedUsers = useQuery(getRelatedUsersQuery(notifications.data || []));
 
@@ -30,14 +35,21 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         await Promise.all([relatedProjects.refetch(), relatedUsers.refetch()]);
     };
 
-    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : undefined;
+    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : null;
     if (relatedProjects.data && relatedProjectsList) {
         for (const project of relatedProjects.data || []) {
             relatedProjectsList.set(project.id, project);
         }
     }
 
-    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : undefined;
+    const relatedOrgsList = relatedOrgs.data ? new Map<string, OrganisationListItem>() : null;
+    if (relatedOrgs.data && relatedOrgsList) {
+        for (const org of relatedOrgs.data || []) {
+            relatedOrgsList.set(org.id, org);
+        }
+    }
+
+    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : null;
     if (relatedUsers.data && relatedUsersList) {
         for (const user of relatedUsers.data || []) {
             relatedUsersList.set(user.id, user);
@@ -61,11 +73,13 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <NotificationsContext.Provider
             value={{
-                notifications: notifications.data || null,
                 isLoading: isNotificationsLoading,
-                relatedProjects: relatedProjectsList || null,
-                relatedUsers: relatedUsersList || null,
+                notifications: notifications.data || null,
                 refetchNotifications: refetchNotifications,
+
+                relatedProjects: relatedProjectsList,
+                relatedOrgs: relatedOrgsList,
+                relatedUsers: relatedUsersList,
             }}
         >
             {children}

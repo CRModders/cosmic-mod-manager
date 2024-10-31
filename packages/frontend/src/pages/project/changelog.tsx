@@ -1,3 +1,4 @@
+import { DownloadAnimationContext } from "@/components/download-ripple";
 import MarkdownRenderBox from "@/components/layout/md-editor/render-md";
 import PaginatedNavigation from "@/components/pagination-nav";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -46,6 +47,8 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
 
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
     const [showAllVersions, setShowAllVersions] = useState(false);
+
+    const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const Pagination =
         (versionsList.length || 0) > perPageLimit ? (
@@ -286,6 +289,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                     <a
                                         href={projectFileUrl(version.primaryFile.url)}
                                         className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
+                                        onClick={showDownloadAnimation}
                                     >
                                         <DownloadIcon className="w-btn-icon h-btn-icon" />
                                         Download

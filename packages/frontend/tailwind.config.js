@@ -48,6 +48,7 @@ module.exports = {
                 tiny: "var(--font-tiny)",
                 sm: "var(--font-sm)",
                 base: "var(--font-base)",
+                md: "var(--font-md)",
                 lg: "var(--font-lg)",
                 xl: "var(--font-xl)",
                 "2xl": "var(--font-2xl)",

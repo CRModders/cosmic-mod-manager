@@ -3,10 +3,10 @@ import prisma from "@/services/prisma";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
+import { generateDbId } from "@/utils/str";
 import type { Dependency } from "@prisma/client";
-import { STRING_ID_LENGTH } from "@shared/config";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
-import { doesMemberHaveAccess, getLoadersByProjectType } from "@shared/lib/utils";
+import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema } from "@shared/schemas/project/version";
@@ -14,7 +14,6 @@ import { ProjectPermission, type ProjectType, ProjectVisibility } from "@shared/
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
 import { aggregateProjectLoaderNames, aggregateVersions, createVersionFiles, isAnyDuplicateFile } from "@src/project/utils";
 import type { Context } from "hono";
-import { nanoid } from "nanoid";
 import type { z } from "zod";
 
 export async function createNewVersion(
@@ -46,7 +45,7 @@ export async function createNewVersion(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !memberObj) return notFoundResponseData("Project not found");
 
     const canUploadVersion = doesMemberHaveAccess(
@@ -95,7 +94,7 @@ export async function createNewVersion(
 
     let newVersion = await prisma.version.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             projectId: project.id,
             authorId: userSession.id,
             title: formData.title,
@@ -225,7 +224,7 @@ export const createVersionDependencies = async (dependentVersionId: string, list
             // If the dependency is a version level dependency, check if the version exists
             if (dependency.versionId && versionMap.has(dependency.versionId)) {
                 validVersionLevelDependencies.push({
-                    id: nanoid(STRING_ID_LENGTH),
+                    id: generateDbId(),
                     projectId: dependency.projectId,
                     versionId: dependency.versionId,
                     dependencyType: dependency.dependencyType,
@@ -235,7 +234,7 @@ export const createVersionDependencies = async (dependentVersionId: string, list
             // If the dependency is a project level dependency
             else {
                 validProjectLevelDependencies.push({
-                    id: nanoid(STRING_ID_LENGTH),
+                    id: generateDbId(),
                     projectId: dependency.projectId,
                     versionId: null,
                     dependencyType: dependency.dependencyType,

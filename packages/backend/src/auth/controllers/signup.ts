@@ -2,12 +2,12 @@ import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-atte
 import prisma from "@/services/prisma";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS } from "@/utils/http";
-import { AUTHTOKEN_COOKIE_NAMESPACE, STRING_ID_LENGTH, USER_SESSION_VALIDITY } from "@shared/config";
+import { generateDbId } from "@/utils/str";
+import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@shared/config";
 import { GlobalUserRole } from "@shared/types";
 import { createNewAuthAccount, getAuthProviderProfileData } from "@src/auth/helpers";
 import { createUserSession, setSessionCookie } from "@src/auth/helpers/session";
 import type { Context } from "hono";
-import { nanoid } from "nanoid";
 
 export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tokenExchangeCode: string): Promise<RouteHandlerResponse> => {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
@@ -59,11 +59,11 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
         };
     }
 
-    const userName = nanoid(STRING_ID_LENGTH);
+    const userName = generateDbId();
     // Finally create a user
     const newUser = await prisma.user.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             name: profileData?.name || "",
             email: profileData.email,
             userName: userName,

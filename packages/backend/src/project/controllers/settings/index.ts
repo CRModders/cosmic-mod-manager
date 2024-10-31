@@ -3,14 +3,12 @@ import { deleteDirectory, deleteProjectFile, saveProjectFile } from "@/services/
 import { projectFileStoragePath } from "@/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
-import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
-import { generateRandomId } from "@/utils/str";
-import { STRING_ID_LENGTH } from "@shared/config";
-import { doesMemberHaveAccess } from "@shared/lib/utils";
+import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
+import { generateDbId, generateRandomId } from "@/utils/str";
+import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
 import { ProjectPermission } from "@shared/types";
-import { nanoid } from "nanoid";
 import type { z } from "zod";
 import { projectMemberPermissionsSelect } from "../../queries/project";
 
@@ -29,15 +27,15 @@ export async function updateProject(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const currMember = project?.team.members?.[0] || project?.organisation?.team.members?.[0];
+    const currMember = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !currMember) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
 
-    if (!doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)) {
-        return {
-            data: { success: false, message: "You don't have the permission to update project details" },
-            status: HTTP_STATUS.UNAUTHORIZED,
-        };
-    }
+    const canEditProject = doesMemberHaveAccess(
+        ProjectPermission.EDIT_DETAILS,
+        currMember.permissions as ProjectPermission[],
+        currMember.isOwner,
+    );
+    if (!canEditProject) return unauthorizedReqResponseData("You don't have the permission to update project details");
 
     // If the project slug has been updated
     if (formData.slug !== project.slug) {
@@ -48,7 +46,7 @@ export async function updateProject(
             },
         });
 
-        if (existingProjectWithSameSlug?.id) return invalidReqestResponseData(`The slug "${formData.slug}" is status: already taken`);
+        if (existingProjectWithSameSlug?.id) return invalidReqestResponseData(`The slug "${formData.slug}" is already taken`);
     }
 
     // Check if the icon was updated
@@ -92,8 +90,8 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0];
-    if (!project?.id || !memberObj) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
+    if (!project?.id || !memberObj) return notFoundResponseData("Project not found");
 
     // Check if the user has the permission to delete the project
     const hasDeleteAccess = doesMemberHaveAccess(
@@ -101,12 +99,7 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
     );
-    if (!hasDeleteAccess) {
-        return {
-            data: { success: false, message: "You don't have the permission to delete the project" },
-            status: HTTP_STATUS.UNAUTHORIZED,
-        };
-    }
+    if (!hasDeleteAccess) return unauthorizedReqResponseData("You don't have the permission to delete the project");
 
     // Get all the project versions
     const versions = await prisma.version.findMany({
@@ -200,7 +193,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project || !memberObj) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
 
     const hasEditAccess = doesMemberHaveAccess(
@@ -208,12 +201,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
     );
-    if (!hasEditAccess) {
-        return {
-            data: { success: false, message: "You don't have the permission to update project icon" },
-            status: HTTP_STATUS.UNAUTHORIZED,
-        };
-    }
+    if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project icon");
 
     // Delete the previous icon if it exists
     if (project.iconFileId) {
@@ -230,7 +218,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
     const newDbFile = await prisma.file.create({
         data: {
-            id: nanoid(STRING_ID_LENGTH),
+            id: generateDbId(),
             name: fileName,
             size: icon.size,
             type: fileType,
@@ -262,7 +250,7 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = project?.team.members?.[0];
+    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
     if (!project || !memberObj) return notFoundResponseData("Project not found");
 
     if (!project.iconFileId) return invalidReqestResponseData("Project does not have any icon");
@@ -272,12 +260,7 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
     );
-    if (!hasEditAccess) {
-        return {
-            data: { success: false, message: "You don't have the permission to delete project icon" },
-            status: HTTP_STATUS.UNAUTHORIZED,
-        };
-    }
+    if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");
 
     const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
     await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
