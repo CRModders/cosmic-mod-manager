@@ -59,7 +59,6 @@ const CreateNewOrg_Dialog = ({ children }: { children: React.ReactNode }) => {
 
             invalidateUserOrgsListQuery();
             navigate(getOrgPagePathname(values.slug));
-            return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
         }
