@@ -19,7 +19,7 @@ import { useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useParams } from "react-router-dom";
 import SecondaryNav from "../project/secondary-nav";
-import UserProfilePage from "./page";
+import UserProjectsList from "./page";
 import "./styles.css";
 
 const UserPageLayout = () => {
@@ -69,9 +69,15 @@ const UserPageLayout = () => {
                         />
                     ) : null}
 
-                    <UserProfilePage projectType={projectType} projectsList={projectsList} />
+                    {projectsList?.length ? (
+                        <UserProjectsList projectType={projectType} projectsList={projectsList} />
+                    ) : (
+                        <div className="w-full flex items-center justify-center py-12">
+                            <p className="text-lg text-muted-foreground italic">{userData.userName} doesn't have any projects yet.</p>
+                        </div>
+                    )}
                 </div>
-                <PageSidebar userName={userData.userName} orgsList={orgsList || []} />
+                <PageSidebar userName={userData.userName} userId={userData.id} orgsList={orgsList || []} />
             </div>
         </>
     );
@@ -79,7 +85,7 @@ const UserPageLayout = () => {
 
 export const Component = UserPageLayout;
 
-const PageSidebar = ({ userName, orgsList }: { userName: string; orgsList: Organisation[] }) => {
+const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId: string; orgsList: Organisation[] }) => {
     return (
         <div
             style={{
@@ -94,21 +100,26 @@ const PageSidebar = ({ userName, orgsList }: { userName: string; orgsList: Organ
 
                 <div className="flex flex-wrap gap-2 items-start justify-start">
                     <TooltipProvider>
-                        {orgsList.map((org) => (
-                            <Tooltip key={org.id}>
-                                <TooltipTrigger asChild>
-                                    <Link to={getOrgPagePathname(org.slug)}>
-                                        <ImgWrapper
-                                            src={imageUrl(org.icon)}
-                                            alt={org.name}
-                                            fallback={fallbackOrgIcon}
-                                            className="w-14 h-14"
-                                        />
-                                    </Link>
-                                </TooltipTrigger>
-                                <TooltipContent>{org.name}</TooltipContent>
-                            </Tooltip>
-                        ))}
+                        {orgsList.map((org) => {
+                            const member = org.members.find((member) => member.id === userId);
+                            if (member?.accepted !== true) return null;
+
+                            return (
+                                <Tooltip key={org.id}>
+                                    <TooltipTrigger asChild>
+                                        <Link to={getOrgPagePathname(org.slug)}>
+                                            <ImgWrapper
+                                                src={imageUrl(org.icon)}
+                                                alt={org.name}
+                                                fallback={fallbackOrgIcon}
+                                                className="w-14 h-14"
+                                            />
+                                        </Link>
+                                    </TooltipTrigger>
+                                    <TooltipContent>{org.name}</TooltipContent>
+                                </Tooltip>
+                            );
+                        })}
                     </TooltipProvider>
                 </div>
             </ContentCardTemplate>

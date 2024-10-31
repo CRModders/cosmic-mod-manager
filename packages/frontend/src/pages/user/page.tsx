@@ -6,7 +6,7 @@ interface Props {
     projectsList: ProjectListItem[] | null;
 }
 
-const UserProfilePage = ({ projectType, projectsList }: Props) => {
+const UserProjectsList = ({ projectType, projectsList }: Props) => {
     if (!projectsList) return null;
 
     const formattedProjectType = projectType?.slice(0, -1);
@@ -38,4 +38,4 @@ const UserProfilePage = ({ projectType, projectsList }: Props) => {
     );
 };
 
-export default UserProfilePage;
+export default UserProjectsList;
