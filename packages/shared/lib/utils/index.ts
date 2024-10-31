@@ -210,7 +210,8 @@ export const doesOrgMemberHaveAccess = (
     return permissions.includes(requiredPermission);
 };
 
-export const getCurrMember = <T extends PartialTeamMember>(userId: string, teamMembers: T[], orgMembers: T[]) => {
+export const getCurrMember = <T extends PartialTeamMember>(userId: string | null | undefined, teamMembers: T[], orgMembers: T[]) => {
+    if (!userId) return null;
     const combinedMembers = combineProjectMembers(teamMembers, orgMembers);
     return combinedMembers.get(userId);
 };

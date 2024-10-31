@@ -17,6 +17,7 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
+import "./../styles.css";
 
 const TagsSettingsPage = () => {
     const [isLoading, setIsLoading] = useState(false);

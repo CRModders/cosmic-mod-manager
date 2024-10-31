@@ -4,6 +4,7 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
 import { orgIconUrl, projectIconUrl } from "@/utils/urls";
+import { getCurrMember } from "@shared/lib/utils";
 import type { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import {
     type OrganisationPermission,
@@ -35,6 +36,8 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
     if (!organisation) {
         return notFoundResponseData("Organisation not found");
     }
+    const currMember = getCurrMember(userSession?.id, [], organisation.team.members);
+    const isMember = currMember?.accepted === true;
 
     const formattedData = {
         id: organisation.id,
@@ -53,8 +56,8 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
                 role: member.role,
                 isOwner: member.isOwner,
                 accepted: member.accepted,
-                permissions: member.permissions as ProjectPermission[],
-                organisationPermissions: member.organisationPermissions as OrganisationPermission[],
+                permissions: (isMember ? member.permissions : []) as ProjectPermission[],
+                organisationPermissions: (isMember ? member.organisationPermissions : []) as OrganisationPermission[],
             };
         }),
     } satisfies Organisation;
@@ -76,7 +79,6 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
         }
         userId = user.id;
     }
-
     const organisations = await prisma.organisation.findMany({
         where: {
             team: {
@@ -105,6 +107,8 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
 
     const organisationsList: Organisation[] = [];
     for (const org of organisations) {
+        const currMember = getCurrMember(userSession?.id, [], org.team.members);
+
         organisationsList.push({
             id: org.id,
             teamId: org.teamId,
@@ -121,8 +125,8 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
                 role: member.role,
                 isOwner: member.isOwner,
                 accepted: member.accepted,
-                permissions: member.permissions as ProjectPermission[],
-                organisationPermissions: member.organisationPermissions as OrganisationPermission[],
+                permissions: (currMember?.accepted === true ? member.permissions : []) as ProjectPermission[],
+                organisationPermissions: (currMember?.accepted === true ? member.organisationPermissions : []) as OrganisationPermission[],
             })),
         });
     }
