@@ -5,6 +5,7 @@ import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { OrganisationPermission } from "@shared/types";
 import { useContext } from "react";
 import { orgDataContext } from "../../org-context";
+import { OrgTeamMember } from "./edit-member";
 
 const OrgMemberSettings = () => {
     const { orgData, fetchOrgData, currUsersMembership } = useContext(orgDataContext);
@@ -23,6 +24,18 @@ const OrgMemberSettings = () => {
                 <InviteMemberForm teamId={orgData.teamId} canInviteMembers={canInviteMembers} dataRefetch={fetchOrgData} isOrg />
                 <LeaveTeam teamId={orgData.teamId} currUsersMembership={currUsersMembership} refreshData={fetchOrgData} />
             </Card>
+
+            {orgData.members.map((member) => {
+                return (
+                    <OrgTeamMember
+                        key={member.userId}
+                        org={orgData}
+                        member={member}
+                        currMember={currUsersMembership}
+                        fetchOrgData={fetchOrgData}
+                    />
+                );
+            })}
         </>
     );
 };

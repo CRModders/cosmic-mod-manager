@@ -42,7 +42,7 @@ const LabelledCheckbox = React.forwardRef<
     return (
         <Label
             className={cn(
-                "flex text-base font-normal py-[0.1rem] gap-x-2.5 items-center justify-start transition cursor-not-allowed text-muted-foreground opacity-75",
+                "flex text-base font-normal py-1 gap-x-2.5 leading-tight items-center justify-start transition cursor-not-allowed text-muted-foreground opacity-75",
                 !disabled && "hover:brightness-[85%] cursor-pointer opacity-100",
                 className,
             )}

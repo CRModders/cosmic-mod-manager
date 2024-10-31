@@ -1,6 +1,6 @@
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "@/services/prisma";
-import { deleteOrgFile, saveOrgFile } from "@/services/storage";
+import { deleteOrgDirectory, deleteOrgFile, saveOrgFile } from "@/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import {
@@ -11,7 +11,7 @@ import {
     unauthorizedReqResponseData,
 } from "@/utils/http";
 import { generateDbId, generateRandomId } from "@/utils/str";
-import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
+import { doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
 import { OrganisationPermission } from "@shared/types";
@@ -257,11 +257,13 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
         return serverErrorResponseData();
     }
 
-    // Delete icon and files
+    // Delete icon
     if (org.iconFileId) {
-        const deletedDbFile = await prisma.file.delete({ where: { id: org.iconFileId } });
-        await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
+        await prisma.file.delete({ where: { id: org.iconFileId } });
     }
+
+    // Delete storate directory
+    await deleteOrgDirectory(FILE_STORAGE_SERVICE.LOCAL, org.id);
 
     const orgProjectIds = org.projects.map((project) => project.id);
     const projectTeamIds = org.projects.map((project) => project.teamId);
@@ -315,6 +317,33 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
 }
 
 export async function addProjectToOrganisation(userSession: ContextUserData, orgId: string, projectId: string) {
+    const org = await prisma.organisation.findUnique({
+        where: {
+            id: orgId,
+        },
+        select: {
+            id: true,
+            team: {
+                select: {
+                    members: {
+                        where: { userId: userSession.id, accepted: true },
+                        select: { id: true, userId: true, isOwner: true, organisationPermissions: true },
+                    },
+                },
+            },
+        },
+    });
+    if (!org) return notFoundResponseData("Organization not found");
+    const currMember = getCurrMember(userSession.id, [], org.team.members);
+    if (!currMember) return unauthorizedReqResponseData("You are not a member of the organization");
+
+    const canAddProjects = doesOrgMemberHaveAccess(
+        OrganisationPermission.ADD_PROJECT,
+        currMember.organisationPermissions as OrganisationPermission[],
+        currMember.isOwner,
+    );
+    if (!canAddProjects) return unauthorizedReqResponseData("You don't have the permission to add projects to the organization");
+
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
@@ -338,25 +367,6 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
 
     const projectOwner = project.team.members?.[0];
     if (projectOwner?.userId !== userSession.id) return unauthorizedReqResponseData("You are not the owner of the project");
-
-    const org = await prisma.organisation.findUnique({
-        where: {
-            id: orgId,
-        },
-        select: {
-            id: true,
-            team: {
-                select: {
-                    members: {
-                        where: { userId: userSession.id, accepted: true },
-                        select: { id: true, userId: true },
-                    },
-                },
-            },
-        },
-    });
-    if (!org) return notFoundResponseData("Organization not found");
-    if (!org.team.members?.[0]?.id) return unauthorizedReqResponseData("You are not a member of the organization");
 
     await Promise.all([
         // Delete the team members from the project's current team
@@ -390,17 +400,25 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
             team: {
                 select: {
                     members: {
-                        where: { userId: userSession.id, isOwner: true },
-                        select: { id: true, userId: true },
+                        where: { userId: userSession.id, accepted: true },
+                        select: { id: true, userId: true, isOwner: true, organisationPermissions: true },
                     },
                 },
             },
         },
     });
     if (!org) return notFoundResponseData("Organization not found");
-    if (!org.team.members?.[0]?.id) {
+    const currMember = getCurrMember(userSession.id, [], org.team.members);
+    if (!currMember) return unauthorizedReqResponseData("You are not a member of the organization");
+
+    const canRemoveProjects = doesOrgMemberHaveAccess(
+        OrganisationPermission.REMOVE_PROJECT,
+        currMember.organisationPermissions as OrganisationPermission[],
+        currMember.isOwner,
+    );
+    if (!canRemoveProjects) {
         await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData("You are not the owner of the organization");
+        return unauthorizedReqResponseData("You don't have the permission to remove projects from the organization");
     }
 
     const project = await prisma.project.findUnique({
@@ -414,7 +432,6 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
         },
     });
     if (!project) return notFoundResponseData("Project not found");
-    if (project.organisationId !== org.id) return invalidReqestResponseData("Project is not part of the organization");
 
     await Promise.all([
         prisma.teamMember.deleteMany({

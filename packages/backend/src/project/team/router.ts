@@ -8,6 +8,7 @@ import { parseValueToSchema } from "@shared/schemas/utils";
 import { type Context, Hono } from "hono";
 import {
     acceptProjectTeamInvite,
+    changeTeamOwner,
     editProjectMember,
     inviteToProjectTeam,
     leaveProjectTeam,
@@ -27,6 +28,7 @@ teamRouter.post("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute
 teamRouter.patch("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_patch);
 teamRouter.post("/:teamId/leave", critModifyReqRateLimiter, LoginProtectedRoute, teamLeave_post);
 
+teamRouter.patch("/:teamId/owner", critModifyReqRateLimiter, LoginProtectedRoute, teamOwner_patch);
 teamRouter.post(":teamId/members", critModifyReqRateLimiter, LoginProtectedRoute, teamMembers_post);
 teamRouter.patch("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_patch);
 teamRouter.delete("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_delete);
@@ -67,6 +69,21 @@ async function teamLeave_post(ctx: Context) {
         if (!userSession || !teamId) return invalidReqestResponse(ctx);
 
         const res = await leaveProjectTeam(ctx, userSession, teamId);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function teamOwner_patch(ctx: Context) {
+    try {
+        const { teamId } = ctx.req.param();
+        const userSession = getUserFromCtx(ctx);
+        const targetUserId = ctx.get(REQ_BODY_NAMESPACE)?.userId;
+        if (!userSession || !teamId || !targetUserId) return invalidReqestResponse(ctx);
+
+        const res = await changeTeamOwner(ctx, userSession, teamId, targetUserId);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { getOrgPagePathname, imageUrl } from "@/lib/utils";
+import { useSession } from "@/src/contexts/auth";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { getdashboardOrgsListQuery } from "./_loader";
 import CreateNewOrg_Dialog from "./new-organisation";
 
 const OrganisationDashboardPage = () => {
+    const { session } = useSession();
     const { data: organisations } = useQuery(getdashboardOrgsListQuery());
 
     return (
@@ -29,16 +31,20 @@ const OrganisationDashboardPage = () => {
                     <FullWidthSpinner />
                 ) : (
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {organisations?.map((org) => (
-                            <OrgListItemCard
-                                key={org.id}
-                                title={org.name}
-                                url={getOrgPagePathname(org.slug)}
-                                icon={imageUrl(org.icon)}
-                                description={org.description || ""}
-                                members={org.members.length}
-                            />
-                        ))}
+                        {organisations?.map((org) => {
+                            if (org.members.find((member) => member.userId === session?.id)?.accepted === false) return;
+
+                            return (
+                                <OrgListItemCard
+                                    key={org.id}
+                                    title={org.name}
+                                    url={getOrgPagePathname(org.slug)}
+                                    icon={imageUrl(org.icon)}
+                                    description={org.description || ""}
+                                    members={org.members.length}
+                                />
+                            );
+                        })}
                     </div>
                 )}
             </CardContent>

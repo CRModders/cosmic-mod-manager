@@ -35,7 +35,7 @@ export default {
         },
         DDOS_PROTECTION: {
             max: 50,
-            timeWindow_seconds: 10,
+            timeWindow_seconds: 5,
             namespace: "global_DDOS_PROTECTION",
         },
     },

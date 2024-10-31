@@ -45,6 +45,8 @@ const ProjectMemberSettingsPage = () => {
                         member={member}
                         currUsersMembership={currUsersMembershipData}
                         fetchProjectData={fetchProjectData}
+                        projectTeamId={projectData.teamId}
+                        doesProjectHaveOrg={!!projectData.organisation}
                     />
                 ))}
 
@@ -65,13 +67,7 @@ const ProjectMemberSettingsPage = () => {
             ) : null}
 
             {projectData.organisation?.members?.map((member) => (
-                <OrgTeamMember
-                    key={member.userId}
-                    project={projectData}
-                    orgMembership={member}
-                    currUsersMembership={currUsersMembershipData}
-                    fetchProjectData={fetchProjectData}
-                />
+                <OrgTeamMember key={member.userId} project={projectData} orgMembership={member} fetchProjectData={fetchProjectData} />
             ))}
         </>
     );

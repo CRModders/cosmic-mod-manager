@@ -15,7 +15,7 @@ import { updateTeamMemberFormSchema } from "@shared/schemas/project/settings/mem
 import { handleFormError } from "@shared/schemas/utils";
 import { ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
-import { ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
+import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -26,9 +26,17 @@ interface ProjectTeamMemberProps {
     member: TeamMember;
     currUsersMembership: TeamMember;
     fetchProjectData: () => Promise<void>;
+    projectTeamId: string;
+    doesProjectHaveOrg: boolean;
 }
 
-export const ProjectTeamMember = ({ member, currUsersMembership, fetchProjectData }: ProjectTeamMemberProps) => {
+export const ProjectTeamMember = ({
+    member,
+    currUsersMembership,
+    fetchProjectData,
+    projectTeamId,
+    doesProjectHaveOrg,
+}: ProjectTeamMemberProps) => {
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -77,6 +85,27 @@ export const ProjectTeamMember = ({ member, currUsersMembership, fetchProjectDat
 
             await fetchProjectData();
             return toast.success("Member removed successfully");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const transferOwnership = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        try {
+            const res = await useFetch(`/api/team/${projectTeamId}/owner`, {
+                method: "PATCH",
+                body: JSON.stringify({ userId: member.userId }),
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data?.success) {
+                return toast.error(data?.message || "Error");
+            }
+
+            await fetchProjectData();
+            return toast.success(data?.message || "Ownership transferred successfully");
         } finally {
             setIsLoading(false);
         }
@@ -207,7 +236,7 @@ export const ProjectTeamMember = ({ member, currUsersMembership, fetchProjectDat
                             <Button
                                 type="submit"
                                 size="sm"
-                                disabled={isLoading}
+                                disabled={isLoading || !form.formState.isDirty}
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const values = await updateTeamMemberFormSchema.parseAsync(form.getValues());
@@ -229,13 +258,23 @@ export const ProjectTeamMember = ({ member, currUsersMembership, fetchProjectDat
                                         type="button"
                                         variant="secondary-destructive"
                                         size="sm"
-                                        disabled={isLoading || !form.formState.isDirty}
+                                        disabled={isLoading}
                                         onClick={removeTeamMember}
                                     >
                                         <UserXIcon className="w-btn-icon h-btn-icon" />
                                         Remove member
                                     </Button>
                                 )}
+
+                            {currUsersMembership.isOwner &&
+                            member.accepted &&
+                            !doesProjectHaveOrg &&
+                            member.userId !== currUsersMembership.userId ? (
+                                <Button variant="secondary" size="sm" disabled={isLoading} onClick={transferOwnership}>
+                                    <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
+                                    Transfer ownership
+                                </Button>
+                            ) : null}
                         </div>
                     </form>
                 </Form>
@@ -247,11 +286,10 @@ export const ProjectTeamMember = ({ member, currUsersMembership, fetchProjectDat
 interface OrgTeamMemberProps {
     project: ProjectDetailsData;
     orgMembership: TeamMember;
-    currUsersMembership: TeamMember;
     fetchProjectData: () => Promise<void>;
 }
 
-export const OrgTeamMember = ({ project, orgMembership, currUsersMembership, fetchProjectData }: OrgTeamMemberProps) => {
+export const OrgTeamMember = ({ project, orgMembership, fetchProjectData }: OrgTeamMemberProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [detailsOpen, setDetailsOpen] = useState(false);
 

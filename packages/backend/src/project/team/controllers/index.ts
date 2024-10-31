@@ -114,6 +114,7 @@ export async function inviteToProjectTeam(
             permissions: [],
             organisationPermissions: [],
             accepted: defaultAccepted === true,
+            dateAccepted: defaultAccepted === true ? new Date() : null,
         },
     });
 
@@ -177,7 +178,7 @@ export async function leaveProjectTeam(ctx: Context, userSession: ContextUserDat
         await addInvalidAuthAttempt(ctx);
         return invalidReqestResponseData("You're not a member of this project team");
     }
-    if (targetTeamMember.isOwner === true) invalidReqestResponseData("You can't leave the team while you're the owner");
+    if (targetTeamMember.isOwner === true) return invalidReqestResponseData("You can't leave the team while you're the owner");
 
     await prisma.teamMember.delete({
         where: {
@@ -204,6 +205,7 @@ export async function editProjectMember(
                     id: true,
                     userId: true,
                     permissions: true,
+                    organisationPermissions: true,
                     isOwner: true,
                 },
             },
@@ -217,16 +219,31 @@ export async function editProjectMember(
                     },
                 },
             },
+            organisation: {
+                select: {
+                    id: true,
+                },
+            },
         },
     });
     const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
     if (!team?.id || !currMember?.id) return notFoundResponseData();
 
-    const canEditMembers = doesMemberHaveAccess(
-        ProjectPermission.EDIT_MEMBER,
-        currMember.permissions as ProjectPermission[],
-        currMember.isOwner,
-    );
+    let canEditMembers = false;
+
+    if (team.organisation?.id) {
+        canEditMembers = doesOrgMemberHaveAccess(
+            OrganisationPermission.EDIT_MEMBER,
+            currMember.organisationPermissions as OrganisationPermission[],
+            currMember.isOwner,
+        );
+    } else {
+        canEditMembers = doesMemberHaveAccess(
+            ProjectPermission.EDIT_MEMBER,
+            currMember.permissions as ProjectPermission[],
+            currMember.isOwner,
+        );
+    }
     if (!canEditMembers) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to edit members");
@@ -235,13 +252,46 @@ export async function editProjectMember(
     const targetMember = team.members.find((member) => member.id === targetMemberId);
     if (!targetMember?.id) return notFoundResponseData("Member not found");
 
+    // Only owner can add permissions to the member
+    if (currMember.isOwner !== true) {
+        for (const permission of formData.permissions || []) {
+            if (!currMember.permissions.includes(permission)) {
+                // If this is an org team, check if the user has access to edit default permissions
+                if (team.organisation?.id) {
+                    const canEditDefaultPermissions = doesOrgMemberHaveAccess(
+                        OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
+                        currMember.organisationPermissions as OrganisationPermission[],
+                        currMember.isOwner,
+                    );
+
+                    if (canEditDefaultPermissions) break;
+                }
+
+                return unauthorizedReqResponseData("You don't have access to add permissions to the member");
+            }
+        }
+
+        for (const permission of formData.organisationPermissions || []) {
+            if (!currMember.organisationPermissions.includes(permission)) {
+                return unauthorizedReqResponseData("You don't have access to add permissions to the member");
+            }
+        }
+    }
+
+    const updatedPerms = {
+        permissions: formData.permissions || [],
+        organisationPermissions: [] as OrganisationPermission[],
+    };
+
+    if (team.organisation?.id) updatedPerms.organisationPermissions = formData.organisationPermissions || [];
+
     await prisma.teamMember.update({
         where: {
             id: targetMember.id,
         },
         data: {
             role: formData.role,
-            ...(targetMember.isOwner ? {} : { permissions: formData.permissions }),
+            ...(targetMember.isOwner ? {} : updatedPerms),
         },
     });
 
@@ -330,7 +380,12 @@ export async function overrideOrgMember(
     return { data: { success: true }, status: HTTP_STATUS.OK };
 }
 
-export const removeProjectMember = async (ctx: Context, userSession: ContextUserData, targetMemberId: string, teamId: string) => {
+export async function removeProjectMember(
+    ctx: Context,
+    userSession: ContextUserData,
+    targetMemberId: string,
+    teamId: string,
+): Promise<RouteHandlerResponse> {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: {
@@ -341,6 +396,7 @@ export const removeProjectMember = async (ctx: Context, userSession: ContextUser
                     isOwner: true,
                     userId: true,
                     permissions: true,
+                    organisationPermissions: true,
                 },
             },
             project: {
@@ -353,16 +409,30 @@ export const removeProjectMember = async (ctx: Context, userSession: ContextUser
                     },
                 },
             },
+            organisation: {
+                select: {
+                    id: true,
+                },
+            },
         },
     });
     const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
     if (!team?.id || !currMember) return notFoundResponseData();
 
-    const canRemoveMembers = doesMemberHaveAccess(
-        ProjectPermission.REMOVE_MEMBER,
-        currMember.permissions as ProjectPermission[],
-        currMember.isOwner,
-    );
+    let canRemoveMembers = false;
+    if (team.organisation?.id) {
+        canRemoveMembers = doesOrgMemberHaveAccess(
+            OrganisationPermission.REMOVE_MEMBER,
+            currMember.organisationPermissions as OrganisationPermission[],
+            currMember.isOwner,
+        );
+    } else {
+        canRemoveMembers = doesMemberHaveAccess(
+            ProjectPermission.REMOVE_MEMBER,
+            currMember.permissions as ProjectPermission[],
+            currMember.isOwner,
+        );
+    }
     if (!canRemoveMembers) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to remove members");
@@ -382,4 +452,63 @@ export const removeProjectMember = async (ctx: Context, userSession: ContextUser
     });
 
     return { data: { success: true }, status: HTTP_STATUS.OK };
-};
+}
+
+export async function changeTeamOwner(
+    ctx: Context,
+    userSession: ContextUserData,
+    teamId: string,
+    targetUserId: string,
+): Promise<RouteHandlerResponse> {
+    const team = await prisma.team.findUnique({
+        where: {
+            id: teamId,
+        },
+        select: {
+            id: true,
+            members: true,
+        },
+    });
+    if (!team) return notFoundResponseData();
+
+    const targetMember = team.members.find((member) => member.userId === targetUserId);
+    if (!targetMember || !targetMember.accepted) return notFoundResponseData("Member not found");
+
+    const currMember = team.members.find((member) => member.userId === userSession.id);
+    if (!currMember || !currMember.isOwner) {
+        await addInvalidAuthAttempt(ctx);
+        return unauthorizedReqResponseData("You don't have access to change the team owner");
+    }
+
+    if (currMember.id === targetMember.id) return invalidReqestResponseData("You're already the owner of the team");
+
+    await Promise.all([
+        // Give ownership to the target member
+        await prisma.teamMember.update({
+            where: {
+                id: targetMember.id,
+            },
+            data: {
+                isOwner: true,
+                role: "Owner",
+                permissions: [],
+                organisationPermissions: [],
+            },
+        }),
+
+        // Remove ownership from the current owner
+        await prisma.teamMember.update({
+            where: {
+                id: currMember.id,
+            },
+            data: {
+                isOwner: false,
+                role: "Member",
+                permissions: [],
+                organisationPermissions: [],
+            },
+        }),
+    ]);
+
+    return { data: { success: true, message: "Team owner changed" }, status: HTTP_STATUS.OK };
+}

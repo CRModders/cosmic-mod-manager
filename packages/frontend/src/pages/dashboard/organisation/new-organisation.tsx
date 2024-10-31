@@ -123,7 +123,7 @@ const CreateNewOrg_Dialog = ({ children }: { children: React.ReactNode }) => {
                                         </FormLabel>
                                         <Input
                                             id="org-url-slug-input"
-                                            placeholder="https://crmm.tech/organisation/YOUR_URL"
+                                            placeholder="https://crmm.tech/organization/YOUR_URL"
                                             type="text"
                                             {...field}
                                             onChange={(e) => {
@@ -160,7 +160,7 @@ const CreateNewOrg_Dialog = ({ children }: { children: React.ReactNode }) => {
                                 </DialogClose>
                                 <Button disabled={isLoading || !isFormSubmittable()}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                    Create organisation
+                                    Create organization
                                 </Button>
                             </DialogFooter>
                         </form>
