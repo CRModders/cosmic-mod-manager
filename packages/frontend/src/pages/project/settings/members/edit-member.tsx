@@ -215,7 +215,7 @@ export const ProjectTeamMember = ({
                             <Button
                                 type="submit"
                                 size="sm"
-                                disabled={isLoading || !form.formState.isDirty}
+                                disabled={isLoading || !form.formState.isDirty || (!canEditMember && !canAddPermissions)}
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const values = await updateTeamMemberFormSchema.parseAsync(form.getValues());
@@ -513,7 +513,7 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
                             <Button
                                 type="submit"
                                 size="sm"
-                                disabled={isLoading || !form.formState.isDirty || (!permsOverridden && !overridePerms)}
+                                disabled={isLoading || !form.formState.isDirty || (!permsOverridden && !overridePerms) || !canEditMember}
                                 onClick={async () => {
                                     if (permsOverridden && !overridePerms) return await removePermissionOverride();
 

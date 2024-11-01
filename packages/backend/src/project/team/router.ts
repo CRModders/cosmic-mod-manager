@@ -10,7 +10,7 @@ import {
     acceptProjectTeamInvite,
     changeTeamOwner,
     editProjectMember,
-    inviteToProjectTeam,
+    inviteMember,
     leaveProjectTeam,
     overrideOrgMember,
     removeProjectMember,
@@ -40,7 +40,7 @@ async function teamInvite_post(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
         if (!userName || !userSession || !teamId) return invalidReqestResponse(ctx);
 
-        const res = await inviteToProjectTeam(ctx, userSession, userName, teamId);
+        const res = await inviteMember(ctx, userSession, userName, teamId);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

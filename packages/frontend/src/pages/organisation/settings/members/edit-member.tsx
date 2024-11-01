@@ -252,7 +252,7 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                             <Button
                                 type="submit"
                                 size="sm"
-                                disabled={isLoading || !form.formState.isDirty}
+                                disabled={isLoading || (!canEditMember && !canEditDefaultPermissions) || !form.formState.isDirty}
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const values = await updateTeamMemberFormSchema.parseAsync(form.getValues());

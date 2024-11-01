@@ -12,7 +12,7 @@ import type { Context } from "hono";
 import type { z } from "zod";
 import { teamPermsSelectObj } from "../../queries/project";
 
-export async function inviteToProjectTeam(
+export async function inviteMember(
     ctx: Context,
     userSession: ContextUserData,
     userSlug: string,
@@ -36,7 +36,7 @@ export async function inviteToProjectTeam(
                     id: true,
                     organisation: {
                         select: {
-                            ...teamPermsSelectObj({ userId: userSession.id }),
+                            ...teamPermsSelectObj(),
                         },
                     },
                 },

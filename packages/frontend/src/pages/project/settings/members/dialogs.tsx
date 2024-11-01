@@ -47,7 +47,7 @@ export const RemoveMemberDialog = ({ member, refreshData, children }: RemoveMemb
 
     return (
         <Dialog>
-            <DialogTrigger>{children}</DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Remove member</DialogTitle>
@@ -102,7 +102,7 @@ export const TransferOwnershipDialog = ({ member, teamId, refreshData, children 
 
     return (
         <Dialog>
-            <DialogTrigger>{children}</DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Transfer Ownership</DialogTitle>

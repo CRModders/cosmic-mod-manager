@@ -1,5 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { Button, CancelButton } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogBody,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { getUserOrgsListQuery } from "@/src/contexts/_loaders";
 import { useSession } from "@/src/contexts/auth";
@@ -110,14 +120,36 @@ export const LeaveTeam = ({
                 <p className="text-muted-foreground">Remove yourself as a member of this project.</p>
             </div>
 
-            <Button
-                variant="destructive"
-                disabled={currUsersMembership.isOwner || currUsersMembership.teamId !== teamId || isLoading}
-                onClick={handleLeaveProject}
-            >
-                {isLoading ? <LoadingSpinner size="xs" /> : <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />}
-                Leave project
-            </Button>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="secondary-destructive" disabled={currUsersMembership.isOwner || currUsersMembership.teamId !== teamId}>
+                        <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
+                        Leave project
+                    </Button>
+                </DialogTrigger>
+
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Leave project</DialogTitle>
+                    </DialogHeader>
+                    <DialogBody className="flex flex-col gap-4">
+                        <p>Are you sure you want to leave this team?</p>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <CancelButton />
+                            </DialogClose>
+                            <Button variant="destructive" disabled={isLoading} onClick={handleLeaveProject}>
+                                {isLoading ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
+                                )}
+                                Leave project
+                            </Button>
+                        </DialogFooter>
+                    </DialogBody>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
