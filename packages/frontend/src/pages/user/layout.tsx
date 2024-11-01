@@ -102,7 +102,7 @@ const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId:
         >
             <ContentCardTemplate title="Organizations" titleClassName="text-lg">
                 {!joinedOrgs.length ? (
-                    <span className="text-muted-foreground/75 italic text-center">{userName} is not a member of any Organization</span>
+                    <span className="text-muted-foreground/75 italic">{userName} is not a member of any Organization</span>
                 ) : null}
 
                 <div className="flex flex-wrap gap-2 items-start justify-start">
