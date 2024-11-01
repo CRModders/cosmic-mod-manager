@@ -73,7 +73,9 @@ const UserPageLayout = () => {
                         <UserProjectsList projectType={projectType} projectsList={projectsList} />
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">
-                            <p className="text-lg text-muted-foreground italic">{userData.userName} doesn't have any projects yet.</p>
+                            <p className="text-lg text-muted-foreground italic text-center">
+                                {userData.userName} doesn't have any projects yet.
+                            </p>
                         </div>
                     )}
                 </div>
@@ -100,7 +102,7 @@ const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId:
         >
             <ContentCardTemplate title="Organizations" titleClassName="text-lg">
                 {!joinedOrgs.length ? (
-                    <span className="text-muted-foreground/75 italic">{userName} is not a member of any Organization</span>
+                    <span className="text-muted-foreground/75 italic text-center">{userName} is not a member of any Organization</span>
                 ) : null}
 
                 <div className="flex flex-wrap gap-2 items-start justify-start">

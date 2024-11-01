@@ -53,7 +53,7 @@ export const PageHeader = ({
                         {titleBadge}
                     </div>
                     <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{description}</p>
-                    <div className="mt-auto flex flex-wrap gap-4 text-muted-foreground">{children}</div>
+                    <div className="py-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>
                 </div>
             </div>
 

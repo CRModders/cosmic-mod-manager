@@ -79,7 +79,9 @@ const OrgPageLayout = () => {
                         <OrgProjectsList projectType={projectType} projectsList={projects} />
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">
-                            <p className="text-lg text-muted-foreground italic">This organization doesn't have any projects yet.</p>
+                            <p className="text-lg text-muted-foreground italic text-center">
+                                This organization doesn't have any projects yet.
+                            </p>
                         </div>
                     )}
                 </div>
@@ -190,7 +192,7 @@ const OrgInfoHeader = ({ orgData, totalProjects, totalDownloads, currUsersMember
                         {totalProjects} {totalProjects > 1 ? "Projects" : "Project"}
                     </span>
                 </div>
-                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <div className="flex items-center gap-2 pr-4">
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{totalDownloads} downloads</span>
                 </div>

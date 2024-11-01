@@ -67,7 +67,13 @@ const ProjectMemberSettingsPage = () => {
             ) : null}
 
             {projectData.organisation?.members?.map((member) => (
-                <OrgTeamMember key={member.userId} project={projectData} orgMembership={member} fetchProjectData={fetchProjectData} />
+                <OrgTeamMember
+                    key={member.userId}
+                    project={projectData}
+                    orgMember={member}
+                    currUsersMembership={currUsersMembershipData}
+                    fetchProjectData={fetchProjectData}
+                />
             ))}
         </>
     );

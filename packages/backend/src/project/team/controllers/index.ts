@@ -338,15 +338,18 @@ export async function overrideOrgMember(
         return notFoundResponseData();
     }
 
-    const canOverrideMembers = doesMemberHaveAccess(
+    const canEditMembers = doesMemberHaveAccess(
         ProjectPermission.EDIT_MEMBER,
         currMember.permissions as ProjectPermission[],
         currMember.isOwner,
     );
-    if (!canOverrideMembers) {
+    if (!canEditMembers) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to override members");
     }
+
+    if (currMember.isOwner !== true && formData.permissions?.length)
+        return unauthorizedReqResponseData("You don't have access to add permissions to a member");
 
     // Check if the user is a member of the organisation
     const orgMember = team.project.organisation.team.members.find((member) => member.userId === formData.userId);
@@ -372,6 +375,7 @@ export async function overrideOrgMember(
             role: formData.role,
             isOwner: false,
             permissions: orgMember.isOwner ? [] : formData.permissions,
+            organisationPermissions: [],
             accepted: true,
             dateAccepted: new Date(),
         },

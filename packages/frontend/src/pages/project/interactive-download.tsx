@@ -277,6 +277,12 @@ const AvailableVersionsList = ({ selectedGameVersion, selectedLoader, allProject
             if (version.gameVersions.includes(selectedGameVersion) && (!selectedLoader || version.loaders.includes(selectedLoader))) {
                 const lastItem = list[list.length - 1];
                 if (lastItem && lastItem.releaseChannel === VersionReleaseChannel.RELEASE) break;
+                if (
+                    version.releaseChannel !== VersionReleaseChannel.RELEASE &&
+                    list.some((v) => v.releaseChannel !== VersionReleaseChannel.RELEASE)
+                ) {
+                    continue;
+                }
                 list.push(version);
             }
         }

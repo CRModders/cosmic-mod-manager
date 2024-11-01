@@ -7,6 +7,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/
 import { Input } from "@/components/ui/input";
 import { imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
+import { RemoveMemberDialog, TransferOwnershipDialog } from "@/src/pages/project/settings/members/dialogs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OrgPermissionsList, ProjectPermissionsList } from "@shared/config/project";
 import { CapitalizeAndFormatString, doesOrgMemberHaveAccess } from "@shared/lib/utils";
@@ -25,7 +26,7 @@ import type { z } from "zod";
 interface OrgTeamMemberProps {
     org: Organisation;
     member: TeamMember;
-    currMember: TeamMember | null;
+    currMember: TeamMember;
     fetchOrgData: () => Promise<void>;
 }
 
@@ -66,51 +67,28 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
         }
     };
 
-    const removeTeamMember = async () => {
-        if (isLoading) return;
-        setIsLoading(true);
-        try {
-            const res = await useFetch(`/api/team/${org.teamId}/member/${member.id}`, {
-                method: "DELETE",
-            });
-            const data = await res.json();
-
-            if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
-            }
-
-            await fetchOrgData();
-            return toast.success("Member removed successfully");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const transferOwnership = async () => {
-        if (isLoading) return;
-        setIsLoading(true);
-        try {
-            const res = await useFetch(`/api/team/${org.teamId}/owner`, {
-                method: "PATCH",
-                body: JSON.stringify({ userId: member.userId }),
-            });
-            const data = await res.json();
-
-            if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
-            }
-
-            await fetchOrgData();
-            return toast.success(data?.message || "Ownership transferred successfully");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         form.reset(defaultValues);
     }, [member]);
+
+    const canEditMember = doesOrgMemberHaveAccess(
+        OrganisationPermission.EDIT_MEMBER,
+        currMember.organisationPermissions,
+        currMember.isOwner,
+    );
+    const canEditDefaultPermissions = doesOrgMemberHaveAccess(
+        OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
+        currMember.organisationPermissions,
+        currMember.isOwner,
+    );
+    const canAddPermissions = currMember.isOwner;
+    const canRemoveMembers = doesOrgMemberHaveAccess(
+        OrganisationPermission.REMOVE_MEMBER,
+        currMember.organisationPermissions,
+        currMember.isOwner,
+    );
+    const canTransferOwnership = currMember.isOwner && member.accepted && member.userId !== currMember.userId;
 
     return (
         <Card className="w-full flex flex-col gap-4 p-card-surround">
@@ -171,6 +149,7 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                         <FormField
                             control={form.control}
                             name="role"
+                            disabled={!canEditMember}
                             render={({ field }) => (
                                 <FormItem className="flex-col md:flex-row justify-between">
                                     <div className="flex flex-col items-start justify-center gap-1">
@@ -192,6 +171,7 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                                 <FormField
                                     control={form.control}
                                     name="permissions"
+                                    disabled={!canEditDefaultPermissions}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel className="font-bold">Project permissions</FormLabel>
@@ -201,22 +181,24 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                                                     gridTemplateColumns: "repeat(auto-fit, minmax(12rem, 1fr))",
                                                 }}
                                             >
-                                                {ProjectPermissionsList.map((permissionName) => {
+                                                {ProjectPermissionsList.map((permission) => {
+                                                    const checked = (field?.value || []).includes(permission);
                                                     return (
                                                         <LabelledCheckbox
-                                                            key={permissionName}
-                                                            name={permissionName}
-                                                            checked={(field?.value || []).includes(permissionName)}
+                                                            key={permission}
+                                                            name={permission}
+                                                            checked={checked}
+                                                            disabled={field.disabled}
                                                             onCheckedChange={(checked) => {
                                                                 const currList = field.value || [];
                                                                 if (checked === true) {
-                                                                    field.onChange([...currList, permissionName]);
+                                                                    field.onChange([...currList, permission]);
                                                                 } else {
-                                                                    field.onChange(currList.filter((p) => p !== permissionName));
+                                                                    field.onChange(currList.filter((p) => p !== permission));
                                                                 }
                                                             }}
                                                         >
-                                                            {CapitalizeAndFormatString(permissionName)}
+                                                            {CapitalizeAndFormatString(permission)}
                                                         </LabelledCheckbox>
                                                     );
                                                 })}
@@ -228,6 +210,7 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                                 <FormField
                                     control={form.control}
                                     name="organisationPermissions"
+                                    disabled={!canEditMember}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel className="font-bold">Organization permissions</FormLabel>
@@ -238,11 +221,13 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                                                 }}
                                             >
                                                 {OrgPermissionsList.map((permission) => {
+                                                    const checked = (field?.value || []).includes(permission);
                                                     return (
                                                         <LabelledCheckbox
                                                             key={permission}
                                                             name={permission}
-                                                            checked={(field?.value || []).includes(permission)}
+                                                            checked={checked}
+                                                            disabled={field.disabled || (!checked && !canAddPermissions)}
                                                             onCheckedChange={(checked) => {
                                                                 const currList = field.value || [];
                                                                 if (checked === true) {
@@ -279,30 +264,22 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                                 Save changes
                             </Button>
 
-                            {!member.isOwner &&
-                                currMember &&
-                                doesOrgMemberHaveAccess(
-                                    OrganisationPermission.REMOVE_MEMBER,
-                                    currMember.organisationPermissions,
-                                    currMember.isOwner,
-                                ) && (
-                                    <Button
-                                        type="button"
-                                        variant="secondary-destructive"
-                                        size="sm"
-                                        disabled={isLoading}
-                                        onClick={removeTeamMember}
-                                    >
+                            {!member.isOwner && canRemoveMembers && (
+                                <RemoveMemberDialog member={member} refreshData={fetchOrgData}>
+                                    <Button type="button" variant="secondary-destructive" size="sm" disabled={isLoading}>
                                         <UserXIcon className="w-btn-icon h-btn-icon" />
                                         Remove member
                                     </Button>
-                                )}
+                                </RemoveMemberDialog>
+                            )}
 
-                            {currMember?.isOwner && member.accepted && member.userId !== currMember.userId ? (
-                                <Button variant="secondary" size="sm" disabled={isLoading} onClick={transferOwnership}>
-                                    <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
-                                    Transfer ownership
-                                </Button>
+                            {canTransferOwnership ? (
+                                <TransferOwnershipDialog member={member} teamId={org.teamId} refreshData={fetchOrgData}>
+                                    <Button variant="secondary" size="sm" disabled={isLoading}>
+                                        <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
+                                        Transfer ownership
+                                    </Button>
+                                </TransferOwnershipDialog>
                             ) : null}
                         </div>
                     </form>
