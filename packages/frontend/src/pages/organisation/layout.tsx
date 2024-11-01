@@ -151,12 +151,14 @@ const OrgInfoHeader = ({ orgData, totalProjects, totalDownloads, currUsersMember
                 threeDotMenu={
                     <>
                         {currUsersMembership?.id ? (
-                            <VariantButtonLink variant="ghost" url={getOrgPagePathname(orgData.slug, "/settings/projects")}>
-                                <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                                Manage projects
-                            </VariantButtonLink>
+                            <>
+                                <VariantButtonLink variant="ghost" url={getOrgPagePathname(orgData.slug, "/settings/projects")}>
+                                    <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    Manage projects
+                                </VariantButtonLink>
+                                <Separator className="my-0.5" />
+                            </>
                         ) : null}
-                        <Separator className="my-0.5" />
                         <PopoverClose asChild>
                             <Button
                                 className="w-full justify-start"
