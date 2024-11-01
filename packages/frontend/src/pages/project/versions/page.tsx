@@ -20,10 +20,10 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { getGameVersionsFromValues } from "@shared/config/game-versions";
+import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { GameVersionReleaseType, ProjectPermission, type VersionReleaseChannel } from "@shared/types";
+import { ProjectPermission, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
     CalendarIcon,
@@ -116,10 +116,10 @@ const ProjectVersionsPage = () => {
     const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
 
     const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
-        [GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType),
+        isExperimentalGameVersion(ver.releaseType),
     );
     const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
-        .filter((ver) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType))
+        .filter((ver) => showAllVersions || !isExperimentalGameVersion(ver.releaseType))
         .map((ver) => ({ label: ver.label, value: ver.value }));
 
     return (

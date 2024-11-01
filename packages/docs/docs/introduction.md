@@ -12,7 +12,7 @@ Welcome to the documentation of CRMM api!
 - Website URL: [https://www.crmm.tech](https://www.crmm.tech)
 - API URL: [https://api.crmm.tech](https://api.crmm.tech)
 
-Also, you can check the API Rate Limits [here](https://github.com/CRModders/cosmic-mod-manager/blob/bc01c108505fca4ce52c3094972cdfcd2e91cb62/packages/backend/src/middleware/rate-limiter.ts#L171).
+Also, you can check the API Rate Limits [here](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/backend/middleware/rate-limit/limits.ts).
 
 <br />
 
@@ -23,7 +23,7 @@ As of now, there's no implementation of PATs, so you'll have to use your cookie 
 Example:
 ```bash
 curl -X PATCH \
---header "Cookie: auth-token=URL_ENCODED_COOKIE_STRING" \
+--header "Cookie: auth-token=g5myuyngq3vsgu23afuuzorbecuebndhkbwckoy" \
 --form "icon=@./Pictures/iris logo.webp" \
 https://api.crmm.tech/api/project/iris/icon
 ```

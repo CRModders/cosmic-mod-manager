@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { LabelledCheckbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import GAME_VERSIONS from "@shared/config/game-versions";
+import GAME_VERSIONS, { isExperimentalGameVersion } from "@shared/config/game-versions";
 import {
     categoryFilterParamNamespace,
     environmentFilterParamNamespace,
@@ -13,7 +13,7 @@ import {
     loaderFilterParamNamespace,
 } from "@shared/config/search";
 import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
-import { GameVersionReleaseType, ProjectType, TagHeaderType } from "@shared/types";
+import { ProjectType, TagHeaderType } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -77,7 +77,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
 
     // Game version filters
     const gameVersionFilterOptions = GAME_VERSIONS.filter((version) => {
-        if (!showAllVersions && [GameVersionReleaseType.SNAPSHOT].includes(version.releaseType)) return false;
+        if (!showAllVersions && isExperimentalGameVersion(version.releaseType)) return false;
         return true;
     })
         .map((version) => ({ value: version.value, label: version.label }))

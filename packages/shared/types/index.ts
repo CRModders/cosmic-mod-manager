@@ -85,8 +85,8 @@ export enum GameVersionReleaseType {
     RELEASE = "release",
     BETA = "beta",
     ALPHA = "alpha",
+    PRE_RELEASE = "pre-release",
     SNAPSHOT = "snapshot",
-    PRE_ALPHA = "pre-alpha",
 }
 
 export enum ProjectPermission {

@@ -22,18 +22,11 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
-import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
+import GAME_VERSIONS, { getGameVersionFromValue, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, createURLSafeSlug, getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project/version";
-import {
-    DependencyType,
-    DependsOn,
-    type FileObjectType,
-    GameVersionReleaseType,
-    type ProjectType,
-    VersionReleaseChannel,
-} from "@shared/types";
+import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -271,7 +264,7 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                         <MultiSelect
                             selectedOptions={field.value || []}
                             options={GAME_VERSIONS.filter(
-                                (version) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(version.releaseType),
+                                (version) => showAllVersions || !isExperimentalGameVersion(version.releaseType),
                             ).map((version) => ({ label: version.label, value: version.value }))}
                             onChange={field.onChange}
                             classNames={{

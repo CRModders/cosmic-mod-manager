@@ -11,10 +11,10 @@ import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { getGameVersionsFromValues } from "@shared/config/game-versions";
+import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { GameVersionReleaseType, VersionReleaseChannel } from "@shared/types";
+import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, DownloadIcon, FilterIcon, XCircleIcon, XIcon } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
@@ -109,10 +109,10 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
     const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
 
     const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
-        [GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType),
+        isExperimentalGameVersion(ver.releaseType),
     );
     const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
-        .filter((ver) => showAllVersions || ![GameVersionReleaseType.SNAPSHOT].includes(ver.releaseType))
+        .filter((ver) => showAllVersions || !isExperimentalGameVersion(ver.releaseType))
         .map((ver) => ({ label: ver.label, value: ver.value }));
 
     return (
