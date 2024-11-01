@@ -92,7 +92,7 @@ export const ProjectContextProvider = ({
 
     let currUsersMembership: CurrUsersMembership = { data: null, status: LoadingStatus.LOADING };
 
-    if (!projectData?.id || !session?.id) currUsersMembership = { data: null, status: LoadingStatus.LOADING };
+    if (!projectData?.id || !session?.id) currUsersMembership = { data: null, status: LoadingStatus.LOADED };
     else {
         const membership = getCurrMember(session.id, projectData.members, projectData.organisation?.members || []);
 
