@@ -248,7 +248,7 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
                             </>
                         )}
 
-                        <div className="w-full flex gap-x-4 gap-y-2">
+                        <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
                             <Button
                                 type="submit"
                                 size="sm"

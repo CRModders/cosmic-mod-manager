@@ -211,7 +211,7 @@ export const ProjectTeamMember = ({
                             />
                         )}
 
-                        <div className="w-full flex gap-x-4 gap-y-2">
+                        <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
                             <Button
                                 type="submit"
                                 size="sm"
@@ -509,7 +509,7 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
                             />
                         )}
 
-                        <div className="w-full flex gap-x-4 gap-y-2">
+                        <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
                             <Button
                                 type="submit"
                                 size="sm"

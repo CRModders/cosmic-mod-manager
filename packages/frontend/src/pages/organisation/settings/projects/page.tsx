@@ -44,7 +44,7 @@ const OrgProjectsSettings = () => {
                 <CardContent className="p-0">
                     {projects?.length === 0 ? (
                         <div className="w-full flex items-center justify-start p-6">
-                            <p>You don't have any projects. Click the button above to create one.</p>
+                            <p>This organization don't have any projects. Click the button above to create one.</p>
                         </div>
                     ) : (projects?.length || 0) > 0 ? (
                         <ProjectsListTable projects={projects || []} />
