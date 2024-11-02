@@ -4,8 +4,8 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 
 const isDev = process.env.NODE_ENV === "development";
-const repoPath = !isDev ? "/var/www/cosmic-mod-manager" : "/home/abhinav/Code/Monorepos/cosmic-mod-manager";
-const backendDir = `${repoPath}/packages/backend`;
+const projectPath = !isDev ? "/var/www/cosmic-mod-manager" : "/home/abhinav/Code/Monorepos/cosmic-mod-manager";
+const backendDir = `${projectPath}/packages/backend`;
 const pm2ConfigPath = `${backendDir}/pm2.config.cjs`;
 const reloadApps = `pm2 reload ${pm2ConfigPath} --only crmm-meilisearch && pm2 reload ${pm2ConfigPath} --only crmm-redis && pm2 reload ${pm2ConfigPath} --only crmm-backend`;
 
@@ -53,7 +53,7 @@ module.exports = {
             key: `${process.env.SSH_KEY}`,
             ref: "origin/main",
             repo: "git@github.com:CRModders/cosmic-mod-manager.git",
-            path: repoPath,
+            path: "/var/www",
             "post-deploy": `cd ${backendDir} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadApps}`,
         },
     },
