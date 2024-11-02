@@ -60,7 +60,7 @@ const ProjectMemberSettingsPage = () => {
                     />
                 ))}
 
-            {userOrgs?.data?.length && !projectData.organisation ? (
+            {userOrgs?.data?.length && !projectData.organisation && currUsersMembershipData.isOwner === true ? (
                 <TransferProjectManagementCard
                     organisations={userOrgs.data || []}
                     projectId={projectData.id}
