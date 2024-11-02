@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 
 const isDev = process.env.NODE_ENV === "development";
-const repoPath = "/var/www/cosmic-mod-manager";
+const repoPath = !isDev ? "/var/www/cosmic-mod-manager" : "/home/abhinav/Code/Monorepos/cosmic-mod-manager";
 const backendDir = `${repoPath}/packages/backend`;
 const pm2ConfigPath = `${backendDir}/pm2.config.cjs`;
 const reloadApps = `pm2 reload ${pm2ConfigPath} --only crmm-meilisearch && pm2 reload ${pm2ConfigPath} --only crmm-redis && pm2 reload ${pm2ConfigPath} --only crmm-backend`;
