@@ -1,5 +1,5 @@
-import { deleteUserDataCache } from "@/cache/session";
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
+import { deleteUserDataCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
 import { hashPassword, matchPassword } from "@/src/auth/helpers";
 import { getUserFromCtx } from "@/src/auth/helpers/session";

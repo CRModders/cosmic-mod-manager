@@ -4,6 +4,7 @@ uploads
 
 meilisearch
 private
+redis
 
 # redis files
 dump.rdb

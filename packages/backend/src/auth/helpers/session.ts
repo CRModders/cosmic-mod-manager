@@ -1,5 +1,5 @@
-import { deleteSessionTokenAndIdCache, getSessionCacheFromToken, setSessionTokenCache } from "@/cache/session";
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
+import { deleteSessionTokenAndIdCache, getSessionCacheFromToken, setSessionTokenCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
 import type { ContextUserData } from "@/types";
 import { CTX_USER_NAMESPACE } from "@/types/namespaces";

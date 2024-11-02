@@ -1,11 +1,14 @@
 {
     "name": "crmm-backend",
     "scripts": {
-        "dev": "bun run --hot src/index.ts"
+        "dev": "bun run --hot src/index.ts",
+        "prisma-generate": "prisma generate",
+        "prisma-push": "prisma db push"
     },
     "dependencies": {
         "@oslojs/encoding": "^1.1.0",
         "@prisma/client": "^5.21.1",
+        "dotenv": "^16.4.5",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",
         "meilisearch": "^0.42.0",

@@ -1,4 +1,4 @@
-import { deleteUserDataCache } from "@/cache/session";
+import { deleteUserDataCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
 import { getFilesFromId } from "@/src/project/queries/file";
 import { ListItemProjectFields, projectMembersSelect } from "@/src/project/queries/project";

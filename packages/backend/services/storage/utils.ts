@@ -1,4 +1,5 @@
-export const LOCAL_BASE_STORAGE_PATH = "./uploads";
+// Store files outeside of the project folder
+export const LOCAL_BASE_STORAGE_PATH = "./../../../uploads";
 
 export const PROJECTS_FOLDER_NAMESPACE = "projects";
 export const VERSIONS_FOLDER_NAMESPACE = "versions";
