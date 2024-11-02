@@ -2,7 +2,6 @@ import { fallbackProjectIcon } from "@/components/icons";
 import { ContentCardTemplate } from "@/components/layout/panel";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, CancelButton, buttonVariants } from "@/components/ui/button";
-import { ChipButton } from "@/components/ui/chip";
 import {
     Dialog,
     DialogBody,
@@ -34,7 +33,7 @@ import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settin
 import { handleFormError } from "@shared/schemas/utils";
 import { ProjectPublishingStatus, ProjectSupport, type ProjectType, ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
-import { CheckIcon, ChevronDownIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
+import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -280,47 +279,21 @@ const GeneralSettingsPage = () => {
                                         <span className="text-muted-foreground">Select the appropriate type for your project</span>
                                     </div>
 
-                                    <div className="flex gap-1 flex-col min-w-[15rem] max-w-full">
-                                        {field.value?.length > 0 && (
-                                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                                {field.value?.map((loader: string) => {
-                                                    return (
-                                                        <ChipButton
-                                                            variant="secondary"
-                                                            key={loader}
-                                                            onClick={() => {
-                                                                field.onChange(field.value?.filter((l: string) => l !== loader));
-                                                            }}
-                                                        >
-                                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                                            {CapitalizeAndFormatString(loader)}
-                                                        </ChipButton>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        <MultiSelect
-                                            selectedOptions={field.value || []}
-                                            options={projectTypes.map((type) => ({
-                                                label: CapitalizeAndFormatString(type) || "",
-                                                value: type,
-                                            }))}
-                                            onChange={(values) => {
-                                                field.onChange(getProjectTypesFromNames(values));
-                                            }}
-                                            classNames={{
-                                                popupContent: "min-w-[15rem]",
-                                                listItem: "font-medium",
-                                            }}
-                                            searchBar={false}
-                                        >
-                                            <Button variant="secondary" className="justify-between text-extra-muted-foreground">
-                                                Choose...
-                                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
-                                            </Button>
-                                        </MultiSelect>
-                                    </div>
+                                    <MultiSelect
+                                        defaultMinWidth={false}
+                                        searchBox={false}
+                                        options={projectTypes.map((type) => ({
+                                            label: CapitalizeAndFormatString(type) || "",
+                                            value: type,
+                                        }))}
+                                        selectedValues={field.value || []}
+                                        onValueChange={(values) => {
+                                            field.onChange(getProjectTypesFromNames(values));
+                                        }}
+                                        placeholder="Choose project type"
+                                        className="w-fit sm:min-w-[15rem] sm:w-fit sm:max-w-[20rem]"
+                                        popoverClassname="min-w-[15rem]"
+                                    />
                                 </FormItem>
                             )}
                         />

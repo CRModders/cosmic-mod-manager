@@ -12,7 +12,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LabelledCheckbox } from "@/components/ui/checkbox";
-import { ChipButton } from "@/components/ui/chip";
+import { CommandSeparator } from "@/components/ui/command";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { VariantButtonLink } from "@/components/ui/link";
@@ -22,13 +22,13 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
-import GAME_VERSIONS, { getGameVersionFromValue, isExperimentalGameVersion } from "@shared/config/game-versions";
+import GAME_VERSIONS, { isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, createURLSafeSlug, getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project/version";
 import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import { ChevronDownIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon, XIcon } from "lucide-react";
+import { FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import type { Control, FieldValues, RefCallBack } from "react-hook-form";
 import { toast } from "sonner";
@@ -182,47 +182,16 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                         <FormItem>
                             <FormLabel htmlFor="supported-loaders-filter-input">Loaders</FormLabel>
 
-                            {field.value?.length > 0 && (
-                                <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                    {field.value?.slice(0, Math.min(3, field.value?.length)).map((loader: string) => {
-                                        return (
-                                            <ChipButton
-                                                variant="secondary"
-                                                key={loader}
-                                                onClick={() => {
-                                                    field.onChange(field.value?.filter((l: string) => l !== loader));
-                                                }}
-                                            >
-                                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                                {CapitalizeAndFormatString(loader)}
-                                            </ChipButton>
-                                        );
-                                    })}
-                                    {field.value?.length > 3 && (
-                                        <span className="text-extra-muted-foreground text-sm font-semibold italic">
-                                            and {field.value?.length - 3} more
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-
                             <MultiSelect
-                                selectedOptions={field.value || []}
                                 options={availableLoaders.map((loader) => ({
                                     label: CapitalizeAndFormatString(loader.name) || "",
                                     value: loader.name,
                                 }))}
-                                onChange={field.onChange}
-                                classNames={{
-                                    popupContent: "min-w-[15rem]",
-                                    listItem: "font-medium",
-                                }}
-                            >
-                                <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
-                                    Choose loaders
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
-                                </Button>
-                            </MultiSelect>
+                                onValueChange={field.onChange}
+                                selectedValues={field.value || []}
+                                placeholder="Select loaders"
+                                searchBox={false}
+                            />
                         </FormItem>
                     )}
                 />
@@ -234,56 +203,29 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel htmlFor="supported-game-versions-filter-input">Game versions</FormLabel>
-                        {field.value?.length > 0 && (
-                            <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                {field.value?.slice(0, Math.min(3, field.value?.length)).map((versionNumber: string) => {
-                                    const version = getGameVersionFromValue(versionNumber);
-                                    if (!version) return null;
-
-                                    return (
-                                        <ChipButton
-                                            variant="secondary"
-                                            key={version.value}
-                                            onClick={() => {
-                                                field.onChange(field.value?.filter((v: string) => v !== version.value));
-                                            }}
-                                        >
-                                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                            {version.label}
-                                        </ChipButton>
-                                    );
-                                })}
-                                {field.value?.length > 3 && (
-                                    <span className="text-extra-muted-foreground text-sm font-semibold italic">
-                                        and {field.value?.length - 3} more
-                                    </span>
-                                )}
-                            </div>
-                        )}
 
                         <MultiSelect
-                            selectedOptions={field.value || []}
                             options={GAME_VERSIONS.filter(
                                 (version) => showAllVersions || !isExperimentalGameVersion(version.releaseType),
                             ).map((version) => ({ label: version.label, value: version.value }))}
-                            onChange={field.onChange}
-                            classNames={{
-                                popupContent: "min-w-[15rem]",
-                            }}
-                        >
-                            <Button variant="secondary" className="w-full justify-between text-extra-muted-foreground">
-                                Choose versions
-                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
-                            </Button>
-                        </MultiSelect>
+                            allOptions={GAME_VERSIONS.map((version) => ({ label: version.label, value: version.value }))}
+                            onValueChange={field.onChange}
+                            selectedValues={field.value || []}
+                            placeholder="Select versions"
+                            fixedFooter={
+                                <>
+                                    <CommandSeparator />
 
-                        <LabelledCheckbox
-                            checked={showAllVersions}
-                            onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                            className="text-extra-muted-foreground ml-0.5"
-                        >
-                            List all versions
-                        </LabelledCheckbox>
+                                    <LabelledCheckbox
+                                        checked={showAllVersions}
+                                        onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                        className="text-extra-muted-foreground pl-3.5 mt-1"
+                                    >
+                                        Show all versions
+                                    </LabelledCheckbox>
+                                </>
+                            }
+                        />
                     </FormItem>
                 )}
             />

@@ -16,20 +16,21 @@ interface ComboBoxProps {
     options: ComboBoxItem[];
     value: string;
     children: React.ReactNode;
+    inputBox?: boolean;
     inputLabel?: string;
     setValue: (value: string) => void;
     footerItem?: React.ReactNode;
 }
 
-function ComboBox({ options, value, setValue, inputLabel, children, footerItem }: ComboBoxProps) {
+function ComboBox({ options, value, setValue, inputLabel, children, footerItem, inputBox }: ComboBoxProps) {
     const [open, setOpen] = useState(false);
 
     return (
         <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
-            <PopoverContent className="p-0 sm:min-w-[28rem] thin-scrollbar">
-                <Command>
-                    <CommandInput placeholder={inputLabel || "Search..."} />
+            <PopoverContent className="p-0 sm:min-w-[28rem] thin-scrollbar border-none">
+                <Command className="border border-shallow-background">
+                    {inputBox === false ? null : <CommandInput placeholder={inputLabel || "Search..."} />}
                     <TooltipProvider delayDuration={200}>
                         <CommandList className="">
                             <CommandEmpty>No framework found.</CommandEmpty>

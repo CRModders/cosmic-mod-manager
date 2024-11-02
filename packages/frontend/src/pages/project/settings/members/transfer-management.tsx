@@ -34,7 +34,7 @@ export const TransferProjectManagementCard = ({ organisations, projectId, invali
             const data = await res.json();
 
             if (!res.ok || !data.success) {
-                toast.error(data.message || "Error");
+                return toast.error(data.message || "Error");
             }
 
             invalidateProjectPageQueries();
@@ -100,7 +100,7 @@ export const RemoveProjectFromOrg = ({ org, projectId, invalidateProjectPageQuer
             const data = await res.json();
 
             if (!res.ok || !data.success) {
-                toast.error(data.message || "Error");
+                return toast.error(data.message || "Error");
             }
 
             invalidateProjectPageQueries();

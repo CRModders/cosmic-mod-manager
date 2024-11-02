@@ -4,6 +4,7 @@ import { ImgWrapper } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LabelledCheckbox } from "@/components/ui/checkbox";
 import ComboBox from "@/components/ui/combobox";
+import { CommandSeparator } from "@/components/ui/command";
 import {
     Dialog,
     DialogBody,
@@ -142,18 +143,22 @@ const InteractiveDownloadPopup = () => {
                 </DialogHeader>
                 <DialogBody className="flex flex-col items-center justify-center gap-3">
                     <ComboBox
+                        inputBox={supportedGameVersionsList.length > 5}
                         options={gameVersionsList}
                         value={selectedGameVersion}
                         setValue={setSelectedGameVersion}
                         footerItem={
                             hasExperimentalGameVersion ? (
-                                <LabelledCheckbox
-                                    checked={showAllVersions}
-                                    onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                    className="text-extra-muted-foreground px-2 py-1 ml-2"
-                                >
-                                    Show all versions
-                                </LabelledCheckbox>
+                                <>
+                                    <CommandSeparator />
+                                    <LabelledCheckbox
+                                        checked={showAllVersions}
+                                        onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                        className="text-extra-muted-foreground px-2 pb-2 ml-2 mt-1"
+                                    >
+                                        Show all versions
+                                    </LabelledCheckbox>
+                                </>
                             ) : null
                         }
                     >
@@ -183,7 +188,7 @@ const InteractiveDownloadPopup = () => {
                     </ComboBox>
 
                     {(projectData.loaders?.length || 0) > 1 ? (
-                        <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader}>
+                        <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
                             <Button
                                 variant="outline"
                                 role="combobox"

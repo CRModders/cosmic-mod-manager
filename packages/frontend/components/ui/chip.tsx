@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import type React from "react";
 import { forwardRef } from "react";
-import { Button, type ButtonProps } from "./button";
+import { type ButtonProps, buttonVariants } from "./button";
 
 interface ChipProps {
     children: React.ReactNode;
@@ -23,20 +23,26 @@ const Chip = ({ children, className, style }: ChipProps) => {
     );
 };
 
-export const ChipButton = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ variant = "secondary-inverted", className, children, ...props }, ref) => {
+export const ChipButton = forwardRef<HTMLDivElement, ButtonProps>(
+    ({ variant = "secondary-inverted", className, children, id, onClick, style }, ref) => {
         return (
-            <Button
-                variant={variant}
+            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+            <div
                 ref={ref}
-                {...props}
                 className={cn(
-                    "no_neumorphic_shadow font-semibold gap-x-1 w-fit h-fit py-[0.15rem] px-2 rounded-full text-sm text-muted-foreground/90",
+                    buttonVariants({ variant }),
+                    "cursor-pointer no_neumorphic_shadow font-semibold border-shallower-background h-fit w-fit text-[0.85rem] text-foreground",
+                    "px-2 gap-x-1.5 py-0.5",
+                    variant === "outline" && "py-[calc(0.125rem_-_1px)] pr-1",
                     className,
                 )}
+                id={id}
+                // @ts-ignore
+                onClick={onClick}
+                style={style}
             >
                 {children}
-            </Button>
+            </div>
         );
     },
 );

@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LabelledCheckbox } from "@/components/ui/checkbox";
 import Chip, { ChipButton } from "@/components/ui/chip";
+import { CommandSeparator } from "@/components/ui/command";
 import { copyTextToClipboard } from "@/components/ui/copy-btn";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { VariantButtonLink } from "@/components/ui/link";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { ReleaseChannelBadge, releaseChannelBackgroundColor, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
+import { ReleaseChannelBadge, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsList } from "@/lib/semver";
-import { cn, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
+import { getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
@@ -36,7 +37,6 @@ import {
     SquareArrowOutUpRightIcon,
     UploadIcon,
     XCircleIcon,
-    XIcon,
 } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -137,70 +137,79 @@ const ProjectVersionsPage = () => {
                 <div className="w-full flex flex-wrap items-center justify-start gap-2">
                     {loadersFilterVisible ? (
                         <MultiSelect
-                            popupAlign="start"
-                            selectedOptions={[...filters.loaders]}
+                            selectedValues={filters.loaders}
                             options={projectData.loaders.map((loader) => ({
                                 label: CapitalizeAndFormatString(loader) || "",
                                 value: loader,
                             }))}
-                            onChange={(values) => {
+                            onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, loaders: values }));
                             }}
-                        >
-                            <Button variant="secondary-inverted">
-                                <FilterIcon className="w-btn-icon h-btn-icon" />
-                                Loaders
-                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                            </Button>
-                        </MultiSelect>
+                            searchBox={false}
+                            defaultMinWidth={false}
+                            customTrigger={
+                                <Button variant="secondary-inverted">
+                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    Loaders
+                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                </Button>
+                            }
+                        />
                     ) : null}
 
                     {gameVersionsFilterVisible ? (
                         <MultiSelect
-                            popupAlign="start"
-                            selectedOptions={[...filters.gameVersions]}
+                            searchBox={projectData.gameVersions.length > 5}
+                            selectedValues={filters.gameVersions}
                             options={gameVersionOptions}
-                            onChange={(values) => {
+                            onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
                             }}
-                            footerItem={
+                            defaultMinWidth={false}
+                            customTrigger={
+                                <Button variant="secondary-inverted">
+                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    Game versions
+                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                </Button>
+                            }
+                            fixedFooter={
                                 hasSnapshotVersion ? (
-                                    <LabelledCheckbox
-                                        checked={showAllVersions}
-                                        onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                        className="text-extra-muted-foreground px-2 py-1"
-                                    >
-                                        Show all versions
-                                    </LabelledCheckbox>
+                                    <>
+                                        <CommandSeparator />
+                                        <LabelledCheckbox
+                                            checked={showAllVersions}
+                                            onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                            className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
+                                        >
+                                            Show all versions
+                                        </LabelledCheckbox>
+                                    </>
                                 ) : null
                             }
-                        >
-                            <Button variant="secondary-inverted">
-                                <FilterIcon className="w-btn-icon h-btn-icon" />
-                                Game versions
-                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                            </Button>
-                        </MultiSelect>
+                        />
                     ) : null}
 
                     {releaseChannelsFilterVisible ? (
                         <MultiSelect
-                            popupAlign="start"
-                            selectedOptions={[...filters.releaseChannels]}
+                            searchBox={false}
+                            defaultMinWidth={false}
+                            selectedValues={[...filters.releaseChannels]}
                             options={availableReleaseChannels.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",
                                 value: channel,
                             }))}
-                            onChange={(values) => {
+                            onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, releaseChannels: values }));
                             }}
-                        >
-                            <Button variant="secondary-inverted">
-                                <FilterIcon className="w-btn-icon h-btn-icon" />
-                                Channels
-                                <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                            </Button>
-                        </MultiSelect>
+                            customTrigger={
+                                <Button variant="secondary-inverted">
+                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    Channels
+                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                </Button>
+                            }
+                        />
                     ) : null}
                 </div>
             ) : null}
@@ -209,24 +218,21 @@ const ProjectVersionsPage = () => {
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
                         <ChipButton onClick={resetFilters}>
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                             Clear all filters
+                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ) : null}
 
                     {filters.releaseChannels.map((channel) => (
                         <ChipButton
                             key={channel}
-                            className={cn(
-                                releaseChannelTextColor(channel as VersionReleaseChannel),
-                                releaseChannelBackgroundColor(channel as VersionReleaseChannel),
-                            )}
+                            className={releaseChannelTextColor(channel as VersionReleaseChannel)}
                             onClick={() => {
                                 setFilters((prev) => ({ ...prev, releaseChannels: prev.releaseChannels.filter((c) => c !== channel) }));
                             }}
                         >
-                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
                             {CapitalizeAndFormatString(channel)}
+                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -237,8 +243,8 @@ const ProjectVersionsPage = () => {
                                 setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version.value) }));
                             }}
                         >
-                            <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
                             {version.label}
+                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -246,6 +252,10 @@ const ProjectVersionsPage = () => {
                         const loaderData = getLoaderFromString(loader);
                         if (!loaderData) return null;
                         const accentForeground = loaderData.metadata?.accent?.foreground;
+                        let color = "hsla(var(--muted-foreground))";
+                        if (accentForeground) {
+                            color = theme === "dark" ? accentForeground.dark : accentForeground.light;
+                        }
 
                         return (
                             <ChipButton
@@ -254,15 +264,11 @@ const ProjectVersionsPage = () => {
                                     setFilters((prev) => ({ ...prev, loaders: prev.loaders.filter((l) => l !== loader) }));
                                 }}
                                 style={{
-                                    color: accentForeground
-                                        ? theme === "dark"
-                                            ? accentForeground?.dark
-                                            : accentForeground?.light
-                                        : "hsla(var(--muted-foreground))",
+                                    color: color,
                                 }}
                             >
-                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
                                 {CapitalizeAndFormatString(loader)}
+                                <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                             </ChipButton>
                         );
                     })}

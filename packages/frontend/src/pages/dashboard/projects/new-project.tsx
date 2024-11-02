@@ -1,5 +1,4 @@
 import { Button, CancelButton } from "@/components/ui/button";
-import { ChipButton } from "@/components/ui/chip";
 import {
     Dialog,
     DialogBody,
@@ -27,7 +26,7 @@ import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import { newProjectFormSchema } from "@shared/schemas/project";
 import { handleFormError } from "@shared/schemas/utils";
 import { ProjectVisibility } from "@shared/types";
-import { ArrowRightIcon, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react";
+import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -87,7 +86,7 @@ const CreateNewProjectDialog = ({ orgId, invalidateProjectsData }: { orgId?: str
         <Dialog
             open={createDialogOpen}
             onOpenChange={(isOpen) => {
-                if (typeSelectorOpen) return setTypeSelectorOpen(false);
+                if (typeSelectorOpen) setTypeSelectorOpen(false);
                 setCreateDialogOpen(isOpen);
             }}
         >
@@ -97,7 +96,13 @@ const CreateNewProjectDialog = ({ orgId, invalidateProjectsData }: { orgId?: str
                     Create a project
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent
+                onClick={(e) => {
+                    // @ts-ignore
+                    if (e.target.closest(".type-selector-popover")) return;
+                    if (typeSelectorOpen) return setTypeSelectorOpen(false);
+                }}
+            >
                 <DialogHeader>
                     <DialogTitle>Creating a project</DialogTitle>
                     <VisuallyHidden>
@@ -173,49 +178,23 @@ const CreateNewProjectDialog = ({ orgId, invalidateProjectsData }: { orgId?: str
                                             <FormDescription>Select the appropriate type for your project</FormDescription>
                                         </div>
 
-                                        <div className="flex gap-1 flex-col w-full">
-                                            {field.value?.length > 0 && (
-                                                <div className="w-full items-center justify-start flex gap-x-1.5 gap-y-1 flex-wrap">
-                                                    {field.value.map((loader: string) => {
-                                                        return (
-                                                            <ChipButton
-                                                                variant="secondary"
-                                                                key={loader}
-                                                                onClick={() => {
-                                                                    field.onChange(field.value?.filter((l: string) => l !== loader));
-                                                                }}
-                                                            >
-                                                                <XIcon className="w-btn-icon-sm h-btn-icon-sm" />
-                                                                {CapitalizeAndFormatString(loader)}
-                                                            </ChipButton>
-                                                        );
-                                                    })}
-                                                </div>
-                                            )}
-
-                                            <MultiSelect
-                                                open={typeSelectorOpen}
-                                                onOpenChange={setTypeSelectorOpen}
-                                                selectedOptions={field.value || []}
-                                                options={projectTypes.map((type) => ({
-                                                    label: CapitalizeAndFormatString(type) || "",
-                                                    value: type,
-                                                }))}
-                                                onChange={(values) => {
-                                                    field.onChange(getProjectTypesFromNames(values));
-                                                }}
-                                                classNames={{
-                                                    popupContent: "w-full",
-                                                    listItem: "font-medium",
-                                                }}
-                                                searchBar={false}
-                                            >
-                                                <Button variant="secondary" className="justify-between text-extra-muted-foreground">
-                                                    Choose...
-                                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md" />
-                                                </Button>
-                                            </MultiSelect>
-                                        </div>
+                                        <MultiSelect
+                                            searchBox={false}
+                                            defaultMinWidth={false}
+                                            open={typeSelectorOpen}
+                                            onOpenChange={setTypeSelectorOpen}
+                                            modalPopover={false}
+                                            selectedValues={field.value || []}
+                                            options={projectTypes.map((type) => ({
+                                                label: CapitalizeAndFormatString(type) || "",
+                                                value: type,
+                                            }))}
+                                            onValueChange={(values) => {
+                                                field.onChange(getProjectTypesFromNames(values));
+                                            }}
+                                            placeholder="Choose project type"
+                                            popoverClassname={"type-selector-popover"}
+                                        />
                                     </FormItem>
                                 )}
                             />
