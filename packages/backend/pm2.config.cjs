@@ -5,14 +5,12 @@ dotenv.config({ path: "./.env" });
 
 const isDev = process.env.NODE_ENV === "development";
 
-console.log(process.env.NODE_ENV);
+const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will be cloned in prod
+const sourceDir = !isDev ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
+const backendDir = `${sourceDir}/packages/backend`; // Root of the backend
 
-const projectPath = !isDev ? "/var/www/cosmic-mod-manager/source" : "/home/abhinav/Code/Monorepos/cosmic-mod-manager";
-const backendDir = `${projectPath}/packages/backend`;
-
-const setupDir = "/var/www/cosmic-mod-manager/source/packages/backend";
-const pm2ConfigPath = "pm2.config.cjs";
-const reloadApps = `pm2 reload ${pm2ConfigPath} --only crmm-meilisearch && pm2 reload ${pm2ConfigPath} --only crmm-redis && pm2 reload ${pm2ConfigPath} --only crmm-backend`;
+const reloadApps =
+    "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
 
 const dev_backend = {
     name: "crmm-backend",
@@ -58,8 +56,8 @@ module.exports = {
             key: `${process.env.SSH_KEY}`,
             ref: "origin/main",
             repo: "https://github.com/CRModders/cosmic-mod-manager.git",
-            path: "/var/www/cosmic-mod-manager",
-            "post-deploy": `cd ${setupDir} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadApps}`,
+            path: rootDir,
+            "post-deploy": `cd ${rootDir}/source/packages/backend && bun install && bun run prisma-generate && bun run prisma-push && ${reloadApps}`,
         },
     },
 };
