@@ -112,13 +112,14 @@ const InteractiveDownloadPopup = () => {
         return list;
     }, [projectData, selectedGameVersion, allProjectVersions]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (!projectData) return;
 
         const latestSupportedGameVersion = supportedGameVersionsList?.[0];
         setSelectedGameVersion(latestSupportedGameVersion?.value || "");
         setSelectedLoader(projectData?.loaders[0] || "");
-    }, [projectData, supportedGameVersionsList]);
+    }, [projectData]);
 
     if (!projectData || !allProjectVersions) return null;
 
