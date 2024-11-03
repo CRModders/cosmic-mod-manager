@@ -27,7 +27,7 @@ import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, InfoIcon, WrenchIcon } from "lucide-react";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const getVersionData = (gameVersion: string, loader: string, versionsList: ProjectVersionData[]): ProjectVersionData | null => {
@@ -62,9 +62,8 @@ const InteractiveDownloadPopup = () => {
         isExperimentalGameVersion(ver.releaseType),
     );
 
-    const latestSupportedGameVersion = supportedGameVersionsList?.[0];
-    const [selectedGameVersion, setSelectedGameVersion] = useState<string>(latestSupportedGameVersion?.value || "");
-    const [selectedLoader, setSelectedLoader] = useState<string>(projectData?.loaders[0] || "");
+    const [selectedGameVersion, setSelectedGameVersion] = useState<string>("");
+    const [selectedLoader, setSelectedLoader] = useState<string>("");
     const location = useLocation();
 
     const gameVersionsList = useMemo(() => {
@@ -113,7 +112,16 @@ const InteractiveDownloadPopup = () => {
         return list;
     }, [projectData, selectedGameVersion, allProjectVersions]);
 
+    useEffect(() => {
+        if (!projectData) return;
+
+        const latestSupportedGameVersion = supportedGameVersionsList?.[0];
+        setSelectedGameVersion(latestSupportedGameVersion?.value || "");
+        setSelectedLoader(projectData?.loaders[0] || "");
+    }, [projectData, supportedGameVersionsList]);
+
     if (!projectData || !allProjectVersions) return null;
+
     const isVersionDetailsPage = isCurrLinkActive(
         getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"),
         location.pathname,

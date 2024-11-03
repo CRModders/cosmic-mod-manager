@@ -11,12 +11,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { VariantButtonLink } from "@/components/ui/link";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "@/components/ui/release-channel-pill";
+import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsList } from "@/lib/semver";
 import { getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
-import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
@@ -30,6 +30,7 @@ import {
     CalendarIcon,
     ChevronDownIcon,
     DownloadIcon,
+    EditIcon,
     FilterIcon,
     InfoIcon,
     LinkIcon,
@@ -54,7 +55,6 @@ const ProjectVersionsPage = () => {
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
     const { projectData, allProjectVersions, currUsersMembership } = useContext(projectContext);
-    const { session } = useSession();
 
     const resetFilters = () => {
         setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
@@ -275,7 +275,15 @@ const ProjectVersionsPage = () => {
                 </div>
             ) : null}
 
-            <ProjectVersionsListTable projectData={projectData} allProjectVersions={filteredItems} />
+            <ProjectVersionsListTable
+                projectData={projectData}
+                allProjectVersions={filteredItems}
+                canEditVersion={doesMemberHaveAccess(
+                    ProjectPermission.UPLOAD_VERSION,
+                    currUsersMembership.data?.permissions || [],
+                    currUsersMembership.data?.isOwner || false,
+                )}
+            />
         </>
     );
 };
@@ -301,7 +309,8 @@ const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => 
 const ProjectVersionsListTable = ({
     projectData,
     allProjectVersions,
-}: { projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[] }) => {
+    canEditVersion,
+}: { projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[]; canEditVersion: boolean }) => {
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
     const perPageLimit = 20;
@@ -451,7 +460,10 @@ const ProjectVersionsListTable = ({
                                                     </TooltipContent>
                                                 </Tooltip>
 
-                                                <ThreeDotMenu version={version} versionPageUrl={versionPagePathname(version.slug)} />
+                                                <ThreeDotMenu
+                                                    canEditVersion={canEditVersion}
+                                                    versionPageUrl={versionPagePathname(version.slug)}
+                                                />
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -546,7 +558,7 @@ const DownloadsCount = ({ downloads, iconVisible = true }: { downloads: number; 
     );
 };
 
-const ThreeDotMenu = ({ version, versionPageUrl }: { version: ProjectVersionData; versionPageUrl: string }) => {
+const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: string; canEditVersion: boolean }) => {
     const [dropDownOpen, setDropDownOpen] = useState(false);
 
     return (
@@ -561,7 +573,7 @@ const ThreeDotMenu = ({ version, versionPageUrl }: { version: ProjectVersionData
                     <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="noClickRedirect">
+            <DropdownMenuContent align="end" className="noClickRedirect p-1.5">
                 <VariantButtonLink
                     url={versionPageUrl}
                     variant={"ghost-no-shadow"}
@@ -571,7 +583,7 @@ const ThreeDotMenu = ({ version, versionPageUrl }: { version: ProjectVersionData
                         setDropDownOpen(false);
                     }}
                 >
-                    <SquareArrowOutUpRightIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
                     Open in new tab
                 </VariantButtonLink>
 
@@ -584,9 +596,27 @@ const ThreeDotMenu = ({ version, versionPageUrl }: { version: ProjectVersionData
                         setDropDownOpen(false);
                     }}
                 >
-                    <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    <LinkIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
                     Copy link
                 </Button>
+
+                {canEditVersion ? (
+                    <>
+                        <Separator className="my-0.5" />
+                        <VariantButtonLink
+                            url={`${versionPageUrl}/edit`}
+                            variant={"ghost-no-shadow"}
+                            className="justify-start"
+                            size={"sm"}
+                            onClick={() => {
+                                setDropDownOpen(false);
+                            }}
+                        >
+                            <EditIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            Edit
+                        </VariantButtonLink>
+                    </>
+                ) : null}
             </DropdownMenuContent>
         </DropdownMenu>
     );
