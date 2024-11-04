@@ -39,9 +39,9 @@ const DashboardLayout = () => {
                                 {link.icon}
                                 {link.name}
 
-                                {link.notificationBadge && undreadNotifications > 0 && (
+                                {link.notificationBadge && undreadNotifications > 0 ? (
                                     <NotificationBadge>{undreadNotifications}</NotificationBadge>
-                                )}
+                                ) : null}
                             </ButtonLink>
                         ))}
 

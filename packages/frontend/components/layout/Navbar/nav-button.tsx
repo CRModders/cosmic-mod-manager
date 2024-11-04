@@ -73,7 +73,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         fallback={fallbackUserIcon}
                         className="h-nav-item w-nav-item p-0.5 rounded-full"
                     />
-                    {undreadNotifications > 0 && <NotificationBadge className="min-h-1.5 min-w-1.5" />}
+                    {undreadNotifications > 0 ? <NotificationBadge className="min-h-1.5 min-w-1.5" /> : null}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-52 p-2 flex flex-col gap-1">
@@ -103,7 +103,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                             {item.icon}
                             {item.label}
 
-                            {item.notificationBadge && <NotificationBadge />}
+                            {item.notificationBadge ? <NotificationBadge /> : null}
                         </ButtonLink>
                     );
                 })}
