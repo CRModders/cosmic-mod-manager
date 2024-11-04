@@ -30,24 +30,29 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 export { Badge, badgeVariants };
 
 const notificationBadgeVariants = cva(
-    "text-xs font-semibold rounded-full min-w-2 min-h-2 py-1 px-1 aspect-square flex items-center justify-center absolute top-0 right-0 translate-x-1/2 -translate-y-1/2",
+    "font-mono text-xs leading-[0.6] font-semibold rounded-full p-1 grid grid-cols-1 place-items-center absolute",
     {
         variants: {
             variant: {
                 default: "bg-accent-background text-background",
                 secondary: "bg-shallower-background/75 text-foreground",
             },
+            align: {
+                left: "top-0 left-0 -translate-x-1/4 -translate-y-1/4",
+                right: "top-0 right-0 translate-x-1/4 -translate-y-1/4",
+            },
         },
         defaultVariants: {
             variant: "default",
+            align: "right",
         },
     },
 );
 
 export interface NotificationBadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof notificationBadgeVariants> {}
 
-const NotificationBadge = ({ className, variant, ...props }: NotificationBadgeProps) => {
-    return <div className={cn(notificationBadgeVariants({ variant }), className)} {...props} />;
+const NotificationBadge = ({ className, variant, align, ...props }: NotificationBadgeProps) => {
+    return <div className={cn(notificationBadgeVariants({ variant, align }), className)} {...props} />;
 };
 
 export { NotificationBadge, notificationBadgeVariants };
