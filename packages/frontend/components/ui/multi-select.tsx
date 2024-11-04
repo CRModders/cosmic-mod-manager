@@ -92,7 +92,6 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
         };
 
         const handleTogglePopover = (value: boolean) => {
-            console.log("handleTogglePopover");
             if (onOpenChange) onOpenChange(value);
             else setLocalOpen(value);
         };
