@@ -1,5 +1,7 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@/components/layout/panel";
+import { NotificationBadge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/link";
+import { useSession } from "@/src/contexts/auth";
 import { SITE_NAME_SHORT } from "@shared/config";
 import {
     BarChart2Icon,
@@ -17,6 +19,9 @@ import { RedirectIfNotLoggedIn } from "../auth/guards";
 import NotificationsProvider from "./notifications/context";
 
 const DashboardLayout = () => {
+    const { notifications } = useSession();
+    const undreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
+
     return (
         <>
             <Helmet>
@@ -30,9 +35,13 @@ const DashboardLayout = () => {
                 <PanelAside>
                     <PanelAsideNavCard label="Dashboard">
                         {SidePanelLinks.map((link) => (
-                            <ButtonLink url={link.href} key={link.href}>
+                            <ButtonLink url={link.href} key={link.href} className="relative">
                                 {link.icon}
                                 {link.name}
+
+                                {link.notificationBadge && undreadNotifications > 0 && (
+                                    <NotificationBadge>{undreadNotifications}</NotificationBadge>
+                                )}
                             </ButtonLink>
                         ))}
 
@@ -68,6 +77,7 @@ const SidePanelLinks = [
         name: "Notifications",
         href: `${baseUrlPrefix}/notifications`,
         icon: <BellIcon size="1rem" />,
+        notificationBadge: true,
     },
     {
         name: "Active reports",

@@ -1,5 +1,6 @@
 import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
+import { NotificationBadge } from "@/components/ui/badge";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
@@ -17,7 +18,8 @@ interface MobileNavProps {
 }
 
 export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavProps) => {
-    const { session } = useSession();
+    const { session, notifications } = useSession();
+    const unreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     return (
         <div className={`mobile_navmenu w-full absolute top-[100%] left-0 duration-300 ${isNavMenuOpen && "menu_open"}`}>
@@ -73,6 +75,7 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                                         icon: <BellIcon className="w-btn-icon h-btn-icon" />,
                                         label: "Notifications",
                                         url: "/dashboard/notifications",
+                                        notificationBadge: unreadNotifications,
                                     },
                                     {
                                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
@@ -91,7 +94,7 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                                     },
                                 ]?.map((link) => {
                                     return (
-                                        <li key={`${link.url}`} className="w-full group flex items-center justify-center">
+                                        <li key={`${link.url}`} className="w-full group flex items-center justify-center relative">
                                             <NavMenuLink
                                                 href={link.url}
                                                 label={link.label}
@@ -101,6 +104,10 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                                             >
                                                 {link?.icon || null}
                                                 {link.label}
+
+                                                {link.notificationBadge && unreadNotifications > 0 ? (
+                                                    <NotificationBadge>{unreadNotifications}</NotificationBadge>
+                                                ) : null}
                                             </NavMenuLink>
                                         </li>
                                     );

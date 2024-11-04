@@ -1,11 +1,12 @@
 import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
+import { NotificationBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ButtonLink } from "@/components/ui/link";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn, imageUrl } from "@/lib/utils";
-import { AuthContext } from "@/src/contexts/auth";
+import { SessionContext } from "@/src/contexts/auth";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
@@ -36,12 +37,14 @@ export const LoginButton = ({
 };
 
 const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => void }) => {
-    const { session } = useContext(AuthContext);
+    const { session, notifications } = useContext(SessionContext);
     const [isOpen, setIsOpen] = useState(false);
 
     if (session === undefined) {
         return <LoadingSpinner size="sm" />;
     }
+
+    const undreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     if (!session?.id) {
         return (
@@ -62,7 +65,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     size="lg"
                     variant="ghost"
                     aria-label="Profile icon"
-                    className="p-0 m-0 h-fit rounded-full w-fit hover:bg-transparent dark:hover:bg-transparent no_neumorphic_shadow"
+                    className="p-0 m-0 h-fit rounded-full w-fit hover:bg-transparent dark:hover:bg-transparent no_neumorphic_shadow relative"
                 >
                     <ImgWrapper
                         src={imageUrl(session.avatarUrl)}
@@ -70,6 +73,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         fallback={fallbackUserIcon}
                         className="h-nav-item w-nav-item p-0.5 rounded-full"
                     />
+                    {undreadNotifications > 0 && <NotificationBadge className="min-h-1.5 min-w-1.5" />}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-52 p-2 flex flex-col gap-1">
@@ -85,6 +89,7 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                         label: "Notifications",
                         url: "/dashboard/notifications",
                         matchExactUrl: false,
+                        notificationBadge: undreadNotifications,
                     },
                     {
                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
@@ -94,9 +99,11 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
                     },
                 ].map((item) => {
                     return (
-                        <ButtonLink key={item.url} url={item.url} exactTailMatch={false}>
+                        <ButtonLink key={item.url} url={item.url} exactTailMatch={false} className="relative">
                             {item.icon}
                             {item.label}
+
+                            {item.notificationBadge && <NotificationBadge />}
                         </ButtonLink>
                     );
                 })}
@@ -144,7 +151,7 @@ type Props = {
 
 export const SignOutBtn = ({ className, disabled = false }: Props) => {
     const [loading, setLoading] = useState(false);
-    const { logout } = useContext(AuthContext);
+    const { logout } = useContext(SessionContext);
 
     const handleClick = async () => {
         if (loading || disabled) return;

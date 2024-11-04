@@ -1,12 +1,14 @@
 import useFetch from "@/src/hooks/fetch";
 import type { LoggedInUserData } from "@shared/types";
+import type { Notification } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { getNotificationsQuery } from "../pages/dashboard/notifications/_loader";
 import { reactQueryClient } from "../providers";
 import { getSessionDataQuery } from "./_loaders";
 
-type AuthContextType = {
+type SessionContext = {
     session: LoggedInUserData | null | undefined;
     logout: () => Promise<void>;
     validateSession: () => Promise<void>;
@@ -14,10 +16,12 @@ type AuthContextType = {
     isFetchingInitialData: boolean;
     isFetchingData: boolean;
     isRefetchingData: boolean;
+
+    notifications: Notification[] | null;
 };
 
 // undefined state is initial, null is for when the context has been initialized but session is empty
-export const AuthContext = createContext<AuthContextType>({
+export const SessionContext = createContext<SessionContext>({
     session: undefined,
     logout: async () => {},
     validateSession: async () => {},
@@ -25,10 +29,13 @@ export const AuthContext = createContext<AuthContextType>({
     isFetchingInitialData: true,
     isFetchingData: true,
     isRefetchingData: false,
+
+    notifications: null,
 });
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const SessionProvider = ({ children }: { children: React.ReactNode }) => {
     const sessionData = useQuery(getSessionDataQuery());
+    const notifications = useQuery(getNotificationsQuery());
     const navigate = useNavigate();
 
     const logout = async () => {
@@ -49,7 +56,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider
+        <SessionContext.Provider
             value={{
                 session: sessionData.data,
                 logout,
@@ -58,15 +65,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 isFetchingInitialData: sessionData.isLoading,
                 isFetchingData: sessionData.isFetching,
                 isRefetchingData: sessionData.isRefetching,
+
+                notifications: notifications.data || null,
             }}
         >
             {children}
-        </AuthContext.Provider>
+        </SessionContext.Provider>
     );
 };
 
-export default AuthProvider;
+export default SessionProvider;
 
 export const useSession = () => {
-    return useContext(AuthContext);
+    return useContext(SessionContext);
 };
