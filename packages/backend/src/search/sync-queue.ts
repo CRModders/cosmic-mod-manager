@@ -80,7 +80,7 @@ const syncProjects = async (cursor: null | string) => {
                 visibility: {
                     in: [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED],
                 },
-                // status: ProjectPublishingStatus.PUBLISHED,
+                // TODO: status: ProjectPublishingStatus.PUBLISHED,
             },
             cursor: cursor ? { id: cursor } : undefined,
             take: SYNC_BATCH_SIZE,
@@ -92,12 +92,15 @@ const syncProjects = async (cursor: null | string) => {
 
         const projectIconIds = [];
         for (const project of projects) {
+            if (project.gameVersions.length === 0) continue;
             if (project.iconFileId) projectIconIds.push(project.iconFileId);
         }
         const projectIconFiles = await getFilesFromId(projectIconIds);
 
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
+            if (project.gameVersions.length === 0) continue;
+
             const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
             const iconUrl = getAppropriateProjectIconUrl(projectIconFiles.get(project?.iconFileId || ""), project.slug);
 
