@@ -39,6 +39,8 @@ module.exports = {
                 "extra-muted-foreground": "hsla(var(--extra-muted-foreground))",
                 "danger-background": "hsla(var(--danger-background))",
                 "danger-foreground": "hsla(var(--danger-foreground))",
+                "warning-background": "hsla(var(--warning-background))",
+                "warning-foreground": "hsla(var(--warning-foreground))",
                 "success-background": "hsla(var(--success-background))",
                 "success-foreground": "hsla(var(--success-foreground))",
                 "link-foreground": "hsla(var(--link-foreground))",

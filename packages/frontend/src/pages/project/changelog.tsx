@@ -8,16 +8,18 @@ import { ChipButton } from "@/components/ui/chip";
 import { CommandSeparator } from "@/components/ui/command";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { releaseChannelTextColor } from "@/components/ui/release-channel-pill";
+import { TooltipTemplate } from "@/components/ui/tooltip";
 import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import { ChevronDownIcon, DownloadIcon, FilterIcon, XCircleIcon } from "lucide-react";
+import { ChevronDownIcon, DownloadIcon, FilterIcon, FlaskConicalIcon, XCircleIcon } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useSearchParams } from "react-router-dom";
@@ -272,10 +274,18 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                                 <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
                                     <ChangelogBar releaseChannel={version.releaseChannel} />
+                                    {version.releaseChannel === VersionReleaseChannel.DEV ? (
+                                        <TooltipProvider>
+                                            <TooltipTemplate content="Dev release!" className="font-normal">
+                                                <FlaskConicalIcon className="w-btn-icon-md h-btn-icon-md text-danger-foreground cursor-help" />
+                                            </TooltipTemplate>
+                                        </TooltipProvider>
+                                    ) : null}
+
                                     <h2 className="leading-tight">
                                         <Link
                                             to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
-                                            className="text-[1.25rem] font-bold"
+                                            className="text-[1.25rem] font-bold flex items-baseline gap-2"
                                         >
                                             {version.title}
                                         </Link>
@@ -321,7 +331,7 @@ const ChangelogBar = ({ releaseChannel }: { releaseChannel: VersionReleaseChanne
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA
                           ? "text-orange-500 dark:text-orange-400"
-                          : releaseChannel === VersionReleaseChannel.ALPHA
+                          : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
                             ? "text-danger-background"
                             : "",
                 )}

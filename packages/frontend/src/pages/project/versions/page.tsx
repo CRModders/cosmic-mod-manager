@@ -24,7 +24,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
-import { ProjectPermission, type VersionReleaseChannel } from "@shared/types";
+import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
     CalendarIcon,
@@ -32,6 +32,7 @@ import {
     DownloadIcon,
     EditIcon,
     FilterIcon,
+    FlaskConicalIcon,
     InfoIcon,
     LinkIcon,
     MoreVerticalIcon,
@@ -52,7 +53,8 @@ interface FilterItems {
 
 const ProjectVersionsPage = () => {
     const { theme } = useTheme();
-    const [showAllVersions, setShowAllVersions] = useState(false);
+    const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
+    const [showDevVersions, setShowDevVersions] = useState(false);
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
     const { projectData, allProjectVersions, currUsersMembership } = useContext(projectContext);
 
@@ -64,6 +66,9 @@ const ProjectVersionsPage = () => {
         const filteredItems: ProjectVersionData[] = [];
 
         for (const version of allProjectVersions || []) {
+            // Check for dev version
+            if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+
             if (filters.loaders.length) {
                 let loaderMatch = false;
                 for (const loaderFilter of filters.loaders) {
@@ -96,7 +101,7 @@ const ProjectVersionsPage = () => {
         }
 
         return filteredItems;
-    }, [filters, allProjectVersions]);
+    }, [filters, allProjectVersions, showDevVersions]);
 
     if (projectData === undefined || allProjectVersions === undefined) {
         return <FullWidthSpinner />;
@@ -118,8 +123,9 @@ const ProjectVersionsPage = () => {
     const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
         isExperimentalGameVersion(ver.releaseType),
     );
+    const hasDevVersions = allProjectVersions.some((ver) => ver.releaseChannel === VersionReleaseChannel.DEV);
     const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
-        .filter((ver) => showAllVersions || !isExperimentalGameVersion(ver.releaseType))
+        .filter((ver) => showExperimentalGameVersions || !isExperimentalGameVersion(ver.releaseType))
         .map((ver) => ({ label: ver.label, value: ver.value }));
 
     return (
@@ -178,8 +184,8 @@ const ProjectVersionsPage = () => {
                                     <>
                                         <CommandSeparator />
                                         <LabelledCheckbox
-                                            checked={showAllVersions}
-                                            onCheckedChange={(checked) => setShowAllVersions(checked === true)}
+                                            checked={showExperimentalGameVersions}
+                                            onCheckedChange={(checked) => setShowExperimentalGameVersions(checked === true)}
                                             className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
                                         >
                                             Show all versions
@@ -210,6 +216,19 @@ const ProjectVersionsPage = () => {
                                 </Button>
                             }
                         />
+                    ) : null}
+
+                    {hasDevVersions ? (
+                        <LabelledCheckbox
+                            className="mx-2 sm:ml-auto"
+                            checked={showDevVersions}
+                            onCheckedChange={(checked) => setShowDevVersions(checked === true)}
+                        >
+                            <span className="flex items-center justify-center gap-1">
+                                <FlaskConicalIcon className="w-btn-icon h-btn-icon" />
+                                Show dev versions
+                            </span>
+                        </LabelledCheckbox>
                     ) : null}
                 </div>
             ) : null}
@@ -326,6 +345,14 @@ const ProjectVersionsListTable = ({
         (allProjectVersions?.length || 0) > perPageLimit ? (
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
         ) : null;
+
+    if (!allProjectVersions.length) {
+        return (
+            <div className="w-full flex items-center justify-center py-6">
+                <span className="text-lg italic text-extra-muted-foreground">No project versions to show</span>
+            </div>
+        );
+    }
 
     return (
         <>

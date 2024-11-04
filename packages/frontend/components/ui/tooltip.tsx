@@ -31,11 +31,12 @@ export const TooltipTemplate = ({
     asChild = true,
     content,
     children,
-}: { asChild?: boolean; content: React.ReactNode; children: React.ReactNode }) => {
+    className,
+}: { asChild?: boolean; content: React.ReactNode; children: React.ReactNode; className?: string }) => {
     return (
         <Tooltip>
             <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-            <TooltipContent>{content}</TooltipContent>
+            <TooltipContent className={className}>{content}</TooltipContent>
         </Tooltip>
     );
 };

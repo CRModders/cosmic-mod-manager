@@ -1,7 +1,7 @@
 import prisma from "@/services/prisma";
-import { deleteProjectVersionDirectory, deleteProjectVersionFile, saveProjectVersionFile } from "@/services/storage";
+import { deleteProjectVersionFile, saveProjectVersionFile } from "@/services/storage";
 import { createFilePathSafeString } from "@/services/storage/utils";
-import { FILE_STORAGE_SERVICE } from "@/types";
+import type { FILE_STORAGE_SERVICE } from "@/types";
 import { createHashFromFile } from "@/utils/file";
 import { generateRandomId } from "@/utils/str";
 import type { File as DBFile, VersionFile } from "@prisma/client";
@@ -10,6 +10,14 @@ import { getFileType } from "@shared/lib/utils/convertors";
 import { type PartialTeamMember, combineProjectMembers } from "@shared/lib/utils/project";
 import { ProjectVisibility } from "@shared/types";
 import { sort } from "semver";
+
+export function isProjectPublic(visibility: string, publishingStatus: string) {
+    const isPublic = visibility === ProjectVisibility.PRIVATE;
+    const isPublished = true;
+    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
+
+    return isPublic && isPublished;
+}
 
 interface IsProjectAccessible<T> {
     visibility: string;
@@ -27,15 +35,10 @@ export function isProjectAccessible<T extends PartialTeamMember>({
     orgMembers,
 }: IsProjectAccessible<T>) {
     const combinedMembers = combineProjectMembers(teamMembers, orgMembers);
-
     const isMember = userId ? combinedMembers.has(userId) : false;
-    const isPrivate = visibility === ProjectVisibility.PRIVATE;
-    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
+    const isPublic = isProjectPublic(visibility, publishingStatus);
 
-    return (
-        // isPublished &&
-        !isPrivate || isMember
-    );
+    return isPublic || isMember;
 }
 
 export interface CreateVersionFileProps {
@@ -154,10 +157,6 @@ export async function deleteVersionFiles(projectId: string, versionId: string, f
             },
         },
     });
-}
-
-export async function deleteVersionStoreDirectory(projectId: string, versionId: string) {
-    return await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId);
 }
 
 interface isAnyDuplicateFileProps {

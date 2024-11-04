@@ -258,7 +258,7 @@ const InteractiveDownloadPopup = () => {
                             </TooltipProvider>
                         )
                     )}
-                    {selectedGameVersion && (selectedLoader || !loadersList.length) ? (
+                    {selectedGameVersion ? (
                         <AvailableVersionsList
                             selectedGameVersion={selectedGameVersion}
                             selectedLoader={selectedLoader}

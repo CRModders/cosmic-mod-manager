@@ -4,17 +4,25 @@ import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
-import type { Dependency } from "@prisma/client";
+import type { Dependency, VersionFile } from "@prisma/client";
 import { RESERVED_VERSION_SLUGS } from "@shared/config/reserved";
 import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema } from "@shared/schemas/project/version";
-import { ProjectPermission, type ProjectType, ProjectVisibility } from "@shared/types";
+import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
-import { aggregateProjectLoaderNames, aggregateVersions, createVersionFiles, isAnyDuplicateFile } from "@src/project/utils";
+import {
+    aggregateProjectLoaderNames,
+    aggregateVersions,
+    createVersionFiles,
+    isAnyDuplicateFile,
+    isProjectAccessible,
+    isProjectPublic,
+} from "@src/project/utils";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { deleteVersionsData } from "../../controllers/settings";
 
 export async function createNewVersion(
     ctx: Context,
@@ -36,10 +44,12 @@ export async function createNewVersion(
             type: true,
             gameVersions: true,
             versions: {
-                where: { slug: formData.versionNumber },
                 select: {
                     id: true,
                     slug: true,
+                    releaseChannel: true,
+                    files: true,
+                    datePublished: true,
                 },
             },
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
@@ -89,8 +99,11 @@ export async function createNewVersion(
     }
 
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
+    const versionWithSameSlug = project.versions.find((version) => version.slug === formData.versionNumber.toLowerCase());
     const newUrlSlug =
-        project.versions?.[0]?.id || RESERVED_VERSION_SLUGS.includes(formData.versionNumber.toLowerCase()) ? null : formData.versionNumber;
+        versionWithSameSlug || RESERVED_VERSION_SLUGS.includes(formData.versionNumber.toLowerCase())
+            ? null
+            : formData.versionNumber.toLowerCase();
 
     let newVersion = await prisma.version.create({
         data: {
@@ -157,6 +170,14 @@ export async function createNewVersion(
         },
     });
 
+    if (formData.releaseChannel === VersionReleaseChannel.DEV) {
+        // Delete old dev releases
+        await deleteExcessDevReleases({
+            projectId: project.id,
+            versions: project.versions,
+        });
+    }
+
     return {
         data: {
             success: true,
@@ -167,7 +188,7 @@ export async function createNewVersion(
     };
 }
 
-export const createVersionDependencies = async (dependentVersionId: string, list: z.infer<typeof VersionDependencies>) => {
+export async function createVersionDependencies(dependentVersionId: string, list: z.infer<typeof VersionDependencies>) {
     if (!list?.length) return [];
 
     const projectIds = new Set<string>();
@@ -197,15 +218,12 @@ export const createVersionDependencies = async (dependentVersionId: string, list
         }),
     ]);
 
+    isProjectAccessible;
+
     const projectMap = new Map<string, string>();
     const versionMap = new Map<string, string>();
     for (const project of dependencyProjects) {
-        if (
-            project.visibility === ProjectVisibility.PRIVATE
-            // TODO: Add check for projectPublishingStatus after that is implemented
-            // || project.status !== ProjectPublishingStatus.PUBLISHED
-        )
-            continue;
+        if (!isProjectPublic(project.visibility, project.status)) continue;
         projectMap.set(project.id, project.slug);
     }
     for (const version of dependencyVersions) {
@@ -252,4 +270,40 @@ export const createVersionDependencies = async (dependentVersionId: string, list
     }
 
     return [];
-};
+}
+
+interface PartialFile extends Partial<VersionFile> {
+    id: string;
+    fileId: string;
+}
+
+interface deleteExcessDevReleasesOptions {
+    projectId: string;
+    versions: {
+        id: string;
+        slug: string;
+        releaseChannel: string;
+        files: PartialFile[];
+        datePublished: Date;
+    }[];
+}
+
+export async function deleteExcessDevReleases<T extends deleteExcessDevReleasesOptions>({ projectId, versions }: T) {
+    const devVersions = versions
+        .filter((version) => version.releaseChannel === VersionReleaseChannel.DEV)
+        .toSorted((a, b) => {
+            return b.datePublished.getTime() - a.datePublished.getTime();
+        });
+
+    // TODO: Don't use a hardcoded value for the max number of dev releases
+    if (devVersions.length < 3) return;
+
+    const versionsToDelete = devVersions.slice(2);
+    const versionIds = versionsToDelete.map((v) => v.id);
+    const versionFileIds = [];
+    for (const version of versionsToDelete) {
+        versionFileIds.push(...version.files.map((f) => f.fileId));
+    }
+
+    await deleteVersionsData(projectId, versionIds, versionFileIds, true);
+}

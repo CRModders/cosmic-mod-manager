@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
+import { FlaskConicalIcon } from "lucide-react";
 
 type Props = {
     releaseChannel: VersionReleaseChannel | string;
@@ -37,7 +38,13 @@ export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
                 className,
             )}
         >
-            <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
+            {releaseChannel === VersionReleaseChannel.DEV ? (
+                <span className="flex items-center justify-center">
+                    <FlaskConicalIcon className="w-[80%] h-[80%]" />
+                </span>
+            ) : (
+                <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
+            )}
             <span className="sr-only">{CapitalizeAndFormatString(releaseChannel)}</span>
         </div>
     );
@@ -48,17 +55,15 @@ export const releaseChannelTextColor = (releaseChannel: VersionReleaseChannel) =
         ? "!text-blue-500 dark:!text-blue-400"
         : releaseChannel === VersionReleaseChannel.BETA
           ? "!text-orange-600 dark:!text-orange-400"
-          : releaseChannel === VersionReleaseChannel.ALPHA
+          : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
             ? "!text-danger-foreground"
             : "";
 };
 
 export const releaseChannelBackgroundColor = (releaseChannel: VersionReleaseChannel) => {
-    return releaseChannel === VersionReleaseChannel.RELEASE
-        ? "!bg-blue-500/15 dark:!bg-blue-400/15"
-        : releaseChannel === VersionReleaseChannel.BETA
-          ? "!bg-orange-600/15 dark:!bg-orange-400/15"
-          : releaseChannel === VersionReleaseChannel.ALPHA
-            ? "!bg-danger-foreground/15"
-            : "";
+    if (releaseChannel === VersionReleaseChannel.RELEASE) return "!bg-blue-500/15 dark:!bg-blue-400/15";
+    if (releaseChannel === VersionReleaseChannel.BETA) return "!bg-orange-600/15 dark:!bg-orange-400/15";
+    if (releaseChannel === VersionReleaseChannel.ALPHA) return "!bg-danger-foreground/15";
+    if (releaseChannel === VersionReleaseChannel.DEV) return "!bg-danger-foreground/15";
+    return "";
 };

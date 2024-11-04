@@ -1,5 +1,5 @@
 import prisma from "@/services/prisma";
-import { deleteDirectory, deleteProjectFile, saveProjectFile } from "@/services/storage";
+import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "@/services/storage";
 import { projectFileStoragePath } from "@/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
@@ -111,26 +111,7 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
     const versionIds = versions.map((version) => version.id);
     const dbFileIds = versions.flatMap((version) => version.files.map((file) => file.fileId));
 
-    // Delete all the dbFiles
-    await prisma.file.deleteMany({
-        where: {
-            id: {
-                in: dbFileIds,
-            },
-        },
-    });
-
-    // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
-    // ? Same for version dependencies
-
-    // Delete all the project versions
-    await prisma.version.deleteMany({
-        where: {
-            id: {
-                in: versionIds,
-            },
-        },
-    });
+    await deleteVersionsData(project.id, versionIds, dbFileIds, false);
 
     // Delete the project gallery
     const galleryFileIds = project.gallery.map((file) => file.imageFileId);
@@ -180,6 +161,33 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
         },
         status: HTTP_STATUS.OK,
     };
+}
+
+export async function deleteVersionsData(projectId: string, ids: string[], fileIds: string[], deleteLocalFiles = true) {
+    // Delete all the dbFiles
+    await prisma.file.deleteMany({
+        where: {
+            id: {
+                in: fileIds,
+            },
+        },
+    });
+
+    // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
+    // ? Same for version dependencies
+
+    // Delete all the project versions
+    await prisma.version.deleteMany({
+        where: {
+            id: {
+                in: ids,
+            },
+        },
+    });
+
+    if (!deleteLocalFiles) return;
+
+    await Promise.all(ids.map((versionId) => deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId)));
 }
 
 export async function updateProjectIcon(userSession: ContextUserData, slug: string, icon: File): Promise<RouteHandlerResponse> {

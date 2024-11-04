@@ -1,12 +1,13 @@
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "@/services/prisma";
+import { deleteProjectVersionDirectory } from "@/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import type { File as DBFile } from "@prisma/client";
 import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@shared/lib/utils";
 import type { VersionDependencies, updateVersionFormSchema } from "@shared/schemas/project/version";
-import { ProjectPermission, type ProjectType } from "@shared/types";
+import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import { getFilesFromId } from "@src/project/queries/file";
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
 import {
@@ -14,12 +15,11 @@ import {
     aggregateVersions,
     createVersionFiles,
     deleteVersionFiles,
-    deleteVersionStoreDirectory,
     isAnyDuplicateFile,
 } from "@src/project/utils";
 import type { Context } from "hono";
 import type { z } from "zod";
-import { createVersionDependencies } from "./new-version";
+import { createVersionDependencies, deleteExcessDevReleases } from "./new-version";
 
 export const updateVersionData = async (
     ctx: Context,
@@ -38,9 +38,11 @@ export const updateVersionData = async (
             versions: {
                 select: {
                     id: true,
+                    slug: true,
+                    releaseChannel: true,
                     loaders: true,
                     gameVersions: true,
-                    slug: true,
+                    datePublished: true,
                     files: {
                         where: { isPrimary: false },
                         select: {
@@ -276,6 +278,14 @@ export const updateVersionData = async (
         }
     }
 
+    // Only update dev releases if the release channel is changed
+    if (formData.releaseChannel === VersionReleaseChannel.DEV && formData.releaseChannel !== targetVersion.releaseChannel) {
+        await deleteExcessDevReleases({
+            projectId: project.id,
+            versions: project.versions,
+        });
+    }
+
     return {
         data: {
             success: true,
@@ -344,7 +354,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     await deleteVersionFiles(project.id, targetVersion.id, filesData);
 
     // Delete the version directory
-    await deleteVersionStoreDirectory(project.id, targetVersion.id);
+    await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, project.id, targetVersion.id);
 
     const deletedVersion = await prisma.version.delete({
         where: {

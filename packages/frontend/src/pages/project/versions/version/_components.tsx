@@ -19,6 +19,7 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
+import { TooltipProvider, TooltipTemplate } from "@/components/ui/tooltip";
 import { cn, imageUrl } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
 import type { DependencyData } from "@/types";
@@ -28,7 +29,7 @@ import { getFileType } from "@shared/lib/utils/convertors";
 import type { VersionDependencies } from "@shared/schemas/project/version";
 import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
-import { FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { CircleAlertIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import type { Control, FieldValues, RefCallBack } from "react-hook-form";
 import { toast } from "sonner";
@@ -144,9 +145,27 @@ export const MetadataInputCard = ({ projectType, formControl }: MetadataInputCar
                         <Select value={field.value} onValueChange={field.onChange}>
                             <SelectTrigger>
                                 <SelectValue />
+
+                                {field.value === VersionReleaseChannel.DEV ? (
+                                    <TooltipProvider>
+                                        <TooltipTemplate
+                                            className="max-w-sm bg-shallow-background text-start text-foreground-bright"
+                                            content={
+                                                "NOTE:- Older dev releases will be automatically deleted after a new dev release is published."
+                                            }
+                                        >
+                                            <CircleAlertIcon className="w-btn-icon h-btn-icon text-warning-foreground ml-auto cursor-help" />
+                                        </TooltipTemplate>
+                                    </TooltipProvider>
+                                ) : null}
                             </SelectTrigger>
                             <SelectContent>
-                                {[VersionReleaseChannel.RELEASE, VersionReleaseChannel.BETA, VersionReleaseChannel.ALPHA].map((channel) => (
+                                {[
+                                    VersionReleaseChannel.RELEASE,
+                                    VersionReleaseChannel.BETA,
+                                    VersionReleaseChannel.ALPHA,
+                                    VersionReleaseChannel.DEV,
+                                ].map((channel) => (
                                     <SelectItem key={channel} value={channel}>
                                         {CapitalizeAndFormatString(channel)}
                                     </SelectItem>

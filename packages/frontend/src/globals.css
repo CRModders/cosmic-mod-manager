@@ -25,6 +25,8 @@
     --shallower-background-dark: var(--tint-hue), var(--bg-saturation), 32%;
     --danger-background-dark: 0, 92%, 65%;
     --danger-foreground-dark: 0, 91%, 71%;
+    --warning-background-dark: 35, 74%, 48%;
+    --warning-foreground-dark: 33, 82%, 52%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
     --link-foreground-dark: 213, 94%, 68%;
@@ -41,8 +43,11 @@
     --accent-background-light: var(--accent-color-hue), 80%, 54%;
     --shallow-background-light: var(--tint-hue), var(--bg-saturation), 92%;
     --shallower-background-light: var(--tint-hue), var(--bg-saturation), 82%;
+
     --danger-background-light: 0, 75%, 46%;
     --danger-foreground-light: 0, 65%, 52%;
+    --warning-background-light: 36, 86%, 44%;
+    --warning-foreground-light: 38, 93%, 47%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 28%;
     --link-foreground-light: 208, 88%, 42%;
@@ -80,6 +85,8 @@ html body {
     --shallower-background: var(--shallower-background-dark);
     --danger-background: var(--danger-background-dark);
     --danger-foreground: var(--danger-foreground-dark);
+    --warning-background: var(--warning-background-dark);
+    --warning-foreground: var(--warning-foreground-dark);
     --success-background: var(--success-background-dark);
     --success-foreground: var(--success-foreground-dark);
     --link-foreground: var(--link-foreground-dark);
@@ -106,6 +113,8 @@ html body {
     --shallower-background: var(--shallower-background-light);
     --danger-background: var(--danger-background-light);
     --danger-foreground: var(--danger-foreground-light);
+    --warning-background: var(--warning-background-light);
+    --warning-foreground: var(--warning-foreground-light);
     --success-background: var(--success-background-light);
     --success-foreground: var(--success-foreground-light);
     --link-foreground: var(--link-foreground-light);
