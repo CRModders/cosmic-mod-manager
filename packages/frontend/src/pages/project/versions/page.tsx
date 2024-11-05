@@ -201,10 +201,16 @@ const ProjectVersionsPage = () => {
                             searchBox={false}
                             defaultMinWidth={false}
                             selectedValues={[...filters.releaseChannels]}
-                            options={availableReleaseChannels.map((channel) => ({
+                            allOptions={availableReleaseChannels.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",
                                 value: channel,
                             }))}
+                            options={availableReleaseChannels
+                                .filter((channel) => channel === VersionReleaseChannel.DEV && showDevVersions === true)
+                                .map((channel) => ({
+                                    label: CapitalizeAndFormatString(channel) || "",
+                                    value: channel,
+                                }))}
                             onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, releaseChannels: values }));
                             }}

@@ -225,8 +225,9 @@ export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
 const commonProps = { className: "flex items-center justify-center w-[0.95rem] aspect-square" };
 
 const tagIcons = {
-    puzzle_loader: <PuzzleIcon {...commonProps} />,
     quilt: <QuiltIcon {...commonProps} />,
+    puzzle_loader: <PuzzleIcon {...commonProps} />,
+    paradox: <PuzzleIcon {...commonProps} />,
     adventure: <CompassIcon {...commonProps} />,
     atmosphere: <CloudSunRainIcon {...commonProps} />,
     audio: <HeadphonesIcon {...commonProps} />,

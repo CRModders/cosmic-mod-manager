@@ -19,7 +19,7 @@ export const getNotificationsQuery = () => {
     return {
         queryKey: ["notifications"],
         queryFn: getNotifications,
-        staleTime: 10 * 1000,
+        staleTime: 3 * 1000,
     } satisfies UseQueryOptions;
 };
 

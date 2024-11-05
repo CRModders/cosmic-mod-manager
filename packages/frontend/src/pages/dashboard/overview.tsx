@@ -20,6 +20,7 @@ const OverviewPage = () => {
         notifications,
         relatedProjects,
         relatedUsers,
+        relatedOrgs,
         isLoading: notificationsLoading,
         refetchNotifications,
     } = useContext(NotificationsContext);
@@ -75,6 +76,7 @@ const OverviewPage = () => {
                                         notification={notification}
                                         relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
                                         relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                                        relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
                                         refetchNotifications={refetchNotifications}
                                         concise={true}
                                         showMarkAsReadButton={false}

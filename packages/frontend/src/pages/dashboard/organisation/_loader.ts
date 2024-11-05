@@ -22,6 +22,7 @@ export const getdashboardOrgsListQuery = () => {
     return {
         queryKey: ["dashboard-organizations"],
         queryFn: getUserOrganisations,
+        staleTime: 10 * 1000,
     } satisfies UseQueryOptions;
 };
 

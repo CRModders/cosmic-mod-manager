@@ -16,7 +16,6 @@ import {
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 import { RedirectIfNotLoggedIn } from "../auth/guards";
-import NotificationsProvider from "./notifications/context";
 
 const DashboardLayout = () => {
     const { notifications } = useSession();
@@ -55,9 +54,7 @@ const DashboardLayout = () => {
                     </PanelAsideNavCard>
                 </PanelAside>
                 <PanelContent>
-                    <NotificationsProvider>
-                        <Outlet />
-                    </NotificationsProvider>
+                    <Outlet />
                 </PanelContent>
             </Panel>
         </>

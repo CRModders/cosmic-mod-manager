@@ -24,6 +24,10 @@ export const NotificationsContext = createContext<NotificationsContext>({
     relatedUsers: null,
 });
 
+let projectsList: string[] = [];
+let orgsList: string[] = [];
+let usersList: string[] = [];
+
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     const notifications = useQuery(getNotificationsQuery());
     const relatedOrgs = useQuery(getRelatedOrgsQuery(notifications.data || []));
@@ -32,7 +36,32 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refetchNotifications = async () => {
         await notifications.refetch();
-        await Promise.all([relatedProjects.refetch(), relatedUsers.refetch()]);
+    };
+
+    const refetchRelatedData = async () => {
+        const promises = [];
+        let refetchProjects = false;
+        let refetchOrgs = false;
+        let refetchUsers = false;
+
+        for (const notification of notifications.data || []) {
+            const projectId = notification.body?.projectId as string;
+            if (projectId && !projectsList.includes(projectId)) refetchProjects = true;
+
+            const orgId = notification.body?.orgId as string;
+            if (orgId && !orgsList.includes(orgId)) refetchOrgs = true;
+
+            const userId = notification.body?.invitedBy as string;
+            if (userId && !usersList.includes(userId)) refetchUsers = true;
+
+            if (refetchProjects && refetchOrgs && refetchUsers) break;
+        }
+
+        if (refetchProjects) promises.push(relatedProjects.refetch());
+        if (refetchOrgs) promises.push(relatedOrgs.refetch());
+        if (refetchUsers) promises.push(relatedUsers.refetch());
+
+        await Promise.all(promises);
     };
 
     const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : null;
@@ -65,10 +94,20 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (notifications.data) {
-            if (!relatedProjects.data) relatedProjects.refetch();
-            if (!relatedUsers.data) relatedUsers.refetch();
+            refetchRelatedData();
         }
     }, [notifications.data]);
+
+    useEffect(() => {
+        if (relatedProjects.data) projectsList = relatedProjects.data.map((project) => project.id);
+        else projectsList = [];
+
+        if (relatedOrgs.data) orgsList = relatedOrgs.data.map((org) => org.id);
+        else orgsList = [];
+
+        if (relatedUsers.data) usersList = relatedUsers.data.map((user) => user.id);
+        else usersList = [];
+    }, [relatedProjects.data, relatedOrgs.data, relatedUsers.data]);
 
     return (
         <NotificationsContext.Provider

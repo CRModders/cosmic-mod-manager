@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 import SessionProvider from "./contexts/auth";
 import { ThemeProvider } from "./hooks/use-theme";
+import NotificationsProvider from "./pages/dashboard/notifications/context";
 
 export const reactQueryClient = new QueryClient({
     defaultOptions: {
@@ -21,7 +22,9 @@ export const ContextProviders = ({ children }: { children?: React.ReactNode }) =
         <QueryClientProvider client={reactQueryClient}>
             <SessionProvider>
                 <ThemeProvider>
-                    <DownloadAnimationProvider>{children ? children : <Outlet />}</DownloadAnimationProvider>
+                    <DownloadAnimationProvider>
+                        <NotificationsProvider>{children ? children : <Outlet />}</NotificationsProvider>
+                    </DownloadAnimationProvider>
                     <Toaster />
                 </ThemeProvider>
             </SessionProvider>
