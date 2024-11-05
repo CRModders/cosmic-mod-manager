@@ -111,8 +111,11 @@ const ProjectVersionsPage = () => {
 
     const availableReleaseChannels: string[] = [];
     for (const version of allProjectVersions) {
-        if (!availableReleaseChannels.includes(version.releaseChannel)) {
-            availableReleaseChannels.push(version.releaseChannel);
+        const channel = version.releaseChannel;
+
+        if (channel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+        if (!availableReleaseChannels.includes(channel)) {
+            availableReleaseChannels.push(channel);
         }
     }
 
@@ -201,16 +204,10 @@ const ProjectVersionsPage = () => {
                             searchBox={false}
                             defaultMinWidth={false}
                             selectedValues={[...filters.releaseChannels]}
-                            allOptions={availableReleaseChannels.map((channel) => ({
+                            options={availableReleaseChannels.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",
                                 value: channel,
                             }))}
-                            options={availableReleaseChannels
-                                .filter((channel) => channel === VersionReleaseChannel.DEV && showDevVersions === true)
-                                .map((channel) => ({
-                                    label: CapitalizeAndFormatString(channel) || "",
-                                    value: channel,
-                                }))}
                             onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, releaseChannels: values }));
                             }}
