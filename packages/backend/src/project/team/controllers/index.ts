@@ -255,7 +255,7 @@ export async function editProjectMember(
     // Only owner can add permissions to the member
     if (currMember.isOwner !== true) {
         for (const permission of formData.permissions || []) {
-            if (!currMember.permissions.includes(permission)) {
+            if (!targetMember.permissions.includes(permission)) {
                 // If this is an org team, check if the user has access to edit default permissions
                 if (team.organisation?.id) {
                     const canEditDefaultPermissions = doesOrgMemberHaveAccess(
@@ -272,7 +272,7 @@ export async function editProjectMember(
         }
 
         for (const permission of formData.organisationPermissions || []) {
-            if (!currMember.organisationPermissions.includes(permission)) {
+            if (!targetMember.organisationPermissions.includes(permission)) {
                 return unauthorizedReqResponseData("You don't have access to add permissions to the member");
             }
         }
