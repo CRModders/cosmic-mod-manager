@@ -57,13 +57,7 @@ export const updateVersionData = async (
         },
     });
 
-    let targetVersion = null;
-    for (const version of project?.versions || []) {
-        if (version.slug === versionSlug) {
-            targetVersion = version;
-            break;
-        }
-    }
+    const targetVersion = project?.versions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
 
     // Return if project or target version not found
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
@@ -150,22 +144,6 @@ export const updateVersionData = async (
         }
     }
 
-    // Check it the slug is updated and if it is, check if the new slug is available
-    let updatedSlug = formData.versionNumber;
-    if (updatedSlug !== targetVersion.slug) {
-        let newSlugAvailable = true;
-        for (const version of project.versions) {
-            if (version.slug === formData.versionNumber) {
-                newSlugAvailable = false;
-                break;
-            }
-        }
-
-        if (newSlugAvailable !== true) {
-            updatedSlug = targetVersion.id;
-        }
-    }
-
     // Re evaluate the project loaders list and supported game versions
     const projectLoaders: string[] = [];
     const projectGameVersions: string[] = [];
@@ -241,7 +219,6 @@ export const updateVersionData = async (
             title: formData.title,
             versionNumber: formData.versionNumber,
             changelog: formData.changelog,
-            slug: updatedSlug,
             featured: formData.featured,
             releaseChannel: formData.releaseChannel,
             gameVersions: formData.gameVersions,
@@ -291,7 +268,7 @@ export const updateVersionData = async (
             success: true,
             message: "Version updated successfully",
             data: {
-                slug: updatedSlug,
+                slug: targetVersion.slug,
                 projectLoadersChanged,
                 gameVersionsChanged,
             },

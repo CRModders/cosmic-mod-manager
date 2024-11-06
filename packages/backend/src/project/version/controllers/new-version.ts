@@ -100,39 +100,27 @@ export async function createNewVersion(
 
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
     const versionWithSameSlug = project.versions.find((version) => version.slug === formData.versionNumber.toLowerCase());
-    const newUrlSlug =
-        versionWithSameSlug || RESERVED_VERSION_SLUGS.includes(formData.versionNumber.toLowerCase())
-            ? null
-            : formData.versionNumber.toLowerCase();
+    const versionId = generateDbId();
+    let newUrlSlug = formData.versionNumber.toLowerCase();
+    if (RESERVED_VERSION_SLUGS.includes(newUrlSlug) || versionWithSameSlug || formData.releaseChannel === VersionReleaseChannel.DEV) {
+        newUrlSlug = versionId;
+    }
 
-    let newVersion = await prisma.version.create({
+    const newVersion = await prisma.version.create({
         data: {
-            id: generateDbId(),
+            id: versionId,
             projectId: project.id,
             authorId: userSession.id,
             title: formData.title,
             versionNumber: formData.versionNumber,
             changelog: formData.changelog,
-            slug: newUrlSlug || "",
+            slug: newUrlSlug,
             featured: formData.featured,
             releaseChannel: formData.releaseChannel,
             gameVersions: formData.gameVersions,
             loaders: formData.loaders || [],
         },
     });
-
-    // If there was a version with the urlSlug same as this version's versionNumber newUrlSlug will be null, in that case
-    // gotta update the urlSlug to use newVersion's id
-    if (!newUrlSlug) {
-        newVersion = await prisma.version.update({
-            where: {
-                id: newVersion.id,
-            },
-            data: {
-                slug: newVersion.id,
-            },
-        });
-    }
 
     // Add dependencies
     await createVersionDependencies(newVersion.id, formData.dependencies || []);

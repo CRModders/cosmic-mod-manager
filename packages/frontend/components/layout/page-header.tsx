@@ -52,7 +52,7 @@ export const PageHeader = ({
                         <h1 className="m-0 text-xl font-extrabold leading-tight text-foreground-bright">{title}</h1>
                         {titleBadge}
                     </div>
-                    <p className="text-muted-foreground leading-tight line-clamp-2 max-w-[70ch]">{description}</p>
+                    <p className="text-muted-foreground leading-tight line-clamp-4 max-w-[70ch] text-pretty">{description}</p>
                     <div className="pt-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>
                 </div>
             </div>
