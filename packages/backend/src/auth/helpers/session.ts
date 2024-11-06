@@ -11,7 +11,7 @@ import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@shared/co
 import { UserSessionStates } from "@shared/types";
 import type { Context } from "hono";
 import type { CookieOptions } from "hono/utils/cookie";
-import { generateSessionToken, getUserDeviceDetails, getUserSessionCookie, hashString } from "./index";
+import { generateRandomToken, getUserDeviceDetails, getUserSessionCookie, hashString } from "./index";
 
 interface CreateNewSessionProps {
     userId: string;
@@ -22,7 +22,7 @@ interface CreateNewSessionProps {
 }
 
 export async function createUserSession({ userId, providerName, ctx, isFirstSignIn, user }: CreateNewSessionProps) {
-    const sessionToken = generateSessionToken();
+    const sessionToken = generateRandomToken();
     const tokenHash = await hashString(sessionToken);
 
     const revokeAccessCode = generateRandomId();

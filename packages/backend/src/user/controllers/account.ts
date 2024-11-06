@@ -1,13 +1,13 @@
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { deleteUserDataCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
-import { hashPassword, matchPassword } from "@/src/auth/helpers";
-import { getUserFromCtx } from "@/src/auth/helpers/session";
+import { generateRandomToken, hashPassword, hashString, matchPassword } from "@/src/auth/helpers";
+import { invalidateAllOtherUserSessions } from "@/src/auth/helpers/session";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
-import { generateConfirmationEmailCode, isConfirmationCodeValid } from "@/utils";
+import { isConfirmationCodeValid } from "@/utils";
 import { sendChangePasswordEmail, sendConfirmNewPasswordEmail, sendDeleteUserAccountEmail } from "@/utils/email";
-import { HTTP_STATUS, invalidReqestResponse, invalidReqestResponseData } from "@/utils/http";
+import { HTTP_STATUS, invalidReqestResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
 import {
     CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms,
@@ -31,59 +31,61 @@ const confirmationEmailValidityDict = {
 };
 
 export async function addNewPassword_ConfirmationEmail(
-    ctx: Context,
+    userSession: ContextUserData,
     formData: z.infer<typeof setNewPasswordFormSchema>,
 ): Promise<RouteHandlerResponse> {
     if (formData.newPassword !== formData.confirmNewPassword)
         return { data: { success: false, message: "Passwords do not match" }, status: HTTP_STATUS.BAD_REQUEST };
 
-    const userSession = getUserFromCtx(ctx);
-    if (!userSession || userSession.password) return invalidReqestResponseData();
+    if (userSession.password) return invalidReqestResponseData();
 
     const hashedPassword = await hashPassword(formData.newPassword);
-    const code = generateConfirmationEmailCode(ConfirmationType.CONFIRM_NEW_PASSWORD, userSession.id);
+    const token = generateRandomToken();
+    const tokenHash = await hashString(token);
 
-    const confirmationEmail = await prisma.userConfirmation.create({
+    await prisma.userConfirmation.create({
         data: {
             id: generateDbId(),
             userId: userSession.id,
             confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD,
-            accessCode: code,
+            accessCode: tokenHash,
             contextData: hashedPassword,
         },
     });
 
     sendConfirmNewPasswordEmail({
         fullName: userSession.name,
-        code: confirmationEmail.accessCode,
+        code: token,
         receiverEmail: userSession.email,
     });
 
     return { data: { message: "You should receive a confirmation email shortly.", success: true }, status: HTTP_STATUS.OK };
 }
 
-export const getConfirmActionTypeFromCode = async (ctx: Context, code: string) => {
+export async function getConfirmActionTypeFromCode(token: string) {
+    const tokenHash = await hashString(token);
     const confirmationEmail = await prisma.userConfirmation.findUnique({
         where: {
-            accessCode: code,
+            accessCode: tokenHash,
         },
     });
 
     const actionType = getConfirmActionTypeFromStringName(confirmationEmail?.confirmationType || "");
-    if (!confirmationEmail || !actionType) return ctx.json({ success: false, message: "Invalid or expired code" }, HTTP_STATUS.BAD_REQUEST);
+    if (!confirmationEmail || !actionType) return invalidReqestResponseData("Invalid or expired code");
 
     if (!isConfirmationCodeValid(confirmationEmail.dateCreated, confirmationEmailValidityDict[actionType]))
-        return ctx.json({ success: false, message: "Invalid or expired code" }, HTTP_STATUS.BAD_REQUEST);
+        return invalidReqestResponseData("Invalid or expired code");
 
-    return ctx.json({ actionType: actionType, success: true }, HTTP_STATUS.OK);
-};
+    return { data: { actionType: actionType, success: true }, status: HTTP_STATUS.OK };
+}
 
-export const deleteConfirmationActionCode = async (ctx: Context, code: string) => {
+export async function deleteConfirmationActionCode(token: string) {
+    const tokenHash = await hashString(token);
     const confirmationEmail = await prisma.userConfirmation.findUnique({
-        where: { accessCode: code },
+        where: { accessCode: tokenHash },
     });
 
-    if (!confirmationEmail?.id) return ctx.json({ success: false, message: "Invalid or expired code" }, HTTP_STATUS.BAD_REQUEST);
+    if (!confirmationEmail?.id) return invalidReqestResponseData("Invalid or expired code");
 
     await prisma.userConfirmation.deleteMany({
         where: {
@@ -92,12 +94,14 @@ export const deleteConfirmationActionCode = async (ctx: Context, code: string) =
         },
     });
 
-    return ctx.json({ success: true, message: "Cancelled successfully" }, HTTP_STATUS.OK);
-};
+    return { data: { success: true, message: "Cancelled successfully" }, status: HTTP_STATUS.OK };
+}
 
-export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
+export async function confirmAddingNewPassword(code: string) {
+    const tokenHash = await hashString(code);
+
     const confirmationEmail = await prisma.userConfirmation.findUnique({
-        where: { accessCode: code, confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD },
+        where: { accessCode: tokenHash, confirmationType: ConfirmationType.CONFIRM_NEW_PASSWORD },
         select: {
             id: true,
             userId: true,
@@ -110,12 +114,11 @@ export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
             },
         },
     });
+    if (!confirmationEmail) return invalidReqestResponseData("Invalid or expired code");
 
-    if (!confirmationEmail) return ctx.json({ success: false, message: "Invalid or expired code" }, HTTP_STATUS.BAD_REQUEST);
     if (!isConfirmationCodeValid(confirmationEmail.dateCreated, CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms))
-        return ctx.json({ success: false, message: "Invalid or expired code" }, HTTP_STATUS.BAD_REQUEST);
-    if (confirmationEmail.user.password)
-        return ctx.json({ success: false, message: "A password already exists for your account" }, HTTP_STATUS.BAD_REQUEST);
+        return invalidReqestResponseData("Invalid or expired code");
+    if (confirmationEmail.user.password) return invalidReqestResponseData("A password already exists for your account");
 
     const user = await prisma.user.update({
         where: {
@@ -136,23 +139,23 @@ export const confirmAddingNewPassword = async (ctx: Context, code: string) => {
     });
     await deleteUserDataCache(user.id);
 
-    return ctx.json({ success: true, message: "Successfully added the new password" }, HTTP_STATUS.OK);
-};
+    return { data: { success: true, message: "Successfully added the new password" }, status: HTTP_STATUS.OK };
+}
 
-export const removeAccountPassword = async (
+export async function removeAccountPassword(
     ctx: Context,
     userSession: ContextUserData,
     formData: z.infer<typeof removeAccountPasswordFormSchema>,
-) => {
-    if (!userSession?.password) {
+) {
+    if (!userSession.password) {
         await addInvalidAuthAttempt(ctx);
-        return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
+        return invalidReqestResponseData();
     }
 
     const isCorrectPassword = await matchPassword(formData.password, userSession.password);
     if (!isCorrectPassword) {
         await addInvalidAuthAttempt(ctx);
-        return ctx.json({ success: false, message: "Incorrect password" }, HTTP_STATUS.BAD_REQUEST);
+        return invalidReqestResponseData("Incorrect password");
     }
 
     await prisma.user.update({
@@ -165,10 +168,10 @@ export const removeAccountPassword = async (
     });
     await deleteUserDataCache(userSession.id);
 
-    return ctx.json({ success: true, message: "Account password removed successfully" }, HTTP_STATUS.OK);
-};
+    return { data: { success: true, message: "Account password removed successfully" }, status: HTTP_STATUS.OK };
+}
 
-export const sendAccountPasswordChangeLink = async (ctx: Context, formData: z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>) => {
+export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>) {
     const targetUser = await prisma.user.findUnique({
         where: {
             email: formData.email,
@@ -177,56 +180,65 @@ export const sendAccountPasswordChangeLink = async (ctx: Context, formData: z.in
 
     if (!targetUser?.id) {
         await addInvalidAuthAttempt(ctx);
-        return ctx.json(
-            {
+        return {
+            data: {
                 success: true,
                 message: "You should receive an email with a link to change your password if you entered correct email address.",
             },
-            HTTP_STATUS.OK,
-        );
+            status: HTTP_STATUS.OK,
+        };
     }
 
-    const changePasswordConfirmationEmail = await prisma.userConfirmation.create({
+    const token = generateRandomToken();
+    const tokenHash = await hashString(token);
+
+    await prisma.userConfirmation.create({
         data: {
             id: generateDbId(),
             userId: targetUser.id,
             confirmationType: ConfirmationType.CHANGE_ACCOUNT_PASSWORD,
-            accessCode: generateConfirmationEmailCode(ConfirmationType.CHANGE_ACCOUNT_PASSWORD, targetUser.id),
+            accessCode: tokenHash,
         },
     });
 
     sendChangePasswordEmail({
         name: targetUser.name,
-        code: changePasswordConfirmationEmail.accessCode,
+        code: token,
         receiverEmail: targetUser.email,
     });
 
-    return ctx.json(
-        {
+    return {
+        data: {
             success: true,
             message: "You should receive an email with a link to change your password if you entered correct email address.",
         },
-        HTTP_STATUS.OK,
-    );
-};
+        status: HTTP_STATUS.OK,
+    };
+}
 
-export const changeUserPassword = async (ctx: Context, code: string, formData: z.infer<typeof setNewPasswordFormSchema>) => {
-    if (formData.newPassword !== formData.confirmNewPassword) return invalidReqestResponse(ctx, "Passwords do not match");
+export async function changeUserPassword(
+    ctx: Context,
+    token: string,
+    formData: z.infer<typeof setNewPasswordFormSchema>,
+    userSession: ContextUserData | undefined,
+) {
+    if (formData.newPassword !== formData.confirmNewPassword) return invalidReqestResponseData("Passwords do not match");
 
+    const tokenHash = await hashString(token);
     const confirmationEmail = await prisma.userConfirmation.findUnique({
         where: {
-            accessCode: code,
+            accessCode: tokenHash,
             confirmationType: ConfirmationType.CHANGE_ACCOUNT_PASSWORD,
         },
     });
 
     if (!confirmationEmail?.id) {
         await addInvalidAuthAttempt(ctx);
-        return invalidReqestResponse(ctx);
+        return invalidReqestResponseData();
     }
 
     if (!confirmationEmail?.userId || !isConfirmationCodeValid(confirmationEmail.dateCreated, CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms)) {
-        return invalidReqestResponse(ctx);
+        return invalidReqestResponseData();
     }
     const hashedPassword = await hashPassword(formData.newPassword);
 
@@ -239,6 +251,7 @@ export const changeUserPassword = async (ctx: Context, code: string, formData: z
         },
     });
 
+    // Delete all confirmation emails for the user
     await prisma.userConfirmation.deleteMany({
         where: {
             userId: confirmationEmail.userId,
@@ -248,26 +261,33 @@ export const changeUserPassword = async (ctx: Context, code: string, formData: z
         },
     });
 
-    return ctx.json({ success: true, message: "Successfully changed account password" }, HTTP_STATUS.OK);
-};
+    // Logout all other sessions
+    await invalidateAllOtherUserSessions(confirmationEmail.userId, userSession?.sessionId || "");
 
-export const deleteUserAccountConfirmationEmail = async (ctx: Context, userSession: ContextUserData) => {
-    const accountDeletionEmail = await prisma.userConfirmation.create({
+    return { data: { success: true, message: "Successfully changed account password" }, status: HTTP_STATUS.OK };
+}
+
+export async function deleteUserAccountConfirmationEmail(userSession: ContextUserData) {
+    const token = generateRandomToken();
+    const tokenHash = await hashString(token);
+
+    await prisma.userConfirmation.create({
         data: {
             id: generateDbId(),
             userId: userSession.id,
             confirmationType: ConfirmationType.DELETE_USER_ACCOUNT,
-            accessCode: generateConfirmationEmailCode(ConfirmationType.DELETE_USER_ACCOUNT, userSession.id),
+            accessCode: tokenHash,
         },
     });
 
-    sendDeleteUserAccountEmail({ fullName: userSession.name, code: accountDeletionEmail.accessCode, receiverEmail: userSession.email });
-    return ctx.json({ success: true, message: "You should receive a confirmation email shortly" }, HTTP_STATUS.OK);
-};
+    sendDeleteUserAccountEmail({ fullName: userSession.name, code: token, receiverEmail: userSession.email });
+    return { data: { success: true, message: "You should receive a confirmation email shortly" }, status: HTTP_STATUS.OK };
+}
 
-export const confirmAccountDeletion = async (ctx: Context, code: string) => {
+export async function confirmAccountDeletion(token: string) {
+    // const tokenHash = await hashString(token);
     // const confirmationEmail = await prisma.userConfirmation.findUnique({
-    //     where: { accessCode: code, confirmationType: ConfirmationType.DELETE_USER_ACCOUNT },
+    //     where: { accessCode: tokenHash, confirmationType: ConfirmationType.DELETE_USER_ACCOUNT },
     // });
 
     // if (!confirmationEmail?.id || !isConfirmationCodeValid(confirmationEmail.dateCreated, DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms)) {
@@ -291,5 +311,5 @@ export const confirmAccountDeletion = async (ctx: Context, code: string) => {
 
     // return ctx.json({ success: true, message: `Successfully deleted your ${SITE_NAME_SHORT} account` }, status.OK);
 
-    return ctx.json({ success: false, message: "Method not implemented" }, HTTP_STATUS.SERVER_ERROR);
-};
+    return { data: { success: false, message: "Method not implemented" }, status: HTTP_STATUS.SERVER_ERROR };
+}

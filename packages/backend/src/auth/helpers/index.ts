@@ -152,8 +152,8 @@ export async function getUserDeviceDetails(ctx: Context) {
     };
 }
 
-export function generateSessionToken(): string {
-    const bytes = random(24);
+export function generateRandomToken(): string {
+    const bytes = random(32);
     const token = encodeBase32LowerCaseNoPadding(bytes);
     return token;
 }

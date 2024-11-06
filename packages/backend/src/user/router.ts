@@ -4,7 +4,7 @@ import { strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
-import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "@/utils/http";
+import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "@/utils/http";
 import {
     profileUpdateFormSchema,
     removeAccountPasswordFormSchema,
@@ -99,13 +99,14 @@ async function user_patch(ctx: Context) {
 // Delete user account
 async function user_delete(ctx: Context) {
     try {
-        const code = ctx.get(REQ_BODY_NAMESPACE)?.code;
-        if (!code) {
+        const token = ctx.get(REQ_BODY_NAMESPACE)?.code;
+        if (!token) {
             await addInvalidAuthAttempt(ctx);
             return invalidReqestResponse(ctx);
         }
 
-        return await confirmAccountDeletion(ctx, code);
+        const res = await confirmAccountDeletion(token);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -115,11 +116,12 @@ async function user_delete(ctx: Context) {
 // Get confirmation action type
 async function userConfirmationAction_post(ctx: Context) {
     try {
-        const code = ctx.get(REQ_BODY_NAMESPACE)?.code;
-        if (!code) {
+        const token = ctx.get(REQ_BODY_NAMESPACE)?.code;
+        if (!token) {
             return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
         }
-        return await getConfirmActionTypeFromCode(ctx, code);
+        const res = await getConfirmActionTypeFromCode(token);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -133,7 +135,8 @@ async function userConfirmationAction_delete(ctx: Context) {
         if (!code) {
             return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
         }
-        return await deleteConfirmationActionCode(ctx, code);
+        const res = await deleteConfirmationActionCode(code);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -143,11 +146,14 @@ async function userConfirmationAction_delete(ctx: Context) {
 // Send new password confirmation email
 async function addPasswordConfirmation_post(ctx: Context) {
     try {
+        const userSession = getUserFromCtx(ctx);
+        if (!userSession) return unauthorizedReqResponse(ctx);
+
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(REQ_BODY_NAMESPACE));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
         }
-        const res = await addNewPassword_ConfirmationEmail(ctx, data);
+        const res = await addNewPassword_ConfirmationEmail(userSession, data);
         return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
@@ -158,10 +164,11 @@ async function addPasswordConfirmation_post(ctx: Context) {
 // Add the new password
 async function addPasswordConfirmation_put(ctx: Context) {
     try {
-        const code = ctx.get(REQ_BODY_NAMESPACE)?.code;
-        if (!code) return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
+        const token = ctx.get(REQ_BODY_NAMESPACE)?.code;
+        if (!token) return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
 
-        return await confirmAddingNewPassword(ctx, code);
+        const res = await confirmAddingNewPassword(token);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -179,7 +186,8 @@ async function userPassword_delete(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
         if (!userSession || !userSession?.password) return ctx.json({}, HTTP_STATUS.BAD_REQUEST);
 
-        return await removeAccountPassword(ctx, userSession, data);
+        const res = await removeAccountPassword(ctx, userSession, data);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -193,7 +201,8 @@ async function changePasswordConfirmationEmail_post(ctx: Context) {
         if (error || !data) {
             return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
         }
-        return await sendAccountPasswordChangeLink(ctx, data);
+        const res = await sendAccountPasswordChangeLink(ctx, data);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -203,6 +212,7 @@ async function changePasswordConfirmationEmail_post(ctx: Context) {
 // Change user password
 async function userPassword_patch(ctx: Context) {
     try {
+        const userSession = getUserFromCtx(ctx);
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(REQ_BODY_NAMESPACE));
         if (error || !data) {
             return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
@@ -211,7 +221,8 @@ async function userPassword_patch(ctx: Context) {
         if (!code) {
             return invalidReqestResponse(ctx);
         }
-        return await changeUserPassword(ctx, code, data);
+        const res = await changeUserPassword(ctx, code, data, userSession);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);
@@ -227,7 +238,8 @@ async function deleteAccountConfirmation_post(ctx: Context) {
             return invalidReqestResponse(ctx);
         }
 
-        return await deleteUserAccountConfirmationEmail(ctx, userSession);
+        const res = await deleteUserAccountConfirmationEmail(userSession);
+        return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);
         return serverErrorResponse(ctx);

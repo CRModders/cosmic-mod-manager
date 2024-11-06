@@ -15,13 +15,13 @@ import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatGameVersionsList } from "@/lib/semver";
+import { formatGameVersionsList, sortVersionsWithReference } from "@/lib/semver";
 import { getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
+import GAME_VERSIONS, { type GameVersion, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
@@ -107,29 +107,61 @@ const ProjectVersionsPage = () => {
         return <FullWidthSpinner />;
     }
 
+    // Return
     if (projectData === null || allProjectVersions === null) return null;
 
-    const availableReleaseChannels: string[] = [];
+    // Filters list
+    // Loaders
+    const loaderFilters: string[] = [];
+    for (const version of allProjectVersions) {
+        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+
+        for (const loader of version.loaders) {
+            if (!loaderFilters.includes(loader)) {
+                loaderFilters.push(loader);
+            }
+        }
+    }
+
+    // Game versions
+    let gameVersionFilters: GameVersion[] = [];
+    for (const version of allProjectVersions) {
+        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+
+        for (const gameVersion of getGameVersionsFromValues(version.gameVersions)) {
+            if (!showExperimentalGameVersions && isExperimentalGameVersion(gameVersion.releaseType)) continue;
+
+            if (gameVersionFilters.some((ver) => ver.value === gameVersion.value)) continue;
+            gameVersionFilters.push(gameVersion);
+        }
+    }
+    // Sort game versions
+    gameVersionFilters = getGameVersionsFromValues(
+        sortVersionsWithReference(
+            gameVersionFilters.map((ver) => ver.value),
+            GAME_VERSIONS.map((ver) => ver.value),
+        ),
+    );
+
+    // Release channels
+    const releaseChannelFilters: string[] = [];
     for (const version of allProjectVersions) {
         const channel = version.releaseChannel;
 
         if (channel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-        if (!availableReleaseChannels.includes(channel)) {
-            availableReleaseChannels.push(channel);
+        if (!releaseChannelFilters.includes(channel)) {
+            releaseChannelFilters.push(channel);
         }
     }
 
-    const loadersFilterVisible = projectData.loaders.length > 1;
-    const gameVersionsFilterVisible = projectData.gameVersions.length > 1;
-    const releaseChannelsFilterVisible = availableReleaseChannels.length > 1;
+    const loadersFilterVisible = loaderFilters.length > 1;
+    const gameVersionsFilterVisible = gameVersionFilters.length > 1;
+    const releaseChannelsFilterVisible = releaseChannelFilters.length > 1;
 
     const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
         isExperimentalGameVersion(ver.releaseType),
     );
     const hasDevVersions = allProjectVersions.some((ver) => ver.releaseChannel === VersionReleaseChannel.DEV);
-    const gameVersionOptions = getGameVersionsFromValues(projectData.gameVersions)
-        .filter((ver) => showExperimentalGameVersions || !isExperimentalGameVersion(ver.releaseType))
-        .map((ver) => ({ label: ver.label, value: ver.value }));
 
     return (
         <>
@@ -142,12 +174,12 @@ const ProjectVersionsPage = () => {
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 
-            {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible ? (
+            {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
                 <div className="w-full flex flex-wrap items-center justify-start gap-2">
                     {loadersFilterVisible ? (
                         <MultiSelect
                             selectedValues={filters.loaders}
-                            options={projectData.loaders.map((loader) => ({
+                            options={loaderFilters.map((loader) => ({
                                 label: CapitalizeAndFormatString(loader) || "",
                                 value: loader,
                             }))}
@@ -170,7 +202,7 @@ const ProjectVersionsPage = () => {
                         <MultiSelect
                             searchBox={projectData.gameVersions.length > 5}
                             selectedValues={filters.gameVersions}
-                            options={gameVersionOptions}
+                            options={gameVersionFilters.map((ver) => ({ label: ver.label, value: ver.value }))}
                             onValueChange={(values) => {
                                 setFilters((prev) => ({ ...prev, gameVersions: values }));
                             }}
@@ -204,7 +236,7 @@ const ProjectVersionsPage = () => {
                             searchBox={false}
                             defaultMinWidth={false}
                             selectedValues={[...filters.releaseChannels]}
-                            options={availableReleaseChannels.map((channel) => ({
+                            options={releaseChannelFilters.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",
                                 value: channel,
                             }))}

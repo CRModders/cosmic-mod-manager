@@ -1,6 +1,6 @@
 import GAME_VERSIONS, { getGameVersionFromValue } from "@shared/config/game-versions";
 
-const sortVersionsWithReference = (versions: string[], referenceList: string[]): string[] => {
+export const sortVersionsWithReference = (versions: string[], referenceList: string[]): string[] => {
     return versions.sort((a, b) => referenceList.indexOf(a) - referenceList.indexOf(b));
 };
 
