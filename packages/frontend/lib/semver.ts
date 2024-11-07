@@ -19,6 +19,8 @@ export const groupContinuousVersions = (versions: string[]): GameVersion[][] => 
         ),
     );
 
+    if (!sortedVersions.length) return groupedList;
+
     // If the original version list doesn't have experimental versions, filter them out from the reference list
     if (!sortedVersions.some((item) => isExperimentalGameVersion(item.releaseType))) {
         referenceList = referenceList.filter((version) => !isExperimentalGameVersion(version.releaseType));
@@ -51,6 +53,8 @@ export const groupContinuousVersions = (versions: string[]): GameVersion[][] => 
 };
 
 export const formatGameVersionsList = (list: string[]): string[] => {
+    if (!list.length) return [];
+
     const formattedList: string[] = [];
     const groupedVersions = groupContinuousVersions(list);
 
@@ -67,6 +71,8 @@ export const formatGameVersionsList = (list: string[]): string[] => {
 };
 
 export const formatGameVersionsListString = (list: string[]): string => {
+    if (!list.length) return "";
+
     let formattedStr = "";
     const groupedVersions = groupContinuousVersions(list);
 
