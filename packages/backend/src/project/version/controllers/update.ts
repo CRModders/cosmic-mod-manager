@@ -11,6 +11,7 @@ import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@sha
 import { getFilesFromId } from "@src/project/queries/file";
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
 import {
+    aggregateGameVersions,
     aggregateProjectLoaderNames,
     aggregateVersions,
     createVersionFiles,
@@ -144,24 +145,6 @@ export const updateVersionData = async (
         }
     }
 
-    // Re evaluate the project loaders list and supported game versions
-    const projectLoaders: string[] = [];
-    const projectGameVersions: string[] = [];
-
-    for (const version of project.versions) {
-        // Exclude the target version from the list, instead use the new data
-        if (version.id === targetVersion.id) {
-            projectLoaders.push(...(formData.loaders || []));
-            projectGameVersions.push(...formData.gameVersions);
-            continue;
-        }
-        projectLoaders.push(...version.loaders);
-        projectGameVersions.push(...version.gameVersions);
-    }
-
-    const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
-    const aggregatedGameVersions = aggregateVersions(projectGameVersions);
-
     // Delete removed dependencies and add new ones
     const dependenciesList = formData.dependencies || [];
     if (targetVersion.dependencies.length || dependenciesList?.length) {
@@ -210,6 +193,35 @@ export const updateVersionData = async (
         await createVersionDependencies(targetVersion.id, newDependencies);
     }
 
+    let deletedDevVersions: string[] = [];
+    // Only update dev releases if the release channel is changed
+    if (formData.releaseChannel === VersionReleaseChannel.DEV && formData.releaseChannel !== targetVersion.releaseChannel) {
+        deletedDevVersions = await deleteExcessDevReleases({
+            projectId: project.id,
+            versions: project.versions,
+        });
+    }
+
+    // Re evaluate the project loaders list and supported game versions
+    const _loaders: string[] = [];
+    const _gameVersions: string[] = [];
+
+    for (const version of project.versions) {
+        if (deletedDevVersions.includes(version.id)) continue;
+
+        // Exclude the target version from the list, instead use the new data
+        if (version.id === targetVersion.id) {
+            _loaders.push(...(formData.loaders || []));
+            _gameVersions.push(...formData.gameVersions);
+            continue;
+        }
+        _loaders.push(...version.loaders);
+        _gameVersions.push(...version.gameVersions);
+    }
+
+    const aggregatedLoaderNames = aggregateProjectLoaderNames(_loaders);
+    const aggregatedGameVersions = aggregateVersions(_gameVersions);
+
     // Finally update the version data
     await prisma.version.update({
         where: {
@@ -237,40 +249,12 @@ export const updateVersionData = async (
         },
     });
 
-    // Check if project loaders or game versions were affected by the version update
-    let projectLoadersChanged = false;
-    let gameVersionsChanged = false;
-
-    for (const loader of project.loaders) {
-        if (!aggregatedLoaderNames.includes(loader)) {
-            projectLoadersChanged = true;
-            break;
-        }
-    }
-
-    for (const gameVersion of project.gameVersions) {
-        if (!aggregatedGameVersions.includes(gameVersion)) {
-            gameVersionsChanged = true;
-            break;
-        }
-    }
-
-    // Only update dev releases if the release channel is changed
-    if (formData.releaseChannel === VersionReleaseChannel.DEV && formData.releaseChannel !== targetVersion.releaseChannel) {
-        await deleteExcessDevReleases({
-            projectId: project.id,
-            versions: project.versions,
-        });
-    }
-
     return {
         data: {
             success: true,
             message: "Version updated successfully",
             data: {
                 slug: targetVersion.slug,
-                projectLoadersChanged,
-                gameVersionsChanged,
             },
         },
         status: HTTP_STATUS.OK,
@@ -351,7 +335,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     }
 
     const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
-    const aggregatedGameVersions = aggregateVersions(projectGameVersions);
+    const aggregatedGameVersions = aggregateGameVersions(projectGameVersions);
 
     await prisma.project.update({
         where: {

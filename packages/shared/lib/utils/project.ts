@@ -26,3 +26,7 @@ export function combineProjectMembers<T extends PartialTeamMember>(teamMembers: 
 
     return members;
 }
+
+export const sortVersionsWithReference = (versions: string[], referenceList: string[]): string[] => {
+    return versions.sort((a, b) => referenceList.indexOf(a) - referenceList.indexOf(b));
+};

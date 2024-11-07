@@ -7,7 +7,8 @@ import { HTTP_STATUS } from "@/utils/http";
 import { tryJsonParse } from "@/utils/str";
 import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl, orgIconUrl, projectIconUrl } from "@/utils/urls";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
-import { combineProjectMembers } from "@shared/lib/utils/project";
+import { gameVersionsList } from "@shared/config/game-versions";
+import { combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
 import type {
     OrganisationPermission,
     ProjectPermission,
@@ -17,7 +18,6 @@ import type {
     ProjectVisibility,
 } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem } from "@shared/types/api";
-import { rsort } from "semver";
 import { getFilesFromId } from "../queries/file";
 import { projectDetailsFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
@@ -87,7 +87,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 clientSide: project.clientSide as ProjectSupport,
                 serverSide: project.serverSide as ProjectSupport,
                 loaders: project.loaders,
-                gameVersions: rsort(project.gameVersions || []),
+                gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
                 gallery: project.gallery
                     .map((galleryItem) => {
                         const galleryFileUrl = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.slug);

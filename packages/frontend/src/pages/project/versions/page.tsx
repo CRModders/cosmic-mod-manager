@@ -15,15 +15,16 @@ import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatGameVersionsList, sortVersionsWithReference } from "@/lib/semver";
+import { formatGameVersionsList } from "@/lib/semver";
 import { getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
-import GAME_VERSIONS, { type GameVersion, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
+import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
+import { sortVersionsWithReference } from "@shared/lib/utils/project";
 import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
@@ -139,7 +140,7 @@ const ProjectVersionsPage = () => {
     gameVersionFilters = getGameVersionsFromValues(
         sortVersionsWithReference(
             gameVersionFilters.map((ver) => ver.value),
-            GAME_VERSIONS.map((ver) => ver.value),
+            gameVersionsList,
         ),
     );
 
@@ -544,10 +545,10 @@ const ProjectVersionsListTable = ({
 const VersionName = ({ title, number, url }: { title: string; number: string; url: string }) => {
     return (
         <div className="flex flex-col items-start justify-center overflow-hidden max-w-[24ch] lg:max-w-[32ch]" title={number}>
-            <Link to={url} className="noClickRedirect leading-tight font-bold text-foreground whitespace-pre-wrap">
+            <Link to={url} className="noClickRedirect leading-tight font-bold text-foreground md:whitespace-nowrap">
                 {number}
             </Link>
-            <span className="leading-tight font-medium text-muted-foreground/85 text-sm">{title}</span>
+            <span className="leading-tight font-medium text-muted-foreground/85 text-sm md:whitespace-nowrap">{title}</span>
         </div>
     );
 };

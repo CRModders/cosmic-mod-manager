@@ -13,8 +13,8 @@ import type { VersionDependencies, newVersionFormSchema } from "@shared/schemas/
 import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@shared/types";
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
 import {
+    aggregateGameVersions,
     aggregateProjectLoaderNames,
-    aggregateVersions,
     createVersionFiles,
     isAnyDuplicateFile,
     isProjectAccessible,
@@ -50,6 +50,8 @@ export async function createNewVersion(
                     releaseChannel: true,
                     files: true,
                     datePublished: true,
+                    loaders: true,
+                    gameVersions: true,
                 },
             },
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
@@ -125,8 +127,30 @@ export async function createNewVersion(
     // Add dependencies
     await createVersionDependencies(newVersion.id, formData.dependencies || []);
 
-    const projectLoaders = aggregateProjectLoaderNames([...project.loaders, ...(formData.loaders || [])]);
-    const sortedUniqueGameVersions = aggregateVersions([...project.gameVersions, ...formData.gameVersions]);
+    let deletedDevVersions: string[] = [];
+    // Delete old dev releases
+    if (formData.releaseChannel === VersionReleaseChannel.DEV) {
+        deletedDevVersions = await deleteExcessDevReleases({
+            projectId: project.id,
+            versions: project.versions,
+        });
+    }
+
+    // Collect all the loaders and game versions from the project and the new version
+    const _loaders: string[] = [];
+    const _gameVersions: string[] = [];
+
+    for (const version of project.versions) {
+        if (deletedDevVersions.includes(version.id)) continue;
+
+        _loaders.push(...version.loaders);
+        _gameVersions.push(...version.gameVersions);
+    }
+    if (formData.loaders) _loaders.push(...formData.loaders);
+    _gameVersions.push(...formData.gameVersions);
+
+    const projectLoaders = aggregateProjectLoaderNames(_loaders);
+    const sortedUniqueGameVersions = aggregateGameVersions(_gameVersions);
 
     // Save all the files
     await createVersionFiles({
@@ -157,14 +181,6 @@ export async function createNewVersion(
             dateUpdated: new Date(),
         },
     });
-
-    if (formData.releaseChannel === VersionReleaseChannel.DEV) {
-        // Delete old dev releases
-        await deleteExcessDevReleases({
-            projectId: project.id,
-            versions: project.versions,
-        });
-    }
 
     return {
         data: {
@@ -273,6 +289,8 @@ interface deleteExcessDevReleasesOptions {
         releaseChannel: string;
         files: PartialFile[];
         datePublished: Date;
+        loaders: string[];
+        gameVersions: string[];
     }[];
 }
 
@@ -284,7 +302,7 @@ export async function deleteExcessDevReleases<T extends deleteExcessDevReleasesO
         });
 
     // TODO: Don't use a hardcoded value for the max number of dev releases
-    if (devVersions.length < 3) return;
+    if (devVersions.length < 3) return [];
 
     const versionsToDelete = devVersions.slice(2);
     const versionIds = versionsToDelete.map((v) => v.id);
@@ -294,4 +312,5 @@ export async function deleteExcessDevReleases<T extends deleteExcessDevReleasesO
     }
 
     await deleteVersionsData(projectId, versionIds, versionFileIds, true);
+    return versionIds;
 }

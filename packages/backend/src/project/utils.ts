@@ -5,9 +5,10 @@ import type { FILE_STORAGE_SERVICE } from "@/types";
 import { createHashFromFile } from "@/utils/file";
 import { generateRandomId } from "@/utils/str";
 import type { File as DBFile, VersionFile } from "@prisma/client";
+import { gameVersionsList } from "@shared/config/game-versions";
 import { type Loader, loaders } from "@shared/config/project";
 import { getFileType } from "@shared/lib/utils/convertors";
-import { type PartialTeamMember, combineProjectMembers } from "@shared/lib/utils/project";
+import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
 import { ProjectVisibility } from "@shared/types";
 import { sort } from "semver";
 
@@ -221,6 +222,11 @@ export async function isAnyDuplicateFile({ projectId, files }: isAnyDuplicateFil
 export function aggregateVersions(versionsList: string[]) {
     const uniqueItems = Array.from(new Set(versionsList));
     return sort(uniqueItems);
+}
+
+export function aggregateGameVersions(versions: string[]) {
+    const uniqueItems = Array.from(new Set(versions));
+    return sortVersionsWithReference(uniqueItems, gameVersionsList);
 }
 
 export function aggregateProjectLoaders(projectLoaders: string[]) {

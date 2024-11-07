@@ -449,6 +449,8 @@ const GAME_VERSIONS: GameVersion[] = [
 ];
 export default GAME_VERSIONS;
 
+export const gameVersionsList = GAME_VERSIONS.map((version) => version.value);
+
 export const getGameVersionFromLabel = (label: string): GameVersion | null => {
     return GAME_VERSIONS.find((version) => version.label === label) || null;
 };
