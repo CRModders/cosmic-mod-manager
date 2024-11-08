@@ -1,3 +1,4 @@
+import { useSession } from "@/src/contexts/auth";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
@@ -29,7 +30,9 @@ let orgsList: string[] = [];
 let usersList: string[] = [];
 
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
-    const notifications = useQuery(getNotificationsQuery());
+    const { session } = useSession();
+
+    const notifications = useQuery(getNotificationsQuery(session?.sessionId));
     const relatedOrgs = useQuery(getRelatedOrgsQuery(notifications.data || []));
     const relatedProjects = useQuery(getRelatedProjectsQuery(notifications.data || []));
     const relatedUsers = useQuery(getRelatedUsersQuery(notifications.data || []));
@@ -89,7 +92,9 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         notifications.isLoading ||
         relatedProjects.isLoading ||
         relatedUsers.isLoading ||
-        (!!notifications.data?.length && (!relatedProjectsList || !relatedUsersList));
+        (projectsList.length > 0 && !relatedProjects.data) ||
+        (orgsList.length > 0 && !relatedOrgs.data) ||
+        (usersList.length > 0 && !relatedUsers.data);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {

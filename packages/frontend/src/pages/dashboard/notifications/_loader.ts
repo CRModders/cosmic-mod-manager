@@ -3,7 +3,9 @@ import type { Notification, OrganisationListItem, ProjectListItem } from "@share
 import type { UserProfileData } from "@shared/types/api/user";
 import type { UseQueryOptions } from "@tanstack/react-query";
 
-const getNotifications = async () => {
+const getNotifications = async (sessionId?: string) => {
+    if (!sessionId) return null;
+
     try {
         const response = await useFetch("/api/notifications");
         const data = await response.json();
@@ -15,10 +17,10 @@ const getNotifications = async () => {
         return null;
     }
 };
-export const getNotificationsQuery = () => {
+export const getNotificationsQuery = (sessionId?: string) => {
     return {
         queryKey: ["notifications"],
-        queryFn: getNotifications,
+        queryFn: async () => await getNotifications(sessionId),
         staleTime: 3 * 1000,
     } satisfies UseQueryOptions;
 };
