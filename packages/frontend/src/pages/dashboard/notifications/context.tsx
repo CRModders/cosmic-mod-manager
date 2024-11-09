@@ -92,6 +92,7 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         notifications.isLoading ||
         relatedProjects.isLoading ||
         relatedUsers.isLoading ||
+        relatedOrgs.isLoading ||
         (projectsList.length > 0 && !relatedProjects.data) ||
         (orgsList.length > 0 && !relatedOrgs.data) ||
         (usersList.length > 0 && !relatedUsers.data);

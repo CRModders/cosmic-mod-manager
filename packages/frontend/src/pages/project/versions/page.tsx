@@ -14,15 +14,15 @@ import { ReleaseChannelBadge, releaseChannelTextColor } from "@/components/ui/re
 import { Separator } from "@/components/ui/separator";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatGameVersionsList } from "@/lib/semver";
-import { getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
+import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
-import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
+import { Capitalize, CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { sortVersionsWithReference } from "@shared/lib/utils/project";
 import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
@@ -605,10 +605,12 @@ const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string | Date
     }
 
     return (
-        <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap">
-            {iconVisible === true ? <CalendarIcon className="w-3.5 h-3.5" /> : null}
-            {timeSince(date)}
-        </span>
+        <TooltipTemplate content={formatDate(date)}>
+            <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap cursor-help">
+                {iconVisible === true ? <CalendarIcon className="w-3.5 h-3.5" /> : null}
+                {Capitalize(timeSince(date))}
+            </span>
+        </TooltipTemplate>
     );
 };
 
