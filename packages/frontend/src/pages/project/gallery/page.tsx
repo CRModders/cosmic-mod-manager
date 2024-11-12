@@ -103,7 +103,7 @@ const GalleryItemCard = ({
         <div className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2">
             <button
                 type="button"
-                className="flex items-center justify-center aspect-video bg-[hsla(var(--background-dark))] rounded-lg overflow-hidden"
+                className="flex items-center justify-center aspect-video bg-[hsla(var(--background))] rounded-lg overflow-hidden"
                 onClick={() => {
                     setActiveIndex(index);
                     setdialogOpen(true);
