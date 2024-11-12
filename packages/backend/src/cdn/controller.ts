@@ -107,7 +107,7 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequ
     });
     if (!project?.iconFileId) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
-    const iconFileData = await prisma.file.findUnique({
+    const iconFileData = await prisma.file.findFirst({
         where: {
             id: project.iconFileId,
         },
@@ -143,10 +143,15 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
     });
     if (!project || !project?.gallery?.[0]?.id) return notFoundResponse(ctx);
 
+    const fileIds = project.gallery.flatMap((item) => {
+        if (item.thumbnailFileId) return [item.thumbnailFileId, item.imageFileId];
+        return [item.imageFileId];
+    });
+
     const dbFile = await prisma.file.findFirst({
         where: {
             id: {
-                in: project.gallery.map((galleryItem) => galleryItem.imageFileId),
+                in: fileIds,
             },
             name: image,
         },

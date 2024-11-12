@@ -104,14 +104,14 @@ const GalleryItemCard = ({
             <button
                 type="button"
                 className="flex items-center justify-center aspect-video bg-[hsla(var(--background-dark))] rounded-lg overflow-hidden"
-                onClick={(e) => {
+                onClick={() => {
                     setActiveIndex(index);
                     setdialogOpen(true);
                 }}
             >
                 <img
                     loading="lazy"
-                    src={imageUrl(galleryItem.image)}
+                    src={imageUrl(galleryItem.imageThumbnail)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
                 />

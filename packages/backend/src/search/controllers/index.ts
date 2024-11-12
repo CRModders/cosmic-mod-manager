@@ -80,6 +80,7 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
             gameVersions: project.gameVersions,
             loaders: project.loaders,
             author: project.author,
+            featured_gallery: project.featured_gallery,
         });
     }
 

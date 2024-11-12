@@ -211,14 +211,15 @@ model Dependency {
 }
 
 model GalleryItem {
-    id          String   @id @db.VarChar(32)
-    imageFileId String   @db.VarChar(32)
-    projectId   String   @db.VarChar(32)
-    name        String   @db.VarChar(64)
-    description String   @db.VarChar(512)
-    featured    Boolean
-    dateCreated DateTime @default(now())
-    orderIndex  Int
+    id              String   @id @db.VarChar(32)
+    imageFileId     String   @db.VarChar(32)
+    thumbnailFileId String?  @db.VarChar(32)
+    projectId       String   @db.VarChar(32)
+    name            String   @db.VarChar(64)
+    description     String   @db.VarChar(512)
+    featured        Boolean
+    dateCreated     DateTime @default(now())
+    orderIndex      Int
 
     project Project @relation(name: "ProjectGallery", fields: [projectId], references: [id], onDelete: Cascade)
 }

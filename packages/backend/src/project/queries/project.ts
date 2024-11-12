@@ -92,6 +92,7 @@ export function galleryFields() {
         select: {
             id: true,
             imageFileId: true,
+            thumbnailFileId: true,
             projectId: true,
             name: true,
             description: true,

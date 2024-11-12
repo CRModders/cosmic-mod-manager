@@ -13,7 +13,7 @@ export const addNewGalleryImageFormSchema = z.object({
                 }
                 return true;
             },
-            { message: `Gallery image can only be a maximum of ${MAX_PROJECT_GALLERY_IMAGE_SIZE / 1024} KiB` },
+            { message: `Gallery image can only be a maximum of ${MAX_PROJECT_GALLERY_IMAGE_SIZE / 1048576} MiB` },
         )
         .refine(
             async (file) => {
@@ -31,13 +31,13 @@ export const addNewGalleryImageFormSchema = z.object({
 
     title: z.string().min(2).max(32),
     description: z.string().max(256).optional(),
-    orderIndex: z.number().min(0),
+    orderIndex: z.number().min(0).max(1024),
     featured: z.boolean(),
 });
 
 export const updateGalleryImageFormSchema = z.object({
     title: z.string().min(2).max(32),
     description: z.string().max(256).optional(),
-    orderIndex: z.number().min(0),
+    orderIndex: z.number().min(0).max(1024),
     featured: z.boolean(),
 });

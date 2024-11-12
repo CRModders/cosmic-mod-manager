@@ -11,6 +11,8 @@ import { Card } from "../ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import "./styles.css";
 
+type ViewType = "gallery" | "list";
+
 interface SearchListItemProps {
     projectName: string;
     projectType: string;
@@ -27,9 +29,19 @@ interface SearchListItemProps {
     dateUpdated: Date;
     datePublished: Date;
     showDatePublished?: boolean;
+    viewType?: ViewType;
 }
 
-const SearchListItem = ({
+const SearchListItem = ({ viewType = "list", ...props }: Omit<SearchListItemProps, "clientSide" | "serverSide">) => {
+    if (viewType === "gallery") {
+        return null;
+    }
+    return <ListView {...props} />;
+};
+
+export default SearchListItem;
+
+const ListView = ({
     projectName,
     projectType,
     projectSlug,
@@ -43,7 +55,7 @@ const SearchListItem = ({
     dateUpdated,
     datePublished,
     showDatePublished,
-}: Omit<SearchListItemProps, "clientSide" | "serverSide">) => {
+}: Omit<SearchListItemProps, "clientSide" | "serverSide" | "viewType">) => {
     const projectCategoriesData = getProjectCategoriesDataFromNames(featuredCategories);
     const loadersData = getLoadersFromNames(loaders);
 
@@ -164,4 +176,4 @@ const SearchListItem = ({
     );
 };
 
-export default SearchListItem;
+// const GalleryView =

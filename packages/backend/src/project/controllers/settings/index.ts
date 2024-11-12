@@ -4,11 +4,13 @@ import { projectFileStoragePath } from "@/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
-import { generateDbId, generateRandomId } from "@/utils/str";
+import { resizeImageToWebp } from "@/utils/images";
+import { generateDbId } from "@/utils/str";
+import { ICON_WIDTH } from "@shared/config/forms";
 import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
-import { ProjectPermission } from "@shared/types";
+import { FileType, ProjectPermission } from "@shared/types";
 import type { z } from "zod";
 import { projectMemberPermissionsSelect } from "../../queries/project";
 
@@ -220,16 +222,24 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     const fileType = await getFileType(icon);
     if (!fileType) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
 
-    const fileName = `${generateRandomId()}.${fileType}`;
-    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, icon, fileName);
+    let saveIconFileType = fileType;
+    let saveIcon = icon;
+    if (saveIcon.size > 10240) {
+        saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
+        if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
+    }
 
+    // const resizedIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
-    const newDbFile = await prisma.file.create({
+
+    await prisma.file.create({
         data: {
-            id: generateDbId(),
-            name: fileName,
+            id: fileId,
+            name: fileId,
             size: icon.size,
-            type: fileType,
+            type: saveIconFileType,
             url: newFileUrl,
             storageService: FILE_STORAGE_SERVICE.LOCAL,
         },
@@ -240,7 +250,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
             id: project.id,
         },
         data: {
-            iconFileId: newDbFile.id,
+            iconFileId: fileId,
         },
     });
 

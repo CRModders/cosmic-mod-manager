@@ -9,11 +9,13 @@ import {
     serverErrorResponseData,
     unauthorizedReqResponseData,
 } from "@/utils/http";
+import { resizeImageToWebp } from "@/utils/images";
 import { generateDbId } from "@/utils/str";
+import { GALLERY_IMG_THUMBNAIL_WIDTH, MAX_PROJECT_GALLERY_IMAGES_COUNT } from "@shared/config/forms";
 import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
-import { ProjectPermission } from "@shared/types";
+import { FileType, ProjectPermission } from "@shared/types";
 import type { z } from "zod";
 import { projectMemberPermissionsSelect } from "../queries/project";
 
@@ -37,6 +39,8 @@ export async function addNewGalleryImage(
         },
     });
     if (!project?.id) return notFoundResponseData();
+    if (project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
+        return invalidReqestResponseData(`Maximum of ${MAX_PROJECT_GALLERY_IMAGES_COUNT} gallery images allowed`);
 
     // Check if the order index is not already occupied
     for (const item of project.gallery) {
@@ -70,22 +74,42 @@ export async function addNewGalleryImage(
         }
     }
 
-    const fileType = await getFileType(formData.image);
-    const fileName = `${generateDbId()}.${fileType}`;
-    const fileUrl = await saveProjectGalleryFile(FILE_STORAGE_SERVICE.LOCAL, project.id, formData.image, fileName);
+    const storageService = FILE_STORAGE_SERVICE.LOCAL;
+    const fileType = (await getFileType(formData.image)) || FileType.PNG;
 
-    if (!fileUrl) return serverErrorResponseData("Failed to upload the image");
+    // Save the thumbnail image
+    const thumbnailFileType = FileType.WEBP;
+    const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
+    const thumbnailImg = await resizeImageToWebp(formData.image, fileType, GALLERY_IMG_THUMBNAIL_WIDTH);
+    const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, project.id, thumbnailImg, thumbnailFileId);
 
-    // Create the generic file entry in the database
-    const dbFile = await prisma.file.create({
-        data: {
-            id: generateDbId(),
-            name: fileName,
+    // Save the raw gallery file
+    const rawFileId = `${generateDbId()}.${fileType}`;
+    const rawFileUrl = await saveProjectGalleryFile(storageService, project.id, formData.image, rawFileId);
+
+    if (!rawFileUrl || !thumbnailSaveUrl) return serverErrorResponseData("Failed to upload the image");
+
+    const imageFiles = [
+        {
+            id: rawFileId,
+            name: rawFileId,
             size: formData.image.size,
-            type: (await getFileType(formData.image)) || "",
-            url: fileUrl || "",
-            storageService: FILE_STORAGE_SERVICE.LOCAL,
+            type: fileType || "",
+            url: rawFileUrl,
+            storageService: storageService,
         },
+        {
+            id: thumbnailFileId,
+            name: thumbnailFileId,
+            size: thumbnailImg.size,
+            type: thumbnailFileType,
+            url: thumbnailSaveUrl,
+            storageService: storageService,
+        },
+    ];
+
+    await prisma.file.createMany({
+        data: imageFiles,
     });
 
     // Create the gallery item
@@ -96,8 +120,9 @@ export async function addNewGalleryImage(
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
-            imageFileId: dbFile.id,
-            orderIndex: formData.orderIndex || project.gallery?.[0]?.orderIndex + 1 || 1,
+            imageFileId: rawFileId,
+            thumbnailFileId: thumbnailFileId,
+            orderIndex: formData.orderIndex || (project.gallery?.[0]?.orderIndex || 0) + 1,
         },
     });
 
@@ -114,12 +139,14 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
                 select: {
                     id: true,
                     imageFileId: true,
+                    thumbnailFileId: true,
                 },
             },
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    if (!project?.id || !project.gallery?.[0]?.id) return notFoundResponseData();
+    const galleryItem = project?.gallery?.[0];
+    if (!project?.id || !galleryItem?.id) return notFoundResponseData();
 
     const currMember = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
@@ -134,15 +161,20 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
         where: { id: galleryItemId },
     });
 
-    // Delete the file from database
-    const deletedDbFile = await prisma.file.delete({
-        where: {
-            id: project.gallery[0].imageFileId,
-        },
-    });
+    const filesToDelete = [galleryItem.imageFileId];
+    if (galleryItem.thumbnailFileId) filesToDelete.push(galleryItem.thumbnailFileId);
 
-    // Delete the file from storage
-    await deleteProjectGalleryFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+    for (const fileId of filesToDelete) {
+        // Delete the file from database
+        const deletedDbFile = await prisma.file.delete({
+            where: {
+                id: fileId,
+            },
+        });
+
+        // Delete the file from storage
+        await deleteProjectGalleryFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+    }
 
     return { data: { success: true, message: "Gallery image deleted" }, status: HTTP_STATUS.OK };
 }

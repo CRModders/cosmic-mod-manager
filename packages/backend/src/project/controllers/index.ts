@@ -48,7 +48,10 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
     }
     const currSessionMember = allMembers.get(userSession?.id || "");
 
-    const galleryFileIds = project.gallery.map((item) => item.imageFileId);
+    const galleryFileIds = project.gallery.flatMap((item) => {
+        if (item.thumbnailFileId) return [item.imageFileId, item.thumbnailFileId];
+        return [item.imageFileId];
+    });
     const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
 
     // const organisation = project.organisation;
@@ -92,12 +95,14 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                     .map((galleryItem) => {
                         const galleryFileUrl = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.slug);
                         if (!galleryFileUrl) return null;
+                        const imageThumbnail = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.thumbnailFileId || ""), project.slug);
 
                         return {
                             id: galleryItem.id,
                             name: galleryItem.name,
                             description: galleryItem.description,
                             image: galleryFileUrl,
+                            imageThumbnail: imageThumbnail,
                             featured: galleryItem.featured,
                             dateCreated: galleryItem.dateCreated,
                             orderIndex: galleryItem.orderIndex,
@@ -201,6 +206,7 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             categories: project.categories,
             gameVersions: project.gameVersions,
             loaders: project.loaders,
+            featured_gallery: null,
         });
     }
 

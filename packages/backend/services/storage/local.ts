@@ -2,6 +2,8 @@ import * as fs from "node:fs/promises";
 import { rm } from "node:fs/promises";
 import { LOCAL_BASE_STORAGE_PATH } from "./utils";
 
+export type WritableFile = File | Blob | NodeJS.TypedArray | ArrayBufferLike | string;
+
 export async function doesPathExist(path: string) {
     try {
         return await fs.exists(`${LOCAL_BASE_STORAGE_PATH}/${path}`);
@@ -10,7 +12,7 @@ export async function doesPathExist(path: string) {
     }
 }
 
-export async function saveFileToLocalStorage(path: string, file: File) {
+export async function saveFileToLocalStorage(path: string, file: WritableFile) {
     try {
         await Bun.write(`${LOCAL_BASE_STORAGE_PATH}/${path}`, file);
         return path;
@@ -31,7 +33,7 @@ export async function getFileFromLocalStorage(path: string) {
 
 export async function deleteFromLocalStorage(path: string) {
     try {
-        await rm(`${LOCAL_BASE_STORAGE_PATH}/${path}`, { recursive: true });
+        await rm(`${LOCAL_BASE_STORAGE_PATH}/${path}`, { recursive: true, force: true });
         return path;
     } catch (error) {
         console.error(error);

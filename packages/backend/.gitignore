@@ -5,6 +5,7 @@ uploads
 meilisearch
 private
 redis
+script.ts
 
 # redis files
 dump.rdb

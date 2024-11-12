@@ -43,6 +43,7 @@ export interface GalleryItem {
     name: string;
     description: string | null;
     image: string;
+    imageThumbnail: string;
     featured: boolean;
     dateCreated: Date;
     orderIndex: number;
@@ -156,6 +157,7 @@ export interface ProjectListItem {
     categories: string[];
     gameVersions: string[];
     loaders: string[];
+    featured_gallery: string | null;
 
     author?: string; // The author's username
 }

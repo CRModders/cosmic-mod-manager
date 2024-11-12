@@ -1,6 +1,6 @@
 import meilisearch from "@/services/meilisearch";
 import prisma from "@/services/prisma";
-import { getAppropriateProjectIconUrl } from "@/utils/urls";
+import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
 import { getFilesFromId } from "../project/queries/file";
 
@@ -48,6 +48,11 @@ const requiredProjectFields = {
     organisation: {
         select: teamSelect,
     },
+    gallery: {
+        where: {
+            featured: true,
+        },
+    },
 };
 
 interface ProjectSearchDocument {
@@ -69,6 +74,7 @@ interface ProjectSearchDocument {
     dateUpdated: Date;
     openSource: boolean;
     author: string;
+    featured_gallery: string | null;
 }
 
 const syncProjects = async (cursor: null | string) => {
@@ -90,19 +96,26 @@ const syncProjects = async (cursor: null | string) => {
 
         if (projects.length === 0) return;
 
-        const projectIconIds = [];
+        const projectFileIds = [];
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
-            if (project.iconFileId) projectIconIds.push(project.iconFileId);
+            if (project.iconFileId) projectFileIds.push(project.iconFileId);
+
+            // The thumbnail of the featured gallery image of the project
+            const featuredGallery = project.gallery[0];
+            if (featuredGallery?.thumbnailFileId) {
+                projectFileIds.push(featuredGallery.thumbnailFileId);
+            }
         }
-        const projectIconFiles = await getFilesFromId(projectIconIds);
+        const projectFiles = await getFilesFromId(projectFileIds);
 
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
 
             const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
-            const iconUrl = getAppropriateProjectIconUrl(projectIconFiles.get(project?.iconFileId || ""), project.slug);
+            const iconUrl = getAppropriateProjectIconUrl(projectFiles.get(project?.iconFileId || ""), project.slug);
+            const featuredGallery = getAppropriateGalleryFileUrl(projectFiles.get(project.gallery[0]?.thumbnailFileId || ""), project.slug);
 
             formattedProjectsData.push({
                 id: project.id,
@@ -123,6 +136,7 @@ const syncProjects = async (cursor: null | string) => {
                 author: author?.user?.userName,
                 clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
                 serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
+                featured_gallery: featuredGallery,
             });
         }
 

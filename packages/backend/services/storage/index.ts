@@ -1,6 +1,6 @@
 import { FILE_STORAGE_SERVICE } from "@/types";
 import { isUrl } from "@shared/lib/utils";
-import { deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
+import { type WritableFile, deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
 import { orgFileStoragePath, projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
 
 export const getFileUrl = (storageService: FILE_STORAGE_SERVICE, path: string, fileName: string) => {
@@ -29,7 +29,7 @@ export const getFile = async (storageService: FILE_STORAGE_SERVICE, path: string
     }
 };
 
-export const saveFile = async (storageService: FILE_STORAGE_SERVICE, file: File, path: string) => {
+export const saveFile = async (storageService: FILE_STORAGE_SERVICE, file: WritableFile, path: string) => {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
@@ -76,18 +76,15 @@ export const deleteDirectory = async (storageService: FILE_STORAGE_SERVICE, path
 };
 
 // ? Project Files
-export const saveProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, file: File, fileName: string) => {
-    // TODO: Create backup
+export const saveProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, file: WritableFile, fileName: string) => {
     return await saveFile(storageService, file, projectFileStoragePath(projectId, fileName));
 };
 
 export const deleteProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
-    // TODO: Remove backup file
     return await deleteFile(storageService, projectFileStoragePath(projectId, fileName));
 };
 
 export const deleteProjectDirectory = async (storageService: FILE_STORAGE_SERVICE, projectId: string) => {
-    // TODO: Remove backup directory
     return await deleteDirectory(storageService, projectFileStoragePath(projectId));
 };
 
@@ -100,10 +97,9 @@ export const saveProjectVersionFile = async (
     storageService: FILE_STORAGE_SERVICE,
     projectId: string,
     versionId: string,
-    file: File,
+    file: WritableFile,
     fileName: string,
 ) => {
-    // TODO: Create backup
     return await saveFile(storageService, file, versionFileStoragePath(projectId, versionId, fileName));
 };
 
@@ -113,12 +109,10 @@ export const deleteProjectVersionFile = async (
     versionId: string,
     fileName: string,
 ) => {
-    // TODO: Remove backup file
     return await deleteFile(storageService, versionFileStoragePath(projectId, versionId, fileName));
 };
 
 export const deleteProjectVersionDirectory = async (storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string) => {
-    // TODO: Remove backup directory
     return await deleteDirectory(storageService, versionFileStoragePath(projectId, versionId));
 };
 
@@ -137,31 +131,31 @@ export const getProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE
     return await getFile(storageService, projectGalleryStoragePath(projectId, fileName));
 };
 
-export const saveProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, file: File, fileName: string) => {
+export const saveProjectGalleryFile = async (
+    storageService: FILE_STORAGE_SERVICE,
+    projectId: string,
+    file: WritableFile,
+    fileName: string,
+) => {
     if (isUrl(fileName)) return fileName;
-    // TODO: Create backup
     return await saveFile(storageService, file, projectGalleryStoragePath(projectId, fileName));
 };
 
 export const deleteProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
     if (isUrl(fileName)) return fileName;
-    // TODO: Remove backup file
     return await deleteFile(storageService, projectGalleryStoragePath(projectId, fileName));
 };
 
 // ? Organization Files
-export const saveOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, file: File, fileName: string) => {
-    // TODO: Create backup
+export const saveOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, file: WritableFile, fileName: string) => {
     return await saveFile(storageService, file, orgFileStoragePath(orgId, fileName));
 };
 
 export const deleteOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) => {
-    // TODO: Remove backup file
     return await deleteFile(storageService, orgFileStoragePath(orgId, fileName));
 };
 
 export const deleteOrgDirectory = async (storageService: FILE_STORAGE_SERVICE, orgId: string) => {
-    // TODO: Remove backup directory
     return await deleteDirectory(storageService, orgFileStoragePath(orgId));
 };
 
