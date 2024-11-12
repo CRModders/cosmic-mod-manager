@@ -1,3 +1,4 @@
+import { ImgLoader } from "@/components/img-loading-spinner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -167,6 +168,7 @@ const ImageDialog = ({
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+    const [imgLoaded, setImgLoaded] = useState(false);
     const [isFullWidth, setIsFullWidth] = useState(false);
 
     const toggleFullWidth = () => {
@@ -211,6 +213,11 @@ const ImageDialog = ({
         if (dialogOpen === false) setIsFullWidth(false);
     }, [dialogOpen]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        setImgLoaded(false);
+    }, [galleryItem.image]);
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogContent
@@ -226,7 +233,7 @@ const ImageDialog = ({
                         <div className="absolute top-0 left-0 w-full h-full z-0" />
                     </DialogClose>
 
-                    <img
+                    <ImgLoader
                         src={imageUrl(galleryItem.image)}
                         alt={galleryItem.name}
                         className={cn(
@@ -234,6 +241,8 @@ const ImageDialog = ({
                             "max-w-[calc(100vw_-_2rem)] sm:max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)]",
                             isFullWidth && "w-full h-full",
                         )}
+                        loaded={imgLoaded}
+                        setLoaded={setImgLoaded}
                     />
 
                     <div className="max-w-full flex flex-col items-center justify-center group p-16 pt-24 pb-4 rounded w-fit absolute left-[50%] bottom-[0.5rem] translate-x-[-50%] z-20">
