@@ -213,7 +213,7 @@ model Dependency {
 model GalleryItem {
     id              String   @id @db.VarChar(32)
     imageFileId     String   @db.VarChar(32)
-    thumbnailFileId String?  @db.VarChar(32)
+    thumbnailFileId String   @db.VarChar(32)
     projectId       String   @db.VarChar(32)
     name            String   @db.VarChar(64)
     description     String   @db.VarChar(512)
