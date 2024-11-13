@@ -224,7 +224,8 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
     let saveIconFileType = fileType;
     let saveIcon = icon;
-    if (saveIcon.size > 10240) {
+    // Resize the image if it's larger than 5KB
+    if (saveIcon.size > 5120) {
         saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
         if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
     }
