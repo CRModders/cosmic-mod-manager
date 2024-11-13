@@ -32,6 +32,7 @@ export const configuredXss = new FilterXSS({
     },
     onTag: (tag, html, { isClosing }) => {
         if (tag === "img" && !isClosing) {
+            console.log(html);
             return `<${tag} loading="lazy" ${html.slice(5)}`;
         }
 

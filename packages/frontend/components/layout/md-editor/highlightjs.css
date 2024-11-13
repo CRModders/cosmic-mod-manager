@@ -94,7 +94,7 @@
 }
 
 .markdown-body img {
-    @apply max-w-full w-auto h-auto inline-block;
+    @apply max-w-full h-auto inline-block;
 }
 
 html:not(.dark).markdown-body img[src$='#gh-dark-mode-only'] {
