@@ -100,6 +100,7 @@ const syncProjects = async (cursor: null | string) => {
             if (project.gameVersions.length === 0) continue;
 
             const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
+            const featured_gallery = project.gallery[0] ? projectGalleryFileUrl(project.id, project.gallery[0].thumbnailFileId) : null;
 
             formattedProjectsData.push({
                 id: project.id,
@@ -120,7 +121,7 @@ const syncProjects = async (cursor: null | string) => {
                 author: author?.user?.userName,
                 clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
                 serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
-                featured_gallery: projectGalleryFileUrl(project.id, project.gallery[0]?.thumbnailFileId || ""),
+                featured_gallery: featured_gallery,
             });
         }
 
