@@ -71,7 +71,7 @@ html body {
 .dark body {
     --accent-color-hue: 345;
     --tint-hue: 200;
-    --bg-saturation: 13%;
+    --bg-saturation: 10%;
 
     --foreground: var(--foreground-dark);
     --foreground-bright: var(--foreground-bright-dark);
@@ -99,7 +99,7 @@ html body {
 .light body {
     --accent-color-hue: 343;
     --tint-hue: 210;
-    --bg-saturation: 13%;
+    --bg-saturation: 12%;
 
     --foreground: var(--foreground-light);
     --foreground-bright: var(--foreground-bright-light);
