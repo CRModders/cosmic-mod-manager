@@ -236,6 +236,7 @@ const ImageDialog = ({
                     <ImgLoader
                         src={imageUrl(galleryItem.image)}
                         alt={galleryItem.name}
+                        thumbnailSrc={imageUrl(galleryItem.imageThumbnail)}
                         className={cn(
                             "border-none ring-0 rounded-lg object-contain z-10",
                             "max-w-[calc(100vw_-_2rem)] sm:max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)]",

@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { WanderingCubesSpinner } from "./ui/spinner";
 
@@ -6,19 +7,31 @@ interface ImgLoaderProps {
     setLoaded: (loaded: boolean) => void;
     src: string;
     alt: string;
+    thumbnailSrc?: string;
     className?: string;
     spinner?: React.ReactNode;
 }
 
-export const ImgLoader = ({ src, alt, className, spinner, loaded, setLoaded }: ImgLoaderProps) => {
+const loadedImages = new Set<string>();
+
+export const ImgLoader = ({ src, alt, className, spinner, loaded, setLoaded, thumbnailSrc }: ImgLoaderProps) => {
+    const _spinner = spinner || (
+        <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
+    );
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (loaded) return;
+        if (loadedImages.has(src)) {
+            setLoaded(true);
+            return;
+        }
 
         const img = document.createElement("img");
         img.src = src;
         img.onload = () => {
             setLoaded(true);
+            loadedImages.add(src);
         };
 
         return () => {
@@ -26,9 +39,13 @@ export const ImgLoader = ({ src, alt, className, spinner, loaded, setLoaded }: I
         };
     }, [loaded]);
 
-    if (!loaded) {
-        return <div>{spinner ? spinner : <WanderingCubesSpinner />}</div>;
-    }
-
-    return <img src={src} alt={alt} className={className} />;
+    return (
+        <div className="relative">
+            {!loaded && thumbnailSrc ? (
+                <img src={thumbnailSrc} alt={alt} className={cn("absolute-center w-full h-full brightness-75", className)} />
+            ) : null}
+            <img src={src} alt={alt} className={cn("", !loaded && "invisible", className)} />
+            {!loaded ? _spinner : null}
+        </div>
+    );
 };
