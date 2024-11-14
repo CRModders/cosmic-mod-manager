@@ -18,7 +18,6 @@ export const ImgLoader = ({ src, alt, className, spinner, loaded, setLoaded }: I
         const img = document.createElement("img");
         img.src = src;
         img.onload = () => {
-            console.log("Image loaded");
             setLoaded(true);
         };
 

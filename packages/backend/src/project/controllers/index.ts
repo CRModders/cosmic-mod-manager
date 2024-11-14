@@ -5,7 +5,7 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { isNumber } from "@/utils";
 import { HTTP_STATUS } from "@/utils/http";
 import { tryJsonParse } from "@/utils/str";
-import { getAppropriateGalleryFileUrl, orgIconUrl, projectIconUrl } from "@/utils/urls";
+import { orgIconUrl, projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
 import { gameVersionsList } from "@shared/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
@@ -90,8 +90,8 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
                 gallery: project.gallery
                     .map((galleryItem) => {
-                        const rawImage = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.id);
-                        const imageThumbnail = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.thumbnailFileId || ""), project.id);
+                        const rawImage = projectGalleryFileUrl(project.id, galleryItem.imageFileId);
+                        const imageThumbnail = projectGalleryFileUrl(project.id, galleryItem.thumbnailFileId);
                         if (!rawImage || !imageThumbnail) return null;
 
                         return {

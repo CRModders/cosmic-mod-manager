@@ -17,5 +17,4 @@ export interface ContextUserData extends User {
 
 export enum FILE_STORAGE_SERVICE {
     LOCAL = "local",
-    IMGBB = "imgbb",
 }

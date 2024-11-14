@@ -1,5 +1,5 @@
 import prisma from "@/services/prisma";
-import { getFile, getFileUrl, getProjectGalleryFile } from "@/services/storage";
+import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile } from "@/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import { HTTP_STATUS, notFoundResponse } from "@/utils/http";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, versionFileUrl } from "@/utils/urls";
@@ -18,7 +18,7 @@ export const serveVersionFile = async (
     userSession: ContextUserData | undefined,
     isCdnRequest = true,
 ) => {
-    const projectData = await prisma.project.findUnique({
+    const project = await prisma.project.findUnique({
         where: {
             id: projectId,
         },
@@ -39,18 +39,18 @@ export const serveVersionFile = async (
         },
     });
 
-    const targetVersion = projectData?.versions?.[0];
-    if (!projectData?.id || !targetVersion?.files?.[0]?.fileId) {
+    const targetVersion = project?.versions?.[0];
+    if (!project?.id || !targetVersion?.files?.[0]?.fileId) {
         return notFoundResponse(ctx);
     }
 
-    const isProjectPrivate = projectData.visibility === ProjectVisibility.PRIVATE;
+    const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
     const projectAccessible = isProjectAccessible({
-        visibility: projectData.visibility,
-        publishingStatus: projectData.status,
+        visibility: project.visibility,
+        publishingStatus: project.status,
         userId: userSession?.id,
-        teamMembers: projectData.team.members,
-        orgMembers: projectData.organisation?.team.members || [],
+        teamMembers: project.team.members,
+        orgMembers: project.organisation?.team.members || [],
     });
     if (!projectAccessible) {
         return notFoundResponse(ctx);
@@ -77,17 +77,22 @@ export const serveVersionFile = async (
         await addToDownloadsQueue({
             ipAddress: getUserIpAddress(ctx) || "",
             userId: userSession?.id || ctx.get("guest-session"),
-            projectId: projectData.id,
+            projectId: project.id,
             versionId: targetVersion.id,
         });
     }
 
     // Redirect to the cdn url if the project is public
     if (!isCdnRequest && !isProjectPrivate) {
-        return ctx.redirect(`${versionFileUrl(projectId, versionId, fileName, true)}`);
+        return ctx.redirect(`${versionFileUrl(project.id, targetVersion.id, fileName, true)}`);
     }
 
-    const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
+    const file = await getProjectVersionFile(
+        versionFile.storageService as FILE_STORAGE_SERVICE,
+        project.id,
+        targetVersion.id,
+        versionFile.name,
+    );
     if (!file) return ctx.json({ message: "File not found" }, HTTP_STATUS.NOT_FOUND);
 
     if (typeof file === "string") return ctx.redirect(file);
@@ -115,10 +120,10 @@ export const serveProjectIconFile = async (ctx: Context, projectId: string, isCd
     if (!iconFileData?.id) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
     if (!isCdnRequest) {
-        return ctx.redirect(`${projectIconUrl(project.slug, project.iconFileId)}`);
+        return ctx.redirect(`${projectIconUrl(project.id, project.iconFileId)}`);
     }
 
-    const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
+    const iconFile = await getProjectFile(iconFileData.storageService as FILE_STORAGE_SERVICE, project.id, iconFileData.name);
 
     // Redirect to the file if it's a URL
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
@@ -128,7 +133,7 @@ export const serveProjectIconFile = async (ctx: Context, projectId: string, isCd
     return response;
 };
 
-export const serveProjectGalleryImage = async (ctx: Context, projectId: string, image: string, isCdnRequest: boolean) => {
+export const serveProjectGalleryImage = async (ctx: Context, projectId: string, imgFileId: string, isCdnRequest: boolean) => {
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
@@ -143,32 +148,23 @@ export const serveProjectGalleryImage = async (ctx: Context, projectId: string, 
     });
     if (!project || !project?.gallery?.[0]?.id) return notFoundResponse(ctx);
 
-    const fileIds = project.gallery.flatMap((item) => {
-        if (item.thumbnailFileId) return [item.thumbnailFileId, item.imageFileId];
-        return [item.imageFileId];
-    });
+    const targetGalleryItem = project.gallery.find((item) => item.imageFileId === imgFileId || item.thumbnailFileId === imgFileId);
+    if (!targetGalleryItem) return notFoundResponse(ctx);
 
     const dbFile = await prisma.file.findFirst({
         where: {
-            id: {
-                in: fileIds,
-            },
-            name: image,
+            id: imgFileId,
         },
     });
-    if (!dbFile?.name) return notFoundResponse(ctx);
+    if (!dbFile?.id) return notFoundResponse(ctx);
 
     // If it's not a CDN request redirect to the cache_cdn url
     if (!isCdnRequest) {
-        return ctx.redirect(`${projectGalleryFileUrl(project.slug, dbFile.name)}`);
+        return ctx.redirect(`${projectGalleryFileUrl(project.id, dbFile.id)}`);
     }
 
-    // Get the URL of the stored file
-    const imageFileUrl = getFileUrl(dbFile.storageService as FILE_STORAGE_SERVICE, dbFile.url, dbFile.name);
-    if (!imageFileUrl) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
-
     // Get the file from the storage service
-    const file = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, imageFileUrl);
+    const file = await getProjectGalleryFile(dbFile.storageService as FILE_STORAGE_SERVICE, project.id, dbFile.name);
     if (!file) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
     // If the file is a URL, redirect to it
@@ -195,15 +191,15 @@ export const serveOrgIconFile = async (ctx: Context, orgId: string, isCdnRequest
     if (!iconFileData?.id) return notFoundResponse(ctx);
 
     if (!isCdnRequest) {
-        return ctx.redirect(`${orgIconUrl(org.slug, org.iconFileId)}`);
+        return ctx.redirect(`${orgIconUrl(org.id, org.iconFileId)}`);
     }
 
-    const iconFile = await getFile(iconFileData.storageService as FILE_STORAGE_SERVICE, iconFileData.url);
+    const icon = await getOrgFile(iconFileData.storageService as FILE_STORAGE_SERVICE, org.id, iconFileData.name);
 
     // Redirect to the file if it's a URL
-    if (typeof iconFile === "string") return ctx.redirect(iconFile);
+    if (typeof icon === "string") return ctx.redirect(icon);
 
-    const response = new Response(iconFile);
+    const response = new Response(icon);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
     return response;
 };

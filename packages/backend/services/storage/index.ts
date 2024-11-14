@@ -3,24 +3,11 @@ import { isUrl } from "@shared/lib/utils";
 import { type WritableFile, deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
 import { orgFileStoragePath, projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
 
-export const getFileUrl = (storageService: FILE_STORAGE_SERVICE, path: string, fileName: string) => {
-    switch (storageService) {
-        case FILE_STORAGE_SERVICE.LOCAL:
-            return fileName;
-        case FILE_STORAGE_SERVICE.IMGBB:
-            return path;
-        default:
-            return null;
-    }
-};
-
 export const getFile = async (storageService: FILE_STORAGE_SERVICE, path: string) => {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
                 return await getFileFromLocalStorage(path);
-            case FILE_STORAGE_SERVICE.IMGBB:
-                return path;
             default:
                 return null;
         }
@@ -48,8 +35,6 @@ export const deleteFile = async (storageService: FILE_STORAGE_SERVICE, path: str
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
                 return await deleteFromLocalStorage(path);
-            case FILE_STORAGE_SERVICE.IMGBB:
-                return null;
             default:
                 return null;
         }
@@ -64,8 +49,6 @@ export const deleteDirectory = async (storageService: FILE_STORAGE_SERVICE, path
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
                 return await deleteFromLocalStorage(path);
-            case FILE_STORAGE_SERVICE.IMGBB:
-                return null;
             default:
                 return null;
         }

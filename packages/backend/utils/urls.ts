@@ -1,5 +1,3 @@
-import { getFileUrl } from "@/services/storage";
-import type { FILE_STORAGE_SERVICE } from "@/types";
 import env from "./env";
 
 const CDN_PREFIX = (useCacheCdn?: boolean) => `${useCacheCdn ? env.CACHE_CDN_URL : env.CDN_SERVER_URL}/cdn/data`;
@@ -20,9 +18,9 @@ export function projectIconUrl(projectId: string, icon: string | null) {
     return cdnUrl(`${projectId}/${icon}`);
 }
 
-export function projectGalleryFileUrl(slug: string, galleryFile: string) {
+export function projectGalleryFileUrl(projectId: string, galleryFile: string) {
     if (galleryFile.startsWith("http")) return galleryFile;
-    return cdnUrl(`${slug}/gallery/${encodeURIComponent(galleryFile)}`);
+    return cdnUrl(`${projectId}/gallery/${encodeURIComponent(galleryFile)}`);
 }
 
 export function versionFileUrl(projectId: string, versionId: string, fileName: string, useCacheCdn?: boolean) {
@@ -37,17 +35,4 @@ export function orgIconUrl(orgId: string, icon: string | null) {
 
     // Otherwise, construct and return the CDN URL
     return cdnUrl(`organization/${orgId}/${icon}`);
-}
-
-interface FileData {
-    name: string;
-    url: string;
-    storageService: string;
-}
-
-export function getAppropriateGalleryFileUrl(file: FileData | undefined, projectId: string) {
-    if (!file) return null;
-    const fileUrl = projectGalleryFileUrl(projectId, getFileUrl(file.storageService as FILE_STORAGE_SERVICE, file.url, file.name) || "");
-    if (!fileUrl) return null;
-    return fileUrl;
 }

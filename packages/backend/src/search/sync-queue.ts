@@ -1,8 +1,7 @@
 import meilisearch from "@/services/meilisearch";
 import prisma from "@/services/prisma";
-import { getAppropriateGalleryFileUrl, projectIconUrl } from "@/utils/urls";
+import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
-import { getFilesFromId } from "../project/queries/file";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
@@ -96,24 +95,11 @@ const syncProjects = async (cursor: null | string) => {
 
         if (projects.length === 0) return;
 
-        const projectFileIds = [];
-        for (const project of projects) {
-            if (project.gameVersions.length === 0) continue;
-
-            // The thumbnail of the featured gallery image of the project
-            const featuredGallery = project.gallery[0];
-            if (featuredGallery?.thumbnailFileId) {
-                projectFileIds.push(featuredGallery.thumbnailFileId);
-            }
-        }
-        const projectFiles = await getFilesFromId(projectFileIds);
-
         const formattedProjectsData: ProjectSearchDocument[] = [];
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
 
             const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
-            const featuredGallery = getAppropriateGalleryFileUrl(projectFiles.get(project.gallery[0]?.thumbnailFileId || ""), project.id);
 
             formattedProjectsData.push({
                 id: project.id,
@@ -134,7 +120,7 @@ const syncProjects = async (cursor: null | string) => {
                 author: author?.user?.userName,
                 clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
                 serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
-                featured_gallery: featuredGallery,
+                featured_gallery: projectGalleryFileUrl(project.id, project.gallery[0]?.thumbnailFileId || ""),
             });
         }
 
