@@ -230,7 +230,6 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
     }
 
-    // const resizedIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };

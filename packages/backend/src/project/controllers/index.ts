@@ -5,7 +5,7 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { isNumber } from "@/utils";
 import { HTTP_STATUS } from "@/utils/http";
 import { tryJsonParse } from "@/utils/str";
-import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl, orgIconUrl, projectIconUrl } from "@/utils/urls";
+import { getAppropriateGalleryFileUrl, orgIconUrl, projectIconUrl } from "@/utils/urls";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
 import { gameVersionsList } from "@shared/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
@@ -52,11 +52,8 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         if (item.thumbnailFileId) return [item.imageFileId, item.thumbnailFileId];
         return [item.imageFileId];
     });
-    const filesMap = await getFilesFromId(galleryFileIds.concat(project.iconFileId || ""));
+    const filesMap = await getFilesFromId(galleryFileIds);
 
-    // const organisation = project.organisation;
-    const projectIconFile = filesMap.get(project.iconFileId || "");
-    const projectIconUrl = getAppropriateProjectIconUrl(projectIconFile, project.slug);
     const org = project.organisation;
 
     return {
@@ -67,7 +64,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 teamId: project.team.id,
                 orgId: null,
                 name: project.name,
-                icon: projectIconUrl,
+                icon: projectIconUrl(project.id, project.iconFileId),
                 status: project.status as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
@@ -93,15 +90,15 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
                 gallery: project.gallery
                     .map((galleryItem) => {
-                        const galleryFileUrl = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.slug);
-                        if (!galleryFileUrl) return null;
-                        const imageThumbnail = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.thumbnailFileId || ""), project.slug);
+                        const rawImage = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.imageFileId), project.id);
+                        const imageThumbnail = getAppropriateGalleryFileUrl(filesMap.get(galleryItem.thumbnailFileId || ""), project.id);
+                        if (!rawImage || !imageThumbnail) return null;
 
                         return {
                             id: galleryItem.id,
                             name: galleryItem.name,
                             description: galleryItem.description,
-                            image: galleryFileUrl,
+                            image: rawImage,
                             imageThumbnail: imageThumbnail,
                             featured: galleryItem.featured,
                             dateCreated: galleryItem.dateCreated,
@@ -116,7 +113,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                           name: org.name,
                           slug: org.slug,
                           description: org.description,
-                          icon: orgIconUrl(org.slug, org.iconFileId),
+                          icon: orgIconUrl(org.id, org.iconFileId),
                           members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
                       }
                     : null,
@@ -150,9 +147,9 @@ function formatProjectMember<T extends FormatMemberProps>(member: T, currMember?
 }
 
 export async function checkProjectSlugValidity(slug: string): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findFirst({
+    const project = await prisma.project.findUnique({
         where: {
-            OR: [{ id: slug }, { slug: slug }],
+            slug: slug,
         },
     });
 
@@ -188,7 +185,7 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
         if (!projectAccessible) continue;
 
         projectsList.push({
-            icon: projectIconUrl(project.slug, project.iconFileId),
+            icon: projectIconUrl(project.id, project.iconFileId),
             id: project.id,
             slug: project.slug,
             name: project.name,

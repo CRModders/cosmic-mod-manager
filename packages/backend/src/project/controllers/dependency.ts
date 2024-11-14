@@ -2,9 +2,8 @@ import prisma from "@/services/prisma";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS } from "@/utils/http";
-import { getAppropriateProjectIconUrl } from "@/utils/urls";
+import { projectIconUrl } from "@/utils/urls";
 import type { Dependency } from "@prisma/client";
-import { getFilesFromId } from "../queries/file";
 import { ListItemProjectFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
@@ -84,20 +83,12 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
         },
     });
 
-    const iconFileIds = [];
-    for (const project of dependencyProjects) {
-        if (project.iconFileId) iconFileIds.push(project.iconFileId);
-    }
-    const projectIconFiles = await getFilesFromId(iconFileIds);
-
     return {
         data: {
             projects: dependencyProjects.map((project) => {
-                const iconFile = projectIconFiles.get(project?.iconFileId || "");
-
                 return {
                     ...project,
-                    icon: getAppropriateProjectIconUrl(iconFile, project.slug),
+                    icon: projectIconUrl(project.id, project.iconFileId),
                 };
             }),
             versions: dependencyVersions,

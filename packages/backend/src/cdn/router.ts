@@ -17,20 +17,20 @@ export const corsAllowCdn = cors({
 
 cdnRouter.use(corsAllowCdn);
 
-cdnRouter.get("/data/:projectSlug/:file", cdnAssetRateLimiter, projectFile_get);
-cdnRouter.get("/data/:projectSlug/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
-cdnRouter.get("/data/:projectSlug/version/:versionSlug/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
+cdnRouter.get("/data/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
+cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
+cdnRouter.get("/data/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
 
-cdnRouter.get("/data/organization/:orgSlug/:file", cdnAssetRateLimiter, orgFile_get);
+cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
 
 async function projectFile_get(ctx: Context) {
     try {
-        const { projectSlug } = ctx.req.param();
-        if (!projectSlug) {
+        const { projectId } = ctx.req.param();
+        if (!projectId) {
             return invalidReqestResponse(ctx);
         }
 
-        return await serveProjectIconFile(ctx, projectSlug, IsCdnRequest(ctx));
+        return await serveProjectIconFile(ctx, projectId, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
@@ -38,12 +38,12 @@ async function projectFile_get(ctx: Context) {
 
 async function galleryImage_get(ctx: Context) {
     try {
-        const { projectSlug, image } = ctx.req.param();
-        if (!projectSlug || !image) {
+        const { projectId, image } = ctx.req.param();
+        if (!projectId || !image) {
             return invalidReqestResponse(ctx);
         }
 
-        return await serveProjectGalleryImage(ctx, projectSlug, image, IsCdnRequest(ctx));
+        return await serveProjectGalleryImage(ctx, projectId, image, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
@@ -52,12 +52,12 @@ async function galleryImage_get(ctx: Context) {
 async function versionFile_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-        const { projectSlug, versionSlug, fileName } = ctx.req.param();
-        if (!projectSlug || !versionSlug || !fileName) {
+        const { projectId, versionId, fileName } = ctx.req.param();
+        if (!projectId || !versionId || !fileName) {
             return invalidReqestResponse(ctx);
         }
 
-        return await serveVersionFile(ctx, projectSlug, versionSlug, fileName, userSession, IsCdnRequest(ctx));
+        return await serveVersionFile(ctx, projectId, versionId, fileName, userSession, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }
@@ -65,12 +65,12 @@ async function versionFile_get(ctx: Context) {
 
 async function orgFile_get(ctx: Context) {
     try {
-        const { orgSlug } = ctx.req.param();
-        if (!orgSlug) {
+        const { orgId } = ctx.req.param();
+        if (!orgId) {
             return invalidReqestResponse(ctx);
         }
 
-        return await serveOrgIconFile(ctx, orgSlug, IsCdnRequest(ctx));
+        return await serveOrgIconFile(ctx, orgId, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }

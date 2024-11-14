@@ -1,12 +1,11 @@
 import { deleteUserDataCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
-import { getFilesFromId } from "@/src/project/queries/file";
 import { ListItemProjectFields, projectMembersSelect } from "@/src/project/queries/project";
 import { isProjectAccessible } from "@/src/project/utils";
 import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS } from "@/utils/http";
-import { getAppropriateProjectIconUrl } from "@/utils/urls";
+import { projectIconUrl } from "@/utils/urls";
 import { formatUserName } from "@shared/lib/utils";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
 import { type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
@@ -119,35 +118,11 @@ export async function getAllVisibleProjects(
             ...projectMembersSelect(),
         },
     });
-    // const orgProjects = prisma.project.findMany({
-    //     where: {
-    //         organisation: {
-    //             team: {
-    //                 members: {
-    //                     some: {
-    //                         userId: user.id,
-    //                         accepted: true,
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     },
-    //     select: {
-    //         ...ListItemProjectFields(),
-    //         ...projectMembersSelect(),
-    //     },
-    // });
 
     const queryResults = await Promise.all([teamProjects]);
     const allProjects = [...queryResults[0]].toSorted((a, b) => b.downloads - a.downloads);
 
     if (!allProjects?.length) return { data: [], status: HTTP_STATUS.OK };
-
-    const iconFileIds: string[] = [];
-    for (const project of allProjects) {
-        if (project?.iconFileId) iconFileIds.push(project.iconFileId);
-    }
-    const iconFilesMap = await getFilesFromId(iconFileIds);
 
     const projectListData: ProjectListItem[] = [];
     for (const project of allProjects) {
@@ -165,7 +140,6 @@ export async function getAllVisibleProjects(
         });
         if (!projectAccessible) continue;
 
-        const projectIconUrl = getAppropriateProjectIconUrl(iconFilesMap.get(project?.iconFileId || ""), project.slug);
         projectListData.push({
             id: project.id,
             slug: project.slug,
@@ -173,7 +147,7 @@ export async function getAllVisibleProjects(
             summary: project.summary,
             type: project.type,
             status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl,
+            icon: projectIconUrl(project.id, project.iconFileId),
             downloads: project.downloads,
             followers: project.followers,
             dateUpdated: project.dateUpdated,
@@ -182,6 +156,7 @@ export async function getAllVisibleProjects(
             categories: project.categories,
             gameVersions: project.gameVersions,
             loaders: project.loaders,
+            featured_gallery: null,
         });
     }
 

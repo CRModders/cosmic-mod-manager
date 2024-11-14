@@ -10,7 +10,6 @@ export enum AuthProvider {
 export enum GlobalUserRole {
     ADMIN = "admin",
     MODERATOR = "moderator",
-    CREATOR = "creator",
     USER = "user",
 }
 

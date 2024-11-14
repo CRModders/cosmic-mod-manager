@@ -1,5 +1,5 @@
 import { type CategoryType, type Loader, categories, loaders } from "../../config/project";
-import { type OrganisationPermission, type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
+import { GlobalUserRole, type OrganisationPermission, type ProjectPermission, ProjectType, type TagHeaderType } from "../../types";
 import type { TeamMember } from "../../types/api";
 import { type PartialTeamMember, combineProjectMembers } from "./project";
 
@@ -194,7 +194,12 @@ export const isNumber = (num: number | string) => {
     return Number.isFinite(+num);
 };
 
-export const doesMemberHaveAccess = (requiredPermission: ProjectPermission, permissions: ProjectPermission[] = [], isOwner = false) => {
+export const doesMemberHaveAccess = (
+    requiredPermission: ProjectPermission,
+    permissions: ProjectPermission[] = [],
+    isOwner = false,
+    userRole = GlobalUserRole.USER, // TODO:
+) => {
     if (!requiredPermission) return false;
     if (isOwner === true) return true;
     return permissions.includes(requiredPermission);
@@ -204,6 +209,7 @@ export const doesOrgMemberHaveAccess = (
     requiredPermission: OrganisationPermission,
     permissions: OrganisationPermission[] = [],
     isOwner = false,
+    userRole = GlobalUserRole.USER, // TODO:
 ) => {
     if (!requiredPermission) return false;
     if (isOwner === true) return true;

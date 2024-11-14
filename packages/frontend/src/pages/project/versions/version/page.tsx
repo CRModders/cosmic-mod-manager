@@ -25,9 +25,8 @@ import { NotFoundPage } from "@/src/pages/not-found";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
-import type { ProjectVersionData } from "@shared/types/api";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
-import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ProjectMember } from "../../layout";
@@ -39,24 +38,8 @@ const VersionPage = () => {
     const navigate = useNavigate();
     const { projectData, currUsersMembership, allProjectVersions, projectDependencies, fetchingProjectData } = useContext(projectContext);
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
-
-    const getVersionData = () => {
-        for (const version of allProjectVersions || []) {
-            if (version.slug === versionSlug || version.id === versionSlug) {
-                return version;
-            }
-        }
-
-        return null;
-    };
-    const [versionData, setVersionData] = useState<ProjectVersionData | null>(getVersionData());
     const projectType = projectData?.type[0] || "";
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        if (!allProjectVersions?.length) return;
-        setVersionData(getVersionData());
-    }, [versionSlug, allProjectVersions]);
+    const versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
 
     if (fetchingProjectData === false && !versionData) {
         return (
@@ -70,7 +53,7 @@ const VersionPage = () => {
         );
     }
 
-    if (!versionData || !projectSlug || !versionSlug) return null;
+    if (!projectData || !versionData || !projectSlug || !versionSlug) return null;
 
     return (
         <>
@@ -392,17 +375,17 @@ const FileDetailsItem = ({
             </ContextMenuTrigger>
             <ContextMenuContent>
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha1_hash)}>
-                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
-                    Copy SHA1 hash
+                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
+                    Copy sha1 hash
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha512_hash)}>
-                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
-                    Copy SHA512 hash
+                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
+                    Copy sha512 hash
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(downloadLink)}>
-                    <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-muted-foreground" />
+                    <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
                     Copy file URL
                 </ContextMenuItem>
             </ContextMenuContent>

@@ -2,10 +2,7 @@ import { getFileUrl } from "@/services/storage";
 import type { FILE_STORAGE_SERVICE } from "@/types";
 import env from "./env";
 
-const CDN_SERVER_URL = env.CDN_SERVER_URL;
-const CACHE_CDN_URL = env.CACHE_CDN_URL;
-
-const CDN_PREFIX = (useCacheCdn?: boolean) => `${useCacheCdn ? CACHE_CDN_URL : CDN_SERVER_URL}/cdn/data`;
+const CDN_PREFIX = (useCacheCdn?: boolean) => `${useCacheCdn ? env.CACHE_CDN_URL : env.CDN_SERVER_URL}/cdn/data`;
 
 export function cdnUrl(path: string, useCacheCdn = true) {
     if (!path) return null;
@@ -14,13 +11,13 @@ export function cdnUrl(path: string, useCacheCdn = true) {
     return `${CDN_PREFIX(useCacheCdn)}/${path}`;
 }
 
-export function projectIconUrl(slug: string, icon: string | null) {
+export function projectIconUrl(projectId: string, icon: string | null) {
     if (!icon) return null;
     // If the icon has a full URL, return it
     if (icon.startsWith("http")) return icon;
 
     // Otherwise, construct and return the CDN URL
-    return cdnUrl(`${slug}/${icon}`);
+    return cdnUrl(`${projectId}/${icon}`);
 }
 
 export function projectGalleryFileUrl(slug: string, galleryFile: string) {
@@ -28,9 +25,18 @@ export function projectGalleryFileUrl(slug: string, galleryFile: string) {
     return cdnUrl(`${slug}/gallery/${encodeURIComponent(galleryFile)}`);
 }
 
-export function versionFileUrl(projectSlug: string, versionSlug: string, fileName: string, useCacheCdn?: boolean) {
+export function versionFileUrl(projectId: string, versionId: string, fileName: string, useCacheCdn?: boolean) {
     if (fileName.startsWith("http")) return fileName;
-    return cdnUrl(`${projectSlug}/version/${versionSlug}/${encodeURIComponent(fileName)}`, useCacheCdn);
+    return cdnUrl(`${projectId}/version/${versionId}/${encodeURIComponent(fileName)}`, useCacheCdn);
+}
+
+export function orgIconUrl(orgId: string, icon: string | null) {
+    if (!icon) return null;
+    // If the icon has a full URL, return it
+    if (icon.startsWith("http")) return icon;
+
+    // Otherwise, construct and return the CDN URL
+    return cdnUrl(`organization/${orgId}/${icon}`);
 }
 
 interface FileData {
@@ -39,30 +45,9 @@ interface FileData {
     storageService: string;
 }
 
-export function getAppropriateProjectIconUrl(iconFile: FileData | undefined, projectSlug: string) {
-    if (!iconFile) return null;
-
-    const fileUrl = projectIconUrl(
-        projectSlug,
-        getFileUrl(iconFile.storageService as FILE_STORAGE_SERVICE, iconFile.url, iconFile.name) || "",
-    );
-    if (!fileUrl) return null;
-    return fileUrl;
-}
-
-export function getAppropriateGalleryFileUrl(file: FileData | undefined, projectSlug: string) {
+export function getAppropriateGalleryFileUrl(file: FileData | undefined, projectId: string) {
     if (!file) return null;
-    const fileUrl = projectGalleryFileUrl(projectSlug, getFileUrl(file.storageService as FILE_STORAGE_SERVICE, file.url, file.name) || "");
+    const fileUrl = projectGalleryFileUrl(projectId, getFileUrl(file.storageService as FILE_STORAGE_SERVICE, file.url, file.name) || "");
     if (!fileUrl) return null;
     return fileUrl;
-}
-
-// Organization urls
-export function orgIconUrl(slug: string, icon: string | null) {
-    if (!icon) return null;
-    // If the icon has a full URL, return it
-    if (icon.startsWith("http")) return icon;
-
-    // Otherwise, construct and return the CDN URL
-    return cdnUrl(`organization/${slug}/${icon}`);
 }

@@ -44,7 +44,7 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
         teamId: organisation.teamId,
         name: organisation.name,
         slug: organisation.slug,
-        icon: orgIconUrl(organisation.slug, organisation.iconFileId),
+        icon: orgIconUrl(organisation.id, organisation.iconFileId),
         description: organisation.description,
         members: organisation.team.members.map((member) => {
             return {
@@ -115,7 +115,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
             name: org.name,
             slug: org.slug,
             description: org.description,
-            icon: orgIconUrl(org.slug, org.iconFileId),
+            icon: orgIconUrl(org.id, org.iconFileId),
             members: org.team.members.map((member) => ({
                 id: member.id,
                 userId: member.userId,
@@ -222,7 +222,7 @@ export async function getOrganisationProjects(
             name: project.name,
             summary: project.summary,
             type: project.type,
-            icon: projectIconUrl(project.slug, project.iconFileId),
+            icon: projectIconUrl(project.id, project.iconFileId),
             downloads: project.downloads,
             followers: project.followers,
             dateUpdated: project.dateUpdated,
@@ -235,6 +235,7 @@ export async function getOrganisationProjects(
             visibility: project.visibility as ProjectVisibility,
             clientSide: project.clientSide as ProjectSupport,
             serverSide: project.serverSide as ProjectSupport,
+            featured_gallery: null,
         });
     }
 

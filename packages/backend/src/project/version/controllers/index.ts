@@ -31,25 +31,18 @@ export const versionFields = {
 
 interface VersionSelect {
     featured?: boolean;
-    OR?: [
-        {
-            slug: string;
-        },
-        {
-            id: string;
-        },
-    ];
+    id?: string;
 }
 
 export async function getAllProjectVersions(
     slug: string,
     userSession: ContextUserData | undefined,
     featuredOnly = false,
-    versionSlug = "",
+    versionId = "",
 ): Promise<RouteHandlerResponse> {
     const whereSelect: VersionSelect = {};
     if (featuredOnly) whereSelect.featured = true;
-    if (versionSlug) whereSelect.OR = [{ slug: versionSlug }, { id: versionSlug }];
+    if (versionId) whereSelect.id = versionId;
 
     const project = await prisma.project.findFirst({
         where: {
@@ -108,8 +101,8 @@ export async function getAllProjectVersions(
                 name: fileData.name,
                 size: fileData.size,
                 type: fileData.type,
-                // ? Don't use cache cdn for primary files
-                url: versionFileUrl(project.slug, version.slug, fileData.name, useDirectCacheCdnUrl) || "",
+                // ? Don't use cache cdn for primary files or private project files
+                url: versionFileUrl(project.id, version.id, fileData.name, useDirectCacheCdnUrl) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
@@ -159,10 +152,10 @@ export async function getAllProjectVersions(
 
 export async function getProjectVersionData(
     projectSlug: string,
-    versionSlug: string,
+    versionId: string,
     userSession: ContextUserData,
 ): Promise<RouteHandlerResponse> {
-    const res = await getAllProjectVersions(projectSlug, userSession, false, versionSlug);
+    const res = await getAllProjectVersions(projectSlug, userSession, false, versionId);
     // @ts-ignore
     const list = res.data?.data as ProjectVersionData[];
     if (Array.isArray(list)) {

@@ -14,11 +14,11 @@ import { deleteProjectVersion, updateVersionData } from "./controllers/update";
 const versionRouter = new Hono();
 
 versionRouter.get("/", getReqRateLimiter, versions_get);
-versionRouter.get("/:versionSlug", getReqRateLimiter, version_get);
+versionRouter.get("/:versionId", getReqRateLimiter, version_get);
 
 versionRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, version_post);
-versionRouter.patch("/:versionSlug", modifyReqRateLimiter, LoginProtectedRoute, version_patch);
-versionRouter.delete("/:versionSlug", critModifyReqRateLimiter, LoginProtectedRoute, version_delete);
+versionRouter.patch("/:versionId", modifyReqRateLimiter, LoginProtectedRoute, version_patch);
+versionRouter.delete("/:versionId", critModifyReqRateLimiter, LoginProtectedRoute, version_delete);
 
 async function versions_get(ctx: Context) {
     try {
@@ -38,10 +38,10 @@ async function versions_get(ctx: Context) {
 async function version_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-        const { projectSlug, versionSlug } = ctx.req.param();
-        if (!userSession || !projectSlug || !versionSlug) return invalidReqestResponse(ctx);
+        const { projectSlug, versionId } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionId) return invalidReqestResponse(ctx);
 
-        const res = await getProjectVersionData(projectSlug, versionSlug, userSession);
+        const res = await getProjectVersionData(projectSlug, versionId, userSession);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.trace(error);
@@ -99,8 +99,8 @@ async function version_post(ctx: Context) {
 async function version_patch(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-        const { projectSlug, versionSlug } = ctx.req.param();
-        if (!userSession || !projectSlug || !versionSlug) return invalidReqestResponse(ctx);
+        const { projectSlug, versionId } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionId) return invalidReqestResponse(ctx);
 
         const formData = ctx.get(REQ_BODY_NAMESPACE);
         const dependencies = formData.get("dependencies");
@@ -132,7 +132,7 @@ async function version_patch(ctx: Context) {
             return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, HTTP_STATUS.BAD_REQUEST);
         }
 
-        const res = await updateVersionData(ctx, projectSlug, versionSlug, userSession, data);
+        const res = await updateVersionData(ctx, projectSlug, versionId, userSession, data);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.trace(error);
@@ -143,10 +143,10 @@ async function version_patch(ctx: Context) {
 async function version_delete(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-        const { projectSlug, versionSlug } = ctx.req.param();
-        if (!userSession || !projectSlug || !versionSlug) return invalidReqestResponse(ctx);
+        const { projectSlug, versionId } = ctx.req.param();
+        if (!userSession || !projectSlug || !versionId) return invalidReqestResponse(ctx);
 
-        const res = await deleteProjectVersion(ctx, projectSlug, versionSlug, userSession);
+        const res = await deleteProjectVersion(ctx, projectSlug, versionId, userSession);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.trace(error);

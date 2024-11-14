@@ -10,11 +10,13 @@ import {
     serverErrorResponseData,
     unauthorizedReqResponseData,
 } from "@/utils/http";
-import { generateDbId, generateRandomId } from "@/utils/str";
+import { resizeImageToWebp } from "@/utils/images";
+import { generateDbId } from "@/utils/str";
+import { ICON_WIDTH } from "@shared/config/forms";
 import { doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
-import { OrganisationPermission } from "@shared/types";
+import { FileType, OrganisationPermission } from "@shared/types";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { orgMemberPermsSelect } from "../queries";
@@ -75,7 +77,7 @@ export async function updateOrg(
     // Update the org icon
     if (formData.icon instanceof File) {
         // @ts-ignore
-        icon = (await updateOrgIcon(ctx, userSession, orgId, formData.icon)).data?.newIcon || null;
+        icon = (await updateOrgIcon(ctx, userSession, orgId, formData.icon, true)).data?.newIcon || null;
     }
 
     const updatedOrg = await prisma.organisation.update({
@@ -138,17 +140,25 @@ export async function updateOrgIcon(
     const fileType = await getFileType(icon);
     if (!fileType) return invalidReqestResponseData("Invalid file type");
 
-    const fileName = `${generateRandomId()}.${fileType}`;
-    const newFileUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, icon, fileName);
+    let saveIconFileType = fileType;
+    let saveIcon = icon;
+    // Resize the image if it's larger than 5KB
+    if (saveIcon.size > 5120) {
+        saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
+        if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
+    }
 
-    if (!newFileUrl) return serverErrorResponseData("Failed to save the icon");
-    const newDbFile = await prisma.file.create({
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const iconSaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, saveIcon, fileId);
+    if (!iconSaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
+
+    await prisma.file.create({
         data: {
-            id: generateDbId(),
-            name: fileName,
+            id: fileId,
+            name: fileId,
             size: icon.size,
             type: fileType,
-            url: newFileUrl,
+            url: iconSaveUrl,
             storageService: FILE_STORAGE_SERVICE.LOCAL,
         },
     });
@@ -159,12 +169,12 @@ export async function updateOrgIcon(
                 id: org.id,
             },
             data: {
-                iconFileId: newDbFile.id,
+                iconFileId: fileId,
             },
         });
     }
 
-    return { data: { success: true, message: "Organization icon updated", newIcon: newDbFile.id }, status: HTTP_STATUS.OK };
+    return { data: { success: true, message: "Organization icon updated", newIcon: fileId }, status: HTTP_STATUS.OK };
 }
 
 export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {

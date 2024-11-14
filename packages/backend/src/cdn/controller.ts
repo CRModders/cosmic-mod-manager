@@ -12,15 +12,15 @@ import { addToDownloadsQueue } from "./downloads-counter";
 
 export const serveVersionFile = async (
     ctx: Context,
-    projectSlug: string,
-    versionSlug: string,
+    projectId: string,
+    versionId: string,
     fileName: string,
     userSession: ContextUserData | undefined,
     isCdnRequest = true,
 ) => {
     const projectData = await prisma.project.findUnique({
         where: {
-            slug: projectSlug,
+            id: projectId,
         },
         select: {
             id: true,
@@ -28,7 +28,7 @@ export const serveVersionFile = async (
             status: true,
             versions: {
                 where: {
-                    slug: versionSlug,
+                    id: versionId,
                 },
                 select: {
                     id: true,
@@ -84,7 +84,7 @@ export const serveVersionFile = async (
 
     // Redirect to the cdn url if the project is public
     if (!isCdnRequest && !isProjectPrivate) {
-        return ctx.redirect(`${versionFileUrl(projectSlug, versionSlug, fileName, true)}`);
+        return ctx.redirect(`${versionFileUrl(projectId, versionId, fileName, true)}`);
     }
 
     const file = await getFile(versionFile.storageService as FILE_STORAGE_SERVICE, versionFile.url);
@@ -99,10 +99,10 @@ export const serveVersionFile = async (
     return response;
 };
 
-export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequest: boolean) => {
-    const project = await prisma.project.findFirst({
+export const serveProjectIconFile = async (ctx: Context, projectId: string, isCdnRequest: boolean) => {
+    const project = await prisma.project.findUnique({
         where: {
-            OR: [{ slug: slug }, { id: slug }],
+            id: projectId,
         },
     });
     if (!project?.iconFileId) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
@@ -128,10 +128,10 @@ export const serveProjectIconFile = async (ctx: Context, slug: string, isCdnRequ
     return response;
 };
 
-export const serveProjectGalleryImage = async (ctx: Context, slug: string, image: string, isCdnRequest: boolean) => {
-    const project = await prisma.project.findFirst({
+export const serveProjectGalleryImage = async (ctx: Context, projectId: string, image: string, isCdnRequest: boolean) => {
+    const project = await prisma.project.findUnique({
         where: {
-            OR: [{ slug: slug }, { id: slug }],
+            id: projectId,
         },
         select: {
             id: true,
@@ -179,10 +179,10 @@ export const serveProjectGalleryImage = async (ctx: Context, slug: string, image
     return response;
 };
 
-export const serveOrgIconFile = async (ctx: Context, slug: string, isCdnRequest: boolean) => {
-    const org = await prisma.organisation.findFirst({
+export const serveOrgIconFile = async (ctx: Context, orgId: string, isCdnRequest: boolean) => {
+    const org = await prisma.organisation.findUnique({
         where: {
-            OR: [{ slug: slug }, { id: slug }],
+            id: orgId,
         },
     });
     if (!org?.iconFileId) return notFoundResponse(ctx);

@@ -1,6 +1,6 @@
 import meilisearch from "@/services/meilisearch";
 import prisma from "@/services/prisma";
-import { getAppropriateGalleryFileUrl, getAppropriateProjectIconUrl } from "@/utils/urls";
+import { getAppropriateGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
 import { getFilesFromId } from "../project/queries/file";
 
@@ -99,7 +99,6 @@ const syncProjects = async (cursor: null | string) => {
         const projectFileIds = [];
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
-            if (project.iconFileId) projectFileIds.push(project.iconFileId);
 
             // The thumbnail of the featured gallery image of the project
             const featuredGallery = project.gallery[0];
@@ -114,14 +113,13 @@ const syncProjects = async (cursor: null | string) => {
             if (project.gameVersions.length === 0) continue;
 
             const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
-            const iconUrl = getAppropriateProjectIconUrl(projectFiles.get(project?.iconFileId || ""), project.slug);
-            const featuredGallery = getAppropriateGalleryFileUrl(projectFiles.get(project.gallery[0]?.thumbnailFileId || ""), project.slug);
+            const featuredGallery = getAppropriateGalleryFileUrl(projectFiles.get(project.gallery[0]?.thumbnailFileId || ""), project.id);
 
             formattedProjectsData.push({
                 id: project.id,
                 name: project.name,
                 slug: project.slug,
-                iconUrl: iconUrl,
+                iconUrl: projectIconUrl(project.id, project.iconFileId),
                 loaders: project.loaders,
                 type: project.type,
                 gameVersions: project.gameVersions,
