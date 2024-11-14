@@ -35,5 +35,5 @@ export function orgFileStoragePath(orgId: string, extra?: string) {
 }
 
 export function createFilePathSafeString(str: string) {
-    return str.replace(/[^a-z0-9.-_]/gi, "-").toLowerCase();
+    return str.replace(/[^a-zA-Z0-9.-_]/gi, "-");
 }

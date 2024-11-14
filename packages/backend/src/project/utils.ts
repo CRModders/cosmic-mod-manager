@@ -95,13 +95,14 @@ export async function createVersionFiles({ versionId, projectId, files }: create
         if (createdFiles.includes(sha1_hash)) continue;
 
         const sha512_hash = await createHashFromFile(file, "sha512");
-        const path = await saveProjectVersionFile(storageService, projectId, versionId, file, file.name);
+        const fileName = createFilePathSafeString(file.name);
+        const path = await saveProjectVersionFile(storageService, projectId, versionId, file, fileName);
         if (!path) continue;
 
         const fileId = generateRandomId();
         filesToCreate.push({
             id: fileId,
-            name: createFilePathSafeString(file.name),
+            name: fileName,
             size: file.size,
             type: fileType,
             storageService: storageService,
