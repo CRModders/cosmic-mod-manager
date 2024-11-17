@@ -14,18 +14,23 @@ interface ImgLoaderProps {
 }
 
 const loadedImages = new Set<string>();
-const timeoutRefs = new Map<string, number>();
-const deleteTimeoutRef = (src: string) => timeoutRefs.delete(src);
 
 export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, loaded, setLoaded, thumbnailSrc }: ImgLoaderProps) => {
     const _spinner = spinner || (
         <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
     );
 
+    const isImageLoaded = loadedImages.has(src);
+    console.log("isImageLoaded", isImageLoaded);
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-        if (loaded) return;
-        if (loadedImages.has(src)) {
+        setLoaded(isImageLoaded);
+    }, [isImageLoaded]);
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    useEffect(() => {
+        if (isImageLoaded) {
             setLoaded(true);
             return;
         }
@@ -33,38 +38,23 @@ export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, load
         const img = document.createElement("img");
         img.src = src;
         img.onload = () => {
+            console.log("loaded", src);
             setLoaded(true);
             loadedImages.add(src);
         };
 
         return () => {
             img.onload = null;
-
-            const prevRef = timeoutRefs.get(src);
-            if (prevRef) {
-                window.clearTimeout(prevRef);
-                deleteTimeoutRef(src);
-            }
-
-            const ref = window.setTimeout(() => {
-                if (loadedImages.has(src)) {
-                    loadedImages.delete(src);
-                }
-
-                deleteTimeoutRef(src);
-            }, 2_000);
-
-            timeoutRefs.set(src, ref);
         };
-    }, [loaded]);
+    }, [src]);
 
     return (
         <div className={cn("relative", wrapperClassName)}>
-            {!loaded && thumbnailSrc ? <img src={thumbnailSrc} alt={alt} className={cn("brightness-75", className)} /> : null}
+            {!isImageLoaded && thumbnailSrc ? <img src={thumbnailSrc} alt={alt} className={cn("brightness-75", className)} /> : null}
 
-            {loaded ? <img src={src} alt={alt} className={className} /> : null}
+            {isImageLoaded ? <img src={src} alt={alt} className={className} /> : null}
 
-            {!loaded ? _spinner : null}
+            {!isImageLoaded ? _spinner : null}
         </div>
     );
 };

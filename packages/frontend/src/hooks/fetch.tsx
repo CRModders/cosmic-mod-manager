@@ -6,5 +6,3 @@ export default async function useFetch(path: string, init?: FetchRequestInit | u
         credentials: "include",
     });
 }
-
-if (!SERVER_URL) throw new Error("Environment variable BACKEND_SERVER_URL is not set!");

@@ -213,11 +213,6 @@ const ImageDialog = ({
         if (dialogOpen === false) setIsFullWidth(false);
     }, [dialogOpen]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        setImgLoaded(false);
-    }, [galleryItem.image]);
-
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogContent

@@ -3,6 +3,7 @@ import { pluginReact } from "@rsbuild/plugin-react";
 
 export default defineConfig({
     plugins: [pluginReact()],
+
     html: {
         appIcon: "./public/icon.svg",
         title: "CRMM",
