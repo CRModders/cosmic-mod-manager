@@ -29,7 +29,7 @@ export default {
             namespace: "global_EMAIL",
         },
         INVALID_AUTH_ATTEMPT: {
-            max: 10,
+            max: 5,
             timeWindow_seconds: 300,
             namespace: "global_INVALID_AUTH_ATTEMPT",
         },

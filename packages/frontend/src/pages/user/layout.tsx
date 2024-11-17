@@ -55,7 +55,7 @@ const UserPageLayout = () => {
                         gridArea: "content",
                     }}
                 >
-                    {projectTypesList?.length > 1 ? (
+                    {projectTypesList?.length > 1 && totalProjects > 1 ? (
                         <SecondaryNav
                             className="bg-card-background rounded-lg px-3 py-2"
                             urlBase={`/user/${userData.userName}`}
@@ -69,7 +69,7 @@ const UserPageLayout = () => {
                         />
                     ) : null}
 
-                    {projectsList?.length ? (
+                    {totalProjects ? (
                         <UserProjectsList projectType={projectType} projectsList={projectsList} />
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">

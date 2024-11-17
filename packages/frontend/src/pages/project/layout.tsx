@@ -541,7 +541,7 @@ export const ProjectMember = ({
             />
             <div className="w-full flex flex-col items-start justify-start overflow-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-1">
-                    <span className="font-semibold" title={userName}>
+                    <span className="font-semibold leading-tight" title={userName}>
                         {userName}
                     </span>
                     {isOwner === true && (

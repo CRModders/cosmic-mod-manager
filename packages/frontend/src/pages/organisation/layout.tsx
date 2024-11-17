@@ -61,7 +61,7 @@ const OrgPageLayout = () => {
                         gridArea: "content",
                     }}
                 >
-                    {projectTypesList?.length > 1 ? (
+                    {projectTypesList?.length > 1 && totalProjects > 1 ? (
                         <SecondaryNav
                             className="bg-card-background rounded-lg px-3 py-2"
                             urlBase={getOrgPagePathname(orgData.slug)}
@@ -75,7 +75,7 @@ const OrgPageLayout = () => {
                         />
                     ) : null}
 
-                    {projects?.length ? (
+                    {totalProjects ? (
                         <OrgProjectsList projectType={projectType} projectsList={projects} />
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">

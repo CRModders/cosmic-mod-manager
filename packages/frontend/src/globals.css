@@ -67,6 +67,10 @@ html body {
         "Helvetica Neue", sans-serif;
 }
 
+
+/* Dark is the default theme */
+html, 
+body,
 .dark,
 .dark body {
     --accent-color-hue: 345;

@@ -5,7 +5,7 @@ import type { ContextUserData } from "@/types";
 import { CTX_USER_NAMESPACE } from "@/types/namespaces";
 import { sendNewSigninAlertEmail } from "@/utils/email";
 import { deleteCookie, setCookie } from "@/utils/http";
-import { generateRandomId } from "@/utils/str";
+import { generateDbId, generateRandomId } from "@/utils/str";
 import type { Session, User } from "@prisma/client";
 import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@shared/config";
 import { UserSessionStates } from "@shared/types";
@@ -25,14 +25,14 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
     const sessionToken = generateRandomToken();
     const tokenHash = await hashString(sessionToken);
 
-    const revokeAccessCode = generateRandomId();
+    const revokeAccessCode = generateRandomId(32);
     const revokeAccessCodeHash = await hashString(revokeAccessCode);
 
     const deviceDetails = await getUserDeviceDetails(ctx);
 
     await prisma.session.create({
         data: {
-            id: generateRandomId(28),
+            id: generateDbId(),
             tokenHash: tokenHash,
             userId: userId,
             providerName: providerName,
@@ -57,8 +57,8 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
 
         if (userData?.newSignInAlerts === true) {
             sendNewSigninAlertEmail({
-                fullName: user.name || "",
-                receiverEmail: user.email || "",
+                fullName: userData.name,
+                receiverEmail: userData.email,
                 region: deviceDetails.city || "",
                 country: deviceDetails.country || "",
                 ip: deviceDetails.ipAddr || "",

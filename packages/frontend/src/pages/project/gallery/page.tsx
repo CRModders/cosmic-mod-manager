@@ -237,8 +237,8 @@ const ImageDialog = ({
                         src={imageUrl(galleryItem.image)}
                         alt={galleryItem.name}
                         thumbnailSrc={imageUrl(galleryItem.imageThumbnail)}
-                        className={cn(
-                            "border-none ring-0 rounded-lg object-contain z-10",
+                        className="border-none ring-0 rounded-lg object-contain z-10 w-full h-full"
+                        wrapperClassName={cn(
                             "max-w-[calc(100vw_-_2rem)] sm:max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)]",
                             isFullWidth && "w-full h-full",
                         )}
