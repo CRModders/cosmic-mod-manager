@@ -102,5 +102,5 @@ export function setCookie(ctx: Context, name: string, value: string, options?: C
 }
 
 export function deleteCookie(ctx: Context, name: string, options?: CookieOptions) {
-    return honoDeleteCookie(ctx, name, { sameSite: "Lax", ...options });
+    return honoDeleteCookie(ctx, name, { domain: env.COOKIE_DOMAIN, path: "/", sameSite: "Lax", ...options });
 }

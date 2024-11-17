@@ -3,7 +3,6 @@ import prisma from "@/services/prisma";
 import type { ContextUserData } from "@/types";
 import { CTX_USER_NAMESPACE } from "@/types/namespaces";
 import { sendNewSigninAlertEmail } from "@/utils/email";
-import env from "@/utils/env";
 import { deleteCookie, setCookie } from "@/utils/http";
 import { generateDbId, generateRandomId } from "@/utils/str";
 import type { Session, User } from "@prisma/client";
@@ -208,7 +207,7 @@ export function setSessionCookie(ctx: Context, name: string, value: string, opti
 }
 
 export function deleteSessionCookie(ctx: Context, name: string, options?: CookieOptions) {
-    return deleteCookie(ctx, name, { domain: env.COOKIE_DOMAIN, path: "/", ...options });
+    return deleteCookie(ctx, name, options);
 }
 
 export function getUserFromCtx(ctx: Context) {
