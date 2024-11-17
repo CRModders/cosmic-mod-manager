@@ -3,9 +3,8 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS } from "@/utils/http";
 import type { GlobalUserRole } from "@shared/types";
 import type { UserProfileData } from "@shared/types/api/user";
-import type { Context } from "hono";
 
-export async function getManyUsers(ctx: Context, ids: string[]): Promise<RouteHandlerResponse> {
+export async function getManyUsers(ids: string[]): Promise<RouteHandlerResponse> {
     const users = await prisma.user.findMany({
         where: {
             id: {

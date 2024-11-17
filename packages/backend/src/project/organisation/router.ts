@@ -1,5 +1,6 @@
 import { AuthenticationMiddleware, LoginProtectedRoute } from "@/middleware/auth";
 import { strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
+import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { getUserFromCtx } from "@/src/auth/helpers/session";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
@@ -21,6 +22,7 @@ import {
 } from "./controllers/modify-org";
 
 const orgRouter = new Hono();
+orgRouter.use(invalidAuthAttemptLimiter);
 orgRouter.use(AuthenticationMiddleware);
 
 orgRouter.get("/", strictGetReqRateLimiter, userOrganisations_get);

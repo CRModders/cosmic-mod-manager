@@ -1,5 +1,6 @@
 import { AuthenticationMiddleware, LoginProtectedRoute } from "@/middleware/auth";
 import { getReqRateLimiter } from "@/middleware/rate-limit/get-req";
+import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { modifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { getUserFromCtx } from "@/src/auth/helpers/session";
 import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
@@ -12,6 +13,7 @@ import {
 import { type Context, Hono } from "hono";
 
 const notificationRouter = new Hono();
+notificationRouter.use(invalidAuthAttemptLimiter);
 notificationRouter.use(AuthenticationMiddleware);
 notificationRouter.use(LoginProtectedRoute);
 

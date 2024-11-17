@@ -208,7 +208,7 @@ export function setSessionCookie(ctx: Context, name: string, value: string, opti
 }
 
 export function deleteSessionCookie(ctx: Context, name: string, options?: CookieOptions) {
-    return deleteCookie(ctx, name, { sameSite: "Strict", ...options });
+    return deleteCookie(ctx, name, { sameSite: "Lax", ...options });
 }
 
 export function getUserFromCtx(ctx: Context) {

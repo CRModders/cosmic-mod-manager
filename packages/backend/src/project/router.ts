@@ -1,5 +1,6 @@
 import { AuthenticationMiddleware, LoginProtectedRoute } from "@/middleware/auth";
 import { getReqRateLimiter, strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
+import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter, modifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "@/utils/http";
@@ -29,6 +30,7 @@ import {
 import versionRouter from "./version/router";
 
 const projectRouter = new Hono();
+projectRouter.use(invalidAuthAttemptLimiter);
 projectRouter.use(AuthenticationMiddleware);
 
 // Get projects of the currently logged in user

@@ -21,8 +21,8 @@ export const HTTP_STATUS: httpStatusCodes = {
     SERVER_ERROR: 500,
 };
 
-export function serverErrorResponse(ctx: Context) {
-    const res = serverErrorResponseData();
+export function serverErrorResponse(ctx: Context, message?: string) {
+    const res = serverErrorResponseData(message);
     return ctx.json(res.data, res.status);
 }
 
@@ -102,5 +102,5 @@ export function setCookie(ctx: Context, name: string, value: string, options?: C
 }
 
 export function deleteCookie(ctx: Context, name: string, options?: CookieOptions) {
-    return honoDeleteCookie(ctx, name, { sameSite: "Strict", ...options });
+    return honoDeleteCookie(ctx, name, { sameSite: "Lax", ...options });
 }

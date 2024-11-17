@@ -1,4 +1,5 @@
 import { AuthenticationMiddleware, LoginProtectedRoute } from "@/middleware/auth";
+import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { getUserFromCtx } from "@/src/auth/helpers/session";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
@@ -17,6 +18,7 @@ import {
 } from "./controllers";
 
 const teamRouter = new Hono();
+teamRouter.use(invalidAuthAttemptLimiter);
 teamRouter.use(AuthenticationMiddleware);
 
 // ? Planned

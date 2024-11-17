@@ -1,7 +1,7 @@
 import { AuthenticationMiddleware, LoginProtectedRoute } from "@/middleware/auth";
 import { sendEmailRateLimiter } from "@/middleware/rate-limit/email";
 import { strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
-import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
+import { addInvalidAuthAttempt, invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "@/utils/http";
@@ -28,6 +28,7 @@ import { type Context, Hono } from "hono";
 import { getUserFromCtx } from "../auth/helpers/session";
 
 const userRouter = new Hono();
+userRouter.use(invalidAuthAttemptLimiter);
 userRouter.use(AuthenticationMiddleware);
 
 userRouter.get("/", strictGetReqRateLimiter, user_get);
