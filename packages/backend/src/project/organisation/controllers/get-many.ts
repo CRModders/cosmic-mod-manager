@@ -21,7 +21,7 @@ export async function getManyOrgs(projectIds: string[]): Promise<RouteHandlerRes
             teamId: org.teamId,
             name: org.name,
             slug: org.slug,
-            icon: orgIconUrl(org.slug, org.iconFileId),
+            icon: orgIconUrl(org.id, org.iconFileId),
             description: org.description,
         });
     }
