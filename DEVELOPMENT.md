@@ -127,7 +127,7 @@ Keep in mind that you'll need to start the database again after a reboot.
 
 
 ## Running the app backend
-- Start the postgres server in not running
+- Start the postgres server if not running
 - `cd` into `/packages/backend`
 - Start the redis server: `redis-server --port 5501`
 - Start the meilisearch server: `meilisearch --master-key MEILISEARCH_MASTER_KEY` \
