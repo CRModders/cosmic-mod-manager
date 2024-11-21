@@ -30,7 +30,6 @@ const RevokeSessionPage = () => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         const code = searchParams.get("code");
         if (code) {

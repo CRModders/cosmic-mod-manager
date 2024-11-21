@@ -22,9 +22,9 @@ export const ContextProviders = ({ children }: { children?: React.ReactNode }) =
         <QueryClientProvider client={reactQueryClient}>
             <SessionProvider>
                 <ThemeProvider>
-                    <DownloadAnimationProvider>
-                        <NotificationsProvider>{children ? children : <Outlet />}</NotificationsProvider>
-                    </DownloadAnimationProvider>
+                    <NotificationsProvider>
+                        <DownloadAnimationProvider>{children ? children : <Outlet />}</DownloadAnimationProvider>
+                    </NotificationsProvider>
                     <Toaster />
                 </ThemeProvider>
             </SessionProvider>

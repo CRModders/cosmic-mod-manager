@@ -109,7 +109,6 @@ const GeneralSettingsPage = () => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(projectData);
         resetForm(projectData?.icon || "");

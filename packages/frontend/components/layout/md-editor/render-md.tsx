@@ -1,4 +1,5 @@
 import hljs from "highlight.js/lib/core";
+import diff from "highlight.js/lib/languages/diff";
 // Configs
 import gradle from "highlight.js/lib/languages/gradle";
 import groovy from "highlight.js/lib/languages/groovy";
@@ -37,6 +38,7 @@ hljs.registerLanguage("groovy", groovy);
 hljs.registerLanguage("gradle", gradle);
 hljs.registerLanguage("json", json);
 hljs.registerLanguage("ini", ini);
+hljs.registerLanguage("diff", diff);
 hljs.registerLanguage("yaml", yaml);
 hljs.registerLanguage("xml", xml);
 hljs.registerLanguage("properties", properties);
@@ -48,6 +50,7 @@ hljs.registerAliases(["ts"], { languageName: "typescript" });
 hljs.registerAliases(["py"], { languageName: "python" });
 // Coding
 hljs.registerAliases(["kt"], { languageName: "kotlin" });
+hljs.registerAliases(["diff", "patch"], { languageName: "diff" });
 // Configs
 hljs.registerAliases(["json5"], { languageName: "json" });
 hljs.registerAliases(["toml"], { languageName: "ini" });
@@ -87,7 +90,6 @@ export const MarkdownRenderBox = ({ text, className }: { text: string; className
         } catch {}
     }
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         const mdBox = document.querySelector(".markdown-body") as HTMLDivElement | undefined;
         if (!mdBox) return;

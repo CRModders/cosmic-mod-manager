@@ -201,7 +201,6 @@ const ImageDialog = ({
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         document.body.addEventListener("keydown", handleKeyboardInputs);
         return () => {

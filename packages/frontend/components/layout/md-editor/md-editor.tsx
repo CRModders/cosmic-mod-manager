@@ -240,7 +240,6 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
         toggleTextAtCursorsLine(`<details>\n<summary>Spoiler</summary>\n\n${textSeparatorChar}\n\n</details>`);
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (lastSelectionRange?.length) {
             setCursorPosition(editorTextarea.current, lastSelectionRange);
@@ -248,7 +247,6 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
         }
     }, [editorValue]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         let blockKeydownEvent = false;
         const handler = (e: KeyboardEvent) => {

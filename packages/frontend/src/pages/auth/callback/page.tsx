@@ -52,7 +52,6 @@ const OAuthCallbackPage = () => {
           ? AuthActionIntent.SIGN_UP
           : AuthActionIntent.LINK;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (
             urlCsrfState !== getCookie(CSRF_STATE_COOKIE_NAMESPACE) ||

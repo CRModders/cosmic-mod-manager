@@ -25,7 +25,6 @@ const ConfirmActionPage = () => {
         setActionType(getConfirmActionTypeFromStringName(data?.actionType || ""));
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         getActionType();
     }, []);

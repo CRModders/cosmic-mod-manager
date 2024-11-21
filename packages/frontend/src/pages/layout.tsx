@@ -49,7 +49,6 @@ export function NavigationLoadingBar() {
     const navigation = useNavigation();
     const ref = useRef<LoadingBarRef>(null);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         // ? These seemingly purposeless checks prevent showing the loader when the url has changed but the path hasn't actually changed
         // ? I myself don't know how this works, but it works :)

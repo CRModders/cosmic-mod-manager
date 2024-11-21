@@ -43,7 +43,6 @@ export const OrgDataContextProvider = ({ children }: { children: React.ReactNode
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (slug !== currSlug && slug !== orgData.data?.slug && slug !== orgData.data?.id) {
             fetchOrgData(slug);

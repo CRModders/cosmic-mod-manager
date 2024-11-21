@@ -81,7 +81,6 @@ export const ProjectTeamMember = ({
     const canTransferOwnership =
         currUsersMembership.isOwner && member.accepted && !doesProjectHaveOrg && member.userId !== currUsersMembership.userId;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         form.reset({
             role: member.role,
@@ -356,7 +355,6 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         form.reset({
             role: effectiveMembership.role,

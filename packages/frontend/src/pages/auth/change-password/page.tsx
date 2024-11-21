@@ -47,7 +47,6 @@ const ChangePasswordPage = () => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (session?.email) form.setValue("email", session.email);
     }, [session]);

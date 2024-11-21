@@ -25,10 +25,6 @@ export const NotificationsContext = createContext<NotificationsContext>({
     relatedUsers: null,
 });
 
-let projectsList: string[] = [];
-let orgsList: string[] = [];
-let usersList: string[] = [];
-
 const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     const { session } = useSession();
 
@@ -49,13 +45,13 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
 
         for (const notification of notifications.data || []) {
             const projectId = notification.body?.projectId as string;
-            if (projectId && !projectsList.includes(projectId)) refetchProjects = true;
+            if (projectId && !relatedProjects.data?.some((p) => p.id === projectId)) refetchProjects = true;
 
             const orgId = notification.body?.orgId as string;
-            if (orgId && !orgsList.includes(orgId)) refetchOrgs = true;
+            if (orgId && !relatedOrgs.data?.some((o) => o.id === orgId)) refetchOrgs = true;
 
             const userId = notification.body?.invitedBy as string;
-            if (userId && !usersList.includes(userId)) refetchUsers = true;
+            if (userId && !relatedUsers.data?.some((u) => u.id === userId)) refetchUsers = true;
 
             if (refetchProjects && refetchOrgs && refetchUsers) break;
         }
@@ -67,37 +63,51 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
         await Promise.all(promises);
     };
 
-    const relatedProjectsList = relatedProjects.data ? new Map<string, ProjectListItem>() : null;
-    if (relatedProjects.data && relatedProjectsList) {
-        for (const project of relatedProjects.data || []) {
+    const relatedProjectsList = relatedProjects?.data ? new Map<string, ProjectListItem>() : null;
+    if (relatedProjects?.data && relatedProjectsList) {
+        for (const project of relatedProjects?.data || []) {
             relatedProjectsList.set(project.id, project);
         }
     }
 
-    const relatedOrgsList = relatedOrgs.data ? new Map<string, OrganisationListItem>() : null;
-    if (relatedOrgs.data && relatedOrgsList) {
-        for (const org of relatedOrgs.data || []) {
+    const relatedOrgsList = relatedOrgs?.data ? new Map<string, OrganisationListItem>() : null;
+    if (relatedOrgs?.data && relatedOrgsList) {
+        for (const org of relatedOrgs?.data || []) {
             relatedOrgsList.set(org.id, org);
         }
     }
 
-    const relatedUsersList = relatedUsers.data ? new Map<string, UserProfileData>() : null;
-    if (relatedUsers.data && relatedUsersList) {
-        for (const user of relatedUsers.data || []) {
+    const relatedUsersList = relatedUsers?.data ? new Map<string, UserProfileData>() : null;
+    if (relatedUsers?.data && relatedUsersList) {
+        for (const user of relatedUsers?.data || []) {
             relatedUsersList.set(user.id, user);
         }
     }
 
+    const requiredProjects: string[] = [];
+    const requiredOrgs: string[] = [];
+    const requiredUsers: string[] = [];
+    for (const notification of notifications.data || []) {
+        const projectId = notification.body?.projectId as string;
+        if (projectId && !requiredProjects.includes(projectId)) requiredProjects.push(projectId);
+
+        const orgId = notification.body?.orgId as string;
+        if (orgId && !requiredOrgs.includes(orgId)) requiredOrgs.push(orgId);
+
+        const userId = notification.body?.invitedBy as string;
+        if (userId && !requiredUsers.includes(userId)) requiredUsers.push(userId);
+    }
+
     const isNotificationsLoading =
+        notifications.data === null ||
         notifications.isLoading ||
         relatedProjects.isLoading ||
         relatedUsers.isLoading ||
         relatedOrgs.isLoading ||
-        (projectsList.length > 0 && !relatedProjects.data) ||
-        (orgsList.length > 0 && !relatedOrgs.data) ||
-        (usersList.length > 0 && !relatedUsers.data);
+        (requiredProjects.length > 0 && !relatedProjectsList) ||
+        (requiredOrgs.length > 0 && !relatedOrgsList) ||
+        (requiredUsers.length > 0 && !relatedUsersList);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (notifications.data) {
             refetchRelatedData();
@@ -105,15 +115,10 @@ const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
     }, [notifications.data]);
 
     useEffect(() => {
-        if (relatedProjects.data) projectsList = relatedProjects.data.map((project) => project.id);
-        else projectsList = [];
-
-        if (relatedOrgs.data) orgsList = relatedOrgs.data.map((org) => org.id);
-        else orgsList = [];
-
-        if (relatedUsers.data) usersList = relatedUsers.data.map((user) => user.id);
-        else usersList = [];
-    }, [relatedProjects.data, relatedOrgs.data, relatedUsers.data]);
+        if (session?.sessionId && notifications.data === null) {
+            refetchNotifications();
+        }
+    }, [session?.sessionId]);
 
     return (
         <NotificationsContext.Provider

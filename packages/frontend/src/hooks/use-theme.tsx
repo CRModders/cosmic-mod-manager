@@ -34,7 +34,6 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
         if (resolved) doc.classList.add(resolved);
     }, []);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const setTheme = React.useCallback(
         (value: string | ((theme: string | undefined) => string)) => {
             const newTheme = typeof value === "function" ? value(theme) : value;
@@ -50,7 +49,6 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
         [theme],
     );
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         const media = window.matchMedia(MEDIA);
 
@@ -67,7 +65,7 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
     }, []);
 
     // localStorage event handling
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+
     useEffect(() => {
         const handleStorage = (e: StorageEvent) => {
             if (e.key !== storageKey) {
@@ -83,7 +81,6 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
         return () => window.removeEventListener("storage", handleStorage);
     }, [setTheme]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         applyTheme(theme ? theme : ThemeOptions.DARK);
     }, [theme]);

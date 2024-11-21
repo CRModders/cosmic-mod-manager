@@ -104,7 +104,6 @@ export const AbsolutePositionedSpinner = ({
     backdropBgClassName?: string;
     preventScroll?: boolean;
 }) => {
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (preventScroll !== true) return;
 

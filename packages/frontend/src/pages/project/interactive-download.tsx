@@ -112,7 +112,6 @@ const InteractiveDownloadPopup = () => {
         return list;
     }, [projectData, selectedGameVersion, allProjectVersions]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (!projectData) return;
 

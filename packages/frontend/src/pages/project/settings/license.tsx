@@ -64,7 +64,6 @@ const LicenseSettingsPage = () => {
         }
     }, [projectData]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (isCustomLicense && !showCustomLicenseInputFields) setShowCustomLicenseInputFields(true);
     }, [isCustomLicense]);

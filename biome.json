@@ -5,7 +5,12 @@
         "include": ["./*"]
     },
     "linter": {
-        "enabled": true
+        "enabled": true,
+        "rules": {
+            "correctness": {
+                "useExhaustiveDependencies": "off"
+            }
+        }
     },
     "formatter": {
         "lineWidth": 140,

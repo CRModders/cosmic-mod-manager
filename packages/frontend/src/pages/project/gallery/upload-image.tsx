@@ -74,7 +74,6 @@ const UploadGalleryImageForm = () => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (projectData) {
             form.setValue("orderIndex", (projectData?.gallery?.[0]?.orderIndex || 0) + 1);

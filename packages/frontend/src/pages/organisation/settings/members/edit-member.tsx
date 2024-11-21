@@ -67,7 +67,6 @@ export const OrgTeamMember = ({ org, member, currMember, fetchOrgData }: OrgTeam
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         form.reset(defaultValues);
     }, [member]);

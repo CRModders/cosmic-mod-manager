@@ -91,7 +91,6 @@ const GeneralOrgSettings = () => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         initialValues = getInitialValues(orgData);
         resetForm(orgData?.icon || "");

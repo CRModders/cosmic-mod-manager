@@ -35,7 +35,6 @@ export default function ThemeSwitch({ className, iconWrapperClassName, iconClass
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         try {
             setInitialTheme();

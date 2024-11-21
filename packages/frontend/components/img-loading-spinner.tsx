@@ -21,14 +21,11 @@ export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, load
     );
 
     const isImageLoaded = loadedImages.has(src);
-    console.log("isImageLoaded", isImageLoaded);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         setLoaded(isImageLoaded);
     }, [isImageLoaded]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (isImageLoaded) {
             setLoaded(true);
@@ -38,7 +35,6 @@ export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, load
         const img = document.createElement("img");
         img.src = src;
         img.onload = () => {
-            console.log("loaded", src);
             setLoaded(true);
             loadedImages.add(src);
         };

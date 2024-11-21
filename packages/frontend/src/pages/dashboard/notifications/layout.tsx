@@ -5,7 +5,6 @@ import { NotificationsContext } from "./context";
 const NotificationsPageLayout = () => {
     const { refetchNotifications } = useContext(NotificationsContext);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         refetchNotifications();
     }, []);

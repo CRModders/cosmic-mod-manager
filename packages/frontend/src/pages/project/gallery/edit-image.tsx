@@ -67,7 +67,6 @@ const EditGalleryImage = ({ galleryItem }: { galleryItem: GalleryItem }) => {
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         if (galleryItem) {
             form.setValue("title", galleryItem.name);

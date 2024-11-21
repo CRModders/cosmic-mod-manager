@@ -34,7 +34,6 @@ export const SearchResults = ({ type, searchParams }: Props) => {
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageOffsetParamNamespace} />
         ) : null;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         refetchSearchResults();
     }, [searchParams]);
