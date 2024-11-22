@@ -28,9 +28,13 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, wid
 export async function getAverageColor(file: File) {
     try {
         const buffer = await file.arrayBuffer();
-        const { dominant } = await sharp(buffer).stats();
 
-        const hexColor = rgbToHex(dominant.r, dominant.g, dominant.b);
+        const { data } = await sharp(buffer).resize(1, 1).raw().toBuffer({ resolveWithObject: true });
+
+        // const { dominant } = await sharp(buffer).stats();
+
+        // const hexColor = rgbToHex(dominant.r, dominant.g, dominant.b);
+        const hexColor = rgbToHex(data[0], data[1], data[2]);
         return hexColor;
     } catch (err) {
         console.error("Error processing image: ", file.name, "\n", err);
