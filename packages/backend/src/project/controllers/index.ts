@@ -204,6 +204,7 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             gameVersions: project.gameVersions,
             loaders: project.loaders,
             featured_gallery: null,
+            color: project.color,
         });
     }
 

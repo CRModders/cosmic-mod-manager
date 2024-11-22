@@ -93,9 +93,12 @@ module.exports = {
                 "iconified-btn": "2.25rem",
             },
             padding: {
-                "card-surround": "1.25rem",
+                "card-surround": "1.1rem",
                 "table-side-pad-sm": "1rem",
                 "table-side-pad": "2rem",
+            },
+            margin: {
+                "card-surround": "1.1rem",
             },
             transitionDuration: {
                 DEFAULT: "200ms",

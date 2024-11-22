@@ -81,6 +81,7 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
             loaders: project.loaders,
             author: project.author,
             featured_gallery: project.featured_gallery,
+            color: project.color || null,
         });
     }
 

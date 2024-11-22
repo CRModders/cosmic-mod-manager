@@ -1,6 +1,7 @@
-import SearchListItem from "@/components/layout/search-list-item";
+import SearchListItem, { ViewType } from "@/components/layout/search-list-item";
 import PaginatedNavigation from "@/components/pagination-nav";
 import { LoadingSpinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { defaultSearchLimit, pageOffsetParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";
 import { type ProjectType, SearchResultSortMethod } from "@shared/types";
@@ -11,10 +12,11 @@ import { getSearchResults } from "./_loader";
 
 type Props = {
     type: ProjectType;
+    viewType: ViewType;
     searchParams: URLSearchParams;
 };
 
-export const SearchResults = ({ type, searchParams }: Props) => {
+export const SearchResults = ({ type, viewType, searchParams }: Props) => {
     const searchResult = useQuery({
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(window.location.search.replace("?", ""), type),
@@ -42,14 +44,17 @@ export const SearchResults = ({ type, searchParams }: Props) => {
         <>
             {pagination}
 
-            <ul className="w-full flex flex-col gap-panel-cards">
+            <ul className={cn("w-full grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")}>
                 {searchResult.data?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
                         key={project.id}
+                        viewType={viewType}
                         projectName={project.name}
                         projectType={project.type[0]}
                         projectSlug={project.slug}
                         icon={project.icon}
+                        featuredGallery={project.featured_gallery}
+                        color={project.color}
                         summary={project.summary}
                         loaders={project.loaders}
                         featuredCategories={project.featuredCategories}

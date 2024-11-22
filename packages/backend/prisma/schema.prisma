@@ -162,6 +162,7 @@ model Project {
     projectSourceUrl String? @db.VarChar(256)
     projectWikiUrl   String? @db.VarChar(256)
     discordInviteUrl String? @db.VarChar(256)
+    color            String? @db.VarChar(32)
 
     versions     Version[]     @relation(name: "ProjectVersions")
     team         Team          @relation(name: "ProjectTeam", fields: [teamId], references: [id])

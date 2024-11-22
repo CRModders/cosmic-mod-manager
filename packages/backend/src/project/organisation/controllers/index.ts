@@ -236,6 +236,7 @@ export async function getOrganisationProjects(
             clientSide: project.clientSide as ProjectSupport,
             serverSide: project.serverSide as ProjectSupport,
             featured_gallery: null,
+            color: project.color,
         });
     }
 

@@ -84,6 +84,7 @@ export function ListItemProjectFields() {
         categories: true,
         gameVersions: true,
         loaders: true,
+        color: true,
     } satisfies Prisma.ProjectSelect;
 }
 

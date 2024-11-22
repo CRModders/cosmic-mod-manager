@@ -4,7 +4,7 @@ import { projectFileStoragePath } from "@/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
-import { resizeImageToWebp } from "@/utils/images";
+import { getAverageColor, resizeImageToWebp } from "@/utils/images";
 import { generateDbId } from "@/utils/str";
 import { ICON_WIDTH } from "@shared/config/forms";
 import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
@@ -234,6 +234,8 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
+    const projectColor = await getAverageColor(saveIcon);
+
     await prisma.file.create({
         data: {
             id: fileId,
@@ -251,6 +253,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         },
         data: {
             iconFileId: fileId,
+            color: projectColor,
         },
     });
 
@@ -289,6 +292,7 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
         },
         data: {
             iconFileId: null,
+            color: null,
         },
     });
 

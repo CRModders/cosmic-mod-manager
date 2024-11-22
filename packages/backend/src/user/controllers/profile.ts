@@ -157,6 +157,7 @@ export async function getAllVisibleProjects(
             gameVersions: project.gameVersions,
             loaders: project.loaders,
             featured_gallery: null,
+            color: project.color,
         });
     }
 

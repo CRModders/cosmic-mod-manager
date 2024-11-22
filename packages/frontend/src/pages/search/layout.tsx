@@ -1,13 +1,15 @@
+import { ViewType } from "@/components/layout/search-list-item";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TooltipProvider, TooltipTemplate } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
-import { CapitalizeAndFormatString } from "@shared/lib/utils";
-import { type ProjectType, SearchResultSortMethod } from "@shared/types";
-import { FilterIcon, SearchIcon } from "lucide-react";
+import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
+import { ProjectType, SearchResultSortMethod } from "@shared/types";
+import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -67,6 +69,9 @@ const SearchPageLayout = ({ type }: Props) => {
     const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
+
+    const viewType = getSearchDisplayPreference(type);
+    const [_, reRender] = useState("0");
 
     // Param values
     const searchQuery = searchParams.get(searchQueryParamNamespace) || "";
@@ -153,12 +158,14 @@ const SearchPageLayout = ({ type }: Props) => {
                         <FilterIcon className="w-btn-icon h-btn-icon" />
                         Filters...
                     </Button>
+
+                    <ViewTypeToggle projectType={type} viewType={viewType} reRender={reRender} />
                 </Card>
 
                 <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
 
                 <section aria-label="Search Results" className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
-                    <SearchResults type={type} searchParams={searchParams} />
+                    <SearchResults type={type} viewType={viewType} searchParams={searchParams} />
                 </section>
             </div>
         </>
@@ -166,3 +173,73 @@ const SearchPageLayout = ({ type }: Props) => {
 };
 
 export const Component = SearchPageLayout;
+
+const ViewTypeToggle = ({
+    projectType,
+    viewType,
+    reRender,
+}: { projectType: ProjectType; viewType: ViewType; reRender: (str: string) => void }) => {
+    const toggleViewType = () => {
+        let newDisplayType = viewType;
+        if (viewType === ViewType.LIST) {
+            newDisplayType = ViewType.GALLERY;
+        } else if (viewType === ViewType.GALLERY) {
+            newDisplayType = ViewType.LIST;
+        }
+
+        reRender(Math.random().toString());
+        saveSearchDisplayPreference(projectType, newDisplayType);
+    };
+
+    return (
+        <TooltipProvider>
+            <TooltipTemplate content={`${Capitalize(viewType)} view`}>
+                <Button variant="secondary" size="icon" onClick={toggleViewType} aria-label="Toggle View Type">
+                    {viewType === ViewType.GALLERY ? (
+                        <ImageIcon className="w-btn-icon-md h-btn-icon-md" />
+                    ) : (
+                        <LayoutListIcon className="w-btn-icon-md h-btn-icon-md" />
+                    )}
+                </Button>
+            </TooltipTemplate>
+        </TooltipProvider>
+    );
+};
+
+const defaultSearchDisplays = {
+    [ProjectType.MOD]: ViewType.LIST,
+    [ProjectType.DATAMOD]: ViewType.LIST,
+    [ProjectType.RESOURCE_PACK]: ViewType.GALLERY,
+    [ProjectType.SHADER]: ViewType.GALLERY,
+    [ProjectType.MODPACK]: ViewType.LIST,
+    [ProjectType.PLUGIN]: ViewType.LIST,
+};
+const searchDisplayPrefsNamespace = "searchDisplayPrefs";
+
+const saveSearchDisplayPreference = (projectType: ProjectType, viewType: ViewType) => {
+    let prefs = defaultSearchDisplays;
+
+    try {
+        const savedPrefs = localStorage.getItem(searchDisplayPrefsNamespace);
+        if (savedPrefs) prefs = { ...prefs, ...JSON.parse(savedPrefs) };
+    } catch (error) {
+        prefs = defaultSearchDisplays;
+    }
+
+    prefs[projectType] = viewType;
+
+    localStorage.setItem(searchDisplayPrefsNamespace, JSON.stringify(prefs));
+};
+
+const getSearchDisplayPreference = (projectType: ProjectType) => {
+    let prefs = defaultSearchDisplays;
+
+    try {
+        const savedPrefs = localStorage.getItem(searchDisplayPrefsNamespace);
+        if (savedPrefs) prefs = { ...prefs, ...JSON.parse(savedPrefs) };
+    } catch (error) {
+        prefs = defaultSearchDisplays;
+    }
+
+    return prefs[projectType];
+};

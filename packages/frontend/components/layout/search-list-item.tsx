@@ -1,4 +1,4 @@
-import { formatDate, getProjectPagePathname, imageUrl, timeSince } from "@/lib/utils";
+import { cn, formatDate, getProjectPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { ProjectSupport } from "@shared/types";
@@ -7,21 +7,25 @@ import { Link } from "react-router-dom";
 import { fallbackProjectIcon } from "../icons";
 import { TagIcon } from "../tag-icons";
 import { ImgWrapper } from "../ui/avatar";
-import { Card } from "../ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import "./styles.css";
 
-type ViewType = "gallery" | "list";
+export enum ViewType {
+    GALLERY = "gallery",
+    LIST = "list",
+}
 
 interface SearchListItemProps {
     projectName: string;
     projectType: string;
     projectSlug: string;
     icon: string | null;
+    featuredGallery: string | null;
+    color: string | null;
     author?: string;
     summary: string;
-    clientSide: ProjectSupport;
-    serverSide: ProjectSupport;
+    clientSide?: ProjectSupport;
+    serverSide?: ProjectSupport;
     loaders: string[];
     featuredCategories: string[];
     downloads: number;
@@ -32,150 +36,184 @@ interface SearchListItemProps {
     viewType?: ViewType;
 }
 
-const SearchListItem = ({ viewType = "list", ...props }: Omit<SearchListItemProps, "clientSide" | "serverSide">) => {
-    if (viewType === "gallery") {
-        return null;
-    }
-    return <ListView {...props} />;
+const SearchListItem = ({ viewType = ViewType.LIST, ...props }: SearchListItemProps) => {
+    return <BaseView viewType={viewType} {...props} />;
 };
 
 export default SearchListItem;
 
-const ListView = ({
-    projectName,
-    projectType,
-    projectSlug,
-    icon,
-    author,
-    summary,
-    featuredCategories,
-    loaders,
-    downloads,
-    followers,
-    dateUpdated,
-    datePublished,
-    showDatePublished,
-}: Omit<SearchListItemProps, "clientSide" | "serverSide" | "viewType">) => {
-    const projectCategoriesData = getProjectCategoriesDataFromNames(featuredCategories);
-    const loadersData = getLoadersFromNames(loaders);
+const BaseView = (props: SearchListItemProps) => {
+    const projectCategoriesData = getProjectCategoriesDataFromNames(props.featuredCategories);
+    const loadersData = getLoadersFromNames(props.loaders);
+
+    const projectPageUrl = getProjectPagePathname(props.projectType, props.projectSlug);
+
+    // View Types
+    const galleryViewType = props.viewType === ViewType.GALLERY;
+    const listViewType = props.viewType === ViewType.LIST;
 
     return (
-        <li className="contents" aria-label={projectName}>
-            <Card className="searchItemWrapperGrid w-full grid gap-x-3 gap-y-2 p-card-surround text-muted-foreground">
+        <li
+            className={cn(
+                "search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
+                listViewType && "p-card-surround",
+                galleryViewType && "pb-4",
+                props.viewType,
+            )}
+            aria-label={props.projectName}
+        >
+            {galleryViewType && (
                 <Link
-                    to={getProjectPagePathname(projectType, projectSlug)}
-                    className="w-max h-fit flex shrink-0 relative items-start justify-center"
+                    to={projectPageUrl}
+                    className="h-44 overflow-hidden rounded-t-lg rounded-b-none m-0.5 mb-0"
+                    aria-label={props.projectName}
                     style={{
-                        gridArea: "icon",
+                        gridArea: "gallery",
+                        backgroundColor: props.color ? props.color : "hsla(var(--foreground), 0.15)",
                     }}
-                    title={projectName}
-                    tabIndex={-1}
                 >
-                    <ImgWrapper src={imageUrl(icon)} alt={projectName} fallback={fallbackProjectIcon} className="h-24 w-24 rounded-xl" />
+                    {props.featuredGallery && (
+                        <img src={props.featuredGallery} alt={props.projectName} className="object-cover w-full h-full" />
+                    )}
+                </Link>
+            )}
+
+            <Link
+                to={projectPageUrl}
+                className={cn(
+                    "w-max h-fit flex shrink-0 relative items-start justify-center",
+                    galleryViewType && "ml-card-surround -mt-12",
+                )}
+                aria-label={props.projectName}
+                tabIndex={-1}
+                style={{
+                    gridArea: "icon",
+                }}
+            >
+                <ImgWrapper
+                    src={imageUrl(props.icon)}
+                    alt={props.projectName}
+                    fallback={fallbackProjectIcon}
+                    className="h-24 w-24 rounded-xl"
+                />
+            </Link>
+
+            <div
+                className={cn("h-fit flex flex-wrap gap-x-1 items-baseline justify-start", galleryViewType && "mr-card-surround flex-col")}
+                style={{ gridArea: "title" }}
+            >
+                <Link
+                    to={projectPageUrl}
+                    className="text-xl font-bold leading-none break-words sm:text-wrap mr-1"
+                    aria-label={props.projectName}
+                >
+                    {props.projectName}
                 </Link>
 
-                <div className="h-fit flex flex-wrap gap-2 items-baseline justify-start" style={{ gridArea: "title" }}>
-                    <Link to={getProjectPagePathname(projectType, projectSlug)} title={projectName}>
-                        <h2 className="text-xl font-bold leading-none break-words sm:text-wrap">{projectName}</h2>
-                    </Link>
+                {props.author && (
+                    <span className="">
+                        by{" "}
+                        <Link to={`/user/${props.author}`} className="underline hover:brightness-110">
+                            {props.author}
+                        </Link>
+                    </span>
+                )}
+            </div>
 
-                    {author ? (
-                        <>
-                            <p className="leading-none">
-                                <span>by</span>
-                                <Link to={`/user/${author}`} className="underline hover:brightness-110 px-1">
-                                    {author}
-                                </Link>
-                            </p>
-                        </>
-                    ) : null}
-                </div>
+            <p
+                className={cn("leading-tight sm:text-pretty max-w-[80ch]", galleryViewType && "mx-card-surround")}
+                style={{ gridArea: "summary" }}
+            >
+                {props.summary}
+            </p>
 
-                <p className="leading-tight sm:text-pretty max-w-[80ch]" style={{ gridArea: "summary" }}>
-                    {summary}
-                </p>
+            <div
+                className={cn(
+                    "flex items-center justify-start gap-x-4 gap-y-0 flex-wrap text-extra-muted-foreground",
+                    galleryViewType && "mx-card-surround",
+                )}
+                style={{ gridArea: "tags" }}
+            >
+                {projectCategoriesData.map((category) => {
+                    return (
+                        <span className="flex gap-1 items-center justify-center" key={category.name} aria-label={category.name}>
+                            <TagIcon name={category.name} />
+                            {CapitalizeAndFormatString(category.name)}
+                        </span>
+                    );
+                })}
 
-                <div
-                    className="w-full flex items-center justify-start gap-x-4 gap-y-0 flex-wrap text-extra-muted-foreground"
-                    style={{ gridArea: "tags" }}
-                >
-                    {projectCategoriesData.map((category) => {
-                        return (
-                            <span className="flex gap-1 items-center justify-center" key={category.name}>
-                                <TagIcon name={category.name} />
-                                {CapitalizeAndFormatString(category.name)}
-                            </span>
-                        );
-                    })}
+                {loadersData.map((loader) => {
+                    if (loader.metadata.visibleInTagsList === false) return null;
 
-                    {loadersData.map((loader) => {
-                        if (loader.metadata.visibleInTagsList === false) return null;
+                    return (
+                        <span key={loader.name} className="flex gap-1 items-center justify-center" aria-label={loader.name}>
+                            <TagIcon name={loader.name} />
+                            {CapitalizeAndFormatString(loader.name)}
+                        </span>
+                    );
+                })}
+            </div>
 
-                        return (
-                            <span key={loader.name} className="flex gap-1 items-center justify-center">
-                                <TagIcon name={loader.name} />
-                                {CapitalizeAndFormatString(loader.name)}
-                            </span>
-                        );
-                    })}
-                </div>
-
-                <div
-                    className="flex flex-wrap items-start justify-between"
-                    style={{
-                        gridArea: "stats",
-                    }}
-                >
-                    <div className="flex flex-wrap justify-end items-end gap-x-5">
-                        <div className="h-fit flex items-center justify-end gap-1.5">
-                            <DownloadIcon className="w-[1.17rem] h-[1.17rem]" />
-                            <p className="flex items-baseline justify-center gap-1">
-                                <strong className="text-lg">{downloads}</strong>
-                                <span className="hidden sm:inline-block">downloads</span>
-                            </p>
-                        </div>
-
-                        <div className="h-fit flex items-center justify-end gap-1.5">
-                            <HeartIcon className="w-[1.13rem] h-[1.13rem]" />
-                            <p className="flex items-baseline justify-center gap-1">
-                                <strong className="text-lg">{followers}</strong>
-                                <span className="hidden sm:inline-block">followers</span>
-                            </p>
-                        </div>
+            <div
+                className={cn("flex flex-wrap items-start justify-between gap-x-4", galleryViewType && "mx-card-surround")}
+                style={{
+                    gridArea: "stats",
+                }}
+            >
+                <div className="flex flex-wrap justify-end items-end gap-x-5">
+                    <div className="h-fit flex items-center justify-end gap-1.5">
+                        <DownloadIcon className="w-[1.17rem] h-[1.17rem]" />
+                        <p className="flex items-baseline justify-center gap-1">
+                            <strong className="text-lg">{props.downloads}</strong>
+                            {!galleryViewType && <span className="hidden sm:inline-block">downloads</span>}
+                        </p>
                     </div>
 
-                    <div className="h-fit flex items-center justify-end gap-1.5 whitespace-nowrap mt-auto ml-auto">
-                        <TooltipProvider>
-                            {showDatePublished === true ? (
-                                <Tooltip>
-                                    <CalendarIcon className="w-[1.1rem] h-[1.1rem]" />
-                                    <TooltipTrigger asChild>
-                                        <p className="flex items-baseline justify-center gap-1">
-                                            <span>Published</span>
-                                            <span>{timeSince(datePublished)}</span>
-                                        </p>
-                                    </TooltipTrigger>
-                                    <TooltipContent>{formatDate(datePublished)}</TooltipContent>
-                                </Tooltip>
-                            ) : (
-                                <Tooltip>
-                                    <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem]" />
-
-                                    <TooltipTrigger asChild>
-                                        <p className="flex items-baseline justify-center gap-1">
-                                            <span>Updated</span>
-                                            <span>{timeSince(dateUpdated)}</span>
-                                        </p>
-                                    </TooltipTrigger>
-                                    <TooltipContent>{formatDate(dateUpdated)}</TooltipContent>
-                                </Tooltip>
-                            )}
-                        </TooltipProvider>
+                    <div className="h-fit flex items-center justify-end gap-1.5">
+                        <HeartIcon className="w-[1.13rem] h-[1.13rem]" />
+                        <p className="flex items-baseline justify-center gap-1">
+                            <strong className="text-lg">{props.followers}</strong>
+                            {!galleryViewType && <span className="hidden sm:inline-block">followers</span>}
+                        </p>
                     </div>
                 </div>
-            </Card>
+
+                <div
+                    className={cn(
+                        "h-fit flex items-center gap-1.5 whitespace-nowrap mt-auto",
+                        listViewType && "justify-end ml-auto",
+                        galleryViewType && "justify-start",
+                    )}
+                >
+                    <TooltipProvider>
+                        {props.showDatePublished === true ? (
+                            <Tooltip>
+                                <CalendarIcon className="w-[1.1rem] h-[1.1rem]" />
+                                <TooltipTrigger asChild>
+                                    <p className="flex items-baseline justify-center gap-1">
+                                        <span>Published</span>
+                                        <span>{timeSince(props.datePublished)}</span>
+                                    </p>
+                                </TooltipTrigger>
+                                <TooltipContent>{formatDate(props.datePublished)}</TooltipContent>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip>
+                                <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem]" />
+
+                                <TooltipTrigger asChild>
+                                    <p className="flex items-baseline justify-center gap-1">
+                                        <span>Updated</span>
+                                        <span>{timeSince(props.dateUpdated)}</span>
+                                    </p>
+                                </TooltipTrigger>
+                                <TooltipContent>{formatDate(props.dateUpdated)}</TooltipContent>
+                            </Tooltip>
+                        )}
+                    </TooltipProvider>
+                </div>
+            </div>
         </li>
     );
 };
-
-// const GalleryView =

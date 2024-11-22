@@ -24,3 +24,21 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, wid
 
     return new File(resizedImgBuffer, "__resized-webp-img__");
 }
+
+export async function getAverageColor(file: File) {
+    try {
+        const buffer = await file.arrayBuffer();
+        const { dominant } = await sharp(buffer).stats();
+
+        const hexColor = rgbToHex(dominant.r, dominant.g, dominant.b);
+        return hexColor;
+    } catch (error) {
+        console.error("Error processing image: ", file.name, "\n", error);
+        return null;
+    }
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+    const hexCode = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return `#${hexCode}`;
+}

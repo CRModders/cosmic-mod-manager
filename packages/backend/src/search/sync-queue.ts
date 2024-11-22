@@ -43,6 +43,7 @@ const requiredProjectFields = {
     clientSide: true,
     serverSide: true,
     projectSourceUrl: true,
+    color: true,
     ...teamSelect,
     organisation: {
         select: teamSelect,
@@ -74,6 +75,7 @@ interface ProjectSearchDocument {
     openSource: boolean;
     author: string;
     featured_gallery: string | null;
+    color: string | null;
 }
 
 const syncProjects = async (cursor: null | string) => {
@@ -122,6 +124,7 @@ const syncProjects = async (cursor: null | string) => {
                 clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
                 serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
                 featured_gallery: featured_gallery,
+                color: project.color,
             });
         }
 

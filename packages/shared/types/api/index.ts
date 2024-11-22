@@ -158,6 +158,7 @@ export interface ProjectListItem {
     gameVersions: string[];
     loaders: string[];
     featured_gallery: string | null;
+    color: string | null;
 
     author?: string; // The author's username
 }
