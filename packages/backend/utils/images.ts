@@ -32,8 +32,8 @@ export async function getAverageColor(file: File) {
 
         const hexColor = rgbToHex(dominant.r, dominant.g, dominant.b);
         return hexColor;
-    } catch (error) {
-        console.error("Error processing image: ", file.name, "\n", error);
+    } catch (err) {
+        console.error("Error processing image: ", file.name, "\n", err);
         return null;
     }
 }
