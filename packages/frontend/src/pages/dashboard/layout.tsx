@@ -34,7 +34,7 @@ const DashboardLayout = () => {
                 <PanelAside>
                     <PanelAsideNavCard label="Dashboard">
                         {SidePanelLinks.map((link) => (
-                            <ButtonLink url={link.href} key={link.href} className="relative">
+                            <ButtonLink url={link.href} key={link.href} className="relative" preventScrollReset>
                                 {link.icon}
                                 {link.name}
 
@@ -46,7 +46,7 @@ const DashboardLayout = () => {
 
                         <span className="text-lg font-semibold mt-3">Manage</span>
                         {ManagementPagesLinks.map((link) => (
-                            <ButtonLink url={link.href} key={link.href}>
+                            <ButtonLink url={link.href} key={link.href} preventScrollReset>
                                 {link.icon}
                                 {link.name}
                             </ButtonLink>

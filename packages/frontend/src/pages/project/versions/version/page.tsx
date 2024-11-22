@@ -109,10 +109,12 @@ const VersionPage = () => {
                         </Tooltip>
                     </TooltipProvider>
 
-                    <Button variant={"secondary"}>
-                        <FlagIcon className="w-btn-icon h-btn-icon" />
-                        Report
-                    </Button>
+                    {!currUsersMembership.data?.userId ? (
+                        <Button variant={"secondary"}>
+                            <FlagIcon className="w-btn-icon h-btn-icon" />
+                            Report
+                        </Button>
+                    ) : null}
 
                     {currUsersMembership.data?.id &&
                     currUsersMembership.data?.id &&

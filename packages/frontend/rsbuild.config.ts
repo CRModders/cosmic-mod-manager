@@ -6,9 +6,11 @@ export default defineConfig({
 
     // server: {
     //     proxy: {
-    //         "/api": "https://api.crmm.tech",
-    //         changeOrigin: true,
-    //         secure: true,
+    //         "/api": {
+    //             target: "https://api.crmm.tech",
+    //             changeOrigin: true,
+    //             secure: true,
+    //         },
     //     },
     // },
 

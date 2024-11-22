@@ -91,7 +91,7 @@ const ProjectSettingsLayout = () => {
                         <div className="w-full flex flex-col gap-1">
                             <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
                             {SidePanelLinks.map((link) => (
-                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`}>
+                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
                                     {link.icon}
                                     {link.name}
                                 </ButtonLink>

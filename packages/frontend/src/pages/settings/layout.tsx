@@ -1,7 +1,7 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@/components/layout/panel";
 import { ButtonLink } from "@/components/ui/link";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { MonitorSmartphone, UserIcon } from "lucide-react";
+import { MonitorSmartphoneIcon, UserIcon } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
 import { RedirectIfNotLoggedIn } from "../auth/guards";
@@ -20,12 +20,12 @@ const SettingsPageLayout = () => {
                 <Panel>
                     <PanelAside className="gap-2">
                         <PanelAsideNavCard label="Settings">
-                            <ButtonLink url="/settings/account">
+                            <ButtonLink url="/settings/account" preventScrollReset>
                                 <UserIcon className="size-4" />
                                 Account
                             </ButtonLink>
-                            <ButtonLink url="/settings/sessions">
-                                <MonitorSmartphone className="size-4" />
+                            <ButtonLink url="/settings/sessions" preventScrollReset>
+                                <MonitorSmartphoneIcon className="size-4" />
                                 Sessions
                             </ButtonLink>
                         </PanelAsideNavCard>

@@ -13,6 +13,7 @@ type ButtonLinkProps = {
     tabIndex?: number;
     onClick?: () => void;
     activeClassName?: string;
+    preventScrollReset?: boolean;
 };
 
 export const ButtonLink = ({
@@ -49,6 +50,7 @@ interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     label?: string;
     target?: string;
     onClick?: () => void | Promise<void>;
+    preventScrollReset?: boolean;
 }
 
 export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLinkProps>(

@@ -13,7 +13,7 @@ const SecondaryNav = ({ urlBase, className, links }: { urlBase: string; classNam
                 {links.map((link) => {
                     return (
                         <li key={`${urlBase}-${link.href}`} className="flex items-center justify-center">
-                            <ButtonLink url={`${urlBase}${link.href}`} className="h-10 px-4 py-0 rounded font-semibold">
+                            <ButtonLink url={`${urlBase}${link.href}`} className="h-10 px-4 py-0 rounded font-semibold" preventScrollReset>
                                 {link.label}
                             </ButtonLink>
                         </li>

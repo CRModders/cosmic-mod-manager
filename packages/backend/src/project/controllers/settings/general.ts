@@ -153,7 +153,7 @@ export async function updateProjectLicense(
     }
 
     if (!formData.name && !formData.id) {
-        return invalidReqestResponseData("Either license name of a valid ID is required");
+        return invalidReqestResponseData("Either license name or a valid SPDX ID is required");
     }
 
     let validSpdxData: SPDX_LICENSE | null = null;
