@@ -84,7 +84,10 @@ const SearchPageLayout = ({ type }: Props) => {
             <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
                 <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2" style={{ gridArea: "header" }}>
                     <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
-                        <SearchIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]" />
+                        <SearchIcon
+                            aria-label="Search Icon"
+                            className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
+                        />
                         <Input
                             value={searchQuery}
                             onChange={(e) => {
@@ -101,6 +104,7 @@ const SearchPageLayout = ({ type }: Props) => {
                             placeholder={`Search ${type}s...`}
                             className="text-lg font-semibold !pl-9"
                             id="search-input"
+                            aria-label={`Search ${type}s`}
                         />
                     </label>
 
@@ -153,9 +157,9 @@ const SearchPageLayout = ({ type }: Props) => {
 
                 <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
 
-                <div className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
+                <section aria-label="Search Results" className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
                     <SearchResults type={type} searchParams={searchParams} />
-                </div>
+                </section>
             </div>
         </>
     );

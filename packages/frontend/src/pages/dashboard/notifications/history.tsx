@@ -41,17 +41,19 @@ const NotificationsHistory = () => {
             <CardContent className="flex flex-col gap-panel-cards">
                 {!notifications?.length && <span className="text-muted-foreground">You don't have any notifications.</span>}
 
-                {notifications?.map((notification) => (
-                    <NotificationItem
-                        key={notification.id}
-                        notification={notification}
-                        relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
-                        relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
-                        relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
-                        refetchNotifications={refetchNotifications}
-                        showDeleteButton={true}
-                    />
-                ))}
+                <ul className="w-full flex flex-col gap-panel-cards">
+                    {notifications?.map((notification) => (
+                        <NotificationItem
+                            key={notification.id}
+                            notification={notification}
+                            relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
+                            relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                            relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
+                            refetchNotifications={refetchNotifications}
+                            showDeleteButton={true}
+                        />
+                    ))}
+                </ul>
             </CardContent>
         </Card>
     );

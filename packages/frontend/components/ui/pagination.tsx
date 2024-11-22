@@ -45,7 +45,7 @@ const PaginationPrevious = ({ className, to, ...props }: React.ComponentProps<ty
     const icon = <ChevronLeftIcon className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
-            <Button variant={"secondary"} disabled size={"icon"}>
+            <Button variant={"secondary"} disabled size={"icon"} aria-label="Previous page">
                 {icon}
             </Button>
         );
@@ -54,7 +54,7 @@ const PaginationPrevious = ({ className, to, ...props }: React.ComponentProps<ty
     return (
         <PaginationLink
             to={to}
-            aria-label="Go to previous page"
+            aria-label="Previous page"
             size="default"
             className={cn("h-iconified-btn w-iconified-btn p-0", className)}
             {...props}
@@ -69,7 +69,7 @@ const PaginationNext = ({ className, to, ...props }: React.ComponentProps<typeof
     const icon = <ChevronRightIcon className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
-            <Button variant={"secondary"} disabled size={"icon"}>
+            <Button variant={"secondary"} disabled size={"icon"} aria-label="Next page">
                 {icon}
             </Button>
         );
@@ -78,7 +78,7 @@ const PaginationNext = ({ className, to, ...props }: React.ComponentProps<typeof
     return (
         <PaginationLink
             to={to}
-            aria-label="Go to next page"
+            aria-label="Next page"
             size="default"
             className={cn("h-iconified-btn w-iconified-btn p-0", className)}
             {...props}

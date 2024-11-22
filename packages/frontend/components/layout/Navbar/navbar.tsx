@@ -47,6 +47,7 @@ const Navbar = () => {
                         <Link
                             to={"/"}
                             className="flex items-center justify-center h-nav-item"
+                            aria-label="CRMM Home page"
                             onClick={() => {
                                 toggleNavMenu(false);
                             }}

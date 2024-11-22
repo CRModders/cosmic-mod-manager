@@ -69,7 +69,7 @@ const OverviewPage = () => {
                             ) : null}
                         </CardHeader>
                         <CardContent>
-                            <div className="w-full flex flex-col items-start justify-center gap-2">
+                            <ul className="w-full flex flex-col items-start justify-center gap-2">
                                 {unreadNotifications?.map((notification) => (
                                     <NotificationItem
                                         key={notification.id}
@@ -84,16 +84,16 @@ const OverviewPage = () => {
                                 ))}
 
                                 {!unreadNotifications?.length && (
-                                    <>
+                                    <li aria-label="No unread notifications">
                                         <span className="text-muted-foreground">You have no unread notifications.</span>
 
                                         <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
                                             <HistoryIcon className="w-btn-icon h-btn-icon" />
                                             View notification history
                                         </ButtonLink>
-                                    </>
+                                    </li>
                                 )}
-                            </div>
+                            </ul>
                         </CardContent>
                     </Card>
                 )}

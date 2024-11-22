@@ -42,24 +42,26 @@ export const SearchResults = ({ type, searchParams }: Props) => {
         <>
             {pagination}
 
-            {searchResult.data?.hits?.map((project: ProjectListItem) => (
-                <SearchListItem
-                    key={project.id}
-                    projectName={project.name}
-                    projectType={project.type[0]}
-                    projectSlug={project.slug}
-                    icon={project.icon}
-                    summary={project.summary}
-                    loaders={project.loaders}
-                    featuredCategories={project.featuredCategories}
-                    downloads={project.downloads}
-                    followers={project.followers}
-                    dateUpdated={new Date(project.dateUpdated)}
-                    datePublished={new Date(project.datePublished)}
-                    showDatePublished={searchParams.get(sortByParamNamespace) === SearchResultSortMethod.RECENTLY_PUBLISHED}
-                    author={project?.author || ""}
-                />
-            ))}
+            <ul className="w-full flex flex-col gap-panel-cards">
+                {searchResult.data?.hits?.map((project: ProjectListItem) => (
+                    <SearchListItem
+                        key={project.id}
+                        projectName={project.name}
+                        projectType={project.type[0]}
+                        projectSlug={project.slug}
+                        icon={project.icon}
+                        summary={project.summary}
+                        loaders={project.loaders}
+                        featuredCategories={project.featuredCategories}
+                        downloads={project.downloads}
+                        followers={project.followers}
+                        dateUpdated={new Date(project.dateUpdated)}
+                        datePublished={new Date(project.datePublished)}
+                        showDatePublished={searchParams.get(sortByParamNamespace) === SearchResultSortMethod.RECENTLY_PUBLISHED}
+                        author={project?.author || ""}
+                    />
+                ))}
+            </ul>
 
             {!searchResult.data?.hits?.length && !searchResult.isLoading && !searchResult.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">

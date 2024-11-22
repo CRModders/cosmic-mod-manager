@@ -70,7 +70,9 @@ const UserPageLayout = () => {
                     ) : null}
 
                     {totalProjects ? (
-                        <UserProjectsList projectType={projectType} projectsList={projectsList} />
+                        <ul className="w-full flex flex-col gap-panel-cards">
+                            <UserProjectsList projectType={projectType} projectsList={projectsList} />
+                        </ul>
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">
                             <p className="text-lg text-muted-foreground italic text-center">

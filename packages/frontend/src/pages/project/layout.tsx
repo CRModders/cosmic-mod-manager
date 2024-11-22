@@ -530,6 +530,7 @@ export const ProjectMember = ({
 }) => {
     return (
         <ButtonLink
+            aria-label={userName}
             url={url || `/user/${userName}`}
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >

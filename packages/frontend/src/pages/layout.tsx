@@ -27,9 +27,10 @@ export const RootLayout = () => {
 
             <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
                 <Navbar />
-                <div className="full_page container px-4 sm:px-8">
+
+                <main className="full_page container px-4 sm:px-8">
                     <Outlet />
-                </div>
+                </main>
 
                 <Footer />
             </div>

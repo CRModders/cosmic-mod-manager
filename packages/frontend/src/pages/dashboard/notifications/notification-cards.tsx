@@ -88,14 +88,15 @@ export const TeamInviteNotification = ({
     };
 
     return (
-        <div className="w-full flex flex-col gap-2 bg-background/75 rounded p-card-surround">
+        <li className="w-full flex flex-col gap-2 bg-background/75 rounded p-card-surround" aria-label="Team Invite">
             <div className="w-full flex flow-row items-center justify-between">
                 <div className="grow flex flex-wrap items-center justify-start gap-1">
-                    <Link to={pageUrl} className="mr-1.5">
+                    <Link to={pageUrl} className="mr-1.5" aria-label={title}>
                         <ImgWrapper src={icon || ""} alt={title} fallback={fallbackIcon} className="w-11 h-11" />
                     </Link>
                     <div className="flex items-center justify-start gap-x-1 flex-wrap">
                         <Link
+                            aria-label={invitedBy.userName || (notification.body?.invitedBy as string)}
                             to={`/user/${invitedBy.userName}`}
                             className="flex items-center justify-center gap-1 font-semibold hover:underline"
                         >
@@ -223,6 +224,6 @@ export const TeamInviteNotification = ({
                     </Tooltip>
                 </TooltipProvider>
             </div>
-        </div>
+        </li>
     );
 };

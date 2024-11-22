@@ -1,7 +1,7 @@
 import { fallbackUserIcon } from "@/components/icons";
 import { ImgWrapper } from "@/components/ui/avatar";
 import { NotificationBadge } from "@/components/ui/badge";
-import { imageUrl } from "@/lib/utils";
+import { cn, imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -22,7 +22,7 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
     const unreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     return (
-        <div className={`mobile_navmenu w-full absolute top-[100%] left-0 duration-300 ${isNavMenuOpen && "menu_open"}`}>
+        <div className={cn("mobile_navmenu w-full absolute top-[100%] left-0 duration-300", isNavMenuOpen && "menu_open")}>
             <div className="w-full flex flex-col items-center justify-center row-span-2 relative">
                 <div className="absolute top-0 left-0 w-full h-full bg-background opacity-[0.975] dark:opacity-[0.985] z-[3]" />
 

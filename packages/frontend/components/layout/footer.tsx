@@ -1,30 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, type LinkProps } from "react-router-dom";
 import { BrandIcon, DiscordIcon, GithubIcon } from "../icons";
 import { DotSeparator } from "../ui/separator";
 import ThemeSwitch from "../ui/theme-switcher";
 
 const Footer = () => {
     return (
-        <div className="w-full bg-card-background py-8 mt-12">
+        <footer className="w-full bg-card-background py-8 mt-12">
             <div className="container flex items-center justify-between flex-wrap gap-x-5 gap-y-2">
                 <span className="flex gap-2 items-center justify-center text-lg font-bold">
-                    <BrandIcon size="2rem" />
+                    <BrandIcon size="2rem" aria-label="CRMM Logo" />
                     CRMM
                 </span>
 
                 <div className="flex items-center justify-center gap-3 flex-wrap">
-                    <FooterLink href="https://docs.crmm.tech">Docs</FooterLink>
+                    <FooterLink to="https://docs.crmm.tech" aria-label="CRMM Docs">
+                        Docs
+                    </FooterLink>
 
                     <DotSeparator />
 
-                    <FooterLink href="https://github.com/CRModders/cosmic-mod-manager">
+                    <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo">
                         <GithubIcon />
                         GitHub
                     </FooterLink>
 
                     <DotSeparator />
 
-                    <FooterLink href="https://discord.gg/T2pFVHmFpH">
+                    <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite">
                         <DiscordIcon className="fill-current dark:fill-current" />
                         Discord
                     </FooterLink>
@@ -37,16 +39,16 @@ const Footer = () => {
                     />
                 </div>
             </div>
-        </div>
+        </footer>
     );
 };
 
 export default Footer;
 
-const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
+const FooterLink = ({ children, ...props }: LinkProps) => {
     return (
         <Link
-            to={href}
+            {...props}
             target="_blank"
             className="flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:underline"
         >

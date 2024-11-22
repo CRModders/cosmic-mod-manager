@@ -1,6 +1,6 @@
 import { fallbackOrgIcon, fallbackProjectIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VariantButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { getOrgPagePathname, getProjectPagePathname } from "@/lib/utils";
@@ -82,16 +82,18 @@ const NotificationsPage = () => {
                         <span className="text-muted-foreground">You don't have any unread notifications.</span>
                     )}
 
-                    {unreadNotifications?.map((notification) => (
-                        <NotificationItem
-                            key={notification.id}
-                            notification={notification}
-                            relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
-                            relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
-                            relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
-                            refetchNotifications={refetchNotifications}
-                        />
-                    ))}
+                    <ul aria-label="Notifications list" className="w-full flex flex-col gap-panel-cards">
+                        {unreadNotifications?.map((notification) => (
+                            <NotificationItem
+                                key={notification.id}
+                                notification={notification}
+                                relatedProject={relatedProjects?.get(`${notification.body?.projectId}`)}
+                                relatedOrg={relatedOrgs?.get(`${notification.body?.orgId}`)}
+                                relatedUser={relatedUsers?.get(`${notification.body?.invitedBy}`)}
+                                refetchNotifications={refetchNotifications}
+                            />
+                        ))}
+                    </ul>
                 </CardContent>
             </Card>
         </>

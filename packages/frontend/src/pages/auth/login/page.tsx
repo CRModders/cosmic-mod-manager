@@ -66,7 +66,7 @@ const LoginPage = () => {
             </Helmet>
 
             <RedirectIfLoggedIn redirectTo="/dashboard">
-                <main className="full_page w-full flex items-center justify-center py-12">
+                <div className="full_page w-full flex items-center justify-center py-12">
                     <Card className="w-full max-w-md relative">
                         <CardHeader className="mb-1">
                             <CardTitle>Log In</CardTitle>
@@ -162,7 +162,7 @@ const LoginPage = () => {
                             </div>
 
                             <div className="w-full flex flex-col items-center justify-center gap-1 mt-4">
-                                <p className="text-center text-foreground">
+                                <div className="text-center text-foreground">
                                     <span className="text-foreground-muted">Don't have an account?&nbsp;</span>
                                     <Link
                                         to="/signup"
@@ -171,8 +171,8 @@ const LoginPage = () => {
                                     >
                                         Sign up
                                     </Link>
-                                </p>
-                                <p className="text-center">
+                                </div>
+                                <div className="text-center">
                                     <span className="text-foreground-muted">Forgot password?&nbsp;</span>
                                     <Link
                                         to="/change-password"
@@ -181,11 +181,11 @@ const LoginPage = () => {
                                     >
                                         Change password
                                     </Link>
-                                </p>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
-                </main>
+                </div>
             </RedirectIfLoggedIn>
         </>
     );

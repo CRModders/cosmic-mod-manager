@@ -115,87 +115,39 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     );
 
     return (
-        <Card
-            className={cn("thin-scrollbar medium h-fit flex flex-col gap-3 p-card-surround", showFilters === false && "hidden lg:flex")}
-            style={{ gridArea: "sidebar" }}
-        >
-            <div className="flex items-center justify-center gap-2">
-                <Input
-                    placeholder="Search filters..."
-                    value={query}
-                    onChange={(e) => {
-                        setQuery(e.target.value);
-                    }}
-                />
-
-                <Button
-                    variant="secondary"
-                    className="shrink-0 !w-10 !h-10"
-                    title="Reset filters"
-                    size="icon"
-                    onClick={() => {
-                        const newUrl = clearFilters();
-                        navigate(newUrl);
-                    }}
-                >
-                    <FilterXIcon className="w-btn-icon-md h-btn-icon-md" />
-                </Button>
-            </div>
-
-            <FilterCategory
-                items={loaderFilterOptions}
-                selectedItems={searchParams.getAll(loaderFilterParamNamespace)}
-                label={loadersFilterLabel}
-                onCheckedChange={(loaderName) => {
-                    const newUrl = updateSearchParam({
-                        key: loaderFilterParamNamespace,
-                        value: loaderName,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
-
-            <FilterCategory
-                items={gameVersionFilterOptions}
-                selectedItems={searchParams.getAll(gameVersionFilterParamNamespace)}
-                label={gameVersionsFilterLabel}
-                listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
-                formatLabel={false}
-                onCheckedChange={(version) => {
-                    const newUrl = updateSearchParam({
-                        key: gameVersionFilterParamNamespace,
-                        value: version,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-                footerItem={
-                    <LabelledCheckbox
-                        checked={showAllVersions}
-                        onCheckedChange={(checked) => {
-                            setShowAllVersions(checked === true);
+        <aside style={{ gridArea: "sidebar" }} className={showFilters === false ? "hidden lg:flex" : ""}>
+            <Card className={cn("thin-scrollbar medium h-fit flex flex-col gap-3 p-card-surround")}>
+                <div className="flex items-center justify-center gap-2">
+                    <Input
+                        placeholder="Search filters..."
+                        value={query}
+                        onChange={(e) => {
+                            setQuery(e.target.value);
                         }}
-                        className="mt-3 ml-0.5 text-extra-muted-foreground"
-                    >
-                        Show all versions
-                    </LabelledCheckbox>
-                }
-            />
+                    />
 
-            {[ProjectType.MOD, ProjectType.MODPACK].includes(type) && (
+                    <Button
+                        variant="secondary"
+                        className="shrink-0 !w-10 !h-10"
+                        title="Reset filters"
+                        size="icon"
+                        onClick={() => {
+                            const newUrl = clearFilters();
+                            navigate(newUrl);
+                        }}
+                    >
+                        <FilterXIcon className="w-btn-icon-md h-btn-icon-md" />
+                    </Button>
+                </div>
+
                 <FilterCategory
-                    items={environmentFilterOptions}
-                    selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
-                    label={environmentFilterLabel}
-                    onCheckedChange={(env) => {
+                    items={loaderFilterOptions}
+                    selectedItems={searchParams.getAll(loaderFilterParamNamespace)}
+                    label={loadersFilterLabel}
+                    onCheckedChange={(loaderName) => {
                         const newUrl = updateSearchParam({
-                            key: environmentFilterParamNamespace,
-                            value: env,
+                            key: loaderFilterParamNamespace,
+                            value: loaderName,
                             deleteIfExists: true,
                             deleteParamsWithMatchingValueOnly: true,
                             customURLModifier: deletePageOffsetParam,
@@ -203,88 +155,135 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                         navigate(newUrl);
                     }}
                 />
-            )}
 
-            <FilterCategory
-                items={categoryFilterOptions}
-                selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label={categoryFilterLabel}
-                onCheckedChange={(category) => {
-                    const newUrl = updateSearchParam({
-                        key: categoryFilterParamNamespace,
-                        value: category,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
+                <FilterCategory
+                    items={gameVersionFilterOptions}
+                    selectedItems={searchParams.getAll(gameVersionFilterParamNamespace)}
+                    label={gameVersionsFilterLabel}
+                    listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
+                    formatLabel={false}
+                    onCheckedChange={(version) => {
+                        const newUrl = updateSearchParam({
+                            key: gameVersionFilterParamNamespace,
+                            value: version,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                    footerItem={
+                        <LabelledCheckbox
+                            checked={showAllVersions}
+                            onCheckedChange={(checked) => {
+                                setShowAllVersions(checked === true);
+                            }}
+                            className="mt-3 ml-0.5 text-extra-muted-foreground"
+                        >
+                            Show all versions
+                        </LabelledCheckbox>
+                    }
+                />
 
-            <FilterCategory
-                items={featureFilterOptions}
-                selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label={featureFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
-                        key: categoryFilterParamNamespace,
-                        value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
+                {[ProjectType.MOD, ProjectType.MODPACK].includes(type) && (
+                    <FilterCategory
+                        items={environmentFilterOptions}
+                        selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
+                        label={environmentFilterLabel}
+                        onCheckedChange={(env) => {
+                            const newUrl = updateSearchParam({
+                                key: environmentFilterParamNamespace,
+                                value: env,
+                                deleteIfExists: true,
+                                deleteParamsWithMatchingValueOnly: true,
+                                customURLModifier: deletePageOffsetParam,
+                            });
+                            navigate(newUrl);
+                        }}
+                    />
+                )}
 
-            <FilterCategory
-                items={resolutionFilterOptions}
-                selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label={resolutionFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
-                        key: categoryFilterParamNamespace,
-                        value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
+                <FilterCategory
+                    items={categoryFilterOptions}
+                    selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
+                    label={categoryFilterLabel}
+                    onCheckedChange={(category) => {
+                        const newUrl = updateSearchParam({
+                            key: categoryFilterParamNamespace,
+                            value: category,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
 
-            <FilterCategory
-                items={performanceFilterOptions}
-                selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
-                label={performanceFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
-                        key: categoryFilterParamNamespace,
-                        value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
+                <FilterCategory
+                    items={featureFilterOptions}
+                    selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
+                    label={featureFilterLabel}
+                    onCheckedChange={(feature) => {
+                        const newUrl = updateSearchParam({
+                            key: categoryFilterParamNamespace,
+                            value: feature,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
 
-            <FilterCategory
-                items={licenseFilterOptions}
-                selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
-                label={licenseFilterLabel}
-                onCheckedChange={(license) => {
-                    const newUrl = updateSearchParam({
-                        key: licenseFilterParamNamespace,
-                        value: license,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
-                    });
-                    navigate(newUrl);
-                }}
-            />
-        </Card>
+                <FilterCategory
+                    items={resolutionFilterOptions}
+                    selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
+                    label={resolutionFilterLabel}
+                    onCheckedChange={(feature) => {
+                        const newUrl = updateSearchParam({
+                            key: categoryFilterParamNamespace,
+                            value: feature,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
+
+                <FilterCategory
+                    items={performanceFilterOptions}
+                    selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
+                    label={performanceFilterLabel}
+                    onCheckedChange={(feature) => {
+                        const newUrl = updateSearchParam({
+                            key: categoryFilterParamNamespace,
+                            value: feature,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
+
+                <FilterCategory
+                    items={licenseFilterOptions}
+                    selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
+                    label={licenseFilterLabel}
+                    onCheckedChange={(license) => {
+                        const newUrl = updateSearchParam({
+                            key: licenseFilterParamNamespace,
+                            value: license,
+                            deleteIfExists: true,
+                            deleteParamsWithMatchingValueOnly: true,
+                            customURLModifier: deletePageOffsetParam,
+                        });
+                        navigate(newUrl);
+                    }}
+                />
+            </Card>
+        </aside>
     );
 };
 

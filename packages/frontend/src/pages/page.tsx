@@ -188,6 +188,7 @@ const CarouselRow = ({
 const CarouselItem = ({ item }: { item: ProjectListItem }) => {
     return (
         <Link
+            aria-label={item.name}
             to={getProjectPagePathname(item.type[0], item.slug)}
             className={cn(
                 "shrink-0 border border-card-background rounded-lg w-72 h-[5.35rem] flex gap-x-3 items-start justify-start p-3",

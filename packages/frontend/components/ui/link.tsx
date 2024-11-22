@@ -1,10 +1,11 @@
 import { cn, isCurrLinkActive } from "@/lib/utils";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
+import type { LinkProps } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { buttonVariants } from "./button";
 
-type ButtonLinkProps = {
+interface ButtonLinkProps extends Omit<LinkProps, "to"> {
     url: string;
     children: React.ReactNode;
     className?: string;
@@ -14,7 +15,7 @@ type ButtonLinkProps = {
     onClick?: () => void;
     activeClassName?: string;
     preventScrollReset?: boolean;
-};
+}
 
 export const ButtonLink = ({
     url,
@@ -29,6 +30,7 @@ export const ButtonLink = ({
 
     return (
         <Link
+            {...props}
             to={url}
             className={cn(
                 "bg_hover_stagger w-full h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
@@ -36,7 +38,6 @@ export const ButtonLink = ({
                 isCurrLinkActive(url, location.pathname, exactTailMatch) && `active ${activeClassName}`,
                 className,
             )}
-            {...props}
         >
             {children}
         </Link>
