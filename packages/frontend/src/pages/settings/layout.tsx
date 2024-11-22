@@ -16,25 +16,23 @@ const SettingsPageLayout = () => {
 
             <RedirectIfNotLoggedIn redirectTo="/login" />
 
-            <main className="w-full">
-                <Panel>
-                    <PanelAside className="gap-2">
-                        <PanelAsideNavCard label="Settings">
-                            <ButtonLink url="/settings/account" preventScrollReset>
-                                <UserIcon className="size-4" />
-                                Account
-                            </ButtonLink>
-                            <ButtonLink url="/settings/sessions" preventScrollReset>
-                                <MonitorSmartphoneIcon className="size-4" />
-                                Sessions
-                            </ButtonLink>
-                        </PanelAsideNavCard>
-                    </PanelAside>
-                    <PanelContent>
-                        <Outlet />
-                    </PanelContent>
-                </Panel>
-            </main>
+            <Panel>
+                <PanelAside className="gap-2">
+                    <PanelAsideNavCard label="Settings">
+                        <ButtonLink url="/settings/account" preventScrollReset>
+                            <UserIcon className="size-4" />
+                            Account
+                        </ButtonLink>
+                        <ButtonLink url="/settings/sessions" preventScrollReset>
+                            <MonitorSmartphoneIcon className="size-4" />
+                            Sessions
+                        </ButtonLink>
+                    </PanelAsideNavCard>
+                </PanelAside>
+                <PanelContent>
+                    <Outlet />
+                </PanelContent>
+            </Panel>
         </>
     );
 };

@@ -46,7 +46,7 @@ const HomePage = () => {
                 <meta name="description" content="All your favourite Cosmic Reach mods" />
             </Helmet>
 
-            <main className="w-full">
+            <div className="w-full">
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center gap-1">
@@ -118,7 +118,7 @@ const HomePage = () => {
                 </section>
 
                 <ProjectsCarousel />
-            </main>
+            </div>
         </>
     );
 };
