@@ -83,6 +83,16 @@ export default defineConfig({
                 head: true,
                 append: true,
             },
+            {
+                tag: "script",
+                attrs: {
+                    defer: true,
+                    src: "https://cloud.umami.is/script.js",
+                    "data-website-id": "1bbb8989-cc84-4b4c-bfca-51e53779f587",
+                },
+                head: true,
+                append: true,
+            },
         ],
     },
 });
