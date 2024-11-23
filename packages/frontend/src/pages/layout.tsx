@@ -31,7 +31,7 @@ export const RootLayout = () => {
                 <meta property="og:title" content="Cosmic Reach Mod Manager - CRMM" />
                 <meta property="og:url" content={FRONTEND_URL} />
                 <meta property="og:description" content={desc} />
-                <meta property="og:image" content={`${FRONTEND_URL}/favicon.ico`} />
+                <meta property="og:image" content={`${FRONTEND_URL}/icon.png`} />
             </Helmet>
 
             <NavigationLoadingBar />

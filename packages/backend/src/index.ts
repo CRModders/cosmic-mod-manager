@@ -60,7 +60,7 @@ app.get("/", corsAllowCdn, (ctx: Context) => {
     return ctx.redirect("/api");
 });
 app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
-    return ctx.redirect("https://wsrv.nl/?url=https://i.ibb.co/qMXwhxL/Mercury-rose-gradient-lighter.png");
+    return ctx.redirect("https://www.crmm.tech/favicon.ico");
 });
 app.get("/api", corsAllowCdn, apiDetails);
 
