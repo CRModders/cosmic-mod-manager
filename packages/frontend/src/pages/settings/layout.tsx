@@ -1,6 +1,6 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@/components/layout/panel";
 import { ButtonLink } from "@/components/ui/link";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { MonitorSmartphoneIcon, UserIcon } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
@@ -10,7 +10,7 @@ const SettingsPageLayout = () => {
     return (
         <>
             <Helmet>
-                <title>Settings | {SITE_NAME_SHORT}</title>
+                <title>Settings | {SITE_NAME_LONG}</title>
                 <meta name="description" content="Settings" />
             </Helmet>
 

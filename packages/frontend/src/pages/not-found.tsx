@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export function NotFoundPage({ className, title, description, linkHref, linkLabe
         <>
             <Helmet>
                 <title>
-                    {title || "Page not found"} | {SITE_NAME_SHORT}
+                    {title || "Page not found"} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content="We couldn't find the page you are looking for." />
             </Helmet>

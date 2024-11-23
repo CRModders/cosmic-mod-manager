@@ -5,7 +5,7 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { getOrgPagePathname, getProjectPagePathname } from "@/lib/utils";
 import useFetch from "@/src/hooks/fetch";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { NotificationType } from "@shared/types";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
@@ -48,7 +48,7 @@ const NotificationsPage = () => {
     return (
         <>
             <Helmet>
-                <title>Notifications | {SITE_NAME_SHORT}</title>
+                <title>Notifications | {SITE_NAME_LONG}</title>
                 <meta name="description" content="Your notifications" />
             </Helmet>
 

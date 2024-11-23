@@ -13,7 +13,7 @@ import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -122,7 +122,7 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
         <>
             <Helmet>
                 <title>
-                    {projectData?.name || ""} - Changelog | {SITE_NAME_SHORT}
+                    {projectData?.name || ""} - Changelog | {SITE_NAME_LONG}
                 </title>
             </Helmet>
             {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible ? (

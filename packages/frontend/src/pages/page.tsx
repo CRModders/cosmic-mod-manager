@@ -6,7 +6,7 @@ import { FullWidthSpinner, LoadingSpinner } from "@/components/ui/spinner";
 import { cn, getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import "@/src/styles.css";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
@@ -42,8 +42,11 @@ const HomePage = () => {
                 : null}
 
             <Helmet>
-                <title>{SITE_NAME_SHORT}</title>
-                <meta name="description" content="All your favourite Cosmic Reach mods" />
+                <title>{SITE_NAME_LONG}</title>
+                <meta
+                    name="description"
+                    content={`Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}). Discover and publish projects on ${SITE_NAME_SHORT} with a modern, easy to use interface and API.`}
+                />
             </Helmet>
 
             <div className="w-full">

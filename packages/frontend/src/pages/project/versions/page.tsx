@@ -20,7 +20,7 @@ import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, time
 import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { Capitalize, CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -394,7 +394,7 @@ const ProjectVersionsListTable = ({
         <>
             <Helmet>
                 <title>
-                    {projectData?.name || ""} - Versions | {SITE_NAME_SHORT}
+                    {projectData?.name || ""} - Versions | {SITE_NAME_LONG}
                 </title>
             </Helmet>
 

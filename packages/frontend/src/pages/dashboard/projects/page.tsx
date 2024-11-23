@@ -5,7 +5,7 @@ import CopyBtn from "@/components/ui/copy-btn";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@/lib/utils";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
@@ -22,7 +22,7 @@ const ProjectsPage = () => {
     return (
         <>
             <Helmet>
-                <title>Projects | {SITE_NAME_SHORT}</title>
+                <title>Projects | {SITE_NAME_LONG}</title>
                 <meta name="description" content={`Your ${SITE_NAME_SHORT} projects`} />
             </Helmet>
 

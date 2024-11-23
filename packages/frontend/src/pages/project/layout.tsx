@@ -26,7 +26,7 @@ import { projectContext } from "@/src/contexts/curr-project";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
@@ -103,7 +103,7 @@ const ProjectPageLayout = () => {
         <>
             <Helmet>
                 <title>
-                    {projectData?.name || ""} | {SITE_NAME_SHORT}
+                    {projectData?.name || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={projectData?.summary || " "} />
             </Helmet>

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TooltipProvider, TooltipTemplate } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
@@ -81,9 +81,12 @@ const SearchPageLayout = ({ type }: Props) => {
         <>
             <Helmet>
                 <title>
-                    Search {type}s | {SITE_NAME_SHORT}
+                    Search {type}s | {SITE_NAME_LONG}
                 </title>
-                <meta name="description" content={`Search for your favourite ${type}s on ${SITE_NAME_SHORT}`} />
+                <meta
+                    name="description"
+                    content={`Search and download your favorite cosmic reach ${type}s with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`}
+                />
             </Helmet>
 
             <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
@@ -194,7 +197,13 @@ const ViewTypeToggle = ({
     return (
         <TooltipProvider>
             <TooltipTemplate content={`${Capitalize(viewType)} view`}>
-                <Button variant="secondary" size="icon" onClick={toggleViewType} aria-label="Toggle View Type">
+                <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={toggleViewType}
+                    aria-label="Toggle View Type"
+                    className="h-nav-item w-nav-item"
+                >
                     {viewType === ViewType.GALLERY ? (
                         <ImageIcon className="w-btn-icon-md h-btn-icon-md" />
                     ) : (

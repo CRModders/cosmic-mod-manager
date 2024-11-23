@@ -6,7 +6,7 @@ import { cn, formatDate, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import { LoadingStatus } from "@/types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { GalleryItem, TeamMember } from "@shared/types/api";
@@ -39,7 +39,7 @@ const ProjectGallery = () => {
         <>
             <Helmet>
                 <title>
-                    {projectData?.name || ""} - Gallery | {SITE_NAME_SHORT}
+                    {projectData?.name || ""} - Gallery | {SITE_NAME_LONG}
                 </title>
             </Helmet>
 

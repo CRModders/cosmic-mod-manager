@@ -13,7 +13,7 @@ import { ButtonLink } from "@/components/ui/link";
 import { getProjectPagePathname, imageUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import { RedirectIfNotLoggedIn } from "@/src/pages/auth/guards";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
     BarChart2Icon,
@@ -43,7 +43,7 @@ const ProjectSettingsLayout = () => {
         <>
             <Helmet>
                 <title>
-                    {projectData?.name || ""} - Settings | {SITE_NAME_SHORT}
+                    {projectData?.name || ""} - Settings | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content="Project settings" />
             </Helmet>

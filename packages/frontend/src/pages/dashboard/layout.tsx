@@ -2,7 +2,7 @@ import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@/components
 import { NotificationBadge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/link";
 import { useSession } from "@/src/contexts/auth";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import {
     BarChart2Icon,
     BellIcon,
@@ -24,7 +24,7 @@ const DashboardLayout = () => {
     return (
         <>
             <Helmet>
-                <title>Dashboard | {SITE_NAME_SHORT}</title>
+                <title>Dashboard | {SITE_NAME_LONG}</title>
                 <meta name="description" content="Dashboard" />
             </Helmet>
 

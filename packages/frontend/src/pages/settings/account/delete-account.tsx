@@ -13,7 +13,7 @@ import {
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -52,7 +52,7 @@ const DeleteAccountDialog = () => {
                     <DialogTitle>
                         Delete account
                         <VisuallyHidden>
-                            <DialogDescription>Delete your {SITE_NAME_SHORT.toLowerCase()} account</DialogDescription>
+                            <DialogDescription>Delete your {SITE_NAME_LONG.toLowerCase()} account</DialogDescription>
                         </VisuallyHidden>
                     </DialogTitle>
                 </DialogHeader>

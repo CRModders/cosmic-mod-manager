@@ -22,7 +22,7 @@ import { formatGameVersionsListString } from "@/lib/semver";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@/lib/utils";
 import { projectContext } from "@/src/contexts/curr-project";
 import { NotFoundPage } from "@/src/pages/not-found";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
@@ -59,7 +59,7 @@ const VersionPage = () => {
         <>
             <Helmet>
                 <title>
-                    {versionData.title} - {projectData?.name || ""} | {SITE_NAME_SHORT}
+                    {versionData.title} - {projectData?.name || ""} | {SITE_NAME_LONG}
                 </title>
             </Helmet>
 

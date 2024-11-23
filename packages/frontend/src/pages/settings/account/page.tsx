@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { FullWidthSpinner } from "@/components/ui/spinner";
 import { imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 import { getLinkedAuthProvidersQuery } from "../_loaders";
@@ -29,7 +29,7 @@ const AccountSettingsPage = () => {
     return (
         <>
             <Helmet>
-                <title>Account settings | {SITE_NAME_SHORT}</title>
+                <title>Account settings | {SITE_NAME_LONG}</title>
                 <meta name="description" content={`Your ${SITE_NAME_SHORT} account settings`} />
             </Helmet>
             {linkedAuthProviders.isLoading ? (

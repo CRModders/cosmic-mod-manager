@@ -3,7 +3,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { getCookie } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
-import { CSRF_STATE_COOKIE_NAMESPACE, SITE_NAME_SHORT } from "@shared/config";
+import { CSRF_STATE_COOKIE_NAMESPACE, SITE_NAME_LONG } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
@@ -71,7 +71,7 @@ const OAuthCallbackPage = () => {
             {errorMsg ? (
                 <>
                     <Helmet>
-                        <title>Error | {SITE_NAME_SHORT}</title>
+                        <title>Error | {SITE_NAME_LONG}</title>
                         <meta name="description" content={errorMsg} />
                     </Helmet>
                     <div className="w-full max-w-md flex flex-col gap-4 items-center justify-center">
@@ -94,7 +94,7 @@ const OAuthCallbackPage = () => {
             ) : (
                 <>
                     <Helmet>
-                        <title>... | {SITE_NAME_SHORT}</title>
+                        <title>... | {SITE_NAME_LONG}</title>
                         <meta name="description" content="Authenticating..." />
                     </Helmet>
                     <LoadingSpinner />

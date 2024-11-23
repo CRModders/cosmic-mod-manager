@@ -1,12 +1,29 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
+import { SITE_NAME_LONG } from "./../shared/config/index";
 
 export default defineConfig({
     plugins: [pluginReact()],
 
+    // server: {
+    //     proxy: {
+    //         "/api": {
+    //             target: "https://api.crmm.tech",
+    //             changeOrigin: true,
+    //             secure: false,
+    //         },
+    //     },
+    // },
+
     html: {
         appIcon: "./public/icon.svg",
-        title: "CRMM",
+        title: SITE_NAME_LONG,
+        meta: {
+            description: {
+                name: "description",
+                content: "Search and download your favorite cosmic reach mods with ease.",
+            },
+        },
         tags: [
             {
                 tag: "link",

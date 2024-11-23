@@ -3,6 +3,7 @@ import { ButtonLink } from "@/components/ui/link";
 import ThemeSwitch from "@/components/ui/theme-switcher";
 import { cn } from "@/lib/utils";
 import "@/src/globals.css";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type React from "react";
@@ -54,7 +55,7 @@ const Navbar = () => {
                         >
                             <BrandIcon size="2.2rem" />
                             <span className="text-lg font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background drop-shadow-2xl">
-                                CRMM
+                                {SITE_NAME_SHORT}
                             </span>
                         </Link>
 

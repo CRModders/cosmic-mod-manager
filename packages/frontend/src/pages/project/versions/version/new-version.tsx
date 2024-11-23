@@ -5,7 +5,7 @@ import { getProjectPagePathname, getProjectVersionPagePathname } from "@/lib/uti
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
@@ -95,7 +95,7 @@ const UploadVersionPage = () => {
         <>
             <Helmet>
                 <title>
-                    Create version - {projectData?.name || ""} | {SITE_NAME_SHORT}
+                    Create version - {projectData?.name || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content="Upload a new version" />
             </Helmet>

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
@@ -16,7 +16,7 @@ const SignUpPage = () => {
     return (
         <>
             <Helmet>
-                <title>Signup | {SITE_NAME_SHORT}</title>
+                <title>Signup | {SITE_NAME_LONG}</title>
                 <meta name="description" content="Signup for a CRMM account" />
             </Helmet>
 

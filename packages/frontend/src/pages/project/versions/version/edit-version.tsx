@@ -6,7 +6,7 @@ import { getProjectPagePathname, getProjectVersionPagePathname } from "@/lib/uti
 import { projectContext } from "@/src/contexts/curr-project";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SITE_NAME_SHORT } from "@shared/config/index";
+import { SITE_NAME_LONG } from "@shared/config/index";
 import { parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
@@ -118,7 +118,7 @@ const EditVersionPage = () => {
         <>
             <Helmet>
                 <title>
-                    Edit {versionData.versionNumber} - {projectData?.name || ""} | {SITE_NAME_SHORT}
+                    Edit {versionData.versionNumber} - {projectData?.name || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={`Edit ${versionData.title} of ${projectData?.name}`} />
             </Helmet>

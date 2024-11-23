@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FormSuccessMessage } from "@/components/ui/form-message";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
@@ -62,7 +62,7 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
     return (
         <>
             <Helmet>
-                <title>Confirm new password | {SITE_NAME_SHORT}</title>
+                <title>Confirm new password | {SITE_NAME_LONG}</title>
                 <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
             </Helmet>
 

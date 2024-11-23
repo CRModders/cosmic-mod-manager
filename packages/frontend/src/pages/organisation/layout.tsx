@@ -6,7 +6,7 @@ import { VariantButtonLink } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 import { getOrgPagePathname, imageUrl } from "@/lib/utils";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { Organisation, TeamMember } from "@shared/types/api";
@@ -41,7 +41,7 @@ const OrgPageLayout = () => {
         <>
             <Helmet>
                 <title>
-                    {orgData.name || ""} | {SITE_NAME_SHORT}
+                    {orgData.name || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={`${orgData.name} organization`} />
             </Helmet>

@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@/components/ui/spinner";
 import { useSession } from "@/src/contexts/auth";
 import useFetch from "@/src/hooks/fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { LoginFormSchema } from "@shared/schemas/auth";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { LogInIcon } from "lucide-react";
@@ -61,7 +61,7 @@ const LoginPage = () => {
     return (
         <>
             <Helmet>
-                <title>Login | {SITE_NAME_SHORT}</title>
+                <title>Login | {SITE_NAME_LONG}</title>
                 <meta name="description" content="Log into your CRMM account" />
             </Helmet>
 

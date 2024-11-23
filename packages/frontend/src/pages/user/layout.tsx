@@ -9,7 +9,7 @@ import { getOrgPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { userProfileContext } from "@/src/contexts/user-profile";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { Organisation } from "@shared/types/api";
@@ -42,7 +42,7 @@ const UserPageLayout = () => {
         <>
             <Helmet>
                 <title>
-                    {userData?.userName || ""} | {SITE_NAME_SHORT}
+                    {userData?.userName || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={`${userData.userName}'s profile on ${SITE_NAME_SHORT}`} />
             </Helmet>

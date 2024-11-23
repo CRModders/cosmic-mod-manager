@@ -12,7 +12,7 @@ import {
 import { ButtonLink } from "@/components/ui/link";
 import { getOrgPagePathname, imageUrl } from "@/lib/utils";
 import { RedirectIfNotLoggedIn } from "@/src/pages/auth/guards";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
@@ -31,7 +31,7 @@ const OrgSettingsLayout = () => {
         <>
             <Helmet>
                 <title>
-                    {orgData.name || ""} - Organization Settings | {SITE_NAME_SHORT}
+                    {orgData.name || ""} - Organization Settings | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content="Organization settings" />
             </Helmet>

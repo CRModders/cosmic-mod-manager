@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { Helmet } from "react-helmet";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,7 +16,7 @@ const OrgProjectsSettings = () => {
     return (
         <>
             <Helmet>
-                <title>Projects | {SITE_NAME_SHORT}</title>
+                <title>Projects | {SITE_NAME_LONG}</title>
                 <meta name="description" content={`Your ${SITE_NAME_SHORT} projects`} />
             </Helmet>
 
