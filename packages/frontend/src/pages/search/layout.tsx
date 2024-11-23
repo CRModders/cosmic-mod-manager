@@ -10,7 +10,7 @@ import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sor
 import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SearchResults } from "./page";
@@ -66,6 +66,7 @@ interface Props {
 }
 
 const SearchPageLayout = ({ type }: Props) => {
+    const searchInput = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
@@ -76,6 +77,28 @@ const SearchPageLayout = ({ type }: Props) => {
     // Param values
     const searchQuery = searchParams.get(searchQueryParamNamespace) || "";
     const sortBy = searchParams.get(sortByParamNamespace);
+
+    // Search box focus
+    const handleSearchInputFocus = (e: KeyboardEvent) => {
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+        if (e.key === "/") {
+            e.stopPropagation();
+            if (searchInput.current) searchInput.current.focus();
+        }
+    };
+
+    useEffect(() => {
+        if (searchInput.current) searchInput.current.focus();
+    }, [type]);
+
+    useEffect(() => {
+        document.addEventListener("keyup", handleSearchInputFocus);
+
+        return () => {
+            document.removeEventListener("keyup", handleSearchInputFocus);
+        };
+    }, []);
 
     return (
         <>
@@ -97,6 +120,8 @@ const SearchPageLayout = ({ type }: Props) => {
                             className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
                         />
                         <Input
+                            autoFocus
+                            ref={searchInput}
                             value={searchQuery}
                             onChange={(e) => {
                                 const val = e.target.value;
@@ -110,10 +135,14 @@ const SearchPageLayout = ({ type }: Props) => {
                                 navigate(urlPathname);
                             }}
                             placeholder={`Search ${type}s...`}
-                            className="text-lg font-semibold !pl-9"
+                            className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
                             id="search-input"
                             aria-label={`Search ${type}s`}
                         />
+
+                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-card-background px-1 rounded-[0.2rem] font-mono">
+                            /
+                        </kbd>
                     </label>
 
                     <Select
@@ -167,7 +196,12 @@ const SearchPageLayout = ({ type }: Props) => {
 
                 <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
 
-                <section aria-label="Search Results" className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
+                <section
+                    id="main"
+                    aria-label="Search Results"
+                    className="h-fit flex flex-col gap-panel-cards"
+                    style={{ gridArea: "content" }}
+                >
                     <SearchResults type={type} viewType={viewType} searchParams={searchParams} />
                 </section>
             </div>

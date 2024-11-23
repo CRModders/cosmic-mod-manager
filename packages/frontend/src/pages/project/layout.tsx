@@ -117,7 +117,7 @@ const ProjectPageLayout = () => {
                 />
 
                 {/* SIDEBAR */}
-                <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
+                <aside className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
                     <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
                         <h3 className="text-lg font-extrabold">Compatibility</h3>
                         <div>
@@ -370,7 +370,7 @@ const ProjectPageLayout = () => {
                             </Tooltip>
                         </TooltipProvider>
                     </Card>
-                </div>
+                </aside>
 
                 <div className="w-full max-w-full overflow-auto flex flex-col gap-panel-cards [grid-area:_content]">
                     <SecondaryNav

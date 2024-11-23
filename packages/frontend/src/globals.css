@@ -70,7 +70,7 @@ html body {
 
 
 /* Dark is the default theme */
-html, 
+html,
 body,
 .dark,
 .dark body {
@@ -165,6 +165,10 @@ body.no-scrollbar {
     overflow: hidden;
 }
 
+*:focus {
+    outline: transparent;
+}
+
 @layer components {
     .neumorphic_shadow:not(.no_neumorphic_shadow) {
         /* box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)), 0 0 0 0.175rem transparent; */
@@ -239,8 +243,9 @@ body.no-scrollbar {
 
     .text-shadow {
         text-shadow: 1px 1px 8px black,
-                     -1px -1px 8px black;
+            -1px -1px 8px black;
     }
+
 }
 
 

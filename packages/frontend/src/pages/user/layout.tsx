@@ -96,7 +96,7 @@ const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId:
     });
 
     return (
-        <div
+        <aside
             style={{
                 gridArea: "sidebar",
             }}
@@ -130,7 +130,7 @@ const PageSidebar = ({ userName, userId, orgsList }: { userName: string; userId:
             {/* <ContentCardTemplate title="Badges" titleClassName="text-lg">
                 <span className="text-muted-foreground italic">List of badges the user has earned</span>
             </ContentCardTemplate> */}
-        </div>
+        </aside>
     );
 };
 

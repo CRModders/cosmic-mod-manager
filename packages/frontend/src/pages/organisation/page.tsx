@@ -31,6 +31,8 @@ const OrgProjectsList = ({ projectType, projectsList }: Props) => {
                         followers={project.followers}
                         dateUpdated={new Date(project.dateUpdated)}
                         datePublished={new Date(project.datePublished)}
+                        featuredGallery={project.featured_gallery}
+                        color={project.color}
                     />
                 );
             })}

@@ -76,7 +76,9 @@ const OrgPageLayout = () => {
                     ) : null}
 
                     {totalProjects ? (
-                        <OrgProjectsList projectType={projectType} projectsList={projects} />
+                        <ul className="w-full grid grid-cols-1 gap-panel-cards">
+                            <OrgProjectsList projectType={projectType} projectsList={projects} />
+                        </ul>
                     ) : (
                         <div className="w-full flex items-center justify-center py-12">
                             <p className="text-lg text-muted-foreground italic text-center">
@@ -95,7 +97,7 @@ export const Component = OrgPageLayout;
 
 const PageSidebar = ({ members }: { members: TeamMember[] }) => {
     return (
-        <div
+        <aside
             style={{
                 gridArea: "sidebar",
             }}
@@ -121,7 +123,7 @@ const PageSidebar = ({ members }: { members: TeamMember[] }) => {
                     })}
                 </CardContent>
             </Card>
-        </div>
+        </aside>
     );
 };
 
