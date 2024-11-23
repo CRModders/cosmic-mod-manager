@@ -23,6 +23,7 @@ import {
 } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { projectContext } from "@/src/contexts/curr-project";
+import { FRONTEND_URL } from "@/src/hooks/fetch";
 import useTheme from "@/src/hooks/use-theme";
 import { LoadingStatus } from "@/types";
 import { PopoverClose } from "@radix-ui/react-popover";
@@ -98,6 +99,7 @@ const ProjectPageLayout = () => {
 
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
     const projectType = projectData.type?.[0] || "project";
+    const projectPageUrl = getProjectPagePathname(projectType, projectData.slug);
 
     return (
         <>
@@ -106,6 +108,12 @@ const ProjectPageLayout = () => {
                     {projectData?.name || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={projectData?.summary || " "} />
+                <link rel="canonical" href={`${FRONTEND_URL}${projectPageUrl}`} />
+
+                <meta property="og:title" content={`${projectData.name} - CR ${CapitalizeAndFormatString(projectData.type[0])}`} />
+                <meta property="og:url" content={`${FRONTEND_URL}${projectPageUrl}`} />
+                <meta property="og:description" content={projectData?.summary || " "} />
+                <meta property="og:image" content={imageUrl(projectData.icon)} />
             </Helmet>
 
             <div className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">

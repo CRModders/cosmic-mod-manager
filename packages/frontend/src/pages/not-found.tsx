@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { SITE_NAME_LONG } from "@shared/config";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { FRONTEND_URL } from "../hooks/fetch";
 
 interface Props {
     title?: string;
@@ -20,6 +21,7 @@ export function NotFoundPage({ className, title, description, linkHref, linkLabe
                     {title || "Page not found"} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content="We couldn't find the page you are looking for." />
+                <link rel="canonical" href={`${FRONTEND_URL}/not-found`} />
             </Helmet>
             <div className={cn("w-full full_page flex flex-col items-center justify-center", className)}>
                 <div className="w-full flex flex-col items-center justify-center">

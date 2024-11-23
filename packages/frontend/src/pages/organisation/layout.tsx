@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VariantButtonLink } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 import { getOrgPagePathname, imageUrl } from "@/lib/utils";
+import { FRONTEND_URL } from "@/src/hooks/fetch";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { SITE_NAME_LONG } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { Organisation, TeamMember } from "@shared/types/api";
@@ -36,6 +37,7 @@ const OrgPageLayout = () => {
         }
     }
     const projectTypesList = Array.from(aggregatedProjectTypes);
+    const orgPageUrl = getOrgPagePathname(orgData.slug);
 
     return (
         <>
@@ -43,7 +45,13 @@ const OrgPageLayout = () => {
                 <title>
                     {orgData.name || ""} | {SITE_NAME_LONG}
                 </title>
-                <meta name="description" content={`${orgData.name} organization`} />
+                <meta name="description" content={`${orgData.description} - ${SITE_NAME_SHORT} Organization`} />
+                <link rel="canonical" href={`${FRONTEND_URL}${orgPageUrl}`} />
+
+                <meta property="og:title" content={`${orgData.name} - ${SITE_NAME_SHORT} Organization`} />
+                <meta property="og:url" content={`${FRONTEND_URL}${orgPageUrl}`} />
+                <meta property="og:description" content={orgData?.description || " "} />
+                <meta property="og:image" content={imageUrl(orgData.icon)} />
             </Helmet>
 
             <div className="org-page-layout pb-12 gap-panel-cards">

@@ -5,8 +5,11 @@ import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
 import { toast } from "sonner";
 
 import { DownloadRipple } from "@/components/download-ripple";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
+import { Helmet } from "react-helmet";
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
+import { FRONTEND_URL } from "../hooks/fetch";
 
 export const RootLayout = () => {
     useEffect(() => {
@@ -17,8 +20,20 @@ export const RootLayout = () => {
         }
     }, []);
 
+    const desc = `Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}). Discover and publish projects on ${SITE_NAME_SHORT} with a modern, easy to use interface and API.`;
+
     return (
         <>
+            <Helmet>
+                <title>{SITE_NAME_LONG}</title>
+                <meta name="description" content={desc} data-react-helmet="true" />
+
+                <meta property="og:title" content="Cosmic Reach Mod Manager - CRMM" />
+                <meta property="og:url" content={FRONTEND_URL} />
+                <meta property="og:description" content={desc} />
+                <meta property="og:image" content={`${FRONTEND_URL}/favicon.ico`} />
+            </Helmet>
+
             <NavigationLoadingBar />
             <ScrollRestoration />
 

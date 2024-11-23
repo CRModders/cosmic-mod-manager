@@ -46,7 +46,8 @@ const UploadVersionPage = () => {
     form.watch();
 
     if (!projectData) return null;
-    const versionsPageUrl = `${getProjectPagePathname(projectData.type[0], projectData.slug)}/versions`;
+    const projectPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug);
+    const versionsPageUrl = `${projectPageUrl}/versions`;
 
     const handleSubmit = async (data: z.infer<typeof newVersionFormSchema>) => {
         if (!(data.primaryFile instanceof File)) {

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TooltipProvider, TooltipTemplate } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { FRONTEND_URL } from "@/src/hooks/fetch";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -96,16 +97,21 @@ const SearchPageLayout = ({ type }: Props) => {
         };
     }, []);
 
+    const desc = `Search and download your favorite cosmic reach ${type}s with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`;
+
     return (
         <>
             <Helmet>
                 <title>
                     Search {type}s | {SITE_NAME_LONG}
                 </title>
-                <meta
-                    name="description"
-                    content={`Search and download your favorite cosmic reach ${type}s with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`}
-                />
+                <meta name="description" content={desc} />
+                <link rel="canonical" href={`${FRONTEND_URL}/${type}s`} />
+
+                <meta property="og:title" content={`Search ${type}s`} />
+                <meta property="og:url" content={`${FRONTEND_URL}/${type}s`} />
+                <meta property="og:description" content={desc} />
+                <meta property="og:image" content={`${FRONTEND_URL}/favicon.ico`} />
             </Helmet>
 
             <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">

@@ -77,11 +77,6 @@
         currentRef = currentUrl;
         currentUrl = parseURL(url.toString());
 
-        console.log({
-            currentUrl,
-            currentRef,
-        });
-
         if (currentUrl !== currentRef) {
             setTimeout(track, delayDuration);
         }

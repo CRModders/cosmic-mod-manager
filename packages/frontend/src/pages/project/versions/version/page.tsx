@@ -54,6 +54,7 @@ const VersionPage = () => {
     }
 
     if (!projectData || !versionData || !projectSlug || !versionSlug) return null;
+    const projectPageUrl = getProjectPagePathname(projectType, projectSlug);
 
     return (
         <>
@@ -67,7 +68,7 @@ const VersionPage = () => {
                 <Breadcrumb>
                     <BreadcrumbList className="flex items-center">
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={`${getProjectPagePathname(projectType, projectSlug)}/versions`} className="text-base">
+                            <BreadcrumbLink href={`${projectPageUrl}/versions`} className="text-base">
                                 Versions
                             </BreadcrumbLink>
                         </BreadcrumbItem>

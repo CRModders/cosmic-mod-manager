@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { FRONTEND_URL } from "../hooks/fetch";
 import { getRandomProjectsQuery } from "./_loader";
 import styles from "./styles.module.css";
 
@@ -47,6 +48,7 @@ const HomePage = () => {
                     name="description"
                     content={`Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}). Discover and publish projects on ${SITE_NAME_SHORT} with a modern, easy to use interface and API.`}
                 />
+                <link rel="canonical" href={FRONTEND_URL} />
             </Helmet>
 
             <div className="w-full">

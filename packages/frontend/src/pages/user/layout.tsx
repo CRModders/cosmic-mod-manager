@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getOrgPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { userProfileContext } from "@/src/contexts/user-profile";
+import { FRONTEND_URL } from "@/src/hooks/fetch";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -45,6 +46,12 @@ const UserPageLayout = () => {
                     {userData?.userName || ""} | {SITE_NAME_LONG}
                 </title>
                 <meta name="description" content={`${userData.userName}'s profile on ${SITE_NAME_SHORT}`} />
+                <link rel="canonical" href={`${FRONTEND_URL}/user/${userData.userName}`} />
+
+                <meta property="og:title" content={`${userData.userName} - ${SITE_NAME_SHORT} User`} />
+                <meta property="og:url" content={`${FRONTEND_URL}/user/${userData.userName}`} />
+                <meta property="og:description" content={userData?.bio || " "} />
+                <meta property="og:image" content={imageUrl(userData.avatarUrl)} />
             </Helmet>
 
             <div className="profile-page-layout pb-12 gap-panel-cards">
