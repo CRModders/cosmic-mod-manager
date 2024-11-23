@@ -22,6 +22,7 @@ export default defineConfig({
             description: {
                 name: "description",
                 content: "Search and download your favorite cosmic reach mods with ease.",
+                "data-react-helmet": "true",
             },
         },
         tags: [
