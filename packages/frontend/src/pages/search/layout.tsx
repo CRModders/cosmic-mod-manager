@@ -89,10 +89,6 @@ const SearchPageLayout = ({ type }: Props) => {
     };
 
     useEffect(() => {
-        if (searchInput.current) searchInput.current.focus();
-    }, [type]);
-
-    useEffect(() => {
         document.addEventListener("keyup", handleSearchInputFocus);
 
         return () => {
@@ -120,7 +116,6 @@ const SearchPageLayout = ({ type }: Props) => {
                             className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
                         />
                         <Input
-                            autoFocus
                             ref={searchInput}
                             value={searchQuery}
                             onChange={(e) => {

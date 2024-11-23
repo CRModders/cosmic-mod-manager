@@ -67,6 +67,7 @@ const BaseView = (props: SearchListItemProps) => {
                     to={projectPageUrl}
                     className="h-44 overflow-hidden rounded-t-lg rounded-b-none m-0.5 mb-0"
                     aria-label={props.projectName}
+                    tabIndex={-1}
                     style={{
                         gridArea: "gallery",
                         backgroundColor: props.color ? props.color : "hsla(var(--foreground), 0.15)",
