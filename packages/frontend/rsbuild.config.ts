@@ -1,6 +1,6 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
-import { SITE_NAME_LONG } from "./../shared/config/index";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "./../shared/config/index";
 
 export default defineConfig({
     plugins: [pluginReact()],
@@ -21,7 +21,7 @@ export default defineConfig({
         meta: {
             description: {
                 name: "description",
-                content: "Search and download your favorite cosmic reach mods with ease.",
+                content: `Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}). Discover and publish projects on ${SITE_NAME_SHORT} with a modern, easy to use interface and API.`,
                 "data-react-helmet": "true",
             },
         },
