@@ -4,7 +4,7 @@ import { NotificationBadge } from "@/components/ui/badge";
 import { cn, imageUrl } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
 

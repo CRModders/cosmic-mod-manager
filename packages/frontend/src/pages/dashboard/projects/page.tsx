@@ -12,7 +12,7 @@ import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { getUserProjectsQuery, invalidateUserProjectsQuery } from "./_loader";
 import CreateNewProjectDialog from "./new-project";
 

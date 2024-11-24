@@ -13,7 +13,7 @@ import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { FRONTEND_URL } from "../hooks/fetch";
 import { getRandomProjectsQuery } from "./_loader";
 import styles from "./styles.module.css";

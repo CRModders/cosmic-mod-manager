@@ -22,7 +22,7 @@ import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, DownloadIcon, FilterIcon, FlaskConicalIcon, XCircleIcon } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 
 const VersionChangelogs = () => {
     const { projectData, allProjectVersions } = useContext(projectContext);

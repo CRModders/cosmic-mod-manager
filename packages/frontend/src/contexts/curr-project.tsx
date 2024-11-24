@@ -3,7 +3,7 @@ import { getCurrMember } from "@shared/lib/utils";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { NotFoundPage } from "../pages/not-found";
 import { reactQueryClient } from "../providers";
 import { getAllProjectVersionsQuery, getProjectDataQuery, getProjectDependenciesQuery } from "./_loaders";

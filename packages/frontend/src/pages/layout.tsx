@@ -1,7 +1,7 @@
 import Navbar from "@/components/layout/Navbar/navbar";
 import Footer from "@/components/layout/footer";
 import { useEffect, useRef } from "react";
-import { Outlet, ScrollRestoration, useNavigation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useNavigation } from "react-router";
 import { toast } from "sonner";
 
 import { DownloadRipple } from "@/components/download-ripple";

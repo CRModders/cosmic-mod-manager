@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { UsersIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { fallbackOrgIcon } from "./icons";
 import { ImgWrapper } from "./ui/avatar";
 

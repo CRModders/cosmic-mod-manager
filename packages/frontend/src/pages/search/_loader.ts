@@ -3,7 +3,7 @@ import useFetch from "@/src/hooks/fetch";
 import type { ProjectType } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { UseQueryOptions } from "@tanstack/react-query";
-import type { LoaderFunctionArgs } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router";
 
 interface SearchResult {
     estimatedTotalHits: number;

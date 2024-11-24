@@ -8,7 +8,7 @@ import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";

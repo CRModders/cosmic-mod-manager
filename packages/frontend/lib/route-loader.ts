@@ -1,6 +1,6 @@
 import { reactQueryClient } from "@/src/providers";
 import type { EnsureQueryDataOptions, UseQueryOptions } from "@tanstack/react-query";
-import type { LoaderFunctionArgs } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router";
 
 export type routeLoaderQueryArg<T> = EnsureQueryDataOptions<T> | ((args: LoaderFunctionArgs) => EnsureQueryDataOptions<T>);
 

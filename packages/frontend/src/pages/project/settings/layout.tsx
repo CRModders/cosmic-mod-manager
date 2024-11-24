@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 const ProjectSettingsLayout = () => {
     const { projectData } = useContext(projectContext);

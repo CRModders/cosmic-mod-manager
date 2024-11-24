@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { NotificationsContext } from "./context";
 
 const NotificationsPageLayout = () => {

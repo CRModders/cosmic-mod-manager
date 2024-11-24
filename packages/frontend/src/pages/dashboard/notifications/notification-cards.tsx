@@ -8,7 +8,7 @@ import { acceptTeamInvite, leaveTeam } from "@/src/pages/project/settings/member
 import type { Notification } from "@shared/types/api";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export const TeamInviteNotification = ({

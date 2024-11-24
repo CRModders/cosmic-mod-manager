@@ -2,7 +2,7 @@ import { ensureQueryData, routeLoader } from "@/lib/route-loader";
 import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
-import type { LoaderFunctionArgs } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router";
 import useFetch from "../hooks/fetch";
 
 // Auth Session Data Loader

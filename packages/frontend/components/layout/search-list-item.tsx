@@ -3,7 +3,7 @@ import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@s
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { ProjectSupport } from "@shared/types";
 import { CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { fallbackProjectIcon } from "../icons";
 import { TagIcon } from "../tag-icons";
 import { ImgWrapper } from "../ui/avatar";

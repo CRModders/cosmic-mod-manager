@@ -15,7 +15,7 @@ import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { RedirectIfLoggedIn } from "../guards";

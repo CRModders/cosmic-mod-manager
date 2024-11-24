@@ -15,7 +15,7 @@ import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import {

@@ -3,7 +3,7 @@ import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { getNotificationsQuery } from "../pages/dashboard/notifications/_loader";
 import { reactQueryClient } from "../providers";
 import { getSessionDataQuery } from "./_loaders";

@@ -1,4 +1,4 @@
-import { Link, type LinkProps } from "react-router-dom";
+import { Link, type LinkProps } from "react-router";
 import { BrandIcon, DiscordIcon, GithubIcon } from "../icons";
 import { DotSeparator } from "../ui/separator";
 import ThemeSwitch from "../ui/theme-switcher";

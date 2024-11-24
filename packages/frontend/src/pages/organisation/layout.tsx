@@ -14,7 +14,7 @@ import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, ClipboardCopyIcon, DownloadIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import TeamInvitationBanner from "../project/join-project-banner";
 import { ProjectMember } from "../project/layout";
 import SecondaryNav from "../project/secondary-nav";

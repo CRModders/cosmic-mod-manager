@@ -2,7 +2,7 @@ import { ensureQueryData, routeLoader } from "@/lib/route-loader";
 import useFetch from "@/src/hooks/fetch";
 import { reactQueryClient } from "@/src/providers";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
-import type { LoaderFunctionArgs } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router";
 
 // User Profile Data Loader
 const getOrgData = async (slug: string | undefined) => {

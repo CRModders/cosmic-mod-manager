@@ -3,7 +3,7 @@ import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useQuery } from "@tanstack/react-query";
 import { createContext } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router";
 import { NotFoundPage } from "../pages/not-found";
 import { getProjectsListDataQuery, getUserOrgsListQuery, getUserProfileDataQuery } from "./_loaders";
 

@@ -16,7 +16,7 @@ import { SITE_NAME_LONG } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { orgDataContext } from "../org-context";
 
 const OrgSettingsLayout = () => {

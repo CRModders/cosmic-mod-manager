@@ -43,7 +43,7 @@ import {
 } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import "./../styles.css";
 
 interface FilterItems {

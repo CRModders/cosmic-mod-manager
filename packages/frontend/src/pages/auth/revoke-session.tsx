@@ -2,7 +2,7 @@ import { FormErrorMessage, FormSuccessMessage } from "@/components/ui/form-messa
 import { LoadingSpinner } from "@/components/ui/spinner";
 import useFetch from "@/src/hooks/fetch";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 const RevokeSessionPage = () => {

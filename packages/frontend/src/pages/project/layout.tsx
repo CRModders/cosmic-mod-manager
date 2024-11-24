@@ -52,7 +52,7 @@ import {
 import type React from "react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router";
 import InteractiveDownloadPopup from "./interactive-download";
 import SecondaryNav from "./secondary-nav";
 import "./styles.css";

@@ -28,7 +28,7 @@ import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, InfoIcon, WrenchIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 
 const getVersionData = (gameVersion: string, loader: string, versionsList: ProjectVersionData[]): ProjectVersionData | null => {
     let latestVersion = null;

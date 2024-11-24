@@ -20,7 +20,7 @@ import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { configuredXss, md } from "./parse-md";
 
 /* REGISTRATION */

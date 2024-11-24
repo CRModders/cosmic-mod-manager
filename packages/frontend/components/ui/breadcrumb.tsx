@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const Breadcrumb = React.forwardRef<
     HTMLElement,

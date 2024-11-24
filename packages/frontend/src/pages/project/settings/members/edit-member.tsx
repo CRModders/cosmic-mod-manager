@@ -18,7 +18,7 @@ import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { RemoveMemberDialog, TransferOwnershipDialog } from "./dialogs";

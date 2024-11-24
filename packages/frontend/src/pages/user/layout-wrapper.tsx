@@ -1,5 +1,5 @@
 import { UserProfileContextProvider } from "@/src/contexts/user-profile";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 const UserProfileLayoutWrapper = () => {
     return (

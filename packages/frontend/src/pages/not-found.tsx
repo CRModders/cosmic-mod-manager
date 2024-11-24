@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SITE_NAME_LONG } from "@shared/config";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { FRONTEND_URL } from "../hooks/fetch";
 
 interface Props {

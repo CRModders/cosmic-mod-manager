@@ -16,7 +16,7 @@ import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategori
 import { ProjectType, TagHeaderType } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
 
 interface Props {

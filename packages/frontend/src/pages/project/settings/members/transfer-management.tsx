@@ -8,7 +8,7 @@ import useFetch from "@/src/hooks/fetch";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, CheckIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 interface Props {

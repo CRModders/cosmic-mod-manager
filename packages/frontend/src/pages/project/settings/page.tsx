@@ -36,7 +36,7 @@ import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 

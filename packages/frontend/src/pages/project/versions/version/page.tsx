@@ -28,7 +28,7 @@ import { ProjectPermission } from "@shared/types";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router";
 import { ProjectMember } from "../../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));

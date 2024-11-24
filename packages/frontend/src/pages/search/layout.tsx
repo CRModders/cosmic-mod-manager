@@ -13,7 +13,7 @@ import { ProjectType, SearchResultSortMethod } from "@shared/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 import { SearchResults } from "./page";
 import FilterSidebar from "./sidebar";
 import "./styles.css";

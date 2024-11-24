@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { setNewPasswordFormSchema } from "@shared/schemas/settings";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import SessionsPageLink from "./sessions-page-link";

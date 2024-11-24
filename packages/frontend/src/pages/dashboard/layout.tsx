@@ -14,7 +14,7 @@ import {
     LibraryIcon,
 } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { RedirectIfNotLoggedIn } from "../auth/guards";
 
 const DashboardLayout = () => {

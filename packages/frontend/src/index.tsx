@@ -1,8 +1,10 @@
-import { SuspenseFallback } from "@/components/ui/spinner";
 import "@/src/globals.css";
 import { projectTypes } from "@shared/config/project";
 import ReactDOM from "react-dom/client";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Outlet, createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+
+import { SuspenseFallback } from "@/components/ui/spinner";
 import { projectPageLoader, sessionDataLoader, userProfilePageLoader } from "./contexts/_loaders";
 import ErrorView from "./pages/error-page";
 import { RootLayout } from "./pages/layout";
@@ -19,6 +21,7 @@ import userProjectsLoader from "./pages/dashboard/projects/_loader";
 import { NotFoundPage } from "@/src/pages/not-found";
 import { orgPageLoader } from "./pages/organisation/_loader";
 import { searchResultsLoader } from "./pages/search/_loader";
+
 // Project settings Loaders
 import { accountSettingsPageLoader, userSessionsPageLoader } from "./pages/settings/_loaders";
 
@@ -136,6 +139,7 @@ const router = createBrowserRouter([
         element: <ContextProviders />,
         loader: sessionDataLoader,
         errorElement: <ErrorView />,
+        hydrateFallbackElement: <SuspenseFallback className="py-32" />,
         children: [
             {
                 path: "auth/callback/:authProvider",
@@ -303,9 +307,5 @@ const router = createBrowserRouter([
 const rootEl = document.getElementById("root");
 if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
-    root.render(
-        // <StrictMode>
-        <RouterProvider router={router} fallbackElement={<SuspenseFallback className="py-32" />} />,
-        // </StrictMode>,
-    );
+    root.render(<RouterProvider router={router} />);
 }

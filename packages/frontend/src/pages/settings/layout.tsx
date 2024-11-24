@@ -3,7 +3,7 @@ import { ButtonLink } from "@/components/ui/link";
 import { SITE_NAME_LONG } from "@shared/config";
 import { MonitorSmartphoneIcon, UserIcon } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { RedirectIfNotLoggedIn } from "../auth/guards";
 
 const SettingsPageLayout = () => {

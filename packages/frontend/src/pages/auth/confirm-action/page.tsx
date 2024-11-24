@@ -4,7 +4,7 @@ import useFetch from "@/src/hooks/fetch";
 import { getConfirmActionTypeFromStringName } from "@shared/lib/utils/convertors";
 import { ConfirmationType } from "@shared/types";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 import ChangePasswordCard from "./change-password";
 import ConfirmNewPasswordCard from "./confirm-new-password";
 import DeleteAccountConfirmationCard from "./delete-account";

@@ -9,7 +9,7 @@ import { useSession } from "@/src/contexts/auth";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { getAllUserProjectsQuery } from "./_loader";
 import { NotificationsContext } from "./notifications/context";
 import { NotificationItem } from "./notifications/page";

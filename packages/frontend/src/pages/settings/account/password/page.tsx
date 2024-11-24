@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import type { LoggedInUserData } from "@shared/types";
 import { KeyRound } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import AddPasswordForm from "./add-password";
 import RemovePasswordForm from "./remove-password";
 

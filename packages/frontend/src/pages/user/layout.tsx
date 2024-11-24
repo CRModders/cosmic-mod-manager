@@ -18,7 +18,7 @@ import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
 import { useContext } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import SecondaryNav from "../project/secondary-nav";
 import UserProjectsList from "./page";
 import "./styles.css";

@@ -8,7 +8,7 @@ import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 const OAuthCallbackPage = () => {

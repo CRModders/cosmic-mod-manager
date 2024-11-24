@@ -16,7 +16,7 @@ import useFetch from "@/src/hooks/fetch";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Trash2Icon } from "lucide-react";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 const DeleteVersionDialog = ({ projectSlug, versionSlug, featured }: { projectSlug: string; versionSlug: string; featured: boolean }) => {

@@ -1,8 +1,8 @@
 import { cn, isCurrLinkActive } from "@/lib/utils";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
-import type { LinkProps } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
+import type { LinkProps } from "react-router";
+import { Link, useLocation } from "react-router";
 import { buttonVariants } from "./button";
 
 interface ButtonLinkProps extends Omit<LinkProps, "to"> {

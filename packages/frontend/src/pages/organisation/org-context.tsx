@@ -4,7 +4,7 @@ import { NotFoundPage } from "@/src/pages/not-found";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router";
 import { getOrgDataQuery, getOrgProjectsQuery } from "./_loader";
 
 interface OrgDataContext {

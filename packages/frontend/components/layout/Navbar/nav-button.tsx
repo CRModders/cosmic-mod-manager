@@ -9,7 +9,7 @@ import { cn, imageUrl } from "@/lib/utils";
 import { SessionContext } from "@/src/contexts/auth";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 export const LoginButton = ({
     className,
