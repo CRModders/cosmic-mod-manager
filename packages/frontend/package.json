@@ -8,6 +8,9 @@
         "preview": "rsbuild preview"
     },
     "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+
         "@hookform/resolvers": "^3.9.0",
         "@radix-ui/react-accordion": "^1.2.0",
         "@radix-ui/react-checkbox": "^1.1.1",
@@ -29,8 +32,6 @@
         "highlight.js": "^11.10.0",
         "lucide-react": "^0.408.0",
         "markdown-it": "^14.1.0",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
         "react-helmet": "^6.1.0",
         "react-hook-form": "^7.52.1",
         "react-router": "^7.0.1",
@@ -43,17 +44,19 @@
         "zod": "^3.23.8"
     },
     "devDependencies": {
-        "@types/react": "^18.3.3",
-        "@types/react-dom": "^18.3.0",
-        "@rsbuild/core": "1.0.1-beta.2",
-        "@rsbuild/plugin-react": "1.0.1-beta.2",
-        "@types/markdown-it": "^14.1.2",
-        "@types/react-helmet": "^6.1.11",
-        "@types/semver": "^7.5.8",
-        "autoprefixer": "^10.4.19",
+        "typescript": "^5.5.2",
         "postcss": "^8.4.39",
         "postcss-loader": "^8.1.1",
         "tailwindcss": "^3.4.6",
-        "typescript": "^5.5.2"
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+
+        "@rsbuild/core": "1.0.1-beta.2",
+        "@rsbuild/plugin-react": "1.0.1-beta.2",
+
+        "@types/markdown-it": "^14.1.2",
+        "@types/react-helmet": "^6.1.11",
+        "@types/semver": "^7.5.8",
+        "autoprefixer": "^10.4.19"
     }
 }

@@ -252,11 +252,11 @@ body.no-scrollbar {
 .thin-scrollbar {
     --width: var(--scrollbar-width, 0.35rem);
     --height: var(--scrollbar-width, 0.35rem);
-    --radius: var(0.3rem);
+    --radius: 0.3rem;
 }
 
 .thin-scrollbar.medium {
-    --width: var(0.5rem);
-    --height: var(0.5rem);
-    --radius: var(0.5rem);
+    --width: 0.5rem;
+    --height: 0.5rem;
+    --radius: 0.5rem;
 }
