@@ -3,7 +3,7 @@ import Config from "@root/utils/config";
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     let fetchUrl = pathname;
 
-    const clientIp = clientReq.headers.get("x-forwarded-for") || clientReq.headers.get("x-real-ip") || "";
+    const clientIp = clientReq.headers.get("x-forwarded-for") || clientReq.headers.get("x-real-ip") || "0.0.0.0";
     const userAgent = clientReq.headers.get("User-Agent") || "";
 
     const headers = {
@@ -14,6 +14,9 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
         "x-identity-token": "",
         Cookie: "",
     };
+
+    console.log("");
+    console.log("IP: ", clientIp);
 
     if (fetchUrl.startsWith("/")) {
         fetchUrl = `${Config.BACKEND_URL}${fetchUrl}`;

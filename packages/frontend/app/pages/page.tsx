@@ -116,13 +116,15 @@ export default function HomePage({ session, projects }: Props) {
 }
 
 function ShowCase({ projects }: { projects: ProjectListItem[] }) {
+    if (!projects?.length) return null;
+
     const carousel1Items = projects.slice(0, Math.floor(projects.length / 2));
     const carousel2Items = projects.slice(Math.floor(projects.length / 2));
 
     return (
         <div className="w-full flex flex-col gap-6">
-            <MarqueeScroll items={carousel1Items} />
-            <MarqueeScroll items={carousel2Items} reverse />
+            <MarqueeScroll items={carousel1Items || []} />
+            <MarqueeScroll items={carousel2Items || []} reverse />
         </div>
     );
 }
