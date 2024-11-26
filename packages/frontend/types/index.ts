@@ -40,3 +40,11 @@ export interface DependencyData {
     projects: DependencyProjectData[];
     versions: DependencyVersionData[];
 }
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export type AwaitedReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
+    ? U
+    : // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      T extends (...args: any) => infer U
+      ? U
+      : never;

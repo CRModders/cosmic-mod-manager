@@ -1,4 +1,0 @@
-sitemap: https://www.crmm.tech/sitemap.xml
-
-User-agent: *
-Allow: /
