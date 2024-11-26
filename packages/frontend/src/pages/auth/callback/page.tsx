@@ -60,7 +60,8 @@ const OAuthCallbackPage = () => {
             !urlCsrfState ||
             getAuthProviderFromString(authProvider) === AuthProvider.UNKNOWN
         ) {
-            return navigate("/");
+            navigate("/");
+            return;
         }
 
         submitCode(code, getAuthProviderFromString(authProvider), actionIntent);

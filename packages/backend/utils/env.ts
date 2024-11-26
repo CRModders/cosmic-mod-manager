@@ -21,6 +21,7 @@ const envKeys = [
     "DEMO_EMAIL_PASSWORD",
     "NODE_ENV",
     "CDN_SECRET",
+    "FRONTEND_SECRET",
 ] as const;
 
 type EnvKeys = (typeof envKeys)[number];

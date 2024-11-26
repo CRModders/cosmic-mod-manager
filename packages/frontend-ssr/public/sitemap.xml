@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+   <url>
+      <loc>https://www.crmm.tech/</loc>
+   </url>
+
+   <url>
+      <loc>https://www.crmm.tech/mods</loc>
+   </url>
+
+   <url>
+      <loc>https://www.crmm.tech/datamods</loc>
+   </url>
+
+   <url>
+      <loc>https://www.crmm.tech/resource-packs</loc>
+   </url>
+   
+   <url>
+      <loc>https://www.crmm.tech/shaders</loc>
+   </url>
+   
+   <url>
+      <loc>https://www.crmm.tech/modpacks</loc>
+   </url>
+
+   <url>
+      <loc>https://www.crmm.tech/plugins</loc>
+   </url>
+   
+</urlset>

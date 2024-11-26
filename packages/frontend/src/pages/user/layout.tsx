@@ -8,16 +8,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getOrgPagePathname, imageUrl, timeSince } from "@/lib/utils";
 import { useSession } from "@/src/contexts/auth";
 import { userProfileContext } from "@/src/contexts/user-profile";
-import { FRONTEND_URL } from "@/src/hooks/fetch";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { Organisation } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
 import { useContext } from "react";
-import { Helmet } from "react-helmet";
 import { Link, useParams } from "react-router";
 import SecondaryNav from "../project/secondary-nav";
 import UserProjectsList from "./page";
@@ -40,57 +37,42 @@ const UserPageLayout = () => {
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
     return (
-        <>
-            <Helmet>
-                <title>
-                    {userData?.userName || ""} | {SITE_NAME_LONG}
-                </title>
-                <meta name="description" content={`${userData.userName}'s profile on ${SITE_NAME_SHORT}`} />
-                <link rel="canonical" href={`${FRONTEND_URL}/user/${userData.userName}`} />
+        <div className="profile-page-layout pb-12 gap-panel-cards">
+            <ProfilePageHeader userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
+            <div
+                className="flex items-start justify-start flex-col gap-panel-cards"
+                style={{
+                    gridArea: "content",
+                }}
+            >
+                {projectTypesList?.length > 1 && totalProjects > 1 ? (
+                    <SecondaryNav
+                        className="bg-card-background rounded-lg px-3 py-2"
+                        urlBase={`/user/${userData.userName}`}
+                        links={[
+                            { label: "All", href: "" },
+                            ...getProjectTypesFromNames(projectTypesList).map((type) => ({
+                                label: `${CapitalizeAndFormatString(type)}s` || "",
+                                href: `/${type}s`,
+                            })),
+                        ]}
+                    />
+                ) : null}
 
-                <meta property="og:title" content={`${userData.userName} - ${SITE_NAME_SHORT} User`} />
-                <meta property="og:url" content={`${FRONTEND_URL}/user/${userData.userName}`} />
-                <meta property="og:description" content={userData?.bio || " "} />
-                <meta property="og:image" content={imageUrl(userData.avatarUrl)} />
-            </Helmet>
-
-            <div className="profile-page-layout pb-12 gap-panel-cards">
-                <ProfilePageHeader userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
-                <div
-                    className="flex items-start justify-start flex-col gap-panel-cards"
-                    style={{
-                        gridArea: "content",
-                    }}
-                >
-                    {projectTypesList?.length > 1 && totalProjects > 1 ? (
-                        <SecondaryNav
-                            className="bg-card-background rounded-lg px-3 py-2"
-                            urlBase={`/user/${userData.userName}`}
-                            links={[
-                                { label: "All", href: "" },
-                                ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-                                    label: `${CapitalizeAndFormatString(type)}s` || "",
-                                    href: `/${type}s`,
-                                })),
-                            ]}
-                        />
-                    ) : null}
-
-                    {totalProjects ? (
-                        <ul className="w-full flex flex-col gap-panel-cards">
-                            <UserProjectsList projectType={projectType} projectsList={projectsList} />
-                        </ul>
-                    ) : (
-                        <div className="w-full flex items-center justify-center py-12">
-                            <p className="text-lg text-muted-foreground italic text-center">
-                                {userData.userName} doesn't have any projects yet.
-                            </p>
-                        </div>
-                    )}
-                </div>
-                <PageSidebar userName={userData.userName} userId={userData.id} orgsList={orgsList || []} />
+                {totalProjects ? (
+                    <ul className="w-full flex flex-col gap-panel-cards">
+                        <UserProjectsList projectType={projectType} projectsList={projectsList} />
+                    </ul>
+                ) : (
+                    <div className="w-full flex items-center justify-center py-12">
+                        <p className="text-lg text-muted-foreground italic text-center">
+                            {userData.userName} doesn't have any projects yet.
+                        </p>
+                    </div>
+                )}
             </div>
-        </>
+            <PageSidebar userName={userData.userName} userId={userData.id} orgsList={orgsList || []} />
+        </div>
     );
 };
 

@@ -16,7 +16,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router";
 import { FRONTEND_URL } from "../hooks/fetch";
 import { getRandomProjectsQuery } from "./_loader";
-import styles from "./styles.module.css";
+import "./styles.css";
 
 const HomePage = () => {
     const { session } = useSession();
@@ -154,11 +154,11 @@ const ScrollingCarousel = ({ items, reverse = false }: { items: ProjectListItem[
     const duration = 7.5 * items.length;
 
     return (
-        <div className={cn(styles.scrollMainContainer, "w-full relative flex items-center justify-start h-24 overflow-hidden")}>
-            <CarouselRow items={items} className={cn(styles.scrollContainer)} duration={duration} reverse={reverse} />
+        <div className={cn("scrollMainContainer", "w-full relative flex items-center justify-start h-24 overflow-hidden")}>
+            <CarouselRow items={items} className="scrollContainer" duration={duration} reverse={reverse} />
             <CarouselRow
                 items={items}
-                className={cn(styles.scrollContainerOffset)}
+                className="scrollContainerOffset"
                 duration={duration}
                 delay={-1 * (duration / 2)}
                 reverse={reverse}
@@ -205,12 +205,7 @@ const CarouselItem = ({ item }: { item: ProjectListItem }) => {
                 <span className="max-w-52 text-lg font-bold overflow-hidden whitespace-nowrap text-ellipsis leading-tight">
                     {item.name}
                 </span>
-                <span
-                    className={cn(
-                        styles.carouselItemDescription,
-                        "max-w-52 text-[0.87rem] text-muted-foreground overflow-hidden leading-tight text-pretty",
-                    )}
-                >
+                <span className="carouselItemDescription max-w-52 text-[0.87rem] text-muted-foreground overflow-hidden leading-tight text-pretty">
                     {item.summary}
                 </span>
             </div>

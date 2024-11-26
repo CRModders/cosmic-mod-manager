@@ -15,7 +15,7 @@ import EditProfileDialog from "./edit-profile";
 import ManageAuthProviders from "./manage-providers";
 import ManagePasswords from "./password/page";
 
-const AccountSettingsPage = () => {
+export default function AccountSettingsPage() {
     const { session, isFetchingData, validateSession } = useSession();
     const linkedAuthProviders = useQuery(getLinkedAuthProvidersQuery());
 
@@ -130,6 +130,4 @@ const AccountSettingsPage = () => {
             )}
         </>
     );
-};
-
-export const Component = AccountSettingsPage;
+}

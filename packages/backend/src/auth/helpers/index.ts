@@ -10,6 +10,7 @@ import { getDiscordUserProfileData } from "@src/auth/providers/discord";
 import { getGithubUserProfileData } from "@src/auth/providers/github";
 import { getGitlabUserProfileData } from "@src/auth/providers/gitlab";
 import { getGoogleUserProfileData } from "@src/auth/providers/google";
+import type { SocketAddress } from "bun";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { random } from "nanoid";
@@ -89,28 +90,24 @@ export async function createNewAuthAccount(
     });
 }
 
-type IpAddressType =
-    | {
-          address: string;
-          family: string;
-          port: number;
-      }
-    | string
-    | null;
-
 export type GeoApiData = {
     city?: string;
     country?: string;
 };
 
-export function getUserIpAddress(ctx: Context) {
-    let ipAddr =
-        ctx.req.header("x-forwarded-for")?.split(", ")?.[0] || ctx.req.header("x-forwarded-for") || (ctx.env.ip as string as IpAddressType);
-    if (typeof ipAddr !== "string") {
-        ipAddr = ipAddr?.address || null;
+export function getUserIpAddress(ctx: Context): string | null {
+    const clientIP = ctx.req.header("x-client-ip");
+    const identityToken = ctx.req.header("x-identity-token");
+
+    if (clientIP && env.FRONTEND_SECRET === identityToken) {
+        return clientIP;
     }
 
-    return ipAddr;
+    const socketAddr = ctx.env.ip as SocketAddress;
+    // Don't allow IPv6 addresses
+    if (socketAddr.family === "IPv6" && socketAddr.address !== "::1") return null;
+
+    return socketAddr.address;
 }
 
 export async function getUserDeviceDetails(ctx: Context) {

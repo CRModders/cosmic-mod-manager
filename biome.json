@@ -9,6 +9,9 @@
         "rules": {
             "correctness": {
                 "useExhaustiveDependencies": "off"
+            },
+            "style": {
+                "noParameterAssign": "off"
             }
         }
     },

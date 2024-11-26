@@ -1,0 +1,128 @@
+.hero_section_showcase {
+    --showcase-animation-cycle-duration: 14s;
+    animation: animateShowcaseItems var(--showcase-animation-cycle-duration) ease infinite;
+}
+
+.hero_section_showcase strong {
+    animation: opacityFadeOut var(--showcase-animation-cycle-duration) calc((0.17 * var(--index) * var(--showcase-animation-cycle-duration)) + (0.03 * var(--showcase-animation-cycle-duration) * (var(--index) - 1))) ease infinite;
+}
+
+
+/*  Made for 6 showcase items currently
+    % of time given to animate * (Number of total items - 1) +  %  of time each item stays in view * (Number of toal items - 1)  = 100 %
+    CURRENTLY: 3% of the duration is given for animation  and each item stays 17% of total duration in view
+*/
+
+@keyframes animateShowcaseItems {
+
+    0%,
+    17% {
+        transform: translateY(0);
+    }
+
+    20%,
+    37% {
+        transform: translateY(calc(var(--unit-height) * -1));
+    }
+
+    40%,
+    57% {
+        transform: translateY(calc(var(--unit-height) * -2));
+    }
+
+    60%,
+    77% {
+        transform: translateY(calc(var(--unit-height) * -3));
+    }
+
+    80%,
+    97% {
+        transform: translateY(calc(var(--unit-height) * -4));
+    }
+
+    100%,
+    100% {
+        transform: translateY(calc(var(--unit-height) * -5));
+    }
+}
+
+@keyframes opacityFadeOut {
+
+    0% {
+        opacity: 1;
+    }
+
+    2%,
+    80% {
+        opacity: 0;
+    }
+
+    82%,
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Subtle grid bg for the body */
+
+.hero_section_grid_bg {
+    --line-width: 0.1rem;
+    --bg-size: 2rem;
+    --line-color: hsla(var(--shallower-background), 0.2);
+    --transition-from-bg: var(--background);
+
+    background:
+        linear-gradient(var(--line-color) var(--line-width), transparent var(--line-width)),
+        linear-gradient(to right, var(--line-color) var(--line-width), transparent var(--line-width)),
+        hsla(var(--transition-from-bg));
+    background-size: var(--bg-size) var(--bg-size);
+    background-position: -0.7rem -0.7rem, -0.7rem -0.7rem, 0 0;
+    background-attachment: absolute;
+}
+
+.dark .hero_section_grid_bg {
+    --line-color: hsla(var(--shallow-background), 0.125);
+    --transition-from-bg: var(--background);
+}
+
+
+/* Scrolling Carousel */
+
+.scrollMainContainer:focus-within .scrollContainer,
+.scrollMainContainer:focus-within .scrollContainerOffset,
+.scrollMainContainer:hover .scrollContainer,
+.scrollMainContainer:hover .scrollContainerOffset {
+    animation-play-state: paused !important;
+}
+
+.scrollContainer {
+    animation: scroll-horizontally linear infinite;
+}
+
+.scrollContainerOffset {
+    animation: scroll-horizontally linear infinite;
+}
+
+.carouselItemTitle {
+    display: block;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.carouselItemDescription {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+@keyframes scroll-horizontally {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}

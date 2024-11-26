@@ -1,0 +1,167 @@
+/* LOADING SPINNER */
+
+.wandering_cubes_animation {
+    --frame-size: 2.1rem;
+    --cube-size: 0.5rem;
+    --animation-duration: 1.8s;
+}
+
+.wandering_cube {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--cube-size);
+    height: var(--cube-size);
+    animation-name: wandering_cubes;
+    animation-duration: var(--animation-duration);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.wandering_cube.cube1 {
+    animation-delay: 0;
+}
+
+.wandering_cube.cube2 {
+    animation-delay: calc(-0.5 * var(--animation-duration));
+}
+
+@keyframes wandering_cubes {
+    25% {
+        transform: translatex(calc(var(--frame-size) - var(--cube-size))) rotate(-90deg) scale(.5);
+    }
+
+    50% {
+        transform: translatex(calc(var(--frame-size) - var(--cube-size))) translatey(calc(var(--frame-size) - var(--cube-size))) rotate(-180deg);
+    }
+
+    75% {
+        transform: translatex(0) translatey(calc(var(--frame-size) - var(--cube-size))) rotate(-270deg) scale(.5);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+
+
+/* THEME-SWITCHER */
+
+
+/* Theme switcher styling */
+.sun_icon_wrapper,
+.moon_icon_wrapper {
+
+    --animation-duration: 600ms;
+    --sun-corona-animation-duration: 250ms;
+
+    overflow: hidden;
+    position: absolute;
+    transform-origin: -2rem -1.5rem;
+    transform-box: border-box;
+}
+
+.sun_icon_wrapper svg,
+.moon_icon_wrapper svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.light [data-hide-on-theme='dark'],
+.dark [data-hide-on-theme='light'] {
+    scale: 0;
+    opacity: 0;
+    animation: fadeIn var(--animation-duration) forwards ease-in-out;
+}
+
+
+.dark [data-hide-on-theme='dark'] {
+    animation: fadeOut var(--animation-duration) forwards ease-in-out;
+}
+
+.light [data-hide-on-theme='light'] {
+    animation: fadeOut var(--animation-duration) var(--sun-corona-animation-duration) forwards ease-in-out;
+}
+
+#sun_corona {
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+.light #sun_corona {
+    animation: fadeOutSunCorona var(--sun-corona-animation-duration) ease-in-out forwards;
+}
+
+
+.dark #sun_corona {
+    opacity: 0;
+    transform: scale(0);
+    animation: fadeInSunCorona var(--sun-corona-animation-duration) ease-in-out var(--animation-duration) forwards;
+}
+
+
+@keyframes fadeOut {
+    0% {
+        scale: 1;
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+        rotate: 180deg;
+    }
+
+    100% {
+        scale: 0;
+        opacity: 0;
+    }
+}
+
+
+@keyframes fadeIn {
+    0% {
+        scale: 0;
+        opacity: 0;
+        rotate: 180deg;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 1;
+        rotate: 360deg;
+    }
+}
+
+@keyframes fadeInSunCorona {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes fadeOutSunCorona {
+    0% {
+        scale: 1;
+    }
+
+    100% {
+        scale: 0;
+    }
+}

@@ -8,8 +8,6 @@ export const getUserRoleFromString = (roleName: string) => {
             return GlobalUserRole.ADMIN;
         case GlobalUserRole.MODERATOR:
             return GlobalUserRole.MODERATOR;
-        case GlobalUserRole.CREATOR:
-            return GlobalUserRole.CREATOR;
         case GlobalUserRole.USER:
             return GlobalUserRole.USER;
         default:

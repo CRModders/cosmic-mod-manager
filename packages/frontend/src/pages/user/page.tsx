@@ -31,6 +31,8 @@ const UserProjectsList = ({ projectType, projectsList }: Props) => {
                         followers={project.followers}
                         dateUpdated={new Date(project.dateUpdated)}
                         datePublished={new Date(project.datePublished)}
+                        color={project.color}
+                        featuredGallery={null}
                     />
                 );
             })}

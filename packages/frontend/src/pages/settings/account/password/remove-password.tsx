@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-const RemovePasswordForm = () => {
+export default function RemovePasswordForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { validateSession } = useSession();
@@ -109,6 +109,4 @@ const RemovePasswordForm = () => {
             </DialogContent>
         </Dialog>
     );
-};
-
-export default RemovePasswordForm;
+}
