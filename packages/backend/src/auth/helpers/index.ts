@@ -10,7 +10,6 @@ import { getDiscordUserProfileData } from "@src/auth/providers/discord";
 import { getGithubUserProfileData } from "@src/auth/providers/github";
 import { getGitlabUserProfileData } from "@src/auth/providers/gitlab";
 import { getGoogleUserProfileData } from "@src/auth/providers/google";
-import type { SocketAddress } from "bun";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { random } from "nanoid";
@@ -99,15 +98,12 @@ export function getUserIpAddress(ctx: Context): string | null {
     const clientIP = ctx.req.header("x-client-ip");
     const identityToken = ctx.req.header("x-identity-token");
 
-    if (clientIP && env.FRONTEND_SECRET === identityToken) {
-        return clientIP;
-    }
+    if (clientIP && env.FRONTEND_SECRET === identityToken) return clientIP;
 
-    const socketAddr = ctx.env.ip as SocketAddress;
-    // Don't allow IPv6 addresses
-    if (socketAddr.family === "IPv6" && socketAddr.address !== "::1") return null;
+    const ipAddr = ctx.req.header("x-forwarded-for")?.split(", ")?.[0] || ctx.req.header("x-forwarded-for");
+    if (!ipAddr) return null;
 
-    return socketAddr.address;
+    return ipAddr;
 }
 
 export async function getUserDeviceDetails(ctx: Context) {
