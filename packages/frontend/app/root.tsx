@@ -22,6 +22,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="publisher" content="CRMM" />
+                <meta name="theme-color" content="#F04570" />
+                <meta name="color-scheme" content="dark light" />
                 <Meta />
                 <Links />
                 <script defer src="/telemetry.js" data-website-id="1bbb8989-cc84-4b4c-bfca-51e53779f587" data-exclude-search="true" />
