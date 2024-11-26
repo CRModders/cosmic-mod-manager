@@ -1,9 +1,9 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Button, CancelButton } from "~/components/ui/button";

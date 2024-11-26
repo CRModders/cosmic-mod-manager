@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useNavigate, useOutletContext } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { projectTypes } from "@shared/config/project";
@@ -12,7 +13,6 @@ import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useOutletContext } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackProjectIcon } from "~/components/icons";

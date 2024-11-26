@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useNavigate } from "@remix-run/react";
 import { getOrgPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { createURLSafeSlug } from "@shared/lib/utils";
@@ -7,7 +8,6 @@ import { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { Button, CancelButton } from "~/components/ui/button";

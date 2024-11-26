@@ -1,3 +1,4 @@
+import { useNavigate } from "@remix-run/react";
 import { cn } from "@root/utils";
 import GAME_VERSIONS, { isExperimentalGameVersion } from "@shared/config/game-versions";
 import {
@@ -11,7 +12,6 @@ import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategori
 import { ProjectType, TagHeaderType } from "@shared/types";
 import { FilterXIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { TagIcon } from "~/components/tag-icons";
 import { Button } from "~/components/ui/button";
 import { LabelledCheckbox } from "~/components/ui/checkbox";

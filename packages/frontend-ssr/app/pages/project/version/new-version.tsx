@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { SITE_NAME_LONG } from "@shared/config";
@@ -12,7 +13,6 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import MarkdownEditor from "~/components/layout/md-editor/md-editor";

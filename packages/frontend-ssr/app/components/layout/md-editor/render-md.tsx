@@ -1,3 +1,4 @@
+import { useNavigate } from "@remix-run/react";
 // Scripting
 import { cn } from "@root/utils";
 import hljs from "highlight.js/lib/core";
@@ -19,7 +20,6 @@ import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
 import "~/components/layout/md-editor/highlightjs.css";
 import { configuredXss, md } from "./parse-md";
 
