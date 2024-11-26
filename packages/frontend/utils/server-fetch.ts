@@ -15,12 +15,10 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
         Cookie: "",
     };
 
-    console.log("");
-    console.log("IP: ", clientIp);
-
     if (fetchUrl.startsWith("/")) {
         fetchUrl = `${Config.BACKEND_URL}${fetchUrl}`;
         headers.Cookie = clientReq.headers.get("Cookie") || "";
+        headers["x-identity-token"] = process.env.FRONTEND_SECRET || "";
     }
 
     const res = await fetch(fetchUrl, {

@@ -97,8 +97,8 @@ export type GeoApiData = {
 export function getUserIpAddress(ctx: Context): string | null {
     const clientIP = ctx.req.header("x-client-ip");
     const identityToken = ctx.req.header("x-identity-token");
-    let ipAddr = ctx.req.header("x-forwarded-for")?.split(", ")?.[0] || ctx.req.header("x-forwarded-for") || ctx.env.ip;
 
+    let ipAddr = ctx.req.header("x-forwarded-for")?.split(", ")?.[0] || ctx.req.header("x-forwarded-for") || ctx.env.ip;
     if (typeof ipAddr !== "string") ipAddr = ipAddr?.address;
 
     if (clientIP && env.FRONTEND_SECRET === identityToken) return clientIP;
