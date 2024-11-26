@@ -4,13 +4,12 @@ import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { VariantButtonLink } from "~/components/ui/link";
-import { FullWidthSpinner } from "~/components/ui/spinner";
 import "./styles.css";
 
 interface Props {
@@ -32,7 +31,7 @@ export default function HomePage({ session, projects }: Props) {
         <>
             {gridBgPortal
                 ? createPortal(
-                      <div className="relative w-full h-[115vh] flex items-center justify-center overflow-hidden">
+                      <div className="relative w-full h-[115vh] lg:max-h-[100vh] flex items-center justify-center overflow-hidden">
                           <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
                               <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent via-transparent to-background" />
                           </div>
@@ -110,70 +109,64 @@ export default function HomePage({ session, projects }: Props) {
                     </div>
                 </section>
 
-                <ProjectsCarousel projects={projects} />
+                <ShowCase projects={projects} />
             </div>
         </>
     );
 }
 
-const ProjectsCarousel = ({ className, projects }: { className?: string; projects: ProjectListItem[] }) => {
-    if (!projects?.length) {
-        // Adjust its height according to the height of the carousel
-        return <FullWidthSpinner className="h-52" />;
-    }
-
+function ShowCase({ projects }: { projects: ProjectListItem[] }) {
     const carousel1Items = projects.slice(0, Math.floor(projects.length / 2));
     const carousel2Items = projects.slice(Math.floor(projects.length / 2));
 
     return (
-        <div className={cn("w-full flex flex-col gap-2", className)}>
-            <ScrollingCarousel items={carousel1Items} />
-            <ScrollingCarousel items={carousel2Items} reverse />
+        <div className="w-full flex flex-col gap-6">
+            <MarqueeScroll items={carousel1Items} />
+            <MarqueeScroll items={carousel2Items} reverse />
         </div>
     );
-};
+}
 
-const ScrollingCarousel = ({ items, reverse = false }: { items: ProjectListItem[]; reverse?: boolean }) => {
+interface MarqueeScrollProps {
+    items: ProjectListItem[];
+    reverse?: boolean;
+}
+
+function MarqueeScroll({ items, reverse = false }: MarqueeScrollProps) {
     const duration = 7.5 * items.length;
 
     return (
-        <div className="scrollMainContainer w-full relative flex items-center justify-start h-24 overflow-hidden">
-            <CarouselRow items={items} className="scrollContainer" duration={duration} reverse={reverse} />
-            <CarouselRow
-                items={items}
-                className="scrollContainerOffset"
-                duration={duration}
-                delay={-1 * (duration / 2)}
-                reverse={reverse}
-            />
+        <div className="marquee w-full relative h-[5.35rem] overflow-hidden">
+            <div
+                className="scroll-container absolute w-fit flex items-center justify-start gap-x-6 px-3"
+                style={{
+                    animationDuration: `${duration}s`,
+                    animationDelay: `-${duration / 2}s`,
+                    animationDirection: reverse ? "reverse" : "normal",
+                }}
+            >
+                {items.map((item) => (
+                    <ShowcaseItem key={item.id} item={item} />
+                ))}
+            </div>
+
+            <div
+                className="scroll-container absolute w-fit flex items-center justify-start gap-x-6 px-3"
+                style={{
+                    animationDuration: `${duration}s`,
+                    animationDelay: "0s",
+                    animationDirection: reverse ? "reverse" : "normal",
+                }}
+            >
+                {items.map((item) => (
+                    <ShowcaseItem key={item.id} item={item} />
+                ))}
+            </div>
         </div>
     );
-};
+}
 
-const CarouselRow = ({
-    items,
-    className,
-    duration,
-    delay = 0,
-    reverse = false,
-}: { items: ProjectListItem[]; className?: string; duration: number; delay?: number; reverse?: boolean }) => {
-    return (
-        <div
-            className={cn("absolute w-fit flex flex-row gap-6 px-3", className)}
-            style={{
-                animationDuration: `${duration}s`,
-                animationDelay: `${delay}s`,
-                animationDirection: reverse ? "reverse" : "normal",
-            }}
-        >
-            {items.map((item) => (
-                <CarouselItem key={item.id} item={item} />
-            ))}
-        </div>
-    );
-};
-
-const CarouselItem = ({ item }: { item: ProjectListItem }) => {
+function ShowcaseItem({ className, item, ...props }: { className?: string; item: ProjectListItem; style?: CSSProperties }) {
     return (
         <Link
             aria-label={item.name}
@@ -181,17 +174,19 @@ const CarouselItem = ({ item }: { item: ProjectListItem }) => {
             className={cn(
                 "shrink-0 border border-card-background rounded-lg w-72 h-[5.35rem] flex gap-x-3 items-start justify-start p-3",
                 "bg-card-background dark:bg-transparent hover:bg-card-background/35 dark:hover:bg-card-background/35 transition-colors duration-300",
+                className,
             )}
+            {...props}
         >
             <ImgWrapper src={imageUrl(item.icon)} alt={item.name} fallback={fallbackProjectIcon} className="w-11 h-11" />
             <div className="flex flex-col gap-1">
                 <span className="max-w-52 text-lg font-bold overflow-hidden whitespace-nowrap text-ellipsis leading-tight">
                     {item.name}
                 </span>
-                <span className="carouselItemDescription max-w-52 text-[0.87rem] text-muted-foreground overflow-hidden leading-tight text-pretty">
+                <span className="description__showcase-item max-w-52 text-[0.87rem] text-muted-foreground overflow-hidden leading-tight text-pretty">
                     {item.summary}
                 </span>
             </div>
         </Link>
     );
-};
+}

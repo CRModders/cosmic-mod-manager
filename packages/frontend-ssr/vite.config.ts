@@ -76,21 +76,47 @@ async function defineRemixRoutes(defineRoutes: DefineRoutesFunction) {
 
         for (const type of ProjectTypes) {
             // Project pages
-            route(`/${type}/:projectSlug`, path("project/layout.tsx"), { id: `${type}__layout` }, () => {
-                route("", path("project/page.tsx"), { index: true, id: `${type}__page` });
-                route("gallery", path("project/gallery.tsx"), { id: `${type}__gallery` });
-                route("changelog", path("project/changelog.tsx"), { id: `${type}__changelog` });
-                route("versions", path("project/versions.tsx"), { id: `${type}__versions` });
-                route("version/:versionSlug", path("project/version/page.tsx"), { id: `${type}__version__page` });
-                route("version/new", path("project/version/new.tsx"), { id: `${type}__version__new` });
-                route("version/:versionSlug/edit", path("project/version/edit.tsx"), { id: `${type}__version__edit` });
+
+            route(`/${type}/:projectSlug`, path("project/data-wrapper.tsx"), { id: `${type}__data-wrapper` }, () => {
+                route("", path("project/layout.tsx"), { id: `${type}__layout` }, () => {
+                    route("", path("project/page.tsx"), { index: true, id: `${type}__page` });
+                    route("gallery", path("project/gallery.tsx"), { id: `${type}__gallery` });
+                    route("changelog", path("project/changelog.tsx"), { id: `${type}__changelog` });
+                    route("versions", path("project/versions.tsx"), { id: `${type}__versions` });
+                    route("version/:versionSlug", path("project/version/page.tsx"), { id: `${type}__version__page` });
+                    route("version/new", path("project/version/new.tsx"), { id: `${type}__version__new` });
+                    route("version/:versionSlug/edit", path("project/version/edit.tsx"), { id: `${type}__version__edit` });
+                });
+                route("settings", path("project/settings/layout.tsx"), { id: `${type}__settings-layout` }, () => {
+                    route("", path("project/settings/general.tsx"), { id: `${type}__settings__general`, index: true });
+                    route("tags", path("project/settings/tags.tsx"), { id: `${type}__settings__tags` });
+                    route("description", path("project/settings/description.tsx"), { id: `${type}__settings__description` });
+                    route("license", path("project/settings/license.tsx"), { id: `${type}__settings__license` });
+                    route("links", path("project/settings/links.tsx"), { id: `${type}__settings__links` });
+                    route("members", path("project/settings/members.tsx"), { id: `${type}__settings__members` });
+                    route("*", path("$.tsx"), { id: `${type}__settings-not-found` });
+                });
             });
         }
+
+        // Organization pages
+        route("/organization/:orgSlug", path("organization/data-wrapper.tsx"), () => {
+            route("settings", path("organization/settings/layout.tsx"), () => {
+                route("", path("organization/settings/page.tsx"), { index: true });
+                route("projects", path("organization/settings/projects.tsx"));
+                route("members", path("organization/settings/members.tsx"));
+            });
+
+            route("", path("organization/layout.tsx"), { id: "organization__layout" }, () => {
+                route("", path("organization/page.tsx"), { index: true, id: "organization__projects-all" });
+                route(":projectType", path("organization/page.tsx"), { id: "organization__projects" });
+            });
+        });
 
         // User profile
         route("user/:userName", path("user/layout.tsx"), () => {
             route("", path("user/page.tsx"), { index: true, id: "user__all-projects" });
-            route(":type", path("user/page.tsx"), { index: true, id: "user__projects" });
+            route(":type", path("user/page.tsx"), { id: "user__projects" });
         });
 
         // Not found

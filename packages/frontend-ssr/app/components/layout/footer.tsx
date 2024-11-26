@@ -5,7 +5,7 @@ import ThemeSwitch from "~/components/ui/theme-switcher";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-card-background py-8 mt-12">
+        <footer className="w-full bg-card-background py-8 mt-16">
             <div className="container flex items-center justify-between flex-wrap gap-x-5 gap-y-2">
                 <span className="flex gap-2 items-center justify-center text-lg font-bold">
                     <BrandIcon size="2rem" aria-label="CRMM Logo" />
