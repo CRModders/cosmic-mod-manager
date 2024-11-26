@@ -22,7 +22,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
 
     const res = await fetch(fetchUrl, {
         ...init,
-        headers: { ...headers, ...init?.headers },
+        headers: { ...init?.headers, ...headers },
     });
 
     return res;
