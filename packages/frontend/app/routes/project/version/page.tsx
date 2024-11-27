@@ -1,6 +1,14 @@
-import { useOutletContext } from "@remix-run/react";
+import { type MetaArgs, useOutletContext } from "@remix-run/react";
+import type { AwaitedReturnType } from "@root/types";
+import { formatDate, getProjectPagePathname } from "@root/utils";
+import Config from "@root/utils/config";
+import { MetaTags } from "@root/utils/meta";
+import { formatGameVersionsListString } from "@root/utils/version";
+import { SITE_NAME_SHORT } from "@shared/config";
+import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import VersionPage from "~/pages/project/version/page";
+import type { loader as ProjectDataLoader } from "~/routes/project/data-wrapper";
 
 export default function _VersionPage() {
     const data = useOutletContext<ProjectLayoutProps>();
@@ -13,4 +21,45 @@ export default function _VersionPage() {
             currUsersMembership={data.currUsersMembership}
         />
     );
+}
+
+export function meta(props: MetaArgs) {
+    const parentMetaTags = props.matches?.at(-2)?.meta;
+
+    const parentData = props.matches[1].data as AwaitedReturnType<typeof ProjectDataLoader>;
+    const project = parentData.projectData;
+    const versionSlug = props.params.versionSlug;
+
+    if (!project?.id) {
+        return MetaTags({
+            title: "Project not found",
+            description: `The project with the slug/ID "${parentData.projectSlug}" does not exist.`,
+            image: `${Config.FRONTEND_URL}/icon.png`,
+            url: `${Config.FRONTEND_URL}`,
+            suffixTitle: true,
+        });
+    }
+
+    const version = parentData.versions.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    if (!version?.id) {
+        return MetaTags({
+            title: `Version not found - ${project.name}`,
+            description: `${project.name} does not have a version with the slug/ID "${versionSlug}".`,
+            image: `${Config.FRONTEND_URL}/icon.png`,
+            url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug, "/versions")}`,
+        });
+    }
+
+    const loaders = version.loaders.length ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ") : null;
+    const publishedAt = formatDate(new Date(version.datePublished), "${month} ${day}, ${year}", true);
+
+    const titleIncludesProjectName = version.title.toLowerCase().includes(project.name.toLowerCase());
+
+    return MetaTags({
+        title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
+        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatGameVersionsListString(version.gameVersions)}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${version.downloads} downloads.`,
+        url: `${Config.FRONTEND_URL}${props.location.pathname}`,
+        image: project.icon || "",
+        parentMetaTags,
+    });
 }

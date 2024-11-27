@@ -1,4 +1,7 @@
+import type { MetaArgs } from "@remix-run/node";
 import { useOutletContext } from "@remix-run/react";
+import Config from "@root/utils/config";
+import { MetaTags } from "@root/utils/meta";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import ProjectVersionsPage from "~/pages/project/versions";
 
@@ -12,4 +15,14 @@ export default function _Versions() {
             currUsersMembership={data.currUsersMembership}
         />
     );
+}
+
+export function meta(props: MetaArgs) {
+    const parentMetaTags = props.matches?.at(-2)?.meta;
+
+    return MetaTags({
+        url: `${Config.FRONTEND_URL}${props.location.pathname}`,
+        linksOnly: true,
+        parentMetaTags,
+    });
 }

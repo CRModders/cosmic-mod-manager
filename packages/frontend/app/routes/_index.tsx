@@ -37,12 +37,3 @@ export function meta() {
         url: Config.FRONTEND_URL,
     });
 }
-
-export function links() {
-    return [
-        {
-            rel: "canonical",
-            href: Config.FRONTEND_URL,
-        },
-    ];
-}

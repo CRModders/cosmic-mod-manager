@@ -134,7 +134,7 @@ function MarqueeScroll({ items, reverse = false }: MarqueeScrollProps) {
     const duration = 7.5 * items.length;
 
     return (
-        <div className="marquee w-full relative h-[5.35rem] overflow-hidden">
+        <div className="marquee w-full flex items-center justify-start relative h-[5.7rem] overflow-hidden">
             <div
                 className="scroll-container absolute w-fit flex items-center justify-start gap-x-6 px-3"
                 style={{

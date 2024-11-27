@@ -80,7 +80,7 @@ export function meta(props: MetaArgs) {
     });
 }
 
-export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate({ currentParams, nextParams, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
     const currentId = currentParams.userName;
     const nextId = nextParams.userName;
 
