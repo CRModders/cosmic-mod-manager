@@ -584,12 +584,16 @@ export const ProjectMember = ({
 
 const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
     return (
-        <Link to={url} className="w-fit flex items-center justify-start" target="_blank" referrerPolicy="no-referrer">
-            <Button tabIndex={-1} variant={"link"} className="p-0 w-fit h-fit gap-2 text-muted-foreground">
-                {icon}
-                {label}
-                <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
-            </Button>
+        <Link
+            to={url}
+            className="w-fit flex items-center justify-start p-0 gap-2 text-muted-foreground hover:underline"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerPolicy="no-referrer"
+        >
+            {icon}
+            {label}
+            <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
         </Link>
     );
 };
