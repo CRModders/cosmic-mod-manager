@@ -2,7 +2,6 @@ import { Link, useNavigate, useParams } from "@remix-run/react";
 import type { DependencyData } from "@root/types";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
 import { formatGameVersionsListString } from "@root/utils/version";
-import { SITE_NAME_LONG } from "@shared/config";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
@@ -65,7 +64,8 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
         <>
             <Helmet>
                 <title>
-                    {versionData.title} - {projectData?.name || ""} | {SITE_NAME_LONG}
+                    {versionData.title}
+                    {versionData.title.toLowerCase().includes(projectData?.name?.toLowerCase()) ? "" : ` - ${projectData.name}`}
                 </title>
             </Helmet>
 

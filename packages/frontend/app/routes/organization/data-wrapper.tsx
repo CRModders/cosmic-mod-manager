@@ -20,7 +20,7 @@ export default function _OrgDataWrapper() {
     const { session } = useOutletContext<RootOutletData>();
     const data = useLoaderData<typeof loader>();
 
-    if (!data.orgData) {
+    if (!data.orgData?.id) {
         return (
             <NotFoundPage
                 title="Organization not found"
@@ -75,7 +75,7 @@ export function meta(props: MetaArgs) {
     const data = props.data as AwaitedReturnType<typeof loader>;
     const orgData = data?.orgData;
 
-    if (!orgData) {
+    if (!orgData?.id) {
         return MetaTags({
             title: "Organization Not Found",
             description: "The organization you are looking for could not be found.",

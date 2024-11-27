@@ -1,4 +1,3 @@
-import { SITE_NAME_LONG } from "@shared/config";
 import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
@@ -15,7 +14,7 @@ export default function OrgProjectsSettings() {
     return (
         <>
             <Helmet>
-                <title>Projects - {SITE_NAME_LONG}</title>
+                <title>Projects - {orgData.name}</title>
             </Helmet>
 
             <Card className="w-full overflow-hidden">

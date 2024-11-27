@@ -5,7 +5,7 @@ import { getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
-import { getCurrMember } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
 import type { RootOutletData } from "~/root";
@@ -120,11 +120,10 @@ export function meta(props: MetaArgs) {
     }
 
     return MetaTags({
-        title: projectData.name,
+        title: `${projectData.name} - Cosmic Reach ${CapitalizeAndFormatString(projectData.type?.[0])}`,
         description: projectData.summary,
         image: projectData.icon || "",
         url: `${Config.FRONTEND_URL}${getProjectPagePathname(projectData.type?.[0], projectData.slug)}`,
-        suffixTitle: true,
     });
 }
 

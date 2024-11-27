@@ -1,7 +1,6 @@
 import { Link, useNavigate, useSearchParams } from "@remix-run/react";
 import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@root/utils";
 import { formatGameVersionsList } from "@root/utils/version";
-import { SITE_NAME_LONG } from "@shared/config";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { Capitalize, CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -23,7 +22,6 @@ import {
     XCircleIcon,
 } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import PaginatedNavigation from "~/components/pagination-nav";
 import loaderIcons from "~/components/tag-icons";
@@ -169,12 +167,6 @@ export default function ProjectVersionsPage({ projectData, allProjectVersions, c
 
     return (
         <>
-            <Helmet>
-                <title>
-                    {projectData?.name || ""} - Versions | {SITE_NAME_LONG}
-                </title>
-            </Helmet>
-
             {currUsersMembership?.id &&
             doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, currUsersMembership?.permissions, currUsersMembership?.isOwner) ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />

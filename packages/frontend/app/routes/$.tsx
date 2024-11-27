@@ -4,8 +4,8 @@ import { MetaTags } from "@root/utils/meta";
 import { VariantButtonLink } from "~/components/ui/link";
 
 interface Props {
-    title?: string;
-    description?: string;
+    title?: string | React.ReactNode;
+    description?: string | React.ReactNode;
     linkLabel?: string;
     linkHref?: string;
     className?: string;

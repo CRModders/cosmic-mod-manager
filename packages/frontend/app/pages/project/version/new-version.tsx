@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
-import { SITE_NAME_LONG } from "@shared/config";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
@@ -97,9 +96,7 @@ export default function UploadVersionPage({ projectData }: Props) {
     return (
         <>
             <Helmet>
-                <title>
-                    Create version - {projectData?.name || ""} | {SITE_NAME_LONG}
-                </title>
+                <title>Create version - {projectData?.name || ""}</title>
                 <meta name="description" content="Upload a new version" />
             </Helmet>
 

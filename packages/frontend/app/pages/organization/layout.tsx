@@ -5,6 +5,7 @@ import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, ClipboardCopyIcon, DownloadIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { Helmet } from "react-helmet";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
 import RefreshPage from "~/components/refresh-page";
@@ -38,53 +39,61 @@ export default function OrgPageLayout() {
     }
 
     return (
-        <div className="org-page-layout pb-12 gap-panel-cards">
-            <OrgInfoHeader
-                orgData={orgData}
-                currUsersMembership={currUsersMembership}
-                totalDownloads={aggregatedDownloads}
-                totalProjects={totalProjects}
-                fetchOrgData={refreshOrgData}
-            />
+        <>
+            <Helmet>
+                <title>{orgData.name} - Organization</title>
+            </Helmet>
 
-            <div
-                className="flex items-start justify-start flex-col gap-panel-cards"
-                style={{
-                    gridArea: "content",
-                }}
-            >
-                {projectTypesList?.length > 1 && totalProjects > 1 ? (
-                    <SecondaryNav
-                        className="bg-card-background rounded-lg px-3 py-2"
-                        urlBase={getOrgPagePathname(orgData.slug)}
-                        links={[
-                            { label: "All", href: "" },
-                            ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-                                label: `${CapitalizeAndFormatString(type)}s` || "",
-                                href: `/${type}s`,
-                            })),
-                        ]}
-                    />
-                ) : null}
+            <div className="org-page-layout pb-12 gap-panel-cards">
+                <OrgInfoHeader
+                    orgData={orgData}
+                    currUsersMembership={currUsersMembership}
+                    totalDownloads={aggregatedDownloads}
+                    totalProjects={totalProjects}
+                    fetchOrgData={refreshOrgData}
+                />
 
-                {totalProjects ? (
-                    <Outlet
-                        context={
-                            {
-                                orgData: orgData,
-                                orgProjects: projects,
-                                currUsersMembership: currUsersMembership,
-                            } satisfies OrgDataContext
-                        }
-                    />
-                ) : (
-                    <div className="w-full flex items-center justify-center py-12">
-                        <p className="text-lg text-muted-foreground italic text-center">This organization doesn't have any projects yet.</p>
-                    </div>
-                )}
+                <div
+                    className="flex items-start justify-start flex-col gap-panel-cards"
+                    style={{
+                        gridArea: "content",
+                    }}
+                >
+                    {projectTypesList?.length > 1 && totalProjects > 1 ? (
+                        <SecondaryNav
+                            className="bg-card-background rounded-lg px-3 py-2"
+                            urlBase={getOrgPagePathname(orgData.slug)}
+                            links={[
+                                { label: "All", href: "" },
+                                ...getProjectTypesFromNames(projectTypesList).map((type) => ({
+                                    label: `${CapitalizeAndFormatString(type)}s` || "",
+                                    href: `/${type}s`,
+                                })),
+                            ]}
+                        />
+                    ) : null}
+
+                    {totalProjects ? (
+                        <Outlet
+                            context={
+                                {
+                                    orgData: orgData,
+                                    orgProjects: projects,
+                                    currUsersMembership: currUsersMembership,
+                                } satisfies OrgDataContext
+                            }
+                        />
+                    ) : (
+                        <div className="w-full flex items-center justify-center py-12">
+                            <p className="text-lg text-muted-foreground italic text-center">
+                                This organization doesn't have any projects yet.
+                            </p>
+                        </div>
+                    )}
+                </div>
+                <PageSidebar members={orgData.members} />
             </div>
-            <PageSidebar members={orgData.members} />
-        </div>
+        </>
     );
 }
 

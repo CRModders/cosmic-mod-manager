@@ -1,6 +1,5 @@
 import { Outlet } from "@remix-run/react";
 import { getProjectPagePathname, imageUrl } from "@root/utils";
-import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
@@ -16,7 +15,6 @@ import {
     TextIcon,
     UsersIcon,
 } from "lucide-react";
-import { Helmet } from "react-helmet";
 import { ProjectStatusIcon, fallbackProjectIcon } from "~/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -40,98 +38,90 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
     const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || "project", projectData.slug) : "";
 
     return (
-        <>
-            <Helmet>
-                <title>
-                    {projectData?.name || ""} Settings - {SITE_NAME_SHORT}
-                </title>
-            </Helmet>
+        <Panel className="pb-12">
+            <PanelAside className="flex flex-col gap-panel-cards lg:w-80">
+                <ContentCardTemplate className="gap-3">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/dashboard/projects">Projects</BreadcrumbLink>
+                            </BreadcrumbItem>
 
-            <Panel className="pb-12">
-                <PanelAside className="flex flex-col gap-panel-cards lg:w-80">
-                    <ContentCardTemplate className="gap-3">
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem>
-                                    <BreadcrumbLink href="/dashboard/projects">Projects</BreadcrumbLink>
-                                </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href={baseUrl}>{projectData.name}</BreadcrumbLink>
+                            </BreadcrumbItem>
 
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    <BreadcrumbLink href={baseUrl}>{projectData.name}</BreadcrumbLink>
-                                </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>Settings</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
 
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Settings</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
+                    <div className="w-full flex items-start justify-start gap-3">
+                        <ImgWrapper
+                            src={imageUrl(projectData.icon)}
+                            alt={projectData.name}
+                            fallback={fallbackProjectIcon}
+                            className="rounded h-14 w-14"
+                        />
 
-                        <div className="w-full flex items-start justify-start gap-3">
-                            <ImgWrapper
-                                src={imageUrl(projectData.icon)}
-                                alt={projectData.name}
-                                fallback={fallbackProjectIcon}
-                                className="rounded h-14 w-14"
-                            />
-
-                            <div className="flex flex-col items-start justify-start">
-                                <span className="text-lg font-semibold">{projectData.name}</span>
-                                <span className="flex items-center justify-center gap-1 font-semibold text-muted-foreground">
-                                    <ProjectStatusIcon status={projectData.status} />
-                                    {CapitalizeAndFormatString(projectData.status)}
-                                </span>
-                            </div>
+                        <div className="flex flex-col items-start justify-start">
+                            <span className="text-lg font-semibold">{projectData.name}</span>
+                            <span className="flex items-center justify-center gap-1 font-semibold text-muted-foreground">
+                                <ProjectStatusIcon status={projectData.status} />
+                                {CapitalizeAndFormatString(projectData.status)}
+                            </span>
                         </div>
+                    </div>
 
-                        <div className="w-full flex flex-col gap-1">
-                            <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
-                            {SidePanelLinks.map((link) => (
-                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                    <div className="w-full flex flex-col gap-1">
+                        <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
+                        {SidePanelLinks.map((link) => (
+                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                                {link.icon}
+                                {link.name}
+                            </ButtonLink>
+                        ))}
+
+                        <span className="text-lg font-semibold mt-2">View</span>
+                        {viewPageLinks.map((link) => (
+                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                                <div className="flex items-center justify-center gap-2">
                                     {link.icon}
                                     {link.name}
-                                </ButtonLink>
-                            ))}
+                                </div>
+                                <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            </ButtonLink>
+                        ))}
 
-                            <span className="text-lg font-semibold mt-2">View</span>
-                            {viewPageLinks.map((link) => (
-                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
-                                    <div className="flex items-center justify-center gap-2">
-                                        {link.icon}
-                                        {link.name}
-                                    </div>
-                                    <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                                </ButtonLink>
-                            ))}
+                        <span className="text-lg font-semibold mt-2">Upload</span>
+                        {UploadPageLinks.map((link) => (
+                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                                <div className="flex items-center justify-center gap-2">
+                                    {link.icon}
+                                    {link.name}
+                                </div>
+                                <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            </ButtonLink>
+                        ))}
+                    </div>
+                </ContentCardTemplate>
+            </PanelAside>
 
-                            <span className="text-lg font-semibold mt-2">Upload</span>
-                            {UploadPageLinks.map((link) => (
-                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
-                                    <div className="flex items-center justify-center gap-2">
-                                        {link.icon}
-                                        {link.name}
-                                    </div>
-                                    <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                                </ButtonLink>
-                            ))}
-                        </div>
-                    </ContentCardTemplate>
-                </PanelAside>
-
-                <PanelContent>
-                    <Outlet
-                        context={
-                            {
-                                session,
-                                projectData,
-                                currUsersMembership,
-                            } satisfies ProjectSettingsContext
-                        }
-                    />
-                </PanelContent>
-            </Panel>
-        </>
+            <PanelContent>
+                <Outlet
+                    context={
+                        {
+                            session,
+                            projectData,
+                            currUsersMembership,
+                        } satisfies ProjectSettingsContext
+                    }
+                />
+            </PanelContent>
+        </Panel>
     );
 }
 

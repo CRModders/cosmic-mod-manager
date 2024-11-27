@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
-import { SITE_NAME_LONG } from "@shared/config/index";
 import { parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
@@ -129,9 +128,8 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
         <>
             <Helmet>
                 <title>
-                    Edit {versionData.versionNumber} - {projectData?.name || ""} | {SITE_NAME_LONG}
+                    Edit {versionData.versionNumber} - {projectData?.name || ""}
                 </title>
-                <meta name="description" content={`Edit ${versionData.title} of ${projectData?.name}`} />
             </Helmet>
 
             <Form {...form}>

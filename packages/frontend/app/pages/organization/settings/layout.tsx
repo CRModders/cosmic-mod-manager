@@ -1,6 +1,6 @@
 import { Outlet, useOutletContext } from "@remix-run/react";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
-import { SITE_NAME_LONG } from "@shared/config";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
@@ -25,7 +25,7 @@ export default function OrgSettingsLayout() {
         <>
             <Helmet>
                 <title>
-                    {orgData.name || ""} Settings - {SITE_NAME_LONG}
+                    {orgData.name || ""} Settings - {SITE_NAME_SHORT}
                 </title>
             </Helmet>
 

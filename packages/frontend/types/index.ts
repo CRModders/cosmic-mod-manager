@@ -13,7 +13,7 @@ export enum ThemeOptions {
 export interface UseThemeProps {
     themes?: string[];
     setTheme: (value: string | ((theme: string | undefined) => string)) => void;
-    theme?: ThemeOptions;
+    theme?: ThemeOptions | string;
 }
 
 export enum LoadingStatus {

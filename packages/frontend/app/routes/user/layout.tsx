@@ -9,10 +9,22 @@ import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import UserPageLayout from "~/pages/user/layout";
 import type { RootOutletData } from "~/root";
+import NotFoundPage from "../$";
 
 export default function _UserLayout() {
     const { session } = useOutletContext<RootOutletData>();
     const data = useLoaderData<typeof loader>();
+
+    if (!data.userData?.id) {
+        return (
+            <NotFoundPage
+                title="User not found"
+                description={`The user with username/ID "${data?.userSlug}" does not exist.`}
+                linkHref="/"
+                linkLabel="Home"
+            />
+        );
+    }
 
     return <UserPageLayout session={session} userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []} />;
 }
@@ -38,6 +50,7 @@ export async function loader(props: LoaderFunctionArgs) {
     const orgs = await resJson<Organisation[]>(orgsRes);
 
     return {
+        userSlug: userName,
         userData: userData,
         projects: projects,
         orgs: orgs,
@@ -45,8 +58,18 @@ export async function loader(props: LoaderFunctionArgs) {
 }
 
 export function meta(props: MetaArgs) {
-    const { userData } = props.data as AwaitedReturnType<typeof loader>;
+    const { userData, userSlug } = props.data as AwaitedReturnType<typeof loader>;
     const image = userData?.avatarUrl || `${Config.FRONTEND_URL}/icon.png`;
+
+    if (!userData?.id) {
+        return MetaTags({
+            title: "User not found",
+            description: `No user with the username/ID ${userSlug} exists on ${SITE_NAME_SHORT}`,
+            image: `${Config.FRONTEND_URL}/icon.png`,
+            url: `${Config.FRONTEND_URL}/user/${userSlug}`,
+            suffixTitle: true,
+        });
+    }
 
     return MetaTags({
         title: userData?.userName || "",
