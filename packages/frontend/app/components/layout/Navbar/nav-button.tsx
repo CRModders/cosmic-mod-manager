@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { NotificationBadge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import { ButtonLink } from "~/components/ui/link";
+import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useSession } from "~/hooks/session";
 
@@ -19,20 +18,19 @@ export const LoginButton = ({
     onClick?: () => void;
 }) => {
     return (
-        <Button
+        <VariantButtonLink
+            url="/login"
             className={cn(
                 "bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90",
                 className,
             )}
-            variant={"secondary"}
-            // size={"sm"}
+            variant="secondary"
             aria-label="Login"
-            tabIndex={-1}
             onClick={onClick}
         >
             <LogInIcon className="w-btn-icon h-btn-icon" />
             Log In
-        </Button>
+        </VariantButtonLink>
     );
 };
 
@@ -48,13 +46,11 @@ const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => v
 
     if (!session?.id) {
         return (
-            <Link to={"/login"}>
-                <LoginButton
-                    onClick={() => {
-                        toggleNavMenu(false);
-                    }}
-                />
-            </Link>
+            <LoginButton
+                onClick={() => {
+                    toggleNavMenu(false);
+                }}
+            />
         );
     }
 

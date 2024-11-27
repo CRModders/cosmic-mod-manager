@@ -136,9 +136,9 @@ export default function ProjectPageLayout({
                 {/* SIDEBAR */}
                 <aside className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
                     <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
-                        <h3 className="text-lg font-extrabold">Compatibility</h3>
-                        <div>
-                            <span className="flex font-bold text-muted-foreground pb-1">Game versions</span>
+                        <h2 className="text-lg font-extrabold">Compatibility</h2>
+                        <section>
+                            <h3 className="flex font-bold text-muted-foreground pb-1">Game versions</h3>
                             <div className="w-full flex flex-wrap gap-1">
                                 {formatGameVersionsList(projectData.gameVersions).map((version) => (
                                     <Chip key={version} className="text-muted-foreground">
@@ -146,11 +146,11 @@ export default function ProjectPageLayout({
                                     </Chip>
                                 ))}
                             </div>
-                        </div>
+                        </section>
 
                         {listedLoaders.length ? (
-                            <div>
-                                <span className="flex font-bold text-muted-foreground pb-1">Loaders</span>
+                            <section>
+                                <h3 className="flex font-bold text-muted-foreground pb-1">Loaders</h3>
                                 <div className="w-full flex flex-wrap gap-1">
                                     {listedLoaders.map((loader) => {
                                         const accentForeground = loader?.metadata?.accent?.foreground;
@@ -174,21 +174,19 @@ export default function ProjectPageLayout({
                                         );
                                     })}
                                 </div>
-                            </div>
+                            </section>
                         ) : null}
 
                         {projectEnvironments?.length ? (
-                            <>
-                                <div className="flex flex-wrap items-start justify-start gap-1">
-                                    <span className="block w-full font-bold text-muted-foreground">Environments</span>
-                                    {projectEnvironments.map((item, i) => {
-                                        return (
-                                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                            <Chip key={i}>{item}</Chip>
-                                        );
-                                    })}
-                                </div>
-                            </>
+                            <section className="flex flex-wrap items-start justify-start gap-1">
+                                <h3 className="block w-full font-bold text-muted-foreground">Environments</h3>
+                                {projectEnvironments.map((item, i) => {
+                                    return (
+                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                        <Chip key={i}>{item}</Chip>
+                                    );
+                                })}
+                            </section>
                         ) : null}
                     </Card>
 
@@ -197,7 +195,7 @@ export default function ProjectPageLayout({
                     projectData?.projectWikiUrl ||
                     projectData?.discordInviteUrl ? (
                         <Card className="p-card-surround grid grid-cols-1 gap-1">
-                            <h3 className="text-lg font-bold pb-2">Links</h3>
+                            <h2 className="text-lg font-bold pb-2">Links</h2>
                             {projectData?.issueTrackerUrl ? (
                                 <ExternalLink
                                     url={projectData?.issueTrackerUrl}
@@ -234,7 +232,7 @@ export default function ProjectPageLayout({
 
                     {(featuredProjectVersions?.length || 0) > 0 ? (
                         <Card className="p-card-surround grid grid-cols-1 gap-1">
-                            <h3 className="text-lg font-bold pb-2">Featured versions</h3>
+                            <h2 className="text-lg font-bold pb-2">Featured versions</h2>
                             <TooltipProvider>
                                 {featuredProjectVersions?.map((version) => (
                                     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -308,7 +306,7 @@ export default function ProjectPageLayout({
                     ) : null}
 
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
-                        <h3 className="text-lg font-bold pb-1">Creators</h3>
+                        <h2 className="text-lg font-bold pb-1">Creators</h2>
                         {projectData.organisation?.id ? (
                             <>
                                 <ProjectMember
@@ -340,7 +338,7 @@ export default function ProjectPageLayout({
                     </Card>
 
                     <Card className="items-start justify-start p-card-surround grid grid-cols-1 gap-1">
-                        <h3 className="text-lg font-bold pb-2">Details</h3>
+                        <h2 className="text-lg font-bold pb-2">Details</h2>
 
                         {projectLicenseData?.id || projectLicenseData?.name ? (
                             <div className="flex items-center justify-start gap-2 text-muted-foreground">

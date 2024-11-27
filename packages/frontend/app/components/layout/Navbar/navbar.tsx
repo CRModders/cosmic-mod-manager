@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { cn } from "@root/utils";
-import { SITE_NAME_SHORT } from "@shared/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type React from "react";
@@ -51,6 +51,7 @@ const Navbar = () => {
                             to={"/"}
                             className="flex items-center justify-center h-nav-item"
                             aria-label="CRMM Home page"
+                            title={SITE_NAME_LONG}
                             onClick={() => {
                                 toggleNavMenu(false);
                             }}

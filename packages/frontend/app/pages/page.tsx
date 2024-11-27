@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react";
 import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
-import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
@@ -8,7 +7,6 @@ import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { VariantButtonLink } from "~/components/ui/link";
 import "./styles.css";
 
@@ -21,7 +19,7 @@ export default function HomePage({ session, projects }: Props) {
     const [gridBgPortal, setGridBgPortal] = useState<Element | null>(null);
 
     // The animation keyframes in "@/app/styles.css" need to be updated according to the number of items in the list
-    const showcaseItems = ["Mods", "Plugins", "Resource Packs", "Modpacks", "Shaders", "Mods"];
+    const showcaseItems = ["mods", "plugins", "resource packs", "modpacks", "shaders", "mods"];
 
     useEffect(() => {
         setGridBgPortal(document.querySelector("#hero_section_bg_portal"));
@@ -44,7 +42,7 @@ export default function HomePage({ session, projects }: Props) {
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center gap-1">
-                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">{SITE_NAME_LONG}</h1>
+                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">The place for Cosmic Reach</h1>
 
                         <h2 className="h-12 lg:h-[4.5rem] mb-1 overflow-hidden">
                             <span className="hero_section_showcase flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
@@ -67,7 +65,7 @@ export default function HomePage({ session, projects }: Props) {
                         </h2>
 
                         <div className="w-full max-w-xl flex flex-col items-center justify-center">
-                            <h2 className="w-full text-center text-lg lg:text-xl">
+                            <h2 className="w-full leading-snug text-center text-lg lg:text-xl text-muted-foreground/95">
                                 The best place for your&nbsp;
                                 <a
                                     href="https://finalforeach.itch.io/cosmic-reach"
@@ -84,17 +82,15 @@ export default function HomePage({ session, projects }: Props) {
                     </div>
 
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
-                        <Link to={"/mods"}>
-                            <Button size={"lg"} aria-label="Explore mods" tabIndex={-1} className="px-6">
-                                <CompassIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                                Explore mods
-                            </Button>
-                        </Link>
+                        <VariantButtonLink size="lg" variant="default" url="/mods" className="px-6">
+                            <CompassIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                            Explore mods
+                        </VariantButtonLink>
 
                         {!session?.id ? (
                             <VariantButtonLink
                                 url="/signup"
-                                size={"lg"}
+                                size="lg"
                                 className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
                             >
                                 <LogInIcon className="w-btn-icon-md h-btn-icon-md" />

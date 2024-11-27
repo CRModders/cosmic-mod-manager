@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { fallbackUserIcon } from "~/components/icons";
@@ -122,9 +121,7 @@ export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavP
                         )}
                         {!session?.id && (
                             <li className="w-full flex group">
-                                <Link to="/login" className="w-full" tabIndex={!isNavMenuOpen ? -1 : 0}>
-                                    <LoginButton onClick={() => toggleNavMenu(false)} className="w-full" />
-                                </Link>
+                                {isNavMenuOpen && <LoginButton onClick={() => toggleNavMenu(false)} className="w-full" />}
                             </li>
                         )}
                     </ul>

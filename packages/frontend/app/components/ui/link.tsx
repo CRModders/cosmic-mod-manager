@@ -51,6 +51,7 @@ interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     label?: string;
     target?: string;
     onClick?: () => void | Promise<void>;
+    tabIndex?: number;
     preventScrollReset?: boolean;
 }
 

@@ -47,7 +47,7 @@ export default function ThemeSwitch({ className, iconWrapperClassName, iconClass
             <Button
                 type="button"
                 variant={"ghost"}
-                aria-label={label ? label : "Change theme"}
+                title={`Switch to ${theme === ThemeOptions.DARK ? ThemeOptions.LIGHT : ThemeOptions.DARK} theme`}
                 className={cn(
                     "no_neumorphic_shadow rounded-full p-0 hover:bg-card-background dark:hover:bg-shallow-background overflow-hidden",
                     className,

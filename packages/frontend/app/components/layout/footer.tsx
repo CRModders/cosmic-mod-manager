@@ -1,4 +1,5 @@
 import { Link, type LinkProps } from "@remix-run/react";
+import { SITE_NAME_LONG } from "@shared/config";
 import { BrandIcon, DiscordIcon, GithubIcon } from "~/components/icons";
 import { DotSeparator } from "~/components/ui/separator";
 import ThemeSwitch from "~/components/ui/theme-switcher";
@@ -7,7 +8,7 @@ const Footer = () => {
     return (
         <footer className="w-full bg-card-background py-8 mt-16">
             <div className="container flex items-center justify-between flex-wrap gap-x-5 gap-y-2">
-                <span className="flex gap-2 items-center justify-center text-lg font-bold">
+                <span className="flex gap-2 items-center justify-center text-lg font-bold" title={SITE_NAME_LONG}>
                     <BrandIcon size="2rem" aria-label="CRMM Logo" />
                     CRMM
                 </span>

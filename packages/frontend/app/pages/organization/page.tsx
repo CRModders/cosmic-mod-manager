@@ -15,7 +15,7 @@ function OrganizationPage({ projectsList }: Props) {
         : projectsList;
 
     return (
-        <ul className="w-full grid grid-cols-1 gap-panel-cards">
+        <div className="w-full grid grid-cols-1 gap-panel-cards" role="list">
             {filteredProjects.map((project) => {
                 return (
                     <SearchListItem
@@ -36,7 +36,7 @@ function OrganizationPage({ projectsList }: Props) {
                     />
                 );
             })}
-        </ul>
+        </div>
     );
 }
 

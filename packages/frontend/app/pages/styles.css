@@ -1,5 +1,5 @@
 .hero_section_showcase {
-    --showcase-animation-cycle-duration: 14s;
+    --showcase-animation-cycle-duration: 12s;
     animation: animateShowcaseItems var(--showcase-animation-cycle-duration) ease infinite;
 }
 

@@ -61,7 +61,7 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
                 ) : null}
 
                 {totalProjects ? (
-                    <ul className="w-full flex flex-col gap-panel-cards">
+                    <div className="w-full flex flex-col gap-panel-cards" role="list">
                         <Outlet
                             context={
                                 {
@@ -69,7 +69,7 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
                                 } satisfies UserOutletData
                             }
                         />
-                    </ul>
+                    </div>
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
                         <p className="text-lg text-muted-foreground italic text-center">

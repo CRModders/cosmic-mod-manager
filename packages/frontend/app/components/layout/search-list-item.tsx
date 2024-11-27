@@ -53,7 +53,8 @@ const BaseView = (props: SearchListItemProps) => {
     const listViewType = props.viewType === ViewType.LIST;
 
     return (
-        <li
+        <article
+            role="listitem"
             className={cn(
                 "search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
                 listViewType && "p-card-surround",
@@ -215,6 +216,6 @@ const BaseView = (props: SearchListItemProps) => {
                     </TooltipProvider>
                 </div>
             </div>
-        </li>
+        </article>
     );
 };

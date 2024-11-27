@@ -27,6 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <meta name="theme-color" content="#F04570" />
                 <meta name="color-scheme" content="dark light" />
                 <meta property="og:logo" content="https://www.crmm.tech/icon.png" />
+                <meta name="google-site-verification" content="saVDIhLaNSit_2LnqK9Zz-yxY2hMGTEC_Vud5v7-Tug" />
                 <Meta />
                 <Links />
                 <script defer src="/telemetry.js" data-website-id="1bbb8989-cc84-4b4c-bfca-51e53779f587" data-exclude-search="true" />

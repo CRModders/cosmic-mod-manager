@@ -40,7 +40,7 @@ export function SearchResultsPage() {
         <>
             {pagination}
 
-            <ul className={cn("w-full grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")}>
+            <div className={cn("w-full grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")} role="list">
                 {searchResult.data?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
                         key={project.id}
@@ -62,7 +62,7 @@ export function SearchResultsPage() {
                         author={project?.author || ""}
                     />
                 ))}
-            </ul>
+            </div>
 
             {!searchResult.data?.hits?.length && !searchResult.isLoading && !searchResult.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">
