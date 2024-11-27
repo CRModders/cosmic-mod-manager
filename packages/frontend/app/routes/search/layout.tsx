@@ -3,12 +3,10 @@ import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
-import ClientOnly from "~/components/client-only";
-import { SuspenseFallback } from "~/components/ui/spinner";
 import SearchPageLayout from "~/pages/search/layout";
 
 export default function _Search() {
-    return <ClientOnly fallback={<SuspenseFallback />} Element={SearchPageLayout} />;
+    return <SearchPageLayout />;
 }
 
 export function meta(props: MetaArgs) {

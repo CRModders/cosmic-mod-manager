@@ -7,7 +7,6 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
-import ClientOnly from "~/components/client-only";
 import UserPageLayout from "~/pages/user/layout";
 import type { RootOutletData } from "~/root";
 
@@ -15,13 +14,7 @@ export default function _UserLayout() {
     const { session } = useOutletContext<RootOutletData>();
     const data = useLoaderData<typeof loader>();
 
-    return (
-        <ClientOnly
-            Element={() => (
-                <UserPageLayout session={session} userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []} />
-            )}
-        />
-    );
+    return <UserPageLayout session={session} userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []} />;
 }
 
 export async function loader(props: LoaderFunctionArgs) {

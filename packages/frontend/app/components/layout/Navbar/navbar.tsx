@@ -4,7 +4,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ClientOnly from "~/components/client-only";
 import { BrandIcon } from "~/components/icons";
 import { ButtonLink } from "~/components/ui/link";
@@ -35,6 +35,8 @@ const Navbar = () => {
             document.body.classList.remove("navmenu-open");
         }
     }, [isNavMenuOpen]);
+
+    const MemoizedThemeSwitch = useMemo(() => <ThemeSwitch />, []);
 
     return (
         <header className="w-full flex items-start justify-start relative">
@@ -76,10 +78,12 @@ const Navbar = () => {
                         fallback={<div className="h-nav-item w-nav-item rounded-full" />}
                         Element={() => (
                             <div className="flex items-center gap-4">
-                                <ThemeSwitch />
+                                {MemoizedThemeSwitch}
+
                                 <div className="hidden lg:flex">
                                     <NavButton toggleNavMenu={toggleNavMenu} />
                                 </div>
+
                                 <div className="flex lg:hidden align-center justify-center">
                                     <HamMenu isNavMenuOpen={isNavMenuOpen} toggleNavMenu={toggleNavMenu} />
                                 </div>

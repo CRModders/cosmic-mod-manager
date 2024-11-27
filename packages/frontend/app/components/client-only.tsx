@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 interface ClientOnlyProps {
     Element: () => JSX.Element | React.ReactNode | null;
-    fallback?: JSX.Element;
+    fallback?: JSX.Element | React.ReactNode | null;
 }
 
 export default function ClientOnly({ Element, fallback }: ClientOnlyProps) {

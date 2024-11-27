@@ -7,12 +7,13 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export enum ThemeOptions {
     LIGHT = "light",
     DARK = "dark",
+    SYSTEM = "system",
 }
 
 export interface UseThemeProps {
     themes?: string[];
     setTheme: (value: string | ((theme: string | undefined) => string)) => void;
-    theme?: string | undefined;
+    theme?: ThemeOptions;
 }
 
 export enum LoadingStatus {

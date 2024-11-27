@@ -1,3 +1,4 @@
+import { ThemeOptions } from "@root/types";
 import { cn } from "@root/utils";
 import { useEffect } from "react";
 import { MoonIcon, SunIcon } from "~/components/icons";
@@ -16,15 +17,15 @@ export default function ThemeSwitch({ className, iconWrapperClassName, iconClass
     const { theme, setTheme } = useTheme();
 
     const switchTheme = () => {
-        if (theme === "dark") {
-            setTheme("light");
+        if (theme === ThemeOptions.DARK) {
+            setTheme(ThemeOptions.LIGHT);
         } else {
-            setTheme("dark");
+            setTheme(ThemeOptions.DARK);
         }
     };
 
     const setInitialTheme = () => {
-        if (theme !== "system") return;
+        if (theme !== ThemeOptions.SYSTEM) return;
 
         const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
