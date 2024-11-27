@@ -9,7 +9,6 @@ import ClientOnly from "~/components/client-only";
 import { BrandIcon } from "~/components/icons";
 import { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
-import "~/globals.css";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";

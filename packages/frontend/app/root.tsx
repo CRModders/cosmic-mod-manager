@@ -9,12 +9,13 @@ import { useMemo } from "react";
 import { DownloadRipple } from "~/components/download-animation";
 import Navbar from "~/components/layout/Navbar/navbar";
 import LoaderBar from "~/components/loader-bar";
+import "~/pages/globals.css";
+import "~/pages/inter.css";
 import ContextProviders from "~/providers";
 import ClientOnly from "./components/client-only";
 import Footer from "./components/layout/footer";
 import ToastAnnouncer from "./components/toast-announcer";
 import { WanderingCubesSpinner } from "./components/ui/spinner";
-import "./globals.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
@@ -90,15 +91,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export const links: LinksFunction = () => {
     return [
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {
             rel: "preconnect",
             href: "https://fonts.gstatic.com",
             crossOrigin: "anonymous",
-        },
-        {
-            rel: "stylesheet",
-            href: "https://fonts.googleapis.com/css2?&family=Inter:wght@100..900&display=swap",
         },
         {
             rel: "preconnect",

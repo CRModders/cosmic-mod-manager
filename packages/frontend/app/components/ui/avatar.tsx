@@ -10,7 +10,6 @@ export const ImgWrapper = ({
     if (!src) {
         return (
             <div
-                aria-label={alt}
                 className={cn(
                     "h-24 w-24 flex items-center justify-center rounded bg-shallow-background border border-shallow-background shrink-0",
                     className,
