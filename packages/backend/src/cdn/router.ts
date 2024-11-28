@@ -8,7 +8,7 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
-const cacheCdnUrls = env.CACHE_CDN_URL.split(" ").filter((url) => url);
+const cacheCdnUrls = [env.CACHE_CDN_URL, "https://crmm-cdn.global.ssl.fastly.net"];
 
 const cdnRouter = new Hono();
 export const corsAllowCdn = cors({
