@@ -252,7 +252,7 @@ const ImageDialog = ({
                                 aria-label={galleryItem.name}
                                 className={cn(buttonVariants({ variant: "secondary", size: "icon" }), "rounded-full")}
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener noreferrer"
                             >
                                 <VisuallyHidden>{galleryItem.name}</VisuallyHidden>
                                 <ExternalLinkIcon className="w-btn-icon h-btn-icon" />

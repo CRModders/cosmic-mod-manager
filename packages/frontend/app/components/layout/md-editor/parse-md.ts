@@ -124,6 +124,7 @@ export const configuredXss = new FilterXSS({
                     "cf.way2muchnoise.eu",
                     "bstats.org",
                     "crmm.tech",
+                    "cdn.crmm.tech",
                     "crmm-cdn.global.ssl.fastly.net",
                     "wsrv.nl",
                     "localhost",

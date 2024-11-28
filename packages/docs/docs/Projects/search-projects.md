@@ -120,7 +120,7 @@ For example, [`/tags/categories?type=mod`](https://api.crmm.tech/api/tags/catego
     "teamId": "QQM8DQzZJoc076lbl1",
     "orgId": null,
     "name": "Dice",
-    "icon": "https://crmm-cdn.global.ssl.fastly.net/cdn/data/dice/JolAzfYYSrgnj2Ak.png",
+    "icon": "https://cdn.crmm.tech/cdn/data/dice/JolAzfYYSrgnj2Ak.png",
     "status": "draft",
     "summary": "A dice datamod with dice. 16x textures. ",
     "description": "...",
@@ -149,7 +149,7 @@ For example, [`/tags/categories?type=mod`](https://api.crmm.tech/api/tags/catego
             "id": "vtMgB0OzA5lwjnJmYJ",
             "name": "All the dice! Again!",
             "description": "",
-            "image": "https://crmm-cdn.global.ssl.fastly.net/cdn/data/dice/gallery/5m_nx-W64ygxQg_SM1.png",
+            "image": "https://cdn.crmm.tech/cdn/data/dice/gallery/5m_nx-W64ygxQg_SM1.png",
             "featured": false,
             "dateCreated": "2024-09-25T10:17:40.100Z",
             "orderIndex": 18

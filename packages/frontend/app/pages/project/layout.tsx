@@ -589,7 +589,6 @@ const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode
             className="w-fit flex items-center justify-start p-0 gap-2 text-muted-foreground hover:underline"
             target="_blank"
             rel="noopener noreferrer"
-            referrerPolicy="no-referrer"
         >
             {icon}
             {label}

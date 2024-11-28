@@ -103,7 +103,7 @@ export const links: LinksFunction = () => {
         },
         {
             rel: "preconnect",
-            href: "https://crmm-cdn.global.ssl.fastly.net",
+            href: "https://cdn.crmm.tech",
         },
         {
             rel: "icon",
