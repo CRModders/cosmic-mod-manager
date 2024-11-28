@@ -566,6 +566,7 @@ export const ProjectMember = ({
                 alt={userName}
                 className={cn("h-10 w-10 rounded-full", avatarClassName)}
                 fallback={fallbackIcon || fallbackUserIcon}
+                loading="eager"
             />
             <div className="w-full flex flex-col items-start justify-start overflow-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-1">

@@ -75,7 +75,7 @@ const BaseView = (props: SearchListItemProps) => {
                     }}
                 >
                     {props.featuredGallery && (
-                        <img src={props.featuredGallery} alt={props.projectName} className="object-cover w-full h-full" />
+                        <img src={props.featuredGallery} alt={props.projectName} className="object-cover w-full h-full" loading="lazy" />
                     )}
                 </Link>
             )}
@@ -93,6 +93,7 @@ const BaseView = (props: SearchListItemProps) => {
                 }}
             >
                 <ImgWrapper
+                    loading="lazy"
                     src={imageUrl(props.icon)}
                     alt={props.projectName}
                     fallback={fallbackProjectIcon}

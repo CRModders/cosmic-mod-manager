@@ -46,6 +46,7 @@ export const PageHeader = ({
                     alt={title}
                     className={cn("bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black ", iconClassName)}
                     fallback={fallbackIcon}
+                    loading="eager"
                 />
                 <div className="flex flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

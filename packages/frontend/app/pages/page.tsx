@@ -176,7 +176,7 @@ function ShowcaseItem({ className, item, ...props }: { className?: string; item:
             )}
             {...props}
         >
-            <ImgWrapper src={imageUrl(item.icon)} alt={item.name} fallback={fallbackProjectIcon} className="w-11 h-11" />
+            <ImgWrapper src={imageUrl(item.icon)} alt={item.name} fallback={fallbackProjectIcon} className="w-11 h-11" loading="lazy" />
             <div className="flex flex-col gap-1">
                 <span className="max-w-52 text-lg font-bold overflow-hidden whitespace-nowrap text-ellipsis leading-tight">
                     {item.name}
