@@ -1,6 +1,6 @@
 import { cn } from "@root/utils";
 import type React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle, SectionCard } from "../ui/card";
 
 export const Panel = ({ children, className }: { children: React.ReactNode; className?: string }) => {
     return (
@@ -10,16 +10,14 @@ export const Panel = ({ children, className }: { children: React.ReactNode; clas
     );
 };
 
-export const PanelAside = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    return <aside className={cn("w-full lg:w-[19rem]", className)}>{children}</aside>;
+export const PanelAside = ({ children, className, aside }: { children: React.ReactNode; className?: string; aside?: boolean }) => {
+    if (aside === true) return <aside className={cn("w-full lg:w-[19rem]", className)}>{children}</aside>;
+    return <div className={cn("w-full lg:w-[19rem]", className)}>{children}</div>;
 };
 
-export const PanelContent = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    return (
-        <section className={cn("w-full overflow-auto flex flex-col gap-panel-cards items-center justify-center", className)}>
-            {children}
-        </section>
-    );
+export const PanelContent = ({ children, className, main }: { children: React.ReactNode; className?: string; main?: boolean }) => {
+    if (main === true) return <main className={cn("w-full grid grid-cols-1 overflow-auto gap-panel-cards", className)}>{children}</main>;
+    return <div className={cn("w-full grid grid-cols-1 overflow-auto gap-panel-cards", className)}>{children}</div>;
 };
 
 export const PanelAsideNavCard = ({ children, className, label }: { children: React.ReactNode; className?: string; label: string }) => {
@@ -40,6 +38,7 @@ export const ContentCardTemplate = ({
     cardClassname,
     headerClassName,
     titleClassName,
+    sectionTag,
 }: {
     children: React.ReactNode;
     title?: string;
@@ -47,16 +46,19 @@ export const ContentCardTemplate = ({
     cardClassname?: string;
     headerClassName?: string;
     titleClassName?: string;
+    sectionTag?: boolean;
 }) => {
+    const CardTag = sectionTag === true ? SectionCard : Card;
+
     return (
-        <Card className={cn("w-full", !title && "pt-5", cardClassname)}>
+        <CardTag className={cn("w-full", !title && "pt-5", cardClassname)}>
             {!!title && (
                 <CardHeader className={headerClassName}>
                     <CardTitle className={titleClassName}>{title}</CardTitle>
                 </CardHeader>
             )}
             <CardContent className={className}>{children}</CardContent>
-        </Card>
+        </CardTag>
     );
 };
 

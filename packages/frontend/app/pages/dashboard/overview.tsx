@@ -6,7 +6,7 @@ import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { fallbackUserIcon } from "~/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { ButtonLink } from "~/components/ui/link";
 import { NotificationItem, type NotificationsData } from "./notification/page";
 
@@ -26,7 +26,7 @@ export default function OverviewPage({ session, userProjects, notifications, rel
 
     return (
         <div className="w-full flex flex-col items-start justify-start gap-panel-cards">
-            <ContentCardTemplate>
+            <ContentCardTemplate sectionTag>
                 <div className="w-full flex flex-wrap gap-6">
                     <ImgWrapper
                         src={imageUrl(session?.avatarUrl)}
@@ -46,7 +46,7 @@ export default function OverviewPage({ session, userProjects, notifications, rel
             </ContentCardTemplate>
 
             <PanelContent_AsideCardLayout>
-                <Card className="w-full">
+                <SectionCard className="w-full">
                     <CardHeader className="w-full flex flex-row items-center justify-between gap-x-6 gap-y-2">
                         <CardTitle className="w-fit">Notifications</CardTitle>
                         {(unreadNotifications?.length || 0) > 0 ? (
@@ -82,9 +82,13 @@ export default function OverviewPage({ session, userProjects, notifications, rel
                             )}
                         </ul>
                     </CardContent>
-                </Card>
+                </SectionCard>
 
-                <ContentCardTemplate title="Analytics" className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards">
+                <ContentCardTemplate
+                    sectionTag
+                    title="Analytics"
+                    className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards"
+                >
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
                         <span className="text-lg text-muted-foreground font-semibold mb-1">Total downloads</span>
                         <span className="text-2xl font-semibold">{totalDownloads}</span>

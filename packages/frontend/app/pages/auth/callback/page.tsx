@@ -66,7 +66,7 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
     }, [authProvider]);
 
     return (
-        <div className="w-full h-[100vh] min-h-[720px] flex flex-col gap-4 items-center justify-center">
+        <main className="w-full h-[100vh] min-h-[720px] flex flex-col gap-4 items-center justify-center">
             {errorMsg ? (
                 <div className="w-full max-w-md flex flex-col gap-4 items-center justify-center">
                     <FormErrorMessage text={errorMsg} />
@@ -87,6 +87,6 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
             ) : (
                 <LoadingSpinner />
             )}
-        </div>
+        </main>
     );
 }

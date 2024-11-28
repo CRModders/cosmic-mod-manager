@@ -1,8 +1,8 @@
-import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaArgs, MetaDescriptor } from "@remix-run/node";
 import { type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "@remix-run/react";
 import type { AwaitedReturnType } from "@root/types";
 import Config from "@root/utils/config";
-import { MetaTags } from "@root/utils/meta";
+import { MetaTags, OrganizationLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
@@ -57,8 +57,8 @@ export async function loader(props: LoaderFunctionArgs) {
     };
 }
 
-export function meta(props: MetaArgs) {
-    const { userData, userSlug } = props.data as AwaitedReturnType<typeof loader>;
+export function meta(props: MetaArgs): MetaDescriptor[] {
+    const { userData, orgs, userSlug } = props.data as AwaitedReturnType<typeof loader>;
     const image = userData?.avatarUrl || `${Config.FRONTEND_URL}/icon.png`;
 
     if (!userData?.id) {
@@ -71,12 +71,19 @@ export function meta(props: MetaArgs) {
         });
     }
 
+    const orgsData = orgs?.map((org) => OrganizationLdJson(org));
+    const ldJson = UserLdJson(userData, {
+        "@context": "https://schema.org",
+        memberOf: orgsData || [],
+    });
+
     return MetaTags({
         title: userData?.userName || "",
         description: `${userData?.bio} - Download ${userData?.userName}'s projects on ${SITE_NAME_SHORT}`,
         image: image,
         url: `${Config.FRONTEND_URL}/user/${userData?.userName}`,
         suffixTitle: true,
+        ldJson: ldJson,
     });
 }
 

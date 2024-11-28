@@ -15,7 +15,7 @@ interface Props {
     sortBy: SearchResultSortMethod;
     offset: number;
     limit: number;
-    type: ProjectType;
+    type?: ProjectType;
 }
 
 export const searchProjects = async (props: Props): Promise<RouteHandlerResponse> => {
@@ -48,18 +48,21 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
         environments.push("serverSide = true");
     }
 
+    const filters = [
+        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
+        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),
+        props.categories.map((category) => `categories = ${category}`).join(" AND "),
+        environments.join(" AND "),
+    ];
+
+    if (props.type) filters.push(`type = ${props.type}`);
+    if (props.openSourceOnly) filters.push("openSource = true");
+
     const result = await index.search(props.query, {
         sort: sortBy ? [sortBy] : [],
         limit: props.limit,
         offset: props.offset,
-        filter: [
-            props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
-            props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),
-            props.categories.map((category) => `categories = ${category}`).join(" AND "),
-            environments.join(" AND "),
-            props.openSourceOnly ? "openSource = true" : "",
-            `type = ${props.type}`,
-        ],
+        filter: filters,
     });
 
     const projects: ProjectListItem[] = [];

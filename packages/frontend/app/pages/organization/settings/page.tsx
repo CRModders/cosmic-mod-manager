@@ -85,7 +85,7 @@ export default function GeneralOrgSettings() {
     };
 
     return (
-        <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
+        <>
             <ContentCardTemplate title="Organization information">
                 <Form {...form}>
                     <form
@@ -253,7 +253,7 @@ export default function GeneralOrgSettings() {
             </ContentCardTemplate>
 
             <DeleteOrgDialog name={orgData.name} slug={orgData.slug} />
-        </div>
+        </>
     );
 }
 

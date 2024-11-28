@@ -57,7 +57,7 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
 
                 <div className="w-full flex flex-wrap gap-3">
                     <Select value={selectedOrg} onValueChange={setSelectedOrg}>
-                        <SelectTrigger className="w-fit gap-2 min-w-[42ch]">
+                        <SelectTrigger className="w-fit gap-2 min-w-full sm:min-w-[42ch]">
                             <SelectValue placeholder="Select organization" />
                         </SelectTrigger>
                         <SelectContent>

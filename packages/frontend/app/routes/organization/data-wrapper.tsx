@@ -3,7 +3,7 @@ import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletCont
 import type { AwaitedReturnType } from "@root/types";
 import { getOrgPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
-import { MetaTags } from "@root/utils/meta";
+import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
@@ -85,10 +85,39 @@ export function meta(props: MetaArgs) {
         });
     }
 
+    const owner = orgData.members.find((member) => member.isOwner) as TeamMember;
+    const members = orgData.members.filter((member) => !member.isOwner);
+
+    const membersLdJson = members.map((member) =>
+        UserLdJson({
+            ...member,
+            id: member.userId,
+            name: member.userName,
+            bio: "",
+        }),
+    );
+
+    const projectsJson = data.orgProjects?.map((project) => ProjectLdJson(project));
+    let projectObj = {};
+    if ((projectsJson?.length || 0) > 0) projectObj = { memberOf: projectsJson };
+
+    const ldJson = OrganizationLdJson(orgData, {
+        "@context": "https://schema.org",
+        founder: UserLdJson({
+            ...owner,
+            id: owner.userId,
+            name: owner.userName,
+            bio: "",
+        }),
+        member: membersLdJson,
+        ...projectObj,
+    });
+
     return MetaTags({
         title: `${orgData.name} - Organization`,
         description: `${orgData.description} - View the organization ${orgData.name} on ${SITE_NAME_SHORT}`,
         image: orgData.icon || "",
         url: `${Config.FRONTEND_URL}${getOrgPagePathname(orgData.slug)}`,
+        ldJson: ldJson,
     });
 }

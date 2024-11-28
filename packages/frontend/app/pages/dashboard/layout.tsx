@@ -20,7 +20,7 @@ interface Props {
 export default function DashboardLayout({ outletContext }: Props) {
     return (
         <Panel className="pb-12">
-            <PanelAside>
+            <PanelAside aside>
                 <PanelAsideNavCard label="Dashboard">
                     {SidePanelLinks.map((link) => (
                         <ButtonLink url={link.href} key={link.href} className="relative" preventScrollReset>
@@ -38,7 +38,7 @@ export default function DashboardLayout({ outletContext }: Props) {
                     ))}
                 </PanelAsideNavCard>
             </PanelAside>
-            <PanelContent>
+            <PanelContent main>
                 <Outlet context={outletContext} />
             </PanelContent>
         </Panel>

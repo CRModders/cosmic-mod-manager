@@ -61,7 +61,7 @@ export default function App() {
                 <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
                     <Navbar />
 
-                    <main className="full_page container px-4 sm:px-8">
+                    <div className="full_page container px-4 sm:px-8">
                         <Outlet
                             context={
                                 {
@@ -69,7 +69,7 @@ export default function App() {
                                 } satisfies RootOutletData
                             }
                         />
-                    </main>
+                    </div>
 
                     <Footer />
                 </div>

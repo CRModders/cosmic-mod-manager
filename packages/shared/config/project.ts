@@ -15,7 +15,7 @@ export const projectTypes = [
     ProjectType.SHADER,
     ProjectType.MODPACK,
     ProjectType.PLUGIN,
-] as const;
+];
 
 export const ProjectPermissionsList = [
     ProjectPermission.UPLOAD_VERSION,

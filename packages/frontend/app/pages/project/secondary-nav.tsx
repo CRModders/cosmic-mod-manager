@@ -13,7 +13,7 @@ const SecondaryNav = ({
     onClick,
 }: { urlBase: string; className?: string; links: LinkItem[]; onClick?: (e: React.MouseEvent, link: LinkItem) => void }) => {
     return (
-        <nav className={cn("w-full flex items-center justify-start", className)} id="project-page-nav">
+        <nav className={cn("flex items-center justify-start", className)} id="project-page-nav">
             <ul className="w-full flex gap-1 flex-wrap">
                 {links.map((link) => {
                     return (

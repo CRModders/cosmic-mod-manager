@@ -2,7 +2,7 @@ import { imageUrl } from "@root/utils";
 import type { LinkedProvidersListData, LoggedInUserData } from "@shared/types";
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import DeleteAccountDialog from "./delete-account";
@@ -18,7 +18,7 @@ interface Props {
 export default function AccountSettingsPage({ session, linkedAuthProviders }: Props) {
     return (
         <>
-            <Card className="w-full">
+            <SectionCard className="w-full">
                 <CardHeader className="w-full flex flex-row items-center justify-between py-2">
                     <CardTitle className="flex w-fit">User profile</CardTitle>
                     <EditProfileDialog session={session} linkedAuthProviders={linkedAuthProviders} />
@@ -49,9 +49,9 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
                         </div>
                     </div>
                 </CardContent>
-            </Card>
+            </SectionCard>
 
-            <Card className="w-full">
+            <SectionCard className="w-full">
                 <CardHeader>
                     <CardTitle>Account security</CardTitle>
                 </CardHeader>
@@ -83,9 +83,9 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
                         <ManageAuthProviders linkedAuthProviders={linkedAuthProviders || []} />
                     </div>
                 </CardContent>
-            </Card>
+            </SectionCard>
 
-            <Card className="w-full">
+            <SectionCard className="w-full">
                 <CardHeader>
                     <CardTitle>Delete account</CardTitle>
                 </CardHeader>
@@ -99,7 +99,7 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
                         <DeleteAccountDialog />
                     </div>
                 </CardContent>
-            </Card>
+            </SectionCard>
         </>
     );
 }

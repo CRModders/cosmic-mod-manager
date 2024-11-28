@@ -21,7 +21,7 @@ export default function ChangePasswordPage({ session }: { session: LoggedInUserD
     const form = useForm<z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>>({
         resolver: zodResolver(sendAccoutPasswordChangeLinkFormSchema),
         defaultValues: {
-            email: "",
+            email: session?.email || "",
         },
     });
 
@@ -47,7 +47,7 @@ export default function ChangePasswordPage({ session }: { session: LoggedInUserD
     };
 
     return (
-        <div className="full_page w-full flex items-center justify-center">
+        <main className="full_page w-full flex items-center justify-center">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(sendAccountPasswordChangeEmail)} className="w-full max-w-md">
                     <Card className="w-full">
@@ -86,6 +86,6 @@ export default function ChangePasswordPage({ session }: { session: LoggedInUserD
                     </Card>
                 </form>
             </Form>
-        </div>
+        </main>
     );
 }

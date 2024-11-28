@@ -68,8 +68,6 @@ async function defineRemixRoutes(defineRoutes: DefineRoutesFunction) {
         // Search pages
         route("/", path("search/layout.tsx"), { id: "search-layout" }, () => {
             for (const type of ProjectTypes) {
-                if (type === "project") continue;
-
                 route(`${type}s`, path("search/page.tsx"), { id: `${type}__search` });
             }
         });

@@ -3,7 +3,7 @@ import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { OrganisationPermission } from "@shared/types";
 import { Helmet } from "react-helmet";
 import RefreshPage from "~/components/refresh-page";
-import { Card, CardTitle } from "~/components/ui/card";
+import { CardTitle, SectionCard } from "~/components/ui/card";
 import InviteMemberForm from "~/pages/project/settings/members/invite-member";
 import { LeaveTeam } from "~/pages/project/settings/members/page";
 import type { OrgDataContext } from "~/routes/organization/data-wrapper";
@@ -32,11 +32,11 @@ export default function OrgMemberSettings() {
                 <title>Members - {orgData.name}</title>
             </Helmet>
 
-            <Card className="w-full flex flex-col p-card-surround gap-4">
+            <SectionCard className="w-full flex flex-col p-card-surround gap-4">
                 <CardTitle>Manage members</CardTitle>
                 <InviteMemberForm teamId={orgData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshOrgData} isOrg />
                 <LeaveTeam teamId={orgData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshOrgData} />
-            </Card>
+            </SectionCard>
 
             {orgData.members.map((member) => {
                 return (

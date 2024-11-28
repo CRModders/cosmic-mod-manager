@@ -39,7 +39,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
 
     return (
         <Panel className="pb-12">
-            <PanelAside className="flex flex-col gap-panel-cards lg:w-80">
+            <PanelAside aside className="flex flex-col gap-panel-cards lg:w-80">
                 <ContentCardTemplate className="gap-3">
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -110,7 +110,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
                 </ContentCardTemplate>
             </PanelAside>
 
-            <PanelContent>
+            <PanelContent main>
                 <Outlet
                     context={
                         {

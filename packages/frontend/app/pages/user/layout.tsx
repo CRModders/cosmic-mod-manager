@@ -38,10 +38,10 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
     return (
-        <div className="profile-page-layout pb-12 gap-panel-cards">
+        <main className="profile-page-layout pb-12 gap-panel-cards">
             <ProfilePageHeader session={session} userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div
-                className="flex items-start justify-start flex-col gap-panel-cards"
+                className="h-fit grid grid-cols-1 gap-panel-cards"
                 style={{
                     gridArea: "content",
                 }}
@@ -79,7 +79,7 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
                 )}
             </div>
             <PageSidebar userName={userData.userName} userId={userData.id} orgsList={orgsList || []} />
-        </div>
+        </main>
     );
 }
 
@@ -94,7 +94,7 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
     });
 
     return (
-        <aside
+        <div
             style={{
                 gridArea: "sidebar",
             }}
@@ -128,7 +128,7 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
             {/* <ContentCardTemplate title="Badges" titleClassName="text-lg">
                 <span className="text-muted-foreground italic">List of badges the user has earned</span>
             </ContentCardTemplate> */}
-        </aside>
+        </div>
     );
 }
 

@@ -13,28 +13,30 @@ export default function SettingsPageLayout() {
     }
 
     return (
-        <Panel>
-            <PanelAside className="gap-2">
-                <PanelAsideNavCard label="Settings">
-                    <ButtonLink url="/settings/account" preventScrollReset>
-                        <UserIcon className="size-4" />
-                        Account
-                    </ButtonLink>
-                    <ButtonLink url="/settings/sessions" preventScrollReset>
-                        <MonitorSmartphoneIcon className="size-4" />
-                        Sessions
-                    </ButtonLink>
-                </PanelAsideNavCard>
-            </PanelAside>
-            <PanelContent>
-                <Outlet
-                    context={
-                        {
-                            ...context,
-                        } satisfies RootOutletData
-                    }
-                />
-            </PanelContent>
-        </Panel>
+        <main className="w-full">
+            <Panel>
+                <PanelAside className="gap-2" aside>
+                    <PanelAsideNavCard label="Settings">
+                        <ButtonLink url="/settings/account" preventScrollReset>
+                            <UserIcon className="size-4" />
+                            Account
+                        </ButtonLink>
+                        <ButtonLink url="/settings/sessions" preventScrollReset>
+                            <MonitorSmartphoneIcon className="size-4" />
+                            Sessions
+                        </ButtonLink>
+                    </PanelAsideNavCard>
+                </PanelAside>
+                <PanelContent>
+                    <Outlet
+                        context={
+                            {
+                                ...context,
+                            } satisfies RootOutletData
+                        }
+                    />
+                </PanelContent>
+            </Panel>
+        </main>
     );
 }

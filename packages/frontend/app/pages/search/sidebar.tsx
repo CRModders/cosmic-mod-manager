@@ -10,7 +10,8 @@ import {
 } from "@shared/config/search";
 import { CapitalizeAndFormatString, getALlLoaderFilters, getValidProjectCategories } from "@shared/lib/utils";
 import { ProjectType, TagHeaderType } from "@shared/types";
-import { FilterXIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
 import { TagIcon } from "~/components/tag-icons";
 import { Button } from "~/components/ui/button";
@@ -20,7 +21,7 @@ import { SkipNav } from "~/components/ui/skip-nav";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
 
 interface Props {
-    type: ProjectType;
+    type: ProjectType[];
     showFilters: boolean;
     searchParams: URLSearchParams;
 }
@@ -69,8 +70,8 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const navigate = useNavigate();
 
     // Filters list
-    // Project Loader filters
     const loaderFilters = getALlLoaderFilters(type);
+    // Project Loader filters
     const loaderFilterOptions = loaderFilters
         .map((loader) => loader.name)
         .filter((loader) => matchesSearch([loader, loadersFilterLabel], query));
@@ -90,22 +91,22 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const environmentFilterOptions = ["client", "server"].filter((env) => matchesSearch([env, environmentFilterLabel], query));
 
     // Category filters
-    const categoryFilterOptions = getValidProjectCategories([type], TagHeaderType.CATEGORY)
+    const categoryFilterOptions = getValidProjectCategories(type, TagHeaderType.CATEGORY)
         .map((c) => c.name)
         .filter((category) => matchesSearch([category, categoryFilterLabel], query));
 
     // Feature filters
-    const featureFilterOptions = getValidProjectCategories([type], TagHeaderType.FEATURE)
+    const featureFilterOptions = getValidProjectCategories(type, TagHeaderType.FEATURE)
         .map((f) => f.name)
         .filter((feature) => matchesSearch([feature, featureFilterLabel], query));
 
     // Resolution filters
-    const resolutionFilterOptions = getValidProjectCategories([type], TagHeaderType.RESOLUTION)
+    const resolutionFilterOptions = getValidProjectCategories(type, TagHeaderType.RESOLUTION)
         .map((r) => r.name)
         .filter((resolution) => matchesSearch([resolution, resolutionFilterLabel], query));
 
     // Performance impact filters
-    const performanceFilterOptions = getValidProjectCategories([type], TagHeaderType.PERFORMANCE_IMPACT)
+    const performanceFilterOptions = getValidProjectCategories(type, TagHeaderType.PERFORMANCE_IMPACT)
         .map((p) => p.name)
         .filter((performance) => matchesSearch([performance, performanceFilterLabel], query));
 
@@ -113,6 +114,10 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const licenseFilterOptions = [{ value: "oss", label: "Open source only" }].filter((license) =>
         matchesSearch([license.label, license.value, licenseFilterLabel], query),
     );
+
+    const isModOrModpack = type.includes(ProjectType.MOD) || type.includes(ProjectType.MODPACK);
+    const isUniversalSearchPage = type.length > 1;
+    const defaultOpenAdditionalFilters = !isUniversalSearchPage;
 
     return (
         <aside
@@ -192,7 +197,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                 }
             />
 
-            {[ProjectType.MOD, ProjectType.MODPACK].includes(type) && (
+            {isModOrModpack && (
                 <FilterCategory
                     items={environmentFilterOptions}
                     selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
@@ -207,6 +212,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                         });
                         navigate(newUrl);
                     }}
+                    defaultOpen={defaultOpenAdditionalFilters}
                 />
             )}
 
@@ -224,6 +230,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                defaultOpen={defaultOpenAdditionalFilters}
             />
 
             <FilterCategory
@@ -240,6 +247,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                defaultOpen={defaultOpenAdditionalFilters}
             />
 
             <FilterCategory
@@ -256,6 +264,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                defaultOpen={defaultOpenAdditionalFilters}
             />
 
             <FilterCategory
@@ -272,6 +281,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                defaultOpen={defaultOpenAdditionalFilters}
             />
 
             <FilterCategory
@@ -288,6 +298,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
                     });
                     navigate(newUrl);
                 }}
+                defaultOpen={defaultOpenAdditionalFilters}
             />
         </aside>
     );
@@ -309,6 +320,8 @@ interface FilterCategoryProps {
     className?: string;
     formatLabel?: boolean;
     footerItem?: React.ReactNode;
+    collapsible?: boolean;
+    defaultOpen?: boolean;
 }
 
 const FilterCategory = ({
@@ -320,13 +333,34 @@ const FilterCategory = ({
     listWrapperClassName,
     formatLabel = true,
     footerItem,
+    collapsible = true,
+    defaultOpen = true,
 }: FilterCategoryProps) => {
+    const [isOpen, setIsOpen] = useState(defaultOpen);
     if (!items.length) return null;
 
+    function toggleVisibility(e?: React.MouseEvent) {
+        e?.stopPropagation();
+        setIsOpen((prev) => !prev);
+    }
+
     return (
-        <div className={cn("filterCategory flex flex-col gap-0.5", className)}>
-            <h3 className="font-bold text-base">{label}</h3>
-            <div className={cn("w-full flex flex-col", listWrapperClassName)}>
+        <section className={cn("filterCategory grid grid-cols-1", className)}>
+            <div
+                className={cn("flex items-center justify-between gap-x-2 p-0.5", collapsible && "cursor-pointer")}
+                onClick={toggleVisibility}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") toggleVisibility();
+                }}
+            >
+                <h3 className="font-bold text-base">{label}</h3>
+                {collapsible && (
+                    <button type="button" onClick={toggleVisibility} className="text-extra-muted-foreground">
+                        {isOpen ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+                    </button>
+                )}
+            </div>
+            <div className={cn("w-full flex flex-col", !isOpen && collapsible && "hidden", listWrapperClassName)}>
                 {items.map((item) => {
                     const itemValue = typeof item === "string" ? item : item.value;
                     const _itemLabel = typeof item === "string" ? item : item.label;
@@ -347,7 +381,7 @@ const FilterCategory = ({
                     );
                 })}
             </div>
-            {footerItem}
-        </div>
+            {!isOpen && collapsible ? null : footerItem}
+        </section>
     );
 };

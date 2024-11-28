@@ -24,10 +24,10 @@ export const Capitalize = (str: string, eachWord = false) => {
     return newStr;
 };
 
-export function CapitalizeAndFormatString(str: string | null | undefined) {
+export function CapitalizeAndFormatString<T extends string | null | undefined>(str: T): T {
     if (!str) return str;
 
-    return Capitalize(str.toLowerCase()).replaceAll("_", " ").replaceAll("-", " ");
+    return Capitalize(str.toLowerCase()).replaceAll("_", " ").replaceAll("-", " ") as T;
 }
 
 export function createURLSafeSlug(slug: string, additionalAllowedChars?: string) {
@@ -160,12 +160,18 @@ export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibi
     return Array.from(allLoadersList);
 };
 
-export const getALlLoaderFilters = (projectType: ProjectType) => {
-    const list = new Set<Loader>();
+export const getALlLoaderFilters = (projectType: ProjectType[]) => {
+    if (!projectType?.length) return [];
 
+    const list = new Set<Loader>();
     for (const loader of loaders) {
-        if (loader.supportedProjectTypes.includes(projectType) && loader.metadata.isAFilter === true) {
-            list.add(loader);
+        if (loader.metadata.isAFilter !== true) continue;
+
+        for (const supportedType of loader.supportedProjectTypes) {
+            if (projectType.includes(supportedType)) {
+                list.add(loader);
+                break;
+            }
         }
     }
 

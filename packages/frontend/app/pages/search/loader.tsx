@@ -15,11 +15,12 @@ interface SearchResult {
 
 let searchResultsFetchReqAbortController: AbortController;
 
-export const getSearchResults = async (params: string, type: ProjectType) => {
+export const getSearchResults = async (params: string, type?: ProjectType) => {
     if (searchResultsFetchReqAbortController) searchResultsFetchReqAbortController.abort();
     searchResultsFetchReqAbortController = new AbortController();
 
-    const queryParams = `${params ? "?" : ""}${params}${params ? "&" : "?"}type=${type}`;
+    let queryParams = `${params ? "?" : ""}${params}`;
+    if (type) queryParams += `${params ? "&" : "?"}type=${type}`;
 
     const res = await clientFetch(`/api/search${queryParams}`, {
         signal: searchResultsFetchReqAbortController.signal,
@@ -29,7 +30,7 @@ export const getSearchResults = async (params: string, type: ProjectType) => {
     return (data || {}) as SearchResult;
 };
 
-export const getSearchResultsQuery = (params: string, type: ProjectType) => {
+export const getSearchResultsQuery = (params: string, type?: ProjectType) => {
     return {
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(params, type),

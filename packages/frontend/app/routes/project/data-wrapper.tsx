@@ -3,9 +3,10 @@ import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletCont
 import type { AwaitedReturnType } from "@root/types";
 import { getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
-import { MetaTags } from "@root/utils/meta";
+import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
+import { combineProjectMembers } from "@shared/lib/utils/project";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
 import type { RootOutletData } from "~/root";
@@ -107,9 +108,9 @@ export async function loader(props: LoaderFunctionArgs) {
 
 export function meta(props: MetaArgs) {
     const data = props.data as AwaitedReturnType<typeof loader>;
-    const projectData = data?.projectData;
+    const project = data?.projectData;
 
-    if (!projectData) {
+    if (!project) {
         return MetaTags({
             title: "Project Not Found",
             description: "The project you are looking for could not be found.",
@@ -119,11 +120,57 @@ export function meta(props: MetaArgs) {
         });
     }
 
+    const allMembers = Array.from(combineProjectMembers(project.members, project.organisation?.members || []).values());
+    const creator = allMembers.find((member) => member.isOwner);
+    const contributors = project.members.filter((member) => !member.isOwner);
+
+    const creatorJson = creator
+        ? UserLdJson(
+              {
+                  ...creator,
+                  id: creator.userId,
+                  name: creator.userName,
+                  bio: "",
+              },
+              {
+                  role: "Creator",
+              },
+          )
+        : {};
+
+    const projectMembersJson = contributors.map((member) =>
+        UserLdJson(
+            {
+                ...member,
+                id: member.userId,
+                name: member.userName,
+                bio: "",
+            },
+            { role: member.role },
+        ),
+    );
+
+    const orgJson = project.organisation ? OrganizationLdJson(project.organisation) : null;
+
+    let contributorObj = {};
+    if (projectMembersJson.length > 0) contributorObj = { contributor: projectMembersJson };
+
+    let orgObj = {};
+    if (orgJson) orgObj = { publisher: orgJson };
+
+    const ldJson = ProjectLdJson(project, {
+        "@context": "https://schema.org",
+        creator: creatorJson,
+        ...contributorObj,
+        ...orgObj,
+    });
+
     return MetaTags({
-        title: `${projectData.name} - Cosmic Reach ${CapitalizeAndFormatString(projectData.type?.[0])}`,
-        description: projectData.summary,
-        image: projectData.icon || "",
-        url: `${Config.FRONTEND_URL}${getProjectPagePathname(projectData.type?.[0], projectData.slug)}`,
+        title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
+        description: project.summary,
+        image: project.icon || "",
+        url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug)}`,
+        ldJson: ldJson,
     });
 }
 

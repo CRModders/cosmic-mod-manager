@@ -13,10 +13,10 @@ import type { SearchOutlet } from "./layout";
 import { getSearchResultsQuery } from "./loader";
 
 export function SearchResultsPage() {
-    const { type, viewType, searchParams } = useOutletContext<SearchOutlet>();
+    const { type, typeStr, viewType, searchParams } = useOutletContext<SearchOutlet>();
 
     const location = useLocation();
-    const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type));
+    const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type === typeStr ? type : undefined));
 
     const refetchSearchResults = async () => {
         await searchResult.refetch();
@@ -40,7 +40,11 @@ export function SearchResultsPage() {
         <>
             {pagination}
 
-            <div className={cn("w-full grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")} role="list">
+            <section
+                className={cn("w-full h-fit grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")}
+                role="list"
+                aria-label="Search Results"
+            >
                 {searchResult.data?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
                         key={project.id}
@@ -62,7 +66,7 @@ export function SearchResultsPage() {
                         author={project?.author || ""}
                     />
                 ))}
-            </div>
+            </section>
 
             {!searchResult.data?.hits?.length && !searchResult.isLoading && !searchResult.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">

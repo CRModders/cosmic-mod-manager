@@ -41,9 +41,8 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const versionData = allProjectVersions?.filter((version) => {
-        if (version.slug === versionSlug || version.id === versionSlug) return version;
-    })[0];
+    let versionData = allProjectVersions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    if (versionSlug === "latest") versionData = allProjectVersions[0];
 
     const versionAdditionalFiles = [];
     if (versionData?.files) {

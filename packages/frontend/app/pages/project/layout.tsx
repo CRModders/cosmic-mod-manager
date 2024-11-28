@@ -123,7 +123,7 @@ export default function ProjectPageLayout({
                 </title>
             </Helmet>
 
-            <div className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
+            <main className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
                 <ProjectInfoHeader
                     session={session}
                     projectData={projectData}
@@ -134,7 +134,7 @@ export default function ProjectPageLayout({
                 />
 
                 {/* SIDEBAR */}
-                <aside className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
+                <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
                     <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
                         <h2 className="text-lg font-extrabold">Compatibility</h2>
                         <section>
@@ -385,12 +385,12 @@ export default function ProjectPageLayout({
                             </Tooltip>
                         </TooltipProvider>
                     </Card>
-                </aside>
+                </div>
 
-                <div className="w-full max-w-full overflow-auto flex flex-col gap-panel-cards [grid-area:_content]">
+                <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards [grid-area:_content]">
                     <SecondaryNav
                         urlBase={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}
-                        className="bg-card-background rounded-lg px-3 py-2"
+                        className="h-fit bg-card-background rounded-lg px-3 py-2"
                         links={[
                             {
                                 label: "Description",
@@ -424,7 +424,7 @@ export default function ProjectPageLayout({
                         }
                     />
                 </div>
-            </div>
+            </main>
         </>
     );
 }

@@ -58,7 +58,9 @@ export const updateVersionData = async (
         },
     });
 
-    const targetVersion = project?.versions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    const versions = project?.versions || [];
+    let targetVersion = versions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    if (versionSlug === "latest") targetVersion = versions?.[0];
 
     // Return if project or target version not found
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);

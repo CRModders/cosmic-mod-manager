@@ -11,7 +11,7 @@ export default function SignUpPage() {
     }>({ value: false, provider: null });
 
     return (
-        <div className="w-full flex items-center justify-center py-12 min-h-[100vh]">
+        <aside className="w-full flex items-center justify-center py-12 min-h-[100vh]">
             <Card className="w-full max-w-md relative">
                 <CardHeader className="mb-1">
                     <CardTitle>Sign Up</CardTitle>
@@ -42,6 +42,6 @@ export default function SignUpPage() {
                     </div>
                 </CardContent>
             </Card>
-        </div>
+        </aside>
     );
 }

@@ -98,7 +98,7 @@ export default function GeneralSettingsPage() {
     };
 
     return (
-        <div className="w-full flex flex-col gap-panel-cards items-start justify-start">
+        <>
             <ContentCardTemplate title="Project information">
                 <Form {...form}>
                     <form
@@ -444,7 +444,7 @@ export default function GeneralSettingsPage() {
             </ContentCardTemplate>
 
             <DeleteProjectDialog name={projectData.name} slug={projectData.slug} />
-        </div>
+        </>
     );
 }
 

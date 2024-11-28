@@ -40,7 +40,11 @@ export function meta(props: MetaArgs) {
         });
     }
 
-    const version = parentData.versions.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    let version = parentData.versions.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    if (versionSlug === "latest") {
+        version = parentData.versions[0];
+    }
+
     if (!version?.id) {
         return MetaTags({
             title: `Version not found - ${project.name}`,

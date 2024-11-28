@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate, useSearchParams } from "@remix-run/react";
 import { cn } from "@root/utils";
+import { projectTypes } from "@shared/config/project";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
@@ -99,103 +100,106 @@ export default function SearchPageLayout() {
 
     return (
         <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
-            <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2" style={{ gridArea: "header" }}>
-                <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
-                    <SearchIcon
-                        aria-label="Search Icon"
-                        className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
-                    />
-                    <Input
-                        ref={searchInput}
-                        value={searchQuery}
-                        onChange={(e) => {
-                            const val = e.target.value;
+            <FilterSidebar type={type === typeStr ? [type] : projectTypes} showFilters={showFilters} searchParams={searchParams} />
+            <main id="main" style={{ gridArea: "content" }} className="h-fit grid grid-cols-1 gap-panel-cards">
+                <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2">
+                    <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
+                        <SearchIcon
+                            aria-label="Search Icon"
+                            className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
+                        />
+                        <Input
+                            ref={searchInput}
+                            value={searchQuery}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                const urlPathname = updateSearchParam({
+                                    key: searchQueryParamNamespace,
+                                    value: val,
+                                    deleteIfFalsyValue: true,
+                                    newParamsInsertionMode: "replace",
+                                    customURLModifier: deletePageOffsetParam,
+                                });
+                                navigate(urlPathname);
+                            }}
+                            placeholder={`Search ${type}s...`}
+                            className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
+                            id="search-input"
+                            aria-label={`Search ${type}s`}
+                        />
+
+                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-card-background px-1 rounded-[0.2rem] font-mono">
+                            /
+                        </kbd>
+                    </label>
+
+                    <Select
+                        value={sortBy || defaultSortBy}
+                        onValueChange={(val) => {
                             const urlPathname = updateSearchParam({
-                                key: searchQueryParamNamespace,
+                                key: sortByParamNamespace,
                                 value: val,
-                                deleteIfFalsyValue: true,
+                                deleteIfMatches: defaultSortBy,
                                 newParamsInsertionMode: "replace",
                                 customURLModifier: deletePageOffsetParam,
                             });
                             navigate(urlPathname);
                         }}
-                        placeholder={`Search ${type}s...`}
-                        className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
-                        id="search-input"
-                        aria-label={`Search ${type}s`}
-                    />
+                        name="sort-by"
+                    >
+                        <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted" aria-label="sort-by">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel className="text-foreground font-bold">Sort by</SelectLabel>
+                                {[
+                                    SearchResultSortMethod.RELEVANCE,
+                                    SearchResultSortMethod.DOWNLOADS,
+                                    SearchResultSortMethod.FOLLOW_COUNT,
+                                    SearchResultSortMethod.RECENTLY_UPDATED,
+                                    SearchResultSortMethod.RECENTLY_PUBLISHED,
+                                ].map((option) => {
+                                    return (
+                                        <SelectItem key={option} value={option}>
+                                            {CapitalizeAndFormatString(option)}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
 
-                    <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-card-background px-1 rounded-[0.2rem] font-mono">/</kbd>
-                </label>
+                    <Button
+                        className={cn("flex lg:hidden", showFilters && "!ring-[0.13rem] ring-accent-background/75")}
+                        variant="secondary"
+                        onClick={() => setShowFilters((prev) => !prev)}
+                    >
+                        <FilterIcon className="w-btn-icon h-btn-icon" />
+                        Filters...
+                    </Button>
 
-                <Select
-                    value={sortBy || defaultSortBy}
-                    onValueChange={(val) => {
-                        const urlPathname = updateSearchParam({
-                            key: sortByParamNamespace,
-                            value: val,
-                            deleteIfMatches: defaultSortBy,
-                            newParamsInsertionMode: "replace",
-                            customURLModifier: deletePageOffsetParam,
-                        });
-                        navigate(urlPathname);
-                    }}
-                    name="sort-by"
-                >
-                    <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted" aria-label="sort-by">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel className="text-foreground font-bold">Sort by</SelectLabel>
-                            {[
-                                SearchResultSortMethod.RELEVANCE,
-                                SearchResultSortMethod.DOWNLOADS,
-                                SearchResultSortMethod.FOLLOW_COUNT,
-                                SearchResultSortMethod.RECENTLY_UPDATED,
-                                SearchResultSortMethod.RECENTLY_PUBLISHED,
-                            ].map((option) => {
-                                return (
-                                    <SelectItem key={option} value={option}>
-                                        {CapitalizeAndFormatString(option)}
-                                    </SelectItem>
-                                );
-                            })}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                    <ViewTypeToggle projectType={type} viewType={viewType} reRender={reRender} />
+                </Card>
 
-                <Button
-                    className={cn("flex lg:hidden", showFilters && "!ring-[0.13rem] ring-accent-background/75")}
-                    variant="secondary"
-                    onClick={() => setShowFilters((prev) => !prev)}
-                >
-                    <FilterIcon className="w-btn-icon h-btn-icon" />
-                    Filters...
-                </Button>
-
-                <ViewTypeToggle projectType={type} viewType={viewType} reRender={reRender} />
-            </Card>
-
-            <FilterSidebar type={type} showFilters={showFilters} searchParams={searchParams} />
-
-            <section id="main" aria-label="Search Results" className="h-fit flex flex-col gap-panel-cards" style={{ gridArea: "content" }}>
                 <Outlet
                     context={
                         {
                             type,
+                            typeStr,
                             viewType,
                             searchParams,
                         } satisfies SearchOutlet
                     }
                 />
-            </section>
+            </main>
         </div>
     );
 }
 
 export interface SearchOutlet {
     type: ProjectType;
+    typeStr: string;
     viewType: ViewType;
     searchParams: URLSearchParams;
 }

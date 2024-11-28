@@ -38,7 +38,7 @@ export default function HomePage({ session, projects }: Props) {
                   )
                 : null}
 
-            <div className="w-full">
+            <main className="w-full">
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <BrandIcon size="16rem" className="text-accent-foreground" />
                     <div className="w-full flex flex-col items-center justify-center gap-1">
@@ -106,7 +106,7 @@ export default function HomePage({ session, projects }: Props) {
                 </section>
 
                 <ShowCase projects={projects} />
-            </div>
+            </main>
         </>
     );
 }

@@ -72,7 +72,7 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
                                 <FormMessage />
                             </FormLabel>
 
-                            <div className="w-full flex flex-wrap gap-x-4 gap-y-1">
+                            <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
                                 <Input {...field} className="w-full md:w-[32ch]" placeholder="Username" id="username-input" />
                                 <Button type="submit" disabled={!canInviteMembers || isLoading}>
                                     {isLoading ? (

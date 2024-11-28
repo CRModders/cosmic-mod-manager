@@ -38,7 +38,7 @@ export default function RevokeSessionPage() {
     }, [searchParams]);
 
     return (
-        <div className="w-full full_page flex items-center justify-center">
+        <main className="w-full full_page flex items-center justify-center">
             <div className="w-full max-w-md flex items-center justify-center">
                 {isLoading ? (
                     <LoadingSpinner />
@@ -48,6 +48,6 @@ export default function RevokeSessionPage() {
                     <FormErrorMessage text="Error" className="w-fit" />
                 )}
             </div>
-        </div>
+        </main>
     );
 }

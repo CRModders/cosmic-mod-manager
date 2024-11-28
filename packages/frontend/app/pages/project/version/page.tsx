@@ -7,7 +7,6 @@ import { ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
-import { Helmet } from "react-helmet";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
@@ -45,7 +44,8 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
     const navigate = useNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
     const projectType = projectData?.type[0] || "";
-    const versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    let versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    if (versionSlug === "latest") versionData = allProjectVersions[0];
 
     if (!versionData || !projectSlug || !versionSlug)
         return (
@@ -53,7 +53,7 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                 className="no_full_page py-16"
                 title="Version not found"
                 description="The version you are looking for doesn't exist"
-                linkLabel="Versions"
+                linkLabel="See versions list"
                 linkHref={`${getProjectPagePathname(projectType, projectSlug || "")}/versions`}
             />
         );
@@ -62,13 +62,6 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
 
     return (
         <>
-            <Helmet>
-                <title>
-                    {versionData.title}
-                    {versionData.title.toLowerCase().includes(projectData?.name?.toLowerCase()) ? "" : ` - ${projectData.name}`}
-                </title>
-            </Helmet>
-
             <Card className="w-full flex flex-col items-start justify-start p-card-surround gap-4">
                 <Breadcrumb>
                     <BreadcrumbList className="flex items-center">

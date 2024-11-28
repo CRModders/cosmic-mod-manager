@@ -12,7 +12,7 @@ interface Props {
 
 export default function ConfirmActionPage({ actionType, code }: Props) {
     return (
-        <div className="w-full full_page flex flex-col items-center justify-center px-4">
+        <main className="w-full full_page flex flex-col items-center justify-center px-4">
             {!code || actionType === null ? (
                 <div className="w-full max-w-md flex flex-col items-center justify-center gap-6">
                     <FormErrorMessage text={"Invalid or expired code"} />
@@ -23,7 +23,7 @@ export default function ConfirmActionPage({ actionType, code }: Props) {
             ) : (
                 <ActionCard actionType={actionType} code={code} />
             )}
-        </div>
+        </main>
     );
 }
 

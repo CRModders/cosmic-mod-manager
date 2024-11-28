@@ -1,5 +1,8 @@
 import type { MetaDescriptor } from "@remix-run/node";
 import { SITE_NAME_SHORT } from "@shared/config";
+import { DateToISOStr } from "@shared/lib/utils/date-time";
+import { getProjectPagePathname } from ".";
+import Config from "./config";
 
 type MetaTags =
     | {
@@ -10,6 +13,7 @@ type MetaTags =
           linksOnly?: false;
           parentMetaTags?: MetaDescriptor[];
           suffixTitle?: boolean;
+          ldJson?: LdJsonObject;
       }
     | {
           title?: string;
@@ -19,6 +23,7 @@ type MetaTags =
           linksOnly: true;
           parentMetaTags?: MetaDescriptor[];
           suffixTitle?: boolean;
+          ldJson?: LdJsonObject;
       };
 
 export function MetaTags(props: MetaTags): MetaDescriptor[] {
@@ -48,6 +53,10 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { property: "og:url", content: props.url },
         { name: "twitter:url", content: props.url },
     ]);
+
+    if (props.ldJson !== undefined) {
+        links.push({ "script:ld+json": props.ldJson });
+    }
 
     if (props.linksOnly) {
         return links;
@@ -94,4 +103,91 @@ function mergeMetaTagsList(originalList: MetaDescriptor[], newItems: MetaDescrip
     }
 
     return combinedList;
+}
+
+type LdJsonObject = {
+    [Key in string]: LdJsonValue;
+} & {
+    [Key in string]?: LdJsonValue | undefined;
+};
+type LdJsonArray = LdJsonValue[] | readonly LdJsonValue[];
+type LdJsonPrimitive = string | number | boolean | null;
+type LdJsonValue = LdJsonPrimitive | LdJsonObject | LdJsonArray;
+
+interface UserLdJsonData {
+    id: string;
+    name: string | null;
+    userName: string;
+    bio: string | null;
+    avatarUrl: string | null;
+}
+
+export function UserLdJson(user: UserLdJsonData, otherData?: LdJsonObject): LdJsonObject {
+    return {
+        "@type": "Person",
+        "@id": LdJsonId(user.id, LdJsonIdType.Person),
+        name: user.userName,
+        alternateName: user.name,
+        url: `${Config.FRONTEND_URL}/user/${user.userName}`,
+        description: user.bio,
+        image: user.avatarUrl,
+        identifier: `user-${user.id}`,
+        ...otherData,
+    };
+}
+
+interface ProjectLdJsonData {
+    id: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    summary: string;
+    type: string[];
+    datePublished: Date | string;
+    dateUpdated: Date | string;
+}
+
+export function ProjectLdJson(project: ProjectLdJsonData, otherData?: LdJsonObject): LdJsonObject {
+    return {
+        "@type": "CreativeWork",
+        "@id": LdJsonId(project.id, LdJsonIdType.CreativeWork),
+        name: project.name,
+        url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug)}`,
+        description: project.summary,
+        image: project.icon,
+        thumbnailUrl: project.icon,
+        dateCreated: DateToISOStr(project.datePublished),
+        dateModified: DateToISOStr(project.dateUpdated),
+        ...otherData,
+    };
+}
+
+interface OrganizationLdJsonData {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    icon: string | null;
+}
+
+export function OrganizationLdJson(org: OrganizationLdJsonData, otherData?: LdJsonObject): LdJsonObject {
+    return {
+        "@type": "Organization",
+        "@id": LdJsonId(org.id, LdJsonIdType.Organization),
+        name: org.name,
+        description: org.description,
+        url: `${Config.FRONTEND_URL}/organization/${org.slug}`,
+        logo: org.icon,
+        ...otherData,
+    };
+}
+
+export enum LdJsonIdType {
+    Person = "person",
+    CreativeWork = "creativework",
+    Organization = "organization",
+}
+
+export function LdJsonId(id: string, type: LdJsonIdType): string {
+    return `${Config.FRONTEND_URL}/#/schema/${type}/${id}`;
 }
