@@ -8,10 +8,11 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
+const cacheCdnUrls = env.CACHE_CDN_URL.split(" ").filter((url) => url);
 
 const cdnRouter = new Hono();
 export const corsAllowCdn = cors({
-    origin: [env.CDN_SERVER_URL, env.CACHE_CDN_URL],
+    origin: [env.CDN_SERVER_URL, ...cacheCdnUrls],
     credentials: true,
 });
 
