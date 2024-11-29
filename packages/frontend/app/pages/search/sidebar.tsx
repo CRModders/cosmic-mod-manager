@@ -67,7 +67,11 @@ const clearFilters = () => {
 const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [query, setQuery] = useState("");
-    const navigate = useNavigate();
+    const _navigate = useNavigate();
+
+    function navigate(to: string) {
+        return _navigate(to, { replace: true, preventScrollReset: true });
+    }
 
     // Filters list
     const loaderFilters = getALlLoaderFilters(type);
