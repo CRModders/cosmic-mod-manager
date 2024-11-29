@@ -1,11 +1,11 @@
 import { AuthenticationMiddleware } from "@/middleware/auth";
 import { cdnAssetRateLimiter, cdnLargeFileRateLimiter } from "@/middleware/rate-limit/cdn";
+import { getSitemap } from "@/services/sitemap-gen";
 import env from "@/utils/env";
 import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { getUserFromCtx } from "../auth/helpers/session";
-import { getSitemap } from "../search/sitemap-gen";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
