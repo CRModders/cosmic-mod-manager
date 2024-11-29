@@ -32,7 +32,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
                 <script defer src="/telemetry.js" data-website-id="1bbb8989-cc84-4b4c-bfca-51e53779f587" data-exclude-search="true" />
             </head>
-            <body>
+            <body className="antialiased">
                 {children}
 
                 <ScrollRestoration />
