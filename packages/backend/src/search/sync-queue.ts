@@ -2,7 +2,6 @@ import meilisearch from "@/services/meilisearch";
 import prisma from "@/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
-import { startSitemapGenerator } from "./sitemap-gen";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
@@ -79,7 +78,7 @@ export interface ProjectSearchDocument {
     color: string | null;
 }
 
-const syncProjects = async (cursor: null | string) => {
+async function syncProjects(cursor: null | string) {
     try {
         const index = meilisearch.index(projectSearchNamespace);
 
@@ -136,9 +135,9 @@ const syncProjects = async (cursor: null | string) => {
     } catch (error) {
         console.error(error);
     }
-};
+}
 
-const syncSearchDb = async () => {
+async function syncSearchDb() {
     if (isSyncing) return;
     isSyncing = true;
 
@@ -147,6 +146,8 @@ const syncSearchDb = async () => {
         const index = meilisearch.index(projectSearchNamespace);
         await index.deleteAllDocuments();
 
+        await new Promise((resolve) => setTimeout(resolve, 10_000));
+
         while (true) {
             cursor = await syncProjects(cursor);
             if (!cursor) break;
@@ -154,12 +155,11 @@ const syncSearchDb = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        startSitemapGenerator();
         isSyncing = false;
     }
-};
+}
 
-const queueSearchDbSync = () => {
+function queueSearchDbSync() {
     // @ts-ignore
     const intervalId = global.intervalId;
     if (intervalId) clearInterval(intervalId);
@@ -168,7 +168,7 @@ const queueSearchDbSync = () => {
     global.intervalId = setInterval(() => {
         syncSearchDb();
     }, SYNC_INTERVAL);
-};
+}
 
 const index = meilisearch.index(projectSearchNamespace);
 index.updateFilterableAttributes(["categories", "loaders", "type", "gameVersions", "openSource", "clientSide", "serverSide"]);

@@ -10,7 +10,7 @@ const SITEMAP_REFRESH_INTERVAL_s = 86400; // 24 hours
 let queued = false;
 let isGenerating = false;
 
-export function startSitemapGenerator() {
+export async function startSitemapGenerator() {
     if (queued) return;
     queued = true;
 
@@ -18,10 +18,29 @@ export function startSitemapGenerator() {
     setInterval(generateSitemap, SITEMAP_REFRESH_INTERVAL_s * 1000);
 }
 
+let startupTries = 10;
 export async function generateSitemap() {
     if (isGenerating) return;
     isGenerating = true;
     try {
+        const index = meilisearch.index(projectSearchNamespace);
+        const res = await index.search(null);
+        if (res.estimatedTotalHits === 0) {
+            startupTries -= 1;
+            if (startupTries > 0) {
+                console.log("Waiting for projects to be indexed...");
+            } else {
+                console.error("Failed to generate sitemap, no projects found");
+                return;
+            }
+
+            return setTimeout(() => {
+                generateSitemap();
+            }, 2_000);
+        }
+        startupTries = 10;
+        console.log("Starting sitemap generation...");
+
         const fragments = await collectSitemapFragments();
 
         await saveSitemap("index", fragments.index);
@@ -32,6 +51,8 @@ export async function generateSitemap() {
         await saveSitemap(ProjectType.SHADER, fragments.shaderPackLinks, "s");
         await saveSitemap(ProjectType.MODPACK, fragments.modpackLinks, "s");
         await saveSitemap(ProjectType.PLUGIN, fragments.pluginLinks, "s");
+
+        console.log("Sitemap generation complete");
     } finally {
         isGenerating = false;
     }
