@@ -20,6 +20,6 @@ export function meta(props: MetaArgs) {
         title: `Search ${type}s`,
         description: `Search and download your favorite cosmic reach ${type}s with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`,
         url: `${Config.FRONTEND_URL}/${type}s`,
-        image: `${Config.FRONTEND_URL}/favicon.ico`,
+        image: `${Config.FRONTEND_URL}/icon.png`,
     });
 }

@@ -24,12 +24,3 @@ export function meta() {
         suffixTitle: true,
     });
 }
-
-export function links() {
-    return [
-        {
-            rel: "canonical",
-            href: `${Config.FRONTEND_URL}/signup`,
-        },
-    ];
-}
