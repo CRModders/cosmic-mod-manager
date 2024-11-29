@@ -84,7 +84,7 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
 function mergeMetaTagsList(originalList: MetaDescriptor[], newItems: MetaDescriptor[]) {
     const combinedList = newItems.slice();
 
-    const matchKeys = ["name", "property", "rel", "hrefLang", "tagName", "title"];
+    const matchKeys = ["name", "property", "rel", "hrefLang", "tagName"];
 
     outerLoop: for (const originalItem of originalList) {
         for (const existingItem of combinedList) {
