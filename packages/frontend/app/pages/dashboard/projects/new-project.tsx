@@ -194,7 +194,6 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             defaultMinWidth={false}
                                             open={typeSelectorOpen}
                                             onOpenChange={setTypeSelectorOpen}
-                                            modalPopover={true}
                                             selectedValues={field.value || []}
                                             options={projectTypes.map((type) => ({
                                                 label: CapitalizeAndFormatString(type) || "",
@@ -221,7 +220,10 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                         </FormLabel>
                                         <Select
                                             open={visibilitySelectorOpen}
-                                            onOpenChange={(isOpen) => setVisibilitySelectorOpen(isOpen)}
+                                            onOpenChange={(isOpen) => {
+                                                if (typeSelectorOpen) setTypeSelectorOpen(false);
+                                                setVisibilitySelectorOpen(isOpen);
+                                            }}
                                             disabled={field.disabled}
                                             name={field.name}
                                             value={field.value}
