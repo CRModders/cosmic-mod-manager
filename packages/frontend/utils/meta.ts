@@ -7,6 +7,7 @@ import Config from "./config";
 type MetaTags =
     | {
           title: string;
+          siteMetaDescription?: string;
           description: string;
           image: string;
           url: string;
@@ -17,6 +18,7 @@ type MetaTags =
       }
     | {
           title?: string;
+          siteMetaDescription?: string;
           description?: string;
           image?: string;
           url: string;
@@ -64,7 +66,7 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
 
     return mergeMetaTagsList(links, [
         { title: props.title },
-        { name: "description", content: props.description },
+        { name: "description", content: props.siteMetaDescription || props.description },
 
         { property: "og:site_name", content: SITE_NAME_SHORT },
         { property: "og:type", content: "website" },

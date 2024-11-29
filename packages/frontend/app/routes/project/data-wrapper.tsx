@@ -5,6 +5,7 @@ import { getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
 import { combineProjectMembers } from "@shared/lib/utils/project";
 import type { LoggedInUserData } from "@shared/types";
@@ -168,6 +169,7 @@ export function meta(props: MetaArgs) {
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
         description: project.summary,
+        siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${creator?.userName} on ${SITE_NAME_SHORT}`,
         image: project.icon || "",
         url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug)}`,
         ldJson: ldJson,

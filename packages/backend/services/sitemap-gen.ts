@@ -3,7 +3,7 @@ import { getFileFromLocalStorage, saveFileToLocalStorage } from "@/services/stor
 import env from "@/utils/env";
 import { projectTypes } from "@shared/config/project";
 import { ProjectType } from "@shared/types";
-import { type ProjectSearchDocument, projectSearchNamespace } from "./sync-queue";
+import { type ProjectSearchDocument, projectSearchNamespace } from "@src/search/sync-queue";
 
 const BATCH_SIZE = 1000;
 const SITEMAP_REFRESH_INTERVAL_s = 86400; // 24 hours
