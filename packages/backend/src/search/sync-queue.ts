@@ -2,6 +2,7 @@ import meilisearch from "@/services/meilisearch";
 import prisma from "@/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
 import { ProjectSupport, ProjectVisibility } from "@shared/types";
+import { startSitemapGenerator } from "./sitemap-gen";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
@@ -153,6 +154,7 @@ const syncSearchDb = async () => {
     } catch (error) {
         console.error(error);
     } finally {
+        startSitemapGenerator();
         isSyncing = false;
     }
 };

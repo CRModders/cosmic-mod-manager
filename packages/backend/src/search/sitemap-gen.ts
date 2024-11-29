@@ -7,9 +7,13 @@ import { type ProjectSearchDocument, projectSearchNamespace } from "./sync-queue
 
 const BATCH_SIZE = 1000;
 const SITEMAP_REFRESH_INTERVAL_s = 86400; // 24 hours
+let queued = false;
 let isGenerating = false;
 
 export function startSitemapGenerator() {
+    if (queued) return;
+    queued = true;
+
     generateSitemap();
     setInterval(generateSitemap, SITEMAP_REFRESH_INTERVAL_s * 1000);
 }

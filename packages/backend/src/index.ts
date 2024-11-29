@@ -17,7 +17,6 @@ import orgRouter from "./project/organisation/router";
 import projectRouter from "./project/router";
 import teamRouter from "./project/team/router";
 import searchRouter from "./search/router";
-import { startSitemapGenerator } from "./search/sitemap-gen";
 import tagsRouter from "./tags";
 import bulkUserActionsRouter from "./user/bulk_actions/router";
 import notificationRouter from "./user/notification/router";
@@ -75,7 +74,6 @@ Bun.serve({
 // Start the sync queues
 queueDownloadsCounterQueueProcessing();
 queueSearchDbSync();
-startSitemapGenerator();
 
 async function apiDetails(ctx: Context) {
     return ctx.json(
