@@ -3,7 +3,7 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS } from "@/utils/http";
 import { type ProjectType, SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
-import { projectSearchNamespace } from "../sync-queue";
+import { type ProjectSearchDocument, projectSearchNamespace } from "../sync-queue";
 
 interface Props {
     query: string;
@@ -66,7 +66,9 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
     });
 
     const projects: ProjectListItem[] = [];
-    for (const project of result.hits) {
+    const hits = result.hits as ProjectSearchDocument[];
+
+    for (const project of hits) {
         projects.push({
             id: project.id,
             slug: project.slug,

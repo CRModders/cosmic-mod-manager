@@ -5,6 +5,7 @@ import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { getUserFromCtx } from "../auth/helpers/session";
+import { getSitemap } from "../search/sitemap-gen";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
@@ -23,6 +24,9 @@ cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryIma
 cdnRouter.get("/data/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
 
 cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
+
+// Sitemaps
+cdnRouter.get("/sitemap/:name", cdnAssetRateLimiter, sitemap_get);
 
 async function projectFile_get(ctx: Context) {
     try {
@@ -72,6 +76,28 @@ async function orgFile_get(ctx: Context) {
         }
 
         return await serveOrgIconFile(ctx, orgId, IsCdnRequest(ctx));
+    } catch (error) {
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function sitemap_get(ctx: Context) {
+    try {
+        const { name } = ctx.req.param();
+        if (!name) {
+            return invalidReqestResponse(ctx);
+        }
+
+        const sitemap = await getSitemap(name);
+        if (!sitemap) {
+            return invalidReqestResponse(ctx);
+        }
+
+        return new Response(sitemap, {
+            headers: {
+                "Content-Type": "application/xml",
+            },
+        });
     } catch (error) {
         return serverErrorResponse(ctx);
     }

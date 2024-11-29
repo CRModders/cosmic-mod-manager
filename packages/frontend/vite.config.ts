@@ -12,13 +12,13 @@ declare module "@remix-run/node" {
 export default defineConfig({
     server: {
         port: 3000,
-        // proxy: {
-        //     "/api": {
-        //         target: "https://api.crmm.tech",
-        //         changeOrigin: true,
-        //         secure: false,
-        //     },
-        // },
+        proxy: {
+            // "/api": {
+            //     target: "https://api.crmm.tech",
+            //     changeOrigin: true,
+            //     secure: false,
+            // },
+        },
     },
     plugins: [
         remix({

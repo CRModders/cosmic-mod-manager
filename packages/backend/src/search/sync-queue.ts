@@ -55,7 +55,7 @@ const requiredProjectFields = {
     },
 };
 
-interface ProjectSearchDocument {
+export interface ProjectSearchDocument {
     id: string;
     name: string;
     slug: string;

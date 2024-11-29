@@ -1,6 +1,7 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cn, formatDate, imageUrl } from "@root/utils";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
+import { DateToISOStr } from "@shared/lib/utils/date-time";
 import { ProjectPermission } from "@shared/types";
 import type { GalleryItem, ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
@@ -95,7 +96,11 @@ const GalleryItemCard = ({
     currUsersMembership: TeamMember | null;
 }) => {
     return (
-        <div className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2">
+        <div
+            className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2"
+            itemScope
+            itemType="http://schema.org/ImageObject"
+        >
             <button
                 type="button"
                 className="flex items-center justify-center aspect-video bg-[hsla(var(--background))] rounded-lg overflow-hidden"
@@ -103,13 +108,20 @@ const GalleryItemCard = ({
                     setActiveIndex(index);
                     setdialogOpen(true);
                 }}
+                aria-label={`View ${galleryItem.name}`}
             >
                 <img
                     loading="lazy"
                     src={imageUrl(galleryItem.imageThumbnail)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
+                    itemProp="thumbnail"
                 />
+
+                <meta itemProp="contentUrl" content={imageUrl(galleryItem.image)} />
+                <meta itemProp="name" content={galleryItem.name} />
+                <meta itemProp="description" content={galleryItem.description || galleryItem.name} />
+                <meta itemProp="datePublished" content={DateToISOStr(galleryItem.dateCreated) || ""} />
             </button>
 
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
