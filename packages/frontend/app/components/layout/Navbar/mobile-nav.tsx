@@ -1,13 +1,16 @@
 import { cn, imageUrl } from "@root/utils";
+import type { LoggedInUserData } from "@shared/types";
+import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { NotificationBadge } from "~/components/ui/badge";
-import { useSession } from "~/hooks/session";
 import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
 
 interface MobileNavProps {
+    session: LoggedInUserData | null;
+    notifications: Notification[] | null;
     isNavMenuOpen: boolean;
     toggleNavMenu: (newState?: boolean) => void;
     NavLinks: {
@@ -16,8 +19,7 @@ interface MobileNavProps {
     }[];
 }
 
-export const MobileNav = ({ isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavProps) => {
-    const { session, notifications } = useSession();
+export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavProps) => {
     const unreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     return (

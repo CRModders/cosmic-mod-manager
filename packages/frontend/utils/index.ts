@@ -1,3 +1,4 @@
+import { ThemeOptions } from "@root/types";
 import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { type ClassValue, clsx } from "clsx";
@@ -7,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function getCookie(key: string, src: string = document.cookie) {
+export function getCookie(key: string, src: string) {
     for (const cookie of src.split("; ")) {
         if (cookie.split("=")[0] === key) {
             return cookie.split("=")[1];
@@ -18,6 +19,10 @@ export function getCookie(key: string, src: string = document.cookie) {
 
 export function setCookie(key: string, value: string, expires = 365) {
     document.cookie = `${key}=${value}; expires=${new Date(Date.now() + expires * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+}
+
+export function getThemeFromCookie(cookie?: string | null): ThemeOptions {
+    return cookie === ThemeOptions.LIGHT ? ThemeOptions.LIGHT : ThemeOptions.DARK;
 }
 
 export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {

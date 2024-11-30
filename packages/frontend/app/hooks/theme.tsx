@@ -6,16 +6,20 @@ const MEDIA = "(prefers-color-scheme: dark)";
 export const ThemeContext = React.createContext<UseThemeProps | undefined>(undefined);
 const themes = [ThemeOptions.DARK, ThemeOptions.LIGHT];
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
+export const ThemeProvider = ({ children, initTheme }: { children: React.ReactNode; initTheme: ThemeOptions }): React.ReactNode => {
     const context = React.useContext(ThemeContext);
 
     // Ignore nested context providers, just passthrough children
     if (context) return children;
-    return <Theme>{children}</Theme>;
+    return <Theme initTheme={initTheme}>{children}</Theme>;
 };
 
-const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; storageKey?: string }) => {
-    const [theme, setThemeState] = React.useState(() => getTheme(storageKey));
+const Theme = ({
+    children,
+    initTheme,
+    storageKey = "theme",
+}: { children: React.ReactNode; initTheme: ThemeOptions; storageKey?: string }) => {
+    const [theme, setThemeState] = React.useState<string>(initTheme);
 
     const applyTheme = React.useCallback((theme: string) => {
         let resolved = theme;
@@ -88,7 +92,7 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
 function getTheme(key: string, fallback?: string) {
     let theme: string | undefined;
     try {
-        theme = getCookie(key) || undefined;
+        theme = getCookie(key, document.cookie) || undefined;
     } catch (e) {
         // Unsupported
     }

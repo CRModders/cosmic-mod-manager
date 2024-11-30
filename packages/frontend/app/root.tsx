@@ -1,7 +1,6 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
-import { ThemeOptions } from "@root/types";
-import { getCookie } from "@root/utils";
+import { getCookie, getThemeFromCookie } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_LONG } from "@shared/config";
@@ -10,13 +9,12 @@ import fontStyles from "~/pages/inter.css?url";
 import ClientOnly from "./components/client-only";
 import LoaderBar from "./components/loader-bar";
 import { WanderingCubesSpinner } from "./components/ui/spinner";
-import ErrorView from "./routes/error-view";
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<typeof loader>();
 
     return (
-        <html lang="en" className={data?.theme === ThemeOptions.LIGHT ? "light" : "dark"}>
+        <html lang="en" className={data?.theme}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,22 +40,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
     return (
         <>
-            <ClientOnly Element={LoaderBar} />
             <Outlet />
+            <ClientOnly Element={LoaderBar} />
         </>
     );
 }
 
 export function loader(props: LoaderFunctionArgs) {
-    const theme = getCookie("theme", props.request.headers.get("Cookie") || "");
+    const cookie = getCookie("theme", props.request.headers.get("Cookie") || "");
+    const theme = getThemeFromCookie(cookie);
 
     return {
         theme,
     };
-}
-
-export function ErrorBoundary() {
-    return <ErrorView />;
 }
 
 export const links: LinksFunction = () => {

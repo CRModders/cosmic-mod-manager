@@ -1,14 +1,18 @@
+import { useLocation, useNavigate } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
+import clientFetch from "@root/utils/client-fetch";
+import type { LoggedInUserData } from "@shared/types";
+import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { fallbackUserIcon } from "~/components/icons";
+import RefreshPage from "~/components/refresh-page";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { NotificationBadge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
-import { useSession } from "~/hooks/session";
 
 export const LoginButton = ({
     className,
@@ -34,8 +38,13 @@ export const LoginButton = ({
     );
 };
 
-const NavButton = ({ toggleNavMenu }: { toggleNavMenu: (newState?: boolean) => void }) => {
-    const { session, notifications } = useSession();
+interface NavbuttonProps {
+    toggleNavMenu: (newState?: boolean) => void;
+    session: LoggedInUserData | null;
+    notifications: Notification[] | null;
+}
+
+const NavButton = ({ session, notifications, toggleNavMenu }: NavbuttonProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     if (session === undefined) {
@@ -147,12 +156,18 @@ type Props = {
 
 export const SignOutBtn = ({ className, disabled = false }: Props) => {
     const [loading, setLoading] = useState(false);
-    const { logout } = useSession();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleClick = async () => {
         if (loading || disabled) return;
         setLoading(true);
-        await logout();
+
+        await clientFetch("/api/auth/sessions", {
+            method: "DELETE",
+        });
+
+        RefreshPage(navigate, location);
     };
 
     return (

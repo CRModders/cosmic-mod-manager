@@ -3,6 +3,8 @@ import { cn } from "@root/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
+import type { LoggedInUserData } from "@shared/types";
+import type { Notification } from "@shared/types/api";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import ClientOnly from "~/components/client-only";
@@ -13,7 +15,12 @@ import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
 
-const Navbar = () => {
+interface NavbarProps {
+    session: LoggedInUserData | null;
+    notifications: Notification[];
+}
+
+function Navbar(props: NavbarProps) {
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
 
     const toggleNavMenu = (newState?: boolean) => {
@@ -81,7 +88,7 @@ const Navbar = () => {
                                 {MemoizedThemeSwitch}
 
                                 <div className="hidden lg:flex">
-                                    <NavButton toggleNavMenu={toggleNavMenu} />
+                                    <NavButton session={props.session} notifications={props.notifications} toggleNavMenu={toggleNavMenu} />
                                 </div>
 
                                 <div className="flex lg:hidden align-center justify-center">
@@ -93,14 +100,20 @@ const Navbar = () => {
                 </nav>
             </div>
 
-            <MobileNav isNavMenuOpen={isNavMenuOpen} NavLinks={NavLinks} toggleNavMenu={toggleNavMenu} />
+            <MobileNav
+                session={props.session}
+                notifications={props.notifications}
+                isNavMenuOpen={isNavMenuOpen}
+                NavLinks={NavLinks}
+                toggleNavMenu={toggleNavMenu}
+            />
         </header>
     );
-};
+}
 
 export default Navbar;
 
-type Props = {
+type NavlinkProps = {
     href: string;
     label?: string;
     isDisabled?: boolean;
@@ -111,7 +124,7 @@ type Props = {
     children?: React.ReactNode;
 };
 
-export const Navlink = ({ href, label, children, className }: Props) => {
+export const Navlink = ({ href, label, children, className }: NavlinkProps) => {
     return (
         <ButtonLink
             url={href}
@@ -132,7 +145,7 @@ export const NavMenuLink = ({
     closeNavMenuOnLinkClick = true,
     toggleNavMenu,
     children,
-}: Props) => {
+}: NavlinkProps) => {
     return (
         <ButtonLink
             url={href}

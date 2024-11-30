@@ -1,8 +1,7 @@
-import type { LoggedInUserData } from "@shared/types";
+import type { ThemeOptions } from "@root/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DownloadAnimationProvider } from "~/components/download-animation";
 import { Toaster } from "~/components/ui/sonner";
-import SessionProvider from "~/hooks/session";
 import { ThemeProvider } from "~/hooks/theme";
 
 export const reactQueryClient = new QueryClient({
@@ -17,20 +16,18 @@ export const reactQueryClient = new QueryClient({
 
 interface ContextProvidersProps {
     children: React.ReactNode;
-    session: LoggedInUserData | null;
+    theme: ThemeOptions;
 }
 
-export default function ContextProviders({ children, session }: ContextProvidersProps) {
+export default function ContextProviders({ children, theme }: ContextProvidersProps) {
     return (
         <QueryClientProvider client={reactQueryClient}>
-            <SessionProvider session={session}>
-                <ThemeProvider>
-                    <DownloadAnimationProvider>
-                        {children}
-                        <Toaster />
-                    </DownloadAnimationProvider>
-                </ThemeProvider>
-            </SessionProvider>
+            <ThemeProvider initTheme={theme}>
+                <DownloadAnimationProvider>
+                    {children}
+                    <Toaster initTheme={theme} />
+                </DownloadAnimationProvider>
+            </ThemeProvider>
         </QueryClientProvider>
     );
 }
