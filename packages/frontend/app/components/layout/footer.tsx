@@ -20,6 +20,12 @@ const Footer = () => {
 
                     <DotSeparator />
 
+                    <FooterLink to="https://status.crmm.tech" aria-label="CRMM Status">
+                        Status
+                    </FooterLink>
+
+                    <DotSeparator />
+
                     <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo">
                         <GithubIcon />
                         GitHub
