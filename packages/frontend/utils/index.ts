@@ -16,7 +16,7 @@ export const getCookie = (key: string) => {
     return null;
 };
 
-export const isCurrLinkActive = (currUrl: string, targetUrl: string, exactEnds = true) => {
+export const isCurrLinkActive = (targetUrl: string, currUrl: string, exactEnds = true) => {
     if (exactEnds === true) {
         return currUrl === targetUrl;
     }

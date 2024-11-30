@@ -117,12 +117,12 @@ const GalleryItemCard = ({
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
                     itemProp="thumbnail"
                 />
-
-                <meta itemProp="contentUrl" content={imageUrl(galleryItem.image)} />
-                <meta itemProp="name" content={galleryItem.name} />
-                <meta itemProp="description" content={galleryItem.description || galleryItem.name} />
-                <meta itemProp="datePublished" content={DateToISOStr(galleryItem.dateCreated) || ""} />
             </button>
+
+            <meta itemProp="contentUrl" content={imageUrl(galleryItem.image)} />
+            <meta itemProp="name" content={galleryItem.name} />
+            <meta itemProp="description" content={galleryItem.description || galleryItem.name} />
+            <meta itemProp="datePublished" content={DateToISOStr(galleryItem.dateCreated) || ""} />
 
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
                 <div className="w-full flex flex-col items-start justify-start ">

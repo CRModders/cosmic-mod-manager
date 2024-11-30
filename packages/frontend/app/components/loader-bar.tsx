@@ -20,7 +20,7 @@ function LoaderBar() {
             (navigation.state === "loading" || navigation.state === "submitting") &&
             (navigatedTo !== prevPath || !noConsecutiveLoadersOnPaths.includes(navigatedTo || ""))
         ) {
-            ref.current?.continuousStart();
+            ref.current?.continuousStart(35, 1100);
             prevAction = "start";
         }
 
@@ -32,7 +32,7 @@ function LoaderBar() {
         prevPath = navigatedTo || window.location.pathname;
     }, [navigation.location?.pathname]);
 
-    return <LoadingBar ref={ref} color="#EE3A76" shadow={false} height={2.5} transitionTime={300} waitingTime={300} />;
+    return <LoadingBar ref={ref} color="#EE3A76" shadow={false} height={2} transitionTime={450} waitingTime={550} />;
 }
 
 export default LoaderBar;
