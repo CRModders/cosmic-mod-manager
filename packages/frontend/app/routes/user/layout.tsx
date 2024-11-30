@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs, MetaArgs, MetaDescriptor } from "@remix-run/no
 import { type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "@remix-run/react";
 import type { AwaitedReturnType } from "@root/types";
 import Config from "@root/utils/config";
-import { MetaTags, OrganizationLdJson, UserLdJson } from "@root/utils/meta";
+import { LdJsonId, LdJsonIdType, MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
@@ -58,7 +58,7 @@ export async function loader(props: LoaderFunctionArgs) {
 }
 
 export function meta(props: MetaArgs): MetaDescriptor[] {
-    const { userData, orgs, userSlug } = props.data as AwaitedReturnType<typeof loader>;
+    const { userData, orgs, projects, userSlug } = props.data as AwaitedReturnType<typeof loader>;
     const image = userData?.avatarUrl || `${Config.FRONTEND_URL}/icon.png`;
 
     if (!userData?.id) {
@@ -72,10 +72,26 @@ export function meta(props: MetaArgs): MetaDescriptor[] {
     }
 
     const orgsData = orgs?.map((org) => OrganizationLdJson(org));
-    const ldJson = UserLdJson(userData, {
-        "@context": "https://schema.org",
-        memberOf: orgsData || [],
+    let memberOf = {};
+    if (orgsData?.length) memberOf = { memberOf: orgsData };
+
+    const userJson = UserLdJson(userData, {
+        ...memberOf,
     });
+
+    // Projects
+    const projectsJson = projects?.map((project) =>
+        ProjectLdJson(project, {
+            creator: {
+                "@id": LdJsonId(userData.id, LdJsonIdType.Person),
+            },
+        }),
+    );
+
+    const ldJson = {
+        "@context": "https://schema.org",
+        "@graph": [userJson, ...(projectsJson || [])],
+    };
 
     return MetaTags({
         title: userData?.userName || "",
