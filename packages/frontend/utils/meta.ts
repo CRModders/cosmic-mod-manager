@@ -56,16 +56,12 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { name: "twitter:url", content: props.url },
     ]);
 
-    if (props.ldJson !== undefined) {
-        links.push({ "script:ld+json": props.ldJson });
-    }
-
     if (props.linksOnly) {
         return links;
     }
 
-    return mergeMetaTagsList(links, [
-        { title: props.title },
+    const mergedMeta = mergeMetaTagsList(links, [
+        { title: props.title, "data-tag-name": "title" },
         { name: "description", content: props.siteMetaDescription || props.description },
 
         { property: "og:site_name", content: SITE_NAME_SHORT },
@@ -79,12 +75,18 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { name: "twitter:description", content: props.description },
         { name: "twitter:image", content: props.image },
     ]);
+
+    if (props.ldJson !== undefined) {
+        mergedMeta.push({ "script:ld+json": props.ldJson });
+    }
+
+    return mergedMeta;
 }
 
 function mergeMetaTagsList(originalList: MetaDescriptor[], newItems: MetaDescriptor[]) {
     const combinedList = newItems.slice();
 
-    const matchKeys = ["name", "property", "rel", "hrefLang", "tagName"];
+    const matchKeys = ["name", "property", "rel", "hrefLang", "tagName", "data-tag-name"];
 
     outerLoop: for (const originalItem of originalList) {
         for (const existingItem of combinedList) {

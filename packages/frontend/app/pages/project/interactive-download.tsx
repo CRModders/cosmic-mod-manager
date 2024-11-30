@@ -110,8 +110,6 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
         false,
     );
 
-    console.log(isVersionDetailsPage);
-
     return (
         <Dialog>
             <DialogTrigger asChild>
