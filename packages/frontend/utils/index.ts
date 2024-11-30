@@ -7,21 +7,25 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export const getCookie = (key: string) => {
-    for (const cookie of document.cookie.split("; ")) {
+export function getCookie(key: string, src: string = document.cookie) {
+    for (const cookie of src.split("; ")) {
         if (cookie.split("=")[0] === key) {
             return cookie.split("=")[1];
         }
     }
     return null;
-};
+}
 
-export const isCurrLinkActive = (targetUrl: string, currUrl: string, exactEnds = true) => {
+export function setCookie(key: string, value: string, expires = 365) {
+    document.cookie = `${key}=${value}; expires=${new Date(Date.now() + expires * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+}
+
+export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
     if (exactEnds === true) {
         return currUrl === targetUrl;
     }
     return currUrl.includes(targetUrl);
-};
+}
 
 export const monthNames = [
     "January",
@@ -40,7 +44,7 @@ export const monthNames = [
 
 export const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export const timeSince = (pastTime: Date): string => {
+export function timeSince(pastTime: Date): string {
     try {
         const now = new Date();
         const diff = now.getTime() - pastTime.getTime();
@@ -75,13 +79,13 @@ export const timeSince = (pastTime: Date): string => {
         console.error(error);
         return "";
     }
-};
+}
 
-export const formatDate = (
+export function formatDate(
     date: Date,
     timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
     useShortMonthNames = false,
-): string => {
+): string {
     try {
         const year = date.getFullYear();
         const monthIndex = date.getMonth();
@@ -106,27 +110,27 @@ export const formatDate = (
         console.error(error);
         return "";
     }
-};
+}
 
-export const getProjectPagePathname = (type: string, projectSlug: string, extra?: string) => {
+export function getProjectPagePathname(type: string, projectSlug: string, extra?: string) {
     let pathname = `/${type}/${projectSlug}`;
     if (extra) pathname += `${extra}`;
     return pathname;
-};
+}
 
-export const getProjectVersionPagePathname = (type: string, projectSlug: string, versionSlug: string, extra?: string) => {
+export function getProjectVersionPagePathname(type: string, projectSlug: string, versionSlug: string, extra?: string) {
     let pathname = `${getProjectPagePathname(type, projectSlug)}/version/${versionSlug}`;
     if (extra) pathname += `${extra}`;
     return pathname;
-};
+}
 
-export const getOrgPagePathname = (orgSlug: string, extra?: string) => {
+export function getOrgPagePathname(orgSlug: string, extra?: string) {
     let pathname = `/organization/${orgSlug}`;
     if (extra) pathname += `${extra}`;
     return pathname;
-};
+}
 
-export const FormatProjectTypes = (types: string[]) => {
+export function FormatProjectTypes(types: string[]) {
     if (types.length === 1) return CapitalizeAndFormatString(types[0]);
     if (types.length === 2) return `${CapitalizeAndFormatString(types[0])} and ${CapitalizeAndFormatString(types[1])}`;
 
@@ -137,19 +141,19 @@ export const FormatProjectTypes = (types: string[]) => {
 
     str += `${CapitalizeAndFormatString(types.at(-2))} and ${CapitalizeAndFormatString(types.at(-1))}`;
     return str;
-};
+}
 
-export const projectFileUrl = (pathname: string) => {
+export function projectFileUrl(pathname: string) {
     return `${pathname}`;
-};
+}
 
-export const imageUrl = (url: string | undefined | null): string => {
+export function imageUrl(url: string | undefined | null): string {
     if (!url) return "";
 
     return url;
-};
+}
 
-export const isLoaderVisibleInTagsList = (loaderName: string) => {
+export function isLoaderVisibleInTagsList(loaderName: string) {
     for (const LOADER of loaders) {
         if (LOADER.name === loaderName) {
             if (LOADER.metadata.visibleInTagsList === false) return false;
@@ -158,4 +162,4 @@ export const isLoaderVisibleInTagsList = (loaderName: string) => {
     }
 
     return true;
-};
+}

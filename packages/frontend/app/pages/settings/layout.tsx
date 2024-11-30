@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation, useOutletContext } from "@remix-run/reac
 import { MonitorSmartphoneIcon, UserIcon } from "lucide-react";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 
 export default function SettingsPageLayout() {
     const context = useOutletContext<RootOutletData>();

@@ -22,7 +22,7 @@ export async function loader(props: LoaderFunctionArgs) {
             method: "POST",
             body: JSON.stringify({ code }),
         });
-        const data = await resJson(res);
+        const data = await resJson<{ actionType: ConfirmationType }>(res);
 
         actionType = (data?.actionType as ConfirmationType) || null;
     } catch {}

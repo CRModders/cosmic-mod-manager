@@ -8,7 +8,7 @@ import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectListItem } from "@shared/types/api";
 import HomePage from "~/pages/page";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 
 export default function HomePage_Wrapper() {
     const { session } = useOutletContext<RootOutletData>();

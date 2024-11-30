@@ -10,7 +10,7 @@ import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
 import { combineProjectMembers } from "@shared/lib/utils/project";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 import NotFoundPage from "../$";
 
 export interface ProjectDataWrapperContext {

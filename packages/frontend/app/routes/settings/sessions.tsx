@@ -6,7 +6,7 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import type { SessionListData } from "@shared/types/api";
 import ClientOnly from "~/components/client-only";
 import SessionsPage from "~/pages/settings/sessions/page";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 
 export default function _Sessions() {
     const { session } = useOutletContext<RootOutletData>();

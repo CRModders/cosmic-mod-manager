@@ -1,4 +1,5 @@
 import { ThemeOptions, type UseThemeProps } from "@root/types";
+import { getCookie, setCookie } from "@root/utils";
 import React, { useContext, useEffect } from "react";
 
 const MEDIA = "(prefers-color-scheme: dark)";
@@ -14,7 +15,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }): Reac
 };
 
 const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; storageKey?: string }) => {
-    const [theme, setThemeState] = React.useState(() => getTheme(storageKey, ThemeOptions.DARK));
+    const [theme, setThemeState] = React.useState(() => getTheme(storageKey));
 
     const applyTheme = React.useCallback((theme: string) => {
         let resolved = theme;
@@ -25,13 +26,13 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
             resolved = getSystemTheme();
         }
 
-        const doc = document.documentElement;
+        const elem = document.documentElement;
 
         for (const theme_name of themes) {
-            doc.classList.remove(theme_name);
+            elem?.classList.remove(theme_name);
         }
 
-        if (resolved) doc.classList.add(resolved);
+        if (resolved) elem?.classList.add(resolved);
     }, []);
 
     const setTheme = React.useCallback(
@@ -41,7 +42,7 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
 
             // Save to storage
             try {
-                localStorage.setItem(storageKey, newTheme);
+                setCookie(storageKey, newTheme);
             } catch (e) {
                 // Unsupported
             }
@@ -50,6 +51,7 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
     );
 
     useEffect(() => {
+        // if (theme) return;
         const media = window.matchMedia(MEDIA);
 
         const handleMediaQuery = (e: MediaQueryList | MediaQueryListEvent) => {
@@ -64,24 +66,8 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
         return () => media.removeEventListener("change", handleMediaQuery);
     }, []);
 
-    // localStorage event handling
-
     useEffect(() => {
-        const handleStorage = (e: StorageEvent) => {
-            if (e.key !== storageKey) {
-                return;
-            }
-
-            // If default theme is set, use it if localstorage === null (happens on local storage manual deletion)
-            const newTheme = e.newValue || ThemeOptions.DARK;
-            setTheme(newTheme);
-        };
-
-        window.addEventListener("storage", handleStorage);
-        return () => window.removeEventListener("storage", handleStorage);
-    }, [setTheme]);
-
-    useEffect(() => {
+        if (!theme) return;
         applyTheme(theme ? theme : ThemeOptions.DARK);
     }, [theme]);
 
@@ -99,24 +85,26 @@ const Theme = ({ children, storageKey = "theme" }: { children: React.ReactNode; 
 
 // Helpers
 
-const getTheme = (key: string, fallback?: string) => {
+function getTheme(key: string, fallback?: string) {
     let theme: string | undefined;
     try {
-        theme = localStorage.getItem(key) || undefined;
+        theme = getCookie(key) || undefined;
     } catch (e) {
         // Unsupported
     }
     return theme || fallback;
-};
+}
 
-const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent) => {
+function getSystemTheme(e?: MediaQueryList | MediaQueryListEvent) {
     const event = e ? e : window.matchMedia(MEDIA);
     const isDark = event.matches;
     const systemTheme = isDark ? ThemeOptions.DARK : ThemeOptions.LIGHT;
     return systemTheme;
-};
+}
 
 // USE-THEME HOOK EXPORT
 const defaultContext: UseThemeProps = { setTheme: (_) => {}, themes: [] };
-const useTheme = () => useContext(ThemeContext) || defaultContext;
+function useTheme() {
+    return useContext(ThemeContext) || defaultContext;
+}
 export default useTheme;

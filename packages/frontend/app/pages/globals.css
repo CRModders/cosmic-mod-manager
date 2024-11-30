@@ -71,9 +71,7 @@ html body {
 
 /* Dark is the default theme */
 html,
-body,
-.dark,
-.dark body {
+.dark {
     --accent-color-hue: 345;
     --tint-hue: 200;
     --bg-saturation: 10%;
@@ -100,8 +98,7 @@ body,
     color-scheme: dark;
 }
 
-.light,
-.light body {
+.light {
     --accent-color-hue: 343;
     --tint-hue: 210;
     --bg-saturation: 12%;
@@ -259,4 +256,10 @@ body.no-scrollbar {
     --width: 0.5rem;
     --height: 0.5rem;
     --radius: 0.5rem;
+}
+
+/* Some Reset */
+img {
+    vertical-align: center;
+    font-style: italic;
 }

@@ -11,10 +11,11 @@ type MetaTags =
           description: string;
           image: string;
           url: string;
-          linksOnly?: false;
           parentMetaTags?: MetaDescriptor[];
-          suffixTitle?: boolean;
           ldJson?: LdJsonObject;
+          suffixTitle?: boolean;
+          linksOnly?: false;
+          botsFollow?: boolean;
       }
     | {
           title?: string;
@@ -22,10 +23,11 @@ type MetaTags =
           description?: string;
           image?: string;
           url: string;
-          linksOnly: true;
           parentMetaTags?: MetaDescriptor[];
-          suffixTitle?: boolean;
           ldJson?: LdJsonObject;
+          linksOnly: true;
+          suffixTitle?: boolean;
+          botsFollow?: boolean;
       };
 
 export function MetaTags(props: MetaTags): MetaDescriptor[] {
@@ -60,6 +62,8 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         return links;
     }
 
+    const botsFollow = props.botsFollow === false ? "noindex, nofollow" : "index, follow";
+
     const mergedMeta = mergeMetaTagsList(links, [
         { title: props.title, "data-tag-name": "title" },
         { name: "description", content: props.siteMetaDescription || props.description },
@@ -74,6 +78,9 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { name: "twitter:title", content: props.title },
         { name: "twitter:description", content: props.description },
         { name: "twitter:image", content: props.image },
+
+        { name: "robots", content: botsFollow },
+        { name: "googlebot", content: botsFollow },
     ]);
 
     if (props.ldJson !== undefined) {

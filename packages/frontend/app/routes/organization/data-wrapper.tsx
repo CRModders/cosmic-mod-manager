@@ -7,7 +7,7 @@ import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/u
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 import NotFoundPage from "../$";
 
 export interface OrgDataContext {

@@ -5,7 +5,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import ClientOnly from "~/components/client-only";
 import { SuspenseFallback, WanderingCubesSpinner } from "~/components/ui/spinner";
 import DashboardLayout from "~/pages/dashboard/layout";
-import type { RootOutletData } from "~/root";
+import type { RootOutletData } from "~/routes/layout";
 
 export default function _DashboardLayout() {
     const context = useOutletContext<RootOutletData>();

@@ -1,25 +1,22 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { ThemeOptions } from "@root/types";
+import { getCookie } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
-import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_LONG } from "@shared/config";
-import type { LoggedInUserData } from "@shared/types";
-import { useMemo } from "react";
-import { DownloadRipple } from "~/components/download-animation";
-import Navbar from "~/components/layout/Navbar/navbar";
-import LoaderBar from "~/components/loader-bar";
-import "~/pages/globals.css";
-import "~/pages/inter.css";
-import ContextProviders from "~/providers";
+import globalStyles from "~/pages/globals.css?url";
+import fontStyles from "~/pages/inter.css?url";
 import ClientOnly from "./components/client-only";
-import Footer from "./components/layout/footer";
-import ToastAnnouncer from "./components/toast-announcer";
+import LoaderBar from "./components/loader-bar";
 import { WanderingCubesSpinner } from "./components/ui/spinner";
+import ErrorView from "./routes/error-view";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+    const data = useLoaderData<typeof loader>();
+
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className={data?.theme === ThemeOptions.LIGHT ? "light" : "dark"}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,52 +39,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
-export interface RootOutletData {
-    session: LoggedInUserData | null;
-}
-
 export default function App() {
-    const { session } = useLoaderData<typeof loader>();
-
-    return useMemo(
-        () => (
-            <ContextProviders session={session}>
-                <ClientOnly Element={LoaderBar} />
-                <ClientOnly Element={ToastAnnouncer} />
-
-                {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
-                <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
-
-                <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
-                    <Navbar />
-
-                    <div className="full_page container px-4 sm:px-8">
-                        <Outlet
-                            context={
-                                {
-                                    session: session,
-                                } satisfies RootOutletData
-                            }
-                        />
-                    </div>
-
-                    <Footer />
-                </div>
-
-                <DownloadRipple />
-            </ContextProviders>
-        ),
-        [session?.id],
+    return (
+        <>
+            <ClientOnly Element={LoaderBar} />
+            <Outlet />
+        </>
     );
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-    const sessionRes = await serverFetch(request, "/api/auth/me");
-    const session = await resJson(sessionRes);
+export function loader(props: LoaderFunctionArgs) {
+    const theme = getCookie("theme", props.request.headers.get("Cookie") || "");
 
     return {
-        session: session as LoggedInUserData | null,
+        theme,
     };
+}
+
+export function ErrorBoundary() {
+    return <ErrorView />;
 }
 
 export const links: LinksFunction = () => {
@@ -107,13 +77,22 @@ export const links: LinksFunction = () => {
         },
         {
             rel: "icon",
-            type: "image/svg+xml",
+            type: "image/png",
             href: "/icon.png",
         },
         {
             rel: "apple-touch-icon",
+            type: "image/png",
             sizes: "180*180",
             href: "/icon.png",
+        },
+        {
+            rel: "stylesheet",
+            href: fontStyles,
+        },
+        {
+            rel: "stylesheet",
+            href: globalStyles,
         },
     ];
 };
@@ -126,13 +105,6 @@ export function meta() {
         image: `${Config.FRONTEND_URL}/icon.png`,
         url: Config.FRONTEND_URL,
     });
-}
-
-export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {
-    const revalidate = nextUrl.searchParams.get("revalidate") === "true";
-
-    if (revalidate) return true;
-    return false;
 }
 
 export function HydrateFallback() {
