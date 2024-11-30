@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
-import { parseFileSize } from "@shared/lib/utils";
+import { getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
@@ -37,10 +37,11 @@ interface Props {
 }
 
 export default function EditVersionPage({ projectData, allProjectVersions, projectDependencies }: Props) {
-    const { slug: projectSlug, versionSlug } = useParams();
+    const { versionSlug } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const availableLoaders = getLoadersByProjectType(projectData.type);
     let versionData = allProjectVersions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
     if (versionSlug === "latest") versionData = allProjectVersions[0];
 
@@ -57,6 +58,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
         }
     }
 
+    const initialLoaders = availableLoaders.length ? versionData?.loaders || [] : [];
     const form = useForm<z.infer<typeof updateVersionFormSchema>>({
         resolver: zodResolver(updateVersionFormSchema),
         defaultValues: {
@@ -65,7 +67,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
             releaseChannel: versionData?.releaseChannel || VersionReleaseChannel.RELEASE,
             featured: versionData?.featured || false,
             versionNumber: versionData?.versionNumber || "",
-            loaders: versionData?.loaders || [],
+            loaders: initialLoaders,
             gameVersions: versionData?.gameVersions || [],
             additionalFiles: versionAdditionalFiles,
             dependencies:
@@ -100,7 +102,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
                 }
             }
 
-            const res = await clientFetch(`/api/project/${projectSlug}/version/${versionSlug}`, {
+            const res = await clientFetch(`/api/project/${projectData.slug}/version/${versionSlug}`, {
                 method: "PATCH",
                 body: formData,
             });
