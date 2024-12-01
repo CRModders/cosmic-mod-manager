@@ -21,11 +21,16 @@ function LoaderBar() {
             (navigation.state === "loading" || navigation.state === "submitting") &&
             (navigatedTo !== prevPath || !noConsecutiveLoadersOnPaths.includes(navigatedTo || ""))
         ) {
+            if (prevAction === "start") {
+                ref.current?.complete();
+                prevAction = "complete";
+            }
+
             ref.current?.continuousStart(35, 1100);
             prevAction = "start";
         }
 
-        if (navigation.state === "idle" && (prevAction === "start" || !prevAction)) {
+        if (navigation.state === "idle" && prevAction === "start") {
             ref.current?.complete();
             prevAction = "complete";
         }

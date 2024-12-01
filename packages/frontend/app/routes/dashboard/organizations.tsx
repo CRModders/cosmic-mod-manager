@@ -6,7 +6,7 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation } from "@shared/types/api";
 import OrganisationDashboardPage from "~/pages/dashboard/organization/page";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 
 export default function _Organizations() {
     const orgs = useLoaderData<typeof loader>();

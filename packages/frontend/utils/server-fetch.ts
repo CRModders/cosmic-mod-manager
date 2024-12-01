@@ -2,7 +2,6 @@ import Config from "@root/utils/config";
 
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
-        const startTime = Date.now();
         let fetchUrl = pathname;
 
         const clientIp = clientReq.headers.get("x-forwarded-for") || clientReq.headers.get("x-real-ip") || "0.0.0.0";
@@ -28,7 +27,6 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
             headers: { ...init?.headers, ...headers },
         });
 
-        console.log(`[Fetch] ${pathname} ${Date.now() - startTime}ms`);
         return res;
     } catch (error) {
         return new Response(null, { status: 500 });

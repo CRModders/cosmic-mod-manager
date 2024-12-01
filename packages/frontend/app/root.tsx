@@ -1,14 +1,29 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
+import type { ThemeOptions } from "@root/types";
 import { getCookie, getThemeFromCookie } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
+import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_LONG } from "@shared/config";
+import type { LoggedInUserData } from "@shared/types";
+import { useMemo } from "react";
 import globalStyles from "~/pages/globals.css?url";
 import fontStyles from "~/pages/inter.css?url";
 import ClientOnly from "./components/client-only";
+import { DownloadRipple } from "./components/download-animation";
+import Navbar from "./components/layout/Navbar/navbar";
+import Footer from "./components/layout/footer";
 import LoaderBar from "./components/loader-bar";
+import ToastAnnouncer from "./components/toast-announcer";
 import { WanderingCubesSpinner } from "./components/ui/spinner";
+import ContextProviders from "./providers";
+import ErrorView from "./routes/error-view";
+
+export interface RootOutletData {
+    theme: ThemeOptions;
+    session: LoggedInUserData | null;
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData<typeof loader>();
@@ -38,21 +53,58 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    return (
-        <>
-            <Outlet />
-            <ClientOnly Element={LoaderBar} />
-        </>
+    const { session, theme } = useLoaderData<typeof loader>();
+
+    return useMemo(
+        () => (
+            <ContextProviders theme={theme}>
+                <ClientOnly Element={ToastAnnouncer} />
+                <ClientOnly Element={LoaderBar} />
+
+                {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
+                <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
+
+                <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
+                    <Navbar session={session} notifications={[]} />
+
+                    <div className="full_page container px-4 sm:px-8">
+                        <Outlet
+                            context={
+                                {
+                                    session: session,
+                                    theme: theme,
+                                } satisfies RootOutletData
+                            }
+                        />
+                    </div>
+
+                    <Footer />
+                </div>
+
+                <DownloadRipple />
+            </ContextProviders>
+        ),
+        [],
     );
 }
 
-export function loader(props: LoaderFunctionArgs) {
-    const cookie = getCookie("theme", props.request.headers.get("Cookie") || "");
-    const theme = getThemeFromCookie(cookie);
+export async function loader({ request }: LoaderFunctionArgs) {
+    const sessionRes = await serverFetch(request, "/api/auth/me");
+    const session = await resJson(sessionRes);
+    const themePref = getCookie("theme", request.headers.get("Cookie") || "");
+    const theme = getThemeFromCookie(themePref);
 
     return {
         theme,
+        session: session as LoggedInUserData | null,
     };
+}
+
+export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {
+    const revalidate = nextUrl.searchParams.get("revalidate") === "true";
+
+    if (revalidate) return true;
+    return false;
 }
 
 export const links: LinksFunction = () => {
@@ -104,4 +156,8 @@ export function meta() {
 
 export function HydrateFallback() {
     return <WanderingCubesSpinner />;
+}
+
+export function ErrorBoundary() {
+    <ErrorView />;
 }

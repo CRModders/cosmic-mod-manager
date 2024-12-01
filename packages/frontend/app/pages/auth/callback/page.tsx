@@ -52,7 +52,7 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
 
     useEffect(() => {
         if (
-            csrfState !== getCookie(CSRF_STATE_COOKIE_NAMESPACE) ||
+            csrfState !== getCookie(CSRF_STATE_COOKIE_NAMESPACE, document.cookie) ||
             !authProvider ||
             !code ||
             !csrfState ||

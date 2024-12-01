@@ -6,7 +6,7 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import ClientOnly from "~/components/client-only";
 import AccountSettingsPage from "~/pages/settings/account/page";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 
 export default function _AccountSettings() {
     const { session } = useOutletContext<RootOutletData>();

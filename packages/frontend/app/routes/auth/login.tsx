@@ -3,7 +3,7 @@ import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_SHORT } from "@shared/config";
 import LoginPage from "~/pages/auth/login/page";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 
 export default function Login() {
     const { session } = useOutletContext<RootOutletData>();

@@ -8,17 +8,13 @@ import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectListItem } from "@shared/types/api";
 import HomePage from "~/pages/page";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 
 export default function HomePage_Wrapper() {
     const { session } = useOutletContext<RootOutletData>();
     const data = useLoaderData<typeof loader>();
 
     return <HomePage session={session} projects={data.projects} />;
-}
-
-export function shouldRevalidate() {
-    return false;
 }
 
 export async function loader(props: LoaderFunctionArgs) {
@@ -28,6 +24,10 @@ export async function loader(props: LoaderFunctionArgs) {
     return {
         projects: projects || [],
     };
+}
+
+export function shouldRevalidate() {
+    return false;
 }
 
 const ldJson = {

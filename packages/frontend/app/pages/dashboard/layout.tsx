@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 
 interface Props {
     outletContext: RootOutletData;

@@ -8,7 +8,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import UserPageLayout from "~/pages/user/layout";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
 
 export default function _UserLayout() {

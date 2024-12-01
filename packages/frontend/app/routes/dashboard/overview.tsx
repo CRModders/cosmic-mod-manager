@@ -4,7 +4,7 @@ import { resJson } from "@root/utils/server-fetch";
 import type { ProjectListItem } from "@shared/types/api";
 import { WanderingCubesSpinner } from "~/components/ui/spinner";
 import OverviewPage from "~/pages/dashboard/overview";
-import type { RootOutletData } from "~/routes/layout";
+import type { RootOutletData } from "~/root";
 import { clientLoader as NotificationsLoader } from "./notifications/page";
 
 export default function _Overview() {
