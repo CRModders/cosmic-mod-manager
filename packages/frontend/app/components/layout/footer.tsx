@@ -64,8 +64,11 @@ export default function Footer() {
 
                 <div style={{ gridArea: "buttons" }}>
                     <ThemeSwitch
-                        className="pl-1 bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background gap-0"
+                        // className="pl-1 bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background gap-0"
                         label="Change theme"
+                        noDefaultStyle
+                        variant="outline"
+                        className="rounded-full px-1 gap-0"
                     />
                 </div>
             </div>

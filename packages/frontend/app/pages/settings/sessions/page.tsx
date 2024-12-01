@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import CopyBtn from "~/components/ui/copy-btn";
 import { DotSeparator } from "~/components/ui/separator";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { Switch } from "~/components/ui/switch";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { authProvidersList } from "~/pages/auth/oauth-providers";
 
@@ -24,6 +25,7 @@ interface Props {
 
 export default function SessionsPage({ loggedInSessions, session: currSession }: Props) {
     const [isLoading, setIsLoading] = useState<{ value: boolean; sessionId: string }>({ value: false, sessionId: "" });
+    const [showIp, setShowIp] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -53,8 +55,14 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
 
     return (
         <Card className="w-full">
-            <CardHeader className="gap-2">
-                <CardTitle>Sessions</CardTitle>
+            <CardHeader className="gap-3">
+                <div className="flex items-center justify-between gap-x-6 gap-y-2">
+                    <CardTitle>Sessions</CardTitle>
+                    <label className="flex gap-2 items-center justify-center text-sm text-muted-foreground">
+                        Show IP Addresses
+                        <Switch checked={showIp} onCheckedChange={setShowIp} />
+                    </label>
+                </div>
                 <CardDescription>
                     These devices are currently logged into your account, you can revoke any session at any time. If you see something you
                     don't recognize, immediately revoke the session and change the password of the associated auth provider.
@@ -75,7 +83,13 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                         <span>{session.os}</span>
                                         <DotSeparator />
                                         <div className="flex gap-2 items-center justify-center">
-                                            <span>{session.ip}</span>
+                                            {showIp ? (
+                                                <span>{session.ip}</span>
+                                            ) : (
+                                                <span className="text-extra-muted-foreground" title={session.ip || ""}>
+                                                    [IP hidden]
+                                                </span>
+                                            )}
                                             <CopyBtn text={session.ip || ""} id={`session-ip-${session.id}`} />
                                         </div>
                                     </div>
