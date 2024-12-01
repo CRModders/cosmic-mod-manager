@@ -40,7 +40,8 @@ export default function HomePage({ session, projects }: Props) {
 
             <main className="w-full">
                 <section className="w-full flex flex-col items-center justify-center py-28">
-                    <BrandIcon size="16rem" className="text-accent-foreground" />
+                    <BrandIcon size="20rem" className="text-accent-foreground" />
+
                     <div className="w-full flex flex-col items-center justify-center gap-1">
                         <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">The place for Cosmic Reach</h1>
 

@@ -63,7 +63,7 @@ function Navbar(props: NavbarProps) {
                                 toggleNavMenu(false);
                             }}
                         >
-                            <BrandIcon size="2.2rem" />
+                            <BrandIcon size="2.4rem" strokeWidth={26} />
                             <span className="text-lg font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background drop-shadow-2xl">
                                 {SITE_NAME_SHORT}
                             </span>

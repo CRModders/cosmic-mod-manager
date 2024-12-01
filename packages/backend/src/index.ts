@@ -61,7 +61,7 @@ app.get("/", corsAllowCdn, (ctx: Context) => {
     return ctx.redirect("/api");
 });
 app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
-    return ctx.redirect("https://www.crmm.tech/favicon.ico");
+    return ctx.redirect("https://www.crmm.tech/icon.png");
 });
 app.get("/api", corsAllowCdn, apiDetails);
 

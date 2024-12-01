@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="footer-grid container gap-y-5">
                 <LinksColumn area="logo">
                     <span className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none" title={SITE_NAME_LONG}>
-                        <BrandIcon size="3.15rem" aria-label="CRMM Logo" />
+                        <BrandIcon size="3.75rem" aria-label="CRMM Logo" />
                         CRMM
                     </span>
                 </LinksColumn>
