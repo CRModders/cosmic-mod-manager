@@ -1,4 +1,26 @@
 sitemap: https://www.crmm.tech/sitemap.xml
 
-User-agent: *
+User-agent: Googlebot
 Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: AhrefsBot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: *
+Disallow: /
+
