@@ -1,18 +1,18 @@
 import { FileType } from "@shared/types";
 import sharp = require("sharp");
 
-export async function resizeImageToWebp(file: File, inputFileType: FileType, width?: number, height?: number) {
+export async function resizeImageToWebp(file: File, inputFileType: FileType, width?: number, height?: number, resizeGifs = false) {
     if (!width && !height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
 
-    if (inputFileType === FileType.GIF) {
+    if (inputFileType === FileType.GIF && resizeGifs === false) {
         // GIFs loose animation when resized
         return file;
     }
 
     const imgBuffer = await file.arrayBuffer();
-    const sharpInstance = await sharp(imgBuffer);
+    const sharpInstance = sharp(imgBuffer);
 
     const resizedImgBuffer = await sharpInstance
         .webp()
