@@ -2,9 +2,10 @@ import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 
 export default function AboutPage() {
     return (
-        <MarkdownRenderBox
-            className="w-full bg-card-background p-6 pt-0 rounded-lg"
-            text={`
+        <main className="grid grid-cols-1 w-full overflow-auto">
+            <MarkdownRenderBox
+                className="bg-card-background p-6 pt-0 rounded-lg"
+                text={`
 # Services' status
 
 <table>
@@ -131,6 +132,7 @@ export default function AboutPage() {
 
 Visit [status.crmm.tech](https://status.crmm.tech) for more details.
 `}
-        />
+            />
+        </main>
     );
 }

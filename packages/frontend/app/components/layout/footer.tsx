@@ -34,7 +34,7 @@ export default function Footer() {
                 <LinksColumn area="links-2">
                     <Title>Resources</Title>
 
-                    <FooterLink to="https://docs.crmm.tech" aria-label="Docs">
+                    <FooterLink to="https://docs.crmm.tech" aria-label="Docs" target="_blank">
                         Docs
                     </FooterLink>
 
@@ -42,7 +42,7 @@ export default function Footer() {
                         Status
                     </FooterLink>
 
-                    <FooterLink to="mailto:support@crmm.tech" aria-label="Support">
+                    <FooterLink to="mailto:support@crmm.tech" aria-label="Support" target="_blank">
                         Support
                     </FooterLink>
                 </LinksColumn>
@@ -53,11 +53,11 @@ export default function Footer() {
                         About
                     </FooterLink>
 
-                    <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo">
+                    <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
                         Github
                     </FooterLink>
 
-                    <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite">
+                    <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite" target="_blank">
                         Discord
                     </FooterLink>
                 </LinksColumn>
