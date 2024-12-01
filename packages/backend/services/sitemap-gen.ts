@@ -18,7 +18,7 @@ export async function startSitemapGenerator() {
     setInterval(generateSitemap, SITEMAP_REFRESH_INTERVAL_s * 1000);
 }
 
-let startupTries = 10;
+let startupTries = 20;
 export async function generateSitemap() {
     if (isGenerating) return;
     isGenerating = true;
