@@ -2,12 +2,13 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
 import type { ThemeOptions } from "@root/types";
 import { getCookie, getThemeFromCookie } from "@root/utils";
+import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import globalStyles from "~/pages/globals.css?url";
 import fontStyles from "~/pages/inter.css?url";
 import ClientOnly from "./components/client-only";
@@ -58,6 +59,8 @@ export default function App() {
     return useMemo(
         () => (
             <ContextProviders theme={theme}>
+                <ValidateClientSession />
+                <ClientOnly Element={ToastAnnouncer} />
                 <ClientOnly Element={ToastAnnouncer} />
                 <ClientOnly Element={LoaderBar} />
 
@@ -157,4 +160,12 @@ export function HydrateFallback() {
 
 export function ErrorBoundary() {
     <ErrorView />;
+}
+
+function ValidateClientSession() {
+    useEffect(() => {
+        clientFetch("/api/auth/me");
+    }, []);
+
+    return null;
 }

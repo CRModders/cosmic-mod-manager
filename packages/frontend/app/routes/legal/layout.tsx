@@ -52,3 +52,5 @@ const links = [
         icon: <LockIcon size="1rem" />,
     },
 ];
+
+export const descriptionSuffix = "an open source modding platform focused on Cosmic Reach";
