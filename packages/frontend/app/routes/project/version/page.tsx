@@ -24,9 +24,9 @@ export default function _VersionPage() {
 }
 
 export function meta(props: MetaArgs) {
-    const parentMetaTags = props.matches?.at(-2)?.meta;
+    const parentMetaTags = props.matches?.at(-3)?.meta;
 
-    const parentData = props.matches[1].data as AwaitedReturnType<typeof ProjectDataLoader>;
+    const parentData = props.matches[2].data as AwaitedReturnType<typeof ProjectDataLoader>;
     const project = parentData.projectData;
     const versionSlug = props.params.versionSlug;
 
@@ -62,7 +62,7 @@ export function meta(props: MetaArgs) {
     return MetaTags({
         title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
         description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatGameVersionsListString(version.gameVersions)}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${version.downloads} downloads.`,
-        url: `${Config.FRONTEND_URL}${props.location.pathname}`,
+        url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug, `/version/${version.slug}`)}`,
         image: project.icon || "",
         parentMetaTags,
     });
