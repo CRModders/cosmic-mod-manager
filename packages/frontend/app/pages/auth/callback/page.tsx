@@ -6,7 +6,6 @@ import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import RefreshPage from "~/components/refresh-page";
 import { FormErrorMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
@@ -21,7 +20,6 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
     const navigate = useNavigate();
 
     const submitCode = async (code: string, provider: AuthProvider, actionIntent: AuthActionIntent) => {
-        let redirectUrl = "/dashboard";
         try {
             const response = await clientFetch(`/api/auth/${actionIntent}/${provider}`, {
                 method: "POST",
@@ -35,9 +33,7 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
             }
 
             toast.success(data?.message || "Success!");
-
-            redirectUrl = data?.redirect || redirectUrl;
-            RefreshPage(navigate, redirectUrl);
+            window.location.href = "/dashboard";
         } catch (error) {
             console.error(error);
             setErrorMsg(`${error}` || "Something went wrong!");
@@ -58,6 +54,7 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
             !csrfState ||
             getAuthProviderFromString(authProvider) === AuthProvider.UNKNOWN
         ) {
+            toast.error("CSRF state didn't match!");
             navigate("/");
             return;
         }

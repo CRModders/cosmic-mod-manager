@@ -1,4 +1,3 @@
-import { useLocation, useNavigate } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import type { LoggedInUserData } from "@shared/types";
@@ -6,7 +5,6 @@ import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { fallbackUserIcon } from "~/components/icons";
-import RefreshPage from "~/components/refresh-page";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { NotificationBadge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -14,13 +12,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuT
 import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
-export const LoginButton = ({
+export function LoginButton({
     className,
     onClick,
 }: {
     className?: string;
     onClick?: () => void;
-}) => {
+}) {
     return (
         <VariantButtonLink
             url="/login"
@@ -36,7 +34,7 @@ export const LoginButton = ({
             Log In
         </VariantButtonLink>
     );
-};
+}
 
 interface NavbuttonProps {
     toggleNavMenu: (newState?: boolean) => void;
@@ -44,7 +42,7 @@ interface NavbuttonProps {
     notifications: Notification[] | null;
 }
 
-const NavButton = ({ session, notifications, toggleNavMenu }: NavbuttonProps) => {
+export default function NavButton({ session, notifications, toggleNavMenu }: NavbuttonProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     if (session === undefined) {
@@ -145,19 +143,15 @@ const NavButton = ({ session, notifications, toggleNavMenu }: NavbuttonProps) =>
             </DropdownMenuContent>
         </DropdownMenu>
     );
-};
-
-export default NavButton;
+}
 
 type Props = {
     className?: string;
     disabled?: boolean;
 };
 
-export const SignOutBtn = ({ className, disabled = false }: Props) => {
+export function SignOutBtn({ className, disabled = false }: Props) {
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const handleClick = async () => {
         if (loading || disabled) return;
@@ -167,7 +161,7 @@ export const SignOutBtn = ({ className, disabled = false }: Props) => {
             method: "DELETE",
         });
 
-        RefreshPage(navigate, location);
+        window.location.reload();
     };
 
     return (
@@ -182,4 +176,4 @@ export const SignOutBtn = ({ className, disabled = false }: Props) => {
             Sign out
         </ButtonLink>
     );
-};
+}
