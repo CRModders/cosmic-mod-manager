@@ -42,10 +42,15 @@ export default function ThemeSwitch({
         const x = e.clientX;
         const y = e.clientY;
 
+        document.documentElement.setAttribute("data-view-transition", "theme-switch");
         document.documentElement.style.setProperty("--click-x", `${x}px`);
         document.documentElement.style.setProperty("--click-y", `${y}px`);
 
         document.startViewTransition(switchTheme);
+
+        setTimeout(() => {
+            document.documentElement.removeAttribute("data-view-transition");
+        }, 600);
     }
 
     return (

@@ -45,7 +45,6 @@
 }
 
 
-
 ::view-transition-group(root) {
     animation-duration: .5s;
 }
@@ -55,13 +54,13 @@
     mix-blend-mode: normal;
 }
 
-::view-transition-new(root) {
+[data-view-transition="theme-switch"]::view-transition-new(root) {
     animation-timing-function: ease-in;
     animation-name: reveal-theme;
 }
 
-::view-transition-old(root),
-.dark::view-transition-old(root) {
+[data-view-transition="theme-switch"]::view-transition-old(root),
+.dark[data-view-transition="theme-switch"]::view-transition-old(root) {
     animation: none;
 }
 
