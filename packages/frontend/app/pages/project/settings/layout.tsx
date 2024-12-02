@@ -61,6 +61,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
 
                     <div className="w-full flex items-start justify-start gap-3">
                         <ImgWrapper
+                            vtId={projectData.id}
                             src={imageUrl(projectData.icon)}
                             alt={projectData.name}
                             fallback={fallbackProjectIcon}

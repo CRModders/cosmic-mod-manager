@@ -123,6 +123,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
                 <div className="w-full flex flex-wrap gap-3">
                     <div className="w-full">
                         <OrgListItemCard
+                            vtId={org.id}
                             title={org.name}
                             url={getOrgPagePathname(org.slug)}
                             icon={imageUrl(org.icon)}

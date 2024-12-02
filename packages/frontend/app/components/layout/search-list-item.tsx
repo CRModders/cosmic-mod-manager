@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { cn, formatDate, getProjectPagePathname, imageUrl, timeSince } from "@root/utils";
 import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
@@ -6,6 +5,7 @@ import type { ProjectSupport } from "@shared/types";
 import { CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
 import { TagIcon } from "~/components/tag-icons";
 import { ImgWrapper } from "~/components/ui/avatar";
+import Link from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { fallbackProjectIcon } from "../icons";
 import "./styles.css";
@@ -34,15 +34,14 @@ interface SearchListItemProps {
     datePublished: Date;
     showDatePublished?: boolean;
     viewType?: ViewType;
+    vtId: string; // View Transition ID
 }
 
-const SearchListItem = ({ viewType = ViewType.LIST, ...props }: SearchListItemProps) => {
+export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
     return <BaseView viewType={viewType} {...props} />;
-};
+}
 
-export default SearchListItem;
-
-const BaseView = (props: SearchListItemProps) => {
+function BaseView(props: SearchListItemProps) {
     const projectCategoriesData = getProjectCategoriesDataFromNames(props.featuredCategories);
     const loadersData = getLoadersFromNames(props.loaders);
 
@@ -93,6 +92,7 @@ const BaseView = (props: SearchListItemProps) => {
                 }}
             >
                 <ImgWrapper
+                    vtId={props.vtId}
                     loading="lazy"
                     src={imageUrl(props.icon)}
                     alt={props.projectName}
@@ -219,4 +219,4 @@ const BaseView = (props: SearchListItemProps) => {
             </div>
         </article>
     );
-};
+}

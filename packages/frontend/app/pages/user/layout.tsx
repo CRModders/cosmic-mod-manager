@@ -1,5 +1,5 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Link, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import { getOrgPagePathname, imageUrl, timeSince } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
@@ -12,7 +12,7 @@ import { PageHeader } from "~/components/layout/page-header";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { VariantButtonLink } from "~/components/ui/link";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import SecondaryNav from "../project/secondary-nav";
 import "./styles.css";
@@ -112,6 +112,7 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
                                 <TooltipTrigger asChild>
                                     <Link to={getOrgPagePathname(org.slug)}>
                                         <ImgWrapper
+                                            vtId={org.id}
                                             src={imageUrl(org.icon)}
                                             alt={org.name}
                                             fallback={fallbackOrgIcon}
@@ -142,6 +143,7 @@ interface ProfilePageHeaderProps {
 function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }: ProfilePageHeaderProps) {
     return (
         <PageHeader
+            vtId={userData.id}
             icon={imageUrl(userData.avatarUrl)}
             iconClassName="rounded-full"
             fallbackIcon={fallbackUserIcon}

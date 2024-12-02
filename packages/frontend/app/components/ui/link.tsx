@@ -1,9 +1,20 @@
 import type { LinkProps } from "@remix-run/react";
-import { Link, useLocation } from "@remix-run/react";
+import { Link as RemixLink, useLocation, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import { cn, isCurrLinkActive } from "@root/utils";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
+import type { RootOutletData } from "~/root";
 import { buttonVariants } from "./button";
+
+interface CustomLinkProps extends LinkProps {}
+
+const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
+    const data = useRouteLoaderData<RootOutletData>("root");
+    const viewTransitions = data?.viewTransitions;
+
+    return <RemixLink ref={ref} {...props} viewTransition={viewTransitions} />;
+});
+export default Link;
 
 interface ButtonLinkProps extends Omit<LinkProps, "to"> {
     url: string;
@@ -70,3 +81,13 @@ export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLink
         );
     },
 );
+
+export function useCustomNavigate() {
+    const navigate = useNavigate();
+
+    const _navigate = (to: string): void => {
+        navigate(to, { viewTransition: true });
+    };
+
+    return _navigate;
+}

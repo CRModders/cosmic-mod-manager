@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
 import { setNewPasswordFormSchema } from "@shared/schemas/settings";
 import { useState } from "react";
@@ -11,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/componen
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { FormSuccessMessage } from "~/components/ui/form-message";
 import { Input } from "~/components/ui/input";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import SessionsPageLink from "./help-link";
 

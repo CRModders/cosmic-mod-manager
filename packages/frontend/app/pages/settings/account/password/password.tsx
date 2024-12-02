@@ -1,7 +1,7 @@
-import { Link } from "@remix-run/react";
 import type { LoggedInUserData } from "@shared/types";
 import { KeyRound } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import Link from "~/components/ui/link";
 import AddPasswordForm from "./add-password";
 import RemovePasswordForm from "./remove-password";
 

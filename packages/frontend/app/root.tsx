@@ -11,6 +11,7 @@ import type { LoggedInUserData } from "@shared/types";
 import { useEffect, useMemo } from "react";
 import globalStyles from "~/pages/globals.css?url";
 import fontStyles from "~/pages/inter.css?url";
+import transitionStyles from "~/pages/transitions.css?url";
 import ClientOnly from "./components/client-only";
 import { DownloadRipple } from "./components/download-animation";
 import Navbar from "./components/layout/Navbar/navbar";
@@ -23,6 +24,7 @@ import ErrorView from "./routes/error-view";
 
 export interface RootOutletData {
     theme: ThemeOptions;
+    viewTransitions: boolean;
     session: LoggedInUserData | null;
 }
 
@@ -54,11 +56,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    const { session, theme } = useLoaderData<typeof loader>();
+    const data = useLoaderData<typeof loader>();
 
     return useMemo(
         () => (
-            <ContextProviders theme={theme}>
+            <ContextProviders theme={data.theme}>
                 <ValidateClientSession />
                 <ClientOnly Element={ToastAnnouncer} />
                 <ClientOnly Element={ToastAnnouncer} />
@@ -68,17 +70,10 @@ export default function App() {
                 <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
                 <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
-                    <Navbar session={session} notifications={[]} />
+                    <Navbar session={data.session} notifications={[]} />
 
                     <div className="full_page container px-4 sm:px-8">
-                        <Outlet
-                            context={
-                                {
-                                    session: session,
-                                    theme: theme,
-                                } satisfies RootOutletData
-                            }
-                        />
+                        <Outlet context={data satisfies RootOutletData} />
                     </div>
 
                     <Footer />
@@ -94,11 +89,16 @@ export default function App() {
 export async function loader({ request }: LoaderFunctionArgs) {
     const sessionRes = await serverFetch(request, "/api/auth/me");
     const session = await resJson(sessionRes);
+
+    // Preferences
     const themePref = getCookie("theme", request.headers.get("Cookie") || "");
     const theme = getThemeFromCookie(themePref);
 
+    const viewTransitions = getCookie("viewTransitions", request.headers.get("Cookie") || "") === "true";
+
     return {
         theme,
+        viewTransitions,
         session: session as LoggedInUserData | null,
     };
 }
@@ -140,6 +140,10 @@ export const links: LinksFunction = () => {
         {
             rel: "stylesheet",
             href: globalStyles,
+        },
+        {
+            rel: "stylesheet",
+            href: transitionStyles,
         },
     ];
 };

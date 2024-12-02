@@ -48,6 +48,7 @@ export function SearchResultsPage() {
                 {searchResult.data?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
                         key={project.id}
+                        vtId={project.id}
                         viewType={viewType}
                         projectName={project.name}
                         projectType={project.type[0]}

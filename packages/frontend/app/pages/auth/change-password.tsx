@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
 import { sendAccoutPasswordChangeLinkFormSchema } from "@shared/schemas/settings";
 import type { LoggedInUserData } from "@shared/types";
@@ -13,6 +12,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/componen
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import HorizontalSeparator from "~/components/ui/hr-separator";
 import { Input } from "~/components/ui/input";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
 export default function ChangePasswordPage({ session }: { session: LoggedInUserData | null }) {

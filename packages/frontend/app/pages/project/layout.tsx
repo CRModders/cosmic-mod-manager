@@ -1,5 +1,5 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Link, Outlet, useLocation, useNavigate } from "@remix-run/react";
+import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import {
     cn,
     formatDate,
@@ -17,9 +17,9 @@ import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
 import {
+    BookmarkIcon,
     BookOpenIcon,
     BookTextIcon,
-    BookmarkIcon,
     BugIcon,
     CalendarIcon,
     ClipboardCopyIcon,
@@ -44,7 +44,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import Chip from "~/components/ui/chip";
-import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
+import Link, { ButtonLink, useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -78,6 +78,7 @@ export default function ProjectPageLayout({
     const { theme } = useTheme();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
     const navigate = useNavigate();
+    const customNavigate = useCustomNavigate();
     const location = useLocation();
 
     if (!projectData) return null;
@@ -242,7 +243,7 @@ export default function ProjectPageLayout({
                                                 version.slug,
                                             );
                                             if (window.location.pathname !== link) {
-                                                navigate(link);
+                                                customNavigate(link);
                                             }
                                         }
                                     }}
@@ -299,6 +300,7 @@ export default function ProjectPageLayout({
                     {projectData.organisation?.id ? (
                         <>
                             <ProjectMember
+                                vtId={projectData.organisation.id}
                                 url={getOrgPagePathname(projectData.organisation.slug)}
                                 userName={projectData.organisation.name}
                                 isOwner={false}
@@ -316,6 +318,7 @@ export default function ProjectPageLayout({
                         if (member.accepted !== true) return null;
                         return (
                             <ProjectMember
+                                vtId={member.userId}
                                 key={member.userId}
                                 userName={member.userName}
                                 isOwner={member.isOwner}
@@ -445,6 +448,7 @@ const ProjectInfoHeader = ({
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
+                vtId={projectData.id}
                 icon={imageUrl(projectData.icon)}
                 iconClassName="rounded"
                 fallbackIcon={fallbackProjectIcon}
@@ -524,16 +528,8 @@ const ProjectInfoHeader = ({
     );
 };
 
-export const ProjectMember = ({
-    userName,
-    isOwner,
-    roleName,
-    avatarImageUrl,
-    className,
-    url,
-    avatarClassName,
-    fallbackIcon,
-}: {
+interface ProjectMemberProps {
+    vtId?: string;
     userName: string;
     isOwner: boolean;
     roleName: string;
@@ -542,7 +538,19 @@ export const ProjectMember = ({
     url?: string;
     avatarClassName?: string;
     fallbackIcon?: React.ReactNode;
-}) => {
+}
+
+export function ProjectMember({
+    vtId,
+    userName,
+    isOwner,
+    roleName,
+    avatarImageUrl,
+    className,
+    url,
+    avatarClassName,
+    fallbackIcon,
+}: ProjectMemberProps) {
     return (
         <ButtonLink
             aria-label={userName}
@@ -550,6 +558,7 @@ export const ProjectMember = ({
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
             <ImgWrapper
+                vtId={vtId}
                 src={imageUrl(avatarImageUrl)}
                 alt={userName}
                 className={cn("h-10 w-10 rounded-full", avatarClassName)}
@@ -569,7 +578,7 @@ export const ProjectMember = ({
             </div>
         </ButtonLink>
     );
-};
+}
 
 const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
     return (

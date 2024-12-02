@@ -10,6 +10,8 @@
     const { currentScript, referrer } = document;
     const localStorage = href.startsWith("data:") ? undefined : window.localStorage;
 
+    if (hostname.includes("localhost")) return;
+
     if (!currentScript) return;
 
     const _data = "data-";

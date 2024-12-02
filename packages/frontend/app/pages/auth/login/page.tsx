@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
 import { LoginFormSchema } from "@shared/schemas/auth";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { FormErrorMessage } from "~/components/ui/form-message";
 import HorizontalSeparator from "~/components/ui/hr-separator";
 import { Input } from "~/components/ui/input";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import OAuthProvidersWidget from "../oauth-providers";
 

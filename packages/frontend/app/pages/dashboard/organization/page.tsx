@@ -48,6 +48,7 @@ export default function OrganisationDashboardPage({ organisations, session }: Pr
 
                             return (
                                 <OrgListItemCard
+                                    vtId={org.id}
                                     key={org.id}
                                     title={org.name}
                                     url={getOrgPagePathname(org.slug)}

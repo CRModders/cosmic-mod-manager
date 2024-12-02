@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
@@ -7,7 +6,7 @@ import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { VariantButtonLink } from "~/components/ui/link";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import "./styles.css";
 
 interface Props {

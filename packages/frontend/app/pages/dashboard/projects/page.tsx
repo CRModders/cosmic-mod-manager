@@ -1,4 +1,3 @@
-import { Link, useNavigate } from "@remix-run/react";
 import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectPublishingStatus } from "@shared/types";
@@ -10,6 +9,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import CopyBtn from "~/components/ui/copy-btn";
+import Link, { useCustomNavigate } from "~/components/ui/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import CreateNewProjectDialog from "./new-project";
 
@@ -46,7 +46,7 @@ export default function ProjectsPage({ projects }: Props) {
 }
 
 export function ProjectsListTable({ projects }: { projects: ProjectListItem[] }) {
-    const navigate = useNavigate();
+    const customNavigate = useCustomNavigate();
 
     return (
         <div className="w-full mt-2">
@@ -82,7 +82,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {
-                                        navigate(getProjectPagePathname(project.type[0], project.slug));
+                                        customNavigate(getProjectPagePathname(project.type[0], project.slug));
                                     }
                                 }}
                             >
@@ -95,6 +95,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                         aria-label={`view ${project.name}`}
                                     >
                                         <ImgWrapper
+                                            vtId={project.id}
                                             src={imageUrl(project.icon)}
                                             alt={project.name}
                                             fallback={fallbackProjectIcon}

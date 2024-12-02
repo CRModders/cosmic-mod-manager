@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "@remix-run/react";
+import { useParams } from "@remix-run/react";
 import type { DependencyData } from "@root/types";
 import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
 import { formatGameVersionsListString } from "@root/utils/version";
@@ -6,7 +6,7 @@ import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "
 import { ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
-import { Suspense, lazy, useContext } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
@@ -24,7 +24,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "~/components/ui/context-menu";
 import CopyBtn, { copyTextToClipboard } from "~/components/ui/copy-btn";
-import { VariantButtonLink } from "~/components/ui/link";
+import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import ReleaseChannelChip from "~/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import NotFoundPage from "~/routes/$";
@@ -41,7 +41,7 @@ interface Props {
 
 export default function VersionPage({ projectData, allProjectVersions, projectDependencies, currUsersMembership }: Props) {
     const { projectSlug, versionSlug } = useParams();
-    const navigate = useNavigate();
+    const customNavigate = useCustomNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
     const projectType = projectData?.type[0] || "";
     let versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
@@ -176,11 +176,12 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                                         onClick={(e) => {
                                             //@ts-expect-error
                                             if (!e.target.closest(".noClickRedirect")) {
-                                                navigate(redirectUrl);
+                                                customNavigate(redirectUrl);
                                             }
                                         }}
                                     >
                                         <ImgWrapper
+                                            vtId={dependencyProject.id}
                                             src={imageUrl(dependencyProject.icon)}
                                             alt={dependencyProject.name}
                                             className="h-12 w-12"

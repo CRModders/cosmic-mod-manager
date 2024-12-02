@@ -11,6 +11,7 @@ function LoaderBar() {
     const navigation = useNavigation();
     const ref = useRef<LoadingBarRef>(null);
     const darkTheme = document.documentElement.classList.contains("dark");
+    const randomString = Math.random().toString(36).substring(7);
 
     useEffect(() => {
         // ? These seemingly purposeless checks prevent showing the loader when the url has changed but the path hasn't actually changed
@@ -38,7 +39,17 @@ function LoaderBar() {
         prevPath = navigatedTo || window.location.pathname;
     }, [navigation.location?.pathname]);
 
-    return <LoadingBar ref={ref} color="#EE3A76" shadow={false} height={darkTheme ? 2 : 3} transitionTime={450} waitingTime={550} />;
+    return (
+        <LoadingBar
+            style={{ viewTransitionName: `loader-bar-${randomString}` }}
+            ref={ref}
+            color="#EE3A76"
+            shadow={false}
+            height={darkTheme ? 2 : 3}
+            transitionTime={450}
+            waitingTime={550}
+        />
+    );
 }
 
 export default LoaderBar;

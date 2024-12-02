@@ -45,12 +45,12 @@
 }
 
 
-::view-transition-group(root) {
+[data-view-transition="theme-switch"]::view-transition-group(root) {
     animation-duration: .5s;
 }
 
-::view-transition-new(root),
-::view-transition-old(root) {
+[data-view-transition="theme-switch"]::view-transition-new(root),
+[data-view-transition="theme-switch"]::view-transition-old(root) {
     mix-blend-mode: normal;
 }
 

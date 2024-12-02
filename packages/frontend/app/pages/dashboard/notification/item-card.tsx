@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { formatDate, timeSince } from "@root/utils";
 import type { Notification } from "@shared/types/api";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react";
@@ -7,11 +7,13 @@ import { toast } from "sonner";
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { acceptTeamInvite, leaveTeam } from "~/pages/project/settings/members/utils";
 
 interface Props {
+    vtId: string; // View Transition ID
     notification: Notification;
     markNotificationAsRead: () => Promise<void>;
     deleteNotification: () => Promise<void>;
@@ -22,6 +24,7 @@ interface Props {
     showDeleteButton?: boolean;
     pageUrl: string;
     invitedBy: {
+        id: string;
         userName: string;
         avatarUrl: string | null;
     };
@@ -46,6 +49,7 @@ export function TeamInviteNotification({
     title,
     icon,
     fallbackIcon,
+    vtId,
 }: Props) {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean | "accept" | "decline">(false);
@@ -94,7 +98,7 @@ export function TeamInviteNotification({
             <div className="w-full flex flow-row items-center justify-between">
                 <div className="grow flex flex-wrap items-center justify-start gap-1">
                     <Link to={pageUrl} className="mr-1.5" aria-label={title}>
-                        <ImgWrapper src={icon || ""} alt={title} fallback={fallbackIcon} className="w-11 h-11" />
+                        <ImgWrapper vtId={vtId} src={icon || ""} alt={title} fallback={fallbackIcon} className="w-11 h-11" />
                     </Link>
                     <div className="flex items-center justify-start gap-x-1 flex-wrap">
                         <Link
@@ -103,6 +107,7 @@ export function TeamInviteNotification({
                             className="flex items-center justify-center gap-1 font-semibold hover:underline"
                         >
                             <ImgWrapper
+                                vtId={invitedBy.id}
                                 src={invitedBy?.avatarUrl || ""}
                                 alt={invitedBy.userName || (notification.body?.invitedBy as string)}
                                 fallback={fallbackUserIcon}

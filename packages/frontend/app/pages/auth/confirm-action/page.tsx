@@ -1,6 +1,6 @@
-import { Link } from "@remix-run/react";
 import { ConfirmationType } from "@shared/types";
 import { FormErrorMessage } from "~/components/ui/form-message";
+import Link from "~/components/ui/link";
 import ChangePasswordCard from "./change-password";
 import ConfirmNewPasswordCard from "./confirm-new-password";
 import DeleteAccountConfirmationCard from "./delete-account";

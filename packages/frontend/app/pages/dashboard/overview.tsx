@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { imageUrl } from "@root/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
@@ -7,7 +6,7 @@ import { fallbackUserIcon } from "~/components/icons";
 import { ContentCardTemplate, PanelContent_AsideCardLayout } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
-import { ButtonLink } from "~/components/ui/link";
+import Link, { ButtonLink } from "~/components/ui/link";
 import { NotificationItem, type NotificationsData } from "./notification/page";
 
 interface Props extends NotificationsData {
@@ -29,8 +28,9 @@ export default function OverviewPage({ session, userProjects, notifications, rel
             <ContentCardTemplate sectionTag>
                 <div className="w-full flex flex-wrap gap-6">
                     <ImgWrapper
+                        vtId={session.id}
                         src={imageUrl(session?.avatarUrl)}
-                        alt={session?.userName}
+                        alt={session.userName}
                         fallback={fallbackUserIcon}
                         className="rounded-full"
                     />

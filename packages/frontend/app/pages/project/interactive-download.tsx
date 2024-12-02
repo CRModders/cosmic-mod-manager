@@ -1,6 +1,6 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Link, useLocation } from "@remix-run/react";
+import { useLocation } from "@remix-run/react";
 import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
 import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -25,7 +25,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "~/components/ui/dialog";
-import { VariantButtonLink } from "~/components/ui/link";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
@@ -121,6 +121,7 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
             <DialogContent>
                 <DialogHeader className="flex flex-row gap-3 items-center justify-start pb-3">
                     <ImgWrapper
+                        vtId={projectData.id}
                         src={imageUrl(projectData.icon)}
                         alt={projectData.name}
                         className="h-9 w-9 rounded-md"

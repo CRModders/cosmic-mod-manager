@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "@remix-run/react";
 import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@root/utils";
 import { formatGameVersionsList } from "@root/utils/version";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
@@ -32,7 +32,7 @@ import Chip, { ChipButton } from "~/components/ui/chip";
 import { CommandSeparator } from "~/components/ui/command";
 import { copyTextToClipboard } from "~/components/ui/copy-btn";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import { VariantButtonLink } from "~/components/ui/link";
+import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
@@ -367,7 +367,7 @@ const ProjectVersionsListTable = ({
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
     const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
-    const navigate = useNavigate();
+    const customNavigate = useCustomNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const versionPagePathname = (versionSlug: string) => getProjectVersionPagePathname(projectData.type[0], projectData.slug, versionSlug);
@@ -425,7 +425,7 @@ const ProjectVersionsListTable = ({
                                         onClick={(e) => {
                                             //@ts-expect-error
                                             if (!e.target.closest(".noClickRedirect")) {
-                                                navigate(versionPagePathname(version.slug));
+                                                customNavigate(versionPagePathname(version.slug));
                                             }
                                         }}
                                     >

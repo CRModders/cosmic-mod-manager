@@ -1,7 +1,7 @@
-import { Link } from "@remix-run/react";
 import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import Link from "~/components/ui/link";
 import { Separator } from "~/components/ui/separator";
 import OAuthProvidersWidget from "../oauth-providers";
 

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@remix-run/react";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { ProjectPermissionsList } from "@shared/config/project";
@@ -20,6 +19,7 @@ import { Card } from "~/components/ui/card";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import Link from "~/components/ui/link";
 import { Switch } from "~/components/ui/switch";
 import { RemoveMemberDialog, TransferOwnershipDialog } from "./dialogs";
 
@@ -95,6 +95,7 @@ export const ProjectTeamMember = ({
                 {/* Member profile details */}
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
+                        vtId={member.userId}
                         src={imageUrl(member.avatarUrl)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}
@@ -373,6 +374,7 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
                 {/* Member profile details */}
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
+                        vtId={effectiveMembership.userId}
                         src={imageUrl(effectiveMembership.avatarUrl)}
                         alt={effectiveMembership.userName}
                         fallback={fallbackUserIcon}

@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Link, useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "@remix-run/react";
 import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -16,6 +16,7 @@ import { Card } from "~/components/ui/card";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { ChipButton } from "~/components/ui/chip";
 import { CommandSeparator } from "~/components/ui/command";
+import Link from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { releaseChannelTextColor } from "~/components/ui/release-channel-pill";
 import { TooltipTemplate } from "~/components/ui/tooltip";

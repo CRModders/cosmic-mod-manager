@@ -106,6 +106,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
 
                         return (
                             <ProjectMember
+                                vtId={member.userId}
                                 key={member.id}
                                 userName={member.userName}
                                 isOwner={member.isOwner}
@@ -132,6 +133,7 @@ function OrgInfoHeader({ orgData, totalProjects, totalDownloads, currUsersMember
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
+                vtId={orgData.id}
                 icon={imageUrl(orgData.icon)}
                 iconClassName="rounded"
                 fallbackIcon={fallbackOrgIcon}

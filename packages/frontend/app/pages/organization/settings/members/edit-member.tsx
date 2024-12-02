@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@remix-run/react";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { OrgPermissionsList, ProjectPermissionsList } from "@shared/config/project";
@@ -20,6 +19,7 @@ import { Card } from "~/components/ui/card";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import Link from "~/components/ui/link";
 import { RemoveMemberDialog, TransferOwnershipDialog } from "~/pages/project/settings/members/dialogs";
 
 interface OrgTeamMemberProps {
@@ -95,6 +95,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData }: OrgTeam
                 {/* Member profile details */}
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
+                        vtId={member.userId}
                         src={imageUrl(member.avatarUrl)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}

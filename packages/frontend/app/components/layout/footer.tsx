@@ -1,6 +1,8 @@
-import { Link, type LinkProps } from "@remix-run/react";
+import type { LinkProps } from "@remix-run/react";
 import { SITE_NAME_LONG } from "@shared/config";
+import { Settings2Icon } from "lucide-react";
 import { BrandIcon } from "~/components/icons";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "../ui/theme-switcher";
 import "./styles.css";
 
@@ -62,7 +64,7 @@ export default function Footer() {
                     </FooterLink>
                 </LinksColumn>
 
-                <div style={{ gridArea: "buttons" }}>
+                <div style={{ gridArea: "buttons" }} className="grid grid-cols-1 h-fit gap-2 place-items-center lg:place-items-start">
                     <ThemeSwitch
                         // className="pl-1 bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background gap-0"
                         label="Change theme"
@@ -70,6 +72,11 @@ export default function Footer() {
                         variant="outline"
                         className="rounded-full px-1 gap-0"
                     />
+
+                    <VariantButtonLink url="/settings" variant="outline" className="rounded-full">
+                        <Settings2Icon className="w-btn-icon-md h-btn-icon-md" />
+                        Settings
+                    </VariantButtonLink>
                 </div>
             </div>
         </footer>

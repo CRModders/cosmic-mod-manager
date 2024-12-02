@@ -52,6 +52,7 @@ export default function OrgSettingsLayout() {
 
                         <div className="w-full flex items-start justify-start gap-3">
                             <ImgWrapper
+                                vtId={orgData.id}
                                 src={imageUrl(orgData.icon)}
                                 alt={orgData.name}
                                 fallback={fallbackOrgIcon}

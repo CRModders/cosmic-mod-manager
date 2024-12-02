@@ -1,10 +1,11 @@
-import { Link } from "@remix-run/react";
 import { cn } from "@root/utils";
 import { UsersIcon } from "lucide-react";
 import { fallbackOrgIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
+import Link from "~/components/ui/link";
 
 interface ListItemCardProps {
+    vtId: string;
     title: string;
     url: string;
     icon?: string;
@@ -14,7 +15,7 @@ interface ListItemCardProps {
     className?: string;
 }
 
-export const ListItemCard = ({ title, url, icon, description, children, fallbackIcon, className }: ListItemCardProps) => {
+export function ListItemCard({ vtId, title, url, icon, description, children, fallbackIcon, className }: ListItemCardProps) {
     return (
         <Link
             to={url}
@@ -25,6 +26,7 @@ export const ListItemCard = ({ title, url, icon, description, children, fallback
             )}
         >
             <ImgWrapper
+                vtId={vtId}
                 src={icon || ""}
                 alt={title}
                 fallback={fallbackIcon}
@@ -38,7 +40,7 @@ export const ListItemCard = ({ title, url, icon, description, children, fallback
             </div>
         </Link>
     );
-};
+}
 
 interface OrgListItemCard extends Omit<ListItemCardProps, "children"> {
     members: number;

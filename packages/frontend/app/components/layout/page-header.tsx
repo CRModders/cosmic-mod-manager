@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 
 interface PageHeaderProps {
+    vtId: string; // View Transition ID
     icon?: string;
     fallbackIcon?: React.ReactNode;
     title: string;
@@ -19,7 +20,7 @@ interface PageHeaderProps {
     style?: CSSProperties;
 }
 
-export const PageHeader = ({
+export function PageHeader({
     icon,
     fallbackIcon,
     title,
@@ -30,8 +31,9 @@ export const PageHeader = ({
     className,
     iconClassName,
     threeDotMenu,
+    vtId,
     ...props
-}: PageHeaderProps) => {
+}: PageHeaderProps) {
     return (
         <div
             className={cn(
@@ -42,6 +44,7 @@ export const PageHeader = ({
         >
             <div className="flex gap-5">
                 <ImgWrapper
+                    vtId={vtId}
                     src={icon || ""}
                     alt={title}
                     className={cn("bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black ", iconClassName)}
@@ -78,4 +81,4 @@ export const PageHeader = ({
             </div>
         </div>
     );
-};
+}

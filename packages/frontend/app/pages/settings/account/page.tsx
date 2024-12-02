@@ -27,6 +27,7 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
                     <div className="w-full flex flex-col items-center justify-center my-2">
                         <div className="w-full flex flex-wrap items-center justify-start gap-6">
                             <ImgWrapper
+                                vtId={session.id}
                                 src={imageUrl(session?.avatarUrl)}
                                 alt={session?.userName}
                                 fallback={fallbackUserIcon}

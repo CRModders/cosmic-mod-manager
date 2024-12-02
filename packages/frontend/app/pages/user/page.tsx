@@ -20,6 +20,7 @@ export default function UserProjectsList() {
                 return (
                     <SearchListItem
                         key={project.id}
+                        vtId={project.id}
                         projectName={project.name}
                         projectType={project.type[0]}
                         projectSlug={project.slug}

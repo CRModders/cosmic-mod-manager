@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import { cn } from "@root/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
@@ -9,7 +8,7 @@ import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import ClientOnly from "~/components/client-only";
 import { BrandIcon } from "~/components/icons";
-import { ButtonLink } from "~/components/ui/link";
+import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";

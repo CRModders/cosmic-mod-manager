@@ -1,0 +1,15 @@
+@layer view-transitions {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+::view-transition-group(root) {
+    /* animation: none; */
+    animation-duration: 250ms;
+}
+
+::view-transition-new(root),
+::view-transition-old(root) {
+    mix-blend-mode: normal;
+}

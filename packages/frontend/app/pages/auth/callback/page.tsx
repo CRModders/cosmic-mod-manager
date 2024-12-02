@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { getCookie } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { CSRF_STATE_COOKIE_NAMESPACE } from "@shared/config";
@@ -7,6 +7,7 @@ import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { FormErrorMessage } from "~/components/ui/form-message";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
 interface Props {
