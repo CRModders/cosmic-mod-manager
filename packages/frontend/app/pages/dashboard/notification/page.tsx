@@ -150,7 +150,6 @@ export function NotificationItem({
         case NotificationType.TEAM_INVITE:
             return (
                 <TeamInviteNotification
-                    vtId={relatedProject?.id || (notification.body?.projectId as string)}
                     notification={notification}
                     markNotificationAsRead={markNotificationAsRead}
                     deleteNotification={deleteNotification}
@@ -159,7 +158,6 @@ export function NotificationItem({
                     navigateTo={getProjectPagePathname(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
                     pageUrl={getProjectPagePathname(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
                     invitedBy={{
-                        id: relatedUser?.id || (notification.body?.invitedBy as string),
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
                         avatarUrl: relatedUser?.avatarUrl || null,
                     }}
@@ -173,7 +171,6 @@ export function NotificationItem({
         case NotificationType.ORGANIZATION_INVITE:
             return (
                 <TeamInviteNotification
-                    vtId={relatedOrg?.id || (notification.body?.orgId as string)}
                     notification={notification}
                     markNotificationAsRead={markNotificationAsRead}
                     deleteNotification={deleteNotification}
@@ -182,7 +179,6 @@ export function NotificationItem({
                     navigateTo={getOrgPagePathname(relatedOrg?.slug || "")}
                     pageUrl={getOrgPagePathname(relatedOrg?.slug || "")}
                     invitedBy={{
-                        id: relatedUser?.id || (notification.body?.invitedBy as string),
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
                         avatarUrl: relatedUser?.avatarUrl || null,
                     }}
