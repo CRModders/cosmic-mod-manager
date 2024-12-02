@@ -13,11 +13,11 @@ export default defineConfig({
     server: {
         port: 3000,
         proxy: {
-            // "/api": {
-            //     target: "https://api.crmm.tech",
-            //     changeOrigin: true,
-            //     secure: false,
-            // },
+            "/api": {
+                target: "https://api.crmm.tech",
+                changeOrigin: true,
+                secure: true,
+            },
         },
     },
     plugins: [

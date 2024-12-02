@@ -90,6 +90,7 @@ Keep in mind that you'll need to start the database again after a reboot.
 
     PG_DATABASE_URL="postgresql://prisma:PASSWORD@localhost:5432/crmm_dev?schema=public"
     CDN_SECRET="ANY_RANDOM_STRING"
+    FRONTEND_SECRET="a-secret-between-frontend-and-backend"
     NODE_ENV="development"
 
     # Auth Secrets
@@ -153,8 +154,10 @@ Keep in mind that you'll need to start the database again after a reboot.
 
 ## Running the app frontend
 - `cd` into `/packages/frontend`
+- Change the urls to localhost ones in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2)
 - Run `bun run dev`
 - The frontend server will start on [localhost:3000](http://localhost:3000)
+- NOTE: Make sure to change back those urls in the config.ts when making a commit.
 
 If you wish to only work on the frontend, you can totally skip the backend setup and just proxy the requests to the hosted backend. \
-Uncomment the proxy config in [`/packages/frontend/rsbuild.config.ts`](/packages/frontend/rsbuild.config.ts#L7) and set the server url in [`.env`](/packages/frontend/.env) to an empty string `PUBLIC_BACKEND_SERVER_URL=""`
+Leave the backend url in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2) to be the prod url, and now all the api requests will be made to the prod backend.

@@ -57,13 +57,23 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
         // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 460 500"
+            viewBox="30 53 400 400"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             width={size || width || DefaultSvgSize}
             height={size || height || DefaultSvgSize}
             {...props}
         >
             <defs>
+                <linearGradient
+                    id="b"
+                    x1={252.872}
+                    x2={252.872}
+                    y1={91.975}
+                    y2={178.255}
+                    gradientTransform="matrix(.96253 .27117 -1.09688 3.93103 128.002 -339.044)"
+                    gradientUnits="userSpaceOnUse"
+                    href="#a"
+                />
                 <linearGradient id="a">
                     <stop
                         className="text-[hsl(var(--accent-color-hue),_77%,_58%)] dark:text-[hsla(var(--accent-color-hue),_95%,_64%)]"
@@ -71,13 +81,13 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                         offset="0"
                     />
                     <stop
-                        className="text-[hsl(var(--accent-color-hue),_83%,_42%)] dark:text-[hsl(var(--accent-color-hue),_77%,_38%)]"
+                        className="text-[hsl(var(--accent-color-hue),_83%,_50%)] dark:text-[hsl(var(--accent-color-hue),_77%,_46%)]"
                         stopColor="currentColor"
                         offset="1"
                     />
                 </linearGradient>
                 <linearGradient
-                    id="b"
+                    id="c"
                     x1={328.973}
                     x2={328.973}
                     y1={302.535}
@@ -87,7 +97,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     href="#a"
                 />
                 <linearGradient
-                    id="c"
+                    id="d"
                     x1={233.357}
                     x2={233.357}
                     y1={93.14}
@@ -97,7 +107,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     href="#a"
                 />
                 <linearGradient
-                    id="d"
+                    id="e"
                     x1={233.318}
                     x2={233.318}
                     y1={166.34}
@@ -107,7 +117,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     href="#a"
                 />
                 <linearGradient
-                    id="e"
+                    id="f"
                     x1={0}
                     x2={0}
                     y1={-128.015}
@@ -118,8 +128,9 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                 />
             </defs>
             <g fill="none" strokeWidth={strokeWidth || 22}>
+                <path stroke="url(#b)" d="m255.925 91.975-6.106 86.28" />
                 <path
-                    stroke="url(#b)"
+                    stroke="url(#c)"
                     d="M293.846 302.535 364.1 344"
                     style={{
                         transformBox: "fill-box",
@@ -127,7 +138,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     transform-origin="50% 50%"
                 />
                 <path
-                    stroke="url(#c)"
+                    stroke="url(#d)"
                     strokeLinecap="square"
                     strokeMiterlimit={30}
                     d="m321.33 251.114 73.022-2.595c4.405 123.937-127.008 206.164-236.541 148.011-109.534-58.154-115.04-213.074-9.91-278.857 61.247-38.324 140.519-31.184 193.933 17.466l-49.202 54.02"
@@ -135,7 +146,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     paintOrder="fill"
                 />
                 <path
-                    stroke="url(#d)"
+                    stroke="url(#e)"
                     strokeDashoffset={-14}
                     strokeMiterlimit={4.7}
                     d="M292.632 189.159a93 93 0 0 0-4.783-4.07 90 90 0 0 0-4.946-3.657 88 88 0 0 0-10.304-6.101 87 87 0 0 0-10.738-4.518 85 85 0 0 0-5.488-1.68 87 87 0 0 0-16.722-2.793m-16.741.461a89 89 0 0 0-10.933 2.04 90.3 90.3 0 0 0-15.707 5.546 89 89 0 0 0-14.448 8.393 88 88 0 0 0-8.696 7.101 87 87 0 0 0-7.782 8.254 86 86 0 0 0-12.254 19.784 89 89 0 0 0-4.189 11.44 93 93 0 0 0-2.68 12.264 89 89 0 0 0-.966 12.145 86.2 86.2 0 0 0 2.885 23.092 86 86 0 0 0 3.629 10.748 87 87 0 0 0 4.941 10.081 88 88 0 0 0 6.142 9.316 90 90 0 0 0 7.233 8.449 91 91 0 0 0 8.215 7.482 90 90 0 0 0 9.086 6.415 88.5 88.5 0 0 0 15.022 7.403 86.5 86.5 0 0 0 22.051 5.2 86 86 0 0 0 11.644.373m17.93-2.507a92 92 0 0 0 9.535-2.895q1.725-.63 3.413-1.326a89 89 0 0 0 6.586-3.043 89 89 0 0 0 6.252-3.537 87 87 0 0 0 5.896-4.004 89 89 0 0 0 5.52-4.44 88 88 0 0 0 9.831-10.079 88 88 0 0 0 6.235-8.492 86 86 0 0 0 1.848-2.988m7.399-15.973a89 89 0 0 0 2.052-6.801q.446-1.726.821-3.475.377-1.748.682-3.518.307-1.771.54-3.56.235-1.79.395-3.597.162-1.807.248-3.631.087-1.822.098-3.66a87 87 0 0 0-.054-3.687"
@@ -144,7 +155,7 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                 />
             </g>
             <path
-                fill="url(#e)"
+                fill="url(#f)"
                 d="M-15.874 10.672c-6.994-7.768-6.366-19.751 1.403-26.746 7.768-6.995 19.751-6.366 26.745 1.402 6.995 7.769 6.368 19.751-1.401 26.746s-19.752 6.367-26.747-1.402M0-128.015l-25.604 83.669-85.26-19.662L-51.206 0l-59.658 64.008 85.261-19.662L0 128.015l25.603-83.669 85.261 19.662L51.206 0l59.658-64.008-85.261 19.662z"
                 transform="rotate(132 59.685 179.212)scale(.3372)"
             />
