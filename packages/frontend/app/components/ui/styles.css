@@ -46,122 +46,32 @@
 
 
 
-/* THEME-SWITCHER */
-
-
-/* Theme switcher styling */
-.sun_icon_wrapper,
-.moon_icon_wrapper {
-
-    --animation-duration: 600ms;
-    --sun-corona-animation-duration: 250ms;
-
-    overflow: hidden;
-    position: absolute;
-    transform-origin: -2rem -1.5rem;
-    transform-box: border-box;
+::view-transition-group(root) {
+    animation-duration: .5s;
 }
 
-.sun_icon_wrapper svg,
-.moon_icon_wrapper svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+::view-transition-new(root),
+::view-transition-old(root) {
+    mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+    animation-timing-function: ease-in;
+    animation-name: reveal-theme;
+}
+
+::view-transition-old(root),
+.dark::view-transition-old(root) {
+    animation: none;
 }
 
 
-.light [data-hide-on-theme='dark'],
-.dark [data-hide-on-theme='light'] {
-    scale: 0;
-    opacity: 0;
-    animation: fadeIn var(--animation-duration) forwards ease-in-out;
-}
-
-
-.dark [data-hide-on-theme='dark'] {
-    animation: fadeOut var(--animation-duration) forwards ease-in-out;
-}
-
-.light [data-hide-on-theme='light'] {
-    animation: fadeOut var(--animation-duration) var(--sun-corona-animation-duration) forwards ease-in-out;
-}
-
-#sun_corona {
-    transform-origin: center;
-    transform-box: fill-box;
-}
-
-.light #sun_corona {
-    animation: fadeOutSunCorona var(--sun-corona-animation-duration) ease-in-out forwards;
-}
-
-
-.dark #sun_corona {
-    opacity: 0;
-    transform: scale(0);
-    animation: fadeInSunCorona var(--sun-corona-animation-duration) ease-in-out var(--animation-duration) forwards;
-}
-
-
-@keyframes fadeOut {
-    0% {
-        scale: 1;
-        opacity: 1;
+@keyframes reveal-theme {
+    from {
+        clip-path: circle(0 at var(--click-x, 81.8%) var(--click-y, 1.85rem));
     }
 
-    50% {
-        opacity: 0;
-        rotate: 180deg;
-    }
-
-    100% {
-        scale: 0;
-        opacity: 0;
-    }
-}
-
-
-@keyframes fadeIn {
-    0% {
-        scale: 0;
-        opacity: 0;
-        rotate: 180deg;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        scale: 1;
-        opacity: 1;
-        rotate: 360deg;
-    }
-}
-
-@keyframes fadeInSunCorona {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    25% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-
-@keyframes fadeOutSunCorona {
-    0% {
-        scale: 1;
-    }
-
-    100% {
-        scale: 0;
+    to {
+        clip-path: circle(135% at var(--click-x, 81.8%) var(--click-y, 1.85rem));
     }
 }

@@ -44,18 +44,14 @@ const Theme = ({
             const newTheme = typeof value === "function" ? value(theme) : value;
             setThemeState(newTheme);
 
-            // Save to storage
             try {
                 setCookie(storageKey, newTheme);
-            } catch (e) {
-                // Unsupported
-            }
+            } catch {}
         },
         [theme],
     );
 
     useEffect(() => {
-        // if (theme) return;
         const media = window.matchMedia(MEDIA);
 
         const handleMediaQuery = (e: MediaQueryList | MediaQueryListEvent) => {
@@ -72,7 +68,11 @@ const Theme = ({
 
     useEffect(() => {
         if (!theme) return;
-        applyTheme(theme ? theme : ThemeOptions.DARK);
+        applyTheme(theme);
+
+        if (!getTheme(storageKey)) {
+            setTheme(theme);
+        }
     }, [theme]);
 
     return (
