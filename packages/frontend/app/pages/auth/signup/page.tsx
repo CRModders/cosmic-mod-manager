@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
 import OAuthProvidersWidget from "../oauth-providers";
 
 export default function SignUpPage() {
@@ -28,14 +29,24 @@ export default function SignUpPage() {
                         </div>
                     </div>
 
-                    <div className="w-full flex flex-col items-center justify-center gap-1 mt-4">
-                        <p className="text-center text-foreground">
-                            <span className="text-foreground-muted">Already have an account?&nbsp;</span>
-                            <Link
-                                to="/login"
-                                aria-label="Login"
-                                className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
-                            >
+                    <p className="text-muted-foreground">
+                        By creating an account, you agree to our{" "}
+                        <Link className="text_link" to="/legal/terms">
+                            Terms
+                        </Link>{" "}
+                        and{" "}
+                        <Link className="text_link" to="/legal/privacy">
+                            Privacy Policy
+                        </Link>
+                        .
+                    </p>
+
+                    <Separator />
+
+                    <div className="w-full flex flex-col items-center justify-center gap-1">
+                        <p className="text-center">
+                            <span className="text-muted-foreground">Already have an account?&nbsp;</span>
+                            <Link to="/login" aria-label="Login" className="text_link">
                                 Login
                             </Link>
                         </p>

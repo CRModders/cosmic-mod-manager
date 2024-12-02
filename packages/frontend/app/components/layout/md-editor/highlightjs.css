@@ -94,13 +94,12 @@
 }
 
 .markdown-body a {
-    @apply underline text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block;
+    @apply text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block;
 }
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
-    text-decoration-thickness: 0.09rem;
-    @apply brightness-110;
+    @apply brightness-110 underline;
 }
 
 .markdown-body img {

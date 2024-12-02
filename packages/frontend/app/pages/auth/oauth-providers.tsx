@@ -27,7 +27,7 @@ export const authProvidersList = [
     },
 ];
 
-const OAuthProvidersWidget = ({
+export default function OAuthProvidersWidget({
     actionIntent = AuthActionIntent.SIGN_IN,
     disabled = false,
     isLoading,
@@ -45,8 +45,8 @@ const OAuthProvidersWidget = ({
             provider: AuthProvider | null;
         }>
     >;
-}) => {
-    const redirectToOauthPage = async (provider: AuthProvider) => {
+}) {
+    async function redirectToOauthPage(provider: AuthProvider) {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
@@ -65,7 +65,7 @@ const OAuthProvidersWidget = ({
             console.error(err);
             setIsLoading({ value: false, provider: null });
         }
-    };
+    }
 
     return (
         <>
@@ -89,6 +89,4 @@ const OAuthProvidersWidget = ({
             })}
         </>
     );
-};
-
-export default OAuthProvidersWidget;
+}

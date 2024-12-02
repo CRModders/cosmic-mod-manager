@@ -219,6 +219,10 @@ body.no-scrollbar {
         @apply text-link-foreground;
     }
 
+    .text_link {
+        @apply link_blue hover:underline hover:brightness-110;
+    }
+
     a {
         text-underline-offset: 2px;
     }

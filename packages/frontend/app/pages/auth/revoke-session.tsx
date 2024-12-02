@@ -10,7 +10,7 @@ export default function RevokeSessionPage() {
     const [successMessage, setSuccessMessage] = useState("");
     const [searchParams] = useSearchParams();
 
-    const RevokeSession = async (code: string) => {
+    async function RevokeSession(code: string) {
         try {
             setIsLoading(true);
 
@@ -28,7 +28,7 @@ export default function RevokeSessionPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         const code = searchParams.get("code");

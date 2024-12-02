@@ -17,7 +17,7 @@ interface ButtonLinkProps extends Omit<LinkProps, "to"> {
     preventScrollReset?: boolean;
 }
 
-export const ButtonLink = ({
+export function ButtonLink({
     url,
     children,
     className,
@@ -25,7 +25,7 @@ export const ButtonLink = ({
     activityIndicator = true,
     activeClassName,
     ...props
-}: ButtonLinkProps) => {
+}: ButtonLinkProps) {
     const location = useLocation();
 
     return (
@@ -42,7 +42,7 @@ export const ButtonLink = ({
             {children}
         </Link>
     );
-};
+}
 
 interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     children: React.ReactNode;

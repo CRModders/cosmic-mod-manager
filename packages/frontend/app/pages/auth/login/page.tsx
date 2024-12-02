@@ -145,24 +145,16 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    <div className="w-full flex flex-col items-center justify-center gap-1 mt-4">
-                        <div className="text-center text-foreground">
-                            <span className="text-foreground-muted">Don't have an account?&nbsp;</span>
-                            <Link
-                                to="/signup"
-                                aria-label="Sign up"
-                                className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
-                            >
+                    <div className="w-full flex flex-col items-center justify-center mt-4">
+                        <div className="text-center">
+                            <span className="text-muted-foreground">Don't have an account?&nbsp;</span>
+                            <Link to="/signup" aria-label="Sign up" className="text_link">
                                 Sign up
                             </Link>
                         </div>
                         <div className="text-center">
-                            <span className="text-foreground-muted">Forgot password?&nbsp;</span>
-                            <Link
-                                to="/change-password"
-                                aria-label="Change password"
-                                className="text-foreground font-semibold decoration-[0.1rem] hover:underline underline-offset-2"
-                            >
+                            <span className="text-muted-foreground">Forgot password?&nbsp;</span>
+                            <Link to="/change-password" aria-label="Change password" className="text_link">
                                 Change password
                             </Link>
                         </div>
