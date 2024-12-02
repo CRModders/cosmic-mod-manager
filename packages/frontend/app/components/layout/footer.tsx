@@ -6,7 +6,7 @@ import "./styles.css";
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-card-background mt-24 pt-20 pb-16 mx-auto">
+        <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-16 mx-auto">
             <div className="footer-grid container gap-y-5">
                 <LinksColumn area="logo">
                     <span className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none" title={SITE_NAME_LONG}>

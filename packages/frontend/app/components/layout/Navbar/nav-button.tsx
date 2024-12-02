@@ -20,16 +20,7 @@ export function LoginButton({
     onClick?: () => void;
 }) {
     return (
-        <VariantButtonLink
-            url="/login"
-            className={cn(
-                "bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90",
-                className,
-            )}
-            variant="secondary"
-            aria-label="Login"
-            onClick={onClick}
-        >
+        <VariantButtonLink url="/login" className={className} variant="secondary-inverted" aria-label="Login" onClick={onClick}>
             <LogInIcon className="w-btn-icon h-btn-icon" />
             Log In
         </VariantButtonLink>

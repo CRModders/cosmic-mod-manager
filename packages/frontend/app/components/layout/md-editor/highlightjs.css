@@ -38,6 +38,15 @@
     @apply font-bold;
 }
 
+.markdown-body.bright-heading h1,
+.markdown-body.bright-heading h2,
+.markdown-body.bright-heading h3,
+.markdown-body.bright-heading h4,
+.markdown-body.bright-heading h5,
+.markdown-body.bright-heading h6 {
+    @apply text-foreground;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -85,12 +94,13 @@
 }
 
 .markdown-body a {
-    @apply text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block;
+    @apply underline text-link-foreground cursor-pointer transition-[filter] w-auto h-auto box-border inline-block;
 }
 
 .markdown-body a:focus-visible,
 .markdown-body a:hover {
-    @apply underline brightness-110;
+    text-decoration-thickness: 0.09rem;
+    @apply brightness-110;
 }
 
 .markdown-body img {
@@ -106,15 +116,15 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body pre {
-    @apply mt-4 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/70 rounded overflow-x-auto;
+    @apply mt-4 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/60 rounded overflow-x-auto;
 }
 
 .markdown-body pre code {
-    @apply p-0 rounded-none text-[90%] bg-transparent;
+    @apply p-0 rounded-none text-[90%] bg-transparent dark:bg-transparent;
 }
 
 .markdown-body code {
-    @apply max-w-full py-0.5 px-2 text-[90%] rounded-md bg-shallow-background font-mono;
+    @apply max-w-full py-0.5 px-2 text-[90%] rounded-md bg-shallow-background dark:bg-shallow-background/60 font-mono;
 }
 
 .markdown-body hr {
@@ -135,8 +145,9 @@ html:is(.dark).markdown-body img[src$='#gh-light-mode-only'] {
 }
 
 .markdown-body table tr:nth-child(2n) {
-    @apply bg-zinc-100 dark:bg-zinc-950/25;
+    @apply bg-zinc-100 dark:bg-zinc-950/40;
 }
+
 
 .markdown-body table td:not(:last-of-type),
 .markdown-body table th:not(:last-of-type) {

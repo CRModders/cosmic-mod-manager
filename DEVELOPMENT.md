@@ -160,4 +160,4 @@ Keep in mind that you'll need to start the database again after a reboot.
 - NOTE: Make sure to change back those urls in the config.ts when making a commit.
 
 If you wish to only work on the frontend, you can totally skip the backend setup and just proxy the requests to the hosted backend. \
-Leave the backend url in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2) to be the prod url, and now all the api requests will be made to the prod backend.
+Set `proxy: true` in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2) and now all the api requests will be made to the prod backend.

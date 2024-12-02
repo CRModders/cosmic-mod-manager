@@ -4,6 +4,8 @@ const Config = {
 
     // FRONTEND_URL: "http://localhost:3000",
     // BACKEND_URL: "http://localhost:5500",
-} as const;
+
+    proxy: false,
+};
 
 export default Config;

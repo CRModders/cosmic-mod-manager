@@ -9,7 +9,7 @@ const title = "Privacy Policy";
 export default function PrivacyPolicy() {
     return (
         <MarkdownRenderBox
-            className="bg-card-background p-6 pt-0 rounded-lg"
+            className="bg-card-background bright-heading p-6 pt-0 rounded-lg"
             text={`
 # ${title}
             `}

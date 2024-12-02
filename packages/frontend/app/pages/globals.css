@@ -14,35 +14,35 @@
 
     /* DARK THEME */
     --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
-    --foreground-bright-dark: var(--tint-hue), var(--bg-saturation), 98%;
-    --foreground-dark: var(--tint-hue), var(--bg-saturation), 90%;
-    --muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 78%;
-    --extra-muted-foreground-dark: var(--tint-hue), var(--bg-saturation), 60%;
-    --background-dark: var(--tint-hue), var(--bg-saturation), 5%;
-    --card-background-dark: var(--tint-hue), var(--bg-saturation), 12%;
+    --foreground-bright-dark: var(--text-tint-hue), var(--body-text-saturation), 98%;
+    --foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 91%;
+    --muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 80%;
+    --extra-muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 64%;
+    --background-dark: var(--bg-tint-hue), var(--bg-saturation), 8%;
+    --card-background-dark: var(--bg-tint-hue), var(--bg-saturation), 15%;
     --accent-background-dark: var(--accent-color-hue), 85%, 62%;
-    --shallow-background-dark: var(--tint-hue), var(--bg-saturation), 20%;
-    --shallower-background-dark: var(--tint-hue), var(--bg-saturation), 32%;
+    --shallow-background-dark: var(--bg-tint-hue), var(--bg-saturation), 24%;
+    --shallower-background-dark: var(--bg-tint-hue), var(--bg-saturation), 32%;
     --danger-background-dark: 0, 92%, 65%;
     --danger-foreground-dark: 0, 91%, 71%;
     --warning-background-dark: 35, 74%, 48%;
     --warning-foreground-dark: 33, 82%, 52%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
-    --link-foreground-dark: 213, 94%, 68%;
-    --link-hover-foreground-dark: 210, 80%, 85%;
+    --link-foreground-dark: 213, 94%, 74%;
+    --link-hover-foreground-dark: 210, 80%, 87%;
 
     /* LIGHT THEME */
     --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
-    --foreground-bright-light: var(--tint-hue), var(--bg-saturation), 8%;
-    --foreground-light: var(--tint-hue), var(--bg-saturation), 16%;
-    --muted-foreground-light: var(--tint-hue), var(--bg-saturation), 26%;
-    --extra-muted-foreground-light: var(--tint-hue), var(--bg-saturation), 38%;
-    --background-light: var(--tint-hue), var(--bg-saturation), 92%;
-    --card-background-light: var(--tint-hue), var(--bg-saturation), 100%;
+    --foreground-bright-light: var(--text-tint-hue), var(--body-text-saturation), 8%;
+    --foreground-light: var(--text-tint-hue), var(--body-text-saturation), 16%;
+    --muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 26%;
+    --extra-muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 38%;
+    --background-light: var(--bg-tint-hue), var(--bg-saturation), 92%;
+    --card-background-light: var(--bg-tint-hue), var(--bg-saturation), 100%;
     --accent-background-light: var(--accent-color-hue), 80%, 54%;
-    --shallow-background-light: var(--tint-hue), var(--bg-saturation), 92%;
-    --shallower-background-light: var(--tint-hue), var(--bg-saturation), 82%;
+    --shallow-background-light: var(--bg-tint-hue), var(--bg-saturation), 92%;
+    --shallower-background-light: var(--bg-tint-hue), var(--bg-saturation), 82%;
 
     --danger-background-light: 0, 75%, 46%;
     --danger-foreground-light: 0, 65%, 52%;
@@ -50,7 +50,7 @@
     --warning-foreground-light: 38, 93%, 47%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 28%;
-    --link-foreground-light: 208, 88%, 42%;
+    --link-foreground-light: 208, 88%, 36%;
     --link-hover-foreground-light: 205, 80%, 20%;
 }
 
@@ -73,8 +73,10 @@ html body {
 html,
 .dark {
     --accent-color-hue: 345;
-    --tint-hue: 200;
-    --bg-saturation: 10%;
+    --bg-tint-hue: 215;
+    --bg-saturation: 12%;
+    --text-tint-hue: 208;
+    --body-text-saturation: 16%;
 
     --foreground: var(--foreground-dark);
     --foreground-bright: var(--foreground-bright-dark);
@@ -100,8 +102,10 @@ html,
 
 .light {
     --accent-color-hue: 343;
-    --tint-hue: 210;
-    --bg-saturation: 12%;
+    --bg-tint-hue: 215;
+    --bg-saturation: 13%;
+    --text-tint-hue: 208;
+    --body-text-saturation: 16%;
 
     --foreground: var(--foreground-light);
     --foreground-bright: var(--foreground-bright-light);
@@ -168,11 +172,11 @@ body.no-scrollbar {
 
 @layer components {
     .neumorphic_shadow:not(.no_neumorphic_shadow) {
-        /* box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)), 0 0 0 0.175rem transparent; */
+        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)), 0 0 0 0.175rem transparent; */
     }
 
     .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
-        /* box-shadow: inset 0px -1px 2px hsla(var(--tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)), 0 0 0 0.175rem transparent; */
+        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)), 0 0 0 0.175rem transparent; */
     }
 
     .focus_ring:not(.no_focus_ring) {
