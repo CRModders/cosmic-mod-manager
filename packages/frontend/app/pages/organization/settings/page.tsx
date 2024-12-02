@@ -144,7 +144,6 @@ export default function GeneralOrgSettings() {
                                             })()}
                                             className="rounded"
                                             fallback={fallbackOrgIcon}
-                                            vtId={orgData.id}
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">

@@ -157,7 +157,6 @@ export default function GeneralSettingsPage() {
                                             })()}
                                             className="rounded"
                                             fallback={fallbackProjectIcon}
-                                            vtId={projectData.id}
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">
