@@ -1,5 +1,7 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import { cn } from "@root/utils";
 import type React from "react";
+import type { RootOutletData } from "~/root";
 
 interface Props {
     src: string;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 export function ImgWrapper({ vtId, src, alt, className, loading, fallback }: Props) {
+    const data = useRouteLoaderData<RootOutletData>("root");
+
     if (!src) {
         return (
             <div
@@ -24,7 +28,7 @@ export function ImgWrapper({ vtId, src, alt, className, loading, fallback }: Pro
         );
     }
 
-    const style = vtId ? { viewTransitionName: removeNumbers(vtId) } : {};
+    const style = vtId && data?.viewTransitions ? { viewTransitionName: removeNumbers(vtId) } : {};
 
     return (
         <img
