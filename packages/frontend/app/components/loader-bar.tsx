@@ -46,8 +46,8 @@ function LoaderBar() {
             color="#EE3A76"
             shadow={false}
             height={darkTheme ? 2 : 3}
-            transitionTime={450}
-            waitingTime={550}
+            transitionTime={250}
+            waitingTime={300}
         />
     );
 }

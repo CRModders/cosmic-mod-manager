@@ -59,13 +59,13 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     size="lg"
                     variant="ghost"
                     aria-label="Profile icon"
-                    className="p-0 m-0 h-fit rounded-full w-fit hover:bg-transparent dark:hover:bg-transparent no_neumorphic_shadow relative"
+                    className="p-0 m-0 h-fit rounded-full w-fit no_neumorphic_shadow relative"
                 >
                     <ImgWrapper
                         src={imageUrl(session.avatarUrl)}
                         alt={session?.userName}
                         fallback={fallbackUserIcon}
-                        className="h-nav-item w-nav-item p-0.5 rounded-full"
+                        className="p-0.5 h-nav-item w-nav-item rounded-full border-none bg-shallower-background dark:bg-shallow-background"
                     />
                     {undreadNotifications > 0 ? <NotificationBadge className="min-h-1.5 min-w-1.5" /> : null}
                 </Button>
