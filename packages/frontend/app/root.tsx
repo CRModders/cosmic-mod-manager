@@ -39,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <meta name="publisher" content="CRMM" />
                 <meta name="theme-color" content="#F04570" />
                 <meta name="color-scheme" content="dark light" />
-                <meta property="og:logo" content="https://www.crmm.tech/icon.png" />
+                <meta property="og:logo" content={`${Config.FRONTEND_URL}/icon.png`} />
                 <meta name="google-site-verification" content="saVDIhLaNSit_2LnqK9Zz-yxY2hMGTEC_Vud5v7-Tug" />
                 <Meta />
                 <Links />

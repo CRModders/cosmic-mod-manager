@@ -58,7 +58,7 @@ app.route("/cdn", cdnRouter);
 
 // Redirect to /api
 app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
-    return ctx.redirect("https://www.crmm.tech/icon.png");
+    return ctx.redirect("https://crmm.tech/icon.png");
 });
 
 app.get("/", corsAllowCdn, apiDetails);

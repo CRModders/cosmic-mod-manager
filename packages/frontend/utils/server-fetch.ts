@@ -1,7 +1,6 @@
-import Config from "@root/utils/config";
-
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
+        const backendHost = process.env.BACKEND_HOST || "http://localhost:5500";
         let fetchUrl = pathname;
 
         const clientIp = clientReq.headers.get("x-forwarded-for") || clientReq.headers.get("x-real-ip") || "0.0.0.0";
@@ -17,7 +16,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
         };
 
         if (fetchUrl.startsWith("/")) {
-            fetchUrl = `${Config.BACKEND_URL}${fetchUrl}`;
+            fetchUrl = `${backendHost}${fetchUrl}`;
             headers.Cookie = clientReq.headers.get("Cookie") || "";
             headers["x-identity-token"] = process.env.FRONTEND_SECRET || "";
         }

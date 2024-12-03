@@ -1,4 +1,4 @@
-sitemap: https://www.crmm.tech/sitemap.xml
+sitemap: https://crmm.tech/sitemap.xml
 
 User-agent: Googlebot
 Allow: /

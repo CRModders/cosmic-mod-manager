@@ -9,19 +9,15 @@ const rootDir = "/var/www/cosmic-mod-manager";
 const frontendDir = `${rootDir}/source/packages/frontend`; // Root of the frontend
 const reloadFrontend = "pm2 reload pm2.config.cjs --only crmm-frontend";
 
-const prod_frontend = {
-    name: "crmm-frontend",
-    command: "bun run start",
-    cwd: frontendDir,
-    autorestart: true,
-    watch: false,
-};
-
-const apps = [];
-
-if (!isDev) {
-    apps.push(prod_frontend);
-}
+const apps = [
+    {
+        name: "crmm-frontend",
+        command: "bun run start",
+        cwd: frontendDir,
+        autorestart: true,
+        watch: false,
+    },
+];
 
 module.exports = {
     apps: apps,
