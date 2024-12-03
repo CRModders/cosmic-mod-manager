@@ -91,6 +91,7 @@ function FooterLink({ children, ...props }: LinkProps) {
     return (
         <Link
             {...props}
+            prefetch="viewport"
             className="w-fit flex items-center justify-center lg:justify-start gap-2 leading-none text-muted-foreground hover:text-foreground hover:underline"
         >
             {children}
