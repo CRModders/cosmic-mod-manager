@@ -9,7 +9,7 @@ const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will
 
 const sourceDir = isDev === false ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
 const backendDir = `${sourceDir}/packages/backend`; // Root of the backend
-const frontendDir = "/var/www/cosmic-mod-manager/packages/frontend"; // Root of the frontend
+const frontendDir = "/var/www/cosmic-mod-manager/source/packages/frontend"; // Root of the frontend
 
 const reloadBackend =
     "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
