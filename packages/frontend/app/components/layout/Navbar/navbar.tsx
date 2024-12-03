@@ -19,19 +19,19 @@ interface NavbarProps {
     notifications: Notification[];
 }
 
-function Navbar(props: NavbarProps) {
+const NavLinks = projectTypes.map((projectType) => {
+    return {
+        label: `${CapitalizeAndFormatString(projectType)}s`,
+        href: `/${createURLSafeSlug(projectType).value}s`,
+    };
+});
+
+export default function Navbar(props: NavbarProps) {
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
 
     const toggleNavMenu = (newState?: boolean) => {
         setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
     };
-
-    const NavLinks = projectTypes.map((projectType) => {
-        return {
-            label: `${CapitalizeAndFormatString(projectType)}s`,
-            href: `/${createURLSafeSlug(projectType).value}s`,
-        };
-    });
 
     useEffect(() => {
         if (isNavMenuOpen === true) {
@@ -110,8 +110,6 @@ function Navbar(props: NavbarProps) {
     );
 }
 
-export default Navbar;
-
 type NavlinkProps = {
     href: string;
     label?: string;
@@ -123,7 +121,7 @@ type NavlinkProps = {
     children?: React.ReactNode;
 };
 
-export const Navlink = ({ href, label, children, className }: NavlinkProps) => {
+export function Navlink({ href, label, children, className }: NavlinkProps) {
     return (
         <ButtonLink
             url={href}
@@ -134,7 +132,7 @@ export const Navlink = ({ href, label, children, className }: NavlinkProps) => {
             {children ? children : label}
         </ButtonLink>
     );
-};
+}
 
 export function NavMenuLink({
     href,

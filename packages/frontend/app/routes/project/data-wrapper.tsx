@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "@remix-run/react";
-import type { AwaitedReturnType } from "@root/types";
 import { getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
@@ -27,7 +26,7 @@ export interface ProjectDataWrapperContext {
 
 export default function _ProjectDataWrapper() {
     const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData<typeof loader>();
+    const data = useLoaderData() as loaderData;
 
     const projectData = data?.projectData;
     if (!projectData)
@@ -73,6 +72,16 @@ export default function _ProjectDataWrapper() {
     );
 }
 
+interface loaderData {
+    projectSlug: string | undefined;
+    projectData?: ProjectDetailsData | null;
+    versions?: ProjectVersionData[];
+    dependencies?: {
+        projects: ProjectListItem[];
+        versions: ProjectVersionData[];
+    };
+}
+
 export async function loader(props: LoaderFunctionArgs) {
     const projectSlug = props.params.projectSlug;
 
@@ -87,9 +96,9 @@ export async function loader(props: LoaderFunctionArgs) {
     ]);
 
     if (!projectRes.ok) {
-        return {
+        return Response.json({
             projectSlug: projectSlug,
-        };
+        });
     }
 
     const projectData = (await resJson<{ project: ProjectDetailsData }>(projectRes))?.project;
@@ -99,16 +108,16 @@ export async function loader(props: LoaderFunctionArgs) {
         versions: ProjectVersionData[];
     };
 
-    return {
+    return Response.json({
         projectSlug: projectSlug,
         projectData: projectData || null,
         versions: versions?.data || [],
         dependencies: dependencies || [],
-    };
+    });
 }
 
 export function meta(props: MetaArgs) {
-    const data = props.data as AwaitedReturnType<typeof loader>;
+    const data = props.data as loaderData;
     const project = data?.projectData;
 
     if (!project) {

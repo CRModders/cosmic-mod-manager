@@ -8,7 +8,6 @@
     "dependencies": {
         "@oslojs/encoding": "^1.1.0",
         "@prisma/client": "^5.22.0",
-        "dotenv": "^16.4.5",
         "hono": "^4.4.12",
         "ioredis": "^5.4.1",
         "ip": "^2.0.1",
@@ -25,6 +24,7 @@
         "@types/nodemailer": "^6.4.17",
         "@types/ua-parser-js": "^0.7.39",
         "@types/xml2js": "^0.4.14",
+        "dotenv": "^16.4.5",
         "prisma": "^5.22.0",
         "xml2js": "^0.6.2"
     }

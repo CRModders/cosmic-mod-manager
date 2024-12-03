@@ -1,10 +1,9 @@
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
         const startTime = Date.now();
-
         const backendHost = process.env.BACKEND_HOST || "http://localhost:5500";
-        let fetchUrl = pathname;
 
+        let fetchUrl = pathname;
         const clientIp = clientReq.headers.get("CF-Connecting-IP") || clientReq.headers.get("x-forwarded-for") || "0.0.0.0";
         const userAgent = clientReq.headers.get("User-Agent") || "";
 
