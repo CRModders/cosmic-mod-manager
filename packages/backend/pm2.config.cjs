@@ -9,11 +9,9 @@ const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will
 
 const sourceDir = isDev === false ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
 const backendDir = `${sourceDir}/packages/backend`; // Root of the backend
-const frontendDir = "/var/www/cosmic-mod-manager/source/packages/frontend"; // Root of the frontend
 
 const reloadBackend =
     "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
-const reloadFrontend = "pm2 reload pm2.config.cjs --only crmm-frontend";
 
 const dev_backend = {
     name: "crmm-backend",
@@ -28,14 +26,6 @@ const prod_backend = {
     script: "src/index.ts",
     interpreter: "bun",
     cwd: backendDir,
-    autorestart: true,
-    watch: false,
-};
-
-const prod_frontend = {
-    name: "crmm-frontend",
-    command: "bun run start",
-    cwd: frontendDir,
     autorestart: true,
     watch: false,
 };
@@ -60,14 +50,10 @@ const apps = [
     isDev ? dev_backend : prod_backend,
 ];
 
-if (!isDev) {
-    apps.push(prod_frontend);
-}
-
 module.exports = {
     apps: apps,
     deploy: {
-        prod_backend: {
+        backend: {
             user: `${process.env.SSH_USER}`,
             host: [`${process.env.SSH_HOST}`],
             key: `${process.env.SSH_KEY}`,
@@ -75,15 +61,6 @@ module.exports = {
             repo: "https://github.com/CRModders/cosmic-mod-manager.git",
             path: rootDir,
             "post-deploy": `cd ${backendDir} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadBackend}`,
-        },
-        prod_frontend: {
-            user: `${process.env.SSH_USER}`,
-            host: [`${process.env.SSH_HOST}`],
-            key: `${process.env.SSH_KEY}`,
-            ref: "origin/main",
-            repo: "https://github.com/CRModders/cosmic-mod-manager.git",
-            path: rootDir,
-            "post-deploy": `cd ${frontendDir} && bun install && bun run build && ${reloadFrontend}`,
         },
     },
 };
