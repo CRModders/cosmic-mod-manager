@@ -1,5 +1,7 @@
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
+        const startTime = Date.now();
+
         const backendHost = process.env.BACKEND_HOST || "http://localhost:5500";
         let fetchUrl = pathname;
 
@@ -26,6 +28,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
             headers: { ...init?.headers, ...headers },
         });
 
+        console.log(`${pathname} ${Date.now() - startTime}ms | ${clientIp}`);
         return res;
     } catch (error) {
         return new Response(null, { status: 500 });
