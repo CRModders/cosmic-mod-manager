@@ -9,7 +9,7 @@ export default function LegalPageLayout() {
             <PanelAside aside>
                 <PanelAsideNavCard label="Legal">
                     {links.map((link) => (
-                        <ButtonLink url={link.href} key={link.href} className="relative" preventScrollReset>
+                        <ButtonLink prefetch="render" url={link.href} key={link.href} className="relative" preventScrollReset>
                             {link.icon}
                             {link.name}
                         </ButtonLink>
