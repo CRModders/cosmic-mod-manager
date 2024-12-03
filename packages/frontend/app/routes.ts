@@ -98,6 +98,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
             });
         });
 
+        // Sitemap
+        route("/:sitemap.xml", path("sitemap.tsx"), { id: "sitemaps" });
+
         // Not found
         route("*", path("$.tsx"), { id: "global__not-found" });
     });

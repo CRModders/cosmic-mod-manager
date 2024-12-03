@@ -279,6 +279,7 @@ export default function ProjectPageLayout({
 
                                     <div className="flex w-fit h-full grow flex-col select-text">
                                         <Link
+                                            prefetch="render"
                                             to={getProjectVersionPagePathname(projectData.type?.[0], projectData.slug, version.slug)}
                                             className="noClickRedirect w-fit"
                                         >
