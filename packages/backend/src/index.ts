@@ -57,12 +57,11 @@ app.route("/api/user/:userId/organization", orgRouter);
 app.route("/cdn", cdnRouter);
 
 // Redirect to /api
-app.get("/", corsAllowCdn, (ctx: Context) => {
-    return ctx.redirect("/api");
-});
 app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
     return ctx.redirect("https://www.crmm.tech/icon.png");
 });
+
+app.get("/", corsAllowCdn, apiDetails);
 app.get("/api", corsAllowCdn, apiDetails);
 
 Bun.serve({
