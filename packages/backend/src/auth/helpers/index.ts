@@ -2,6 +2,7 @@ import prisma from "@/services/prisma";
 import type { OAuthProfile } from "@/types/oAuth";
 import env from "@/utils/env";
 import { setCookie } from "@/utils/http";
+import { convertToIPv6, stripIp } from "@/utils/ip";
 import { generateDbId, generateRandomId } from "@/utils/str";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { AUTHTOKEN_COOKIE_NAMESPACE, CSRF_STATE_COOKIE_NAMESPACE, PASSWORD_HASH_SALT_ROUNDS } from "@shared/config";
@@ -94,7 +95,7 @@ export type GeoApiData = {
     country?: string;
 };
 
-export function getUserIpAddress(ctx: Context): string | null {
+export function getUserIpAddress(ctx: Context, fullIp = false): string | null {
     const identityToken = ctx.req.header("x-identity-token");
     let ipStr = null;
     if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
@@ -108,21 +109,24 @@ export function getUserIpAddress(ctx: Context): string | null {
 
     if (typeof ipStr !== "string") ipStr = ipStr?.address;
 
-    ipStr = filterIpString(ipStr);
+    ipStr = removeSpaces(ipStr)?.split(",")?.[0];
     if (!ipStr) return null;
 
-    return ipStr.split(",")[0];
+    if (fullIp) return ipStr;
+
+    const IPv6 = convertToIPv6(ipStr);
+    if (!IPv6) return null;
+
+    return stripIp(IPv6).toString(16);
 }
 
-function filterIpString(ip: string) {
-    // Returns null if the IP is ipv6 or invalid
-    if (ip.includes(":")) return null;
+function removeSpaces(ip: string) {
     return ip?.replaceAll(" ", "");
 }
 
 export async function getUserDeviceDetails(ctx: Context) {
     const userAgent = ctx.req.header("user-agent");
-    const ipAddr = getUserIpAddress(ctx);
+    const ipAddr = getUserIpAddress(ctx, true);
 
     const parsedResult = new UAParser(userAgent).getResult();
     const browserName = parsedResult.browser.name;

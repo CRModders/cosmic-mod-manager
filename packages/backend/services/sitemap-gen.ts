@@ -12,6 +12,8 @@ let isGenerating = false;
 
 export async function startSitemapGenerator() {
     if (queued) return;
+    if (env.NODE_ENV === "development") return;
+
     queued = true;
 
     generateSitemap();
