@@ -51,7 +51,7 @@ export function logger(fn: PrintFunc = console.log) {
     return async function logger(ctx: Context, next: Next) {
         const method = ctx.req?.method;
         const path = getPath(ctx.req.raw);
-        const ipAddress = getUserIpAddress(ctx);
+        const ipAddress = getUserIpAddress(ctx, true);
 
         log(fn, LogPrefix.Incoming, method, `${path} ${ipAddress}`);
 
