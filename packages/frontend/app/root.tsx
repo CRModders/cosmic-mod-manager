@@ -96,11 +96,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const viewTransitions = getCookie("viewTransitions", request.headers.get("Cookie") || "") === "true";
 
-    return {
+    return Response.json({
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
-    };
+    });
 }
 
 export function shouldRevalidate() {

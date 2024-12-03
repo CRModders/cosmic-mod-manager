@@ -20,7 +20,14 @@ export function LoginButton({
     onClick?: () => void;
 }) {
     return (
-        <VariantButtonLink url="/login" className={className} variant="secondary-inverted" aria-label="Login" onClick={onClick}>
+        <VariantButtonLink
+            prefetch="render"
+            url="/login"
+            className={className}
+            variant="secondary-inverted"
+            aria-label="Login"
+            onClick={onClick}
+        >
             <LogInIcon className="w-btn-icon h-btn-icon" />
             Log In
         </VariantButtonLink>

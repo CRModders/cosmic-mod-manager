@@ -149,13 +149,13 @@ export default function LoginPage() {
                     <div className="w-full flex flex-col items-center justify-center mt-4">
                         <div className="text-center">
                             <span className="text-muted-foreground">Don't have an account?&nbsp;</span>
-                            <Link to="/signup" aria-label="Sign up" className="text_link">
+                            <Link prefetch="render" to="/signup" aria-label="Sign up" className="text_link">
                                 Sign up
                             </Link>
                         </div>
                         <div className="text-center">
                             <span className="text-muted-foreground">Forgot password?&nbsp;</span>
-                            <Link to="/change-password" aria-label="Change password" className="text_link">
+                            <Link prefetch="render" to="/change-password" aria-label="Change password" className="text_link">
                                 Change password
                             </Link>
                         </div>

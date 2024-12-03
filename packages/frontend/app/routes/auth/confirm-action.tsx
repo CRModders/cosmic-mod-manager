@@ -27,8 +27,8 @@ export async function loader(props: LoaderFunctionArgs) {
         actionType = (data?.actionType as ConfirmationType) || null;
     } catch {}
 
-    return {
+    return Response.json({
         actionType: actionType,
         code: code,
-    };
+    });
 }

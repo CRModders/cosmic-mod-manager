@@ -8,16 +8,16 @@ import type { ProjectListItem } from "@shared/types/api";
 import ProjectsPage from "~/pages/dashboard/projects/page";
 
 export default function _Projects() {
-    const projects = useLoaderData<typeof loader>();
+    const data = useLoaderData<typeof loader>();
 
-    return <ProjectsPage projects={projects} />;
+    return <ProjectsPage projects={data.projects} />;
 }
 
 export async function loader(props: LoaderFunctionArgs) {
     const res = await serverFetch(props.request, "/api/project");
     const projects = await resJson<ProjectListItem[]>(res);
 
-    return projects || [];
+    return Response.json({ projects: projects || [] });
 }
 
 export function meta() {

@@ -9,19 +9,19 @@ import OrganisationDashboardPage from "~/pages/dashboard/organization/page";
 import type { RootOutletData } from "~/root";
 
 export default function _Organizations() {
-    const orgs = useLoaderData<typeof loader>();
+    const data = useLoaderData<typeof loader>();
     const { session } = useOutletContext<RootOutletData>();
 
     if (!session?.id) return <Navigate to="/login" />;
 
-    return <OrganisationDashboardPage organisations={orgs} session={session} />;
+    return <OrganisationDashboardPage organisations={data.orgs} session={session} />;
 }
 
 export async function loader(props: LoaderFunctionArgs) {
     const res = await serverFetch(props.request, "/api/organization");
     const orgs = ((await resJson(res)) as Organisation[]) || [];
 
-    return orgs;
+    return Response.json({ orgs });
 }
 
 export function meta() {

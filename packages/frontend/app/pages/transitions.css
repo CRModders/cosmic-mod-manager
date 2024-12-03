@@ -6,7 +6,7 @@
 
 ::view-transition-group(root) {
     /* animation: none; */
-    animation-duration: 250ms;
+    animation-duration: 200ms;
 }
 
 ::view-transition-new(root),

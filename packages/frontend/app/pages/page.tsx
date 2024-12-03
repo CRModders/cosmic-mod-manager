@@ -94,6 +94,7 @@ export default function HomePage({ session, projects }: Props) {
                                 url="/signup"
                                 size="lg"
                                 className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
+                                prefetch="render"
                             >
                                 <LogInIcon className="w-btn-icon-md h-btn-icon-md" />
                                 Sign Up

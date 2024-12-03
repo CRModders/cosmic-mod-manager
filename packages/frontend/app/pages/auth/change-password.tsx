@@ -79,7 +79,7 @@ export default function ChangePasswordPage({ session }: { session: LoggedInUserD
                         <CardFooter className="w-full flex flex-col gap-1 items-center justify-center">
                             <HorizontalSeparator />
 
-                            <Link className="text_link" to={session?.id ? "/" : "/login"}>
+                            <Link prefetch="render" className="text_link" to={session?.id ? "/" : "/login"}>
                                 {session?.id ? "Home" : "Login"}
                             </Link>
                         </CardFooter>

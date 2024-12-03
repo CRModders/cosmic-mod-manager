@@ -149,7 +149,6 @@ export function NavMenuLink({
     return (
         <ButtonLink
             url={href}
-            prefetch="render"
             activeClassName="bg-shallower-background dark:bg-shallow-background"
             className={cn("w-full", className)}
             tabIndex={isDisabled ? -1 : tabIndex}

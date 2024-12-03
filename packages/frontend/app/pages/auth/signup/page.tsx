@@ -46,7 +46,7 @@ export default function SignUpPage() {
                     <div className="w-full flex flex-col items-center justify-center gap-1">
                         <p className="text-center">
                             <span className="text-muted-foreground">Already have an account?&nbsp;</span>
-                            <Link to="/login" aria-label="Login" className="text_link">
+                            <Link prefetch="render" to="/login" aria-label="Login" className="text_link">
                                 Login
                             </Link>
                         </p>

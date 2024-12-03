@@ -7,6 +7,7 @@ import type { RootOutletData } from "~/root";
 import { buttonVariants } from "./button";
 
 interface CustomLinkProps extends LinkProps {}
+export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
 const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
     const data = useRouteLoaderData<RootOutletData>("root");
@@ -64,6 +65,7 @@ interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     onClick?: () => void | Promise<void>;
     tabIndex?: number;
     preventScrollReset?: boolean;
+    prefetch?: PrefetchBehavior;
 }
 
 export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLinkProps>(

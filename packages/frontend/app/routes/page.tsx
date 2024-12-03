@@ -21,9 +21,9 @@ export async function loader(props: LoaderFunctionArgs) {
     const res = await serverFetch(props.request, "/api/projects/home-page-carousel");
     const projects = (await resJson(res)) as ProjectListItem[];
 
-    return {
+    return Response.json({
         projects: projects || [],
-    };
+    });
 }
 
 export function shouldRevalidate() {
