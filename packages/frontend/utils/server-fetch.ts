@@ -5,7 +5,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
         const backendHost = process.env.BACKEND_HOST || "http://localhost:5500";
         let fetchUrl = pathname;
 
-        const clientIp = clientReq.headers.get("x-forwarded-for") || clientReq.headers.get("x-real-ip") || "0.0.0.0";
+        const clientIp = clientReq.headers.get("CF-Connecting-IP") || clientReq.headers.get("x-forwarded-for") || "0.0.0.0";
         const userAgent = clientReq.headers.get("User-Agent") || "";
 
         const headers = {

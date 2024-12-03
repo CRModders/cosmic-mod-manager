@@ -95,15 +95,29 @@ export type GeoApiData = {
 };
 
 export function getUserIpAddress(ctx: Context): string | null {
-    const clientIP = ctx.req.header("x-client-ip");
     const identityToken = ctx.req.header("x-identity-token");
+    let ipStr = null;
+    if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
+    else {
+        ipStr =
+            ctx.req.header("CF-Connecting-IP") ||
+            ctx.req.header("x-forwarded-for")?.split(",")?.[0] ||
+            ctx.req.header("x-forwarded-for") ||
+            ctx.env.ip;
+    }
 
-    let ipAddr = ctx.req.header("x-forwarded-for")?.split(", ")?.[0] || ctx.req.header("x-forwarded-for") || ctx.env.ip;
-    if (typeof ipAddr !== "string") ipAddr = ipAddr?.address;
+    if (typeof ipStr !== "string") ipStr = ipStr?.address;
 
-    if (clientIP && env.FRONTEND_SECRET === identityToken) return clientIP;
-    if (!ipAddr) return null;
-    return ipAddr;
+    ipStr = filterIpString(ipStr);
+    if (!ipStr) return null;
+
+    return ipStr.split(",")[0];
+}
+
+function filterIpString(ip: string) {
+    // Returns null if the IP is ipv6 or invalid
+    if (ip.includes(":")) return null;
+    return ip?.replaceAll(" ", "");
 }
 
 export async function getUserDeviceDetails(ctx: Context) {
