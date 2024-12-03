@@ -5,7 +5,8 @@ dotenv.config({ path: "./.env" });
 
 const isDev = process.env.NODE_ENV === "development";
 
-const frontendDir = "/var/www/cosmic-mod-manager/source/packages/frontend"; // Root of the frontend
+const rootDir = "/var/www/cosmic-mod-manager";
+const frontendDir = `${rootDir}/source/packages/frontend`; // Root of the frontend
 const reloadFrontend = "pm2 reload pm2.config.cjs --only crmm-frontend";
 
 const prod_frontend = {
