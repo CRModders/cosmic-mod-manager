@@ -127,6 +127,7 @@ export const Navlink = ({ href, label, children, className }: NavlinkProps) => {
     return (
         <ButtonLink
             url={href}
+            prefetch="render"
             className={cn("hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold", className)}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >
@@ -135,7 +136,7 @@ export const Navlink = ({ href, label, children, className }: NavlinkProps) => {
     );
 };
 
-export const NavMenuLink = ({
+export function NavMenuLink({
     href,
     label,
     isDisabled = false,
@@ -144,10 +145,11 @@ export const NavMenuLink = ({
     closeNavMenuOnLinkClick = true,
     toggleNavMenu,
     children,
-}: NavlinkProps) => {
+}: NavlinkProps) {
     return (
         <ButtonLink
             url={href}
+            prefetch="render"
             activeClassName="bg-shallower-background dark:bg-shallow-background"
             className={cn("w-full", className)}
             tabIndex={isDisabled ? -1 : tabIndex}
@@ -160,4 +162,4 @@ export const NavMenuLink = ({
             {children ? children : label}
         </ButtonLink>
     );
-};
+}
