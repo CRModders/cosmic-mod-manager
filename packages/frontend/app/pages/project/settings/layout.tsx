@@ -80,7 +80,12 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
                     <div className="w-full flex flex-col gap-1">
                         <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
                         {SidePanelLinks.map((link) => (
-                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                            <ButtonLink
+                                prefetch={link.prefetch ? "render" : undefined}
+                                key={link.href}
+                                url={`${baseUrl}/${link.href}`}
+                                preventScrollReset
+                            >
                                 {link.icon}
                                 {link.name}
                             </ButtonLink>
@@ -88,7 +93,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
 
                         <span className="text-lg font-semibold mt-2">View</span>
                         {viewPageLinks.map((link) => (
-                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                            <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
                                     {link.name}
@@ -99,7 +104,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
 
                         <span className="text-lg font-semibold mt-2">Upload</span>
                         {UploadPageLinks.map((link) => (
-                            <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                            <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
                                     {link.name}
@@ -156,6 +161,7 @@ const SidePanelLinks = [
         name: "Members",
         href: "settings/members",
         icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
+        prefetch: false,
     },
 ];
 

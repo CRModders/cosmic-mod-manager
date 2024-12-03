@@ -117,7 +117,7 @@ export function UploadVersionPageTopCard({
 
                 {featuredBtn}
 
-                <VariantButtonLink variant="secondary" url={backUrl}>
+                <VariantButtonLink variant="secondary" url={backUrl} prefetch="render">
                     <CancelButtonIcon className="w-btn-icon h-btn-icon" />
                     Cancel
                 </VariantButtonLink>

@@ -118,7 +118,7 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                     {currUsersMembership?.id &&
                     currUsersMembership?.id &&
                     doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
-                        <VariantButtonLink url="edit">
+                        <VariantButtonLink url="edit" prefetch="render">
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
                         </VariantButtonLink>

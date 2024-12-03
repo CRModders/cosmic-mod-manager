@@ -171,7 +171,7 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
             }
             actionBtns={
                 userData.id === session?.id ? (
-                    <VariantButtonLink variant="secondary-inverted" url="/settings/account">
+                    <VariantButtonLink variant="secondary-inverted" url="/settings/account" prefetch="render">
                         <EditIcon className="w-btn-icon h-btn-icon" />
                         Edit
                     </VariantButtonLink>

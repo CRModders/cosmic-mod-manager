@@ -469,6 +469,7 @@ const ProjectInfoHeader = ({
                                 variant={"secondary-inverted"}
                                 className="rounded-full w-11 h-11 p-0"
                                 label="project settings"
+                                prefetch="render"
                             >
                                 <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
                             </VariantButtonLink>

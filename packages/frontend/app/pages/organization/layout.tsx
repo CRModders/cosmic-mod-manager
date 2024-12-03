@@ -149,7 +149,11 @@ function OrgInfoHeader({ orgData, totalProjects, totalDownloads, currUsersMember
                     <>
                         {currUsersMembership?.id ? (
                             <>
-                                <VariantButtonLink variant="ghost" url={getOrgPagePathname(orgData.slug, "/settings/projects")}>
+                                <VariantButtonLink
+                                    variant="ghost"
+                                    url={getOrgPagePathname(orgData.slug, "/settings/projects")}
+                                    prefetch="render"
+                                >
                                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
                                     Manage projects
                                 </VariantButtonLink>

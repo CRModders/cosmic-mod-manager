@@ -343,7 +343,7 @@ export default function ProjectVersionsPage({ projectData, allProjectVersions, c
 const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => {
     return (
         <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
-            <VariantButtonLink url={uploadPageUrl} variant={"default"}>
+            <VariantButtonLink url={uploadPageUrl} variant="default" prefetch="render">
                 <UploadIcon className="w-btn-icon h-btn-icon" />
                 Upload a version
             </VariantButtonLink>
