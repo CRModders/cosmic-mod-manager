@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { removeAccountPasswordFormSchema } from "@shared/schemas/settings";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
@@ -41,6 +42,7 @@ export default function RemovePasswordForm() {
         try {
             if (isLoading) return;
             setIsLoading(true);
+            disableInteractions();
 
             const response = await clientFetch("/api/user/password", {
                 method: "DELETE",
@@ -57,6 +59,7 @@ export default function RemovePasswordForm() {
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

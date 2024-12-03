@@ -3,6 +3,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useNavigate } from "@remix-run/react";
 import { getOrgPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { createURLSafeSlug } from "@shared/lib/utils";
 import { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import { PlusIcon } from "lucide-react";
@@ -45,6 +46,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
         try {
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
+            disableInteractions();
 
             const response = await clientFetch("/api/organization", {
                 method: "POST",
@@ -59,6 +61,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
             navigate(getOrgPagePathname(values.slug));
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

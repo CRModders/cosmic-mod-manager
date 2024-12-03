@@ -1,5 +1,6 @@
 import { useRouteLoaderData } from "@remix-run/react";
 import { setCookie } from "@root/utils";
+import { disableInteractions } from "@root/utils/dom";
 import { CardContent, CardDescription, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Switch } from "~/components/ui/switch";
 import type { RootOutletData } from "~/root";
@@ -13,6 +14,8 @@ export default function PreferencesPage() {
 
     function toggleViewTransitions(checked: boolean) {
         setCookie("viewTransitions", `${checked}`);
+        disableInteractions();
+
         refresh();
     }
 

@@ -1,4 +1,5 @@
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import React from "react";
 import { toast } from "sonner";
@@ -50,6 +51,7 @@ export default function OAuthProvidersWidget({
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
+            disableInteractions();
 
             const response = await clientFetch(`/api/auth/${actionIntent}/${provider}`);
             const result = await response.json();
@@ -64,6 +66,7 @@ export default function OAuthProvidersWidget({
         } catch (err) {
             console.error(err);
             setIsLoading({ value: false, provider: null });
+            enableInteractions();
         }
     }
 

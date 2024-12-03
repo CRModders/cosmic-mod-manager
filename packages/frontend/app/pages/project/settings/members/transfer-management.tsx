@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "@remix-run/react";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, CheckIcon } from "lucide-react";
 import { useState } from "react";
@@ -27,6 +28,7 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
         try {
             if (isLoading || !selectedOrg) return;
             setIsLoading(true);
+            disableInteractions();
 
             const res = await clientFetch(`/api/organization/${selectedOrg}/projects`, {
                 method: "POST",
@@ -41,6 +43,7 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
             RefreshPage(navigate, location);
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 
@@ -93,6 +96,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
         try {
             if (isLoading) return;
             setIsLoading(true);
+            disableInteractions();
 
             const res = await clientFetch(`/api/organization/${org.id}/project/${projectId}`, {
                 method: "DELETE",
@@ -106,6 +110,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
             RefreshPage(navigate, location);
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

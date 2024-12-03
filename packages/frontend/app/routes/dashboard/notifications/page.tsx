@@ -9,7 +9,7 @@ import type { UserProfileData } from "@shared/types/api/user";
 import NotificationsPage from "~/pages/dashboard/notification/page";
 
 export default function _Notifications() {
-    const data = useLoaderData<typeof clientLoader>();
+    const data = useLoaderData() as LoaderData;
 
     return (
         <NotificationsPage
@@ -21,11 +21,18 @@ export default function _Notifications() {
     );
 }
 
+interface LoaderData {
+    notifications: Notification[] | null;
+    projects?: ProjectListItem[];
+    orgs?: OrganisationListItem[];
+    users?: UserProfileData[];
+}
+
 export async function clientLoader() {
     const notificationsRes = await clientFetch("/api/notifications");
     const notifications = ((await resJson(notificationsRes)) as Notification[]) || [];
 
-    if (!notifications?.length) return { notifications: null };
+    if (!notifications?.length) return Response.json({ notifications: null });
 
     const projectIds: string[] = [];
     const orgIds: string[] = [];
@@ -52,12 +59,12 @@ export async function clientLoader() {
     const orgs = ((await resJson(orgsRes)) as OrganisationListItem[]) || null;
     const users = ((await resJson(usersRes)) as UserProfileData[]) || null;
 
-    return {
+    return Response.json({
         notifications,
         projects,
         orgs,
         users,
-    };
+    });
 }
 
 export function meta() {

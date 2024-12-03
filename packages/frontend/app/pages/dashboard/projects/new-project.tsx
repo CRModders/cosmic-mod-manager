@@ -3,6 +3,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useNavigate } from "@remix-run/react";
 import { getProjectPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
@@ -64,6 +65,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
         try {
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
+            disableInteractions();
 
             const response = await clientFetch("/api/project", {
                 method: "POST",
@@ -79,6 +81,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

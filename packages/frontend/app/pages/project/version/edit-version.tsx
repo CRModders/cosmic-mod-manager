@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
@@ -83,6 +84,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
     const handleSubmit = async (values: z.infer<typeof updateVersionFormSchema>) => {
         if (isLoading || !projectData) return;
         setIsLoading(true);
+        disableInteractions();
 
         try {
             const formData = new FormData();
@@ -118,6 +120,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
             );
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

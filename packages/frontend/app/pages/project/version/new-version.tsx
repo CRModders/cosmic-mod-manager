@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
@@ -59,6 +60,7 @@ export default function UploadVersionPage({ projectData }: Props) {
 
         if (isLoading) return;
         setIsLoading(true);
+        disableInteractions();
 
         try {
             const formData = new FormData();
@@ -90,6 +92,7 @@ export default function UploadVersionPage({ projectData }: Props) {
             return;
         } finally {
             setIsLoading(false);
+            enableInteractions();
         }
     };
 

@@ -73,7 +73,7 @@ export default function Footer() {
                         className="rounded-full px-1 gap-0"
                     />
 
-                    <VariantButtonLink url="/settings" variant="outline" className="rounded-full">
+                    <VariantButtonLink prefetch="render" url="/settings" variant="outline" className="rounded-full">
                         <Settings2Icon className="w-btn-icon-md h-btn-icon-md" />
                         Settings
                     </VariantButtonLink>

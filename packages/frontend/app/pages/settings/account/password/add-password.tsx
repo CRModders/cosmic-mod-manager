@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { setNewPasswordFormSchema } from "@shared/schemas/settings";
 import { KeyRoundIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -43,21 +44,26 @@ const AddPasswordForm = ({ email }: { email: string }) => {
     const addNewPassword = async (values: z.infer<typeof setNewPasswordFormSchema>) => {
         if (isLoading || !isFormSubmittable) return;
         setIsLoading(true);
+        disableInteractions();
 
-        const response = await clientFetch("/api/user/password", {
-            method: "POST",
-            body: JSON.stringify(values),
-        });
-        setIsLoading(false);
-        const data = await response.json();
-
-        if (!response.ok || data?.success !== true) {
+        try {
+            const response = await clientFetch("/api/user/password", {
+                method: "POST",
+                body: JSON.stringify(values),
+            });
             setIsLoading(false);
-            return toast.error(data?.message || "");
+            const data = await response.json();
+
+            if (!response.ok || data?.success !== true) {
+                return toast.error(data?.message || "");
+            }
+            toast.success(data?.message || "");
+            form.reset();
+        } catch (error) {
+            enableInteractions();
+            setIsLoading(false);
+            setIsDialogOpen(false);
         }
-        toast.success(data?.message || "");
-        setIsDialogOpen(false);
-        form.reset();
     };
 
     return (

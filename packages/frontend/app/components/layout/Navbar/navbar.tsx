@@ -55,14 +55,14 @@ export default function Navbar(props: NavbarProps) {
                     <div className="flex items-center justify-center gap-8">
                         <Link
                             to={"/"}
-                            className="flex items-center justify-center h-nav-item"
+                            className="flex items-center justify-center h-nav-item gap-1"
                             aria-label="CRMM Home page"
                             title={SITE_NAME_LONG}
                             onClick={() => {
                                 toggleNavMenu(false);
                             }}
                         >
-                            <BrandIcon size="2rem" strokeWidth={26} />
+                            <BrandIcon size="1.75rem" strokeWidth={26} />
                             <span className="text-lg font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background drop-shadow-2xl">
                                 {SITE_NAME_SHORT}
                             </span>

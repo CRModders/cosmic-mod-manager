@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { LoginFormSchema } from "@shared/schemas/auth";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { LogInIcon } from "lucide-react";
@@ -37,6 +38,7 @@ export default function LoginPage() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: AuthProvider.CREDENTIAL });
+            disableInteractions();
 
             const response = await clientFetch(`/api/auth/${AuthActionIntent.SIGN_IN}/${AuthProvider.CREDENTIAL}`, {
                 method: "POST",
@@ -52,6 +54,7 @@ export default function LoginPage() {
             RefreshPage(navigate, location);
         } finally {
             setIsLoading({ value: false, provider: null });
+            enableInteractions();
         }
     };
 

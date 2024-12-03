@@ -1,5 +1,6 @@
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { disableInteractions } from "@root/utils/dom";
 import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
@@ -154,6 +155,7 @@ export function SignOutBtn({ className, disabled = false }: Props) {
     const handleClick = async () => {
         if (loading || disabled) return;
         setLoading(true);
+        disableInteractions();
 
         await clientFetch("/api/auth/sessions", {
             method: "DELETE",
