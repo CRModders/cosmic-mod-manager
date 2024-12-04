@@ -1,6 +1,5 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { useLocation, useNavigate } from "@remix-run/react";
-import { formatDate, timeSince } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { Capitalize } from "@shared/lib/utils";
 import { AuthProvider, type LoggedInUserData } from "@shared/types";
@@ -12,6 +11,7 @@ import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import CopyBtn from "~/components/ui/copy-btn";
+import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import { DotSeparator } from "~/components/ui/separator";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Switch } from "~/components/ui/switch";
@@ -108,10 +108,12 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
 
                                         <Tooltip>
                                             <TooltipTrigger className="cursor-text">
-                                                <span>Last accessed {timeSince(new Date(session.dateLastActive))}</span>
+                                                <span>
+                                                    Last accessed <TimePassedSince date={session.dateLastActive} />
+                                                </span>
                                             </TooltipTrigger>
                                             <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                {formatDate(new Date(session.dateLastActive))}
+                                                <FormattedDate date={session.dateLastActive} />
                                             </TooltipContent>
                                         </Tooltip>
 
@@ -119,10 +121,12 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
 
                                         <Tooltip>
                                             <TooltipTrigger className="cursor-text">
-                                                <span>Created {timeSince(new Date(session.dateCreated))}</span>
+                                                <span>
+                                                    Created <TimePassedSince date={session.dateCreated} />
+                                                </span>
                                             </TooltipTrigger>
                                             <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                {formatDate(new Date(session.dateCreated))}
+                                                <FormattedDate date={session.dateCreated} />
                                             </TooltipContent>
                                         </Tooltip>
                                     </div>

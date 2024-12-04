@@ -1,4 +1,4 @@
-import { cn, formatDate, getProjectPagePathname, imageUrl, timeSince } from "@root/utils";
+import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { ProjectSupport } from "@shared/types";
@@ -8,6 +8,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import Link from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { fallbackProjectIcon } from "../icons";
+import { FormattedDate, TimePassedSince } from "../ui/date";
 import "./styles.css";
 
 export enum ViewType {
@@ -196,10 +197,14 @@ function BaseView(props: SearchListItemProps) {
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
                                         <span>Published</span>
-                                        <span>{timeSince(props.datePublished)}</span>
+                                        <span>
+                                            <TimePassedSince date={props.datePublished} />
+                                        </span>
                                     </p>
                                 </TooltipTrigger>
-                                <TooltipContent>{formatDate(props.datePublished)}</TooltipContent>
+                                <TooltipContent>
+                                    <FormattedDate date={props.datePublished} />
+                                </TooltipContent>
                             </Tooltip>
                         ) : (
                             <Tooltip>
@@ -208,10 +213,14 @@ function BaseView(props: SearchListItemProps) {
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
                                         <span>Updated</span>
-                                        <span>{timeSince(props.dateUpdated)}</span>
+                                        <span>
+                                            <TimePassedSince date={props.dateUpdated} />
+                                        </span>
                                     </p>
                                 </TooltipTrigger>
-                                <TooltipContent>{formatDate(props.dateUpdated)}</TooltipContent>
+                                <TooltipContent>
+                                    <FormattedDate date={props.dateUpdated} />
+                                </TooltipContent>
                             </Tooltip>
                         )}
                     </TooltipProvider>

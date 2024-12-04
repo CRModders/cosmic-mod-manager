@@ -1,5 +1,5 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { cn, formatDate, imageUrl } from "@root/utils";
+import { cn, imageUrl } from "@root/utils";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { DateToISOStr } from "@shared/lib/utils/date-time";
 import { ProjectPermission } from "@shared/types";
@@ -20,6 +20,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { ImgLoader } from "~/components/img-loading-spinner";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { FormattedDate } from "~/components/ui/date";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "~/components/ui/dialog";
 
 const RemoveGalleryImage = lazy(() => import("./remove-img"));
@@ -137,7 +138,7 @@ const GalleryItemCard = ({
                 <div className="w-full flex flex-col items-start justify-start gap-1.5 mt-1">
                     <p className="flex gap-1.5 items-center justify-center text-muted-foreground">
                         <CalendarIcon className="w-btn-icon h-btn-icon" />
-                        {formatDate(new Date(galleryItem.dateCreated), "${month} ${day}, ${year}")}
+                        <FormattedDate date={galleryItem.dateCreated} timestamp_template="${month} ${day}, ${year}" />
                     </p>
                     {currUsersMembership?.id &&
                     doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currUsersMembership.permissions, currUsersMembership.isOwner) ? (

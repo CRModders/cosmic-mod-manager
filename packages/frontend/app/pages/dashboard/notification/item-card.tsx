@@ -1,5 +1,4 @@
 import { useNavigate } from "@remix-run/react";
-import { formatDate, timeSince } from "@root/utils";
 import type { Notification } from "@shared/types/api";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import { toast } from "sonner";
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -221,9 +221,13 @@ export function TeamInviteNotification({
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <span>Received {timeSince(new Date(notification.dateCreated))}</span>
+                            <span>
+                                Received <TimePassedSince date={notification.dateCreated} />
+                            </span>
                         </TooltipTrigger>
-                        <TooltipContent>{formatDate(new Date(notification.dateCreated))}</TooltipContent>
+                        <TooltipContent>
+                            <FormattedDate date={notification.dateCreated} />
+                        </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
             </div>

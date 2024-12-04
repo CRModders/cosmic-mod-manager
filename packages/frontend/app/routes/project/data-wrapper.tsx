@@ -72,7 +72,7 @@ export default function _ProjectDataWrapper() {
     );
 }
 
-interface loaderData {
+export interface loaderData {
     projectSlug: string | undefined;
     projectData?: ProjectDetailsData | null;
     versions?: ProjectVersionData[];

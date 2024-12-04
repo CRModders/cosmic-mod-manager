@@ -1,8 +1,8 @@
 import { useSearchParams } from "@remix-run/react";
-import { formatDate, getProjectPagePathname, getProjectVersionPagePathname, timeSince } from "@root/utils";
+import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import { formatGameVersionsList } from "@root/utils/version";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
-import { Capitalize, CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { sortVersionsWithReference } from "@shared/lib/utils/project";
 import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
@@ -31,6 +31,7 @@ import { LabelledCheckbox } from "~/components/ui/checkbox";
 import Chip, { ChipButton } from "~/components/ui/chip";
 import { CommandSeparator } from "~/components/ui/command";
 import { copyTextToClipboard } from "~/components/ui/copy-btn";
+import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
@@ -587,17 +588,11 @@ const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
 };
 
 const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string | Date; iconVisible?: boolean }) => {
-    const date = new Date(dateStr);
-
-    if (!date) {
-        return null;
-    }
-
     return (
-        <TooltipTemplate content={formatDate(date)}>
-            <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap cursor-help">
+        <TooltipTemplate content={<FormattedDate date={dateStr} />}>
+            <span className="flex capitalize gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap cursor-help">
                 {iconVisible === true ? <CalendarIcon className="w-3.5 h-3.5" /> : null}
-                {Capitalize(timeSince(date))}
+                <TimePassedSince date={dateStr} />
             </span>
         </TooltipTemplate>
     );

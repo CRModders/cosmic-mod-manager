@@ -1,6 +1,6 @@
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Outlet } from "@remix-run/react";
-import { getOrgPagePathname, imageUrl, timeSince } from "@root/utils";
+import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { LoggedInUserData } from "@shared/types";
@@ -12,6 +12,7 @@ import { PageHeader } from "~/components/layout/page-header";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import SecondaryNav from "../project/secondary-nav";
@@ -188,7 +189,9 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
             </div>
             <div className="flex items-center gap-2">
                 <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />
-                <span className="font-semibold">Joined {timeSince(new Date(userData.dateJoined))}</span>
+                <span className="font-semibold">
+                    Joined <TimePassedSince date={userData.dateJoined} />
+                </span>
             </div>
         </PageHeader>
     );

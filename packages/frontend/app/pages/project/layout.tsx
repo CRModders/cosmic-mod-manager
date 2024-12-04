@@ -1,15 +1,6 @@
 import { PopoverClose } from "@radix-ui/react-popover";
 import { Outlet, useLocation, useNavigate } from "@remix-run/react";
-import {
-    cn,
-    formatDate,
-    getOrgPagePathname,
-    getProjectPagePathname,
-    getProjectVersionPagePathname,
-    imageUrl,
-    isCurrLinkActive,
-    timeSince,
-} from "@root/utils";
+import { cn, getOrgPagePathname, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
 import { formatGameVersionsList, formatGameVersionsListString } from "@root/utils/version";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
@@ -44,6 +35,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import Chip from "~/components/ui/chip";
+import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { ButtonLink, useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
@@ -362,19 +354,23 @@ export default function ProjectPageLayout({
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <CalendarIcon className="w-btn-icon h-btn-icon" />
-                                    Created {timeSince(new Date(projectData.datePublished))}
+                                    Created <TimePassedSince date={projectData.datePublished} />
                                 </p>
                             </TooltipTrigger>
-                            <TooltipContent>{formatDate(new Date(projectData.datePublished))}</TooltipContent>
+                            <TooltipContent>
+                                <FormattedDate date={projectData.datePublished} />
+                            </TooltipContent>
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
-                                    Updated {timeSince(new Date(projectData.dateUpdated))}
+                                    Updated <TimePassedSince date={projectData.dateUpdated} />
                                 </p>
                             </TooltipTrigger>
-                            <TooltipContent>{formatDate(new Date(projectData.dateUpdated))}</TooltipContent>
+                            <TooltipContent>
+                                <FormattedDate date={projectData.dateUpdated} />
+                            </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </Card>

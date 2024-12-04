@@ -1,5 +1,4 @@
 import { type MetaArgs, useOutletContext } from "@remix-run/react";
-import type { AwaitedReturnType } from "@root/types";
 import { formatDate, getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
@@ -8,7 +7,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import VersionPage from "~/pages/project/version/page";
-import type { loader as ProjectDataLoader } from "~/routes/project/data-wrapper";
+import type { loaderData as projectDataLoader } from "~/routes/project/data-wrapper";
 
 export default function _VersionPage() {
     const data = useOutletContext<ProjectLayoutProps>();
@@ -26,11 +25,11 @@ export default function _VersionPage() {
 export function meta(props: MetaArgs) {
     const parentMetaTags = props.matches?.at(-3)?.meta;
 
-    const parentData = props.matches[2].data as AwaitedReturnType<typeof ProjectDataLoader>;
+    const parentData = props.matches[2].data as projectDataLoader;
     const project = parentData.projectData;
     const versionSlug = props.params.versionSlug;
 
-    if (!project?.id) {
+    if (!parentData || !project?.id) {
         return MetaTags({
             title: "Project not found",
             description: `The project with the slug/ID "${parentData.projectSlug}" does not exist.`,
@@ -40,9 +39,9 @@ export function meta(props: MetaArgs) {
         });
     }
 
-    let version = parentData.versions.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    let version = parentData.versions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
     if (versionSlug === "latest") {
-        version = parentData.versions[0];
+        version = parentData.versions?.[0];
     }
 
     if (!version?.id) {

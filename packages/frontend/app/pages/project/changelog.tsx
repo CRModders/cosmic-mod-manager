@@ -1,6 +1,6 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { useSearchParams } from "@remix-run/react";
-import { cn, formatDate, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
+import { cn, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -16,6 +16,7 @@ import { Card } from "~/components/ui/card";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { ChipButton } from "~/components/ui/chip";
 import { CommandSeparator } from "~/components/ui/command";
+import { FormattedDate } from "~/components/ui/date";
 import Link from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { releaseChannelTextColor } from "~/components/ui/release-channel-pill";
@@ -290,7 +291,14 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
                                             {version.author.userName}
                                         </Link>
                                     </span>
-                                    <span>on {formatDate(new Date(version.datePublished), "${month} ${day}, ${year}", true)}</span>
+                                    <span>
+                                        on{" "}
+                                        <FormattedDate
+                                            date={version.datePublished}
+                                            timestamp_template="${month} ${day}, ${year}"
+                                            useShortMonthNames
+                                        />
+                                    </span>
                                 </div>
 
                                 {version.primaryFile?.url ? (

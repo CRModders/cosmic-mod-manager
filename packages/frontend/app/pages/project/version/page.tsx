@@ -1,6 +1,6 @@
 import { useParams } from "@remix-run/react";
 import type { DependencyData } from "@root/types";
-import { cn, formatDate, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
+import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
 import { formatGameVersionsListString } from "@root/utils/version";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
@@ -24,6 +24,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "~/components/ui/context-menu";
 import CopyBtn, { copyTextToClipboard } from "~/components/ui/copy-btn";
+import { FormattedDate } from "~/components/ui/date";
 import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
 import ReleaseChannelChip from "~/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -274,7 +275,11 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                             },
                             {
                                 label: "Publication date",
-                                content: <span className="leading-none"> {formatDate(new Date(versionData.datePublished))} </span>,
+                                content: (
+                                    <span className="leading-none">
+                                        <FormattedDate date={versionData.datePublished} />
+                                    </span>
+                                ),
                             },
                             {
                                 label: "Publisher",
