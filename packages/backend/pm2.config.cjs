@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = false;
 const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will be cloned in prod
 
 const sourceDir = !isDev ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
