@@ -95,15 +95,16 @@ export type GeoApiData = {
     country?: string;
 };
 
-export function getUserIpAddress(ctx: Context, fullIp = false): string | null {
+export function getUserIpAddress(ctx: Context): string | null {
     const identityToken = ctx.req.header("x-identity-token");
     let ipStr = null;
     if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
     else {
         ipStr =
             ctx.req.header("CF-Connecting-IP") ||
-            ctx.req.header("x-forwarded-for")?.split(",")?.[0] ||
-            ctx.req.header("x-forwarded-for") ||
+            ctx.req.header("X-Real-IP") ||
+            ctx.req.header("X-Forwarded-For")?.split(",")?.[0] ||
+            ctx.req.header("X-Forwarded-For") ||
             ctx.env.ip;
     }
 
@@ -111,8 +112,6 @@ export function getUserIpAddress(ctx: Context, fullIp = false): string | null {
 
     ipStr = removeSpaces(ipStr)?.split(",")?.[0];
     if (!ipStr) return null;
-
-    if (fullIp) return ipStr;
 
     const IPv6 = convertToIPv6(ipStr);
     if (!IPv6) return null;
@@ -126,7 +125,7 @@ function removeSpaces(ip: string) {
 
 export async function getUserDeviceDetails(ctx: Context) {
     const userAgent = ctx.req.header("user-agent");
-    const ipAddr = getUserIpAddress(ctx, true);
+    const ipAddr = getUserIpAddress(ctx);
 
     const parsedResult = new UAParser(userAgent).getResult();
     const browserName = parsedResult.browser.name;
