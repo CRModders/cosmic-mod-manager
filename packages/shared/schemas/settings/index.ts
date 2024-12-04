@@ -1,11 +1,11 @@
 import { z } from "zod";
 import {
+    MAX_DISPLAY_NAME_LENGTH,
     MAX_EMAIL_LENGTH,
-    MAX_NAME_LENGTH,
     MAX_PASSWORD_LENGTH,
     MAX_USERNAME_LENGTH,
+    MIN_DISPLAY_NAME_LENGTH,
     MIN_EMAIL_LENGTH,
-    MIN_NAME_LENGTH,
     MIN_PASSWORD_LENGTH,
     MIN_USERNAME_LENGTH,
 } from "../../config/forms";
@@ -19,8 +19,8 @@ export const profileUpdateFormSchema = z.object({
         .max(MAX_USERNAME_LENGTH, `Your username can only have a maximum of ${MAX_USERNAME_LENGTH} characters`),
     name: z
         .string()
-        .min(MIN_NAME_LENGTH, "Enter your full name")
-        .max(MAX_NAME_LENGTH, `Your name can only have a maximum of ${MAX_NAME_LENGTH} characters`),
+        .min(MIN_DISPLAY_NAME_LENGTH, "Enter your display name")
+        .max(MAX_DISPLAY_NAME_LENGTH, `Your display name can only have a maximum of ${MAX_DISPLAY_NAME_LENGTH} characters`),
 });
 
 export const setNewPasswordFormSchema = z.object({

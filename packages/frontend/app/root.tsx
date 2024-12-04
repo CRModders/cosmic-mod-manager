@@ -87,14 +87,21 @@ export default function App() {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    const sessionRes = await serverFetch(request, "/api/auth/me");
-    const session = await resJson(sessionRes);
+    let session: LoggedInUserData | null = null;
+    const cookie = request.headers.get("Cookie") || "";
+
+    if (getCookie("auth-token", cookie)?.length) {
+        const sessionRes = await serverFetch(request, "/api/auth/me");
+        session = await resJson<LoggedInUserData>(sessionRes);
+
+        if (!session?.id) session = null;
+    }
 
     // Preferences
-    const themePref = getCookie("theme", request.headers.get("Cookie") || "");
+    const themePref = getCookie("theme", cookie);
     const theme = getThemeFromCookie(themePref);
 
-    const viewTransitions = getCookie("viewTransitions", request.headers.get("Cookie") || "") === "true";
+    const viewTransitions = getCookie("viewTransitions", cookie) === "true";
 
     return Response.json({
         theme,

@@ -9,7 +9,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
@@ -51,7 +50,7 @@ export default function LoginPage() {
             }
 
             toast.success(result?.message || "Success");
-            RefreshPage(navigate, location);
+            window.location.reload();
         } finally {
             setIsLoading({ value: false, provider: null });
             enableInteractions();

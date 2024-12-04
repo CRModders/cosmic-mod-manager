@@ -17,7 +17,7 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
     });
     const [successMessage, setSuccessMessage] = useState("");
 
-    const confirmAccountDeletion = async () => {
+    async function confirmAccountDeletion() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "confirming" });
@@ -36,9 +36,9 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
-    const cancelAccountDeletion = async () => {
+    async function cancelAccountDeletion() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancelling" });
@@ -57,7 +57,7 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
     return (
         <>

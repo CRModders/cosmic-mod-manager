@@ -7,8 +7,8 @@ export const MAX_PASSWORD_LENGTH = 64;
 export const MIN_USERNAME_LENGTH = 2;
 export const MAX_USERNAME_LENGTH = 32;
 
-export const MIN_NAME_LENGTH = 2;
-export const MAX_NAME_LENGTH = 32;
+export const MIN_DISPLAY_NAME_LENGTH = 2;
+export const MAX_DISPLAY_NAME_LENGTH = 32;
 
 // Project
 export const MIN_PROJECT_NAME_LENGTH = 2;

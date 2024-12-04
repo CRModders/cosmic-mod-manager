@@ -32,7 +32,6 @@ const LoadingBar = forwardRef<LoadingBarRef, IProps>(
             height = 2,
             className = "",
             color = "red",
-            gradient,
             background = "transparent",
             onLoaderFinished,
             transitionTime = 300,
@@ -63,8 +62,9 @@ const LoadingBar = forwardRef<LoadingBarRef, IProps>(
 
         const initialLoaderStyle: CSSProperties = {
             height: "100%",
-            background: gradient || color,
+            background: color,
             transition: `all ${loaderSpeed}ms ease`,
+            filter: "brightness(1.1)",
             width: "0%",
         };
 
@@ -240,6 +240,7 @@ const LoadingBar = forwardRef<LoadingBarRef, IProps>(
                         width: `${_progress}%`,
                         opacity: 1,
                         transition: _progress > 0 ? `all ${loaderSpeed}ms ease` : "",
+                        backgroundSize: `${(100 / (_progress + 1)) * 100}% auto`,
                     };
                 });
 

@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useLocation, useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { Capitalize, formatUserName } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { profileUpdateFormSchema } from "@shared/schemas/settings";
@@ -29,29 +30,28 @@ import { Input } from "~/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
-const EditProfileDialog = ({
-    session,
-    linkedAuthProviders,
-}: {
+interface Props {
     session: LoggedInUserData;
     linkedAuthProviders: LinkedProvidersListData[] | null;
-}) => {
+}
+
+function EditProfileDialog({ session, linkedAuthProviders }: Props) {
     const navigate = useNavigate();
     const location = useLocation();
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const initialFormValues = {
+    const formInit = {
         avatarUrlProvider: getAuthProviderFromString(session?.avatarProvider || ""),
         userName: session.userName,
         name: session.name,
     };
     const form = useForm<z.infer<typeof profileUpdateFormSchema>>({
         resolver: zodResolver(profileUpdateFormSchema),
-        defaultValues: initialFormValues,
+        defaultValues: formInit,
     });
 
-    const handleSubmit = async () => {
+    async function handleSubmit() {
         if (isLoading) return;
         setIsLoading(true);
 
@@ -69,7 +69,7 @@ const EditProfileDialog = ({
         RefreshPage(navigate, location);
         setIsLoading(false);
         setIsDialogOpen(false);
-    };
+    }
 
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -84,7 +84,7 @@ const EditProfileDialog = ({
                     <DialogTitle>Edit profile</DialogTitle>
                 </DialogHeader>
                 <VisuallyHidden>
-                    <DialogDescription>Edit your crmm profile</DialogDescription>
+                    <DialogDescription>Edit your {SITE_NAME_SHORT} profile</DialogDescription>
                 </VisuallyHidden>
 
                 <DialogBody>
@@ -158,7 +158,7 @@ const EditProfileDialog = ({
                                     <>
                                         <FormItem>
                                             <FormLabel>
-                                                Name
+                                                Display Name
                                                 <FormMessage />
                                             </FormLabel>
                                             <FormControl>
@@ -181,7 +181,7 @@ const EditProfileDialog = ({
                                 <DialogClose asChild>
                                     <CancelButton />
                                 </DialogClose>
-                                <Button disabled={isLoading || JSON.stringify(form.getValues()) === JSON.stringify(initialFormValues)}>
+                                <Button disabled={isLoading || JSON.stringify(form.getValues()) === JSON.stringify(formInit)}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="size-4" />}
                                     Save
                                 </Button>
@@ -192,6 +192,6 @@ const EditProfileDialog = ({
             </DialogContent>
         </Dialog>
     );
-};
+}
 
 export default EditProfileDialog;

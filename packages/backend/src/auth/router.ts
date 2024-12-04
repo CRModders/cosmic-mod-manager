@@ -48,7 +48,7 @@ async function currSession_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
 
-        if (!userSession) return ctx.json({ success: false, message: "You're not logged in!" }, HTTP_STATUS.UNAUTHENTICATED);
+        if (!userSession) return ctx.json({ success: false, message: "You're not logged in!" }, HTTP_STATUS.OK);
         const formattedObject: LoggedInUserData = {
             id: userSession.id,
             email: userSession.email,
