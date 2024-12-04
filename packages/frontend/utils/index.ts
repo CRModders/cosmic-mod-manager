@@ -53,6 +53,7 @@ export function timeSince(pastTime: Date): string {
     try {
         const now = new Date();
         const diff = now.getTime() - pastTime.getTime();
+
         const seconds = Math.abs(diff / 1000);
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
@@ -90,15 +91,16 @@ export function formatDate(
     date: Date,
     timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
     useShortMonthNames = false,
+    utc = false,
 ): string {
     try {
-        const year = date.getFullYear();
-        const monthIndex = date.getMonth();
+        const year = utc ? date.getUTCFullYear() : date.getFullYear();
+        const monthIndex = utc ? date.getUTCMonth() : date.getMonth();
         const month = (useShortMonthNames ? shortMonthNames : monthNames)[monthIndex];
-        const day = date.getDate();
+        const day = utc ? date.getUTCDate() : date.getDate();
 
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
+        const hours = utc ? date.getUTCHours() : date.getHours();
+        const minutes = utc ? date.getUTCMinutes() : date.getMinutes();
         const amPm = hours >= 12 ? "PM" : "AM";
         const adjustedHours = hours % 12 || 12; // Convert to 12-hour format
 

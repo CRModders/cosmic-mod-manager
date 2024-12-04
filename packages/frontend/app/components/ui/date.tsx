@@ -11,7 +11,7 @@ export function FormattedDate(props: FormatDateProps) {
     const date = new Date(props.date);
     return (
         <ClientOnly
-            fallback={date.toUTCString()}
+            fallback={formatDate(date, props.timestamp_template, props.useShortMonthNames, true)}
             Element={() => <>{formatDate(date, props.timestamp_template, props.useShortMonthNames)}</>}
         />
     );
@@ -20,5 +20,5 @@ export function FormattedDate(props: FormatDateProps) {
 export function TimePassedSince({ date }: { date: Date | string }) {
     const _date = new Date(date);
 
-    return <ClientOnly fallback={_date.toUTCString()} Element={() => <>{timeSince(_date)}</>} />;
+    return <>{timeSince(_date)}</>;
 }
