@@ -95,7 +95,7 @@ export type GeoApiData = {
     country?: string;
 };
 
-export function getUserIpAddress(ctx: Context): string | null {
+export function getUserIpAddress(ctx: Context, strip = true): string | null {
     const identityToken = ctx.req.header("x-identity-token");
     let ipStr = null;
     if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
@@ -116,6 +116,7 @@ export function getUserIpAddress(ctx: Context): string | null {
     const IPv6 = convertToIPv6(ipStr);
     if (!IPv6) return null;
 
+    if (!strip) return IPv6;
     return stripIp(IPv6).toString(16);
 }
 
@@ -125,7 +126,7 @@ function removeSpaces(ip: string) {
 
 export async function getUserDeviceDetails(ctx: Context) {
     const userAgent = ctx.req.header("user-agent");
-    const ipAddr = getUserIpAddress(ctx);
+    const ipAddr = getUserIpAddress(ctx, false);
 
     const parsedResult = new UAParser(userAgent).getResult();
     const browserName = parsedResult.browser.name;
