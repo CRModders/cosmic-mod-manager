@@ -83,7 +83,10 @@ export const MarkdownRenderBox = ({ text, className }: { text: string; className
             const target = e.target as HTMLAnchorElement;
             const targetUrl = new URL(target.href);
 
-            if (targetUrl.origin !== window.location.origin) return;
+            const targetOrigin = targetUrl.origin;
+            const currOrigin = window.location.origin;
+
+            if (!currOrigin.includes(targetOrigin) && !targetOrigin.includes(currOrigin)) return;
 
             e.preventDefault();
             navigate(`${target.pathname}${target.search}`);
