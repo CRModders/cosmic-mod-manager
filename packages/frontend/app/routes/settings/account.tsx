@@ -5,7 +5,6 @@ import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { LinkedProvidersListData } from "@shared/types";
-import ClientOnly from "~/components/client-only";
 import AccountSettingsPage from "~/pages/settings/account/page";
 import type { RootOutletData } from "~/root";
 
@@ -15,7 +14,7 @@ export default function _AccountSettings() {
 
     if (!session?.id) return <Navigate to="/login" />;
 
-    return <ClientOnly Element={() => <AccountSettingsPage session={session} linkedAuthProviders={linkedProviders || []} />} />;
+    return <AccountSettingsPage session={session} linkedAuthProviders={linkedProviders || []} />;
 }
 
 export async function loader(props: LoaderFunctionArgs) {

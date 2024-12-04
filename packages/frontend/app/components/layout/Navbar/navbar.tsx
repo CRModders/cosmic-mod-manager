@@ -80,31 +80,30 @@ export default function Navbar(props: NavbarProps) {
                             })}
                         </ul>
                     </div>
-                    <ClientOnly
-                        fallback={<div className="h-nav-item w-nav-item rounded-full" />}
-                        Element={() => (
-                            <div className="flex items-center gap-4">
-                                {MemoizedThemeSwitch}
+                    <div className="flex items-center gap-4">
+                        {MemoizedThemeSwitch}
 
-                                <div className="hidden lg:flex">
-                                    <NavButton session={props.session} notifications={props.notifications} toggleNavMenu={toggleNavMenu} />
-                                </div>
+                        <div className="hidden lg:flex">
+                            <NavButton session={props.session} notifications={props.notifications} toggleNavMenu={toggleNavMenu} />
+                        </div>
 
-                                <div className="flex lg:hidden align-center justify-center">
-                                    <HamMenu isNavMenuOpen={isNavMenuOpen} toggleNavMenu={toggleNavMenu} />
-                                </div>
-                            </div>
-                        )}
-                    />
+                        <div className="flex lg:hidden align-center justify-center">
+                            <HamMenu isNavMenuOpen={isNavMenuOpen} toggleNavMenu={toggleNavMenu} />
+                        </div>
+                    </div>
                 </nav>
             </div>
 
-            <MobileNav
-                session={props.session}
-                notifications={props.notifications}
-                isNavMenuOpen={isNavMenuOpen}
-                NavLinks={NavLinks}
-                toggleNavMenu={toggleNavMenu}
+            <ClientOnly
+                Element={() => (
+                    <MobileNav
+                        session={props.session}
+                        notifications={props.notifications}
+                        isNavMenuOpen={isNavMenuOpen}
+                        NavLinks={NavLinks}
+                        toggleNavMenu={toggleNavMenu}
+                    />
+                )}
             />
         </header>
     );

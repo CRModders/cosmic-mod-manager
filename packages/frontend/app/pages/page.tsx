@@ -40,7 +40,7 @@ export default function HomePage({ session, projects }: Props) {
             <main className="w-full">
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <div className="p-6">
-                        <BrandIcon size="18rem" className="text-accent-foreground" />
+                        <BrandIcon className="text-accent-foreground" size="16rem" />
                     </div>
 
                     <div className="w-full flex flex-col items-center justify-center gap-1">

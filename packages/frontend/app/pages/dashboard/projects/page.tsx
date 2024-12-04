@@ -2,11 +2,9 @@ import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@root/util
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
-import { PlusIcon, SettingsIcon } from "lucide-react";
-import ClientOnly from "~/components/client-only";
+import { SettingsIcon } from "lucide-react";
 import { ProjectStatusIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import CopyBtn from "~/components/ui/copy-btn";
 import Link, { useCustomNavigate } from "~/components/ui/link";
@@ -22,15 +20,7 @@ export default function ProjectsPage({ projects }: Props) {
         <Card className="w-full overflow-hidden">
             <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">
                 <CardTitle>Projects</CardTitle>
-                <ClientOnly
-                    fallback={
-                        <Button className="space-y-0">
-                            <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
-                            Create a project
-                        </Button>
-                    }
-                    Element={() => <CreateNewProjectDialog />}
-                />
+                <CreateNewProjectDialog />
             </CardHeader>
             <CardContent className="p-0">
                 {projects.length === 0 ? (
