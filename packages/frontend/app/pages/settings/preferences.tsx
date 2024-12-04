@@ -1,22 +1,23 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLocation, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import { setCookie } from "@root/utils";
 import { disableInteractions } from "@root/utils/dom";
+import RefreshPage from "~/components/refresh-page";
 import { CardContent, CardDescription, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Switch } from "~/components/ui/switch";
 import type { RootOutletData } from "~/root";
 
 export default function PreferencesPage() {
     const data = useRouteLoaderData<RootOutletData>("root");
-
-    function refresh() {
-        window.location.reload();
-    }
+    const navigate = useNavigate();
+    const location = useLocation();
 
     function toggleViewTransitions(checked: boolean) {
-        setCookie("viewTransitions", `${checked}`);
         disableInteractions();
+        setCookie("viewTransitions", `${checked}`);
 
-        refresh();
+        setTimeout(() => {
+            RefreshPage(navigate, location);
+        }, 100);
     }
 
     return (

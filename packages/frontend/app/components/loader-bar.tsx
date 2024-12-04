@@ -1,4 +1,5 @@
 import { useNavigation } from "@remix-run/react";
+import { enableInteractions, interactionsDisabled } from "@root/utils/dom";
 import { useEffect, useRef } from "react";
 import LoadingBar, { type LoadingBarRef } from "~/components/rtk-loading-indicator";
 
@@ -15,23 +16,11 @@ function LoaderBar() {
     }
 
     function loadingEnd() {
+        if (interactionsDisabled()) enableInteractions();
         if (!loaderStarted) return;
 
         ref.current?.complete();
         loaderStarted = false;
-    }
-
-    function handleAjaxRequest() {
-        const requestProcessing = document.documentElement.classList.contains("disable-interactions");
-        if (timeoutRef) window.clearTimeout(timeoutRef);
-        if (navigation.state !== "idle") return;
-
-        if (requestProcessing) {
-            if (loaderStarted) loadingEnd();
-            timeoutRef = window.setTimeout(loadingStart, 100);
-        }
-
-        if (!requestProcessing && loaderStarted) loadingEnd();
     }
 
     useEffect(() => {
@@ -43,13 +32,6 @@ function LoaderBar() {
 
         if (navigation.state === "idle") loadingEnd();
     }, [navigation.location?.pathname]);
-
-    useEffect(() => {
-        const observer = new MutationObserver(handleAjaxRequest);
-        observer.observe(document.documentElement, { attributeFilter: ["class"] });
-
-        return () => observer.disconnect();
-    }, []);
 
     return (
         <LoadingBar

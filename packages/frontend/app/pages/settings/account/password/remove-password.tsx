@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useNavigate } from "@remix-run/react";
 import clientFetch from "@root/utils/client-fetch";
-import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { disableInteractions } from "@root/utils/dom";
 import { removeAccountPasswordFormSchema } from "@shared/schemas/settings";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
@@ -54,12 +54,12 @@ export default function RemovePasswordForm() {
                 return toast.error(result?.message || "Error");
             }
 
-            setDialogOpen(false);
-            RefreshPage(navigate, location);
             return toast.success(result?.message || "Success");
         } finally {
+            setDialogOpen(false);
             setIsLoading(false);
-            enableInteractions();
+
+            RefreshPage(navigate, location);
         }
     };
 

@@ -6,6 +6,7 @@ import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import RefreshPage from "~/components/refresh-page";
 import { FormErrorMessage } from "~/components/ui/form-message";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
@@ -34,7 +35,7 @@ export default function OAuthCallbackPage({ authProvider, code, csrfState }: Pro
             }
 
             toast.success(data?.message || "Success!");
-            window.location.href = "/dashboard";
+            RefreshPage(navigate, "/dashboard");
         } catch (error) {
             console.error(error);
             setErrorMsg(`${error}` || "Something went wrong!");

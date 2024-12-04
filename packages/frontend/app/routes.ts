@@ -5,7 +5,7 @@ const ProjectTypes = ["project", "mod", "modpack", "shader", "resource-pack", "d
 
 export default remixRoutesOptionAdapter((defineRoutes) => {
     return defineRoutes((route) => {
-        route("/", path("error-handler.tsx"), { id: "error-boundary" }, () => {
+        route("/", path("root-wrapper.tsx"), { id: "root-wrapper" }, () => {
             route("", path("page.tsx"), { id: "home-page", index: true });
             route("about", path("about.tsx"));
             route("status", path("status.tsx"));

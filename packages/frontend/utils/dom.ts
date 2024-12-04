@@ -5,6 +5,10 @@ function disablePathNavigations(e: KeyboardEvent) {
     }
 }
 
+export function interactionsDisabled() {
+    return document.documentElement.classList.contains("disable-interactions");
+}
+
 export function disableInteractions() {
     document.documentElement.classList.add("disable-interactions");
     document.addEventListener("keydown", disablePathNavigations);

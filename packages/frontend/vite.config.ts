@@ -22,7 +22,7 @@ export default defineConfig({
                 v3_singleFetch: true,
                 v3_lazyRouteDiscovery: false,
                 v3_routeConfig: true,
-                unstable_optimizeDeps: true,
+                // unstable_optimizeDeps: true,
             },
         }),
         tsconfigPaths(),

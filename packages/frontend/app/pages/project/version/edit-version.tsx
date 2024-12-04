@@ -111,6 +111,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
             const result = await res.json();
 
             if (!res.ok || !result?.success) {
+                enableInteractions();
                 return toast.error(result?.message || "Failed to update version");
             }
 
@@ -120,7 +121,6 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
             );
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 

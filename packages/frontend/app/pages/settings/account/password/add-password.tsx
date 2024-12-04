@@ -59,7 +59,7 @@ const AddPasswordForm = ({ email }: { email: string }) => {
             }
             toast.success(data?.message || "");
             form.reset();
-        } catch (error) {
+        } finally {
             enableInteractions();
             setIsLoading(false);
             setIsDialogOpen(false);

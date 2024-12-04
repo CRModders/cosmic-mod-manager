@@ -74,6 +74,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
+                enableInteractions();
                 return toast.error(result?.message || "Error");
             }
 
@@ -81,7 +82,6 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 

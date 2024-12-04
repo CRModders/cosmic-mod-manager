@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
 import type { ThemeOptions } from "@root/types";
 import { getCookie, getThemeFromCookie } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
@@ -82,7 +82,7 @@ export default function App() {
                 <DownloadRipple />
             </ContextProviders>
         ),
-        [],
+        [data.session, data.viewTransitions],
     );
 }
 
@@ -110,7 +110,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
 }
 
-export function shouldRevalidate() {
+export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {
+    const revalidate = nextUrl.searchParams.get("revalidate") === "true";
+
+    if (revalidate) return true;
     return false;
 }
 

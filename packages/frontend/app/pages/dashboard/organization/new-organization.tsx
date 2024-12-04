@@ -55,13 +55,13 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
+                enableInteractions();
                 return toast.error(result?.message || "Error");
             }
 
             navigate(getOrgPagePathname(values.slug));
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 

@@ -37,13 +37,13 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
             const data = await res.json();
 
             if (!res.ok || !data.success) {
+                enableInteractions();
                 return toast.error(data.message || "Error");
             }
 
             RefreshPage(navigate, location);
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 
@@ -104,13 +104,13 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
             const data = await res.json();
 
             if (!res.ok || !data.success) {
+                enableInteractions();
                 return toast.error(data.message || "Error");
             }
 
             RefreshPage(navigate, location);
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 

@@ -84,6 +84,7 @@ export default function UploadVersionPage({ projectData }: Props) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
+                enableInteractions();
                 toast.error(result?.message);
                 return;
             }
@@ -92,7 +93,6 @@ export default function UploadVersionPage({ projectData }: Props) {
             return;
         } finally {
             setIsLoading(false);
-            enableInteractions();
         }
     };
 

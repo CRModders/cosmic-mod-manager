@@ -4,13 +4,14 @@ import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
+import type { LinkedProvidersListData } from "@shared/types";
 import ClientOnly from "~/components/client-only";
 import AccountSettingsPage from "~/pages/settings/account/page";
 import type { RootOutletData } from "~/root";
 
 export default function _AccountSettings() {
     const { session } = useOutletContext<RootOutletData>();
-    const { linkedProviders } = useLoaderData<typeof loader>();
+    const linkedProviders = useLoaderData() as LinkedProvidersListData[];
 
     if (!session?.id) return <Navigate to="/login" />;
 
@@ -21,9 +22,7 @@ export async function loader(props: LoaderFunctionArgs) {
     const res = await serverFetch(props.request, "/api/auth/linked-providers");
     const data = await resJson(res);
 
-    return {
-        linkedProviders: data,
-    };
+    return Response.json(data || []);
 }
 
 export function meta() {
