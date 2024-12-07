@@ -1,6 +1,6 @@
 import type { IconSvgProps } from "@root/types";
 import { cn } from "@root/utils";
-import type { ProjectPublishingStatus } from "@shared/types";
+import { ProjectPublishingStatus } from "@shared/types";
 import { Building2Icon, FileCheckIcon, FileClockIcon, FileQuestionIcon, FileText, UserIcon, XIcon } from "lucide-react";
 import type React from "react";
 
@@ -266,10 +266,10 @@ export const fallbackOrgIcon = <Building2Icon className="w-[65%] h-[65%] text-ex
 export const fallbackUserIcon = <UserIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
 
 export const PROJECT_STATUS_ICONS = {
-    draft: <FileText className="h-full w-full" />,
-    scheduled: <FileClockIcon className="h-full w-full" />,
-    published: <FileCheckIcon className="h-full w-full" />,
-    unknown: <FileQuestionIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.DRAFT]: <FileText className="h-full w-full" />,
+    [ProjectPublishingStatus.SCHEDULED]: <FileClockIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.PUBLISHED]: <FileCheckIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.UNKNOWN]: <FileQuestionIcon className="h-full w-full" />,
 };
 
 export const ProjectStatusIcon = ({ status, className }: { status: ProjectPublishingStatus; className?: string }) => {

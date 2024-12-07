@@ -3,13 +3,13 @@ import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import { FlaskConicalIcon } from "lucide-react";
 
-type Props = {
+interface Props {
     releaseChannel: VersionReleaseChannel | string;
     labelClassName?: string;
     className?: string;
-};
+}
 
-const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props) => {
+export default function ReleaseChannelChip({ releaseChannel, labelClassName, className }: Props) {
     return (
         <div
             className={cn(
@@ -24,11 +24,9 @@ const ReleaseChannelChip = ({ releaseChannel, labelClassName, className }: Props
             </span>
         </div>
     );
-};
+}
 
-export default ReleaseChannelChip;
-
-export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
+export function ReleaseChannelBadge({ releaseChannel, className }: Props) {
     return (
         <div
             className={cn(
@@ -38,32 +36,61 @@ export const ReleaseChannelBadge = ({ releaseChannel, className }: Props) => {
                 className,
             )}
         >
-            {releaseChannel === VersionReleaseChannel.DEV ? (
-                <span className="flex items-center justify-center">
-                    <FlaskConicalIcon className="w-[80%] h-[80%]" />
-                </span>
-            ) : (
-                <span className="font-extrabold uppercase">{releaseChannel[0]}</span>
-            )}
+            <ReleaseChannelIcon releaseChannel={releaseChannel as VersionReleaseChannel} className="w-5 h-5" />
             <span className="sr-only">{CapitalizeAndFormatString(releaseChannel)}</span>
         </div>
     );
-};
+}
 
-export const releaseChannelTextColor = (releaseChannel: VersionReleaseChannel) => {
-    return releaseChannel === VersionReleaseChannel.RELEASE
-        ? "!text-blue-500 dark:!text-blue-400"
-        : releaseChannel === VersionReleaseChannel.BETA
-          ? "!text-orange-600 dark:!text-orange-400"
-          : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
-            ? "!text-danger-foreground"
-            : "";
-};
+function ReleaseChannelIcon({ releaseChannel, className }: Props) {
+    switch (releaseChannel) {
+        case VersionReleaseChannel.RELEASE:
+            return <span className="font-extrabold uppercase">R</span>;
 
-export const releaseChannelBackgroundColor = (releaseChannel: VersionReleaseChannel) => {
-    if (releaseChannel === VersionReleaseChannel.RELEASE) return "!bg-blue-500/15 dark:!bg-blue-400/15";
-    if (releaseChannel === VersionReleaseChannel.BETA) return "!bg-orange-600/15 dark:!bg-orange-400/15";
-    if (releaseChannel === VersionReleaseChannel.ALPHA) return "!bg-danger-foreground/15";
-    if (releaseChannel === VersionReleaseChannel.DEV) return "!bg-danger-foreground/15";
-    return "";
-};
+        case VersionReleaseChannel.BETA:
+            return <span className="font-bold text-lg">β</span>;
+
+        case VersionReleaseChannel.ALPHA:
+            return <span className="font-bold text-[1.25rem]">α</span>;
+
+        case VersionReleaseChannel.DEV:
+            return <FlaskConicalIcon className="w-5 h-5" />;
+
+        default:
+            return null;
+    }
+}
+
+export function releaseChannelTextColor(releaseChannel: VersionReleaseChannel) {
+    switch (releaseChannel) {
+        case VersionReleaseChannel.RELEASE:
+            return "!text-blue-500 dark:!text-blue-400";
+
+        case VersionReleaseChannel.BETA:
+            return "!text-orange-600 dark:!text-orange-400";
+
+        case VersionReleaseChannel.ALPHA:
+        case VersionReleaseChannel.DEV:
+            return "!text-danger-foreground";
+
+        default:
+            return "";
+    }
+}
+
+export function releaseChannelBackgroundColor(releaseChannel: VersionReleaseChannel) {
+    switch (releaseChannel) {
+        case VersionReleaseChannel.RELEASE:
+            return "!bg-blue-500/15 dark:!bg-blue-400/15";
+
+        case VersionReleaseChannel.BETA:
+            return "!bg-orange-600/15 dark:!bg-orange-400/15";
+
+        case VersionReleaseChannel.ALPHA:
+        case VersionReleaseChannel.DEV:
+            return "!bg-danger-foreground/15";
+
+        default:
+            return "";
+    }
+}

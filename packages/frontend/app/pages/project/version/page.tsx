@@ -170,16 +170,10 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                                 const redirectUrl = dependencyVersionPageUrl || dependencyProjectPageUrl;
 
                                 return (
-                                    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-                                    <div
+                                    <Link
+                                        to={redirectUrl}
                                         key={`${dependencyProject.id}-${dependencyVersion?.id}`}
                                         className="bg_hover_stagger w-full flex items-center justify-start gap-3 text-muted-foreground hover:bg-background/75 cursor-pointer p-2 rounded-lg "
-                                        onClick={(e) => {
-                                            //@ts-expect-error
-                                            if (!e.target.closest(".noClickRedirect")) {
-                                                customNavigate(redirectUrl);
-                                            }
-                                        }}
                                     >
                                         <ImgWrapper
                                             vtId={dependencyProject.id}
@@ -189,24 +183,18 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                                             fallback={fallbackProjectIcon}
                                         />
                                         <div className="flex flex-col items-start justify-center">
-                                            {
-                                                <>
-                                                    <Link to={redirectUrl} className="noClickRedirect font-bold">
-                                                        {dependencyProject.name}
-                                                    </Link>
-                                                    <span className="text-muted-foreground/85">
-                                                        {dependencyVersion?.id ? (
-                                                            <>
-                                                                Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
-                                                            </>
-                                                        ) : (
-                                                            <>{CapitalizeAndFormatString(dependency.dependencyType)}</>
-                                                        )}
-                                                    </span>
-                                                </>
-                                            }
+                                            <span className="font-bold">{dependencyProject.name}</span>
+                                            <span className="text-muted-foreground/85">
+                                                {dependencyVersion?.id ? (
+                                                    <>
+                                                        Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
+                                                    </>
+                                                ) : (
+                                                    <>{CapitalizeAndFormatString(dependency.dependencyType)}</>
+                                                )}
+                                            </span>
                                         </div>
-                                    </div>
+                                    </Link>
                                 );
                             })}
                         </ContentCardTemplate>
