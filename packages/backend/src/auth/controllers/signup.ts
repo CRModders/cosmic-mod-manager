@@ -80,7 +80,10 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
     try {
         const avatarFile = await getImageFromHttpUrl(profileData.avatarImage);
         if (avatarFile) avatarImgId = await getUserAvatar(userId, null, avatarFile);
-    } catch {}
+    } catch (error) {
+        console.error("Error creating avatar image");
+        console.error(error);
+    }
 
     // Finally create a user
     const newUser = await prisma.user.create({
