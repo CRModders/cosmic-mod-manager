@@ -104,12 +104,8 @@ export async function getUserAvatar(
     if (!fileType) return null;
 
     let saveIconFileType = fileType;
-    let saveIcon = avatarFile;
-    // Resize the image if it's larger than 5KB
-    if (saveIcon.size > 5120) {
-        saveIcon = await resizeImageToWebp(avatarFile, fileType, ICON_WIDTH);
-        if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
-    }
+    const saveIcon = await resizeImageToWebp(avatarFile, fileType, ICON_WIDTH);
+    if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);

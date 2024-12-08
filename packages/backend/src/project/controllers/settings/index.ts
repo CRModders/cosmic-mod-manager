@@ -223,12 +223,8 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     if (!fileType) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
 
     let saveIconFileType = fileType;
-    let saveIcon = icon;
-    // Resize the image if it's larger than 5KB
-    if (saveIcon.size > 5120) {
-        saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
-        if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
-    }
+    if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
+    const saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);
