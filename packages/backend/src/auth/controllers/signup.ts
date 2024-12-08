@@ -63,7 +63,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
     }
 
     const userId = generateDbId();
-    let userName = createURLSafeSlug(profileData.name).value;
+    let userName = createURLSafeSlug(profileData.name || "").value;
 
     // Check if the username is available
     const existingUserWithSameUserName = await prisma.user.findFirst({
@@ -78,7 +78,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
     // Create the avatar image
     let avatarImgId: string | null = null;
     try {
-        const avatarFile = await getImageFromHttpUrl(profileData.avatarImage);
+        const avatarFile = await getImageFromHttpUrl(profileData.avatarImage || "");
         if (avatarFile) avatarImgId = await getUserAvatar(userId, null, avatarFile);
     } catch (error) {
         console.error("Error creating avatar image");
