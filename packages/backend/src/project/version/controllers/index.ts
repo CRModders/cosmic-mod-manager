@@ -1,5 +1,5 @@
 import prisma from "@/services/prisma";
-import { versionFileUrl } from "@/utils/urls";
+import { userIconUrl, versionFileUrl } from "@/utils/urls";
 import { type DependencyType, ProjectVisibility, type VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData, VersionFile } from "@shared/types/api";
 
@@ -135,7 +135,7 @@ export async function getAllProjectVersions(
                 id: version.author.id,
                 userName: version.author.userName,
                 name: version.author.name,
-                avatarUrl: version.author.avatarUrl,
+                avatar: userIconUrl(version.author.id, version.author.avatar),
                 role: formattedAuthor?.role || "",
             },
             dependencies: version.dependencies.map((dependency) => ({

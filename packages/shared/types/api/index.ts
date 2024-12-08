@@ -30,7 +30,7 @@ export interface TeamMember {
     userId: string;
     teamId: string;
     userName: string;
-    avatarUrl: string | null;
+    avatar: string | null;
     role: string;
     isOwner: boolean;
     accepted: boolean;
@@ -109,7 +109,7 @@ export interface VersionAuthor {
     id: string;
     userName: string;
     name: string;
-    avatarUrl: string | null;
+    avatar: string | null;
     role: string;
 }
 

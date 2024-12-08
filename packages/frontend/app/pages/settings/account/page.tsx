@@ -1,12 +1,8 @@
-import { imageUrl } from "@root/utils";
 import type { LinkedProvidersListData, LoggedInUserData } from "@shared/types";
-import { fallbackUserIcon } from "~/components/icons";
-import { ImgWrapper } from "~/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import DeleteAccountDialog from "./delete-account";
-import EditProfileDialog from "./edit-profile";
 import ManageAuthProviders from "./manage-providers";
 import ManagePassword from "./password/password";
 
@@ -18,40 +14,6 @@ interface Props {
 export default function AccountSettingsPage({ session, linkedAuthProviders }: Props) {
     return (
         <>
-            <SectionCard className="w-full">
-                <CardHeader className="w-full flex flex-row items-center justify-between py-2">
-                    <CardTitle className="flex w-fit">User profile</CardTitle>
-                    <EditProfileDialog session={session} linkedAuthProviders={linkedAuthProviders} />
-                </CardHeader>
-                <CardContent>
-                    <div className="w-full flex flex-col items-center justify-center my-2">
-                        <div className="w-full flex flex-wrap items-center justify-start gap-6">
-                            <ImgWrapper
-                                vtId={session.id}
-                                src={imageUrl(session?.avatarUrl)}
-                                alt={session?.userName}
-                                fallback={fallbackUserIcon}
-                                className="rounded-full"
-                            />
-
-                            <div className="grow max-w-full flex flex-col items-start justify-center">
-                                <h1 className="flex w-full items-center justify-start leading-tight text-xl font-semibold">
-                                    {session?.name}
-                                </h1>
-                                <div className="overflow-x-auto flex w-full items-center justify-start">
-                                    <p className="text-foreground py-1 leading-tight">
-                                        <span aria-hidden className="text-extra-muted-foreground select-none">
-                                            @
-                                        </span>
-                                        {session?.userName}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </SectionCard>
-
             <SectionCard className="w-full">
                 <CardHeader>
                     <CardTitle>Account security</CardTitle>

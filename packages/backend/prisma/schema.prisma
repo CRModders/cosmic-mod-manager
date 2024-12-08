@@ -14,14 +14,14 @@ model User {
     name              String   @db.VarChar(32)
     email             String   @unique @db.VarChar(64)
     userName          String   @unique @db.VarChar(32)
+    avatar            String?  @db.VarChar(256)
+    avatarUrl         String?  @db.VarChar(256)
     lowerCaseUserName String   @unique @db.VarChar(32)
     dateJoined        DateTime @default(now())
     emailVerified     Boolean
     role              String   @db.VarChar(32)
     bio               String?  @db.VarChar(256)
     password          String?
-    avatarUrl         String?  @db.VarChar(256)
-    avatarUrlProvider String?  @db.VarChar(32)
     newSignInAlerts   Boolean  @default(true)
 
     sessions         Session[]          @relation(name: "UserSessions")

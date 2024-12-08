@@ -1,9 +1,9 @@
 import { FILE_STORAGE_SERVICE } from "@/types";
 import { isUrl } from "@shared/lib/utils";
 import { type WritableFile, deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
-import { orgFileStoragePath, projectFileStoragePath, projectGalleryStoragePath, versionFileStoragePath } from "./utils";
+import { orgDir, projectGalleryDir, projectsDir, userDir, versionsDir } from "./utils";
 
-export const getFile = async (storageService: FILE_STORAGE_SERVICE, path: string) => {
+export async function getFile(storageService: FILE_STORAGE_SERVICE, path: string) {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
@@ -14,9 +14,9 @@ export const getFile = async (storageService: FILE_STORAGE_SERVICE, path: string
     } catch (error) {
         return null;
     }
-};
+}
 
-export const saveFile = async (storageService: FILE_STORAGE_SERVICE, file: WritableFile, path: string) => {
+export async function saveFile(storageService: FILE_STORAGE_SERVICE, file: WritableFile, path: string) {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
@@ -28,9 +28,9 @@ export const saveFile = async (storageService: FILE_STORAGE_SERVICE, file: Writa
         console.error(error);
         return null;
     }
-};
+}
 
-export const deleteFile = async (storageService: FILE_STORAGE_SERVICE, path: string) => {
+export async function deleteFile(storageService: FILE_STORAGE_SERVICE, path: string) {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
@@ -42,9 +42,9 @@ export const deleteFile = async (storageService: FILE_STORAGE_SERVICE, path: str
         console.error(error);
         return null;
     }
-};
+}
 
-export const deleteDirectory = async (storageService: FILE_STORAGE_SERVICE, path: string) => {
+export async function deleteDirectory(storageService: FILE_STORAGE_SERVICE, path: string) {
     try {
         switch (storageService) {
             case FILE_STORAGE_SERVICE.LOCAL:
@@ -56,92 +56,104 @@ export const deleteDirectory = async (storageService: FILE_STORAGE_SERVICE, path
         console.error(error);
         return null;
     }
-};
+}
+
+// ? User Files
+export async function saveUserFile(storageService: FILE_STORAGE_SERVICE, userId: string, file: WritableFile, fileName: string) {
+    return await saveFile(storageService, file, userDir(userId, fileName));
+}
+
+export async function deleteUserFile(storageService: FILE_STORAGE_SERVICE, userId: string, fileName: string) {
+    return await deleteFile(storageService, userDir(userId, fileName));
+}
+
+export async function deleteUserDirectory(storageService: FILE_STORAGE_SERVICE, userId: string) {
+    return await deleteDirectory(storageService, userDir(userId));
+}
+
+export async function getUserFile(storageService: FILE_STORAGE_SERVICE, userId: string, fileName: string) {
+    return await getFile(storageService, userDir(userId, fileName));
+}
 
 // ? Project Files
-export const saveProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, file: WritableFile, fileName: string) => {
-    return await saveFile(storageService, file, projectFileStoragePath(projectId, fileName));
-};
+export async function saveProjectFile(storageService: FILE_STORAGE_SERVICE, projectId: string, file: WritableFile, fileName: string) {
+    return await saveFile(storageService, file, projectsDir(projectId, fileName));
+}
 
-export const deleteProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
-    return await deleteFile(storageService, projectFileStoragePath(projectId, fileName));
-};
+export async function deleteProjectFile(storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) {
+    return await deleteFile(storageService, projectsDir(projectId, fileName));
+}
 
-export const deleteProjectDirectory = async (storageService: FILE_STORAGE_SERVICE, projectId: string) => {
-    return await deleteDirectory(storageService, projectFileStoragePath(projectId));
-};
+export async function deleteProjectDirectory(storageService: FILE_STORAGE_SERVICE, projectId: string) {
+    return await deleteDirectory(storageService, projectsDir(projectId));
+}
 
-export const getProjectFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
-    return await getFile(storageService, projectFileStoragePath(projectId, fileName));
-};
+export async function getProjectFile(storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) {
+    return await getFile(storageService, projectsDir(projectId, fileName));
+}
 
 // ? Project Version Files
-export const saveProjectVersionFile = async (
+export async function saveProjectVersionFile(
     storageService: FILE_STORAGE_SERVICE,
     projectId: string,
     versionId: string,
     file: WritableFile,
     fileName: string,
-) => {
-    return await saveFile(storageService, file, versionFileStoragePath(projectId, versionId, fileName));
-};
+) {
+    return await saveFile(storageService, file, versionsDir(projectId, versionId, fileName));
+}
 
-export const deleteProjectVersionFile = async (
+export async function deleteProjectVersionFile(
     storageService: FILE_STORAGE_SERVICE,
     projectId: string,
     versionId: string,
     fileName: string,
-) => {
-    return await deleteFile(storageService, versionFileStoragePath(projectId, versionId, fileName));
-};
+) {
+    return await deleteFile(storageService, versionsDir(projectId, versionId, fileName));
+}
 
-export const deleteProjectVersionDirectory = async (storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string) => {
-    return await deleteDirectory(storageService, versionFileStoragePath(projectId, versionId));
-};
+export async function deleteProjectVersionDirectory(storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string) {
+    return await deleteDirectory(storageService, versionsDir(projectId, versionId));
+}
 
-export const getProjectVersionFile = async (
-    storageService: FILE_STORAGE_SERVICE,
-    projectId: string,
-    versionId: string,
-    fileName: string,
-) => {
-    return await getFile(storageService, versionFileStoragePath(projectId, versionId, fileName));
-};
+export async function getProjectVersionFile(storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string, fileName: string) {
+    return await getFile(storageService, versionsDir(projectId, versionId, fileName));
+}
 
 // ? Project Gallery Files
-export const getProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
+export async function getProjectGalleryFile(storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) {
     if (isUrl(fileName)) return fileName;
-    return await getFile(storageService, projectGalleryStoragePath(projectId, fileName));
-};
+    return await getFile(storageService, projectGalleryDir(projectId, fileName));
+}
 
-export const saveProjectGalleryFile = async (
+export async function saveProjectGalleryFile(
     storageService: FILE_STORAGE_SERVICE,
     projectId: string,
     file: WritableFile,
     fileName: string,
-) => {
+) {
     if (isUrl(fileName)) return fileName;
-    return await saveFile(storageService, file, projectGalleryStoragePath(projectId, fileName));
-};
+    return await saveFile(storageService, file, projectGalleryDir(projectId, fileName));
+}
 
-export const deleteProjectGalleryFile = async (storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) => {
+export async function deleteProjectGalleryFile(storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) {
     if (isUrl(fileName)) return fileName;
-    return await deleteFile(storageService, projectGalleryStoragePath(projectId, fileName));
-};
+    return await deleteFile(storageService, projectGalleryDir(projectId, fileName));
+}
 
 // ? Organization Files
-export const saveOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, file: WritableFile, fileName: string) => {
-    return await saveFile(storageService, file, orgFileStoragePath(orgId, fileName));
-};
+export async function saveOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, file: WritableFile, fileName: string) {
+    return await saveFile(storageService, file, orgDir(orgId, fileName));
+}
 
-export const deleteOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) => {
-    return await deleteFile(storageService, orgFileStoragePath(orgId, fileName));
-};
+export async function deleteOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
+    return await deleteFile(storageService, orgDir(orgId, fileName));
+}
 
-export const deleteOrgDirectory = async (storageService: FILE_STORAGE_SERVICE, orgId: string) => {
-    return await deleteDirectory(storageService, orgFileStoragePath(orgId));
-};
+export async function deleteOrgDirectory(storageService: FILE_STORAGE_SERVICE, orgId: string) {
+    return await deleteDirectory(storageService, orgDir(orgId));
+}
 
-export const getOrgFile = async (storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) => {
-    return await getFile(storageService, orgFileStoragePath(orgId, fileName));
-};
+export async function getOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
+    return await getFile(storageService, orgDir(orgId, fileName));
+}

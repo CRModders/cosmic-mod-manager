@@ -1,7 +1,9 @@
+import Config from "./config";
+
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
         const startTime = Date.now();
-        const backendHost = process.env.BACKEND_HOST || "http://localhost:5500";
+        const backendHost = Config.BACKEND_URL;
 
         let fetchUrl = pathname;
         const clientIp =

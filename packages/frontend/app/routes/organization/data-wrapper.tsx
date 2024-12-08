@@ -1,12 +1,11 @@
 import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
-import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "@remix-run/react";
-import type { AwaitedReturnType } from "@root/types";
 import { getOrgPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
+import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
 
@@ -18,7 +17,7 @@ export interface OrgDataContext {
 
 export default function _OrgDataWrapper() {
     const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData<typeof loader>();
+    const data = useLoaderData() as LoaderData;
 
     if (!data.orgData?.id) {
         return (
@@ -46,6 +45,12 @@ export default function _OrgDataWrapper() {
     );
 }
 
+interface LoaderData {
+    orgSlug: string;
+    orgData: Organisation | null;
+    orgProjects: ProjectListItem[];
+}
+
 export async function loader(props: LoaderFunctionArgs) {
     const orgSlug = props.params.orgSlug;
 
@@ -56,7 +61,7 @@ export async function loader(props: LoaderFunctionArgs) {
 
     const [orgData, orgProjects] = await Promise.all([resJson<Organisation>(orgDataRes), resJson<ProjectListItem[]>(orgProjectsRes)]);
 
-    return { orgSlug, orgData, orgProjects };
+    return Response.json({ orgSlug, orgData, orgProjects: orgProjects || [] });
 }
 
 export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
@@ -72,7 +77,7 @@ export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultSh
 }
 
 export function meta(props: MetaArgs) {
-    const data = props.data as AwaitedReturnType<typeof loader>;
+    const data = props.data as LoaderData;
     const orgData = data?.orgData;
 
     if (!orgData?.id) {

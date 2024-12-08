@@ -5,7 +5,7 @@ export interface UserProfileData {
     name: string | null;
     userName: string;
     role: GlobalUserRole;
-    avatarUrl: string | null;
+    avatar: string | null;
     bio: string | null;
     dateJoined: Date;
 }

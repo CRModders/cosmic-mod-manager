@@ -180,7 +180,7 @@ export function teamMemberFields() {
             select: {
                 id: true,
                 userName: true,
-                avatarUrl: true,
+                avatar: true,
             },
         },
     } satisfies Prisma.TeamMemberSelect;
@@ -191,7 +191,7 @@ interface FormatTeamMemberDataProps extends TeamMember {
     user: {
         id: string;
         userName: string;
-        avatarUrl: string | null;
+        avatar: string | null;
     };
 }
 export function formatTeamMemberData(member: FormatTeamMemberDataProps) {
@@ -200,7 +200,7 @@ export function formatTeamMemberData(member: FormatTeamMemberDataProps) {
         userId: member.userId,
         teamId: member.teamId,
         userName: member.user.userName,
-        avatarUrl: member.user.avatarUrl,
+        avatar: member.user.avatar,
         role: member.role,
         isOwner: member.isOwner,
         accepted: member.accepted,

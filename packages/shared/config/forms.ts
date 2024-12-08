@@ -1,3 +1,5 @@
+export const MAX_ICON_SIZE = 524288; // 512 KiB
+
 export const MIN_EMAIL_LENGTH = 5;
 export const MAX_EMAIL_LENGTH = 256;
 
@@ -7,6 +9,8 @@ export const MAX_PASSWORD_LENGTH = 64;
 export const MIN_USERNAME_LENGTH = 2;
 export const MAX_USERNAME_LENGTH = 32;
 
+export const MAX_USER_BIO_LENGTH = 256;
+
 export const MIN_DISPLAY_NAME_LENGTH = 2;
 export const MAX_DISPLAY_NAME_LENGTH = 32;
 
@@ -15,7 +19,6 @@ export const MIN_PROJECT_NAME_LENGTH = 2;
 export const MAX_PROJECT_NAME_LENGTH = 32;
 export const MAX_PROJECT_SUMMARY_LENGTH = 320;
 export const MAX_PROJECT_DESCRIPTION_LENGTH = 65256;
-export const MAX_PROJECT_ICON_SIZE = 524288; // 512 KiB
 export const MAX_PROJECT_GALLERY_IMAGE_SIZE = 3145728; // 3 MiB
 export const MAX_PROJECT_GALLERY_IMAGES_COUNT = 32;
 export const GALLERY_IMG_THUMBNAIL_WIDTH = 420;

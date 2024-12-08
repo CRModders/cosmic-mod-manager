@@ -21,6 +21,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
             // User Settings
             route("settings", path("settings/layout.tsx"), () => {
                 route("", path("settings/prefs.tsx"), { index: true });
+                route("profile", path("settings/profile.tsx"));
                 route("account", path("settings/account.tsx"));
                 route("sessions", path("settings/sessions.tsx"));
             });

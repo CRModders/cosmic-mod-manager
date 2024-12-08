@@ -21,13 +21,12 @@ export enum UserSessionStates {
 export interface LoggedInUserData {
     id: string;
     email: string;
-    name: string;
     userName: string;
     hasAPassword: boolean;
-    avatarUrl?: string | null;
-    avatarProvider?: AuthProvider | null;
+    avatar?: string | null;
     role: GlobalUserRole;
     sessionId: string;
+    bio: string | null;
 }
 
 export enum ProjectType {

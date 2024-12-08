@@ -1,8 +1,8 @@
 import prisma from "@/services/prisma";
-import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile } from "@/services/storage";
+import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile, getUserFile } from "@/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import { HTTP_STATUS, notFoundResponse } from "@/utils/http";
-import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, versionFileUrl } from "@/utils/urls";
+import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl, versionFileUrl } from "@/utils/urls";
 import { ProjectVisibility } from "@shared/types";
 import { getUserIpAddress } from "@src/auth/helpers";
 import { isProjectAccessible } from "@src/project/utils";
@@ -10,14 +10,14 @@ import type { Context } from "hono";
 import { projectMembersSelect } from "../project/queries/project";
 import { addToDownloadsQueue } from "./downloads-counter";
 
-export const serveVersionFile = async (
+export async function serveVersionFile(
     ctx: Context,
     projectId: string,
     versionId: string,
     fileName: string,
     userSession: ContextUserData | undefined,
     isCdnRequest = true,
-) => {
+) {
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
@@ -102,9 +102,9 @@ export const serveVersionFile = async (
     response.headers.set("Content-Type", file.type);
 
     return response;
-};
+}
 
-export const serveProjectIconFile = async (ctx: Context, projectId: string, isCdnRequest: boolean) => {
+export async function serveProjectIconFile(ctx: Context, projectId: string, isCdnRequest: boolean) {
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
@@ -131,9 +131,9 @@ export const serveProjectIconFile = async (ctx: Context, projectId: string, isCd
     const response = new Response(iconFile);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
     return response;
-};
+}
 
-export const serveProjectGalleryImage = async (ctx: Context, projectId: string, imgFileId: string, isCdnRequest: boolean) => {
+export async function serveProjectGalleryImage(ctx: Context, projectId: string, imgFileId: string, isCdnRequest: boolean) {
     const project = await prisma.project.findUnique({
         where: {
             id: projectId,
@@ -173,9 +173,9 @@ export const serveProjectGalleryImage = async (ctx: Context, projectId: string, 
     const response = new Response(file);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // 1 year
     return response;
-};
+}
 
-export const serveOrgIconFile = async (ctx: Context, orgId: string, isCdnRequest: boolean) => {
+export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest: boolean) {
     const org = await prisma.organisation.findUnique({
         where: {
             id: orgId,
@@ -202,4 +202,33 @@ export const serveOrgIconFile = async (ctx: Context, orgId: string, isCdnRequest
     const response = new Response(icon);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
     return response;
-};
+}
+
+export async function serveUserAvatar(ctx: Context, userId: string, isCdnRequest: boolean) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (!user?.avatar) return notFoundResponse(ctx);
+
+    const iconFileData = await prisma.file.findUnique({
+        where: {
+            id: user.avatar,
+        },
+    });
+    if (!iconFileData?.id) return notFoundResponse(ctx);
+
+    if (!isCdnRequest) {
+        return ctx.redirect(`${userIconUrl(user.id, user.avatar)}`);
+    }
+
+    const icon = await getUserFile(iconFileData.storageService as FILE_STORAGE_SERVICE, user.id, iconFileData.name);
+
+    // Redirect to the file if it's a URL
+    if (typeof icon === "string") return ctx.redirect(icon);
+
+    const response = new Response(icon);
+    response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
+    return response;
+}

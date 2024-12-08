@@ -24,7 +24,7 @@ interface Props {
     pageUrl: string;
     invitedBy: {
         userName: string;
-        avatarUrl: string | null;
+        avatar: string | null;
     };
     title: string;
     icon: string | null;
@@ -104,7 +104,7 @@ export function TeamInviteNotification({
                             className="flex items-center justify-center gap-1 font-semibold hover:underline"
                         >
                             <ImgWrapper
-                                src={invitedBy?.avatarUrl || ""}
+                                src={invitedBy?.avatar || ""}
                                 alt={invitedBy.userName || (notification.body?.invitedBy as string)}
                                 fallback={fallbackUserIcon}
                                 className="w-6 h-6 rounded-full"

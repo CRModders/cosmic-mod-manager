@@ -316,7 +316,7 @@ export default function ProjectPageLayout({
                                 userName={member.userName}
                                 isOwner={member.isOwner}
                                 roleName={member.role || ""}
-                                avatarImageUrl={member.avatarUrl || ""}
+                                avatarImageUrl={imageUrl(member.avatar)}
                             />
                         );
                     })}

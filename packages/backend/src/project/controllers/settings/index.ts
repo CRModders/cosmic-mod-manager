@@ -1,6 +1,6 @@
 import prisma from "@/services/prisma";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "@/services/storage";
-import { projectFileStoragePath } from "@/services/storage/utils";
+import { projectsDir } from "@/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
@@ -154,7 +154,7 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
     // ? All the teamMember tables will be automatically deleted
 
     // Delete the project's storage folder
-    await deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectFileStoragePath(project.id));
+    await deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectsDir(project.id));
 
     return {
         data: {

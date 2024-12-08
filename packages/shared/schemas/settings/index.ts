@@ -1,26 +1,31 @@
 import { z } from "zod";
 import {
-    MAX_DISPLAY_NAME_LENGTH,
     MAX_EMAIL_LENGTH,
     MAX_PASSWORD_LENGTH,
     MAX_USERNAME_LENGTH,
-    MIN_DISPLAY_NAME_LENGTH,
+    MAX_USER_BIO_LENGTH,
     MIN_EMAIL_LENGTH,
     MIN_PASSWORD_LENGTH,
-    MIN_USERNAME_LENGTH,
 } from "../../config/forms";
-import { AuthProvider } from "../../types";
+import { createURLSafeSlug } from "../../lib/utils";
+import { iconFieldSchema } from "../project/settings/general";
+
+const userNameSchema = z
+    .string()
+    .min(2)
+    .max(MAX_USERNAME_LENGTH)
+    .refine(
+        (slug) => {
+            if (slug.length !== createURLSafeSlug(slug).value.length) return false;
+            return true;
+        },
+        { message: "Username must be a URL safe string" },
+    );
 
 export const profileUpdateFormSchema = z.object({
-    avatarUrlProvider: z.nativeEnum(AuthProvider),
-    userName: z
-        .string()
-        .min(MIN_USERNAME_LENGTH, "Enter your username")
-        .max(MAX_USERNAME_LENGTH, `Your username can only have a maximum of ${MAX_USERNAME_LENGTH} characters`),
-    name: z
-        .string()
-        .min(MIN_DISPLAY_NAME_LENGTH, "Enter your display name")
-        .max(MAX_DISPLAY_NAME_LENGTH, `Your display name can only have a maximum of ${MAX_DISPLAY_NAME_LENGTH} characters`),
+    avatar: iconFieldSchema.or(z.string()).optional(),
+    userName: userNameSchema,
+    bio: z.string().max(MAX_USER_BIO_LENGTH).optional(),
 });
 
 export const setNewPasswordFormSchema = z.object({

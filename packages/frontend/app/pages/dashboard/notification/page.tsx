@@ -159,7 +159,7 @@ export function NotificationItem({
                     pageUrl={getProjectPagePathname(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
                     invitedBy={{
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
-                        avatarUrl: relatedUser?.avatarUrl || null,
+                        avatar: relatedUser?.avatar || null,
                     }}
                     title={relatedProject?.name || (notification.body?.projectId as string)}
                     icon={relatedProject?.icon || null}
@@ -180,7 +180,7 @@ export function NotificationItem({
                     pageUrl={getOrgPagePathname(relatedOrg?.slug || "")}
                     invitedBy={{
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
-                        avatarUrl: relatedUser?.avatarUrl || null,
+                        avatar: relatedUser?.avatar || null,
                     }}
                     title={relatedOrg?.name || (notification.body?.orgId as string)}
                     icon={relatedOrg?.icon || null}

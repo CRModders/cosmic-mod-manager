@@ -4,6 +4,7 @@ import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-
 import { critModifyReqRateLimiter } from "@/middleware/rate-limit/modify-req";
 import { REQ_BODY_NAMESPACE } from "@/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "@/utils/http";
+import { userIconUrl } from "@/utils/urls";
 import { authProvidersList } from "@shared/config/project";
 import { getAuthProviderFromString, getUserRoleFromString } from "@shared/lib/utils/convertors";
 import { LoginFormSchema } from "@shared/schemas/auth";
@@ -52,13 +53,12 @@ async function currSession_get(ctx: Context) {
         const formattedObject: LoggedInUserData = {
             id: userSession.id,
             email: userSession.email,
-            name: userSession.name,
             userName: userSession.userName,
             role: getUserRoleFromString(userSession.role),
             hasAPassword: !!userSession.password,
-            avatarUrl: userSession.avatarUrl,
-            avatarProvider: getAuthProviderFromString(userSession?.avatarUrlProvider || ""),
+            avatar: userIconUrl(userSession.id, userSession.avatar),
             sessionId: userSession.sessionId,
+            bio: userSession.bio,
         };
 
         return ctx.json(formattedObject, HTTP_STATUS.OK);

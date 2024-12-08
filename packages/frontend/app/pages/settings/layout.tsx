@@ -1,5 +1,5 @@
 import { Outlet, useOutletContext } from "@remix-run/react";
-import { MonitorSmartphoneIcon, PaintbrushIcon, UserIcon } from "lucide-react";
+import { MonitorSmartphoneIcon, PaintbrushIcon, ShieldIcon, UserIcon } from "lucide-react";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
 import type { RootOutletData } from "~/root";
@@ -18,9 +18,14 @@ export default function SettingsPageLayout() {
                         </ButtonLink>
                         {context.session?.id ? (
                             <>
-                                <ButtonLink url="/settings/account" preventScrollReset>
+                                <span className="text-lg font-semibold mt-3">Account</span>
+                                <ButtonLink url="/settings/profile" preventScrollReset>
                                     <UserIcon className="size-4" />
-                                    Account
+                                    Public profile
+                                </ButtonLink>
+                                <ButtonLink url="/settings/account" preventScrollReset>
+                                    <ShieldIcon className="size-4" />
+                                    Account and security
                                 </ButtonLink>
                                 <ButtonLink url="/settings/sessions" preventScrollReset>
                                     <MonitorSmartphoneIcon className="size-4" />

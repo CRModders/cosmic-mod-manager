@@ -123,7 +123,7 @@ interface UserLdJsonData {
     name: string | null;
     userName: string;
     bio: string | null;
-    avatarUrl: string | null;
+    avatar: string | null;
 }
 
 export function UserLdJson(user: UserLdJsonData, otherData?: LdJsonObject): LdJsonObject {
@@ -134,7 +134,7 @@ export function UserLdJson(user: UserLdJsonData, otherData?: LdJsonObject): LdJs
         alternateName: user.name,
         url: `${Config.FRONTEND_URL}/user/${user.userName}`,
         description: user.bio,
-        image: user.avatarUrl,
+        image: user.avatar,
         identifier: `user-${user.id}`,
         ...otherData,
     };

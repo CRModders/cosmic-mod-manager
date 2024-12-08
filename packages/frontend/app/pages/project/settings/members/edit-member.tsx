@@ -96,7 +96,7 @@ export const ProjectTeamMember = ({
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
                         vtId={member.userId}
-                        src={imageUrl(member.avatarUrl)}
+                        src={imageUrl(member.avatar)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}
                         className="h-12 w-12 rounded-full"
@@ -375,7 +375,7 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
                         vtId={effectiveMembership.userId}
-                        src={imageUrl(effectiveMembership.avatarUrl)}
+                        src={imageUrl(effectiveMembership.avatar)}
                         alt={effectiveMembership.userName}
                         fallback={fallbackUserIcon}
                         className="h-12 w-12 rounded-full"

@@ -70,7 +70,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     className="p-0 m-0 h-fit rounded-full w-fit no_neumorphic_shadow relative"
                 >
                     <ImgWrapper
-                        src={imageUrl(session.avatarUrl)}
+                        src={imageUrl(session.avatar)}
                         alt={session?.userName}
                         fallback={fallbackUserIcon}
                         className="p-0.5 h-nav-item w-nav-item rounded-full border-none bg-shallower-background dark:bg-shallow-background"
@@ -96,7 +96,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     {
                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
                         label: "Settings",
-                        url: "/settings/account",
+                        url: "/settings/profile",
                         matchExactUrl: false,
                     },
                 ].map((item) => {

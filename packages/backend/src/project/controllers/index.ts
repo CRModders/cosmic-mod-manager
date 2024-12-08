@@ -5,7 +5,7 @@ import type { RouteHandlerResponse } from "@/types/http";
 import { isNumber } from "@/utils";
 import { HTTP_STATUS } from "@/utils/http";
 import { tryJsonParse } from "@/utils/str";
-import { orgIconUrl, projectGalleryFileUrl, projectIconUrl } from "@/utils/urls";
+import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl } from "@/utils/urls";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
 import { gameVersionsList } from "@shared/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
@@ -119,7 +119,7 @@ interface FormatMemberProps extends DBTeamMember {
     user: {
         id: string;
         userName: string;
-        avatarUrl: string | null;
+        avatar: string | null;
     };
 }
 
@@ -129,7 +129,7 @@ function formatProjectMember<T extends FormatMemberProps>(member: T, currMember?
         userId: member.user.id,
         teamId: member.teamId,
         userName: member.user.userName,
-        avatarUrl: member.user.avatarUrl,
+        avatar: userIconUrl(member.user.id, member.user.avatar),
         role: member.role,
         isOwner: member.isOwner,
         accepted: member.accepted,

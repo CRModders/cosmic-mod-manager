@@ -25,6 +25,7 @@ import {
 } from "@src/user/controllers/account";
 import { getAllVisibleProjects, getUserProfileData, updateUserProfile } from "@src/user/controllers/profile";
 import { type Context, Hono } from "hono";
+import type { z } from "zod";
 import { getUserFromCtx } from "../auth/helpers/session";
 
 const userRouter = new Hono();
@@ -85,7 +86,14 @@ async function user_patch(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
         if (!userSession) return invalidReqestResponse(ctx);
 
-        const { data, error } = await parseValueToSchema(profileUpdateFormSchema, ctx.get(REQ_BODY_NAMESPACE));
+        const formData = ctx.get(REQ_BODY_NAMESPACE);
+        const obj = {
+            avatar: formData.get("avatar"),
+            userName: formData.get("userName"),
+            bio: formData.get("bio"),
+        } satisfies z.infer<typeof profileUpdateFormSchema>;
+
+        const { data, error } = await parseValueToSchema(profileUpdateFormSchema, obj);
         if (error || !data) {
             return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
         }

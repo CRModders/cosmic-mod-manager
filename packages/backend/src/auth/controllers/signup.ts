@@ -1,9 +1,12 @@
 import { addInvalidAuthAttempt } from "@/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "@/services/prisma";
+import { getUserAvatar } from "@/src/user/controllers/profile";
 import type { RouteHandlerResponse } from "@/types/http";
+import { getImageFromHttpUrl } from "@/utils/file";
 import { HTTP_STATUS } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
 import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@shared/config";
+import { createURLSafeSlug } from "@shared/lib/utils";
 import { GlobalUserRole } from "@shared/types";
 import { createNewAuthAccount, getAuthProviderProfileData } from "@src/auth/helpers";
 import { createUserSession, setSessionCookie } from "@src/auth/helpers/session";
@@ -59,11 +62,30 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
         };
     }
 
-    const userName = generateDbId();
+    const userId = generateDbId();
+    let userName = createURLSafeSlug(profileData.name).value;
+
+    // Check if the username is available
+    const existingUserWithSameUserName = await prisma.user.findFirst({
+        where: {
+            lowerCaseUserName: userName,
+        },
+    });
+    if (existingUserWithSameUserName) {
+        userName = `${userName}-${userId}`;
+    }
+
+    // Create the avatar image
+    let avatarImgId: string | null = null;
+    try {
+        const avatarFile = await getImageFromHttpUrl(profileData.avatarImage);
+        if (avatarFile) avatarImgId = await getUserAvatar(userId, null, avatarFile);
+    } catch {}
+
     // Finally create a user
     const newUser = await prisma.user.create({
         data: {
-            id: generateDbId(),
+            id: userId,
             name: profileData?.name || "",
             email: profileData.email,
             userName: userName,
@@ -71,8 +93,7 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
             emailVerified: profileData.emailVerified === true,
             role: GlobalUserRole.USER,
             newSignInAlerts: true,
-            avatarUrl: profileData.avatarImage,
-            avatarUrlProvider: profileData.providerName,
+            avatar: avatarImgId,
         },
     });
 

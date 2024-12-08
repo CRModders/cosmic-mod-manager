@@ -96,7 +96,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData }: OrgTeam
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <ImgWrapper
                         vtId={member.userId}
-                        src={imageUrl(member.avatarUrl)}
+                        src={imageUrl(member.avatar)}
                         alt={member.userName}
                         fallback={fallbackUserIcon}
                         className="h-12 w-12 rounded-full"

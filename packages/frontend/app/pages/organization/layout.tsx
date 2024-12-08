@@ -111,7 +111,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
                                 userName={member.userName}
                                 isOwner={member.isOwner}
                                 roleName={member.role}
-                                avatarImageUrl={imageUrl(member.avatarUrl)}
+                                avatarImageUrl={imageUrl(member.avatar)}
                             />
                         );
                     })}

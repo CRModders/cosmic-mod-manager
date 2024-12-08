@@ -36,3 +36,12 @@ export function orgIconUrl(orgId: string, icon: string | null) {
     // Otherwise, construct and return the CDN URL
     return cdnUrl(`organization/${orgId}/${icon}`);
 }
+
+export function userIconUrl(userId: string, icon: string | null) {
+    if (!icon) return null;
+    // If the icon has a full URL, return it
+    if (icon.startsWith("http")) return icon;
+
+    // Otherwise, construct and return the CDN URL
+    return cdnUrl(`user/${userId}/${icon}`);
+}

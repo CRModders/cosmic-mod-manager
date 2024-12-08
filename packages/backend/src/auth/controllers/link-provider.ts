@@ -10,12 +10,12 @@ import type { LinkedProvidersListData } from "@shared/types";
 import { createNewAuthAccount, getAuthProviderProfileData } from "@src/auth/helpers";
 import type { Context } from "hono";
 
-export const linkAuthProviderHandler = async (
+export async function linkAuthProviderHandler(
     ctx: Context,
     userSession: ContextUserData,
     authProvider: string,
     tokenExchangeCode: string,
-): Promise<RouteHandlerResponse> => {
+): Promise<RouteHandlerResponse> {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
 
     if (!profileData || !profileData?.email || !profileData?.providerName || !profileData?.providerAccountId) {
@@ -82,13 +82,9 @@ export const linkAuthProviderHandler = async (
         },
         status: HTTP_STATUS.OK,
     };
-};
+}
 
-export const unlinkAuthProvider = async (
-    ctx: Context,
-    userSession: ContextUserData,
-    authProvider: string,
-): Promise<RouteHandlerResponse> => {
+export async function unlinkAuthProvider(ctx: Context, userSession: ContextUserData, authProvider: string): Promise<RouteHandlerResponse> {
     const allLinkedProviders = await prisma.authAccount.findMany({
         where: {
             userId: userSession.id,
@@ -122,7 +118,7 @@ export const unlinkAuthProvider = async (
         data: { success: true, message: `Unlinked ${Capitalize(providerName)} from your account.` },
         status: HTTP_STATUS.OK,
     };
-};
+}
 
 export async function getLinkedAuthProviders(userSession: ContextUserData): Promise<RouteHandlerResponse> {
     const linkedProviders = await prisma.authAccount.findMany({

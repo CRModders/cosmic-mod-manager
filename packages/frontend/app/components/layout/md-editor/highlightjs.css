@@ -65,11 +65,15 @@
 }
 
 .markdown-body ul li {
-    @apply list-disc;
+    list-style-type: disc;
+}
+
+.markdown-body li ul li {
+    list-style-type: circle;
 }
 
 .markdown-body ol li {
-    @apply list-decimal;
+    list-style-type: decimal;
 }
 
 .markdown-body h1 {

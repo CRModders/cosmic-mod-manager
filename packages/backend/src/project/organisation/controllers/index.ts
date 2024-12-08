@@ -3,7 +3,7 @@ import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
-import { orgIconUrl, projectIconUrl } from "@/utils/urls";
+import { orgIconUrl, projectIconUrl, userIconUrl } from "@/utils/urls";
 import { getCurrMember } from "@shared/lib/utils";
 import type { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import {
@@ -52,7 +52,7 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
                 userId: member.userId,
                 teamId: member.teamId,
                 userName: member.user.userName,
-                avatarUrl: member.user.avatarUrl,
+                avatar: userIconUrl(member.user.id, member.user.avatar),
                 role: member.role,
                 isOwner: member.isOwner,
                 accepted: member.accepted,
@@ -121,7 +121,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
                 userId: member.userId,
                 teamId: member.teamId,
                 userName: member.user.userName,
-                avatarUrl: member.user.avatarUrl,
+                avatar: userIconUrl(member.user.id, member.user.avatar),
                 role: member.role,
                 isOwner: member.isOwner,
                 accepted: member.accepted,

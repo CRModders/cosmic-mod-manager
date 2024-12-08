@@ -29,7 +29,7 @@ export default function OverviewPage({ session, userProjects, notifications, rel
                 <div className="w-full flex flex-wrap gap-6">
                     <ImgWrapper
                         vtId={session.id}
-                        src={imageUrl(session?.avatarUrl)}
+                        src={imageUrl(session?.avatar)}
                         alt={session.userName}
                         fallback={fallbackUserIcon}
                         className="rounded-full"

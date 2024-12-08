@@ -274,7 +274,7 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                                 content: (
                                     <ProjectMember
                                         userName={versionData.author.userName}
-                                        avatarImageUrl={versionData.author.avatarUrl || ""}
+                                        avatarImageUrl={versionData.author.avatar || ""}
                                         isOwner={false}
                                         roleName={versionData.author.role}
                                     />

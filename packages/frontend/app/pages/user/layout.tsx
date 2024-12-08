@@ -145,7 +145,7 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
     return (
         <PageHeader
             vtId={userData.id}
-            icon={imageUrl(userData.avatarUrl)}
+            icon={imageUrl(userData.avatar)}
             iconClassName="rounded-full"
             fallbackIcon={fallbackUserIcon}
             title={userData.userName}
@@ -172,7 +172,7 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
             }
             actionBtns={
                 userData.id === session?.id ? (
-                    <VariantButtonLink variant="secondary-inverted" url="/settings/account" prefetch="render">
+                    <VariantButtonLink variant="secondary-inverted" url="/settings/profile" prefetch="render">
                         <EditIcon className="w-btn-icon h-btn-icon" />
                         Edit
                     </VariantButtonLink>

@@ -51,18 +51,13 @@ export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu
                                 <li className="w-full flex flex-col gap-1 items-center justify-center mb-2">
                                     <div className="w-full flex items-center justify-center gap-2">
                                         <ImgWrapper
-                                            src={imageUrl(session?.avatarUrl)}
+                                            src={imageUrl(session?.avatar)}
                                             alt={session.userName}
                                             className="w-10 h-10 rounded-full"
                                             fallback={fallbackUserIcon}
                                         />
-                                        <div className="flex flex-col items-start justify-center gap-1.5">
-                                            <span className="leading-none font-semibold text-foreground/90">{session?.name}</span>
-                                            <span className="leading-none text-muted-foreground text-[0.93rem]">
-                                                <em className="select-none not-italic text-extra-muted-foreground">@</em>
-                                                {session?.userName}
-                                            </span>
-                                        </div>
+
+                                        <span className="leading-none text-lg font-semibold text-foreground/90">{session?.userName}</span>
                                     </div>
                                 </li>
 
@@ -81,7 +76,7 @@ export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu
                                     {
                                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
                                         label: "Settings",
-                                        url: "/settings/account",
+                                        url: "/settings/profile",
                                     },
                                     {
                                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,

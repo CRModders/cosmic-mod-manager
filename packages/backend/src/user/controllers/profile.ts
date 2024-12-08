@@ -1,14 +1,19 @@
 import { deleteUserDataCache } from "@/services/cache/session";
 import prisma from "@/services/prisma";
+import { deleteUserFile, saveUserFile } from "@/services/storage";
 import { ListItemProjectFields, projectMembersSelect } from "@/src/project/queries/project";
 import { isProjectAccessible } from "@/src/project/utils";
-import type { ContextUserData } from "@/types";
+import { type ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
-import { HTTP_STATUS } from "@/utils/http";
-import { projectIconUrl } from "@/utils/urls";
+import { HTTP_STATUS, notFoundResponseData } from "@/utils/http";
+import { resizeImageToWebp } from "@/utils/images";
+import { generateDbId } from "@/utils/str";
+import { projectIconUrl, userIconUrl } from "@/utils/urls";
+import { ICON_WIDTH } from "@shared/config/forms";
 import { formatUserName } from "@shared/lib/utils";
+import { getFileType } from "@shared/lib/utils/convertors";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import { type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
+import { FileType, type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { z } from "zod";
@@ -27,7 +32,7 @@ export async function getUserProfileData(slug: string): Promise<RouteHandlerResp
         name: user.name,
         userName: user.userName,
         role: user.role as GlobalUserRole,
-        avatarUrl: user.avatarUrl,
+        avatar: userIconUrl(user.id, user.avatar),
         bio: user.bio,
         dateJoined: user.dateJoined,
     } satisfies UserProfileData;
@@ -39,55 +44,89 @@ export async function updateUserProfile(
     userSession: ContextUserData,
     profileData: z.infer<typeof profileUpdateFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    profileData.userName = formatUserName(profileData.userName);
-    profileData.name = formatUserName(profileData.name, " ");
-
-    const existingUserWithSameUserName =
-        profileData.userName.toLowerCase() === userSession.userName.toLowerCase()
-            ? null
-            : !!(
-                  await prisma.user.findUnique({
-                      where: {
-                          lowerCaseUserName: profileData.userName.toLowerCase(),
-                          NOT: [{ id: userSession.id }],
-                      },
-                  })
-              )?.id;
-
-    if (existingUserWithSameUserName)
-        return { data: { success: false, message: "Username already taken" }, status: HTTP_STATUS.BAD_REQUEST };
-
-    let avatarUrl = userSession.avatarUrl;
-    if (userSession.avatarUrlProvider !== profileData.avatarUrlProvider) {
-        const authAccount = await prisma.authAccount.findFirst({
-            where: {
-                userId: userSession.id,
-                providerName: profileData.avatarUrlProvider,
-            },
-        });
-
-        if (!authAccount?.id) {
-            return { data: { success: false, message: "Invalid profile provider" }, status: HTTP_STATUS.BAD_REQUEST };
-        }
-
-        avatarUrl = authAccount?.avatarUrl;
-    }
-
-    await prisma.user.update({
+    const user = await prisma.user.findUnique({
         where: {
             id: userSession.id,
         },
+    });
+    if (!user) return notFoundResponseData("User not found");
+
+    profileData.userName = formatUserName(profileData.userName);
+
+    // If the user is trying to change their username, check if the new username is available
+    if (profileData.userName.toLowerCase() !== user.userName.toLowerCase()) {
+        const existingUserWithSameUserName = await prisma.user.findFirst({
+            where: {
+                lowerCaseUserName: profileData.userName.toLowerCase(),
+                NOT: [{ id: user.id }],
+            },
+        });
+        if (existingUserWithSameUserName) {
+            return { data: { success: false, message: "Username already taken" }, status: HTTP_STATUS.BAD_REQUEST };
+        }
+    }
+
+    const avatarFileId = await getUserAvatar(user.id, user.avatar, profileData.avatar);
+
+    await prisma.user.update({
+        where: {
+            id: user.id,
+        },
         data: {
-            name: profileData.name,
-            userName: profileData.userName,
+            avatar: avatarFileId,
             lowerCaseUserName: profileData.userName.toLowerCase(),
-            avatarUrlProvider: profileData.avatarUrlProvider,
-            avatarUrl: avatarUrl,
+            userName: profileData.userName,
+            bio: profileData.bio,
         },
     });
 
-    await deleteUserDataCache(userSession.id);
+    await deleteUserDataCache(user.id);
     return { data: { success: true, message: "Profile updated successfully", profileData }, status: HTTP_STATUS.OK };
+}
+
+export async function getUserAvatar(
+    userId: string,
+    prevAvatarId: string | null,
+    avatarFile?: null | string | File,
+): Promise<string | null> {
+    if (typeof avatarFile === "string") return avatarFile;
+    // If the user didn't upload a new avatar, return the previous avatar
+    if (!avatarFile) return prevAvatarId;
+
+    try {
+        if (prevAvatarId) {
+            const deletedDbFile = await prisma.file.delete({ where: { id: prevAvatarId } });
+            await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
+        }
+    } catch {}
+
+    const fileType = await getFileType(avatarFile);
+    if (!fileType) return null;
+
+    let saveIconFileType = fileType;
+    let saveIcon = avatarFile;
+    // Resize the image if it's larger than 5KB
+    if (saveIcon.size > 5120) {
+        saveIcon = await resizeImageToWebp(avatarFile, fileType, ICON_WIDTH);
+        if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
+    }
+
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);
+    if (!iconSaveUrl) return null;
+
+    await prisma.file.create({
+        data: {
+            id: fileId,
+            name: fileId,
+            size: avatarFile.size,
+            type: fileType,
+            url: iconSaveUrl,
+            storageService: FILE_STORAGE_SERVICE.LOCAL,
+        },
+    });
+
+    return fileId;
 }
 
 export async function getAllVisibleProjects(

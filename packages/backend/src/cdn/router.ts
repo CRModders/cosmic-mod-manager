@@ -6,7 +6,7 @@ import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { getUserFromCtx } from "../auth/helpers/session";
-import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveVersionFile } from "./controller";
+import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveUserAvatar, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
 const cacheCdnUrls = [env.CACHE_CDN_URL, "https://crmm-cdn.global.ssl.fastly.net"];
@@ -24,6 +24,7 @@ cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryIma
 cdnRouter.get("/data/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
 
 cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
+cdnRouter.get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get);
 
 // Sitemaps
 cdnRouter.get("/sitemap/:name", cdnAssetRateLimiter, sitemap_get);
@@ -76,6 +77,19 @@ async function orgFile_get(ctx: Context) {
         }
 
         return await serveOrgIconFile(ctx, orgId, IsCdnRequest(ctx));
+    } catch (error) {
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function userFile_get(ctx: Context) {
+    try {
+        const { userId } = ctx.req.param();
+        if (!userId) {
+            return invalidReqestResponse(ctx);
+        }
+
+        return await serveUserAvatar(ctx, userId, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }

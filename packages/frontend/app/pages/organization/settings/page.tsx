@@ -55,7 +55,7 @@ export default function GeneralOrgSettings() {
     });
     form.watch();
 
-    const saveSettings = async (values: z.infer<typeof orgSettingsFormSchema>) => {
+    async function saveSettings(values: z.infer<typeof orgSettingsFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
 
@@ -82,7 +82,7 @@ export default function GeneralOrgSettings() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <>
