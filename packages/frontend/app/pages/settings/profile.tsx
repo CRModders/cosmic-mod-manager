@@ -206,7 +206,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                 Save changes
                             </Button>
                             <VariantButtonLink url={`/user/${session.userName}`}>
-                                <UserIcon />
+                                <UserIcon className="w-btn-icon h-btn-icon" />
                                 Visit your profile
                             </VariantButtonLink>
                         </div>

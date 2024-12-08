@@ -15,7 +15,6 @@ model User {
     email             String   @unique @db.VarChar(64)
     userName          String   @unique @db.VarChar(32)
     avatar            String?  @db.VarChar(256)
-    avatarUrl         String?  @db.VarChar(256)
     lowerCaseUserName String   @unique @db.VarChar(32)
     dateJoined        DateTime @default(now())
     emailVerified     Boolean
