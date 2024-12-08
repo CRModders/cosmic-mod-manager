@@ -161,7 +161,7 @@ const GalleryItemCard = ({
     );
 };
 
-const ImageDialog = ({
+function ImageDialog({
     galleryItem,
     setActiveIndex,
     totalItems,
@@ -174,39 +174,39 @@ const ImageDialog = ({
     totalItems: number;
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+}) {
     const [imgLoaded, setImgLoaded] = useState(false);
     const [isFullWidth, setIsFullWidth] = useState(false);
 
-    const toggleFullWidth = () => {
+    function toggleFullWidth() {
         setIsFullWidth((prev) => !prev);
-    };
+    }
 
-    const next = () => {
+    function next() {
         setActiveIndex((current) => {
             if (current < totalItems - 1) {
                 return current + 1;
             }
             return 0;
         });
-    };
+    }
 
-    const previous = () => {
+    function previous() {
         setActiveIndex((current) => {
             if (current > 0) {
                 return current - 1;
             }
             return totalItems - 1;
         });
-    };
+    }
 
-    const handleKeyboardInputs = (e: KeyboardEvent) => {
+    function handleKeyboardInputs(e: KeyboardEvent) {
         if (e.key === "ArrowLeft") {
             previous();
         } else if (e.key === "ArrowRight") {
             next();
         }
-    };
+    }
 
     useEffect(() => {
         document.body.addEventListener("keydown", handleKeyboardInputs);
@@ -296,4 +296,4 @@ const ImageDialog = ({
             </DialogContent>
         </Dialog>
     );
-};
+}

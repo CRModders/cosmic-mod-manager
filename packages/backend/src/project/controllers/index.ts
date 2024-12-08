@@ -18,7 +18,6 @@ import type {
     ProjectVisibility,
 } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem } from "@shared/types/api";
-import { getFilesFromId } from "../queries/file";
 import { projectDetailsFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
@@ -47,13 +46,6 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
     }
     const currSessionMember = allMembers.get(userSession?.id || "");
-
-    const galleryFileIds = project.gallery.flatMap((item) => {
-        if (item.thumbnailFileId) return [item.imageFileId, item.thumbnailFileId];
-        return [item.imageFileId];
-    });
-    const filesMap = await getFilesFromId(galleryFileIds);
-
     const org = project.organisation;
 
     return {
