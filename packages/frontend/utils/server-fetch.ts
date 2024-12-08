@@ -3,7 +3,7 @@ import Config from "./config";
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     try {
         const startTime = Date.now();
-        const backendHost = Config.BACKEND_URL;
+        const backendHost = Config.BACKEND_URL_LOCAL;
 
         let fetchUrl = pathname;
         const clientIp =
