@@ -24,8 +24,8 @@ export default {
             namespace: "global_CRITICAL_MODIFY",
         },
         EMAIL: {
-            max: 5,
-            timeWindow_seconds: 300,
+            max: 3,
+            timeWindow_seconds: 7200,
             namespace: "global_EMAIL",
         },
         INVALID_AUTH_ATTEMPT: {

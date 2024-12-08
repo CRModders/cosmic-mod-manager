@@ -17,11 +17,16 @@ const envKeys = [
     "GITLAB_SECRET",
     "IP2GEO_API_KEY",
     "MEILISEARCH_MASTER_KEY",
-    "DEMO_EMAIL",
-    "DEMO_EMAIL_PASSWORD",
     "NODE_ENV",
     "CDN_SECRET",
     "FRONTEND_SECRET",
+    "BREVO_USER",
+    "SUPPORT_EMAIL",
+    "SUPPORT_EMAIL_PASSWORD",
+    "NOREPLY_EMAIL",
+    "NOREPLY_EMAIL_PASSWORD",
+    "ADMIN_EMAIL",
+    "ADMIN_EMAIL_PASSWORD",
 ] as const;
 
 type EnvKeys = (typeof envKeys)[number];

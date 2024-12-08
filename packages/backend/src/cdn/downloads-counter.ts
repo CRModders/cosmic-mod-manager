@@ -20,7 +20,7 @@ const MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW = 3;
 
 let isQueueProcessing = false;
 
-const getDownloadsHistory = async () => {
+async function getDownloadsHistory() {
     const list: DownloadsQueueItem[] = [];
     const historyItems = await redis.lrange(DOWNLOADS_HISTORY_KEY, 0, -1);
 
@@ -32,24 +32,24 @@ const getDownloadsHistory = async () => {
     }
 
     return list;
-};
+}
 
-const refreshDownloadsHistory = async () => {
+async function refreshDownloadsHistory() {
     await redis.del(DOWNLOADS_HISTORY_KEY);
-};
+}
 
-const addToHistory = async (item: DownloadsQueueItem) => {
+async function addToHistory(item: DownloadsQueueItem) {
     await redis.lpush(DOWNLOADS_HISTORY_KEY, JSON.stringify(item));
-};
+}
 
-const queueDownloadsHistoryRefresh = () => {
+function queueDownloadsHistoryRefresh() {
     // @ts-ignore
     const intervalId = global.historyRefreshIntervalId;
     if (intervalId) clearInterval(intervalId);
 
     // @ts-ignore
     global.historyRefreshIntervalId = setTimeout(refreshDownloadsHistory, HISTORY_VALIDITY);
-};
+}
 
 const flushDownloadsCounterQueue = async () => {
     await redis.del(DOWNLOADS_QUEUE_KEY);
@@ -70,11 +70,11 @@ const getDownloadsCounterQueue = async (flushQueue = false) => {
     return listItems;
 };
 
-const getDownloadsCounterQueueLength = async () => {
+async function getDownloadsCounterQueueLength() {
     return await redis.llen(DOWNLOADS_QUEUE_KEY);
-};
+}
 
-const processDownloads = async () => {
+async function processDownloads() {
     try {
         if (isQueueProcessing) return;
         isQueueProcessing = true;
@@ -160,20 +160,20 @@ const processDownloads = async () => {
     } finally {
         isQueueProcessing = false;
     }
-};
+}
 
-export const queueDownloadsCounterQueueProcessing = async () => {
+export async function queueDownloadsCounterQueueProcessing() {
     // @ts-ignore
     const intervalId = global.downloadsCounterQueueIntervalId;
     if (intervalId) clearInterval(intervalId);
 
     // @ts-ignore
     global.downloadsCounterQueueIntervalId = setInterval(processDownloads, QUEUE_PROCESS_INTERVAL);
-};
+}
 
-export const addToDownloadsQueue = async (item: Omit<DownloadsQueueItem, "id">) => {
+export async function addToDownloadsQueue(item: Omit<DownloadsQueueItem, "id">) {
     await redis.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: generateRandomId() }));
-};
+}
 
 //
 processDownloads();

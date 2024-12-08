@@ -1,4 +1,3 @@
-import * as fs from "node:fs/promises";
 import { rm } from "node:fs/promises";
 import { LOCAL_BASE_STORAGE_PATH } from "./utils";
 
@@ -6,8 +5,8 @@ export type WritableFile = File | Blob | NodeJS.TypedArray | ArrayBufferLike | s
 
 export async function doesPathExist(path: string) {
     try {
-        return await fs.exists(`${LOCAL_BASE_STORAGE_PATH}/${path}`);
-    } catch (error) {
+        return await Bun.file(`${LOCAL_BASE_STORAGE_PATH}/${path}`).exists();
+    } catch {
         return false;
     }
 }
