@@ -112,8 +112,16 @@ Keep in mind that you'll need to start the database again after a reboot.
     MEILISEARCH_MASTER_KEY="MEILISEARCH_MASTERY_KEY"
 
     # Email transport credentials
-    DEMO_EMAIL="GOOGLE_EMAIL"
-    DEMO_EMAIL_PASSWORD="APP_PASSWORD"
+    BREVO_USER="82374982@smtp-brevo.com"
+
+    SUPPORT_EMAIL="support@crmm.tech"
+    SUPPORT_EMAIL_PASSWORD=""
+
+    NOREPLY_EMAIL="no-reply@crmm.tech"
+    NOREPLY_EMAIL_PASSWORD=""
+
+    ADMIN_EMAIL="admin@crmm.tech"
+    ADMIN_EMAIL_PASSWORD=""
 
     # Deployment Config (Not required)
     SSH_USER=""

@@ -20,10 +20,11 @@ export async function getImageFromHttpUrl(url: string) {
         const mime = blob.type;
         if (!mime.startsWith("image/")) return null;
 
-        const extension = mime.split("/")[1] || "jpg";
+        const extension = mime.split("/")[1] || "png";
 
         return new File([blob], `avatar.${extension}`, { type: blob.type });
     } catch (error) {
+        console.error(`Error while fetching image from URL: ${url} \n`, error);
         return null;
     }
 }
