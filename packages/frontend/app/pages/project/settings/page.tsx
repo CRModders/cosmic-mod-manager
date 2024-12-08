@@ -3,6 +3,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useNavigate, useOutletContext } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import Config from "@root/utils/config";
 import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
@@ -219,7 +220,7 @@ export default function GeneralSettingsPage() {
                                             autoComplete="off"
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
-                                            {window.location.origin}/{form.getValues().type?.[0] || "project"}/
+                                            {Config.FRONTEND_URL}/{form.getValues().type?.[0] || "project"}/
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>

@@ -55,16 +55,16 @@ const filtersKeyList = [
     licenseFilterParamNamespace,
 ];
 
-const clearFilters = () => {
+function clearFilters() {
     const currUrl = new URL(window.location.href);
     for (const key of filtersKeyList) {
         currUrl.searchParams.delete(key);
     }
 
     return currUrl.href.replace(window.location.origin, "");
-};
+}
 
-const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
+function FilterSidebar({ type, showFilters, searchParams }: Props) {
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [query, setQuery] = useState("");
     const _navigate = useNavigate();
@@ -306,7 +306,7 @@ const FilterSidebar = ({ type, showFilters, searchParams }: Props) => {
             />
         </aside>
     );
-};
+}
 
 export default FilterSidebar;
 

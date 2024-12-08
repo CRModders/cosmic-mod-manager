@@ -3,6 +3,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useNavigate, useOutletContext } from "@remix-run/react";
 import { cn, getOrgPagePathname, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import Config from "@root/utils/config";
 import { createURLSafeSlug } from "@shared/lib/utils";
 import { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
 import { handleFormError } from "@shared/schemas/utils";
@@ -206,7 +207,7 @@ export default function GeneralOrgSettings() {
                                             autoComplete="off"
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
-                                            {window.location.origin}/organization/
+                                            {Config.FRONTEND_URL}/organization/
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>

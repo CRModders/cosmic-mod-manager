@@ -1,5 +1,6 @@
 import { useSearchParams } from "@remix-run/react";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
+import Config from "@root/utils/config";
 import { formatGameVersionsList } from "@root/utils/version";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
@@ -641,7 +642,7 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                     size={"sm"}
                     className="justify-start"
                     onClick={() => {
-                        copyTextToClipboard(`${window.location.origin}${versionPageUrl}`);
+                        copyTextToClipboard(`${Config.FRONTEND_URL}${versionPageUrl}`);
                         setDropDownOpen(false);
                     }}
                 >
