@@ -23,8 +23,8 @@ export default function OrgPageLayout() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const aggregatedDownloads = (projects || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
-    const totalProjects = projects?.length || 0;
+    const aggregatedDownloads = (projects || []).reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = (projects || []).length;
     const aggregatedProjectTypes = new Set<string>();
     for (const project of projects || []) {
         for (const type of project.type) {

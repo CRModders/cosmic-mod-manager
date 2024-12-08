@@ -28,8 +28,8 @@ interface Props {
 export default function UserPageLayout({ session, userData, projectsList, orgsList }: Props) {
     if (!userData) return null;
 
-    const aggregatedDownloads = (projectsList || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
-    const totalProjects = projectsList?.length || 0;
+    const aggregatedDownloads = (projectsList || []).reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = (projectsList || []).length;
     const aggregatedProjectTypes = new Set<string>();
     for (const project of projectsList || []) {
         for (const type of project.type) {
