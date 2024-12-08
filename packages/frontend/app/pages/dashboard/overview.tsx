@@ -17,8 +17,8 @@ interface Props extends NotificationsData {
 export default function OverviewPage({ session, userProjects, notifications, relatedProjects, relatedOrgs, relatedUsers }: Props) {
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
-    const totalProjects = userProjects?.length || 0;
-    const totalDownloads = userProjects?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = (userProjects || [])?.length;
+    const totalDownloads = (userProjects || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalFollowers = 0;
 
     if (!session?.id) return null;
