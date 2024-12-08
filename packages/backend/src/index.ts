@@ -51,7 +51,7 @@ app.route("/api/projects", bulkProjectsRouter);
 
 app.route("/api/team", teamRouter);
 app.route("/api/organization", orgRouter);
-app.route("/api/organizations", bulkOrgsRouter);
+app.route("/api/organizations", bulkOrgsRouter); // Uses the userSession's userId instead of getting it from the URL
 app.route("/api/user/:userId/organization", orgRouter);
 
 app.route("/cdn", cdnRouter);
@@ -79,8 +79,11 @@ startSitemapGenerator();
 async function apiDetails(ctx: Context) {
     return ctx.json(
         {
-            cdnUrl: env.CACHE_CDN_URL,
+            message: "Hello visitor! Welcome to the CRMM API.",
+            website: "https://crmm.tech",
             docs: "https://docs.crmm.tech",
+            status: "https://status.crmm.tech",
+            cdn: env.CACHE_CDN_URL,
         },
         HTTP_STATUS.OK,
     );

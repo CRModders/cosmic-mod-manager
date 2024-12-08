@@ -18,18 +18,18 @@ tagsRouter.get("/licenses/featured", featuredLicenses_get);
 tagsRouter.get("/licenses/:id", licenses_get);
 tagsRouter.get("/project-types", projectTypes_get);
 
-const getCategories = ({
+function getCategories({
     projectType,
     headerType,
     namesOnly,
-}: { projectType?: ProjectType; headerType?: TagHeaderType; namesOnly?: boolean }) => {
+}: { projectType?: ProjectType; headerType?: TagHeaderType; namesOnly?: boolean }) {
     const list = getValidProjectCategories(projectType ? [projectType] : [], headerType);
 
     if (namesOnly) {
         return list.map((category) => category.name);
     }
     return list;
-};
+}
 
 async function categories_get(ctx: Context) {
     try {

@@ -1,11 +1,13 @@
+import { AuthenticationMiddleware } from "@/middleware/auth";
 import { strictGetReqRateLimiter } from "@/middleware/rate-limit/get-req";
+import { invalidAuthAttemptLimiter } from "@/middleware/rate-limit/invalid-auth-attempt";
 import { invalidReqestResponse, serverErrorResponse } from "@/utils/http";
 import { type Context, Hono } from "hono";
 import { getManyUsers } from "./controller";
 
 const bulkUserActionsRouter = new Hono();
-// bulkUserActionsRouter.use(invalidAuthAttemptLimiter);
-// bulkUserActionsRouter.use(AuthenticationMiddleware);
+bulkUserActionsRouter.use(invalidAuthAttemptLimiter);
+bulkUserActionsRouter.use(AuthenticationMiddleware);
 
 bulkUserActionsRouter.get("/", strictGetReqRateLimiter, users_get);
 
