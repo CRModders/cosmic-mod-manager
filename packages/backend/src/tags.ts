@@ -1,3 +1,4 @@
+import { applyCacheHeaders } from "@/middleware/cache";
 import { searchReqRateLimiter } from "@/middleware/rate-limit/get-req";
 import { HTTP_STATUS, serverErrorResponse } from "@/utils/http";
 import GAME_VERSIONS from "@shared/config/game-versions";
@@ -9,6 +10,12 @@ import { type Context, Hono } from "hono";
 
 const tagsRouter = new Hono();
 tagsRouter.use(searchReqRateLimiter);
+tagsRouter.use(
+    applyCacheHeaders({
+        maxAge: 7200,
+        sMaxAge: 7200,
+    }),
+);
 
 tagsRouter.get("/categories", categories_get);
 tagsRouter.get("/game-versions", gameVersions_get);

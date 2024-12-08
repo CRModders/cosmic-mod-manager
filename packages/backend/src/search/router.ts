@@ -1,3 +1,4 @@
+import { applyCacheHeaders } from "@/middleware/cache";
 import { searchReqRateLimiter } from "@/middleware/rate-limit/get-req";
 import { isNumber } from "@/utils";
 import { HTTP_STATUS, serverErrorResponse } from "@/utils/http";
@@ -22,6 +23,7 @@ import { searchProjects } from "./controllers";
 
 const searchRouter = new Hono();
 searchRouter.use(searchReqRateLimiter);
+searchRouter.use(applyCacheHeaders({ maxAge: 0, sMaxAge: 1800 }));
 
 searchRouter.get("/", search_get);
 searchRouter.get("/filters/sort-by", sortByFilters_get);
