@@ -39,11 +39,10 @@ export default function ProjectGallery({ session, projectData, currUsersMembersh
 
     return (
         <>
-            {currUsersMembership?.id &&
-            doesMemberHaveAccess(
+            {doesMemberHaveAccess(
                 ProjectPermission.EDIT_DETAILS,
-                currUsersMembership.permissions,
-                currUsersMembership.isOwner,
+                currUsersMembership?.permissions,
+                currUsersMembership?.isOwner,
                 session?.role,
             ) ? (
                 <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
@@ -149,11 +148,10 @@ const GalleryItemCard = ({
                         <CalendarIcon className="w-btn-icon h-btn-icon" />
                         <FormattedDate date={galleryItem.dateCreated} timestamp_template="${month} ${day}, ${year}" />
                     </p>
-                    {currUsersMembership?.id &&
-                    doesMemberHaveAccess(
+                    {doesMemberHaveAccess(
                         ProjectPermission.EDIT_DETAILS,
-                        currUsersMembership.permissions,
-                        currUsersMembership.isOwner,
+                        currUsersMembership?.permissions,
+                        currUsersMembership?.isOwner,
                         session?.role,
                     ) ? (
                         <div className="w-full flex flex-wrap items-center justify-start gap-x-2 gap-y-1">

@@ -36,8 +36,8 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
 
     const canInviteMembers = doesMemberHaveAccess(
         ProjectPermission.MANAGE_INVITES,
-        currUsersMembership.permissions,
-        currUsersMembership.isOwner,
+        currUsersMembership?.permissions,
+        currUsersMembership?.isOwner,
         session?.role,
     );
 
@@ -50,7 +50,9 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
             <Card className="w-full flex flex-col p-card-surround gap-4">
                 <CardTitle>Manage members</CardTitle>
                 <InviteMemberForm teamId={projectData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshProjectData} />
-                <LeaveTeam teamId={projectData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshProjectData} />
+                {currUsersMembership ? (
+                    <LeaveTeam teamId={projectData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshProjectData} />
+                ) : null}
             </Card>
 
             {projectData.members
@@ -67,7 +69,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
                     />
                 ))}
 
-            {userOrgs?.length && !projectData.organisation && currUsersMembership.isOwner === true ? (
+            {userOrgs?.length && !projectData.organisation && currUsersMembership?.isOwner === true ? (
                 <TransferProjectManagementCard organisations={userOrgs} projectId={projectData.id} />
             ) : null}
 

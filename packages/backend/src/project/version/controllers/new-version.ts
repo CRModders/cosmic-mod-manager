@@ -58,12 +58,12 @@ export async function createNewVersion(
         },
     });
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData("Project not found");
+    if (!project?.id) return notFoundResponseData("Project not found");
 
     const canUploadVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     // Check if the user has permission to upload a version

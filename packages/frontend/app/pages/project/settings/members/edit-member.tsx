@@ -27,7 +27,7 @@ import { RemoveMemberDialog, TransferOwnershipDialog } from "./dialogs";
 interface ProjectTeamMemberProps {
     session: LoggedInUserData | null;
     member: TeamMember;
-    currUsersMembership: TeamMember;
+    currUsersMembership: TeamMember | null;
     fetchProjectData: () => Promise<void>;
     projectTeamId: string;
     doesProjectHaveOrg: boolean;
@@ -76,22 +76,23 @@ export const ProjectTeamMember = ({
 
     const canEditMember = doesMemberHaveAccess(
         ProjectPermission.EDIT_MEMBER,
-        currUsersMembership.permissions,
-        currUsersMembership.isOwner,
+        currUsersMembership?.permissions,
+        currUsersMembership?.isOwner,
         session?.role,
     );
-    const canAddPermissions = currUsersMembership.isOwner;
+    const canAddPermissions = hasRootAccess(currUsersMembership?.isOwner, session?.role);
     const canRemoveMembers = doesMemberHaveAccess(
         ProjectPermission.REMOVE_MEMBER,
-        currUsersMembership.permissions,
-        currUsersMembership.isOwner,
+        currUsersMembership?.permissions,
+        currUsersMembership?.isOwner,
         session?.role,
     );
     const canTransferOwnership =
-        hasRootAccess(currUsersMembership.isOwner, session?.role) &&
+        hasRootAccess(currUsersMembership?.isOwner, session?.role) &&
+        member.isOwner === false &&
         member.accepted &&
         !doesProjectHaveOrg &&
-        member.userId !== currUsersMembership.userId;
+        member.userId !== currUsersMembership?.userId;
 
     useEffect(() => {
         form.reset({

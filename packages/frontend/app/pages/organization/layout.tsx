@@ -1,10 +1,12 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Outlet, useLocation, useNavigate, useOutletContext } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { isModerator } from "@shared/config/roles";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
+import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, ClipboardCopyIcon, DownloadIcon, SettingsIcon, UsersIcon } from "lucide-react";
+import { Outlet, useLocation, useNavigate, useOutletContext } from "react-router";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
 import RefreshPage from "~/components/refresh-page";
@@ -19,7 +21,7 @@ import SecondaryNav from "../project/secondary-nav";
 import "./styles.css";
 
 export default function OrgPageLayout() {
-    const { orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
+    const { session, orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -40,6 +42,7 @@ export default function OrgPageLayout() {
     return (
         <main className="org-page-layout pb-12 gap-panel-cards">
             <OrgInfoHeader
+                session={session}
                 orgData={orgData}
                 currUsersMembership={currUsersMembership}
                 totalDownloads={aggregatedDownloads}
@@ -71,6 +74,7 @@ export default function OrgPageLayout() {
                     <Outlet
                         context={
                             {
+                                session: session,
                                 orgData: orgData,
                                 orgProjects: projects,
                                 currUsersMembership: currUsersMembership,
@@ -122,6 +126,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
 }
 
 interface OrgInfoHeaderProps {
+    session: LoggedInUserData | null;
     totalProjects: number;
     totalDownloads: number;
     orgData: Organisation;
@@ -129,7 +134,7 @@ interface OrgInfoHeaderProps {
     fetchOrgData: () => Promise<void>;
 }
 
-function OrgInfoHeader({ orgData, totalProjects, totalDownloads, currUsersMembership, fetchOrgData }: OrgInfoHeaderProps) {
+function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUsersMembership, fetchOrgData }: OrgInfoHeaderProps) {
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
@@ -147,7 +152,7 @@ function OrgInfoHeader({ orgData, totalProjects, totalDownloads, currUsersMember
                 }
                 threeDotMenu={
                     <>
-                        {currUsersMembership?.id ? (
+                        {currUsersMembership?.id || isModerator(session?.role) ? (
                             <>
                                 <VariantButtonLink
                                     variant="ghost"
@@ -175,7 +180,7 @@ function OrgInfoHeader({ orgData, totalProjects, totalDownloads, currUsersMember
                     </>
                 }
                 actionBtns={
-                    currUsersMembership?.id ? (
+                    currUsersMembership?.id || isModerator(session?.role) ? (
                         <VariantButtonLink variant="secondary-inverted" url={getOrgPagePathname(orgData.slug, "/settings")}>
                             <SettingsIcon className="w-btn-icon h-btn-icon" />
                             Manage

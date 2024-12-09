@@ -25,13 +25,13 @@ export async function updateProjectDescription(
         },
     });
 
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData();
+    if (!project?.id) return notFoundResponseData();
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DESCRIPTION,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project description");
@@ -59,13 +59,13 @@ export async function updateProjectTags(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData();
+    if (!project?.id) return notFoundResponseData();
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) {
@@ -102,13 +102,13 @@ export async function updateProjectExternalLinks(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData();
+    if (!project?.id) return notFoundResponseData();
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) {
@@ -140,13 +140,13 @@ export async function updateProjectLicense(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData();
+    if (!project?.id) return notFoundResponseData();
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) {

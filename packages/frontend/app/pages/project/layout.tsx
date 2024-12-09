@@ -1,8 +1,8 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Outlet, useLocation, useNavigate } from "react-router";
 import { cn, getOrgPagePathname, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
 import { formatGameVersionsList, formatGameVersionsListString } from "@root/utils/version";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
+import { isModerator } from "@shared/config/roles";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { LoggedInUserData } from "@shared/types";
@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { Suspense, useContext } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { DiscordIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
@@ -457,7 +458,7 @@ const ProjectInfoHeader = ({
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
                             <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
                         </Button>
-                        {currUsersMembership?.id ? (
+                        {currUsersMembership?.id || isModerator(session?.role) ? (
                             <VariantButtonLink
                                 url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
                                 variant={"secondary-inverted"}

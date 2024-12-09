@@ -43,12 +43,10 @@ export async function createNewProject(
         orgId = org.id;
 
         const currMember = org.team.members.find((member) => member.userId === userSession.id);
-        if (!currMember) return invalidReqestResponseData("You are not a member of this organisation");
-
         const canAddProject = doesOrgMemberHaveAccess(
             OrganisationPermission.ADD_PROJECT,
-            currMember.organisationPermissions as OrganisationPermission[],
-            currMember.isOwner,
+            currMember?.organisationPermissions as OrganisationPermission[],
+            currMember?.isOwner,
             userSession?.role,
         );
         if (!canAddProject) return unauthorizedReqResponseData("You do not have permission to add project to this organisation");

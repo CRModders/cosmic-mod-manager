@@ -64,13 +64,13 @@ export const updateVersionData = async (
 
     // Return if project or target version not found
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !targetVersion?.id || !memberObj) return notFoundResponseData("Project not found");
+    if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to edit a version
     const canUpdateVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!canUpdateVersion) {
@@ -293,13 +293,13 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     }
 
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !targetVersion?.id || !memberObj) return notFoundResponseData("Project not found");
+    if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to upload a version
     const canDeleteVersion = doesMemberHaveAccess(
         ProjectPermission.DELETE_VERSION,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!canDeleteVersion) {

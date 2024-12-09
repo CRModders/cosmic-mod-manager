@@ -53,11 +53,11 @@ export async function addNewGalleryImage(
     const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team?.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        (memberObj?.permissions || []) as ProjectPermission[],
-        memberObj?.isOwner === true,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
-    if (!memberObj || !hasEditAccess) {
+    if (!hasEditAccess) {
         return unauthorizedReqResponseData();
     }
 
@@ -155,11 +155,10 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
 
     const currMember = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
-        !currMember ||
         !doesMemberHaveAccess(
             ProjectPermission.EDIT_DETAILS,
-            currMember.permissions as ProjectPermission[],
-            currMember.isOwner,
+            currMember?.permissions as ProjectPermission[],
+            currMember?.isOwner,
             userSession.role,
         )
     ) {
@@ -222,11 +221,10 @@ export async function updateGalleryImage(
 
     const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
-        !memberObj ||
         !doesMemberHaveAccess(
             ProjectPermission.EDIT_DETAILS,
-            memberObj.permissions as ProjectPermission[],
-            memberObj.isOwner,
+            memberObj?.permissions as ProjectPermission[],
+            memberObj?.isOwner,
             userSession.role,
         )
     ) {

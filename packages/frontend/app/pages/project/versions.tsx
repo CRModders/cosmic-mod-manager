@@ -176,7 +176,7 @@ export default function ProjectVersionsPage({ session, projectData, allProjectVe
 
     return (
         <>
-            {currUsersMembership?.id && canUploadVersion ? (
+            {canUploadVersion ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 

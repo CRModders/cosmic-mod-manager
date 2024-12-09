@@ -29,13 +29,13 @@ export async function updateProject(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const currMember = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !currMember) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
+    if (!project?.id) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
 
+    const currMember = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const canEditProject = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        currMember.permissions as ProjectPermission[],
-        currMember.isOwner,
+        currMember?.permissions as ProjectPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canEditProject) return unauthorizedReqResponseData("You don't have the permission to update project details");
@@ -93,14 +93,14 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project?.id || !memberObj) return notFoundResponseData("Project not found");
+    if (!project?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has the permission to delete the project
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasDeleteAccess = doesMemberHaveAccess(
         ProjectPermission.DELETE_PROJECT,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasDeleteAccess) return unauthorizedReqResponseData("You don't have the permission to delete the project");
@@ -205,13 +205,13 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project || !memberObj) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
+    if (!project) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project icon");
@@ -272,15 +272,14 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team?.members || [], project?.organisation?.team.members || []);
-    if (!project || !memberObj) return notFoundResponseData("Project not found");
-
+    if (!project) return notFoundResponseData("Project not found");
     if (!project.iconFileId) return invalidReqestResponseData("Project does not have any icon");
 
+    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
-        memberObj.permissions as ProjectPermission[],
-        memberObj.isOwner,
+        memberObj?.permissions as ProjectPermission[],
+        memberObj?.isOwner,
         userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");

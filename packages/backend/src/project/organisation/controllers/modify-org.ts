@@ -39,17 +39,13 @@ export async function updateOrg(
         },
     });
     if (!org) return notFoundResponseData();
-    const currMember = org.team.members?.[0];
-    if (!currMember) {
-        await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData();
-    }
 
     // Permission check
+    const currMember = org.team.members?.[0];
     const canEditOrg = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_DETAILS,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canEditOrg) {
@@ -117,15 +113,10 @@ export async function updateOrgIcon(
     if (!org) return notFoundResponseData("Organization not found");
 
     const currMember = org.team.members?.[0];
-    if (!currMember) {
-        await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData();
-    }
-
     const canUpdateIcon = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_DETAILS,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canUpdateIcon) {
@@ -190,19 +181,13 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
         },
     });
     if (!org) return notFoundResponseData("Organization not found");
-
-    const currMember = org.team.members?.[0];
-    if (!currMember) {
-        await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData();
-    }
-
     if (!org.iconFileId) return invalidReqestResponseData("Org does not have any icon");
 
+    const currMember = org.team.members?.[0];
     const canDeleteIcon = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_DETAILS,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canDeleteIcon) {
@@ -246,18 +231,12 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
         return notFoundResponseData();
     }
 
-    const currMember = org.team.members?.find((member) => member.userId === userSession.id);
-    // Check if the request is coming from an org member
-    if (!currMember) {
-        await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData();
-    }
-
     // Check if the member has the required permission to delete the org
+    const currMember = org.team.members?.find((member) => member.userId === userSession.id);
     const canDeleteOrg = doesOrgMemberHaveAccess(
         OrganisationPermission.DELETE_ORGANIZATION,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canDeleteOrg) {
@@ -346,13 +325,12 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
         },
     });
     if (!org) return notFoundResponseData("Organization not found");
-    const currMember = getCurrMember(userSession.id, [], org.team.members);
-    if (!currMember) return unauthorizedReqResponseData("You are not a member of the organization");
 
+    const currMember = getCurrMember(userSession.id, [], org.team.members);
     const canAddProjects = doesOrgMemberHaveAccess(
         OrganisationPermission.ADD_PROJECT,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canAddProjects) return unauthorizedReqResponseData("You don't have the permission to add projects to the organization");
@@ -421,13 +399,12 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
         },
     });
     if (!org) return notFoundResponseData("Organization not found");
-    const currMember = getCurrMember(userSession.id, [], org.team.members);
-    if (!currMember) return unauthorizedReqResponseData("You are not a member of the organization");
 
+    const currMember = getCurrMember(userSession.id, [], org.team.members);
     const canRemoveProjects = doesOrgMemberHaveAccess(
         OrganisationPermission.REMOVE_PROJECT,
-        currMember.organisationPermissions as OrganisationPermission[],
-        currMember.isOwner,
+        currMember?.organisationPermissions as OrganisationPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canRemoveProjects) {

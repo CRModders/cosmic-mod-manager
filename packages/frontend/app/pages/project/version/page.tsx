@@ -5,7 +5,7 @@ import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "
 import { type LoggedInUserData, ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
-import { lazy, Suspense, useContext } from "react";
+import { Suspense, lazy, useContext } from "react";
 import { useParams } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
@@ -116,12 +116,10 @@ export default function VersionPage({ session, projectData, allProjectVersions, 
                         </Button>
                     ) : null}
 
-                    {currUsersMembership?.id &&
-                    currUsersMembership?.id &&
-                    doesMemberHaveAccess(
+                    {doesMemberHaveAccess(
                         ProjectPermission.UPLOAD_VERSION,
-                        currUsersMembership.permissions,
-                        currUsersMembership.isOwner,
+                        currUsersMembership?.permissions,
+                        currUsersMembership?.isOwner,
                         session?.role,
                     ) ? (
                         <VariantButtonLink url="edit" prefetch="render">
@@ -130,11 +128,10 @@ export default function VersionPage({ session, projectData, allProjectVersions, 
                         </VariantButtonLink>
                     ) : null}
 
-                    {currUsersMembership?.id &&
-                    doesMemberHaveAccess(
+                    {doesMemberHaveAccess(
                         ProjectPermission.DELETE_VERSION,
-                        currUsersMembership.permissions,
-                        currUsersMembership.isOwner,
+                        currUsersMembership?.permissions,
+                        currUsersMembership?.isOwner,
                         session?.role,
                     ) ? (
                         <Suspense>

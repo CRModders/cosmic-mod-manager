@@ -1,3 +1,4 @@
+import { isModerator } from "@shared/config/roles";
 import { useOutletContext } from "react-router";
 import Redirect from "~/components/ui/redirect";
 import ProjectSettingsLayout from "~/pages/project/settings/layout";
@@ -10,7 +11,7 @@ export default function _ProjectLayout() {
     if (!session?.id) return <Redirect to="/login" />;
 
     const currUsersMembership = data.currUsersMembership;
-    if (!currUsersMembership) return <Redirect to="/" />;
+    if (!currUsersMembership && !isModerator(session.role)) return <Redirect to="/" />;
 
     return <ProjectSettingsLayout session={session} projectData={data.projectData} currUsersMembership={currUsersMembership} />;
 }

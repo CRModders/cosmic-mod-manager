@@ -7,7 +7,6 @@ export const MODERATOR_PERMISSIONS = {
 
 export const ADMIN_PERMISSIONS = {
     PROJECT: [
-        ProjectPermission.UPLOAD_VERSION,
         ProjectPermission.DELETE_VERSION,
         ProjectPermission.EDIT_DETAILS,
         ProjectPermission.EDIT_DESCRIPTION,
@@ -22,7 +21,6 @@ export const ADMIN_PERMISSIONS = {
         OrganisationPermission.MANAGE_INVITES,
         OrganisationPermission.REMOVE_MEMBER,
         OrganisationPermission.EDIT_MEMBER,
-        OrganisationPermission.ADD_PROJECT,
         OrganisationPermission.REMOVE_PROJECT,
         OrganisationPermission.DELETE_ORGANIZATION,
         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
@@ -63,4 +61,8 @@ export function getRolePerms(userRole: string) {
 
 export function hasRootAccess(isItemOwner: boolean | undefined | null, userRole?: string) {
     return isItemOwner === true || userRole === GlobalUserRole.ADMIN;
+}
+
+export function isModerator(userRole: string | undefined) {
+    return userRole === GlobalUserRole.MODERATOR || userRole === GlobalUserRole.ADMIN;
 }

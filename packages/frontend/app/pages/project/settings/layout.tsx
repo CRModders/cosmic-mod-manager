@@ -1,4 +1,3 @@
-import { Outlet } from "react-router";
 import { getProjectPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";
@@ -15,6 +14,7 @@ import {
     TextIcon,
     UsersIcon,
 } from "lucide-react";
+import { Outlet } from "react-router";
 import { ProjectStatusIcon, fallbackProjectIcon } from "~/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -31,7 +31,7 @@ import { ButtonLink } from "~/components/ui/link";
 export interface ProjectSettingsContext {
     session: LoggedInUserData;
     projectData: ProjectDetailsData;
-    currUsersMembership: TeamMember;
+    currUsersMembership: TeamMember | null;
 }
 
 export default function ProjectSettingsLayout({ session, projectData, currUsersMembership }: ProjectSettingsContext) {

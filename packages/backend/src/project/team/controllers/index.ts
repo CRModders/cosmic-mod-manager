@@ -55,24 +55,22 @@ export async function inviteMember(
     // Handle organiszation team invite
     if (team?.organisation?.id) {
         const currMember = team.members.find((member) => member.userId === userSession.id);
-        if (!currMember) return invalidReqestResponseData();
-
         canManageInvites = doesOrgMemberHaveAccess(
             OrganisationPermission.MANAGE_INVITES,
-            currMember.organisationPermissions as OrganisationPermission[],
-            currMember.isOwner,
+            currMember?.organisationPermissions as OrganisationPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     }
     // Handle project team invite
     else {
-        const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
-        if (!team?.id || !currMember) return invalidReqestResponseData();
+        if (!team?.id) return invalidReqestResponseData();
 
+        const currMember = getCurrMember(userSession.id, team.members || [], team.project?.organisation?.team.members || []);
         canManageInvites = doesMemberHaveAccess(
             ProjectPermission.MANAGE_INVITES,
-            currMember.permissions as ProjectPermission[],
-            currMember.isOwner,
+            currMember?.permissions as ProjectPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     }
@@ -234,23 +232,23 @@ export async function editProjectMember(
             },
         },
     });
-    const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
-    if (!team?.id || !currMember?.id) return notFoundResponseData();
+    if (!team?.id) return notFoundResponseData();
 
+    const currMember = getCurrMember(userSession.id, team.members || [], team.project?.organisation?.team.members || []);
     let canEditMembers = false;
 
     if (team.organisation?.id) {
         canEditMembers = doesOrgMemberHaveAccess(
             OrganisationPermission.EDIT_MEMBER,
-            currMember.organisationPermissions as OrganisationPermission[],
-            currMember.isOwner,
+            currMember?.organisationPermissions as OrganisationPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     } else {
         canEditMembers = doesMemberHaveAccess(
             ProjectPermission.EDIT_MEMBER,
-            currMember.permissions as ProjectPermission[],
-            currMember.isOwner,
+            currMember?.permissions as ProjectPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     }
@@ -263,15 +261,15 @@ export async function editProjectMember(
     if (!targetMember?.id) return notFoundResponseData("Member not found");
 
     // Only owner can add permissions to the member
-    if (!hasRootAccess(currMember.isOwner, userSession.role)) {
+    if (!hasRootAccess(currMember?.isOwner, userSession.role)) {
         for (const permission of formData.permissions || []) {
             if (!targetMember.permissions.includes(permission)) {
                 // If this is an org team, check if the user has access to edit default permissions
                 if (team.organisation?.id) {
                     const canEditDefaultPermissions = doesOrgMemberHaveAccess(
                         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
-                        currMember.organisationPermissions as OrganisationPermission[],
-                        currMember.isOwner,
+                        currMember?.organisationPermissions as OrganisationPermission[],
+                        currMember?.isOwner,
                         userSession.role,
                     );
 
@@ -345,15 +343,10 @@ export async function overrideOrgMember(
     if (!team?.project?.id || !team.project.organisation?.id) return invalidReqestResponseData();
 
     const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
-    if (!currMember) {
-        await addInvalidAuthAttempt(ctx);
-        return notFoundResponseData();
-    }
-
     const canEditMembers = doesMemberHaveAccess(
         ProjectPermission.EDIT_MEMBER,
-        currMember.permissions as ProjectPermission[],
-        currMember.isOwner,
+        currMember?.permissions as ProjectPermission[],
+        currMember?.isOwner,
         userSession.role,
     );
     if (!canEditMembers) {
@@ -361,7 +354,7 @@ export async function overrideOrgMember(
         return unauthorizedReqResponseData("You don't have access to override members");
     }
 
-    if (!hasRootAccess(currMember.isOwner, userSession.role) && formData.permissions?.length)
+    if (!hasRootAccess(currMember?.isOwner, userSession.role) && formData.permissions?.length)
         return unauthorizedReqResponseData("You don't have access to add permissions to a member");
 
     // Check if the user is a member of the organisation
@@ -433,22 +426,22 @@ export async function removeProjectMember(
             },
         },
     });
-    const currMember = getCurrMember(userSession.id, team?.members || [], team?.project?.organisation?.team.members || []);
-    if (!team?.id || !currMember) return notFoundResponseData();
+    if (!team?.id) return notFoundResponseData();
 
+    const currMember = getCurrMember(userSession.id, team.members || [], team.project?.organisation?.team.members || []);
     let canRemoveMembers = false;
     if (team.organisation?.id) {
         canRemoveMembers = doesOrgMemberHaveAccess(
             OrganisationPermission.REMOVE_MEMBER,
-            currMember.organisationPermissions as OrganisationPermission[],
-            currMember.isOwner,
+            currMember?.organisationPermissions as OrganisationPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     } else {
         canRemoveMembers = doesMemberHaveAccess(
             ProjectPermission.REMOVE_MEMBER,
-            currMember.permissions as ProjectPermission[],
-            currMember.isOwner,
+            currMember?.permissions as ProjectPermission[],
+            currMember?.isOwner,
             userSession.role,
         );
     }
@@ -493,13 +486,16 @@ export async function changeTeamOwner(
     const targetMember = team.members.find((member) => member.userId === targetUserId);
     if (!targetMember || !targetMember.accepted) return notFoundResponseData("Member not found");
 
+    const currOwner = team.members.find((member) => member.isOwner);
+    if (!currOwner) return invalidReqestResponseData("For some unknown reason the owner of the team was not found");
+
     const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember || !hasRootAccess(currMember.isOwner, userSession.role)) {
+    if (!hasRootAccess(currMember?.isOwner, userSession.role)) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to change the team owner");
     }
 
-    if (currMember.id === targetMember.id) return invalidReqestResponseData("You're already the owner of the team");
+    if (currOwner?.id === targetMember.id) return invalidReqestResponseData("The target member is already the owner of the team");
 
     await Promise.all([
         // Give ownership to the target member
@@ -518,7 +514,7 @@ export async function changeTeamOwner(
         // Remove ownership from the current owner
         await prisma.teamMember.update({
             where: {
-                id: currMember.id,
+                id: currOwner.id,
             },
             data: {
                 isOwner: false,
