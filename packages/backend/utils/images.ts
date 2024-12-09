@@ -7,10 +7,13 @@ interface ResizeProps {
     resizeGifs?: boolean;
     fit?: keyof sharp.FitEnum;
     kernel?: keyof sharp.KernelEnum;
-    withoutEnlargement: sharp.ResizeOptions["withoutEnlargement"];
+    withoutEnlargement?: sharp.ResizeOptions["withoutEnlargement"];
 }
 
 export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
+    let kernel: ResizeProps["kernel"] = props.kernel || sharp.kernel.nearest;
+    if (file.size >= 2048) kernel = sharp.kernel.lanczos3;
+
     if (!props.width && !props.height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
@@ -29,7 +32,7 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, pro
             width: props.width,
             height: props.height,
             fit: props.fit,
-            kernel: props.kernel || sharp.kernel.nearest,
+            kernel: kernel,
             withoutEnlargement: props.withoutEnlargement === true,
         })
         .toArray();
