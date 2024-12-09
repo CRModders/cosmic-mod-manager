@@ -71,8 +71,8 @@ export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultSh
     const revalidate = nextUrl.searchParams.get("revalidate") === "true";
     if (revalidate) return true;
 
-    const currentId = currentParams.orgSlug;
-    const nextId = nextParams.orgSlug;
+    const currentId = currentParams.orgSlug?.toLowerCase();
+    const nextId = nextParams.orgSlug?.toLowerCase();
 
     if (currentId === nextId) return false;
 

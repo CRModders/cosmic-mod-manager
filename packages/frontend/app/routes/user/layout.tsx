@@ -112,8 +112,8 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
 }
 
 export function shouldRevalidate({ currentParams, nextParams, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
-    const currentId = currentParams.userName;
-    const nextId = nextParams.userName;
+    const currentId = currentParams.userName?.toLowerCase();
+    const nextId = nextParams.userName?.toLowerCase();
 
     if (currentId === nextId) return false;
 
