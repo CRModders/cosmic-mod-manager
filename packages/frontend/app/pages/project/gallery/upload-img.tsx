@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useLocation, useNavigate } from "@remix-run/react";
 import { cn } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { addNewGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
-import { handleFormError } from "@shared/schemas/utils";
+import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -26,6 +26,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { InteractiveLabel } from "~/components/ui/label";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 
@@ -134,7 +135,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                         name={field.name}
                                                         id="gallery-image-input"
                                                         className="hidden"
-                                                        accept={".jpg, .jpeg, .png, .webp, .gif"}
+                                                        accept={validImgFileExtensions.join(", ")}
                                                         onChange={(e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
@@ -152,12 +153,12 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                     )}
                                                 </div>
 
-                                                <label
+                                                <InteractiveLabel
                                                     htmlFor="gallery-image-input"
                                                     className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}
                                                 >
                                                     {field.value ? "Replace file" : "Choose file"}
-                                                </label>
+                                                </InteractiveLabel>
                                             </div>
                                             {field.value ? (
                                                 <div className="w-full aspect-[2/1] rounded rounded-t-none overflow-hidden bg-[hsla(var(--background-dark))]">

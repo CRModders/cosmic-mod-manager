@@ -224,7 +224,11 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
     let saveIconFileType = fileType;
     if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
-    const saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
+    const saveIcon = await resizeImageToWebp(icon, fileType, {
+        width: ICON_WIDTH,
+        height: ICON_WIDTH,
+        fit: "cover",
+    });
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);

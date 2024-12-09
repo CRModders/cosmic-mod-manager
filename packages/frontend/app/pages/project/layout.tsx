@@ -1,5 +1,5 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Outlet, useLocation, useNavigate } from "@remix-run/react";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { cn, getOrgPagePathname, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
 import { formatGameVersionsList, formatGameVersionsListString } from "@root/utils/version";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
@@ -117,7 +117,6 @@ export default function ProjectPageLayout({
                 projectType={projectType}
                 currUsersMembership={currUsersMembership}
             />
-
             {/* SIDEBAR */}
             <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
                 <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
@@ -268,7 +267,6 @@ export default function ProjectPageLayout({
                                             </TooltipContent>
                                         </Tooltip>
                                     </div>
-
                                     <div className="flex w-fit h-full grow flex-col select-text">
                                         <Link
                                             prefetch="render"
@@ -375,7 +373,6 @@ export default function ProjectPageLayout({
                     </TooltipProvider>
                 </Card>
             </div>
-
             <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards [grid-area:_content]">
                 <SecondaryNav
                     urlBase={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}

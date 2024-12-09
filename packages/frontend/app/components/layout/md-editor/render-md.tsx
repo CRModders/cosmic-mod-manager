@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 // Scripting
 import { cn } from "@root/utils";
 import hljs from "highlight.js/lib/core";

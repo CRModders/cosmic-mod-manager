@@ -4,10 +4,10 @@
     grid-template-columns: min-content 1fr;
     grid-template-rows: min-content 1fr min-content min-content;
     grid-template-areas:
-        'icon title'
-        'icon summary'
-        'tags tags'
-        'stats stats';
+        "icon title"
+        "icon summary"
+        "tags tags"
+        "stats stats";
 }
 
 .search-list-item.gallery {
@@ -15,31 +15,31 @@
     grid-template-columns: min-content 1fr;
     grid-template-rows: min-content min-content 1fr min-content min-content;
     grid-template-areas:
-        'gallery gallery'
-        'icon title'
-        'summary summary'
-        'tags tags'
-        'stats stats';
+        "gallery gallery"
+        "icon title"
+        "summary summary"
+        "tags tags"
+        "stats stats";
 }
 
 /* MD+ */
 @media screen and (min-width: 47rem) {
     .search-list-item.list {
         grid-template-areas:
-            'icon title'
-            'icon summary'
-            'icon tags'
-            'stats stats';
+            "icon title"
+            "icon summary"
+            "icon tags"
+            "stats stats";
     }
 
     .search-list-item.gallery {
         grid-template-rows: min-content min-content 1fr min-content min-content;
         grid-template-areas:
-            'gallery gallery'
-            'icon title'
-            'summary summary'
-            'tags tags'
-            'stats stats';
+            "gallery gallery"
+            "icon title"
+            "summary summary"
+            "tags tags"
+            "stats stats";
     }
 }
 
@@ -49,22 +49,21 @@
         grid-template-columns: min-content 1fr min-content;
         grid-template-rows: min-content 1fr auto;
         grid-template-areas:
-            'icon title stats'
-            'icon summary stats'
-            'icon tags stats';
+            "icon title stats"
+            "icon summary stats"
+            "icon tags stats";
     }
 
     .search-list-item.gallery {
         grid-template-rows: min-content min-content 1fr min-content min-content;
         grid-template-areas:
-            'gallery gallery'
-            'icon title'
-            'summary summary'
-            'tags tags'
-            'stats stats';
+            "gallery gallery"
+            "icon title"
+            "summary summary"
+            "tags tags"
+            "stats stats";
     }
 }
-
 
 /* Page header */
 .page-layout {
@@ -121,7 +120,6 @@
     .footer-grid {
         grid-template-columns: repeat(5, auto);
         grid-template-rows: auto;
-        grid-template-areas:
-            "logo links-1 links-2 links-3 buttons buttons";
+        grid-template-areas: "logo links-1 links-2 links-3 buttons buttons";
     }
 }

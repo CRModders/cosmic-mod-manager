@@ -1,4 +1,4 @@
-import type { MetaDescriptor } from "@remix-run/node";
+import type { MetaDescriptor } from "react-router";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { DateToISOStr } from "@shared/lib/utils/date-time";
 import { getProjectPagePathname } from ".";

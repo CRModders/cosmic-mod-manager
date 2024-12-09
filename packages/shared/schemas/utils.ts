@@ -30,3 +30,5 @@ export const handleFormError = async (callback: () => void | Promise<void>) => {
         return false;
     }
 };
+
+export const validImgFileExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];

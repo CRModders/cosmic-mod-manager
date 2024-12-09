@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { LoginFormSchema } from "@shared/schemas/auth";

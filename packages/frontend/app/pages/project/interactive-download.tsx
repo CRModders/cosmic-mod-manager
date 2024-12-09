@@ -1,6 +1,6 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
 import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";

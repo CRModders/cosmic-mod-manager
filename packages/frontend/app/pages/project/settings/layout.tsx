@@ -1,4 +1,4 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet } from "react-router";
 import { getProjectPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";

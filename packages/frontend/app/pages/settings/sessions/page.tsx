@@ -1,5 +1,5 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
-import { useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { Capitalize } from "@shared/lib/utils";
 import { AuthProvider, type LoggedInUserData } from "@shared/types";

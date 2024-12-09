@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 import { getOrgPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";

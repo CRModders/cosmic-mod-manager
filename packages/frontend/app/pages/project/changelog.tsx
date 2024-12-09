@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "react-router";
 import { cn, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";

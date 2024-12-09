@@ -1,4 +1,4 @@
-import { type MetaArgs, useOutletContext } from "@remix-run/react";
+import { type MetaArgs, useOutletContext } from "react-router";
 import { formatDate, getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
@@ -7,7 +7,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import VersionPage from "~/pages/project/version/page";
-import type { loaderData as projectDataLoader } from "~/routes/project/data-wrapper";
+import type { LoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
 
 export default function _VersionPage() {
     const data = useOutletContext<ProjectLayoutProps>();

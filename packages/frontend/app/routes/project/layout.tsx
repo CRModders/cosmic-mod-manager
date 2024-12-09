@@ -1,4 +1,4 @@
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext } from "react-router";
 import ProjectPageLayout from "~/pages/project/layout";
 import type { ProjectDataWrapperContext } from "./data-wrapper";
 

@@ -1,4 +1,4 @@
-import { Outlet, useOutletContext } from "@remix-run/react";
+import { Outlet, useOutletContext } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";

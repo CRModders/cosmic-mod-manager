@@ -1,23 +1,24 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "@remix-run/react";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { profileUpdateFormSchema } from "@shared/schemas/settings";
-import { handleFormError } from "@shared/schemas/utils";
+import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
 import type { LoggedInUserData } from "@shared/types";
 import { SaveIcon, UploadIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { fallbackOrgIcon } from "~/components/icons";
+import { fallbackUserIcon } from "~/components/icons";
 import RefreshPage from "~/components/refresh-page";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { InteractiveLabel } from "~/components/ui/label";
 import { VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
@@ -102,7 +103,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                             hidden
                                             className="hidden"
                                             id="user-icon-input"
-                                            accept={".jpg, .jpeg, .png, .webp, .gif"}
+                                            accept={validImgFileExtensions.join(", ")}
                                             type="file"
                                             value={""}
                                             name={field.name}
@@ -125,6 +126,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                         />
 
                                         <ImgWrapper
+                                            vtId={session.id}
                                             alt={session.userName}
                                             src={(() => {
                                                 const image = form.getValues()?.avatar;
@@ -137,17 +139,17 @@ export function ProfileSettingsPage({ session }: Props) {
                                                 return imageUrl(session.avatar || "");
                                             })()}
                                             className="rounded-full"
-                                            fallback={fallbackOrgIcon}
+                                            fallback={fallbackUserIcon}
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <label
+                                            <InteractiveLabel
                                                 htmlFor="user-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
                                                 Upload icon
-                                            </label>
+                                            </InteractiveLabel>
                                         </div>
                                     </div>
                                 </FormItem>

@@ -1,8 +1,11 @@
 import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
+import { useOutletContext } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import Link from "~/components/ui/link";
+import Redirect from "~/components/ui/redirect";
 import { Separator } from "~/components/ui/separator";
+import type { RootOutletData } from "~/root";
 import OAuthProvidersWidget from "../oauth-providers";
 
 export default function SignUpPage() {
@@ -10,6 +13,11 @@ export default function SignUpPage() {
         value: boolean;
         provider: AuthProvider | null;
     }>({ value: false, provider: null });
+
+    const { session } = useOutletContext<RootOutletData>();
+    if (session?.id) {
+        return <Redirect to="/dashboard" />;
+    }
 
     return (
         <aside className="w-full flex items-center justify-center py-12 min-h-[100vh]">

@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { useParams } from "react-router";
 import type { ProjectListItem } from "@shared/types/api";
 import SearchListItem from "~/components/layout/search-list-item";
 

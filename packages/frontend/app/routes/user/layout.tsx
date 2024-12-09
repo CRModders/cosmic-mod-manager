@@ -1,14 +1,15 @@
-import type { LoaderFunctionArgs, MetaArgs, MetaDescriptor } from "@remix-run/node";
 import Config from "@root/utils/config";
 import { LdJsonId, LdJsonIdType, MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
+import type { MetaDescriptor } from "react-router";
 import { type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import UserPageLayout from "~/pages/user/layout";
 import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
+import type { Route } from "./+types/layout";
 
 export default function _UserLayout() {
     const { session } = useOutletContext<RootOutletData>();
@@ -29,22 +30,22 @@ export default function _UserLayout() {
 }
 
 interface LoaderData {
-    userSlug: string;
+    userSlug?: string;
     userData: UserProfileData | null;
     projects: ProjectListItem[];
     orgs: Organisation[];
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     const userName = props.params.userName;
 
     if (!userName)
-        return Response.json({
+        return {
             userSlug: userName,
             userData: null,
             projects: [],
             orgs: [],
-        });
+        };
 
     const [userRes, projectsRes, orgsRes] = await Promise.all([
         serverFetch(props.request, `/api/user/${userName}`),
@@ -56,15 +57,15 @@ export async function loader(props: LoaderFunctionArgs) {
     const projects = await resJson<ProjectListItem[]>(projectsRes);
     const orgs = await resJson<Organisation[]>(orgsRes);
 
-    return Response.json({
+    return {
         userSlug: userName,
         userData: userData,
-        projects: projects,
-        orgs: orgs,
-    });
+        projects: projects || [],
+        orgs: orgs || [],
+    };
 }
 
-export function meta(props: MetaArgs): MetaDescriptor[] {
+export function meta(props: Route.MetaArgs): MetaDescriptor[] {
     const { userData, orgs, projects, userSlug } = props.data as LoaderData;
     const image = userData?.avatar || `${Config.FRONTEND_URL}/icon.png`;
 

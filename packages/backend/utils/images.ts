@@ -1,12 +1,21 @@
 import { FileType } from "@shared/types";
 import sharp = require("sharp");
 
-export async function resizeImageToWebp(file: File, inputFileType: FileType, width?: number, height?: number, resizeGifs = false) {
-    if (!width && !height) {
+type ImageFit = "cover" | "contain" | "fill" | "inside" | "outside";
+
+interface ResizeProps {
+    width?: number;
+    height?: number;
+    resizeGifs?: boolean;
+    fit?: ImageFit;
+}
+
+export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps) {
+    if (!props.width && !props.height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
 
-    if (inputFileType === FileType.GIF && resizeGifs === false) {
+    if (inputFileType === FileType.GIF && props.resizeGifs === false) {
         // GIFs loose animation when resized
         return file;
     }
@@ -17,8 +26,9 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, wid
     const resizedImgBuffer = await sharpInstance
         .webp()
         .resize({
-            width: width,
-            height: height,
+            width: props.width,
+            height: props.height,
+            fit: props.fit,
         })
         .toArray();
 

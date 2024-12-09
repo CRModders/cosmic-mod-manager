@@ -1,4 +1,4 @@
-import type { MetaArgs } from "@remix-run/node";
+import type { MetaArgs } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";

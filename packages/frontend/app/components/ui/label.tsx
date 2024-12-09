@@ -13,3 +13,25 @@ const Label = React.forwardRef<
 Label.displayName = LabelPrimitive.Root.displayName;
 
 export { Label };
+
+interface LabelElemProps extends React.ComponentPropsWithoutRef<"label"> {}
+
+export function InteractiveLabel({ children, htmlFor, ...props }: LabelElemProps) {
+    return (
+        <label
+            {...props}
+            htmlFor={htmlFor}
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+            tabIndex={0}
+            onKeyDown={(e: React.KeyboardEvent<HTMLLabelElement>) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    // @ts-ignore
+                    e.target.click();
+                }
+            }}
+        >
+            {children}
+        </label>
+    );
+}

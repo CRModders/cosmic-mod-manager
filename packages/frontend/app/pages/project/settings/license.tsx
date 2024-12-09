@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate, useOutletContext } from "@remix-run/react";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";

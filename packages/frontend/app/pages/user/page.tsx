@@ -1,4 +1,4 @@
-import { useOutletContext, useParams } from "@remix-run/react";
+import { useOutletContext, useParams } from "react-router";
 import SearchListItem from "~/components/layout/search-list-item";
 import type { UserOutletData } from "./layout";
 

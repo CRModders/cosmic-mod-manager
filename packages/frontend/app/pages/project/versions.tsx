@@ -1,4 +1,4 @@
-import { useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "react-router";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { formatGameVersionsList } from "@root/utils/version";

@@ -1,5 +1,5 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Outlet, useLocation, useNavigate, useOutletContext } from "@remix-run/react";
+import { Outlet, useLocation, useNavigate, useOutletContext } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";

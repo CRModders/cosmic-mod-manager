@@ -1,4 +1,4 @@
-import { useLoaderData, useOutletContext } from "@remix-run/react";
+import { useLoaderData, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { resJson } from "@root/utils/server-fetch";
 import type { ProjectListItem } from "@shared/types/api";

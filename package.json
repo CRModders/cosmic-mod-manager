@@ -3,15 +3,11 @@
     "module": "index.ts",
     "type": "module",
     "devDependencies": {
-        "@biomejs/biome": "^1.8.3",
+        "@biomejs/biome": "1.9.4",
         "@types/bun": "latest"
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
     },
-    "workspaces": ["packages/*"],
-    "dependencies": {
-        "react-hook-form": "^7.52.1",
-        "zod": "^3.23.8"
-    }
+    "workspaces": ["packages/*"]
 }

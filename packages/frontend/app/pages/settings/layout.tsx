@@ -1,4 +1,4 @@
-import { Outlet, useOutletContext } from "@remix-run/react";
+import { Outlet, useOutletContext } from "react-router";
 import { MonitorSmartphoneIcon, PaintbrushIcon, ShieldIcon, UserIcon } from "lucide-react";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
@@ -12,14 +12,14 @@ export default function SettingsPageLayout() {
             <Panel>
                 <PanelAside className="gap-2" aside>
                     <PanelAsideNavCard label="Settings">
-                        <ButtonLink url="/settings" preventScrollReset>
+                        <ButtonLink url="/settings" prefetch="render" preventScrollReset>
                             <PaintbrushIcon className="size-4" />
                             Preferences
                         </ButtonLink>
                         {context.session?.id ? (
                             <>
                                 <span className="text-lg font-semibold mt-3">Account</span>
-                                <ButtonLink url="/settings/profile" preventScrollReset>
+                                <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
                                     <UserIcon className="size-4" />
                                     Public profile
                                 </ButtonLink>

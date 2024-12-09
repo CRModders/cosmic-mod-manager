@@ -1,8 +1,8 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import Config from "@root/utils/config";
 import { serverFetch } from "@root/utils/server-fetch";
+import type { Route } from "./+types/sitemap";
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: Route.LoaderArgs) {
     const sitemapName = props.params.sitemap;
     const res = await serverFetch(props.request, `${Config.BACKEND_URL}/cdn/sitemap/${sitemapName}.xml`);
 

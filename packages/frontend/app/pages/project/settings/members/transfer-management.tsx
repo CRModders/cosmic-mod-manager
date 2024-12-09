@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";

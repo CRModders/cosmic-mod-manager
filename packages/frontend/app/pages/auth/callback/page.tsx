@@ -1,23 +1,24 @@
-import { useNavigate } from "@remix-run/react";
 import { getCookie } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { CSRF_STATE_COOKIE_NAMESPACE } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { FormErrorMessage } from "~/components/ui/form-message";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
-interface Props {
-    authProvider: string | null;
-    code: string | null;
-    csrfState: string | null;
-}
+export default function OAuthCallbackPage() {
+    const params = useParams();
+    const [searchParams] = useSearchParams();
 
-export default function OAuthCallbackPage({ authProvider, code, csrfState }: Props) {
+    const authProvider = params.authProvider || null;
+    const csrfState = searchParams.get("state") || null;
+    const code = searchParams.get("code") || null;
+
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
 

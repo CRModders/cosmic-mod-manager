@@ -1,4 +1,4 @@
-import type { LinkProps } from "@remix-run/react";
+import type { LinkProps } from "react-router";
 import { SITE_NAME_LONG } from "@shared/config";
 import { Settings2Icon } from "lucide-react";
 import { BrandIcon } from "~/components/icons";

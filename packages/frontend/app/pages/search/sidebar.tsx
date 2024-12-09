@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 import { cn } from "@root/utils";
 import GAME_VERSIONS, { isExperimentalGameVersion } from "@shared/config/game-versions";
 import {

@@ -1,5 +1,3 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "@remix-run/react";
 import type { ThemeOptions } from "@root/types";
 import { getCookie, getThemeFromCookie } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
@@ -9,9 +7,12 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
 import { useEffect, useMemo } from "react";
+import type { LinksFunction } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import globalStyles from "~/pages/globals.css?url";
 import fontStyles from "~/pages/inter.css?url";
 import transitionStyles from "~/pages/transitions.css?url";
+import type { Route } from "./+types/root";
 import ClientOnly from "./components/client-only";
 import { DownloadRipple } from "./components/download-animation";
 import Navbar from "./components/layout/Navbar/navbar";
@@ -86,7 +87,7 @@ export default function App() {
     );
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletData> {
     let session: LoggedInUserData | null = null;
     const cookie = request.headers.get("Cookie") || "";
 
@@ -100,14 +101,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     // Preferences
     const themePref = getCookie("theme", cookie);
     const theme = getThemeFromCookie(themePref);
-
     const viewTransitions = getCookie("viewTransitions", cookie) === "true";
 
-    return Response.json({
+    return {
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
-    });
+    };
 }
 
 export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {

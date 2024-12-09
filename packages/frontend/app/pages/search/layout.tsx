@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate, useSearchParams } from "@remix-run/react";
+import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router";
 import { cn } from "@root/utils";
 import { projectTypes } from "@shared/config/project";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";

@@ -141,7 +141,11 @@ export async function updateOrgIcon(
     if (!fileType) return invalidReqestResponseData("Invalid file type");
 
     let saveIconFileType = fileType;
-    const saveIcon = await resizeImageToWebp(icon, fileType, ICON_WIDTH);
+    const saveIcon = await resizeImageToWebp(icon, fileType, {
+        width: ICON_WIDTH,
+        height: ICON_WIDTH,
+        fit: "cover",
+    });
     if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;

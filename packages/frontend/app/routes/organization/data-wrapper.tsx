@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
 import { getOrgPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
@@ -8,6 +7,7 @@ import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/ap
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
+import type { Route } from "./+types/data-wrapper";
 
 export interface OrgDataContext {
     orgData: Organisation;
@@ -46,22 +46,25 @@ export default function _OrgDataWrapper() {
 }
 
 interface LoaderData {
-    orgSlug: string;
+    orgSlug?: string;
     orgData: Organisation | null;
     orgProjects: ProjectListItem[];
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     const orgSlug = props.params.orgSlug;
 
     const [orgDataRes, orgProjectsRes] = await Promise.all([
         serverFetch(props.request, `/api/organization/${orgSlug}`),
         serverFetch(props.request, `/api/organization/${orgSlug}/projects`),
     ]);
-
     const [orgData, orgProjects] = await Promise.all([resJson<Organisation>(orgDataRes), resJson<ProjectListItem[]>(orgProjectsRes)]);
 
-    return Response.json({ orgSlug, orgData, orgProjects: orgProjects || [] });
+    return {
+        orgSlug,
+        orgData,
+        orgProjects: orgProjects || [],
+    };
 }
 
 export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
@@ -76,7 +79,7 @@ export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultSh
     return defaultShouldRevalidate;
 }
 
-export function meta(props: MetaArgs) {
+export function meta(props: Route.MetaArgs) {
     const data = props.data as LoaderData;
     const orgData = data?.orgData;
 

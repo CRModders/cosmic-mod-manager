@@ -1,4 +1,4 @@
-import { type Location, useLocation, useNavigate, useOutletContext } from "@remix-run/react";
+import { type Location, useLocation, useNavigate, useOutletContext } from "react-router";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";

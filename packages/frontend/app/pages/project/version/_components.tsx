@@ -29,6 +29,7 @@ import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { CommandSeparator } from "~/components/ui/command";
 import { FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { InteractiveLabel } from "~/components/ui/label";
 import { VariantButtonLink } from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
@@ -526,9 +527,9 @@ export function SelectPrimaryFileInput({
                 )}
             </div>
 
-            <label htmlFor={inputId} className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}>
+            <InteractiveLabel htmlFor={inputId} className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}>
                 {selectedFile ? "Replace file" : "Choose file"}
-            </label>
+            </InteractiveLabel>
         </div>
     );
 }
@@ -622,13 +623,16 @@ function AdditionalFiles({
                 </div>
             ) : null}
 
-            <label
+            <InteractiveLabel
                 htmlFor={inputId}
-                className="w-full flex items-center justify-center gap-2 px-4 py-5 rounded border-[0.1rem] border-shallow-background cursor-pointer bg-shallow-background/50 hover:bg-shallow-background/70"
+                className={cn(
+                    "w-full flex items-center justify-center gap-2 px-4 py-5 rounded border-[0.1rem] border-shallow-background cursor-pointer bg-shallow-background/50 hover:bg-shallow-background/70",
+                    "focus-visible:outline-none focus-visible:keyboard_focus_ring",
+                )}
             >
                 <UploadIcon className="w-btn-icon h-btn-icon" />
                 Select files
-            </label>
+            </InteractiveLabel>
             {children}
         </div>
     );

@@ -1,8 +1,8 @@
-import type { LinkProps } from "@remix-run/react";
-import { Link as RemixLink, useLocation, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import { cn, isCurrLinkActive } from "@root/utils";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
+import type { LinkProps } from "react-router";
+import { Link as RemixLink, useLocation, useNavigate, useRouteLoaderData } from "react-router";
 import type { RootOutletData } from "~/root";
 import { buttonVariants } from "./button";
 
