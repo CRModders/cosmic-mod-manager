@@ -108,7 +108,7 @@ function getTextareaSelectedText(textarea: HTMLTextAreaElement) {
     return textarea.value.slice(selectionStart, selectionEnd) || "";
 }
 
-const getYoutubeIframe = (url: string, _altText: string, _isPreview = false) => {
+const getYoutubeIframe = (url: string, _altText: string) => {
     const youtubeRegex =
         /^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9_-]{7,15})(?:[?&][a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+)*$/;
     const match = youtubeRegex.exec(url);

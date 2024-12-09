@@ -52,7 +52,7 @@ export const MoonIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props
     );
 };
 
-export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, className, strokeWidth, ...props }) => {
+export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, strokeWidth, ...props }) => {
     return (
         // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
@@ -134,8 +134,8 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, classNa
                     d="M293.846 302.535 364.1 344"
                     style={{
                         transformBox: "fill-box",
+                        transformOrigin: "50% 50%",
                     }}
-                    transform-origin="50% 50%"
                 />
                 <path
                     stroke="url(#d)"

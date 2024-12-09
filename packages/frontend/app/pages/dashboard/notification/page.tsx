@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "react-router";
 import { getOrgPagePathname, getProjectPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { NotificationType } from "@shared/types";

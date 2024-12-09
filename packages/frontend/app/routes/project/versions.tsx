@@ -1,5 +1,5 @@
-import type { MetaArgs } from "@remix-run/node";
-import { useOutletContext } from "@remix-run/react";
+import type { MetaArgs } from "react-router";
+import { useOutletContext } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import type { ProjectLayoutProps } from "~/pages/project/layout";

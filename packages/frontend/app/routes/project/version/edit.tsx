@@ -1,4 +1,4 @@
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext } from "react-router";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import EditVersionPage from "~/pages/project/version/edit-version";
 

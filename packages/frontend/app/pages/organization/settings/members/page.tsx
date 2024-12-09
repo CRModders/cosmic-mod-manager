@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useOutletContext } from "@remix-run/react";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { OrganisationPermission } from "@shared/types";
 import { Helmet } from "react-helmet";

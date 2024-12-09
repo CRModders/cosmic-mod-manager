@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";

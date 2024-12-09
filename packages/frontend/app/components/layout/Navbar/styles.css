@@ -10,7 +10,6 @@
     grid-template-rows: 1fr;
 }
 
-
 .navlink_list_wrapper {
     scrollbar-gutter: stable;
 }
@@ -35,7 +34,6 @@
     opacity: 1;
     transition: opacity 0ms var(--rotate-duration) ease-in-out;
 }
-
 
 .ham_menu_open .ham_menu_line_1,
 .ham_menu_open .ham_menu_line_3 {

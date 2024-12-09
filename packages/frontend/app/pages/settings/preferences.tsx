@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useRouteLoaderData } from "@remix-run/react";
+import { useLocation, useNavigate, useRouteLoaderData } from "react-router";
 import { setCookie } from "@root/utils";
 import { disableInteractions } from "@root/utils/dom";
 import RefreshPage from "~/components/refresh-page";

@@ -27,7 +27,7 @@ export function getThemeFromCookie(cookie?: string | null): ThemeOptions {
 
 export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
     if (exactEnds === true) {
-        return currUrl === targetUrl;
+        return currUrl === targetUrl || currUrl === `${targetUrl}/`;
     }
     return currUrl.includes(targetUrl);
 }

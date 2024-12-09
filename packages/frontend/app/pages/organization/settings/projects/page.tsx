@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext } from "react-router";
 import { BadgeInfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";

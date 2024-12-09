@@ -1,4 +1,4 @@
-import { useSearchParams } from "@remix-run/react";
+import { useSearchParams } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

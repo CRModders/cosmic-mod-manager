@@ -5,10 +5,10 @@ import { SITE_NAME_LONG } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectListItem } from "@shared/types/api";
-import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData, useOutletContext } from "react-router";
 import HomePage from "~/pages/page";
 import type { RootOutletData } from "~/root";
+import type { Route } from "./+types/page";
 
 export default function HomePage_Wrapper() {
     const { session } = useOutletContext<RootOutletData>();
@@ -17,7 +17,7 @@ export default function HomePage_Wrapper() {
     return <HomePage session={session} projects={projects} />;
 }
 
-export async function loader(props: LoaderFunctionArgs): Promise<ProjectListItem[]> {
+export async function loader(props: Route.LoaderArgs): Promise<ProjectListItem[]> {
     const res = await serverFetch(props.request, "/api/projects/home-page-carousel");
     const projects = (await resJson(res)) as ProjectListItem[];
 

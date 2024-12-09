@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
 import { getOrgPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
@@ -8,6 +7,7 @@ import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/ap
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
+import type { Route } from "./+types/data-wrapper";
 
 export interface OrgDataContext {
     orgData: Organisation;
@@ -51,7 +51,7 @@ interface LoaderData {
     orgProjects: ProjectListItem[];
 }
 
-export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
+export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     const orgSlug = props.params.orgSlug;
 
     const [orgDataRes, orgProjectsRes] = await Promise.all([
@@ -79,7 +79,7 @@ export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultSh
     return defaultShouldRevalidate;
 }
 
-export function meta(props: MetaArgs) {
+export function meta(props: Route.MetaArgs) {
     const data = props.data as LoaderData;
     const orgData = data?.orgData;
 

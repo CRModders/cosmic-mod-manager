@@ -1,4 +1,4 @@
-import { useLocation, useOutletContext } from "@remix-run/react";
+import { useLocation, useOutletContext } from "react-router";
 import { cn } from "@root/utils";
 import { defaultSearchLimit, pageOffsetParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";

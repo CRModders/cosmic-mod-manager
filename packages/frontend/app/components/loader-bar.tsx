@@ -1,4 +1,4 @@
-import { useNavigation } from "@remix-run/react";
+import { useNavigation } from "react-router";
 import { enableInteractions, interactionsDisabled } from "@root/utils/dom";
 import { useEffect, useRef } from "react";
 import LoadingBar, { type LoadingBarRef } from "~/components/rtk-loading-indicator";

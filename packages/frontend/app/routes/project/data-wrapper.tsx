@@ -1,5 +1,3 @@
-import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
-import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "@remix-run/react";
 import { getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
@@ -9,8 +7,10 @@ import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
 import { combineProjectMembers } from "@shared/lib/utils/project";
 import type { LoggedInUserData } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
+import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
+import type { Route } from "./+types/data-wrapper";
 
 export interface ProjectDataWrapperContext {
     session: LoggedInUserData | null;
@@ -82,7 +82,7 @@ export interface LoaderData {
     };
 }
 
-export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
+export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     const projectSlug = props.params.projectSlug;
 
     if (!projectSlug) {
@@ -118,7 +118,7 @@ export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
     };
 }
 
-export function meta(props: MetaArgs) {
+export function meta(props: Route.MetaArgs) {
     const data = props.data as LoaderData;
     const project = data?.projectData;
 

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { WanderingCubesSpinner } from "~/components/ui/spinner";
 
 interface ImgLoaderProps {
-    loaded: boolean;
     setLoaded: (loaded: boolean) => void;
     src: string;
     alt: string;
@@ -15,7 +14,7 @@ interface ImgLoaderProps {
 
 const loadedImages = new Set<string>();
 
-export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, loaded, setLoaded, thumbnailSrc }: ImgLoaderProps) => {
+export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, setLoaded, thumbnailSrc }: ImgLoaderProps) => {
     const _spinner = spinner || (
         <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
     );

@@ -3,9 +3,9 @@ import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { ProjectListItem } from "@shared/types/api";
-import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import ProjectsPage from "~/pages/dashboard/projects/page";
+import type { Route } from "./+types/projects";
 
 export default function _Projects() {
     const projects = useLoaderData() as ProjectListItem[];
@@ -13,7 +13,7 @@ export default function _Projects() {
     return <ProjectsPage projects={projects} />;
 }
 
-export async function loader(props: LoaderFunctionArgs): Promise<ProjectListItem[]> {
+export async function loader(props: Route.LoaderArgs): Promise<ProjectListItem[]> {
     const res = await serverFetch(props.request, "/api/project");
     const projects = await resJson<ProjectListItem[]>(res);
 

@@ -1,8 +1,8 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import type { ConfirmationType } from "@shared/types";
+import { useLoaderData } from "react-router";
 import ConfirmActionPage from "~/pages/auth/confirm-action/page";
+import type { Route } from "./+types/confirm-action";
 
 export default function _ConfirmAction() {
     const data = useLoaderData() as LoaderData;
@@ -15,7 +15,7 @@ interface LoaderData {
     code: string | null;
 }
 
-export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
+export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     let code = null;
     let actionType = null;
 

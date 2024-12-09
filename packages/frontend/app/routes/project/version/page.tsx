@@ -1,4 +1,4 @@
-import { type MetaArgs, useOutletContext } from "@remix-run/react";
+import { type MetaArgs, useOutletContext } from "react-router";
 import { formatDate, getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";

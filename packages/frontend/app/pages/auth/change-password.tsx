@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import clientFetch from "@root/utils/client-fetch";
 import { sendAccoutPasswordChangeLinkFormSchema } from "@shared/schemas/settings";
-import type { LoggedInUserData } from "@shared/types";
 import { ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,13 +14,13 @@ import { Input } from "~/components/ui/input";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
-export default function ChangePasswordPage({ session }: { session: LoggedInUserData | null }) {
+export default function ChangePasswordPage() {
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>>({
         resolver: zodResolver(sendAccoutPasswordChangeLinkFormSchema),
         defaultValues: {
-            email: session?.email || "",
+            email: "",
         },
     });
 
@@ -79,8 +78,8 @@ export default function ChangePasswordPage({ session }: { session: LoggedInUserD
                         <CardFooter className="w-full flex flex-col gap-1 items-center justify-center">
                             <HorizontalSeparator />
 
-                            <Link prefetch="render" className="text_link" to={session?.id ? "/" : "/login"}>
-                                {session?.id ? "Home" : "Login"}
+                            <Link prefetch="render" className="text_link" to="/login">
+                                Login
                             </Link>
                         </CardFooter>
                     </Card>

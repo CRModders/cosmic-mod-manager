@@ -1,5 +1,5 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { Trash2Icon } from "lucide-react";

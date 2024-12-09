@@ -1,4 +1,4 @@
-import type { LinkProps } from "@remix-run/react";
+import type { LinkProps } from "react-router";
 import { cn } from "@root/utils";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";

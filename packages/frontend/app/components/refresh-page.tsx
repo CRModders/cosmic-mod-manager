@@ -1,4 +1,4 @@
-import type { Location, NavigateFunction } from "@remix-run/react";
+import type { Location, NavigateFunction } from "react-router";
 
 export default function RefreshPage(navigate: NavigateFunction, location: Location | string) {
     let _url = new URL("https://example.com");

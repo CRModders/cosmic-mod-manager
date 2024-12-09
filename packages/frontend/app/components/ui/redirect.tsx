@@ -1,7 +1,5 @@
-import { Navigate } from "@remix-run/react";
+import { Navigate } from "react-router";
 
-const Redirect = ({ redirectTo }: { redirectTo: string }) => {
-    return <Navigate to={redirectTo} replace={true} />;
-};
-
-export default Redirect;
+export default function Redirect({ to }: { to: string }) {
+    return <Navigate to={to} replace={true} />;
+}
