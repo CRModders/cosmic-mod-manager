@@ -17,11 +17,11 @@ export default function _AccountSettings() {
     return <AccountSettingsPage session={session} linkedAuthProviders={linkedProviders || []} />;
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<LinkedProvidersListData[]> {
     const res = await serverFetch(props.request, "/api/auth/linked-providers");
-    const data = await resJson(res);
+    const providersList = await resJson<LinkedProvidersListData[]>(res);
 
-    return Response.json(data || []);
+    return providersList || [];
 }
 
 export function meta() {

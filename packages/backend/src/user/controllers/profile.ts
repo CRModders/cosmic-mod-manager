@@ -104,7 +104,11 @@ export async function getUserAvatar(
     if (!fileType) return null;
 
     let saveIconFileType = fileType;
-    const saveIcon = await resizeImageToWebp(avatarFile, fileType, ICON_WIDTH);
+    const saveIcon = await resizeImageToWebp(avatarFile, fileType, {
+        width: ICON_WIDTH,
+        height: ICON_WIDTH,
+        fit: "cover",
+    });
     if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;

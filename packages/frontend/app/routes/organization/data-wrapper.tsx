@@ -46,22 +46,25 @@ export default function _OrgDataWrapper() {
 }
 
 interface LoaderData {
-    orgSlug: string;
+    orgSlug?: string;
     orgData: Organisation | null;
     orgProjects: ProjectListItem[];
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
     const orgSlug = props.params.orgSlug;
 
     const [orgDataRes, orgProjectsRes] = await Promise.all([
         serverFetch(props.request, `/api/organization/${orgSlug}`),
         serverFetch(props.request, `/api/organization/${orgSlug}/projects`),
     ]);
-
     const [orgData, orgProjects] = await Promise.all([resJson<Organisation>(orgDataRes), resJson<ProjectListItem[]>(orgProjectsRes)]);
 
-    return Response.json({ orgSlug, orgData, orgProjects: orgProjects || [] });
+    return {
+        orgSlug,
+        orgData,
+        orgProjects: orgProjects || [],
+    };
 }
 
 export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {

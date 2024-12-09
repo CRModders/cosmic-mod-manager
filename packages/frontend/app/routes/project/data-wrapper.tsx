@@ -26,7 +26,7 @@ export interface ProjectDataWrapperContext {
 
 export default function _ProjectDataWrapper() {
     const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData() as loaderData;
+    const data = useLoaderData() as LoaderData;
 
     const projectData = data?.projectData;
     if (!projectData)
@@ -72,7 +72,7 @@ export default function _ProjectDataWrapper() {
     );
 }
 
-export interface loaderData {
+export interface LoaderData {
     projectSlug: string | undefined;
     projectData?: ProjectDetailsData | null;
     versions?: ProjectVersionData[];
@@ -82,11 +82,13 @@ export interface loaderData {
     };
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
     const projectSlug = props.params.projectSlug;
 
     if (!projectSlug) {
-        return { projectSlug: projectSlug };
+        return {
+            projectSlug: projectSlug,
+        };
     }
 
     const [projectRes, versionsRes, depsRes] = await Promise.all([
@@ -96,9 +98,9 @@ export async function loader(props: LoaderFunctionArgs) {
     ]);
 
     if (!projectRes.ok) {
-        return Response.json({
+        return {
             projectSlug: projectSlug,
-        });
+        };
     }
 
     const projectData = (await resJson<{ project: ProjectDetailsData }>(projectRes))?.project;
@@ -108,16 +110,16 @@ export async function loader(props: LoaderFunctionArgs) {
         versions: ProjectVersionData[];
     };
 
-    return Response.json({
+    return {
         projectSlug: projectSlug,
         projectData: projectData || null,
         versions: versions?.data || [],
         dependencies: dependencies || [],
-    });
+    };
 }
 
 export function meta(props: MetaArgs) {
-    const data = props.data as loaderData;
+    const data = props.data as LoaderData;
     const project = data?.projectData;
 
     if (!project) {

@@ -86,7 +86,7 @@ export default function App() {
     );
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs): Promise<RootOutletData> {
     let session: LoggedInUserData | null = null;
     const cookie = request.headers.get("Cookie") || "";
 
@@ -100,14 +100,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     // Preferences
     const themePref = getCookie("theme", cookie);
     const theme = getThemeFromCookie(themePref);
-
     const viewTransitions = getCookie("viewTransitions", cookie) === "true";
 
-    return Response.json({
+    return {
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
-    });
+    };
 }
 
 export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {

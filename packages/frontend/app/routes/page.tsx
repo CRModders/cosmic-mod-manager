@@ -1,5 +1,3 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useOutletContext } from "@remix-run/react";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
@@ -7,23 +5,23 @@ import { SITE_NAME_LONG } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectListItem } from "@shared/types/api";
+import type { LoaderFunctionArgs } from "react-router";
+import { useLoaderData, useOutletContext } from "react-router";
 import HomePage from "~/pages/page";
 import type { RootOutletData } from "~/root";
 
 export default function HomePage_Wrapper() {
     const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData<typeof loader>();
+    const projects = useLoaderData() as ProjectListItem[];
 
-    return <HomePage session={session} projects={data.projects} />;
+    return <HomePage session={session} projects={projects} />;
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<ProjectListItem[]> {
     const res = await serverFetch(props.request, "/api/projects/home-page-carousel");
     const projects = (await resJson(res)) as ProjectListItem[];
 
-    return Response.json({
-        projects: projects || [],
-    });
+    return projects || [];
 }
 
 export function shouldRevalidate() {

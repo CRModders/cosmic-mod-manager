@@ -28,11 +28,11 @@ interface LoaderData {
     users?: UserProfileData[];
 }
 
-export async function clientLoader() {
+export async function clientLoader(): Promise<LoaderData> {
     const notificationsRes = await clientFetch("/api/notifications");
     const notifications = ((await resJson(notificationsRes)) as Notification[]) || [];
 
-    if (!notifications?.length) return Response.json({ notifications: null });
+    if (!notifications?.length) return { notifications: null };
 
     const projectIds: string[] = [];
     const orgIds: string[] = [];
@@ -59,12 +59,12 @@ export async function clientLoader() {
     const orgs = ((await resJson(orgsRes)) as OrganisationListItem[]) || null;
     const users = ((await resJson(usersRes)) as UserProfileData[]) || null;
 
-    return Response.json({
+    return {
         notifications,
         projects,
         orgs,
         users,
-    });
+    };
 }
 
 export function meta() {

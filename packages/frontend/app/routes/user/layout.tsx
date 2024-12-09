@@ -29,22 +29,22 @@ export default function _UserLayout() {
 }
 
 interface LoaderData {
-    userSlug: string;
+    userSlug?: string;
     userData: UserProfileData | null;
     projects: ProjectListItem[];
     orgs: Organisation[];
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
     const userName = props.params.userName;
 
     if (!userName)
-        return Response.json({
+        return {
             userSlug: userName,
             userData: null,
             projects: [],
             orgs: [],
-        });
+        };
 
     const [userRes, projectsRes, orgsRes] = await Promise.all([
         serverFetch(props.request, `/api/user/${userName}`),
@@ -56,12 +56,12 @@ export async function loader(props: LoaderFunctionArgs) {
     const projects = await resJson<ProjectListItem[]>(projectsRes);
     const orgs = await resJson<Organisation[]>(orgsRes);
 
-    return Response.json({
+    return {
         userSlug: userName,
         userData: userData,
-        projects: projects,
-        orgs: orgs,
-    });
+        projects: projects || [],
+        orgs: orgs || [],
+    };
 }
 
 export function meta(props: MetaArgs): MetaDescriptor[] {

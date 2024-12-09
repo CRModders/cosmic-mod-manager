@@ -14,11 +14,11 @@ export default function _Sessions() {
     return <SessionsPage session={session} loggedInSessions={loggedInSessions} />;
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+export async function loader(props: LoaderFunctionArgs): Promise<SessionListData[]> {
     const res = await serverFetch(props.request, "/api/auth/sessions");
-    const data = await resJson(res);
+    const sessions = await resJson<SessionListData[]>(res);
 
-    return Response.json(data || []);
+    return sessions || [];
 }
 
 export function meta() {

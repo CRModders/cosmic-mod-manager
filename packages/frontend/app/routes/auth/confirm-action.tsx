@@ -5,12 +5,17 @@ import type { ConfirmationType } from "@shared/types";
 import ConfirmActionPage from "~/pages/auth/confirm-action/page";
 
 export default function _ConfirmAction() {
-    const { actionType, code } = useLoaderData<typeof loader>();
+    const data = useLoaderData() as LoaderData;
 
-    return <ConfirmActionPage actionType={actionType} code={code} />;
+    return <ConfirmActionPage actionType={data.actionType} code={data.code} />;
 }
 
-export async function loader(props: LoaderFunctionArgs) {
+interface LoaderData {
+    actionType: ConfirmationType | null;
+    code: string | null;
+}
+
+export async function loader(props: LoaderFunctionArgs): Promise<LoaderData> {
     let code = null;
     let actionType = null;
 
@@ -24,11 +29,11 @@ export async function loader(props: LoaderFunctionArgs) {
         });
         const data = await resJson<{ actionType: ConfirmationType }>(res);
 
-        actionType = (data?.actionType as ConfirmationType) || null;
+        actionType = data?.actionType as ConfirmationType;
     } catch {}
 
-    return Response.json({
-        actionType: actionType,
-        code: code,
-    });
+    return {
+        actionType: actionType || null,
+        code: code || null,
+    };
 }
