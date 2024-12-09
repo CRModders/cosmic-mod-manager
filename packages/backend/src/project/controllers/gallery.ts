@@ -81,6 +81,8 @@ export async function addNewGalleryImage(
     const [thumbnailImg, thumbnailFileType] = await resizeImageToWebp(formData.image, fileType, {
         width: GALLERY_IMG_THUMBNAIL_WIDTH,
         resizeGifs: true,
+        fit: "contain",
+        withoutEnlargement: true,
     });
     const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
     const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, project.id, thumbnailImg, thumbnailFileId);

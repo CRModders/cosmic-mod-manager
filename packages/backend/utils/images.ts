@@ -1,24 +1,21 @@
 import { FileType } from "@shared/types";
 import sharp = require("sharp");
 
-type ImageFit = "cover" | "contain" | "fill" | "inside" | "outside";
-
 interface ResizeProps {
     width?: number;
     height?: number;
     resizeGifs?: boolean;
-    fit?: ImageFit;
+    fit?: keyof sharp.FitEnum;
+    kernel?: keyof sharp.KernelEnum;
+    withoutEnlargement: sharp.ResizeOptions["withoutEnlargement"];
 }
 
 export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
-    // If image is smaller than 4KB, don't resize
-    if (file.size <= 4096) return [file, inputFileType];
-
     if (!props.width && !props.height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
 
-    if (inputFileType === FileType.GIF && props.resizeGifs === false) {
+    if (inputFileType === FileType.GIF && props.resizeGifs !== true) {
         // GIFs loose animation when resized
         return [file, inputFileType];
     }
@@ -32,7 +29,8 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, pro
             width: props.width,
             height: props.height,
             fit: props.fit,
-            withoutEnlargement: true,
+            kernel: props.kernel || sharp.kernel.nearest,
+            withoutEnlargement: props.withoutEnlargement === true,
         })
         .toArray();
 
