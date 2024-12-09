@@ -7,9 +7,10 @@ import { generateRandomId } from "@/utils/str";
 import type { File as DBFile, VersionFile } from "@prisma/client";
 import { gameVersionsList } from "@shared/config/game-versions";
 import { type Loader, loaders } from "@shared/config/project";
+import { isModerator } from "@shared/config/roles";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReference } from "@shared/lib/utils/project";
-import { ProjectVisibility } from "@shared/types";
+import { type GlobalUserRole, ProjectVisibility } from "@shared/types";
 import { sort } from "semver";
 
 export function isProjectPublic(visibility: string, publishingStatus: string) {
@@ -26,6 +27,7 @@ interface IsProjectAccessible<T> {
     userId: string | undefined;
     teamMembers: T[];
     orgMembers: T[];
+    sessionUserRole: GlobalUserRole | undefined;
 }
 
 export function isProjectAccessible<T extends PartialTeamMember>({
@@ -34,7 +36,10 @@ export function isProjectAccessible<T extends PartialTeamMember>({
     userId,
     teamMembers,
     orgMembers,
+    sessionUserRole,
 }: IsProjectAccessible<T>) {
+    if (isModerator(sessionUserRole) === true) return true;
+
     const combinedMembers = combineProjectMembers(teamMembers, orgMembers);
     const isMember = userId ? combinedMembers.has(userId) : false;
     const isPublic = isProjectPublic(visibility, publishingStatus);

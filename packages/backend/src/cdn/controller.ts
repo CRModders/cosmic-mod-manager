@@ -52,6 +52,7 @@ export async function serveVersionFile(
         userId: userSession?.id,
         teamMembers: project.team.members,
         orgMembers: project.organisation?.team.members || [],
+        sessionUserRole: userSession?.role,
     });
     if (!projectAccessible) {
         return notFoundResponse(ctx);

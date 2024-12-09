@@ -41,6 +41,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         userId: userSession?.id,
         teamMembers: project.team.members,
         orgMembers: project.organisation?.team.members || [],
+        sessionUserRole: userSession?.role,
     });
     if (!projectAccessible) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
@@ -173,6 +174,7 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             userId: userSession?.id,
             teamMembers: project.team.members,
             orgMembers: project.organisation?.team.members || [],
+            sessionUserRole: userSession?.role,
         });
         if (!projectAccessible) continue;
 

@@ -70,6 +70,7 @@ export async function getAllProjectVersions(
         userId: userSession?.id,
         teamMembers: project.team.members,
         orgMembers: project.organisation?.team.members || [],
+        sessionUserRole: userSession?.role,
     });
     if (!projectAccessible) {
         return notFoundResponseData("Project not found");
