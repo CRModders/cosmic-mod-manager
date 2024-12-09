@@ -255,10 +255,16 @@ body.no-scrollbar {
     --scrollbar-radius: 0.5rem;
 }
 
-/* Some Reset */
 img {
     vertical-align: center;
     font-style: italic;
+
+    image-rendering: pixelated;
+    /* Vendor prefixes for broader support */
+    -webkit-optimize-contrast: pixelated;
+    -moz-crisp-edges: pixelated;
+    -o-crisp-edges: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
 }
 
 .disable-interactions {

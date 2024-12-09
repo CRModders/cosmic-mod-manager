@@ -78,12 +78,11 @@ export async function addNewGalleryImage(
     const fileType = (await getFileType(formData.image)) || FileType.PNG;
 
     // Save the thumbnail image
-    const thumbnailFileType = FileType.WEBP;
-    const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
-    const thumbnailImg = await resizeImageToWebp(formData.image, fileType, {
+    const [thumbnailImg, thumbnailFileType] = await resizeImageToWebp(formData.image, fileType, {
         width: GALLERY_IMG_THUMBNAIL_WIDTH,
         resizeGifs: true,
     });
+    const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
     const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, project.id, thumbnailImg, thumbnailFileId);
 
     // Save the raw gallery file

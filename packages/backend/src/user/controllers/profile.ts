@@ -13,7 +13,7 @@ import { ICON_WIDTH } from "@shared/config/forms";
 import { formatUserName } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { profileUpdateFormSchema } from "@shared/schemas/settings";
-import { FileType, type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
+import { type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { z } from "zod";
@@ -113,13 +113,11 @@ export async function getUserAvatar(
     const fileType = await getFileType(avatarFile);
     if (!fileType) return null;
 
-    let saveIconFileType = fileType;
-    const saveIcon = await resizeImageToWebp(avatarFile, fileType, {
+    const [saveIcon, saveIconFileType] = await resizeImageToWebp(avatarFile, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
-    if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);

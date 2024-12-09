@@ -16,7 +16,7 @@ import { ICON_WIDTH } from "@shared/config/forms";
 import { doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
-import { FileType, OrganisationPermission } from "@shared/types";
+import { OrganisationPermission } from "@shared/types";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { orgMemberPermsSelect } from "../queries";
@@ -140,13 +140,11 @@ export async function updateOrgIcon(
     const fileType = await getFileType(icon);
     if (!fileType) return invalidReqestResponseData("Invalid file type");
 
-    let saveIconFileType = fileType;
-    const saveIcon = await resizeImageToWebp(icon, fileType, {
+    const [saveIcon, saveIconFileType] = await resizeImageToWebp(icon, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
-    if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
     const iconSaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, saveIcon, fileId);

@@ -10,7 +10,7 @@ import { ICON_WIDTH } from "@shared/config/forms";
 import { doesMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
-import { FileType, ProjectPermission } from "@shared/types";
+import { ProjectPermission } from "@shared/types";
 import type { z } from "zod";
 import { projectMemberPermissionsSelect } from "../../queries/project";
 
@@ -222,9 +222,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     const fileType = await getFileType(icon);
     if (!fileType) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
 
-    let saveIconFileType = fileType;
-    if (fileType !== FileType.GIF) saveIconFileType = FileType.WEBP;
-    const saveIcon = await resizeImageToWebp(icon, fileType, {
+    const [saveIcon, saveIconFileType] = await resizeImageToWebp(icon, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",

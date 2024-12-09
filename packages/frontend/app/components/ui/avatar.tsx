@@ -1,6 +1,6 @@
-import { useRouteLoaderData } from "react-router";
 import { cn } from "@root/utils";
 import type React from "react";
+import { useRouteLoaderData } from "react-router";
 import type { RootOutletData } from "~/root";
 
 interface Props {

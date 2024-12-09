@@ -10,14 +10,17 @@ interface ResizeProps {
     fit?: ImageFit;
 }
 
-export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps) {
+export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
+    // If image is smaller than 4KB, don't resize
+    if (file.size <= 4096) return [file, inputFileType];
+
     if (!props.width && !props.height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
 
     if (inputFileType === FileType.GIF && props.resizeGifs === false) {
         // GIFs loose animation when resized
-        return file;
+        return [file, inputFileType];
     }
 
     const imgBuffer = await file.arrayBuffer();
@@ -29,10 +32,11 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, pro
             width: props.width,
             height: props.height,
             fit: props.fit,
+            withoutEnlargement: true,
         })
         .toArray();
 
-    return new File(resizedImgBuffer, "__resized-webp-img__");
+    return [new File(resizedImgBuffer, "__resized-webp-img__"), FileType.WEBP];
 }
 
 export async function getAverageColor(file: File) {
