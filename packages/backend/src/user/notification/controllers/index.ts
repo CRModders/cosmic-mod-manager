@@ -9,7 +9,15 @@ export async function getUserNotifications(ctx: Context, userSession: ContextUse
     const notifications = await prisma.notification.findMany({
         where: {
             user: {
-                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
+                OR: [
+                    {
+                        userName: {
+                            equals: notifUserId,
+                            mode: "insensitive",
+                        },
+                    },
+                    { id: notifUserId },
+                ],
             },
         },
         orderBy: {
@@ -58,7 +66,15 @@ export async function markNotificationAsRead(
                 in: notificationIds,
             },
             user: {
-                OR: [{ lowerCaseUserName: notifUserId.toLowerCase() }, { id: notifUserId }],
+                OR: [
+                    {
+                        userName: {
+                            equals: notifUserId,
+                            mode: "insensitive",
+                        },
+                    },
+                    { id: notifUserId },
+                ],
             },
         },
     });
@@ -105,7 +121,15 @@ export async function deleteNotifications(
                     in: notificationIds,
                 },
                 user: {
-                    OR: [{ lowerCaseUserName: userSlug.toLowerCase() }, { id: userSlug }],
+                    OR: [
+                        {
+                            userName: {
+                                equals: userSlug,
+                                mode: "insensitive",
+                            },
+                        },
+                        { id: userSlug },
+                    ],
                 },
             },
         });

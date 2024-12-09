@@ -10,18 +10,17 @@ datasource db {
 }
 
 model User {
-    id                String   @id @db.VarChar(32)
-    name              String   @db.VarChar(32)
-    email             String   @unique @db.VarChar(64)
-    userName          String   @unique @db.VarChar(32)
-    avatar            String?  @db.VarChar(256)
-    lowerCaseUserName String   @unique @db.VarChar(32)
-    dateJoined        DateTime @default(now())
-    emailVerified     Boolean
-    role              String   @db.VarChar(32)
-    bio               String?  @db.VarChar(256)
-    password          String?
-    newSignInAlerts   Boolean  @default(true)
+    id              String   @id @db.VarChar(32)
+    name            String   @db.VarChar(32)
+    email           String   @unique @db.VarChar(64)
+    avatar          String?  @db.VarChar(256)
+    userName        String   @unique @db.VarChar(32)
+    dateJoined      DateTime @default(now())
+    emailVerified   Boolean
+    role            String   @db.VarChar(32)
+    bio             String?  @db.VarChar(256)
+    password        String?
+    newSignInAlerts Boolean  @default(true)
 
     sessions         Session[]          @relation(name: "UserSessions")
     authAccounts     AuthAccount[]      @relation(name: "UserAuthAccounts")

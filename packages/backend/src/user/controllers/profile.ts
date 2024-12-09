@@ -21,7 +21,15 @@ import type { z } from "zod";
 export async function getUserProfileData(slug: string): Promise<RouteHandlerResponse> {
     const user = await prisma.user.findFirst({
         where: {
-            OR: [{ id: slug }, { lowerCaseUserName: slug.toLowerCase() }],
+            OR: [
+                { id: slug },
+                {
+                    userName: {
+                        equals: slug,
+                        mode: "insensitive",
+                    },
+                },
+            ],
         },
     });
 
@@ -57,7 +65,10 @@ export async function updateUserProfile(
     if (profileData.userName.toLowerCase() !== user.userName.toLowerCase()) {
         const existingUserWithSameUserName = await prisma.user.findFirst({
             where: {
-                lowerCaseUserName: profileData.userName.toLowerCase(),
+                userName: {
+                    equals: profileData.userName,
+                    mode: "insensitive",
+                },
                 NOT: [{ id: user.id }],
             },
         });
@@ -74,7 +85,6 @@ export async function updateUserProfile(
         },
         data: {
             avatar: avatarFileId,
-            lowerCaseUserName: profileData.userName.toLowerCase(),
             userName: profileData.userName,
             bio: profileData.bio,
         },
@@ -136,7 +146,15 @@ export async function getAllVisibleProjects(
 ): Promise<RouteHandlerResponse> {
     const user = await prisma.user.findFirst({
         where: {
-            OR: [{ id: userSlug }, { lowerCaseUserName: userSlug.toLowerCase() }],
+            OR: [
+                { id: userSlug },
+                {
+                    userName: {
+                        equals: userSlug,
+                        mode: "insensitive",
+                    },
+                },
+            ],
         },
     });
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };

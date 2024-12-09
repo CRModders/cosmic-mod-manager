@@ -80,7 +80,12 @@ export async function inviteMember(
 
     const targetUser = await prisma.user.findFirst({
         where: {
-            OR: [{ lowerCaseUserName: userSlug.toLowerCase() }, { id: userSlug }],
+            OR: [
+                {
+                    userName: { equals: userSlug, mode: "insensitive" },
+                },
+                { id: userSlug },
+            ],
         },
     });
 

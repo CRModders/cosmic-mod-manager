@@ -68,7 +68,10 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
     // Check if the username is available
     const existingUserWithSameUserName = await prisma.user.findFirst({
         where: {
-            lowerCaseUserName: userName,
+            userName: {
+                equals: userName,
+                mode: "insensitive",
+            },
         },
     });
     if (existingUserWithSameUserName) {
@@ -92,7 +95,6 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
             name: profileData?.name || "",
             email: profileData.email,
             userName: userName,
-            lowerCaseUserName: userName.toLocaleLowerCase(),
             emailVerified: profileData.emailVerified === true,
             role: GlobalUserRole.USER,
             newSignInAlerts: true,

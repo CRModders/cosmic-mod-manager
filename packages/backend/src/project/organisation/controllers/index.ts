@@ -66,11 +66,19 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
 }
 
 export async function getUserOrganisations(userSession: ContextUserData | undefined, userSlug: string): Promise<RouteHandlerResponse> {
-    let userId = userSlug.toLowerCase() === userSession?.lowerCaseUserName ? userSession.id : null;
+    let userId = userSlug.toLowerCase() === userSession?.userName.toLowerCase() ? userSession.id : null;
     if (!userId) {
         const user = await prisma.user.findFirst({
             where: {
-                OR: [{ id: userSlug }, { lowerCaseUserName: userSlug.toLowerCase() }],
+                OR: [
+                    { id: userSlug },
+                    {
+                        userName: {
+                            equals: userSlug,
+                            mode: "insensitive",
+                        },
+                    },
+                ],
             },
         });
 
@@ -79,6 +87,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
         }
         userId = user.id;
     }
+
     const organisations = await prisma.organisation.findMany({
         where: {
             team: {
