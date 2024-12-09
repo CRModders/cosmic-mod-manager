@@ -263,7 +263,7 @@ export const CancelButtonIcon = XIcon;
 
 export const fallbackProjectIcon = <CubeIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
 export const fallbackOrgIcon = <Building2Icon className="w-[65%] h-[65%] text-extra-muted-foreground" />;
-export const fallbackUserIcon = <UserIcon className="w-3/4 h-3/4 text-extra-muted-foreground" />;
+export const fallbackUserIcon = <UserIcon className="w-[65%] h-[65%] text-extra-muted-foreground" />;
 
 export const PROJECT_STATUS_ICONS = {
     [ProjectPublishingStatus.DRAFT]: <FileText className="h-full w-full" />,

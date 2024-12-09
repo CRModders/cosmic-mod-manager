@@ -1,16 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate, useOutletContext } from "react-router";
 import { cn, getOrgPagePathname, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { createURLSafeSlug } from "@shared/lib/utils";
 import { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
-import { handleFormError } from "@shared/schemas/utils";
+import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
 import type { Organisation } from "@shared/types/api";
 import { SaveIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useOutletContext } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackOrgIcon } from "~/components/icons";
@@ -31,6 +31,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { InteractiveLabel } from "~/components/ui/label";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 import type { OrgDataContext } from "~/routes/organization/data-wrapper";
@@ -109,7 +110,7 @@ export default function GeneralOrgSettings() {
                                             hidden
                                             className="hidden"
                                             id="org-icon-input"
-                                            accept={".jpg, .jpeg, .png, .webp, .gif"}
+                                            accept={validImgFileExtensions.join(", ")}
                                             type="file"
                                             value={""}
                                             name={field.name}
@@ -148,13 +149,13 @@ export default function GeneralOrgSettings() {
                                         />
 
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <label
+                                            <InteractiveLabel
                                                 htmlFor="org-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
                                                 Upload icon
-                                            </label>
+                                            </InteractiveLabel>
                                             {form.getValues().icon ? (
                                                 <Button
                                                     variant={"secondary"}
