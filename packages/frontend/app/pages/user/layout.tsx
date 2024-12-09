@@ -1,12 +1,12 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Outlet } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
-import type { LoggedInUserData } from "@shared/types";
+import { GlobalUserRole, type LoggedInUserData } from "@shared/types";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
+import { Outlet } from "react-router";
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
 import { ContentCardTemplate } from "~/components/layout/panel";
@@ -142,6 +142,12 @@ interface ProfilePageHeaderProps {
 }
 
 function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }: ProfilePageHeaderProps) {
+    let title = null;
+
+    if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {
+        title = "Moderator";
+    }
+
     return (
         <PageHeader
             vtId={userData.id}
@@ -150,6 +156,7 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
             fallbackIcon={fallbackUserIcon}
             title={userData.userName}
             description={userData.bio || ""}
+            titleBadge={title ? <span className="font-semibold text-sm text-muted-foreground">{title}</span> : null}
             threeDotMenu={
                 <>
                     <Button variant="ghost-destructive" className="w-full">
