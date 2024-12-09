@@ -3,6 +3,7 @@ import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFil
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "@/types";
 import { HTTP_STATUS, notFoundResponse } from "@/utils/http";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl, versionFileUrl } from "@/utils/urls";
+import { getMimeFromType } from "@shared/lib/utils/file-signature";
 import { ProjectVisibility } from "@shared/types";
 import { getUserIpAddress } from "@src/auth/helpers";
 import { isProjectAccessible } from "@src/project/utils";
@@ -99,7 +100,8 @@ export async function serveVersionFile(
 
     const response = new Response(file, { status: HTTP_STATUS.OK });
     response.headers.set("Cache-Control", "public, max-age=31536000");
-    response.headers.set("Content-Type", file.type);
+    response.headers.set("Content-Type", getMimeFromType(versionFile.type));
+    response.headers.set("Content-Disposition", `attachment; filename="${versionFile.name}"`);
 
     return response;
 }
@@ -130,6 +132,8 @@ export async function serveProjectIconFile(ctx: Context, projectId: string, isCd
 
     const response = new Response(iconFile);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
+    response.headers.set("Content-Type", getMimeFromType(iconFileData.type));
+    response.headers.set("Content-Disposition", `inline; filename="${iconFileData.name}"`);
     return response;
 }
 
@@ -172,6 +176,8 @@ export async function serveProjectGalleryImage(ctx: Context, projectId: string, 
 
     const response = new Response(file);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // 1 year
+    response.headers.set("Content-Type", getMimeFromType(dbFile.type));
+    response.headers.set("Content-Disposition", `inline; filename="${dbFile.name}"`);
     return response;
 }
 
@@ -201,6 +207,8 @@ export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest
 
     const response = new Response(icon);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
+    response.headers.set("Content-Type", getMimeFromType(iconFileData.type));
+    response.headers.set("Content-Disposition", `inline; filename="${iconFileData.name}"`);
     return response;
 }
 
@@ -230,5 +238,7 @@ export async function serveUserAvatar(ctx: Context, userId: string, isCdnRequest
 
     const response = new Response(icon);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
+    response.headers.set("Content-Type", getMimeFromType(iconFileData.type));
+    response.headers.set("Content-Disposition", `inline; filename="${iconFileData.name}"`);
     return response;
 }

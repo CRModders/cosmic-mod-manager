@@ -87,7 +87,7 @@ const fileTypeSignaturesList: FileSignatureListItem[] = [
     },
 ];
 
-const getFilesTypeFromSignature = (fileSignature: string) => {
+function getFilesTypeFromSignature(fileSignature: string) {
     for (const fileTypeSignatureItem of fileTypeSignaturesList) {
         let matches = true;
 
@@ -109,26 +109,51 @@ const getFilesTypeFromSignature = (fileSignature: string) => {
     }
 
     return null;
-};
+}
 
-const intToHex = (int: number) => {
+function intToHex(int: number) {
     return int.toString(16).padStart(2, "0");
-};
+}
 
-const intArrayToHexArray = (array: Uint8Array) => {
+function intArrayToHexArray(array: Uint8Array) {
     const hexArray: string[] = new Array(array.length);
     for (let i = 0; i < array.length; i++) {
         hexArray[i] = intToHex(array[i]);
     }
 
     return hexArray;
-};
+}
 
-export const getTypeOfFile = async (file: File) => {
+export async function getFileSignatures(file: File) {
     const fileBuffer = await file.arrayBuffer();
     const array = new Uint8Array(fileBuffer.slice(0, magicNumberLen));
 
     const signature = intArrayToHexArray(array).join(" ");
 
     return getFilesTypeFromSignature(signature);
-};
+}
+
+export function getMimeFromType(fileType: string) {
+    switch (fileType.toLowerCase()) {
+        case FileType.JAR:
+            return "application/java-archive";
+        case FileType.ZIP:
+            return "application/zip";
+        case FileType.SEVEN_Z:
+            return "application/x-7z-compressed";
+        case FileType.GZ:
+            return "application/gzip";
+        case FileType.TAR:
+            return "application/x-tar";
+        case FileType.PNG:
+            return "image/png";
+        case FileType.WEBP:
+            return "image/webp";
+        case FileType.JPEG:
+            return "image/jpeg";
+        case FileType.GIF:
+            return "image/gif";
+        default:
+            return "application/octet-stream";
+    }
+}

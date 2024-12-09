@@ -1,8 +1,8 @@
 import { loaders, projectTypes } from "../../config/project";
 import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "../../types";
-import { getTypeOfFile } from "./file-signature";
+import { getFileSignatures } from "./file-signature";
 
-export const getUserRoleFromString = (roleName: string) => {
+export function getUserRoleFromString(roleName: string) {
     switch (roleName) {
         case GlobalUserRole.ADMIN:
             return GlobalUserRole.ADMIN;
@@ -13,9 +13,9 @@ export const getUserRoleFromString = (roleName: string) => {
         default:
             return GlobalUserRole.USER;
     }
-};
+}
 
-export const getProjectTypesFromNames = (list: string[]) => {
+export function getProjectTypesFromNames(list: string[]) {
     const result = [];
     for (const projectType of projectTypes) {
         if (list.includes(projectType)) {
@@ -24,13 +24,13 @@ export const getProjectTypesFromNames = (list: string[]) => {
     }
 
     return result;
-};
+}
 
-export const getProjectTypeFromName = (type: string) => {
+export function getProjectTypeFromName(type: string) {
     return getProjectTypesFromNames([type])?.[0] || ProjectType.MOD;
-};
+}
 
-export const getAuthProviderFromString = (providerName: string) => {
+export function getAuthProviderFromString(providerName: string) {
     switch (providerName.toLowerCase()) {
         case AuthProvider.GITHUB:
             return AuthProvider.GITHUB;
@@ -45,9 +45,9 @@ export const getAuthProviderFromString = (providerName: string) => {
         default:
             return AuthProvider.UNKNOWN;
     }
-};
+}
 
-export const getConfirmActionTypeFromStringName = (type: string) => {
+export function getConfirmActionTypeFromStringName(type: string) {
     switch (type) {
         case ConfirmationType.CONFIRM_NEW_PASSWORD:
             return ConfirmationType.CONFIRM_NEW_PASSWORD;
@@ -58,9 +58,9 @@ export const getConfirmActionTypeFromStringName = (type: string) => {
         default:
             return null;
     }
-};
+}
 
-export const getProjectVisibilityFromString = (visibility: string) => {
+export function getProjectVisibilityFromString(visibility: string) {
     switch (visibility.toLowerCase()) {
         case ProjectVisibility.PRIVATE:
             return ProjectVisibility.PRIVATE;
@@ -71,9 +71,9 @@ export const getProjectVisibilityFromString = (visibility: string) => {
         default:
             return ProjectVisibility.LISTED;
     }
-};
+}
 
-export const getFileTypeFromFileExtension = (fileName: string) => {
+export function getFileTypeFromFileExtension(fileName: string) {
     const fileExtension = fileName.split(".").pop();
     if (!fileExtension) return null;
 
@@ -103,28 +103,28 @@ export const getFileTypeFromFileExtension = (fileName: string) => {
         default:
             return null;
     }
-};
+}
 
-export const getFileType = async (file: File) => {
+export async function getFileType(file: File) {
     const fileExtensionType = getFileTypeFromFileExtension(file.name);
     if (!fileExtensionType) return null;
 
-    const fileSignatureType = await getTypeOfFile(file);
+    const fileSignatureType = await getFileSignatures(file);
     if (!fileSignatureType || !fileSignatureType.includes(fileExtensionType)) return null;
 
     return fileExtensionType;
-};
+}
 
-export const getLoaderFromString = (loaderName: string) => {
+export function getLoaderFromString(loaderName: string) {
     for (const LOADER of loaders) {
         if (LOADER.name === loaderName.toLowerCase()) {
             return LOADER;
         }
     }
     return null;
-};
+}
 
-export const getLoadersFromNames = (loaderNames: string[]) => {
+export function getLoadersFromNames(loaderNames: string[]) {
     const loadersList = [];
 
     for (const loaderName of loaderNames) {
@@ -134,4 +134,4 @@ export const getLoadersFromNames = (loaderNames: string[]) => {
         }
     }
     return loadersList;
-};
+}
