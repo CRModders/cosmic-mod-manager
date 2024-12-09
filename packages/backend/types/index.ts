@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+import type { GlobalUserRole } from "@shared/types";
 
 export interface SessionDeviceDetails {
     os: {
@@ -13,6 +14,7 @@ export interface SessionDeviceDetails {
 
 export interface ContextUserData extends User {
     sessionId: string;
+    role: GlobalUserRole;
 }
 
 export enum FILE_STORAGE_SERVICE {

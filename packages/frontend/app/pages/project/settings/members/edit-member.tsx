@@ -2,10 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { ProjectPermissionsList } from "@shared/config/project";
+import { hasRootAccess } from "@shared/config/roles";
 import { CapitalizeAndFormatString, doesMemberHaveAccess } from "@shared/lib/utils";
 import { updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { handleFormError } from "@shared/schemas/utils";
-import { ProjectPermission } from "@shared/types";
+import { type LoggedInUserData, ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ import { Switch } from "~/components/ui/switch";
 import { RemoveMemberDialog, TransferOwnershipDialog } from "./dialogs";
 
 interface ProjectTeamMemberProps {
+    session: LoggedInUserData | null;
     member: TeamMember;
     currUsersMembership: TeamMember;
     fetchProjectData: () => Promise<void>;
@@ -32,6 +34,7 @@ interface ProjectTeamMemberProps {
 }
 
 export const ProjectTeamMember = ({
+    session,
     member,
     currUsersMembership,
     fetchProjectData,
@@ -71,15 +74,24 @@ export const ProjectTeamMember = ({
         }
     };
 
-    const canEditMember = doesMemberHaveAccess(ProjectPermission.EDIT_MEMBER, currUsersMembership.permissions, currUsersMembership.isOwner);
+    const canEditMember = doesMemberHaveAccess(
+        ProjectPermission.EDIT_MEMBER,
+        currUsersMembership.permissions,
+        currUsersMembership.isOwner,
+        session?.role,
+    );
     const canAddPermissions = currUsersMembership.isOwner;
     const canRemoveMembers = doesMemberHaveAccess(
         ProjectPermission.REMOVE_MEMBER,
         currUsersMembership.permissions,
         currUsersMembership.isOwner,
+        session?.role,
     );
     const canTransferOwnership =
-        currUsersMembership.isOwner && member.accepted && !doesProjectHaveOrg && member.userId !== currUsersMembership.userId;
+        hasRootAccess(currUsersMembership.isOwner, session?.role) &&
+        member.accepted &&
+        !doesProjectHaveOrg &&
+        member.userId !== currUsersMembership.userId;
 
     useEffect(() => {
         form.reset({
@@ -253,13 +265,14 @@ export const ProjectTeamMember = ({
 };
 
 interface OrgTeamMemberProps {
+    session: LoggedInUserData | null;
     project: ProjectDetailsData;
     orgMember: TeamMember;
     currUsersMembership: TeamMember | null;
     fetchProjectData: () => Promise<void>;
 }
 
-export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersMembership }: OrgTeamMemberProps) => {
+export function OrgTeamMember({ session, project, orgMember, fetchProjectData, currUsersMembership }: OrgTeamMemberProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -272,12 +285,14 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
         ProjectPermission.EDIT_MEMBER,
         currUsersMembership?.permissions || [],
         currUsersMembership?.isOwner,
+        session?.role,
     );
-    const canAddPermissions = currUsersMembership?.isOwner === true;
+    const canAddPermissions = hasRootAccess(currUsersMembership?.isOwner, session?.role);
     const canRemoveMembers = doesMemberHaveAccess(
         ProjectPermission.REMOVE_MEMBER,
         currUsersMembership?.permissions || [],
         currUsersMembership?.isOwner,
+        session?.role,
     );
 
     const defaultValues = {
@@ -533,4 +548,4 @@ export const OrgTeamMember = ({ project, orgMember, fetchProjectData, currUsersM
             )}
         </Card>
     );
-};
+}

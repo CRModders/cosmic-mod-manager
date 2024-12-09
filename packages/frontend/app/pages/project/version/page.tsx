@@ -1,12 +1,12 @@
-import { useParams } from "react-router";
 import type { DependencyData } from "@root/types";
 import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
 import { formatGameVersionsListString } from "@root/utils/version";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
-import { ProjectPermission } from "@shared/types";
+import { type LoggedInUserData, ProjectPermission } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { lazy, Suspense, useContext } from "react";
+import { useParams } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
@@ -25,7 +25,7 @@ import { Card } from "~/components/ui/card";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "~/components/ui/context-menu";
 import CopyBtn, { copyTextToClipboard } from "~/components/ui/copy-btn";
 import { FormattedDate } from "~/components/ui/date";
-import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import ReleaseChannelChip from "~/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import NotFoundPage from "~/routes/$";
@@ -34,15 +34,15 @@ import { ProjectMember } from "../layout";
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
 interface Props {
+    session: LoggedInUserData | null;
     projectData: ProjectDetailsData;
     allProjectVersions: ProjectVersionData[];
     projectDependencies: DependencyData;
     currUsersMembership: TeamMember | null;
 }
 
-export default function VersionPage({ projectData, allProjectVersions, projectDependencies, currUsersMembership }: Props) {
+export default function VersionPage({ session, projectData, allProjectVersions, projectDependencies, currUsersMembership }: Props) {
     const { projectSlug, versionSlug } = useParams();
-    const customNavigate = useCustomNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
     const projectType = projectData?.type[0] || "";
     let versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
@@ -118,7 +118,12 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
 
                     {currUsersMembership?.id &&
                     currUsersMembership?.id &&
-                    doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
+                    doesMemberHaveAccess(
+                        ProjectPermission.UPLOAD_VERSION,
+                        currUsersMembership.permissions,
+                        currUsersMembership.isOwner,
+                        session?.role,
+                    ) ? (
                         <VariantButtonLink url="edit" prefetch="render">
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
@@ -126,7 +131,12 @@ export default function VersionPage({ projectData, allProjectVersions, projectDe
                     ) : null}
 
                     {currUsersMembership?.id &&
-                    doesMemberHaveAccess(ProjectPermission.DELETE_VERSION, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
+                    doesMemberHaveAccess(
+                        ProjectPermission.DELETE_VERSION,
+                        currUsersMembership.permissions,
+                        currUsersMembership.isOwner,
+                        session?.role,
+                    ) ? (
                         <Suspense>
                             <DeleteVersionDialog
                                 projectData={projectData}

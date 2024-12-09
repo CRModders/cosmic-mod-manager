@@ -1,7 +1,7 @@
-import { useLocation, useNavigate, useOutletContext } from "react-router";
 import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { OrganisationPermission } from "@shared/types";
 import { Helmet } from "react-helmet";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import RefreshPage from "~/components/refresh-page";
 import { CardTitle, SectionCard } from "~/components/ui/card";
 import InviteMemberForm from "~/pages/project/settings/members/invite-member";
@@ -10,7 +10,7 @@ import type { OrgDataContext } from "~/routes/organization/data-wrapper";
 import { OrgTeamMember } from "./edit-member";
 
 export default function OrgMemberSettings() {
-    const { orgData, currUsersMembership } = useOutletContext<OrgDataContext>();
+    const { session, orgData, currUsersMembership } = useOutletContext<OrgDataContext>();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -24,6 +24,7 @@ export default function OrgMemberSettings() {
         OrganisationPermission.MANAGE_INVITES,
         currUsersMembership.organisationPermissions,
         currUsersMembership.isOwner,
+        session?.role,
     );
 
     return (
@@ -41,6 +42,7 @@ export default function OrgMemberSettings() {
             {orgData.members.map((member) => {
                 return (
                     <OrgTeamMember
+                        session={session}
                         key={member.userId}
                         org={orgData}
                         member={member}

@@ -1,7 +1,7 @@
-import type { MetaArgs } from "react-router";
-import { useOutletContext } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
+import type { MetaArgs } from "react-router";
+import { useOutletContext } from "react-router";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import ProjectVersionsPage from "~/pages/project/versions";
 
@@ -10,6 +10,7 @@ export default function _Versions() {
 
     return (
         <ProjectVersionsPage
+            session={data.session}
             projectData={data.projectData}
             allProjectVersions={data.allProjectVersions}
             currUsersMembership={data.currUsersMembership}

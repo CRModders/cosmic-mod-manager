@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { formatGameVersionsList } from "@root/utils/version";
@@ -6,7 +5,7 @@ import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperi
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { sortVersionsWithReference } from "@shared/lib/utils/project";
-import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
+import { type LoggedInUserData, ProjectPermission, VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import {
     CalendarIcon,
@@ -23,6 +22,7 @@ import {
     XCircleIcon,
 } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import PaginatedNavigation from "~/components/pagination-nav";
 import loaderIcons from "~/components/tag-icons";
@@ -54,9 +54,10 @@ interface Props {
     projectData: ProjectDetailsData;
     allProjectVersions: ProjectVersionData[];
     currUsersMembership: TeamMember | null;
+    session: LoggedInUserData | null;
 }
 
-export default function ProjectVersionsPage({ projectData, allProjectVersions, currUsersMembership }: Props) {
+export default function ProjectVersionsPage({ session, projectData, allProjectVersions, currUsersMembership }: Props) {
     const { theme } = useTheme();
     const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
     const [showDevVersions, setShowDevVersions] = useState(false);
@@ -166,11 +167,16 @@ export default function ProjectVersionsPage({ projectData, allProjectVersions, c
         isExperimentalGameVersion(ver.releaseType),
     );
     const hasDevVersions = allProjectVersions.some((ver) => ver.releaseChannel === VersionReleaseChannel.DEV);
+    const canUploadVersion = doesMemberHaveAccess(
+        ProjectPermission.UPLOAD_VERSION,
+        currUsersMembership?.permissions,
+        currUsersMembership?.isOwner,
+        session?.role,
+    );
 
     return (
         <>
-            {currUsersMembership?.id &&
-            doesMemberHaveAccess(ProjectPermission.UPLOAD_VERSION, currUsersMembership?.permissions, currUsersMembership?.isOwner) ? (
+            {currUsersMembership?.id && canUploadVersion ? (
                 <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
             ) : null}
 
@@ -335,7 +341,8 @@ export default function ProjectVersionsPage({ projectData, allProjectVersions, c
                 canEditVersion={doesMemberHaveAccess(
                     ProjectPermission.UPLOAD_VERSION,
                     currUsersMembership?.permissions || [],
-                    currUsersMembership?.isOwner || false,
+                    currUsersMembership?.isOwner === true,
+                    session?.role,
                 )}
             />
         </>

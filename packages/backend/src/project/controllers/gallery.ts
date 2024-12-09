@@ -55,6 +55,7 @@ export async function addNewGalleryImage(
         ProjectPermission.EDIT_DETAILS,
         (memberObj?.permissions || []) as ProjectPermission[],
         memberObj?.isOwner === true,
+        userSession.role,
     );
     if (!memberObj || !hasEditAccess) {
         return unauthorizedReqResponseData();
@@ -155,7 +156,12 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
     const currMember = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
         !currMember ||
-        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currMember.permissions as ProjectPermission[], currMember.isOwner)
+        !doesMemberHaveAccess(
+            ProjectPermission.EDIT_DETAILS,
+            currMember.permissions as ProjectPermission[],
+            currMember.isOwner,
+            userSession.role,
+        )
     ) {
         return unauthorizedReqResponseData();
     }
@@ -217,7 +223,12 @@ export async function updateGalleryImage(
     const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
         !memberObj ||
-        !doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, memberObj.permissions as ProjectPermission[], memberObj.isOwner)
+        !doesMemberHaveAccess(
+            ProjectPermission.EDIT_DETAILS,
+            memberObj.permissions as ProjectPermission[],
+            memberObj.isOwner,
+            userSession.role,
+        )
     ) {
         return notFoundResponseData();
     }

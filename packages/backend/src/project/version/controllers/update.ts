@@ -71,6 +71,7 @@ export const updateVersionData = async (
         ProjectPermission.UPLOAD_VERSION,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!canUpdateVersion) {
         await addInvalidAuthAttempt(ctx);
@@ -299,6 +300,7 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         ProjectPermission.DELETE_VERSION,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!canDeleteVersion) {
         await addInvalidAuthAttempt(ctx);

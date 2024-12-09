@@ -64,6 +64,7 @@ export async function createNewVersion(
         ProjectPermission.UPLOAD_VERSION,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     // Check if the user has permission to upload a version
     if (!canUploadVersion) {

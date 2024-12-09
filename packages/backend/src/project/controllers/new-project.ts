@@ -49,6 +49,7 @@ export async function createNewProject(
             OrganisationPermission.ADD_PROJECT,
             currMember.organisationPermissions as OrganisationPermission[],
             currMember.isOwner,
+            userSession?.role,
         );
         if (!canAddProject) return unauthorizedReqResponseData("You do not have permission to add project to this organisation");
     }

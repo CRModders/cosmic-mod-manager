@@ -36,6 +36,7 @@ export async function updateProject(
         ProjectPermission.EDIT_DETAILS,
         currMember.permissions as ProjectPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canEditProject) return unauthorizedReqResponseData("You don't have the permission to update project details");
 
@@ -100,6 +101,7 @@ export async function deleteProject(userSession: ContextUserData, slug: string):
         ProjectPermission.DELETE_PROJECT,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasDeleteAccess) return unauthorizedReqResponseData("You don't have the permission to delete the project");
 
@@ -210,6 +212,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         ProjectPermission.EDIT_DETAILS,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project icon");
 
@@ -278,6 +281,7 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
         ProjectPermission.EDIT_DETAILS,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");
 

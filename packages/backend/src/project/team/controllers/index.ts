@@ -5,6 +5,7 @@ import type { ContextUserData } from "@/types";
 import type { RouteHandlerResponse } from "@/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "@/utils/http";
 import { generateDbId } from "@/utils/str";
+import { hasRootAccess } from "@shared/config/roles";
 import { doesMemberHaveAccess, doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import type { overrideOrgMemberFormSchema, updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { OrganisationPermission, ProjectPermission } from "@shared/types";
@@ -60,6 +61,7 @@ export async function inviteMember(
             OrganisationPermission.MANAGE_INVITES,
             currMember.organisationPermissions as OrganisationPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     }
     // Handle project team invite
@@ -71,6 +73,7 @@ export async function inviteMember(
             ProjectPermission.MANAGE_INVITES,
             currMember.permissions as ProjectPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     }
     if (!canManageInvites) {
@@ -241,12 +244,14 @@ export async function editProjectMember(
             OrganisationPermission.EDIT_MEMBER,
             currMember.organisationPermissions as OrganisationPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     } else {
         canEditMembers = doesMemberHaveAccess(
             ProjectPermission.EDIT_MEMBER,
             currMember.permissions as ProjectPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     }
     if (!canEditMembers) {
@@ -258,7 +263,7 @@ export async function editProjectMember(
     if (!targetMember?.id) return notFoundResponseData("Member not found");
 
     // Only owner can add permissions to the member
-    if (currMember.isOwner !== true) {
+    if (!hasRootAccess(currMember.isOwner, userSession.role)) {
         for (const permission of formData.permissions || []) {
             if (!targetMember.permissions.includes(permission)) {
                 // If this is an org team, check if the user has access to edit default permissions
@@ -267,6 +272,7 @@ export async function editProjectMember(
                         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
                         currMember.organisationPermissions as OrganisationPermission[],
                         currMember.isOwner,
+                        userSession.role,
                     );
 
                     if (canEditDefaultPermissions) break;
@@ -348,13 +354,14 @@ export async function overrideOrgMember(
         ProjectPermission.EDIT_MEMBER,
         currMember.permissions as ProjectPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canEditMembers) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to override members");
     }
 
-    if (currMember.isOwner !== true && formData.permissions?.length)
+    if (!hasRootAccess(currMember.isOwner, userSession.role) && formData.permissions?.length)
         return unauthorizedReqResponseData("You don't have access to add permissions to a member");
 
     // Check if the user is a member of the organisation
@@ -435,12 +442,14 @@ export async function removeProjectMember(
             OrganisationPermission.REMOVE_MEMBER,
             currMember.organisationPermissions as OrganisationPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     } else {
         canRemoveMembers = doesMemberHaveAccess(
             ProjectPermission.REMOVE_MEMBER,
             currMember.permissions as ProjectPermission[],
             currMember.isOwner,
+            userSession.role,
         );
     }
     if (!canRemoveMembers) {
@@ -485,7 +494,7 @@ export async function changeTeamOwner(
     if (!targetMember || !targetMember.accepted) return notFoundResponseData("Member not found");
 
     const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!currMember || !currMember.isOwner) {
+    if (!currMember || !hasRootAccess(currMember.isOwner, userSession.role)) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData("You don't have access to change the team owner");
     }

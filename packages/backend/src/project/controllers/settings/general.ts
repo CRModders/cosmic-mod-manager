@@ -32,6 +32,7 @@ export async function updateProjectDescription(
         ProjectPermission.EDIT_DESCRIPTION,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project description");
 
@@ -65,6 +66,7 @@ export async function updateProjectTags(
         ProjectPermission.EDIT_DETAILS,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) {
         return {
@@ -107,6 +109,7 @@ export async function updateProjectExternalLinks(
         ProjectPermission.EDIT_DETAILS,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) {
         return { data: { success: false, message: "You don't the permission to update links" }, status: HTTP_STATUS.UNAUTHORIZED };
@@ -144,6 +147,7 @@ export async function updateProjectLicense(
         ProjectPermission.EDIT_DETAILS,
         memberObj.permissions as ProjectPermission[],
         memberObj.isOwner,
+        userSession.role,
     );
     if (!hasEditAccess) {
         return {

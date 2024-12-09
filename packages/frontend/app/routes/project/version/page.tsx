@@ -1,10 +1,10 @@
-import { type MetaArgs, useOutletContext } from "react-router";
 import { formatDate, getProjectPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { formatGameVersionsListString } from "@root/utils/version";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import { type MetaArgs, useOutletContext } from "react-router";
 import type { ProjectLayoutProps } from "~/pages/project/layout";
 import VersionPage from "~/pages/project/version/page";
 import type { LoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
@@ -14,6 +14,7 @@ export default function _VersionPage() {
 
     return (
         <VersionPage
+            session={data.session}
             projectData={data.projectData}
             allProjectVersions={data.allProjectVersions}
             projectDependencies={data.dependencies}

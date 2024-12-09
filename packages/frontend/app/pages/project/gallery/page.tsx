@@ -2,7 +2,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cn, imageUrl } from "@root/utils";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { DateToISOStr } from "@shared/lib/utils/date-time";
-import { ProjectPermission } from "@shared/types";
+import { type LoggedInUserData, ProjectPermission } from "@shared/types";
 import type { GalleryItem, ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
     ArrowLeftIcon,
@@ -28,18 +28,24 @@ const EditGalleryImage = lazy(() => import("./edit-img"));
 const UploadGalleryImageForm = lazy(() => import("./upload-img"));
 
 interface Props {
+    session: LoggedInUserData | null;
     projectData: ProjectDetailsData;
     currUsersMembership: TeamMember | null;
 }
 
-export default function ProjectGallery({ projectData, currUsersMembership }: Props) {
+export default function ProjectGallery({ session, projectData, currUsersMembership }: Props) {
     const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
     const [dialogOpen, setdialogOpen] = useState(false);
 
     return (
         <>
             {currUsersMembership?.id &&
-            doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
+            doesMemberHaveAccess(
+                ProjectPermission.EDIT_DETAILS,
+                currUsersMembership.permissions,
+                currUsersMembership.isOwner,
+                session?.role,
+            ) ? (
                 <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
                     <Suspense>
                         <UploadGalleryImageForm projectData={projectData} />
@@ -55,6 +61,7 @@ export default function ProjectGallery({ projectData, currUsersMembership }: Pro
                 <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
                     {projectData.gallery.map((galleryItem, index) => (
                         <GalleryItemCard
+                            session={session}
                             key={galleryItem.id}
                             projectData={projectData}
                             galleryItem={galleryItem}
@@ -82,6 +89,7 @@ export default function ProjectGallery({ projectData, currUsersMembership }: Pro
 }
 
 const GalleryItemCard = ({
+    session,
     projectData,
     galleryItem,
     index,
@@ -89,6 +97,7 @@ const GalleryItemCard = ({
     setdialogOpen,
     currUsersMembership,
 }: {
+    session: LoggedInUserData | null;
     projectData: ProjectDetailsData;
     galleryItem: GalleryItem;
     index: number;
@@ -141,7 +150,12 @@ const GalleryItemCard = ({
                         <FormattedDate date={galleryItem.dateCreated} timestamp_template="${month} ${day}, ${year}" />
                     </p>
                     {currUsersMembership?.id &&
-                    doesMemberHaveAccess(ProjectPermission.EDIT_DETAILS, currUsersMembership.permissions, currUsersMembership.isOwner) ? (
+                    doesMemberHaveAccess(
+                        ProjectPermission.EDIT_DETAILS,
+                        currUsersMembership.permissions,
+                        currUsersMembership.isOwner,
+                        session?.role,
+                    ) ? (
                         <div className="w-full flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                             <Suspense>
                                 <EditGalleryImage galleryItem={galleryItem} projectData={projectData} />

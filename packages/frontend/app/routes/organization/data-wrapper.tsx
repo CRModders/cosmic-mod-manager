@@ -3,6 +3,7 @@ import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
+import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
 import type { RootOutletData } from "~/root";
@@ -13,6 +14,7 @@ export interface OrgDataContext {
     orgData: Organisation;
     orgProjects: ProjectListItem[];
     currUsersMembership: TeamMember | null;
+    session: LoggedInUserData | null;
 }
 
 export default function _OrgDataWrapper() {
@@ -39,6 +41,7 @@ export default function _OrgDataWrapper() {
                     orgData: data.orgData,
                     orgProjects: data.orgProjects || [],
                     currUsersMembership: currUsersMembership,
+                    session: session,
                 } satisfies OrgDataContext
             }
         />

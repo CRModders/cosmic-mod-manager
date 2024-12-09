@@ -2,10 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { OrgPermissionsList, ProjectPermissionsList } from "@shared/config/project";
+import { hasRootAccess } from "@shared/config/roles";
 import { CapitalizeAndFormatString, doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { handleFormError } from "@shared/schemas/utils";
-import { OrganisationPermission } from "@shared/types";
+import { type LoggedInUserData, OrganisationPermission } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,9 +28,10 @@ interface OrgTeamMemberProps {
     member: TeamMember;
     currMember: TeamMember;
     fetchOrgData: () => Promise<void>;
+    session: LoggedInUserData | null;
 }
 
-export function OrgTeamMember({ org, member, currMember, fetchOrgData }: OrgTeamMemberProps) {
+export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }: OrgTeamMemberProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -74,19 +76,22 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData }: OrgTeam
         OrganisationPermission.EDIT_MEMBER,
         currMember.organisationPermissions,
         currMember.isOwner,
+        session?.role,
     );
     const canEditDefaultPermissions = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
         currMember.organisationPermissions,
         currMember.isOwner,
+        session?.role,
     );
-    const canAddPermissions = currMember.isOwner;
+    const canAddPermissions = hasRootAccess(currMember.isOwner, session?.role);
     const canRemoveMembers = doesOrgMemberHaveAccess(
         OrganisationPermission.REMOVE_MEMBER,
         currMember.organisationPermissions,
         currMember.isOwner,
+        session?.role,
     );
-    const canTransferOwnership = currMember.isOwner && member.accepted && member.userId !== currMember.userId;
+    const canTransferOwnership = hasRootAccess(currMember.isOwner, session?.role) && member.accepted && member.userId !== currMember.userId;
 
     return (
         <Card className="w-full flex flex-col gap-4 p-card-surround">

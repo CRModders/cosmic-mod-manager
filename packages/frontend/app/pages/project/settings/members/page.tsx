@@ -1,9 +1,9 @@
-import { type Location, useLocation, useNavigate, useOutletContext } from "react-router";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { UserXIcon } from "lucide-react";
 import { useState } from "react";
+import { type Location, useLocation, useNavigate, useOutletContext } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Button, CancelButton } from "~/components/ui/button";
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
-    const { projectData, currUsersMembership } = useOutletContext<ProjectSettingsContext>();
+    const { session, projectData, currUsersMembership } = useOutletContext<ProjectSettingsContext>();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -38,6 +38,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
         ProjectPermission.MANAGE_INVITES,
         currUsersMembership.permissions,
         currUsersMembership.isOwner,
+        session?.role,
     );
 
     const refreshProjectData = async (path: string | Location = location) => {
@@ -56,6 +57,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
                 .filter((member) => !projectData.organisation?.members?.some((orgMember) => orgMember.userId === member.userId))
                 .map((member) => (
                     <ProjectTeamMember
+                        session={session}
                         key={member.userId}
                         member={member}
                         currUsersMembership={currUsersMembership}
@@ -73,6 +75,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
 
             {projectData.organisation?.members?.map((member) => (
                 <OrgTeamMember
+                    session={session}
                     key={member.userId}
                     project={projectData}
                     orgMember={member}

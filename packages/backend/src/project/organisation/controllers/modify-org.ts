@@ -50,6 +50,7 @@ export async function updateOrg(
         OrganisationPermission.EDIT_DETAILS,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canEditOrg) {
         await addInvalidAuthAttempt(ctx);
@@ -125,6 +126,7 @@ export async function updateOrgIcon(
         OrganisationPermission.EDIT_DETAILS,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canUpdateIcon) {
         await addInvalidAuthAttempt(ctx);
@@ -201,6 +203,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
         OrganisationPermission.EDIT_DETAILS,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canDeleteIcon) {
         await addInvalidAuthAttempt(ctx);
@@ -255,6 +258,7 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
         OrganisationPermission.DELETE_ORGANIZATION,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canDeleteOrg) {
         await addInvalidAuthAttempt(ctx);
@@ -349,6 +353,7 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
         OrganisationPermission.ADD_PROJECT,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canAddProjects) return unauthorizedReqResponseData("You don't have the permission to add projects to the organization");
 
@@ -423,6 +428,7 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
         OrganisationPermission.REMOVE_PROJECT,
         currMember.organisationPermissions as OrganisationPermission[],
         currMember.isOwner,
+        userSession.role,
     );
     if (!canRemoveProjects) {
         await addInvalidAuthAttempt(ctx);
