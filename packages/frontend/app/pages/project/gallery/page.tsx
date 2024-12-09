@@ -243,7 +243,6 @@ function ImageDialog({
                             "max-w-[calc(100vw_-_2rem)] sm:max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)]",
                             isFullWidth && "w-full h-full",
                         )}
-                        loaded={imgLoaded}
                         setLoaded={setImgLoaded}
                     />
 
