@@ -18,7 +18,7 @@ interface CreateNewSessionProps {
     providerName: string;
     ctx: Context;
     isFirstSignIn?: boolean;
-    user: Partial<User>;
+    user: User;
 }
 
 export async function createUserSession({ userId, providerName, ctx, isFirstSignIn, user }: CreateNewSessionProps) {
@@ -32,7 +32,7 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
     const revokeAccessCode = generateRandomId(32);
     const revokeAccessCodeHash = await hashString(revokeAccessCode);
 
-    const deviceDetails = getSessionMetadata(getHeader, ctx.env.ip?.address || "");
+    const sessionMetadata = getSessionMetadata(getHeader, ctx.env.ip?.address || "");
 
     await prisma.session.create({
         data: {
@@ -43,31 +43,35 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
             dateExpires: new Date(Date.now() + USER_SESSION_VALIDITY_ms),
             status: UserSessionStates.ACTIVE,
             revokeAccessCode: revokeAccessCodeHash,
-            os: `${deviceDetails.os.name} ${deviceDetails.os.version || ""}`,
-            browser: deviceDetails.browserName || "",
-            ip: deviceDetails.ipAddr || "",
-            city: deviceDetails.city || "",
-            country: deviceDetails.country || "",
-            userAgent: deviceDetails.userAgent || "",
+            os: `${sessionMetadata.os.name} ${sessionMetadata.os.version || ""}`,
+            browser: sessionMetadata.browserName || "",
+            ip: sessionMetadata.ipAddr || "",
+            city: sessionMetadata.city || "",
+            country: sessionMetadata.country || "",
+            userAgent: sessionMetadata.userAgent || "",
         },
     });
 
     if (isFirstSignIn !== true) {
-        const userData = await prisma.user.findUnique({
+        const significantIp = (sessionMetadata.ipAddr || "")?.slice(0, 9);
+        const similarSession = await prisma.session.findFirst({
             where: {
-                id: userId,
+                ip: {
+                    startsWith: significantIp,
+                },
             },
         });
 
-        if (userData?.newSignInAlerts === true) {
+        // Send email alert if the user is signing in from a new location
+        if (!similarSession?.id) {
             sendNewSigninAlertEmail({
-                fullName: userData.name,
-                receiverEmail: userData.email,
-                region: deviceDetails.city || "",
-                country: deviceDetails.country || "",
-                ip: deviceDetails.ipAddr || "",
-                browserName: deviceDetails.browserName || "",
-                osName: deviceDetails.os.name || "",
+                fullName: user.name,
+                receiverEmail: user.email,
+                region: sessionMetadata.city || "",
+                country: sessionMetadata.country || "",
+                ip: sessionMetadata.ipAddr || "",
+                browserName: sessionMetadata.browserName || "",
+                osName: sessionMetadata.os.name || "",
                 authProviderName: providerName || "",
                 revokeAccessCode: revokeAccessCode,
             });
@@ -77,7 +81,7 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
     return sessionToken;
 }
 
-export async function validateSessionToken(ctx: Context, token: string): Promise<ContextUserData | null> {
+export async function validateSessionToken(token: string): Promise<ContextUserData | null> {
     const tokenHash = await hashString(token);
     if (tokenHash.length > 256) {
         return null;
@@ -137,7 +141,7 @@ export async function validateContextSession(ctx: Context): Promise<ContextUserD
         }
 
         // Get the current logged in user from the cookie data
-        const session = await validateSessionToken(ctx, cookie);
+        const session = await validateSessionToken(cookie);
         if (!session?.id) {
             deleteSessionCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
             return null;
