@@ -7,12 +7,14 @@ export const MODERATOR_PERMISSIONS = {
 
 export const ADMIN_PERMISSIONS = {
     PROJECT: [
+        ProjectPermission.UPLOAD_VERSION,
         ProjectPermission.DELETE_VERSION,
         ProjectPermission.EDIT_DETAILS,
         ProjectPermission.EDIT_DESCRIPTION,
         ProjectPermission.MANAGE_INVITES,
         ProjectPermission.REMOVE_MEMBER,
         ProjectPermission.EDIT_MEMBER,
+        ProjectPermission.DELETE_PROJECT,
         ProjectPermission.VIEW_ANALYTICS,
         ProjectPermission.VIEW_REVENUE,
     ],
@@ -21,6 +23,7 @@ export const ADMIN_PERMISSIONS = {
         OrganisationPermission.MANAGE_INVITES,
         OrganisationPermission.REMOVE_MEMBER,
         OrganisationPermission.EDIT_MEMBER,
+        OrganisationPermission.ADD_PROJECT,
         OrganisationPermission.REMOVE_PROJECT,
         OrganisationPermission.DELETE_ORGANIZATION,
         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,

@@ -22,13 +22,13 @@ import type { Context } from "hono";
 import type { z } from "zod";
 import { createVersionDependencies, deleteExcessDevReleases } from "./new-version";
 
-export const updateVersionData = async (
+export async function updateVersionData(
     ctx: Context,
     projectSlug: string,
     versionSlug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof updateVersionFormSchema>,
-): Promise<RouteHandlerResponse> => {
+): Promise<RouteHandlerResponse> {
     const project = await prisma.project.findUnique({
         where: { slug: projectSlug },
         select: {
@@ -63,10 +63,10 @@ export const updateVersionData = async (
     if (versionSlug === "latest") targetVersion = versions?.[0];
 
     // Return if project or target version not found
-    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to edit a version
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     const canUpdateVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
         memberObj?.permissions as ProjectPermission[],
@@ -262,9 +262,9 @@ export const updateVersionData = async (
         },
         status: HTTP_STATUS.OK,
     };
-};
+}
 
-export const deleteProjectVersion = async (ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserData) => {
+export async function deleteProjectVersion(ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserData) {
     const project = await prisma.project.findUnique({
         where: {
             slug: projectSlug,
@@ -292,10 +292,10 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
         }
     }
 
-    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
 
-    // Check if the user has permission to upload a version
+    // Check if the user has permission to delete a version
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     const canDeleteVersion = doesMemberHaveAccess(
         ProjectPermission.DELETE_VERSION,
         memberObj?.permissions as ProjectPermission[],
@@ -352,4 +352,4 @@ export const deleteProjectVersion = async (ctx: Context, projectSlug: string, ve
     });
 
     return { data: { success: true, message: `Version "${deletedVersion.title}" deleted successfully.` }, status: HTTP_STATUS.OK };
-};
+}

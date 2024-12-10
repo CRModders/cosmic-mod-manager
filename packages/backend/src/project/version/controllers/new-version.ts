@@ -57,9 +57,9 @@ export async function createNewVersion(
             ...projectMemberPermissionsSelect({ userId: userSession.id }),
         },
     });
-    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     if (!project?.id) return notFoundResponseData("Project not found");
 
+    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     const canUploadVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
         memberObj?.permissions as ProjectPermission[],
