@@ -28,12 +28,7 @@ export const authProvidersList = [
     },
 ];
 
-export default function OAuthProvidersWidget({
-    actionIntent = AuthActionIntent.SIGN_IN,
-    disabled = false,
-    isLoading,
-    setIsLoading,
-}: {
+interface Props {
     actionIntent: AuthActionIntent;
     disabled?: boolean;
     isLoading: {
@@ -46,7 +41,14 @@ export default function OAuthProvidersWidget({
             provider: AuthProvider | null;
         }>
     >;
-}) {
+}
+
+export default function OAuthProvidersWidget({
+    actionIntent = AuthActionIntent.SIGN_IN,
+    disabled = false,
+    isLoading,
+    setIsLoading,
+}: Props) {
     async function redirectToOauthPage(provider: AuthProvider) {
         try {
             if (isLoading.value === true) return;

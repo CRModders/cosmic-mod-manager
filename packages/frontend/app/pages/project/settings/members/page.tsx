@@ -94,7 +94,8 @@ export function LeaveTeam({
     currUsersMembership,
     teamId,
     refreshData,
-}: { currUsersMembership: TeamMember; teamId: string; refreshData: () => Promise<void> }) {
+    isOrgTeam,
+}: { currUsersMembership: TeamMember; teamId: string; isOrgTeam?: boolean; refreshData: () => Promise<void> }) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleLeaveProject = async () => {
@@ -115,15 +116,15 @@ export function LeaveTeam({
     return (
         <div className="w-full flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
             <div>
-                <h2 className="text-lg font-semibold">Leave project</h2>
-                <p className="text-muted-foreground">Remove yourself as a member of this project.</p>
+                <h2 className="text-lg font-semibold">{isOrgTeam === true ? "Leave organisation" : "Leave project"}</h2>
+                <p className="text-muted-foreground">Remove yourself as a member of this {isOrgTeam ? "organization" : "project"}.</p>
             </div>
 
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="secondary-destructive" disabled={currUsersMembership.isOwner || currUsersMembership.teamId !== teamId}>
                         <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
-                        Leave project
+                        Leave {isOrgTeam ? "organisation" : "project"}
                     </Button>
                 </DialogTrigger>
 
@@ -143,7 +144,7 @@ export function LeaveTeam({
                                 ) : (
                                     <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
                                 )}
-                                Leave project
+                                Leave {isOrgTeam ? "organisation" : "project"}
                             </Button>
                         </DialogFooter>
                     </DialogBody>

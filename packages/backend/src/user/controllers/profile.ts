@@ -99,7 +99,7 @@ export async function getUserAvatar(
     prevAvatarId: string | null,
     avatarFile?: null | string | File,
 ): Promise<string | null> {
-    if (typeof avatarFile === "string") return avatarFile;
+    if (typeof avatarFile === "string") return prevAvatarId;
     // If the user didn't upload a new avatar, return the previous avatar
     if (!avatarFile) return prevAvatarId;
 
