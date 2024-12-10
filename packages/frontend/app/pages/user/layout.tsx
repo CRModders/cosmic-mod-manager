@@ -156,7 +156,7 @@ function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }:
             fallbackIcon={fallbackUserIcon}
             title={userData.userName}
             description={userData.bio || ""}
-            titleBadge={title ? <span className="font-semibold text-sm text-muted-foreground">{title}</span> : null}
+            titleBadge={title ? <span className="font-semibold text-tiny uppercase text-extra-muted-foreground">{title}</span> : null}
             threeDotMenu={
                 <>
                     <Button variant="ghost-destructive" className="w-full">
