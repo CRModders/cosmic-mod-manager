@@ -88,11 +88,7 @@ export const ProjectTeamMember = ({
         session?.role,
     );
     const canTransferOwnership =
-        hasRootAccess(currUsersMembership?.isOwner, session?.role) &&
-        member.isOwner === false &&
-        member.accepted &&
-        !doesProjectHaveOrg &&
-        member.userId !== currUsersMembership?.userId;
+        hasRootAccess(currUsersMembership?.isOwner, session?.role) && member.isOwner === false && member.accepted && !doesProjectHaveOrg;
 
     useEffect(() => {
         form.reset({

@@ -91,11 +91,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
         currMember.isOwner,
         session?.role,
     );
-    const canTransferOwnership =
-        hasRootAccess(currMember.isOwner, session?.role) &&
-        member.isOwner === false &&
-        member.accepted &&
-        member.userId !== currMember.userId;
+    const canTransferOwnership = hasRootAccess(currMember.isOwner, session?.role) && member.isOwner === false && member.accepted;
 
     return (
         <Card className="w-full flex flex-col gap-4 p-card-surround">
