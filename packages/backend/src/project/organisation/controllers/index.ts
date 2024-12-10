@@ -202,6 +202,9 @@ export async function getOrganisationProjects(
                     ...ListItemProjectFields(),
                     ...projectMemberPermissionsSelect(),
                 },
+                orderBy: {
+                    downloads: "desc",
+                },
             },
         },
     });
