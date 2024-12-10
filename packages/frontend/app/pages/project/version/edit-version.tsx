@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, useParams } from "react-router";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
@@ -10,8 +9,8 @@ import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import MarkdownEditor from "~/components/layout/md-editor/md-editor";
@@ -130,11 +129,9 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
 
     return (
         <>
-            <Helmet>
-                <title>
-                    Edit {versionData.versionNumber} - {projectData?.name || ""}
-                </title>
-            </Helmet>
+            <title>
+                Edit {versionData.versionNumber} - {projectData?.name || ""}
+            </title>
 
             <Form {...form}>
                 <form

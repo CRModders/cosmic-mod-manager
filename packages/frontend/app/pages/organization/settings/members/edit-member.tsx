@@ -47,7 +47,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
     });
     form.watch();
 
-    const updateMemberDetails = async (values: z.infer<typeof updateTeamMemberFormSchema>) => {
+    async function updateMemberDetails(values: z.infer<typeof updateTeamMemberFormSchema>) {
         if (isLoading || !currMember) return;
         setIsLoading(true);
         try {
@@ -66,7 +66,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         form.reset(defaultValues);

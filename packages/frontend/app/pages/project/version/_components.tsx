@@ -184,7 +184,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                     <FormItem>
                         <FormLabel>Version number</FormLabel>
                         <Input
-                            placeholder="#"
+                            placeholder="# a.b.c"
                             {...field}
                             onChange={(e) => {
                                 field.onChange(createURLSafeSlug(e.target.value).value);

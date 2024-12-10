@@ -1,6 +1,5 @@
 import { doesOrgMemberHaveAccess } from "@shared/lib/utils";
 import { OrganisationPermission } from "@shared/types";
-import { Helmet } from "react-helmet";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
 import RefreshPage from "~/components/refresh-page";
 import { CardTitle, SectionCard } from "~/components/ui/card";
@@ -29,9 +28,7 @@ export default function OrgMemberSettings() {
 
     return (
         <>
-            <Helmet>
-                <title>Members - {orgData.name}</title>
-            </Helmet>
+            <title>Members - {orgData.name}</title>
 
             <SectionCard className="w-full flex flex-col p-card-surround gap-4">
                 <CardTitle>Manage members</CardTitle>

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router";
 import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
@@ -11,8 +10,8 @@ import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import MarkdownEditor from "~/components/layout/md-editor/md-editor";
@@ -98,10 +97,8 @@ export default function UploadVersionPage({ projectData }: Props) {
 
     return (
         <>
-            <Helmet>
-                <title>Create version - {projectData?.name || ""}</title>
-                <meta name="description" content="Upload a new version" />
-            </Helmet>
+            <title>Create version - {projectData?.name || ""}</title>
+            <meta name="description" content="Upload a new version" />
 
             <Form {...form}>
                 <form

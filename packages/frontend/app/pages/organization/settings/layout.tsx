@@ -1,8 +1,7 @@
-import { Outlet, useOutletContext } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
-import { Helmet } from "react-helmet";
+import { Outlet, useOutletContext } from "react-router";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -18,16 +17,14 @@ import { ButtonLink } from "~/components/ui/link";
 import type { OrgDataContext } from "~/routes/organization/data-wrapper";
 
 export default function OrgSettingsLayout() {
-    const { orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
+    const { session, orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
     const baseUrl = getOrgPagePathname(orgData.slug);
 
     return (
         <>
-            <Helmet>
-                <title>
-                    {orgData.name || ""} Settings - {SITE_NAME_SHORT}
-                </title>
-            </Helmet>
+            <title>
+                {orgData.name || ""} Settings - {SITE_NAME_SHORT}
+            </title>
 
             <Panel className="pb-12">
                 <PanelAside aside className="flex flex-col gap-panel-cards lg:w-80">
@@ -83,7 +80,8 @@ export default function OrgSettingsLayout() {
                     <Outlet
                         context={
                             {
-                                orgData,
+                                session: session,
+                                orgData: orgData,
                                 orgProjects: projects,
                                 currUsersMembership,
                             } satisfies OrgDataContext

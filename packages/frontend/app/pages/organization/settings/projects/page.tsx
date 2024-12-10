@@ -1,8 +1,7 @@
-import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
-import { useOutletContext } from "react-router";
 import { BadgeInfoIcon } from "lucide-react";
+import { useOutletContext } from "react-router";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
 import { ProjectsListTable } from "~/pages/dashboard/projects/page";
@@ -13,9 +12,7 @@ export default function OrgProjectsSettings() {
 
     return (
         <>
-            <Helmet>
-                <title>Projects - {orgData.name}</title>
-            </Helmet>
+            <title>Projects - {orgData.name}</title>
 
             <Card className="w-full overflow-hidden">
                 <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">

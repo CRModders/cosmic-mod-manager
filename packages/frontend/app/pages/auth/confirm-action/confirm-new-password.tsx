@@ -2,7 +2,6 @@ import clientFetch from "@root/utils/client-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
-import { Helmet } from "react-helmet";
 import { toast } from "sonner";
 import { Button, CancelButton } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
@@ -61,10 +60,8 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
 
     return (
         <>
-            <Helmet>
-                <title>Confirm new password - {SITE_NAME_SHORT}</title>
-                <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
-            </Helmet>
+            <title>Confirm new password - {SITE_NAME_SHORT}</title>
+            <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">
                 <CardHeader>
