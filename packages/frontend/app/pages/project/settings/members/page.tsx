@@ -1,3 +1,4 @@
+import { hasRootAccess } from "@shared/config/roles";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
@@ -69,7 +70,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
                     />
                 ))}
 
-            {userOrgs?.length && !projectData.organisation && currUsersMembership?.isOwner === true ? (
+            {userOrgs?.length && !projectData.organisation && hasRootAccess(currUsersMembership?.isOwner, session.role) ? (
                 <TransferProjectManagementCard organisations={userOrgs} projectId={projectData.id} />
             ) : null}
 

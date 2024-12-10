@@ -1,10 +1,10 @@
-import { useLocation, useNavigate } from "react-router";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, CheckIcon } from "lucide-react";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { OrgListItemCard } from "~/components/item-card";
 import RefreshPage from "~/components/refresh-page";
