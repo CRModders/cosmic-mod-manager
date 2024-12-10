@@ -33,10 +33,11 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
     const revokeAccessCodeHash = await hashString(revokeAccessCode);
 
     const sessionMetadata = getSessionMetadata(getHeader, ctx.env.ip?.address || "");
+    const newSessionId = generateDbId();
 
     await prisma.session.create({
         data: {
-            id: generateDbId(),
+            id: newSessionId,
             tokenHash: tokenHash,
             userId: userId,
             providerName: providerName,
@@ -56,6 +57,9 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
         const significantIp = (sessionMetadata.ipAddr || "")?.slice(0, 9);
         const similarSession = await prisma.session.findFirst({
             where: {
+                id: {
+                    not: newSessionId,
+                },
                 ip: {
                     startsWith: significantIp,
                 },
