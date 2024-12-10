@@ -2,12 +2,16 @@
     "name": "crmm",
     "module": "index.ts",
     "type": "module",
-    "devDependencies": {
-        "@biomejs/biome": "1.9.4",
-        "@types/bun": "latest"
+    "dependencies": {
+        "ua-parser-js": "^1.0.38"
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "@types/bun": "latest",
+        "@types/ua-parser-js": "^0.7.39"
     },
     "workspaces": ["packages/*"]
 }

@@ -7,10 +7,11 @@ import { deleteCookie, setCookie } from "@/utils/http";
 import { generateDbId, generateRandomId } from "@/utils/str";
 import type { Session, User } from "@prisma/client";
 import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@shared/config";
-import { UserSessionStates } from "@shared/types";
+import { getSessionMetadata } from "@shared/lib/utils/headers";
+import { type GlobalUserRole, UserSessionStates } from "@shared/types";
 import type { Context } from "hono";
 import type { CookieOptions } from "hono/utils/cookie";
-import { generateRandomToken, getUserDeviceDetails, getUserSessionCookie, hashString } from "./index";
+import { generateRandomToken, getUserSessionCookie, hashString } from "./index";
 
 interface CreateNewSessionProps {
     userId: string;
@@ -21,13 +22,17 @@ interface CreateNewSessionProps {
 }
 
 export async function createUserSession({ userId, providerName, ctx, isFirstSignIn, user }: CreateNewSessionProps) {
+    function getHeader(key: string) {
+        return ctx.req.header(key);
+    }
+
     const sessionToken = generateRandomToken();
     const tokenHash = await hashString(sessionToken);
 
     const revokeAccessCode = generateRandomId(32);
     const revokeAccessCodeHash = await hashString(revokeAccessCode);
 
-    const deviceDetails = await getUserDeviceDetails(ctx);
+    const deviceDetails = getSessionMetadata(getHeader, ctx.env.ip?.address || "");
 
     await prisma.session.create({
         data: {
@@ -115,7 +120,12 @@ export async function validateSessionToken(ctx: Context, token: string): Promise
     });
 
     await setSessionTokenCache(tokenHash, session.id, session.userId, session.user); // SESSION_CACHE : SET
-    return { ...session.user, sessionId: session.id };
+
+    const sessionUser = {
+        ...session.user,
+        role: session.user.role as GlobalUserRole,
+    };
+    return { ...sessionUser, sessionId: session.id };
 }
 
 export async function validateContextSession(ctx: Context): Promise<ContextUserData | null> {

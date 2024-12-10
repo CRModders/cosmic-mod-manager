@@ -6,6 +6,7 @@ import { convertToIPv6, stripIp } from "@/utils/ip";
 import { generateDbId, generateRandomId } from "@/utils/str";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { AUTHTOKEN_COOKIE_NAMESPACE, CSRF_STATE_COOKIE_NAMESPACE, PASSWORD_HASH_SALT_ROUNDS } from "@shared/config";
+import { getSessionIp } from "@shared/lib/utils/headers";
 import { type AuthActionIntent, AuthProvider } from "@shared/types";
 import { getDiscordUserProfileData } from "@src/auth/providers/discord";
 import { getGithubUserProfileData } from "@src/auth/providers/github";
@@ -14,7 +15,6 @@ import { getGoogleUserProfileData } from "@src/auth/providers/google";
 import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { random } from "nanoid";
-import UAParser = require("ua-parser-js");
 
 const oAuthUrlTemplates = {
     [AuthProvider.GITHUB]: (clientId: string, redirectUri: string, csrfState: string) => {
@@ -90,77 +90,26 @@ export async function createNewAuthAccount(
     });
 }
 
-export type GeoApiData = {
-    city?: string;
-    country?: string;
-};
-
 export function getUserIpAddress(ctx: Context, strip = true): string | null {
-    const identityToken = ctx.req.header("x-identity-token");
-    let ipStr = null;
-    if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
-    else {
-        ipStr =
-            ctx.req.header("CF-Connecting-IP") ||
-            ctx.req.header("X-Real-IP") ||
-            ctx.req.header("X-Forwarded-For")?.split(",")?.[0] ||
-            ctx.req.header("X-Forwarded-For") ||
-            ctx.env.ip;
+    function getHeader(key: string) {
+        return ctx.req.header(key);
     }
 
-    if (typeof ipStr !== "string") ipStr = ipStr?.address;
+    let ipStr = null;
 
-    ipStr = removeSpaces(ipStr)?.split(",")?.[0];
+    const identityToken = ctx.req.header("x-identity-token");
+    if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
+    else {
+        ipStr = getSessionIp(getHeader, ctx.env.ip?.address || "");
+    }
     if (!ipStr) return null;
 
     const IPv6 = convertToIPv6(ipStr);
     if (!IPv6) return null;
 
-    if (!strip) return IPv6;
+    if (strip === false) return IPv6;
+    // Strip the IP address to prevent abuse due to IPv6 (to be used in rate limiting)
     return stripIp(IPv6).toString(16);
-}
-
-function removeSpaces(ip: string) {
-    return ip?.replaceAll(" ", "");
-}
-
-export async function getUserDeviceDetails(ctx: Context) {
-    const userAgent = ctx.req.header("user-agent");
-    const ipAddr = getUserIpAddress(ctx, false);
-
-    const parsedResult = new UAParser(userAgent).getResult();
-    const browserName = parsedResult.browser.name;
-    const os = {
-        name: parsedResult?.os?.name || "",
-        version: parsedResult?.os?.version || "",
-    };
-
-    const geoData: GeoApiData = {};
-
-    // Gettings Geo data from the IP address
-    if (ipAddr) {
-        try {
-            const res = await fetch(`https://ipinfo.io/${ipAddr}?token=${env.IP2GEO_API_KEY}`);
-            const resJsonData = await res.json();
-
-            if (resJsonData?.city || resJsonData?.region) {
-                geoData.city = `${resJsonData?.city} ${resJsonData?.region}`;
-            }
-            if (resJsonData?.country) {
-                geoData.country = resJsonData?.country;
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    return {
-        browserName,
-        os,
-        ipAddr,
-        userAgent,
-        ...geoData,
-    };
 }
 
 export function generateRandomToken(): string {

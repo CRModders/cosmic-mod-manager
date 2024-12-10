@@ -15,7 +15,6 @@ const envKeys = [
     "GOOGLE_SECRET",
     "GITLAB_ID",
     "GITLAB_SECRET",
-    "IP2GEO_API_KEY",
     "MEILISEARCH_MASTER_KEY",
     "NODE_ENV",
     "CDN_SECRET",

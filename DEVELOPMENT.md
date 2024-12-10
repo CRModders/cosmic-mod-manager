@@ -108,7 +108,6 @@ Keep in mind that you'll need to start the database again after a reboot.
     GITLAB_ID="GITLAB_OAUTH_APP_ID"
     GITLAB_SECRET="GITLAB_OAUTH_APP_SECRET"
 
-    IP2GEO_API_KEY="ipinof.com API KEY"
     MEILISEARCH_MASTER_KEY="MEILISEARCH_MASTERY_KEY"
 
     # Email transport credentials
