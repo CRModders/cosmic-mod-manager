@@ -33,33 +33,12 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
     const revokeAccessCodeHash = await hashString(revokeAccessCode);
 
     const sessionMetadata = getSessionMetadata(getHeader, ctx.env.ip?.address || "");
-    const newSessionId = generateDbId();
-
-    await prisma.session.create({
-        data: {
-            id: newSessionId,
-            tokenHash: tokenHash,
-            userId: userId,
-            providerName: providerName,
-            dateExpires: new Date(Date.now() + USER_SESSION_VALIDITY_ms),
-            status: UserSessionStates.ACTIVE,
-            revokeAccessCode: revokeAccessCodeHash,
-            os: `${sessionMetadata.os.name} ${sessionMetadata.os.version || ""}`,
-            browser: sessionMetadata.browserName || "",
-            ip: sessionMetadata.ipAddr || "",
-            city: sessionMetadata.city || "",
-            country: sessionMetadata.country || "",
-            userAgent: sessionMetadata.userAgent || "",
-        },
-    });
 
     if (isFirstSignIn !== true) {
         const significantIp = (sessionMetadata.ipAddr || "")?.slice(0, 9);
         const similarSession = await prisma.session.findFirst({
             where: {
-                id: {
-                    not: newSessionId,
-                },
+                userId: userId,
                 ip: {
                     startsWith: significantIp,
                 },
@@ -81,6 +60,24 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
             });
         }
     }
+
+    await prisma.session.create({
+        data: {
+            id: generateDbId(),
+            tokenHash: tokenHash,
+            userId: userId,
+            providerName: providerName,
+            dateExpires: new Date(Date.now() + USER_SESSION_VALIDITY_ms),
+            status: UserSessionStates.ACTIVE,
+            revokeAccessCode: revokeAccessCodeHash,
+            os: `${sessionMetadata.os.name} ${sessionMetadata.os.version || ""}`,
+            browser: sessionMetadata.browserName || "",
+            ip: sessionMetadata.ipAddr || "",
+            city: sessionMetadata.city || "",
+            country: sessionMetadata.country || "",
+            userAgent: sessionMetadata.userAgent || "",
+        },
+    });
 
     return sessionToken;
 }
