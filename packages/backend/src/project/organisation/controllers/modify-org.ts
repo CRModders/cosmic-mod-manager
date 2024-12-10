@@ -13,6 +13,7 @@ import {
 import { resizeImageToWebp } from "@/utils/images";
 import { generateDbId } from "@/utils/str";
 import { ICON_WIDTH } from "@shared/config/forms";
+import { hasRootAccess } from "@shared/config/roles";
 import { doesOrgMemberHaveAccess, getCurrMember } from "@shared/lib/utils";
 import { getFileType } from "@shared/lib/utils/convertors";
 import type { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
@@ -346,7 +347,7 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
             team: {
                 select: {
                     members: {
-                        where: { userId: userSession.id, isOwner: true },
+                        where: { userId: userSession.id },
                         select: { id: true, userId: true, isOwner: true },
                     },
                 },
@@ -356,8 +357,9 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
     if (!project) return notFoundResponseData("Project not found");
     if (project.organisationId) return invalidReqestResponseData("Project is already part of an organization");
 
-    const projectOwner = project.team.members?.[0];
-    if (projectOwner?.userId !== userSession.id) return unauthorizedReqResponseData("You are not the owner of the project");
+    const projectMembership = project.team.members?.[0];
+    if (!hasRootAccess(projectMembership?.isOwner, userSession.role))
+        return unauthorizedReqResponseData("You are not the owner of the project");
 
     await Promise.all([
         // Delete the team members from the project's current team
