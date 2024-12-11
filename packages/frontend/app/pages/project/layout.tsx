@@ -5,7 +5,7 @@ import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { isModerator } from "@shared/config/roles";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
-import type { LoggedInUserData } from "@shared/types";
+import { type LoggedInUserData, ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
 import {
     BookmarkIcon,
@@ -449,6 +449,11 @@ const ProjectInfoHeader = ({
                 fallbackIcon={fallbackProjectIcon}
                 title={projectData.name}
                 description={projectData.summary}
+                titleBadge={
+                    projectData.visibility === ProjectVisibility.ARCHIVED ? (
+                        <Chip className="bg-warning-background/15 text-warning-foreground">Archived</Chip>
+                    ) : null
+                }
                 actionBtns={
                     <>
                         <InteractiveDownloadPopup projectData={projectData} allProjectVersions={allVersions} />

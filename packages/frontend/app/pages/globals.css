@@ -26,7 +26,7 @@
     --danger-background-dark: 0, 92%, 65%;
     --danger-foreground-dark: 0, 91%, 71%;
     --warning-background-dark: 35, 74%, 48%;
-    --warning-foreground-dark: 33, 82%, 52%;
+    --warning-foreground-dark: 33, 82%, 58%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
     --link-foreground-dark: 213, 94%, 74%;
@@ -47,7 +47,7 @@
     --danger-background-light: 0, 75%, 46%;
     --danger-foreground-light: 0, 65%, 52%;
     --warning-background-light: 36, 86%, 44%;
-    --warning-foreground-light: 38, 93%, 47%;
+    --warning-foreground-light: 38, 92%, 44%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 28%;
     --link-foreground-light: 208, 88%, 36%;

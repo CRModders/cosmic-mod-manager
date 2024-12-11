@@ -70,6 +70,7 @@ export enum ProjectPublishingStatus {
     DRAFT = "draft",
     SCHEDULED = "scheduled",
     PUBLISHED = "published",
+    WITHHELD = "withheld",
     UNKNOWN = "unknown",
 }
 

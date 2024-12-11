@@ -10,7 +10,7 @@ import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@s
 import { getFileType } from "@shared/lib/utils/convertors";
 import { isVersionPrimaryFileValid } from "@shared/lib/validation";
 import type { VersionDependencies, newVersionFormSchema } from "@shared/schemas/project/version";
-import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@shared/types";
+import { ProjectPermission, type ProjectType, ProjectVisibility, VersionReleaseChannel } from "@shared/types";
 import { projectMemberPermissionsSelect } from "@src/project/queries/project";
 import {
     aggregateGameVersions,
@@ -42,6 +42,7 @@ export async function createNewVersion(
             id: true,
             loaders: true,
             type: true,
+            visibility: true,
             gameVersions: true,
             versions: {
                 select: {
@@ -58,6 +59,9 @@ export async function createNewVersion(
         },
     });
     if (!project?.id) return notFoundResponseData("Project not found");
+
+    if (project.visibility === ProjectVisibility.ARCHIVED)
+        return invalidReqestResponseData("Unarchive the project to upload a new version!");
 
     const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
     const canUploadVersion = doesMemberHaveAccess(
