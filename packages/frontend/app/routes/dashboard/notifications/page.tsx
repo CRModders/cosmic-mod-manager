@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
@@ -6,6 +5,7 @@ import { resJson } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
+import { useLoaderData } from "react-router";
 import NotificationsPage from "~/pages/dashboard/notification/page";
 
 export default function _Notifications() {

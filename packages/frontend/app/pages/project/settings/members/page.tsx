@@ -1,10 +1,10 @@
 import { hasRootAccess } from "@shared/config/roles";
 import { doesMemberHaveAccess } from "@shared/lib/utils";
-import { ProjectPermission } from "@shared/types";
+import { type LoggedInUserData, ProjectPermission } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { UserXIcon } from "lucide-react";
 import { useState } from "react";
-import { type Location, useLocation, useNavigate, useOutletContext } from "react-router";
+import { type Location, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Button, CancelButton } from "~/components/ui/button";
@@ -20,7 +20,8 @@ import {
     DialogTrigger,
 } from "~/components/ui/dialog";
 import { LoadingSpinner } from "~/components/ui/spinner";
-import type { ProjectSettingsContext } from "../layout";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import { OrgTeamMember, ProjectTeamMember } from "./edit-member";
 import InviteMemberForm from "./invite-member";
 import { RemoveProjectFromOrg, TransferProjectManagementCard } from "./transfer-management";
@@ -31,7 +32,13 @@ interface Props {
 }
 
 export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
-    const { session, projectData, currUsersMembership } = useOutletContext<ProjectSettingsContext>();
+    // Session cant be null here, as the user is redirected to login if they are not logged in
+    const session = useSession() as LoggedInUserData;
+
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+    const currUsersMembership = ctx.currUsersMembership;
+
     const navigate = useNavigate();
     const location = useLocation();
 

@@ -1,7 +1,7 @@
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
-import { Outlet, useOutletContext } from "react-router";
+import { Outlet } from "react-router";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -14,17 +14,18 @@ import {
     BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { ButtonLink } from "~/components/ui/link";
-import type { OrgDataContext } from "~/routes/organization/data-wrapper";
+import { useOrgData } from "~/hooks/org";
 
 export default function OrgSettingsLayout() {
-    const { session, orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
+    const ctx = useOrgData();
+    const orgData = ctx.orgData;
+    const projects = ctx.orgProjects;
+
     const baseUrl = getOrgPagePathname(orgData.slug);
 
     return (
         <>
-            <title>
-                {orgData.name || ""} Settings - {SITE_NAME_SHORT}
-            </title>
+            <title>{`${orgData.name} Settings - ${SITE_NAME_SHORT}`}</title>
 
             <Panel className="pb-12">
                 <PanelAside aside className="flex flex-col gap-panel-cards lg:w-80">
@@ -77,16 +78,7 @@ export default function OrgSettingsLayout() {
                 </PanelAside>
 
                 <PanelContent main>
-                    <Outlet
-                        context={
-                            {
-                                session: session,
-                                orgData: orgData,
-                                orgProjects: projects,
-                                currUsersMembership,
-                            } satisfies OrgDataContext
-                        }
-                    />
+                    <Outlet />
                 </PanelContent>
             </Panel>
         </>

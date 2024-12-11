@@ -1,9 +1,11 @@
-import { useOutletContext } from "react-router";
-import type { ProjectLayoutProps } from "~/pages/project/layout";
+import Redirect from "~/components/ui/redirect";
+import { useSession } from "~/hooks/session";
+
 import UploadVersionPage from "~/pages/project/version/new-version";
 
 export default function _NewVersion() {
-    const data = useOutletContext<ProjectLayoutProps>();
+    const session = useSession();
 
-    return <UploadVersionPage projectData={data.projectData} />;
+    if (!session) return <Redirect to="/login" />;
+    return <UploadVersionPage />;
 }

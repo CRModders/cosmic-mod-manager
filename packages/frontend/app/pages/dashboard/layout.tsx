@@ -1,4 +1,3 @@
-import { Outlet } from "react-router";
 import {
     BarChart2Icon,
     BellIcon,
@@ -9,15 +8,11 @@ import {
     LayoutListIcon,
     LibraryIcon,
 } from "lucide-react";
+import { Outlet } from "react-router";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
-import type { RootOutletData } from "~/root";
 
-interface Props {
-    outletContext: RootOutletData;
-}
-
-export default function DashboardLayout({ outletContext }: Props) {
+export default function DashboardLayout() {
     return (
         <Panel className="pb-12">
             <PanelAside aside>
@@ -39,7 +34,7 @@ export default function DashboardLayout({ outletContext }: Props) {
                 </PanelAsideNavCard>
             </PanelAside>
             <PanelContent main>
-                <Outlet context={outletContext} />
+                <Outlet />
             </PanelContent>
         </Panel>
     );

@@ -1,21 +1,20 @@
-import { useLoaderData, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { resJson } from "@root/utils/server-fetch";
 import type { ProjectListItem } from "@shared/types/api";
+import { useLoaderData } from "react-router";
 import { WanderingCubesSpinner } from "~/components/ui/spinner";
+import { useSession } from "~/hooks/session";
 import OverviewPage from "~/pages/dashboard/overview";
-import type { RootOutletData } from "~/root";
 import { clientLoader as NotificationsLoader } from "./notifications/page";
 
 export default function _Overview() {
-    const { session } = useOutletContext<RootOutletData>();
+    const session = useSession();
     const loaderData = useLoaderData<typeof clientLoader>();
 
-    if (!session) return;
+    if (!session?.id) return;
 
     return (
         <OverviewPage
-            session={session}
             userProjects={loaderData.userProjects}
             notifications={loaderData.notifications || []}
             relatedUsers={loaderData.users || []}

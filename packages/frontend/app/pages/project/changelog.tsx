@@ -1,5 +1,4 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { useSearchParams } from "react-router";
 import { cn, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -8,6 +7,7 @@ import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import { ChevronDownIcon, DownloadIcon, FilterIcon, FlaskConicalIcon, XCircleIcon } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import PaginatedNavigation from "~/components/pagination-nav";
@@ -21,16 +21,14 @@ import Link from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { releaseChannelTextColor } from "~/components/ui/release-channel-pill";
 import { TooltipTemplate } from "~/components/ui/tooltip";
+import { useProjectData } from "~/hooks/project";
 import useTheme from "~/hooks/theme";
 
-interface Props {
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-}
+export default function VersionChangelogs() {
+    const ctx = useProjectData();
 
-export default function VersionChangelogs({ projectData, allProjectVersions }: Props) {
-    if (!projectData || !allProjectVersions?.length) return null;
-    return <ChangelogsList projectData={projectData} versionsList={allProjectVersions} />;
+    if (!ctx.projectData || !ctx.allProjectVersions?.length) return null;
+    return <ChangelogsList projectData={ctx.projectData} versionsList={ctx.allProjectVersions} />;
 }
 
 interface FilterItems {
@@ -39,7 +37,7 @@ interface FilterItems {
     releaseChannels: string[];
 }
 
-const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDetailsData; versionsList: ProjectVersionData[] }) => {
+function ChangelogsList({ projectData, versionsList }: { projectData: ProjectDetailsData; versionsList: ProjectVersionData[] }) {
     const { theme } = useTheme();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
@@ -321,9 +319,9 @@ const ChangelogsList = ({ projectData, versionsList }: { projectData: ProjectDet
             {Pagination}
         </>
     );
-};
+}
 
-const ChangelogBar = ({ releaseChannel }: { releaseChannel: VersionReleaseChannel }) => {
+function ChangelogBar({ releaseChannel }: { releaseChannel: VersionReleaseChannel }) {
     return (
         <>
             <div
@@ -342,4 +340,4 @@ const ChangelogBar = ({ releaseChannel }: { releaseChannel: VersionReleaseChanne
             </div>
         </>
     );
-};
+}

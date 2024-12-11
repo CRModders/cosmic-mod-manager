@@ -6,7 +6,6 @@ import { getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
-import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import { FileIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +17,7 @@ import { ContentCardTemplate } from "~/components/layout/panel";
 import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem } from "~/components/ui/form";
+import { useProjectData } from "~/hooks/project";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -27,23 +27,17 @@ import {
     VersionTitleInput,
 } from "./_components";
 
-interface Props {
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-    projectDependencies: {
-        projects: ProjectListItem[];
-        versions: ProjectVersionData[];
-    };
-}
-
-export default function EditVersionPage({ projectData, allProjectVersions, projectDependencies }: Props) {
+export default function EditVersionPage() {
     const { versionSlug } = useParams();
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const availableLoaders = getLoadersByProjectType(projectData.type);
-    let versionData = allProjectVersions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
-    if (versionSlug === "latest") versionData = allProjectVersions[0];
+    let versionData = ctx.allProjectVersions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
+    if (versionSlug === "latest") versionData = ctx.allProjectVersions[0];
 
     const versionAdditionalFiles = [];
     if (versionData?.files) {
@@ -116,7 +110,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
 
             RefreshPage(
                 navigate,
-                getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.data?.slug || versionData?.slug),
+                getProjectVersionPagePathname(ctx.projectType, projectData.slug, result?.data?.slug || versionData?.slug),
             );
         } finally {
             setIsLoading(false);
@@ -124,14 +118,12 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
     };
 
     if (!projectData || !versionData?.id) return null;
-    const versionsPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug, "/versions");
-    const currVersionPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug, `/version/${versionData.slug}`);
+    const versionsPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug, "/versions");
+    const currVersionPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug, `/version/${versionData.slug}`);
 
     return (
         <>
-            <title>
-                Edit {versionData.versionNumber} - {projectData?.name || ""}
-            </title>
+            <title>{`Edit ${versionData.versionNumber} - ${projectData.name}`}</title>
 
             <Form {...form}>
                 <form
@@ -204,7 +196,7 @@ export default function EditVersionPage({ projectData, allProjectVersions, proje
                                                 dependencies={field.value || []}
                                                 setDependencies={field.onChange}
                                                 currProjectId={projectData.id}
-                                                dependenciesData={projectDependencies}
+                                                dependenciesData={ctx.dependencies}
                                             />
                                         </FormItem>
                                     )}

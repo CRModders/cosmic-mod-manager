@@ -1,13 +1,14 @@
-import { useLocation, useNavigate, useRouteLoaderData } from "react-router";
 import { setCookie } from "@root/utils";
 import { disableInteractions } from "@root/utils/dom";
+import { useLocation, useNavigate } from "react-router";
 import RefreshPage from "~/components/refresh-page";
 import { CardContent, CardDescription, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Switch } from "~/components/ui/switch";
-import type { RootOutletData } from "~/root";
+import { useRootData } from "~/hooks/root-data";
 
 export default function PreferencesPage() {
-    const data = useRouteLoaderData<RootOutletData>("root");
+    const data = useRootData();
+
     const navigate = useNavigate();
     const location = useLocation();
 

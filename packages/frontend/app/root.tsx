@@ -30,7 +30,7 @@ export interface RootOutletData {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const data = useLoaderData<typeof loader>();
+    const data = useLoaderData() as RootOutletData;
 
     return (
         <html lang="en" className={data?.theme} style={{ scrollBehavior: data?.viewTransitions ? "auto" : "smooth" }}>
@@ -57,7 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-    const data = useLoaderData<typeof loader>();
+    const data = useLoaderData() as RootOutletData;
 
     return useMemo(
         () => (
@@ -173,7 +173,7 @@ export function HydrateFallback() {
 }
 
 export function ErrorBoundary() {
-    <ErrorView />;
+    return <ErrorView />;
 }
 
 function ValidateClientSession() {

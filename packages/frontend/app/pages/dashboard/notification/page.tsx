@@ -1,4 +1,3 @@
-import { useLocation, useNavigate } from "react-router";
 import { getOrgPagePathname, getProjectPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { NotificationType } from "@shared/types";
@@ -6,6 +5,7 @@ import type { Notification, OrganisationListItem, ProjectListItem } from "@share
 import type { UserProfileData } from "@shared/types/api/user";
 import { CheckCheckIcon, HistoryIcon } from "lucide-react";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { fallbackOrgIcon, fallbackProjectIcon } from "~/components/icons";
 import RefreshPage from "~/components/refresh-page";
@@ -25,6 +25,7 @@ export interface NotificationsData {
 export default function NotificationsPage({ notifications, relatedProjects, relatedOrgs, relatedUsers }: NotificationsData) {
     const [markingAsRead, setMarkingAsRead] = useState(false);
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
+
     const navigate = useNavigate();
     const location = useLocation();
 

@@ -1,9 +1,7 @@
-import type { DependencyData } from "@root/types";
 import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
 import { formatGameVersionsListString } from "@root/utils/version";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
-import { type LoggedInUserData, ProjectPermission } from "@shared/types";
-import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
+import { ProjectPermission } from "@shared/types";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
 import { useParams } from "react-router";
@@ -28,25 +26,24 @@ import { FormattedDate } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import ReleaseChannelChip from "~/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import NotFoundPage from "~/routes/$";
 import { ProjectMember } from "../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
-interface Props {
-    session: LoggedInUserData | null;
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-    projectDependencies: DependencyData;
-    currUsersMembership: TeamMember | null;
-}
-
-export default function VersionPage({ session, projectData, allProjectVersions, projectDependencies, currUsersMembership }: Props) {
+export default function VersionPage() {
     const { projectSlug, versionSlug } = useParams();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
-    const projectType = projectData?.type[0] || "";
-    let versionData = allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
-    if (versionSlug === "latest") versionData = allProjectVersions[0];
+
+    const session = useSession();
+    const ctx = useProjectData();
+    const currUsersMembership = ctx.currUsersMembership;
+    const projectDependencies = ctx.dependencies;
+
+    let versionData = ctx.allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    if (versionSlug === "latest") versionData = ctx.allProjectVersions[0];
 
     if (!versionData || !projectSlug || !versionSlug)
         return (
@@ -55,11 +52,11 @@ export default function VersionPage({ session, projectData, allProjectVersions, 
                 title="Version not found"
                 description="The version you are looking for doesn't exist"
                 linkLabel="See versions list"
-                linkHref={`${getProjectPagePathname(projectType, projectSlug || "")}/versions`}
+                linkHref={`${getProjectPagePathname(ctx.projectType, projectSlug || "")}/versions`}
             />
         );
 
-    const projectPageUrl = getProjectPagePathname(projectType, projectSlug);
+    const projectPageUrl = getProjectPagePathname(ctx.projectType, projectSlug);
 
     return (
         <>
@@ -136,8 +133,8 @@ export default function VersionPage({ session, projectData, allProjectVersions, 
                     ) ? (
                         <Suspense>
                             <DeleteVersionDialog
-                                projectData={projectData}
-                                projectSlug={projectData?.slug || ""}
+                                projectData={ctx.projectData}
+                                projectSlug={ctx.projectData.slug}
                                 versionSlug={versionData.slug}
                                 featured={versionData.featured}
                             />

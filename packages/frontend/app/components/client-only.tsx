@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type JSX, useEffect, useState } from "react";
 
 interface ClientOnlyProps {
     Element: () => JSX.Element | React.ReactNode | null;

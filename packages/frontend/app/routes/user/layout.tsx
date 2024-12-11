@@ -5,14 +5,16 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import type { MetaDescriptor } from "react-router";
-import { type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
+import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import UserPageLayout from "~/pages/user/layout";
-import type { RootOutletData } from "~/root";
 import NotFoundPage from "../$";
 import type { Route } from "./+types/layout";
 
+export interface UserOutletData {
+    projectsList: ProjectListItem[];
+}
+
 export default function _UserLayout() {
-    const { session } = useOutletContext<RootOutletData>();
     const data = useLoaderData() as LoaderData;
 
     if (!data.userData?.id) {
@@ -26,7 +28,17 @@ export default function _UserLayout() {
         );
     }
 
-    return <UserPageLayout session={session} userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []} />;
+    return (
+        <UserPageLayout userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []}>
+            <Outlet
+                context={
+                    {
+                        projectsList: data.projects,
+                    } satisfies UserOutletData
+                }
+            />
+        </UserPageLayout>
+    );
 }
 
 interface LoaderData {
@@ -116,6 +128,5 @@ export function shouldRevalidate({ currentParams, nextParams, defaultShouldReval
     const nextId = nextParams.userName?.toLowerCase();
 
     if (currentId === nextId) return false;
-
     return defaultShouldRevalidate;
 }

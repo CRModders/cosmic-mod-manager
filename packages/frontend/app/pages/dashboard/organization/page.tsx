@@ -1,19 +1,20 @@
 import { getOrgPagePathname, imageUrl } from "@root/utils";
-import type { LoggedInUserData } from "@shared/types";
 import type { Organisation } from "@shared/types/api";
 import { PlusIcon } from "lucide-react";
 import { OrgListItemCard } from "~/components/item-card";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { FullWidthSpinner } from "~/components/ui/spinner";
+import { useSession } from "~/hooks/session";
 import CreateNewOrg_Dialog from "./new-organization";
 
 interface Props {
     organisations: Organisation[];
-    session: LoggedInUserData;
 }
 
-export default function OrganisationDashboardPage({ organisations, session }: Props) {
+export default function OrganisationDashboardPage({ organisations }: Props) {
+    const session = useSession();
+
     return (
         <Card className="w-full overflow-hidden">
             <CardHeader className="w-full flex flex-row flex-wrap items-center justify-between gap-x-6 gap-y-2">

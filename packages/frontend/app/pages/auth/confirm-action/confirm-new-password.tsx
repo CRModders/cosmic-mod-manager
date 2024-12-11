@@ -60,7 +60,7 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
 
     return (
         <>
-            <title>Confirm new password - {SITE_NAME_SHORT}</title>
+            <title>{`Confirm new password - ${SITE_NAME_SHORT}`}</title>
             <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">

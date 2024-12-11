@@ -5,8 +5,8 @@ import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { isModerator } from "@shared/config/roles";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
-import { type LoggedInUserData, ProjectVisibility } from "@shared/types";
-import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
+import { ProjectVisibility } from "@shared/types";
+import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
 import {
     BookmarkIcon,
     BookOpenIcon,
@@ -41,6 +41,8 @@ import Link, { ButtonLink, useCustomNavigate, VariantButtonLink } from "~/compon
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
@@ -48,28 +50,13 @@ import SecondaryNav from "./secondary-nav";
 import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
-export interface ProjectLayoutProps {
-    session: LoggedInUserData | null;
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-    featuredProjectVersions: ProjectVersionData[] | null;
-    dependencies: {
-        projects: ProjectListItem[];
-        versions: ProjectVersionData[];
-    };
-    currUsersMembership: TeamMember | null;
-}
-
-export default function ProjectPageLayout({
-    session,
-    projectData,
-    allProjectVersions,
-    featuredProjectVersions,
-    dependencies,
-    currUsersMembership,
-}: ProjectLayoutProps) {
+export default function ProjectPageLayout() {
     const { theme } = useTheme();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
+
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+
     const navigate = useNavigate();
     const customNavigate = useCustomNavigate();
     const location = useLocation();
@@ -77,7 +64,7 @@ export default function ProjectPageLayout({
     if (!projectData) return null;
 
     const isVersionDetailsPage = isCurrLinkActive(
-        getProjectPagePathname(projectData?.type[0], projectData.slug, "/version/"),
+        getProjectPagePathname(ctx.projectType, projectData.slug, "/version/"),
         location.pathname,
         false,
     );
@@ -106,17 +93,15 @@ export default function ProjectPageLayout({
     }
 
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
-    const projectType = projectData.type?.[0] || "project";
 
     return (
         <main className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
             <ProjectInfoHeader
-                session={session}
                 projectData={projectData}
-                allVersions={allProjectVersions}
+                allVersions={ctx.allProjectVersions}
                 fetchProjectData={async () => RefreshPage(navigate, location)}
-                projectType={projectType}
-                currUsersMembership={currUsersMembership}
+                projectType={ctx.projectType}
+                currUsersMembership={ctx.currUsersMembership}
             />
             {/* SIDEBAR */}
             <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
@@ -215,11 +200,11 @@ export default function ProjectPageLayout({
                     </Card>
                 ) : null}
 
-                {(featuredProjectVersions?.length || 0) > 0 ? (
+                {(ctx.featuredProjectVersions?.length || 0) > 0 ? (
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
                         <h2 className="text-lg font-bold pb-2">Featured versions</h2>
                         <TooltipProvider>
-                            {featuredProjectVersions?.map((version) => (
+                            {ctx.featuredProjectVersions?.map((version) => (
                                 // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                                 <div
                                     key={version.id}
@@ -229,11 +214,7 @@ export default function ProjectPageLayout({
                                             // @ts-expect-error
                                             !e.target.closest(".noClickRedirect")
                                         ) {
-                                            const link = getProjectVersionPagePathname(
-                                                projectData.type?.[0],
-                                                projectData.slug,
-                                                version.slug,
-                                            );
+                                            const link = getProjectVersionPagePathname(ctx.projectType, projectData.slug, version.slug);
                                             if (window.location.pathname !== link) {
                                                 customNavigate(link);
                                             }
@@ -271,7 +252,7 @@ export default function ProjectPageLayout({
                                     <div className="flex w-fit h-full grow flex-col select-text">
                                         <Link
                                             prefetch="render"
-                                            to={getProjectVersionPagePathname(projectData.type?.[0], projectData.slug, version.slug)}
+                                            to={getProjectVersionPagePathname(ctx.projectType, projectData.slug, version.slug)}
                                             className="noClickRedirect w-fit"
                                         >
                                             <p className="font-bold leading-tight">{version.title}</p>
@@ -376,7 +357,7 @@ export default function ProjectPageLayout({
             </div>
             <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards [grid-area:_content]">
                 <SecondaryNav
-                    urlBase={`/${projectData?.type[0] || projectType}/${projectData?.slug || ""}`}
+                    urlBase={`/${ctx.projectType}/${projectData?.slug || ""}`}
                     className="h-fit bg-card-background rounded-lg px-3 py-2"
                     links={[
                         {
@@ -398,39 +379,28 @@ export default function ProjectPageLayout({
                     ]}
                 />
 
-                <Outlet
-                    context={
-                        {
-                            session,
-                            projectData,
-                            allProjectVersions,
-                            featuredProjectVersions,
-                            dependencies,
-                            currUsersMembership,
-                        } satisfies ProjectLayoutProps
-                    }
-                />
+                <Outlet />
             </div>
         </main>
     );
 }
 
-const ProjectInfoHeader = ({
-    session,
+function ProjectInfoHeader({
     projectData,
     allVersions,
     projectType,
     currUsersMembership,
     fetchProjectData,
 }: {
-    session: LoggedInUserData | null;
     projectData: ProjectDetailsData;
     allVersions: ProjectVersionData[];
     projectType: string;
     currUsersMembership: TeamMember | null;
     fetchProjectData: () => Promise<void>;
-}) => {
+}) {
+    const session = useSession();
     let invitedMember = null;
+
     if (currUsersMembership?.accepted !== true) {
         for (const member of projectData.members) {
             if (member.userId === session?.id && member.accepted === false) {
@@ -527,7 +497,7 @@ const ProjectInfoHeader = ({
             )}
         </div>
     );
-};
+}
 
 interface ProjectMemberProps {
     vtId?: string;
@@ -581,7 +551,7 @@ export function ProjectMember({
     );
 }
 
-const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) => {
+function ExternalLink({ url, label, icon }: { url: string; icon: React.ReactNode; label: string }) {
     return (
         <Link
             to={url}
@@ -594,4 +564,4 @@ const ExternalLink = ({ url, label, icon }: { url: string; icon: React.ReactNode
             <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
         </Link>
     );
-};
+}

@@ -3,58 +3,36 @@ import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
-import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
-import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
-import type { RootOutletData } from "~/root";
+import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
+import { useOrgData } from "~/hooks/org";
 import NotFoundPage from "../$";
 import type { Route } from "./+types/data-wrapper";
 
-export interface OrgDataContext {
-    orgData: Organisation;
-    orgProjects: ProjectListItem[];
-    currUsersMembership: TeamMember | null;
-    session: LoggedInUserData | null;
-}
-
 export default function _OrgDataWrapper() {
-    const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData() as LoaderData;
+    const ctx = useOrgData();
 
-    if (!data.orgData?.id) {
+    if (!ctx?.orgData?.id) {
         return (
             <NotFoundPage
                 title="Organization not found"
-                description={`The organization with the slug/ID "${data?.orgSlug}" does not exist.`}
+                description={`The organization with the slug/ID "${ctx?.orgSlug}" does not exist.`}
                 linkHref="/"
                 linkLabel="Home"
             />
         );
     }
 
-    const currUsersMembership = data.orgData?.members.find((member) => member.userId === session?.id) || null;
-
-    return (
-        <Outlet
-            context={
-                {
-                    orgData: data.orgData,
-                    orgProjects: data.orgProjects || [],
-                    currUsersMembership: currUsersMembership,
-                    session: session,
-                } satisfies OrgDataContext
-            }
-        />
-    );
+    return <Outlet />;
 }
 
-interface LoaderData {
+export interface OrgLoaderData {
     orgSlug?: string;
     orgData: Organisation | null;
     orgProjects: ProjectListItem[];
 }
 
-export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
+export async function loader(props: Route.LoaderArgs): Promise<OrgLoaderData> {
     const orgSlug = props.params.orgSlug;
 
     const [orgDataRes, orgProjectsRes] = await Promise.all([
@@ -83,7 +61,7 @@ export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultSh
 }
 
 export function meta(props: Route.MetaArgs) {
-    const data = props.data as LoaderData;
+    const data = props.data as OrgLoaderData;
     const orgData = data?.orgData;
 
     if (!orgData?.id) {

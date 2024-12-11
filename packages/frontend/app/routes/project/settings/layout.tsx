@@ -1,17 +1,17 @@
 import { isModerator } from "@shared/config/roles";
-import { useOutletContext } from "react-router";
 import Redirect from "~/components/ui/redirect";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import ProjectSettingsLayout from "~/pages/project/settings/layout";
-import type { ProjectDataWrapperContext } from "~/routes/project/data-wrapper";
 
 export default function _ProjectLayout() {
-    const data = useOutletContext<ProjectDataWrapperContext>();
+    const ctx = useProjectData();
+    const session = useSession();
 
-    const session = data.session;
     if (!session?.id) return <Redirect to="/login" />;
 
-    const currUsersMembership = data.currUsersMembership;
+    const currUsersMembership = ctx.currUsersMembership;
     if (!currUsersMembership && !isModerator(session.role)) return <Redirect to="/" />;
 
-    return <ProjectSettingsLayout session={session} projectData={data.projectData} currUsersMembership={currUsersMembership} />;
+    return <ProjectSettingsLayout />;
 }

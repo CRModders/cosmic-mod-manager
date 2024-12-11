@@ -2,11 +2,10 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { getOrgPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
-import { GlobalUserRole, type LoggedInUserData } from "@shared/types";
+import { GlobalUserRole } from "@shared/types";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
-import { Outlet } from "react-router";
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
 import { ContentCardTemplate } from "~/components/layout/panel";
@@ -15,21 +14,21 @@ import { Button } from "~/components/ui/button";
 import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useSession } from "~/hooks/session";
 import SecondaryNav from "../project/secondary-nav";
 import "./styles.css";
 
 interface Props {
-    session: LoggedInUserData | null;
-    userData: UserProfileData | null;
+    children: React.ReactNode;
+    userData: UserProfileData;
     projectsList: ProjectListItem[];
     orgsList: Organisation[];
 }
 
-export default function UserPageLayout({ session, userData, projectsList, orgsList }: Props) {
-    if (!userData) return null;
+export default function UserPageLayout({ userData, projectsList, orgsList, children }: Props) {
+    const aggregatedDownloads = (projectsList || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = (projectsList || [])?.length;
 
-    const aggregatedDownloads = (projectsList || []).reduce((acc, project) => acc + project.downloads, 0) || 0;
-    const totalProjects = (projectsList || []).length;
     const aggregatedProjectTypes = new Set<string>();
     for (const project of projectsList || []) {
         for (const type of project.type) {
@@ -40,7 +39,7 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
 
     return (
         <main className="profile-page-layout pb-12 gap-panel-cards">
-            <ProfilePageHeader session={session} userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
+            <ProfilePageHeader userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div
                 className="h-fit grid grid-cols-1 gap-panel-cards"
                 style={{
@@ -62,14 +61,9 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
                 ) : null}
 
                 {totalProjects ? (
+                    // biome-ignore lint/a11y/useSemanticElements: <explanation>
                     <div className="w-full flex flex-col gap-panel-cards" role="list">
-                        <Outlet
-                            context={
-                                {
-                                    projectsList: projectsList,
-                                } satisfies UserOutletData
-                            }
-                        />
+                        {children}
                     </div>
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
@@ -84,10 +78,6 @@ export default function UserPageLayout({ session, userData, projectsList, orgsLi
     );
 }
 
-export interface UserOutletData {
-    projectsList: ProjectListItem[];
-}
-
 function PageSidebar({ userName, userId, orgsList }: { userName: string; userId: string; orgsList: Organisation[] }) {
     const joinedOrgs = orgsList.filter((org) => {
         const member = org.members.find((member) => member.userId === userId);
@@ -95,12 +85,7 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
     });
 
     return (
-        <div
-            style={{
-                gridArea: "sidebar",
-            }}
-            className="w-full flex flex-col gap-panel-cards"
-        >
+        <div style={{ gridArea: "sidebar" }} className="w-full flex flex-col gap-panel-cards">
             <ContentCardTemplate title="Organizations" titleClassName="text-lg">
                 {!joinedOrgs.length ? (
                     <span className="text-muted-foreground/75 italic">{userName} is not a member of any Organization</span>
@@ -135,13 +120,13 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
 }
 
 interface ProfilePageHeaderProps {
-    session: LoggedInUserData | null;
     totalProjects: number;
     totalDownloads: number;
     userData: UserProfileData;
 }
 
-function ProfilePageHeader({ session, userData, totalProjects, totalDownloads }: ProfilePageHeaderProps) {
+function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfilePageHeaderProps) {
+    const session = useSession();
     let title = null;
 
     if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {

@@ -5,16 +5,14 @@ import { SITE_NAME_LONG } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectListItem } from "@shared/types/api";
-import { useLoaderData, useOutletContext } from "react-router";
+import { useLoaderData } from "react-router";
 import HomePage from "~/pages/page";
-import type { RootOutletData } from "~/root";
 import type { Route } from "./+types/page";
 
 export default function HomePage_Wrapper() {
-    const { session } = useOutletContext<RootOutletData>();
     const projects = useLoaderData() as ProjectListItem[];
 
-    return <HomePage session={session} projects={projects} />;
+    return <HomePage projects={projects} />;
 }
 
 export async function loader(props: Route.LoaderArgs): Promise<ProjectListItem[]> {

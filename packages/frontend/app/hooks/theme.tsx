@@ -6,19 +6,15 @@ const MEDIA = "(prefers-color-scheme: dark)";
 export const ThemeContext = React.createContext<UseThemeProps | undefined>(undefined);
 const themes = [ThemeOptions.DARK, ThemeOptions.LIGHT];
 
-export const ThemeProvider = ({ children, initTheme }: { children: React.ReactNode; initTheme: ThemeOptions }): React.ReactNode => {
+export function ThemeProvider({ children, initTheme }: { children: React.ReactNode; initTheme: ThemeOptions }): React.ReactNode {
     const context = React.useContext(ThemeContext);
 
     // Ignore nested context providers, just passthrough children
     if (context) return children;
     return <Theme initTheme={initTheme}>{children}</Theme>;
-};
+}
 
-const Theme = ({
-    children,
-    initTheme,
-    storageKey = "theme",
-}: { children: React.ReactNode; initTheme: ThemeOptions; storageKey?: string }) => {
+function Theme({ children, initTheme, storageKey = "theme" }: { children: React.ReactNode; initTheme: ThemeOptions; storageKey?: string }) {
     const [theme, setThemeState] = React.useState<string>(initTheme);
 
     const applyTheme = React.useCallback((theme: string) => {
@@ -85,10 +81,9 @@ const Theme = ({
             {children}
         </ThemeContext.Provider>
     );
-};
+}
 
 // Helpers
-
 function getTheme(key: string, fallback?: string) {
     let theme: string | undefined;
     try {
@@ -106,9 +101,7 @@ function getSystemTheme(e?: MediaQueryList | MediaQueryListEvent) {
     return systemTheme;
 }
 
-// USE-THEME HOOK EXPORT
 const defaultContext: UseThemeProps = { setTheme: (_) => {}, themes: [] };
-function useTheme() {
+export default function useTheme() {
     return useContext(ThemeContext) || defaultContext;
 }
-export default useTheme;

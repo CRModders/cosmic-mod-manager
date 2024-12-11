@@ -2,14 +2,14 @@ import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import type { SessionListData } from "@shared/types/api";
-import { useLoaderData, useOutletContext } from "react-router";
+import { useLoaderData } from "react-router";
 import Redirect from "~/components/ui/redirect";
+import { useSession } from "~/hooks/session";
 import SessionsPage from "~/pages/settings/sessions/page";
-import type { RootOutletData } from "~/root";
 import type { Route } from "./+types/sessions";
 
 export default function _Sessions() {
-    const { session } = useOutletContext<RootOutletData>();
+    const session = useSession();
     const loggedInSessions = useLoaderData() as SessionListData[];
 
     if (!session?.id) return <Redirect to="/login" />;

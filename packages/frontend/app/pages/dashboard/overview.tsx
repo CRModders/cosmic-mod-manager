@@ -1,5 +1,4 @@
 import { imageUrl } from "@root/utils";
-import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { fallbackUserIcon } from "~/components/icons";
@@ -7,14 +6,15 @@ import { ContentCardTemplate, PanelContent_AsideCardLayout } from "~/components/
 import { ImgWrapper } from "~/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import Link, { ButtonLink } from "~/components/ui/link";
+import { useSession } from "~/hooks/session";
 import { NotificationItem, type NotificationsData } from "./notification/page";
 
 interface Props extends NotificationsData {
-    session: LoggedInUserData;
     userProjects: ProjectListItem[];
 }
 
-export default function OverviewPage({ session, userProjects, notifications, relatedProjects, relatedOrgs, relatedUsers }: Props) {
+export default function OverviewPage({ userProjects, notifications, relatedProjects, relatedOrgs, relatedUsers }: Props) {
+    const session = useSession();
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
     const totalProjects = (userProjects || []).length;

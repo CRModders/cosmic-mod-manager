@@ -1,15 +1,10 @@
-import { useOutletContext } from "react-router";
-import type { ProjectLayoutProps } from "~/pages/project/layout";
+import Redirect from "~/components/ui/redirect";
+import { useSession } from "~/hooks/session";
 import EditVersionPage from "~/pages/project/version/edit-version";
 
 export default function _EditVersion() {
-    const data = useOutletContext<ProjectLayoutProps>();
+    const session = useSession();
 
-    return (
-        <EditVersionPage
-            projectData={data.projectData}
-            allProjectVersions={data.allProjectVersions}
-            projectDependencies={data.dependencies}
-        />
-    );
+    if (!session) return <Redirect to="/login" />;
+    return <EditVersionPage />;
 }

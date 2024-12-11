@@ -1,5 +1,4 @@
 import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
-import type { LoggedInUserData } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
@@ -7,14 +6,15 @@ import { createPortal } from "react-dom";
 import { BrandIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { VariantButtonLink } from "~/components/ui/link";
+import { useSession } from "~/hooks/session";
 import "./styles.css";
 
 interface Props {
-    session: LoggedInUserData | null;
     projects: ProjectListItem[];
 }
 
-export default function HomePage({ session, projects }: Props) {
+export default function HomePage({ projects }: Props) {
+    const session = useSession();
     const [gridBgPortal, setGridBgPortal] = useState<Element | null>(null);
 
     // The animation keyframes in "@/app/styles.css" need to be updated according to the number of items in the list

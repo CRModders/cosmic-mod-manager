@@ -5,8 +5,8 @@ import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperi
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
 import { sortVersionsWithReference } from "@shared/lib/utils/project";
-import { type LoggedInUserData, ProjectPermission, VersionReleaseChannel } from "@shared/types";
-import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
+import { ProjectPermission, VersionReleaseChannel } from "@shared/types";
+import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
 import {
     CalendarIcon,
     ChevronDownIcon,
@@ -41,6 +41,8 @@ import { Separator } from "~/components/ui/separator";
 import { FullWidthSpinner } from "~/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigger } from "~/components/ui/tooltip";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import "./../styles.css";
 
@@ -50,15 +52,14 @@ interface FilterItems {
     releaseChannels: string[];
 }
 
-interface Props {
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-    currUsersMembership: TeamMember | null;
-    session: LoggedInUserData | null;
-}
-
-export default function ProjectVersionsPage({ session, projectData, allProjectVersions, currUsersMembership }: Props) {
+export default function ProjectVersionsPage() {
+    const session = useSession();
     const { theme } = useTheme();
+
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+    const allProjectVersions = ctx.allProjectVersions;
+
     const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
     const [showDevVersions, setShowDevVersions] = useState(false);
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
@@ -169,8 +170,8 @@ export default function ProjectVersionsPage({ session, projectData, allProjectVe
     const hasDevVersions = allProjectVersions.some((ver) => ver.releaseChannel === VersionReleaseChannel.DEV);
     const canUploadVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
-        currUsersMembership?.permissions,
-        currUsersMembership?.isOwner,
+        ctx.currUsersMembership?.permissions,
+        ctx.currUsersMembership?.isOwner,
         session?.role,
     );
 
@@ -336,12 +337,13 @@ export default function ProjectVersionsPage({ session, projectData, allProjectVe
             ) : null}
 
             <ProjectVersionsListTable
+                projectType={ctx.projectType}
                 projectData={projectData}
                 allProjectVersions={filteredItems}
                 canEditVersion={doesMemberHaveAccess(
                     ProjectPermission.UPLOAD_VERSION,
-                    currUsersMembership?.permissions || [],
-                    currUsersMembership?.isOwner === true,
+                    ctx.currUsersMembership?.permissions || [],
+                    ctx.currUsersMembership?.isOwner === true,
                     session?.role,
                 )}
             />
@@ -365,11 +367,12 @@ const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => 
     );
 };
 
-const ProjectVersionsListTable = ({
+function ProjectVersionsListTable({
+    projectType,
     projectData,
     allProjectVersions,
     canEditVersion,
-}: { projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[]; canEditVersion: boolean }) => {
+}: { projectType: string; projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[]; canEditVersion: boolean }) {
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
     const perPageLimit = 20;
@@ -379,7 +382,7 @@ const ProjectVersionsListTable = ({
     const customNavigate = useCustomNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
-    const versionPagePathname = (versionSlug: string) => getProjectVersionPagePathname(projectData.type[0], projectData.slug, versionSlug);
+    const versionPagePathname = (versionSlug: string) => getProjectVersionPagePathname(projectType, projectData.slug, versionSlug);
 
     const Pagination =
         (allProjectVersions?.length || 0) > perPageLimit ? (
@@ -538,7 +541,7 @@ const ProjectVersionsListTable = ({
             {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
         </>
     );
-};
+}
 
 const VersionName = ({ title, number, url }: { title: string; number: string; url: string }) => {
     return (

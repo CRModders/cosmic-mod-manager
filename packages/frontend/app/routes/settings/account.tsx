@@ -3,18 +3,17 @@ import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { LinkedProvidersListData } from "@shared/types";
-import { useLoaderData, useOutletContext } from "react-router";
+import { useLoaderData } from "react-router";
 import Redirect from "~/components/ui/redirect";
+import { useSession } from "~/hooks/session";
 import AccountSettingsPage from "~/pages/settings/account/page";
-import type { RootOutletData } from "~/root";
 import type { Route } from "./+types/account";
 
 export default function _AccountSettings() {
-    const { session } = useOutletContext<RootOutletData>();
+    const session = useSession();
     const linkedProviders = useLoaderData() as LinkedProvidersListData[];
 
     if (!session?.id) return <Redirect to="/login" />;
-
     return <AccountSettingsPage session={session} linkedAuthProviders={linkedProviders || []} />;
 }
 

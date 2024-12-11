@@ -11,7 +11,14 @@ interface Props {
     className?: string;
 }
 
-export default function NotFoundPage({ className, title, description, linkHref, linkLabel }: Props) {
+export function NotFoundPage({ className, title, description, linkHref, linkLabel }: Props) {
+    console.log({
+        title,
+        description,
+        linkHref,
+        linkLabel,
+    });
+
     return (
         <div className={cn("w-full full_page flex flex-col items-center justify-center", className)}>
             <div className="w-full flex flex-col items-center justify-center">
@@ -29,6 +36,8 @@ export default function NotFoundPage({ className, title, description, linkHref, 
         </div>
     );
 }
+
+export default NotFoundPage;
 
 export function meta() {
     return MetaTags({

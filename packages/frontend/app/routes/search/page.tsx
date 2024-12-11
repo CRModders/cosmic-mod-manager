@@ -1,13 +1,11 @@
-import type { MetaArgs } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
+import type { MetaArgs } from "react-router";
 import { SearchResultsPage } from "~/pages/search/page";
 
-export default function _Search() {
-    return <SearchResultsPage />;
-}
+export default SearchResultsPage;
 
 export function meta(props: MetaArgs) {
     const firstPath = props.location.pathname.split("/")?.[1];

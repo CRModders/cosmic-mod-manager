@@ -4,24 +4,11 @@ import { MetaTags } from "@root/utils/meta";
 import { formatGameVersionsListString } from "@root/utils/version";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
-import { type MetaArgs, useOutletContext } from "react-router";
-import type { ProjectLayoutProps } from "~/pages/project/layout";
+import type { MetaArgs } from "react-router";
 import VersionPage from "~/pages/project/version/page";
-import type { LoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
+import type { ProjectLoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
 
-export default function _VersionPage() {
-    const data = useOutletContext<ProjectLayoutProps>();
-
-    return (
-        <VersionPage
-            session={data.session}
-            projectData={data.projectData}
-            allProjectVersions={data.allProjectVersions}
-            projectDependencies={data.dependencies}
-            currUsersMembership={data.currUsersMembership}
-        />
-    );
-}
+export default VersionPage;
 
 export function meta(props: MetaArgs) {
     const parentMetaTags = props.matches?.at(-3)?.meta;

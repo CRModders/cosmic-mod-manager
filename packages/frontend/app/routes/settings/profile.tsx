@@ -1,13 +1,12 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { useOutletContext } from "react-router";
 import Redirect from "~/components/ui/redirect";
+import { useSession } from "~/hooks/session";
 import { ProfileSettingsPage } from "~/pages/settings/profile";
-import type { RootOutletData } from "~/root";
 
 export default function _AccountSettings() {
-    const { session } = useOutletContext<RootOutletData>();
+    const session = useSession();
 
     if (!session?.id) return <Redirect to="/login" />;
     return <ProfileSettingsPage session={session} />;

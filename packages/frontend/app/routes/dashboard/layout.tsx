@@ -1,17 +1,16 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { useOutletContext } from "react-router";
 import Redirect from "~/components/ui/redirect";
 import { WanderingCubesSpinner } from "~/components/ui/spinner";
+import { useSession } from "~/hooks/session";
 import DashboardLayout from "~/pages/dashboard/layout";
-import type { RootOutletData } from "~/root";
 
 export default function _DashboardLayout() {
-    const context = useOutletContext<RootOutletData>();
+    const session = useSession();
 
-    if (!context.session?.id) return <Redirect to="/login" />;
-    return <DashboardLayout outletContext={context} />;
+    if (!session?.id) return <Redirect to="/login" />;
+    return <DashboardLayout />;
 }
 
 export function HydrateFallback() {

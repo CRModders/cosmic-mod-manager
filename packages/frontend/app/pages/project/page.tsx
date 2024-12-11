@@ -1,18 +1,16 @@
-import type { ProjectDetailsData } from "@shared/types/api";
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
+import { useProjectData } from "~/hooks/project";
 
-interface Props {
-    projectData: ProjectDetailsData;
-}
+export default function ProjectPage() {
+    const ctx = useProjectData();
 
-export default function ProjectPage({ projectData }: Props) {
-    if (!projectData.description) {
+    if (!ctx.projectData.description) {
         return <span className="text-muted-foreground italic text-center">No project description provided</span>;
     }
 
     return (
         <div className="bg-card-background p-card-surround rounded-lg">
-            <MarkdownRenderBox text={projectData.description || ""} />
+            <MarkdownRenderBox text={ctx.projectData.description || ""} />
         </div>
     );
 }

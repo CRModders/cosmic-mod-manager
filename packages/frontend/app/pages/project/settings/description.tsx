@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { updateDescriptionFormSchema } from "@shared/schemas/project/settings/description";
 import { SaveIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import MarkdownEditor from "~/components/layout/md-editor/md-editor";
@@ -13,18 +13,19 @@ import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem } from "~/components/ui/form";
 import { LoadingSpinner } from "~/components/ui/spinner";
-import type { ProjectSettingsContext } from "./layout";
+import { useProjectData } from "~/hooks/project";
 
 export default function DescriptionSettings() {
+    const ctx = useProjectData();
     const [isLoading, setIsLoading] = useState(false);
-    const { projectData } = useOutletContext<ProjectSettingsContext>();
+
     const navigate = useNavigate();
     const location = useLocation();
 
     const form = useForm<z.infer<typeof updateDescriptionFormSchema>>({
         resolver: zodResolver(updateDescriptionFormSchema),
         defaultValues: {
-            description: projectData?.description || "",
+            description: ctx.projectData?.description || "",
         },
     });
     form.watch();
@@ -34,7 +35,7 @@ export default function DescriptionSettings() {
         setIsLoading(true);
 
         try {
-            const response = await clientFetch(`/api/project/${projectData?.slug}/description`, {
+            const response = await clientFetch(`/api/project/${ctx.projectData.slug}/description`, {
                 method: "PATCH",
                 body: JSON.stringify(values),
             });
@@ -73,7 +74,7 @@ export default function DescriptionSettings() {
                     />
 
                     <div className="w-full flex items-center justify-end">
-                        <Button type="submit" disabled={(projectData?.description || "") === form.getValues().description || isLoading}>
+                        <Button type="submit" disabled={(ctx.projectData.description || "") === form.getValues().description || isLoading}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                             Save changes
                         </Button>

@@ -46,7 +46,6 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
 
             for (const type of ProjectTypes) {
                 // Project pages
-
                 route(`${type}/:projectSlug`, path("project/data-wrapper.tsx"), { id: `${type}__data-wrapper` }, () => {
                     route("", path("project/layout.tsx"), { id: `${type}__layout` }, () => {
                         route("", path("project/page.tsx"), { index: true, id: `${type}__page` });
@@ -70,7 +69,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
             }
 
             // Organization pages
-            route("organization/:orgSlug", path("organization/data-wrapper.tsx"), () => {
+            route("organization/:orgSlug", path("organization/data-wrapper.tsx"), { id: "organization-data-wrapper" }, () => {
                 route("settings", path("organization/settings/layout.tsx"), () => {
                     route("", path("organization/settings/page.tsx"), { index: true });
                     route("projects", path("organization/settings/projects.tsx"));

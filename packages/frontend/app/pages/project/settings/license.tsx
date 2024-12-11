@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
@@ -7,6 +6,7 @@ import { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -17,12 +17,15 @@ import ComboBox from "~/components/ui/combobox";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
-import type { ProjectSettingsContext } from "./layout";
+import { useProjectData } from "~/hooks/project";
 
 export default function LicenseSettingsPage() {
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+
     const [showCustomLicenseInputFields, setShowCustomLicenseInputFields] = useState(false);
     const [doesNotHaveASpdxId, setDoesNotHaveASpdxId] = useState(false);
-    const { projectData } = useOutletContext<ProjectSettingsContext>();
+
     const navigate = useNavigate();
     const location = useLocation();
 

@@ -22,18 +22,18 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { FormattedDate } from "~/components/ui/date";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "~/components/ui/dialog";
+import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 
 const RemoveGalleryImage = lazy(() => import("./remove-img"));
 const EditGalleryImage = lazy(() => import("./edit-img"));
 const UploadGalleryImageForm = lazy(() => import("./upload-img"));
 
-interface Props {
-    session: LoggedInUserData | null;
-    projectData: ProjectDetailsData;
-    currUsersMembership: TeamMember | null;
-}
+export default function ProjectGallery() {
+    const session = useSession();
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
 
-export default function ProjectGallery({ session, projectData, currUsersMembership }: Props) {
     const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
     const [dialogOpen, setdialogOpen] = useState(false);
 
@@ -41,8 +41,8 @@ export default function ProjectGallery({ session, projectData, currUsersMembersh
         <>
             {doesMemberHaveAccess(
                 ProjectPermission.EDIT_DETAILS,
-                currUsersMembership?.permissions,
-                currUsersMembership?.isOwner,
+                ctx.currUsersMembership?.permissions,
+                ctx.currUsersMembership?.isOwner,
                 session?.role,
             ) ? (
                 <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
@@ -67,7 +67,7 @@ export default function ProjectGallery({ session, projectData, currUsersMembersh
                             index={index}
                             setActiveIndex={setActiveGalleryIndex}
                             setdialogOpen={setdialogOpen}
-                            currUsersMembership={currUsersMembership}
+                            currUsersMembership={ctx.currUsersMembership}
                         />
                     ))}
 

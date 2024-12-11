@@ -10,7 +10,7 @@ import type { Organisation } from "@shared/types/api";
 import { SaveIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackOrgIcon } from "~/components/icons";
@@ -34,7 +34,7 @@ import { Input } from "~/components/ui/input";
 import { InteractiveLabel } from "~/components/ui/label";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
-import type { OrgDataContext } from "~/routes/organization/data-wrapper";
+import { useOrgData } from "~/hooks/org";
 
 const getInitialValues = (orgData: Organisation) => {
     return {
@@ -46,7 +46,8 @@ const getInitialValues = (orgData: Organisation) => {
 };
 
 export default function GeneralOrgSettings() {
-    const { orgData } = useOutletContext<OrgDataContext>();
+    const orgData = useOrgData().orgData;
+
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 

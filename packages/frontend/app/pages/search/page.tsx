@@ -1,4 +1,3 @@
-import { useLocation, useOutletContext } from "react-router";
 import { cn } from "@root/utils";
 import { defaultSearchLimit, pageOffsetParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";
@@ -6,6 +5,7 @@ import { SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useLocation, useOutletContext } from "react-router";
 import SearchListItem, { ViewType } from "~/components/layout/search-list-item";
 import PaginatedNavigation from "~/components/pagination-nav";
 import { LoadingSpinner } from "~/components/ui/spinner";
@@ -42,6 +42,7 @@ export function SearchResultsPage() {
 
             <section
                 className={cn("w-full h-fit grid grid-cols-1 gap-panel-cards", viewType === ViewType.GALLERY && "sm:grid-cols-2")}
+                // biome-ignore lint/a11y/useSemanticElements: <explanation>
                 role="list"
                 aria-label="Search Results"
             >

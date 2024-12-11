@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { MAX_FEATURED_PROJECT_TAGS } from "@shared/config/forms";
 import { CapitalizeAndFormatString, getValidProjectCategories } from "@shared/lib/utils";
@@ -8,6 +7,7 @@ import { handleFormError } from "@shared/schemas/utils";
 import { SaveIcon, StarIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -18,12 +18,14 @@ import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { Form, FormField } from "~/components/ui/form";
 import { FormErrorMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useProjectData } from "~/hooks/project";
 import "./../styles.css";
-import type { ProjectSettingsContext } from "./layout";
 
 export default function TagsSettingsPage() {
+    const projectData = useProjectData().projectData;
+
     const [isLoading, setIsLoading] = useState(false);
-    const { projectData } = useOutletContext<ProjectSettingsContext>();
+
     const navigate = useNavigate();
     const location = useLocation();
 

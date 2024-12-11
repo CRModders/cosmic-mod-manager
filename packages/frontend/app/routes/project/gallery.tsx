@@ -1,14 +1,9 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
-import { type MetaArgs, useOutletContext } from "react-router";
+import type { MetaArgs } from "react-router";
 import ProjectGallery from "~/pages/project/gallery/page";
-import type { ProjectLayoutProps } from "~/pages/project/layout";
 
-export default function _Gallery() {
-    const data = useOutletContext<ProjectLayoutProps>();
-
-    return <ProjectGallery session={data.session} projectData={data.projectData} currUsersMembership={data.currUsersMembership} />;
-}
+export default ProjectGallery;
 
 export function meta(props: MetaArgs) {
     const parentMetaTags = props.matches?.at(-2)?.meta;

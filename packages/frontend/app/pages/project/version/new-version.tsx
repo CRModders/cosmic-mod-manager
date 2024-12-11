@@ -7,7 +7,6 @@ import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/
 import { newVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
 import { VersionReleaseChannel } from "@shared/types";
-import type { ProjectDetailsData } from "@shared/types/api";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +17,7 @@ import MarkdownEditor from "~/components/layout/md-editor/md-editor";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import RefreshPage from "~/components/refresh-page";
 import { Form, FormField, FormItem } from "~/components/ui/form";
+import { useProjectData } from "~/hooks/project";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -28,11 +28,10 @@ import {
     VersionTitleInput,
 } from "./_components";
 
-interface Props {
-    projectData: ProjectDetailsData;
-}
+export default function UploadVersionPage() {
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
 
-export default function UploadVersionPage({ projectData }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -48,7 +47,7 @@ export default function UploadVersionPage({ projectData }: Props) {
     });
     form.watch();
 
-    const projectPageUrl = getProjectPagePathname(projectData.type[0], projectData.slug);
+    const projectPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug);
     const versionsPageUrl = `${projectPageUrl}/versions`;
 
     const handleSubmit = async (data: z.infer<typeof newVersionFormSchema>) => {
@@ -88,7 +87,7 @@ export default function UploadVersionPage({ projectData }: Props) {
                 return;
             }
 
-            RefreshPage(navigate, getProjectVersionPagePathname(projectData.type[0], projectData.slug, result?.slug));
+            RefreshPage(navigate, getProjectVersionPagePathname(ctx.projectType, projectData.slug, result.slug));
             return;
         } finally {
             setIsLoading(false);
@@ -97,7 +96,7 @@ export default function UploadVersionPage({ projectData }: Props) {
 
     return (
         <>
-            <title>Create version - {projectData?.name || ""}</title>
+            <title>{`Create version - ${projectData.name}`}</title>
             <meta name="description" content="Upload a new version" />
 
             <Form {...form}>

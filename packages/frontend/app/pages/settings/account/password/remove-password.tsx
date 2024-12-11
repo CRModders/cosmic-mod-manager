@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions } from "@root/utils/dom";
 import { removeAccountPasswordFormSchema } from "@shared/schemas/settings";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -28,6 +28,7 @@ import { LoadingSpinner } from "~/components/ui/spinner";
 export default function RemovePasswordForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
 

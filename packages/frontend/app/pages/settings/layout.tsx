@@ -1,11 +1,11 @@
-import { Outlet, useOutletContext } from "react-router";
 import { MonitorSmartphoneIcon, PaintbrushIcon, ShieldIcon, UserIcon } from "lucide-react";
+import { Outlet } from "react-router";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
-import type { RootOutletData } from "~/root";
+import { useSession } from "~/hooks/session";
 
 export default function SettingsPageLayout() {
-    const context = useOutletContext<RootOutletData>();
+    const session = useSession();
 
     return (
         <main className="w-full">
@@ -16,7 +16,7 @@ export default function SettingsPageLayout() {
                             <PaintbrushIcon className="size-4" />
                             Preferences
                         </ButtonLink>
-                        {context.session?.id ? (
+                        {session?.id ? (
                             <>
                                 <span className="text-lg font-semibold mt-3">Account</span>
                                 <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
@@ -36,7 +36,7 @@ export default function SettingsPageLayout() {
                     </PanelAsideNavCard>
                 </PanelAside>
                 <PanelContent>
-                    <Outlet context={context satisfies RootOutletData} />
+                    <Outlet />
                 </PanelContent>
             </Panel>
         </main>

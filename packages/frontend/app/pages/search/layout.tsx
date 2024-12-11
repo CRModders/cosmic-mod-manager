@@ -1,4 +1,3 @@
-import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router";
 import { cn } from "@root/utils";
 import { projectTypes } from "@shared/config/project";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
@@ -7,6 +6,7 @@ import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ViewType } from "~/components/layout/search-list-item";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -27,43 +27,11 @@ interface UpdateSearchParamProps {
     customURLModifier?: (url: URL) => URL;
 }
 
-export function updateSearchParam({
-    key,
-    value,
-    deleteIfMatches,
-    deleteIfFalsyValue,
-    deleteIfExists,
-    deleteParamsWithMatchingValueOnly = false,
-    newParamsInsertionMode = "append",
-    customURLModifier,
-}: UpdateSearchParamProps) {
-    let currUrl = new URL(window.location.href);
-
-    if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else if ((deleteIfFalsyValue === true && !value) || (deleteIfMatches !== undefined && deleteIfMatches === value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else {
-        if (newParamsInsertionMode === "replace") currUrl.searchParams.set(key, value);
-        else currUrl.searchParams.append(key, value);
-    }
-
-    if (customURLModifier) currUrl = customURLModifier(currUrl);
-
-    return currUrl.href.replace(window.location.origin, "");
-}
-
-export function deletePageOffsetParam(url: URL) {
-    url.searchParams.delete(pageOffsetParamNamespace);
-    return url;
-}
-
 export default function SearchPageLayout() {
     const searchInput = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -278,4 +246,37 @@ function getSearchDisplayPreference(projectType: ProjectType) {
     }
 
     return prefs[projectType];
+}
+
+export function updateSearchParam({
+    key,
+    value,
+    deleteIfMatches,
+    deleteIfFalsyValue,
+    deleteIfExists,
+    deleteParamsWithMatchingValueOnly = false,
+    newParamsInsertionMode = "append",
+    customURLModifier,
+}: UpdateSearchParamProps) {
+    let currUrl = new URL(window.location.href);
+
+    if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
+        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
+        else currUrl.searchParams.delete(key);
+    } else if ((deleteIfFalsyValue === true && !value) || (deleteIfMatches !== undefined && deleteIfMatches === value)) {
+        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
+        else currUrl.searchParams.delete(key);
+    } else {
+        if (newParamsInsertionMode === "replace") currUrl.searchParams.set(key, value);
+        else currUrl.searchParams.append(key, value);
+    }
+
+    if (customURLModifier) currUrl = customURLModifier(currUrl);
+
+    return currUrl.href.replace(window.location.origin, "");
+}
+
+export function deletePageOffsetParam(url: URL) {
+    url.searchParams.delete(pageOffsetParamNamespace);
+    return url;
 }

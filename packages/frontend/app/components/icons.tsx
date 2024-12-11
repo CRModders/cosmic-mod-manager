@@ -273,6 +273,7 @@ export const PROJECT_STATUS_ICONS = {
 };
 
 export const ProjectStatusIcon = ({ status, className }: { status: ProjectPublishingStatus; className?: string }) => {
+    // @ts-ignore
     const icon = PROJECT_STATUS_ICONS[status] || PROJECT_STATUS_ICONS.unknown;
 
     if (!icon) return null;

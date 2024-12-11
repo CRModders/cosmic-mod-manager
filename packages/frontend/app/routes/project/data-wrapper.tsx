@@ -3,76 +3,32 @@ import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { SITE_NAME_SHORT } from "@shared/config";
-import { CapitalizeAndFormatString, getCurrMember } from "@shared/lib/utils";
+import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { combineProjectMembers } from "@shared/lib/utils/project";
-import type { LoggedInUserData } from "@shared/types";
-import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
-import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData, useOutletContext } from "react-router";
-import type { RootOutletData } from "~/root";
-import NotFoundPage from "../$";
+import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
+import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
+import { useProjectData } from "~/hooks/project";
+import { NotFoundPage } from "~/routes/$";
 import type { Route } from "./+types/data-wrapper";
 
-export interface ProjectDataWrapperContext {
-    session: LoggedInUserData | null;
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-    featuredProjectVersions: ProjectVersionData[] | null;
-    currUsersMembership: TeamMember | null;
-    dependencies: {
-        projects: ProjectListItem[];
-        versions: ProjectVersionData[];
-    };
-}
-
 export default function _ProjectDataWrapper() {
-    const { session } = useOutletContext<RootOutletData>();
-    const data = useLoaderData() as LoaderData;
+    const data = useProjectData();
 
-    const projectData = data?.projectData;
-    if (!projectData)
+    if (!data?.projectData?.id) {
         return (
             <NotFoundPage
                 title="Project not found"
-                description={`The project with the slug/ID "${data?.projectSlug}" does not exist.`}
-                linkHref="/mods"
-                linkLabel="Browse Mods"
+                description={`The ${data?.projectType} with the slug/ID "${data?.projectSlug}" does not exist.`}
+                linkHref={`/${data?.projectType}s`}
+                linkLabel={`Browse ${CapitalizeAndFormatString(data.projectType)}s`}
             />
         );
-
-    const featuredProjectVersions: ProjectVersionData[] = [];
-    for (const version of data.versions || []) {
-        if (version.featured) {
-            featuredProjectVersions.push(version);
-        }
     }
 
-    let currUsersMembership: TeamMember | null = null;
-    if (!session?.id) currUsersMembership = null;
-    else {
-        const membership = getCurrMember(session.id, projectData.members, projectData.organisation?.members || []);
-
-        if (membership?.id) {
-            currUsersMembership = membership;
-        } else {
-            currUsersMembership = null;
-        }
-    }
-
-    return (
-        <Outlet
-            context={{
-                session: session,
-                projectData: data.projectData,
-                allProjectVersions: data.versions,
-                featuredProjectVersions: featuredProjectVersions,
-                currUsersMembership: currUsersMembership,
-                dependencies: data.dependencies,
-            }}
-        />
-    );
+    return <Outlet />;
 }
 
-export interface LoaderData {
+export interface ProjectLoaderData {
     projectSlug: string | undefined;
     projectData?: ProjectDetailsData | null;
     versions?: ProjectVersionData[];
@@ -82,7 +38,7 @@ export interface LoaderData {
     };
 }
 
-export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
+export async function loader(props: Route.LoaderArgs): Promise<ProjectLoaderData> {
     const projectSlug = props.params.projectSlug;
 
     if (!projectSlug) {
@@ -119,7 +75,7 @@ export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
 }
 
 export function meta(props: Route.MetaArgs) {
-    const data = props.data as LoaderData;
+    const data = props.data as ProjectLoaderData;
     const project = data?.projectData;
 
     if (!project) {

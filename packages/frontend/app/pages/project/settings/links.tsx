@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate, useOutletContext } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { updateExternalLinksFormSchema } from "@shared/schemas/project/settings/links";
 import { SaveIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -12,10 +12,11 @@ import { Card, CardTitle } from "~/components/ui/card";
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
-import type { ProjectSettingsContext } from "./layout";
+import { useProjectData } from "~/hooks/project";
 
 export default function ExternalLinksSettingsPage() {
-    const { projectData } = useOutletContext<ProjectSettingsContext>();
+    const projectData = useProjectData().projectData;
+
     const navigate = useNavigate();
     const location = useLocation();
 

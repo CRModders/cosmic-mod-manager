@@ -1,11 +1,11 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
-import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { Capitalize } from "@shared/lib/utils";
 import { AuthProvider, type LoggedInUserData } from "@shared/types";
 import type { SessionListData } from "@shared/types/api";
 import { KeyRoundIcon, XIcon } from "lucide-react";
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
@@ -26,6 +26,7 @@ interface Props {
 export default function SessionsPage({ loggedInSessions, session: currSession }: Props) {
     const [isLoading, setIsLoading] = useState<{ value: boolean; sessionId: string }>({ value: false, sessionId: "" });
     const [showIp, setShowIp] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -58,9 +59,9 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
             <CardHeader className="gap-3">
                 <div className="flex items-center justify-between gap-x-6 gap-y-2">
                     <CardTitle>Sessions</CardTitle>
-                    <label className="flex gap-2 items-center justify-center text-sm text-muted-foreground">
+                    <label className="flex gap-2 items-center justify-center text-sm text-muted-foreground" htmlFor="show-ip-addresses">
                         Show IP Addresses
-                        <Switch checked={showIp} onCheckedChange={setShowIp} />
+                        <Switch checked={showIp} onCheckedChange={setShowIp} id="show-ip-addresses" />
                     </label>
                 </div>
                 <CardDescription>

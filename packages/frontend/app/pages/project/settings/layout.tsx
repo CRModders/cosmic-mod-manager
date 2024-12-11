@@ -1,7 +1,5 @@
 import { getProjectPagePathname, imageUrl } from "@root/utils";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
-import type { LoggedInUserData } from "@shared/types";
-import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
     BarChart2Icon,
     ChevronRightIcon,
@@ -27,15 +25,13 @@ import {
     BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { ButtonLink } from "~/components/ui/link";
+import { useProjectData } from "~/hooks/project";
 
-export interface ProjectSettingsContext {
-    session: LoggedInUserData;
-    projectData: ProjectDetailsData;
-    currUsersMembership: TeamMember | null;
-}
+export default function ProjectSettingsLayout() {
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
 
-export default function ProjectSettingsLayout({ session, projectData, currUsersMembership }: ProjectSettingsContext) {
-    const baseUrl = projectData ? getProjectPagePathname(projectData.type[0] || "project", projectData.slug) : "";
+    const baseUrl = getProjectPagePathname(ctx.projectType, projectData.slug);
 
     return (
         <Panel className="pb-12">
@@ -117,15 +113,7 @@ export default function ProjectSettingsLayout({ session, projectData, currUsersM
             </PanelAside>
 
             <PanelContent main>
-                <Outlet
-                    context={
-                        {
-                            session,
-                            projectData,
-                            currUsersMembership,
-                        } satisfies ProjectSettingsContext
-                    }
-                />
+                <Outlet />
             </PanelContent>
         </Panel>
     );

@@ -37,6 +37,7 @@ function initForm(user: LoggedInUserData) {
 
 export function ProfileSettingsPage({ session }: Props) {
     const [isLoading, setIsLoading] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
 

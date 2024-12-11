@@ -1,15 +1,9 @@
-import type { MetaArgs } from "react-router";
-import { useOutletContext } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
+import type { MetaArgs } from "react-router";
 import VersionChangelogs from "~/pages/project/changelog";
-import type { ProjectLayoutProps } from "~/pages/project/layout";
 
-export default function _Changelogs() {
-    const data = useOutletContext<ProjectLayoutProps>();
-
-    return <VersionChangelogs projectData={data.projectData} allProjectVersions={data.allProjectVersions} />;
-}
+export default VersionChangelogs;
 
 export function meta(props: MetaArgs) {
     const parentMetaTags = props.matches?.at(-2)?.meta;

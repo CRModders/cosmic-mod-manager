@@ -1,18 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { BadgeInfoIcon } from "lucide-react";
-import { useOutletContext } from "react-router";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useOrgData } from "~/hooks/org";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
 import { ProjectsListTable } from "~/pages/dashboard/projects/page";
-import type { OrgDataContext } from "~/routes/organization/data-wrapper";
 
 export default function OrgProjectsSettings() {
-    const { orgData, orgProjects: projects } = useOutletContext<OrgDataContext>();
+    const ctx = useOrgData();
+    const orgData = ctx.orgData;
+    const projects = ctx.orgProjects;
 
     return (
         <>
-            <title>Projects - {orgData.name}</title>
+            <title>{`Projects - ${orgData.name}`}</title>
 
             <Card className="w-full overflow-hidden">
                 <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">

@@ -13,7 +13,7 @@ import type { ProjectDetailsData } from "@shared/types/api";
 import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackProjectIcon } from "~/components/icons";
@@ -40,22 +40,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-import type { ProjectSettingsContext } from "./layout";
+import { useProjectData } from "~/hooks/project";
 
-function getInitialValues(projectData: ProjectDetailsData) {
-    return {
-        icon: projectData.icon || "",
-        name: projectData.name,
-        slug: projectData.slug,
-        visibility: getProjectVisibilityFromString(projectData.visibility),
-        type: projectData.type as ProjectType[],
-        clientSide: projectData.clientSide as ProjectSupport,
-        serverSide: projectData.serverSide as ProjectSupport,
-        summary: projectData.summary,
-    };
-}
 export default function GeneralSettingsPage() {
-    const { projectData } = useOutletContext<ProjectSettingsContext>();
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -92,7 +82,7 @@ export default function GeneralSettingsPage() {
             }
 
             const newSlug: string = result?.slug || projectData.slug;
-            RefreshPage(navigate, `/${projectData.type[0]}/${newSlug}/settings`);
+            RefreshPage(navigate, `/${ctx.projectType}/${newSlug}/settings`);
             toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);
@@ -532,4 +522,17 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
             </Dialog>
         </ContentCardTemplate>
     );
+}
+
+function getInitialValues(projectData: ProjectDetailsData) {
+    return {
+        icon: projectData.icon || "",
+        name: projectData.name,
+        slug: projectData.slug,
+        visibility: getProjectVisibilityFromString(projectData.visibility),
+        type: projectData.type as ProjectType[],
+        clientSide: projectData.clientSide as ProjectSupport,
+        serverSide: projectData.serverSide as ProjectSupport,
+        summary: projectData.summary,
+    };
 }

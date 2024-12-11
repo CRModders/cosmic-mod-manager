@@ -1,11 +1,11 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { Capitalize } from "@shared/lib/utils";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, type AuthProvider, type LinkedProvidersListData } from "@shared/types";
 import { Link2Icon, SettingsIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/components/ui/accordion";
@@ -14,8 +14,9 @@ import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, Dia
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { authProvidersList } from "~/pages/auth/oauth-providers";
 
-const ManageAuthProviders = ({ linkedAuthProviders }: { linkedAuthProviders: LinkedProvidersListData[] }) => {
+export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAuthProviders: LinkedProvidersListData[] }) {
     const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -142,6 +143,4 @@ const ManageAuthProviders = ({ linkedAuthProviders }: { linkedAuthProviders: Lin
             </DialogContent>
         </Dialog>
     );
-};
-
-export default ManageAuthProviders;
+}

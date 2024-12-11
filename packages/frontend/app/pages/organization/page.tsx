@@ -1,12 +1,10 @@
 import { useParams } from "react-router";
-import type { ProjectListItem } from "@shared/types/api";
 import SearchListItem from "~/components/layout/search-list-item";
+import { useOrgData } from "~/hooks/org";
 
-interface Props {
-    projectsList: ProjectListItem[];
-}
-
-function OrganizationPage({ projectsList }: Props) {
+function OrganizationPage() {
+    const ctx = useOrgData();
+    const projectsList = ctx.orgProjects;
     const projectType = useParams().projectType;
 
     const formattedProjectType = projectType?.slice(0, -1);
@@ -15,6 +13,7 @@ function OrganizationPage({ projectsList }: Props) {
         : projectsList;
 
     return (
+        // biome-ignore lint/a11y/useSemanticElements: <explanation>
         <div className="w-full grid grid-cols-1 gap-panel-cards" role="list">
             {filteredProjects.map((project) => {
                 return (

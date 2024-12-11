@@ -60,7 +60,7 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
 
     return (
         <>
-            <title>Delete account - {SITE_NAME_SHORT}</title>
+            <title>{`Delete account - ${SITE_NAME_SHORT}`}</title>
             <meta name="description" content={`Confirm to delete your ${SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">

@@ -1,12 +1,13 @@
-import { useOutletContext, useParams } from "react-router";
+import type { ProjectListItem } from "@shared/types/api";
+import { useParams } from "react-router";
 import SearchListItem from "~/components/layout/search-list-item";
-import type { UserOutletData } from "./layout";
 
-export default function UserProjectsList() {
+interface Props {
+    projectsList: ProjectListItem[];
+}
+
+export default function UserProjectsList({ projectsList }: Props) {
     const params = useParams();
-    const { projectsList } = useOutletContext<UserOutletData>();
-    if (!projectsList) return null;
-
     const projectType = params.type;
 
     const formattedProjectType = projectType?.slice(0, -1);

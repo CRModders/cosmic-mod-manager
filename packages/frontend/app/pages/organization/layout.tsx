@@ -6,7 +6,7 @@ import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, ClipboardCopyIcon, DownloadIcon, SettingsIcon, UsersIcon } from "lucide-react";
-import { Outlet, useLocation, useNavigate, useOutletContext } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { CubeIcon, fallbackOrgIcon } from "~/components/icons";
 import { PageHeader } from "~/components/layout/page-header";
 import RefreshPage from "~/components/refresh-page";
@@ -14,14 +14,19 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { VariantButtonLink } from "~/components/ui/link";
 import { Separator } from "~/components/ui/separator";
-import type { OrgDataContext } from "~/routes/organization/data-wrapper";
+import { useOrgData } from "~/hooks/org";
+import { useSession } from "~/hooks/session";
 import TeamInvitationBanner from "../project/join-project-banner";
 import { ProjectMember } from "../project/layout";
 import SecondaryNav from "../project/secondary-nav";
 import "./styles.css";
 
 export default function OrgPageLayout() {
-    const { session, orgData, orgProjects: projects, currUsersMembership } = useOutletContext<OrgDataContext>();
+    const session = useSession();
+    const ctx = useOrgData();
+    const projects = ctx.orgProjects;
+    const orgData = ctx.orgData;
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -44,7 +49,7 @@ export default function OrgPageLayout() {
             <OrgInfoHeader
                 session={session}
                 orgData={orgData}
-                currUsersMembership={currUsersMembership}
+                currUsersMembership={ctx.currUsersMembership}
                 totalDownloads={aggregatedDownloads}
                 totalProjects={totalProjects}
                 fetchOrgData={refreshOrgData}
@@ -71,16 +76,7 @@ export default function OrgPageLayout() {
                 ) : null}
 
                 {totalProjects ? (
-                    <Outlet
-                        context={
-                            {
-                                session: session,
-                                orgData: orgData,
-                                orgProjects: projects,
-                                currUsersMembership: currUsersMembership,
-                            } satisfies OrgDataContext
-                        }
-                    />
+                    <Outlet />
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
                         <p className="text-lg text-muted-foreground italic text-center">This organization doesn't have any projects yet.</p>
