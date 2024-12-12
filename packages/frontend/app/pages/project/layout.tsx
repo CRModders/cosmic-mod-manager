@@ -1,8 +1,7 @@
 import { PopoverClose } from "@radix-ui/react-popover";
 import { cn, imageUrl } from "@root/utils";
 import { OrgPagePath, ProjectPagePath, UserProfilePath, VersionPagePath, isCurrLinkActive } from "@root/utils/urls";
-import { formatGameVersionsListString_verbose } from "@root/utils/version";
-import { getVersionsToDisplay } from "@root/utils/version-display";
+import { formatVersionsForDisplay, getVersionsToDisplay } from "@root/utils/version-display";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { isModerator } from "@shared/config/roles";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
@@ -256,7 +255,7 @@ export default function ProjectPageLayout() {
                                         </Link>
                                         <p className="text-pretty leading-tight">
                                             {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
-                                            {formatGameVersionsListString_verbose(version.gameVersions)}
+                                            {formatVersionsForDisplay(version.gameVersions).join(", ")}
                                         </p>
                                     </div>
                                 </div>
