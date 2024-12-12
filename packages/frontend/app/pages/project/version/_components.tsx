@@ -512,7 +512,7 @@ export function SelectPrimaryFileInput({
     inputId,
 }: { children: React.ReactNode; selectedFile?: File | FileObjectType; inputId: string }) {
     return (
-        <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-2 gap-x-4 gap-y-2">
+        <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background/85 rounded px-4 py-2 gap-x-4 gap-y-2">
             <div className="flex items-center justify-start gap-1.5">
                 {children}
                 <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
@@ -523,7 +523,7 @@ export function SelectPrimaryFileInput({
                         <span className="text-muted-foreground italic ml-1">Primary</span>
                     </span>
                 ) : (
-                    <span className="text-muted-foreground italic">No file choosen</span>
+                    <span className="text-muted-foreground italic">No primary file choosen</span>
                 )}
             </div>
 
@@ -540,46 +540,41 @@ export function SelectAdditionalProjectFiles({ formControl }: { formControl: Con
             control={formControl}
             name="additionalFiles"
             render={({ field }) => (
-                <FormItem className="w-full flex flex-col items-start justify-center gap-0">
-                    <span className="font-semibold">Upload additional files</span>
-                    <span className="text-sm text-muted-foreground mb-1">Used for files such as sources or Javadocs.</span>
+                <AdditionalFiles inputId="additional-files-input" selectedFiles={field.value} onChange={field.onChange}>
+                    <input
+                        type="file"
+                        hidden
+                        name={field.name}
+                        multiple
+                        id="additional-files-input"
+                        className="hidden"
+                        onChange={async (e) => {
+                            e.preventDefault();
 
-                    <AdditionalFiles inputId="additional-files-input" selectedFiles={field.value} onChange={field.onChange}>
-                        <input
-                            type="file"
-                            hidden
-                            name={field.name}
-                            multiple
-                            id="additional-files-input"
-                            className="hidden"
-                            onChange={async (e) => {
-                                e.preventDefault();
+                            const newFiles: File[] = [];
+                            mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
+                                const file = e.target.files?.[i];
+                                if (!file?.name) continue;
 
-                                const newFiles: File[] = [];
-                                mainLoop: for (let i = 0; i < (e.target.files?.length || 0); i++) {
-                                    const file = e.target.files?.[i];
-                                    if (!file?.name) continue;
-
-                                    const fileType = await getFileType(file);
-                                    if (!fileType) {
-                                        toast.error(`Invalid file "${file.name}" with type "${fileType}"`);
-                                        continue;
-                                    }
-
-                                    for (const existingFile of field.value || []) {
-                                        if (existingFile.name.toLowerCase() === file.name.toLowerCase()) {
-                                            toast.error(`Cannot add duplicate file. Adding "${file.name}"`);
-                                            continue mainLoop;
-                                        }
-                                    }
-
-                                    newFiles.push(file);
+                                const fileType = await getFileType(file);
+                                if (!fileType) {
+                                    toast.error(`Invalid file "${file.name}" with type "${fileType}"`);
+                                    continue;
                                 }
-                                field.onChange([...(field.value || []), ...newFiles]);
-                            }}
-                        />
-                    </AdditionalFiles>
-                </FormItem>
+
+                                for (const existingFile of field.value || []) {
+                                    if (existingFile.name.toLowerCase() === file.name.toLowerCase()) {
+                                        toast.error(`Cannot add duplicate file. Adding "${file.name}"`);
+                                        continue mainLoop;
+                                    }
+                                }
+
+                                newFiles.push(file);
+                            }
+                            field.onChange([...(field.value || []), ...newFiles]);
+                        }}
+                    />
+                </AdditionalFiles>
             )}
         />
     );
@@ -597,7 +592,28 @@ function AdditionalFiles({
     };
 
     return (
-        <div className="w-full flex flex-col items-start justify-center gap-3">
+        <FormItem className="w-full flex flex-col items-start justify-center gap-0 mb-0">
+            {children}
+
+            <div className="w-full flex flex-wrap items-center justify-between gap-x-6">
+                <div className="flex flex-col">
+                    <span className="font-semibold">Upload additional files</span>
+                    <span className="text-sm text-muted-foreground mb-1">Used for files such as sources or Javadocs.</span>
+                </div>
+
+                <InteractiveLabel
+                    htmlFor={inputId}
+                    className={cn(
+                        "text-muted-foreground cursor-pointer hover:bg-shallow-background/70",
+                        "flex items-center justify-center gap-2 px-4 py-2 rounded cursor-pointer",
+                        "focus-visible:outline-none focus-visible:keyboard_focus_ring",
+                    )}
+                >
+                    <UploadIcon className="w-btn-icon h-btn-icon" />
+                    Select files
+                </InteractiveLabel>
+            </div>
+
             {(selectedFiles?.length || 0) > 0 ? (
                 <div className="w-full flex flex-col gap-2 my-2 items-start justify-center">
                     {selectedFiles?.map((file, index) => (
@@ -622,18 +638,6 @@ function AdditionalFiles({
                     ))}
                 </div>
             ) : null}
-
-            <InteractiveLabel
-                htmlFor={inputId}
-                className={cn(
-                    "w-full flex items-center justify-center gap-2 px-4 py-5 rounded border-[0.1rem] border-shallow-background cursor-pointer bg-shallow-background/50 hover:bg-shallow-background/70",
-                    "focus-visible:outline-none focus-visible:keyboard_focus_ring",
-                )}
-            >
-                <UploadIcon className="w-btn-icon h-btn-icon" />
-                Select files
-            </InteractiveLabel>
-            {children}
-        </div>
+        </FormItem>
     );
 }
