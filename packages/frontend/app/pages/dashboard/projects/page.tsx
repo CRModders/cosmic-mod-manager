@@ -1,4 +1,5 @@
-import { FormatProjectTypes, getProjectPagePathname, imageUrl } from "@root/utils";
+import { FormatProjectTypes, imageUrl } from "@root/utils";
+import { ProjectPagePath } from "@root/utils/urls";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { ProjectPublishingStatus } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
@@ -72,7 +73,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 onClick={(e) => {
                                     //@ts-expect-error
                                     if (!e.target.closest(".noClickRedirect")) {
-                                        customNavigate(getProjectPagePathname(project.type[0], project.slug));
+                                        customNavigate(ProjectPagePath(project.type[0], project.slug));
                                     }
                                 }}
                             >
@@ -80,7 +81,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 <TableCell className="pl-table-side-pad-sm sm:pl-table-side-pad">
                                     <Link
                                         tabIndex={-1}
-                                        to={getProjectPagePathname(project.type[0], project.slug)}
+                                        to={ProjectPagePath(project.type[0], project.slug)}
                                         className="noClickRedirect flex"
                                         aria-label={`view ${project.name}`}
                                     >
@@ -98,7 +99,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 <TableCell className="md:hidden !pl-0 sm:pl-2">
                                     <div className="flex flex-col items-start justify-center gap-1">
                                         <Link
-                                            to={getProjectPagePathname(project.type[0], project.slug)}
+                                            to={ProjectPagePath(project.type[0], project.slug)}
                                             className="noClickRedirect leading-none font-bold text-foreground hover:underline"
                                         >
                                             {project.name}
@@ -119,7 +120,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 {/* NAME */}
                                 <TableCell className="hidden md:table-cell">
                                     <Link
-                                        to={getProjectPagePathname(project.type[0], project.slug)}
+                                        to={ProjectPagePath(project.type[0], project.slug)}
                                         className="noClickRedirect text-base leading-none font-medium hover:underline"
                                     >
                                         {project.name}
@@ -154,7 +155,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 {/* SETTINGS PAGE LINK */}
                                 <TableCell className="pr-table-side-pad-sm sm:pr-table-side-pad">
                                     <Link
-                                        to={`${getProjectPagePathname(project.type[0], project.slug)}/settings`}
+                                        to={ProjectPagePath(project.type[0], project.slug, "settings")}
                                         className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background hover:neumorphic_shadow"
                                         aria-label="project settings"
                                     >

@@ -1,4 +1,5 @@
 import { imageUrl } from "@root/utils";
+import { UserProfilePath } from "@root/utils/urls";
 import type { ProjectListItem } from "@shared/types/api";
 import { ChevronRightIcon, HistoryIcon } from "lucide-react";
 import { fallbackUserIcon } from "~/components/icons";
@@ -37,7 +38,7 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
 
                     <div className="flex flex-col items-start justify-center">
                         <span className="text-xl font-semibold">{session.userName}</span>
-                        <Link to={`/user/${session.userName}`} className="flex gap-1 items-center justify-center link_blue">
+                        <Link to={UserProfilePath(session.userName)} className="flex gap-1 items-center justify-center link_blue">
                             View your profile
                             <ChevronRightIcon className="w-btn-icon h-btn-icon" />
                         </Link>

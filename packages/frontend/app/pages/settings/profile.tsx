@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { UserProfilePath } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { profileUpdateFormSchema } from "@shared/schemas/settings";
 import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
@@ -208,7 +209,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                 Save changes
                             </Button>
-                            <VariantButtonLink url={`/user/${session.userName}`}>
+                            <VariantButtonLink url={UserProfilePath(session.userName)}>
                                 <UserIcon className="w-btn-icon h-btn-icon" />
                                 Visit your profile
                             </VariantButtonLink>

@@ -1,7 +1,7 @@
-import { getOrgPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { OrgPagePath } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
@@ -106,7 +106,7 @@ export function meta(props: Route.MetaArgs) {
         title: `${orgData.name} - Organization`,
         description: `${orgData.description} - View the organization ${orgData.name} on ${SITE_NAME_SHORT}`,
         image: orgData.icon || "",
-        url: `${Config.FRONTEND_URL}${getOrgPagePathname(orgData.slug)}`,
+        url: `${Config.FRONTEND_URL}${OrgPagePath(orgData.slug)}`,
         ldJson: ldJson,
     });
 }

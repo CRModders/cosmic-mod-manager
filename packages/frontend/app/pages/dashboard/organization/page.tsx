@@ -1,4 +1,5 @@
-import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
+import { OrgPagePath } from "@root/utils/urls";
 import type { Organisation } from "@shared/types/api";
 import { PlusIcon } from "lucide-react";
 import { OrgListItemCard } from "~/components/item-card";
@@ -41,7 +42,7 @@ export default function OrganisationDashboardPage({ organisations }: Props) {
                                     vtId={org.id}
                                     key={org.id}
                                     title={org.name}
-                                    url={getOrgPagePathname(org.slug)}
+                                    url={OrgPagePath(org.slug)}
                                     icon={imageUrl(org.icon)}
                                     description={org.description || ""}
                                     members={org.members.length}

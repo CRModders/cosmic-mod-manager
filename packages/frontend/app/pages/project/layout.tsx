@@ -1,16 +1,18 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { cn, getOrgPagePathname, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
-import { formatGameVersionsList, formatGameVersionsListString } from "@root/utils/version";
+import { cn, imageUrl } from "@root/utils";
+import { OrgPagePath, ProjectPagePath, UserProfilePath, VersionPagePath, isCurrLinkActive } from "@root/utils/urls";
+import { formatGameVersionsListString_verbose } from "@root/utils/version";
+import { getVersionsToDisplay } from "@root/utils/version-display";
 import SPDX_LICENSE_LIST from "@shared/config/license-list";
 import { isModerator } from "@shared/config/roles";
 import { Capitalize, CapitalizeAndFormatString, parseFileSize } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import { ProjectVisibility } from "@shared/types";
-import type { ProjectDetailsData, ProjectVersionData, TeamMember } from "@shared/types/api";
+import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
-    BookmarkIcon,
     BookOpenIcon,
     BookTextIcon,
+    BookmarkIcon,
     BugIcon,
     CalendarIcon,
     ClipboardCopyIcon,
@@ -37,7 +39,7 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import Chip from "~/components/ui/chip";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
-import Link, { ButtonLink, useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
+import Link, { ButtonLink, VariantButtonLink, useCustomNavigate } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -63,11 +65,7 @@ export default function ProjectPageLayout() {
 
     if (!projectData) return null;
 
-    const isVersionDetailsPage = isCurrLinkActive(
-        getProjectPagePathname(ctx.projectType, projectData.slug, "/version/"),
-        location.pathname,
-        false,
-    );
+    const isVersionDetailsPage = isCurrLinkActive(ProjectPagePath(ctx.projectType, projectData.slug, "version/"), location.pathname, false);
 
     const projectEnvironments = ProjectSupprotedEnvironments({
         clientSide: projectData.clientSide,
@@ -98,7 +96,6 @@ export default function ProjectPageLayout() {
         <main className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
             <ProjectInfoHeader
                 projectData={projectData}
-                allVersions={ctx.allProjectVersions}
                 fetchProjectData={async () => RefreshPage(navigate, location)}
                 projectType={ctx.projectType}
                 currUsersMembership={ctx.currUsersMembership}
@@ -110,7 +107,7 @@ export default function ProjectPageLayout() {
                     <section>
                         <h3 className="flex font-bold text-muted-foreground pb-1">Game versions</h3>
                         <div className="w-full flex flex-wrap gap-1">
-                            {formatGameVersionsList(projectData.gameVersions).map((version) => (
+                            {getVersionsToDisplay(projectData).map((version) => (
                                 <Chip key={version} className="text-muted-foreground">
                                     {version}
                                 </Chip>
@@ -214,7 +211,7 @@ export default function ProjectPageLayout() {
                                             // @ts-expect-error
                                             !e.target.closest(".noClickRedirect")
                                         ) {
-                                            const link = getProjectVersionPagePathname(ctx.projectType, projectData.slug, version.slug);
+                                            const link = VersionPagePath(ctx.projectType, projectData.slug, version.slug);
                                             if (window.location.pathname !== link) {
                                                 customNavigate(link);
                                             }
@@ -252,14 +249,14 @@ export default function ProjectPageLayout() {
                                     <div className="flex w-fit h-full grow flex-col select-text">
                                         <Link
                                             prefetch="render"
-                                            to={getProjectVersionPagePathname(ctx.projectType, projectData.slug, version.slug)}
+                                            to={VersionPagePath(ctx.projectType, projectData.slug, version.slug)}
                                             className="noClickRedirect w-fit"
                                         >
                                             <p className="font-bold leading-tight">{version.title}</p>
                                         </Link>
                                         <p className="text-pretty leading-tight">
                                             {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
-                                            {formatGameVersionsListString(version.gameVersions)}
+                                            {formatGameVersionsListString_verbose(version.gameVersions)}
                                         </p>
                                     </div>
                                 </div>
@@ -274,7 +271,7 @@ export default function ProjectPageLayout() {
                         <>
                             <ProjectMember
                                 vtId={projectData.organisation.id}
-                                url={getOrgPagePathname(projectData.organisation.slug)}
+                                url={OrgPagePath(projectData.organisation.slug)}
                                 userName={projectData.organisation.name}
                                 isOwner={false}
                                 roleName={"Organization"}
@@ -385,19 +382,14 @@ export default function ProjectPageLayout() {
     );
 }
 
-function ProjectInfoHeader({
-    projectData,
-    allVersions,
-    projectType,
-    currUsersMembership,
-    fetchProjectData,
-}: {
+interface HeaderProps {
     projectData: ProjectDetailsData;
-    allVersions: ProjectVersionData[];
     projectType: string;
     currUsersMembership: TeamMember | null;
     fetchProjectData: () => Promise<void>;
-}) {
+}
+
+function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetchProjectData }: HeaderProps) {
     const session = useSession();
     let invitedMember = null;
 
@@ -426,7 +418,7 @@ function ProjectInfoHeader({
                 }
                 actionBtns={
                     <>
-                        <InteractiveDownloadPopup projectData={projectData} allProjectVersions={allVersions} />
+                        <InteractiveDownloadPopup />
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
                             <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
                         </Button>
@@ -435,7 +427,7 @@ function ProjectInfoHeader({
                         </Button>
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <VariantButtonLink
-                                url={getProjectPagePathname(projectType, projectData.slug, "/settings")}
+                                url={ProjectPagePath(projectType, projectData.slug, "settings")}
                                 variant={"secondary-inverted"}
                                 className="rounded-full w-11 h-11 p-0"
                                 label="project settings"
@@ -525,7 +517,7 @@ export function ProjectMember({
     return (
         <ButtonLink
             aria-label={userName}
-            url={url || `/user/${userName}`}
+            url={url || UserProfilePath(userName)}
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
             <ImgWrapper

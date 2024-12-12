@@ -25,13 +25,6 @@ export function getThemeFromCookie(cookie?: string | null): ThemeOptions {
     return cookie === ThemeOptions.LIGHT ? ThemeOptions.LIGHT : ThemeOptions.DARK;
 }
 
-export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
-    if (exactEnds === true) {
-        return currUrl === targetUrl || currUrl === `${targetUrl}/`;
-    }
-    return currUrl.includes(targetUrl);
-}
-
 export const monthNames = [
     "January",
     "February",
@@ -117,24 +110,6 @@ export function formatDate(
         console.error(error);
         return "";
     }
-}
-
-export function getProjectPagePathname(type: string, projectSlug: string, extra?: string) {
-    let pathname = `/${type}/${projectSlug}`;
-    if (extra) pathname += `${extra}`;
-    return pathname;
-}
-
-export function getProjectVersionPagePathname(type: string, projectSlug: string, versionSlug: string, extra?: string) {
-    let pathname = `${getProjectPagePathname(type, projectSlug)}/version/${versionSlug}`;
-    if (extra) pathname += `${extra}`;
-    return pathname;
-}
-
-export function getOrgPagePathname(orgSlug: string, extra?: string) {
-    let pathname = `/organization/${orgSlug}`;
-    if (extra) pathname += `${extra}`;
-    return pathname;
 }
 
 export function FormatProjectTypes(types: string[]) {

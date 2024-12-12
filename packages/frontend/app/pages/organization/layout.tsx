@@ -1,5 +1,6 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
+import { OrgPagePath } from "@root/utils/urls";
 import { isModerator } from "@shared/config/roles";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
@@ -64,7 +65,7 @@ export default function OrgPageLayout() {
                 {projectTypesList?.length > 1 && totalProjects > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
-                        urlBase={getOrgPagePathname(orgData.slug)}
+                        urlBase={OrgPagePath(orgData.slug)}
                         links={[
                             { label: "All", href: "" },
                             ...getProjectTypesFromNames(projectTypesList).map((type) => ({
@@ -150,11 +151,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                     <>
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <>
-                                <VariantButtonLink
-                                    variant="ghost"
-                                    url={getOrgPagePathname(orgData.slug, "/settings/projects")}
-                                    prefetch="render"
-                                >
+                                <VariantButtonLink variant="ghost" url={OrgPagePath(orgData.slug, "settings/projects")} prefetch="render">
                                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
                                     Manage projects
                                 </VariantButtonLink>
@@ -177,7 +174,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 }
                 actionBtns={
                     currUsersMembership?.id || isModerator(session?.role) ? (
-                        <VariantButtonLink variant="secondary-inverted" url={getOrgPagePathname(orgData.slug, "/settings")}>
+                        <VariantButtonLink variant="secondary-inverted" url={OrgPagePath(orgData.slug, "settings")}>
                             <SettingsIcon className="w-btn-icon h-btn-icon" />
                             Manage
                         </VariantButtonLink>

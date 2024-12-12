@@ -1,4 +1,5 @@
-import { getProjectPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
+import { PageUrl, ProjectPagePath } from "@root/utils/urls";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import {
     BarChart2Icon,
@@ -31,7 +32,7 @@ export default function ProjectSettingsLayout() {
     const ctx = useProjectData();
     const projectData = ctx.projectData;
 
-    const baseUrl = getProjectPagePathname(ctx.projectType, projectData.slug);
+    const baseUrl = ProjectPagePath(ctx.projectType, projectData.slug);
 
     return (
         <Panel className="pb-12">
@@ -40,7 +41,7 @@ export default function ProjectSettingsLayout() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/dashboard/projects">Projects</BreadcrumbLink>
+                                <BreadcrumbLink href={PageUrl("dashboard", "projects")}>Projects</BreadcrumbLink>
                             </BreadcrumbItem>
 
                             <BreadcrumbSeparator />

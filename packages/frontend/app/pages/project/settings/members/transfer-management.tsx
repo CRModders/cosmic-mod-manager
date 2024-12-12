@@ -1,6 +1,7 @@
-import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { OrgPagePath } from "@root/utils/urls";
 import type { Organisation, TeamMember } from "@shared/types/api";
 import { Building2Icon, CheckIcon } from "lucide-react";
 import { useState } from "react";
@@ -130,7 +131,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
                         <OrgListItemCard
                             vtId={org.id}
                             title={org.name}
-                            url={getOrgPagePathname(org.slug)}
+                            url={OrgPagePath(org.slug)}
                             icon={imageUrl(org.icon)}
                             description={org.description || ""}
                             members={org.members.length}

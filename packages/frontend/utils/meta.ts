@@ -1,8 +1,8 @@
-import type { MetaDescriptor } from "react-router";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { DateToISOStr } from "@shared/lib/utils/date-time";
-import { getProjectPagePathname } from ".";
+import type { MetaDescriptor } from "react-router";
 import Config from "./config";
+import { ProjectPagePath, UserProfilePath } from "./urls";
 
 type MetaTags =
     | {
@@ -132,7 +132,7 @@ export function UserLdJson(user: UserLdJsonData, otherData?: LdJsonObject): LdJs
         "@id": LdJsonId(user.id, LdJsonIdType.Person),
         name: user.userName,
         alternateName: user.name,
-        url: `${Config.FRONTEND_URL}/user/${user.userName}`,
+        url: `${Config.FRONTEND_URL}${UserProfilePath(user.userName)}`,
         description: user.bio,
         image: user.avatar,
         identifier: `user-${user.id}`,
@@ -156,7 +156,7 @@ export function ProjectLdJson(project: ProjectLdJsonData, otherData?: LdJsonObje
         "@type": "CreativeWork",
         "@id": LdJsonId(project.id, LdJsonIdType.CreativeWork),
         name: project.name,
-        url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug)}`,
+        url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}`,
         description: project.summary,
         image: project.icon,
         thumbnailUrl: project.icon,

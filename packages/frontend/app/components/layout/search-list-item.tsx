@@ -1,4 +1,5 @@
-import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
+import { cn, imageUrl } from "@root/utils";
+import { ProjectPagePath, UserProfilePath } from "@root/utils/urls";
 import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { ProjectSupport } from "@shared/types";
@@ -46,7 +47,7 @@ function BaseView(props: SearchListItemProps) {
     const projectCategoriesData = getProjectCategoriesDataFromNames(props.featuredCategories);
     const loadersData = getLoadersFromNames(props.loaders);
 
-    const projectPageUrl = getProjectPagePathname(props.projectType, props.projectSlug);
+    const projectPageUrl = ProjectPagePath(props.projectType, props.projectSlug);
 
     // View Types
     const galleryViewType = props.viewType === ViewType.GALLERY;
@@ -54,6 +55,7 @@ function BaseView(props: SearchListItemProps) {
 
     return (
         <article
+            // biome-ignore lint/a11y/useSemanticElements: <explanation>
             role="listitem"
             className={cn(
                 "search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
@@ -117,7 +119,7 @@ function BaseView(props: SearchListItemProps) {
                 {props.author && (
                     <span className="">
                         by{" "}
-                        <Link to={`/user/${props.author}`} className="underline hover:brightness-110">
+                        <Link to={UserProfilePath(props.author)} className="underline hover:brightness-110">
                             {props.author}
                         </Link>
                     </span>

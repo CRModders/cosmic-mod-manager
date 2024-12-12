@@ -1,7 +1,8 @@
-import { formatDate, getProjectPagePathname } from "@root/utils";
+import { formatDate } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
-import { formatGameVersionsListString } from "@root/utils/version";
+import { ProjectPagePath } from "@root/utils/urls";
+import { formatGameVersionsListString_verbose } from "@root/utils/version";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import type { MetaArgs } from "react-router";
@@ -37,7 +38,7 @@ export function meta(props: MetaArgs) {
             title: `Version not found - ${project.name}`,
             description: `${project.name} does not have a version with the slug/ID "${versionSlug}".`,
             image: `${Config.FRONTEND_URL}/icon.png`,
-            url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug, "/versions")}`,
+            url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, "versions")}`,
         });
     }
 
@@ -48,8 +49,8 @@ export function meta(props: MetaArgs) {
 
     return MetaTags({
         title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
-        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatGameVersionsListString(version.gameVersions)}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${version.downloads} downloads.`,
-        url: `${Config.FRONTEND_URL}${getProjectPagePathname(project.type?.[0], project.slug, `/version/${version.slug}`)}`,
+        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatGameVersionsListString_verbose(version.gameVersions)}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${version.downloads} downloads.`,
+        url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, `version/${version.slug}`)}`,
         image: project.icon || "",
         parentMetaTags,
     });

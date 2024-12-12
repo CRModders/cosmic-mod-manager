@@ -1,5 +1,6 @@
-import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, projectFileUrl } from "@root/utils";
-import { formatGameVersionsListString } from "@root/utils/version";
+import { cn, imageUrl, projectFileUrl } from "@root/utils";
+import { ProjectPagePath, VersionPagePath } from "@root/utils/urls";
+import { formatGameVersionsListString_verbose } from "@root/utils/version";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { ProjectPermission } from "@shared/types";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
@@ -52,11 +53,11 @@ export default function VersionPage() {
                 title="Version not found"
                 description="The version you are looking for doesn't exist"
                 linkLabel="See versions list"
-                linkHref={`${getProjectPagePathname(ctx.projectType, projectSlug || "")}/versions`}
+                linkHref={ProjectPagePath(ctx.projectType, projectSlug || "", "versions")}
             />
         );
 
-    const projectPageUrl = getProjectPagePathname(ctx.projectType, projectSlug);
+    const projectPageUrl = ProjectPagePath(ctx.projectType, projectSlug);
 
     return (
         <>
@@ -162,13 +163,9 @@ export default function VersionPage() {
                                 );
 
                                 if (!dependencyProject?.id) return null;
-                                const dependencyProjectPageUrl = getProjectPagePathname(dependencyProject.type[0], dependencyProject.slug);
+                                const dependencyProjectPageUrl = ProjectPagePath(dependencyProject.type[0], dependencyProject.slug);
                                 const dependencyVersionPageUrl = dependencyVersion?.id
-                                    ? getProjectVersionPagePathname(
-                                          dependencyProject.type[0],
-                                          dependencyProject.slug,
-                                          dependencyVersion.slug,
-                                      )
+                                    ? VersionPagePath(dependencyProject.type[0], dependencyProject.slug, dependencyVersion.slug)
                                     : null;
 
                                 const redirectUrl = dependencyVersionPageUrl || dependencyProjectPageUrl;
@@ -259,7 +256,9 @@ export default function VersionPage() {
                             },
                             {
                                 label: "Game versions",
-                                content: <span className="leading-none"> {formatGameVersionsListString(versionData.gameVersions)} </span>,
+                                content: (
+                                    <span className="leading-tight">{formatGameVersionsListString_verbose(versionData.gameVersions)}</span>
+                                ),
                             },
                             {
                                 label: "Downloads",

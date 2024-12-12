@@ -1,4 +1,5 @@
-import { cn, getProjectPagePathname, imageUrl } from "@root/utils";
+import { cn, imageUrl } from "@root/utils";
+import { ProjectPagePath } from "@root/utils/urls";
 import type { ProjectListItem } from "@shared/types/api";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
@@ -171,7 +172,7 @@ function ShowcaseItem({ className, item, ...props }: { className?: string; item:
     return (
         <Link
             aria-label={item.name}
-            to={getProjectPagePathname(item.type[0], item.slug)}
+            to={ProjectPagePath(item.type[0], item.slug)}
             className={cn(
                 "shrink-0 border border-card-background rounded-lg w-72 h-[5.35rem] flex gap-x-3 items-start justify-start p-3",
                 "bg-card-background dark:bg-transparent hover:bg-card-background/35 dark:hover:bg-card-background/35 transition-colors duration-300",

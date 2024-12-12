@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate } from "react-router";
-import { getOrgPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { OrgPagePath } from "@root/utils/urls";
 import { createURLSafeSlug } from "@shared/lib/utils";
 import { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { Button, CancelButton } from "~/components/ui/button";
@@ -59,7 +59,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                 return toast.error(result?.message || "Error");
             }
 
-            navigate(getOrgPagePathname(values.slug));
+            navigate(OrgPagePath(values.slug));
         } finally {
             setIsLoading(false);
         }

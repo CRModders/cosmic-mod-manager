@@ -1,5 +1,6 @@
 import { PopoverClose } from "@radix-ui/react-popover";
-import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
+import { OrgPagePath, UserProfilePath } from "@root/utils/urls";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import { GlobalUserRole } from "@shared/types";
@@ -49,7 +50,7 @@ export default function UserPageLayout({ userData, projectsList, orgsList, child
                 {projectTypesList?.length > 1 && totalProjects > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
-                        urlBase={`/user/${userData.userName}`}
+                        urlBase={UserProfilePath(userData.userName)}
                         links={[
                             { label: "All", href: "" },
                             ...getProjectTypesFromNames(projectTypesList).map((type) => ({
@@ -96,7 +97,7 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
                         {joinedOrgs.map((org) => (
                             <Tooltip key={org.id}>
                                 <TooltipTrigger asChild>
-                                    <Link to={getOrgPagePathname(org.slug)}>
+                                    <Link to={OrgPagePath(org.slug)}>
                                         <ImgWrapper
                                             vtId={org.id}
                                             src={imageUrl(org.icon)}

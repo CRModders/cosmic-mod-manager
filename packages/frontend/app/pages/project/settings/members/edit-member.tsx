@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { UserProfilePath } from "@root/utils/urls";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { hasRootAccess } from "@shared/config/roles";
 import { CapitalizeAndFormatString, doesMemberHaveAccess } from "@shared/lib/utils";
@@ -112,7 +113,7 @@ export const ProjectTeamMember = ({
                     />
                     <div className="flex flex-col items-start justify-center gap-1.5">
                         <Link
-                            to={`/user/${member.userName}`}
+                            to={UserProfilePath(member.userName)}
                             className="flex items-baseline justify-center gap-1.5 font-semibold text-foreground leading-none"
                         >
                             {member.userName}
@@ -394,7 +395,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                     />
                     <div className="flex flex-col items-start justify-center gap-1.5">
                         <Link
-                            to={`/user/${effectiveMembership.userName}`}
+                            to={UserProfilePath(effectiveMembership.userName)}
                             className="flex items-baseline justify-center gap-1.5 font-semibold text-foreground leading-none"
                         >
                             {effectiveMembership.userName}

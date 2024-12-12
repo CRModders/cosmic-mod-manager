@@ -1,4 +1,5 @@
-import { getOrgPagePathname, imageUrl } from "@root/utils";
+import { imageUrl } from "@root/utils";
+import { OrgPagePath } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet } from "react-router";
@@ -21,7 +22,7 @@ export default function OrgSettingsLayout() {
     const orgData = ctx.orgData;
     const projects = ctx.orgProjects;
 
-    const baseUrl = getOrgPagePathname(orgData.slug);
+    const baseUrl = OrgPagePath(orgData.slug);
 
     return (
         <>

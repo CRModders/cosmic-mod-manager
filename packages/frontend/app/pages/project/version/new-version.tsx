@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { ProjectPagePath, VersionPagePath } from "@root/utils/urls";
 import { getFileType } from "@shared/lib/utils/convertors";
 import { allowedPrimaryFileTypes, isVersionPrimaryFileValid } from "@shared/lib/validation";
 import { newVersionFormSchema } from "@shared/schemas/project/version";
@@ -47,7 +47,7 @@ export default function UploadVersionPage() {
     });
     form.watch();
 
-    const projectPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug);
+    const projectPageUrl = ProjectPagePath(ctx.projectType, projectData.slug);
     const versionsPageUrl = `${projectPageUrl}/versions`;
 
     const handleSubmit = async (data: z.infer<typeof newVersionFormSchema>) => {
@@ -87,7 +87,7 @@ export default function UploadVersionPage() {
                 return;
             }
 
-            RefreshPage(navigate, getProjectVersionPagePathname(ctx.projectType, projectData.slug, result.slug));
+            RefreshPage(navigate, VersionPagePath(ctx.projectType, projectData.slug, result.slug));
             return;
         } finally {
             setIsLoading(false);

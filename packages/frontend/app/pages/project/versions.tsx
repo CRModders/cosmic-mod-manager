@@ -1,6 +1,7 @@
-import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import Config from "@root/utils/config";
-import { formatGameVersionsList } from "@root/utils/version";
+import { ProjectPagePath, VersionPagePath } from "@root/utils/urls";
+import { formatGameVersionsList_verbose } from "@root/utils/version";
+import { formatVersionsForDisplay } from "@root/utils/version-display";
 import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString, doesMemberHaveAccess, parseFileSize } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -164,6 +165,8 @@ export default function ProjectVersionsPage() {
     const gameVersionsFilterVisible = gameVersionFilters.length > 1;
     const releaseChannelsFilterVisible = releaseChannelFilters.length > 1;
 
+    const anyFilterEnabled = filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0;
+
     const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
         isExperimentalGameVersion(ver.releaseType),
     );
@@ -178,7 +181,7 @@ export default function ProjectVersionsPage() {
     return (
         <>
             {canUploadVersion ? (
-                <UploadVersionLinkCard uploadPageUrl={`${getProjectPagePathname(projectData.type[0], projectData.slug)}/version/new`} />
+                <UploadVersionLinkCard uploadPageUrl={ProjectPagePath(ctx.projectType, projectData.slug, "version/new")} />
             ) : null}
 
             {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
@@ -346,6 +349,7 @@ export default function ProjectVersionsPage() {
                     ctx.currUsersMembership?.isOwner === true,
                     session?.role,
                 )}
+                anyFilterEnabled={anyFilterEnabled}
             />
         </>
     );
@@ -367,22 +371,27 @@ const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => 
     );
 };
 
-function ProjectVersionsListTable({
-    projectType,
-    projectData,
-    allProjectVersions,
-    canEditVersion,
-}: { projectType: string; projectData: ProjectDetailsData; allProjectVersions: ProjectVersionData[]; canEditVersion: boolean }) {
+interface VersionsTableProps {
+    projectType: string;
+    projectData: ProjectDetailsData;
+    allProjectVersions: ProjectVersionData[];
+    canEditVersion: boolean;
+    anyFilterEnabled: boolean;
+}
+
+function ProjectVersionsListTable({ projectType, projectData, allProjectVersions, canEditVersion, anyFilterEnabled }: VersionsTableProps) {
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
+
     const perPageLimit = 20;
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
     const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
+
     const customNavigate = useCustomNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
-    const versionPagePathname = (versionSlug: string) => getProjectVersionPagePathname(projectType, projectData.slug, versionSlug);
+    const versionPagePathname = (versionSlug: string) => VersionPagePath(projectType, projectData.slug, versionSlug);
 
     const Pagination =
         (allProjectVersions?.length || 0) > perPageLimit ? (
@@ -453,7 +462,7 @@ function ProjectVersionsListTable({
                                                     />
                                                 </div>
                                                 <div className="w-full flex flex-wrap items-center justify-start gap-1.5">
-                                                    <GameVersions gameVersions={version.gameVersions} />
+                                                    <GameVersions gameVersions={version.gameVersions} verbose={anyFilterEnabled} />
                                                     <ProjectLoaders versionLoaders={version.loaders} />
                                                 </div>
                                                 <div className="flex flex-wrap items-start justify-start gap-3">
@@ -480,7 +489,7 @@ function ProjectVersionsListTable({
                                         {/* MID WIDTH AND ABOVE */}
                                         <TableCell className="hidden md:table-cell">
                                             <div className="w-full flex flex-wrap items-start justify-start gap-1.5">
-                                                <GameVersions gameVersions={version.gameVersions} />
+                                                <GameVersions gameVersions={version.gameVersions} verbose={anyFilterEnabled} />
                                                 <ProjectLoaders versionLoaders={version.loaders} />
                                             </div>
                                         </TableCell>
@@ -554,16 +563,20 @@ const VersionName = ({ title, number, url }: { title: string; number: string; ur
     );
 };
 
-const GameVersions = ({ gameVersions }: { gameVersions: string[] }) => {
-    return (
-        <>
-            {formatGameVersionsList(gameVersions).map((version) => (
-                <Chip key={version} className="text-muted-foreground">
-                    {version}
-                </Chip>
-            ))}
-        </>
-    );
+const GameVersions = ({ gameVersions, verbose }: { gameVersions: string[]; verbose: boolean }) => {
+    if (verbose) {
+        return formatGameVersionsList_verbose(gameVersions).map((version) => (
+            <Chip key={version} className="text-muted-foreground">
+                {version}
+            </Chip>
+        ));
+    }
+
+    return formatVersionsForDisplay(gameVersions).map((version) => (
+        <Chip key={version} className="text-muted-foreground">
+            {version}
+        </Chip>
+    ));
 };
 
 const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {

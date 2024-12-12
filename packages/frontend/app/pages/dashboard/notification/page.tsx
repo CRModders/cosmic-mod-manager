@@ -1,5 +1,5 @@
-import { getOrgPagePathname, getProjectPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
+import { OrgPagePath, ProjectPagePath } from "@root/utils/urls";
 import { NotificationType } from "@shared/types";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
@@ -156,8 +156,8 @@ export function NotificationItem({
                     deleteNotification={deleteNotification}
                     markingAsRead={markingAsRead}
                     deletingNotification={deletingNotification}
-                    navigateTo={getProjectPagePathname(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
-                    pageUrl={getProjectPagePathname(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
+                    navigateTo={ProjectPagePath(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
+                    pageUrl={ProjectPagePath(relatedProject?.type[0] || "project", relatedProject?.slug || "")}
                     invitedBy={{
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
                         avatar: relatedUser?.avatar || null,
@@ -177,8 +177,8 @@ export function NotificationItem({
                     deleteNotification={deleteNotification}
                     markingAsRead={markingAsRead}
                     deletingNotification={deletingNotification}
-                    navigateTo={getOrgPagePathname(relatedOrg?.slug || "")}
-                    pageUrl={getOrgPagePathname(relatedOrg?.slug || "")}
+                    navigateTo={OrgPagePath(relatedOrg?.slug || "")}
+                    pageUrl={OrgPagePath(relatedOrg?.slug || "")}
                     invitedBy={{
                         userName: relatedUser?.userName || (notification.body?.invitedBy as string),
                         avatar: relatedUser?.avatar || null,

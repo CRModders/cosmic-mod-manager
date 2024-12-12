@@ -1,4 +1,5 @@
 import { cn, imageUrl } from "@root/utils";
+import { UserProfilePath } from "@root/utils/urls";
 import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
@@ -65,7 +66,7 @@ export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu
                                     {
                                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
                                         label: "Profile",
-                                        url: `/user/${session.userName}`,
+                                        url: UserProfilePath(session.userName),
                                     },
                                     {
                                         icon: <BellIcon className="w-btn-icon h-btn-icon" />,

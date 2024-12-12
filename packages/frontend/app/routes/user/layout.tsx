@@ -1,6 +1,7 @@
 import Config from "@root/utils/config";
 import { LdJsonId, LdJsonIdType, MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { UserProfilePath } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { Organisation, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
@@ -86,7 +87,7 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
             title: "User not found",
             description: `No user with the username/ID ${userSlug} exists on ${SITE_NAME_SHORT}`,
             image: `${Config.FRONTEND_URL}/icon.png`,
-            url: `${Config.FRONTEND_URL}/user/${userSlug}`,
+            url: `${Config.FRONTEND_URL}${UserProfilePath(userSlug || "")}`,
             suffixTitle: true,
         });
     }
@@ -117,7 +118,7 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
         title: userData?.userName || "",
         description: `${userData?.bio} - Download ${userData?.userName}'s projects on ${SITE_NAME_SHORT}`,
         image: image,
-        url: `${Config.FRONTEND_URL}/user/${userData?.userName}`,
+        url: `${Config.FRONTEND_URL}${UserProfilePath(userData?.userName)}`,
         suffixTitle: true,
         ldJson: ldJson,
     });

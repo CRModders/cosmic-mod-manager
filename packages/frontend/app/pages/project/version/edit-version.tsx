@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getProjectPagePathname, getProjectVersionPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { ProjectPagePath, VersionPagePath } from "@root/utils/urls";
 import { getLoadersByProjectType, parseFileSize } from "@shared/lib/utils";
 import { updateVersionFormSchema } from "@shared/schemas/project/version";
 import { handleFormError } from "@shared/schemas/utils";
@@ -108,18 +108,15 @@ export default function EditVersionPage() {
                 return toast.error(result?.message || "Failed to update version");
             }
 
-            RefreshPage(
-                navigate,
-                getProjectVersionPagePathname(ctx.projectType, projectData.slug, result?.data?.slug || versionData?.slug),
-            );
+            RefreshPage(navigate, VersionPagePath(ctx.projectType, projectData.slug, result?.data?.slug || versionData?.slug));
         } finally {
             setIsLoading(false);
         }
     };
 
     if (!projectData || !versionData?.id) return null;
-    const versionsPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug, "/versions");
-    const currVersionPageUrl = getProjectPagePathname(ctx.projectType, projectData.slug, `/version/${versionData.slug}`);
+    const versionsPageUrl = ProjectPagePath(ctx.projectType, projectData.slug, "versions");
+    const currVersionPageUrl = ProjectPagePath(ctx.projectType, projectData.slug, `version/${versionData.slug}`);
 
     return (
         <>

@@ -1,6 +1,7 @@
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions } from "@root/utils/dom";
+import { UserProfilePath } from "@root/utils/urls";
 import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
@@ -83,7 +84,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     {
                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
                         label: "Profile",
-                        url: `/user/${session.userName}`,
+                        url: UserProfilePath(session.userName),
                         matchExactUrl: false,
                     },
                     {

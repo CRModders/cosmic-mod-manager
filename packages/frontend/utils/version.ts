@@ -52,7 +52,7 @@ export const groupContinuousVersions = (versions: string[]): GameVersion[][] => 
     return groupedList;
 };
 
-export const formatGameVersionsList = (list: string[]): string[] => {
+export const formatGameVersionsList_verbose = (list: string[]): string[] => {
     if (!list.length) return [];
 
     const formattedList: string[] = [];
@@ -70,7 +70,7 @@ export const formatGameVersionsList = (list: string[]): string[] => {
     return formattedList;
 };
 
-export const formatGameVersionsListString = (list: string[]): string => {
+export const formatGameVersionsListString_verbose = (list: string[]): string => {
     if (!list.length) return "";
 
     let formattedStr = "";

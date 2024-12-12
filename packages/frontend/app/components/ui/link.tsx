@@ -1,4 +1,5 @@
-import { cn, isCurrLinkActive } from "@root/utils";
+import { cn } from "@root/utils";
+import { isCurrLinkActive } from "@root/utils/urls";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
 import type { LinkProps } from "react-router";

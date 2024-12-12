@@ -1,8 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { cn, getOrgPagePathname, imageUrl } from "@root/utils";
+import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
+import { OrgPagePath } from "@root/utils/urls";
 import { createURLSafeSlug } from "@shared/lib/utils";
 import { orgSettingsFormSchema } from "@shared/schemas/organisation/settings/general";
 import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
@@ -79,7 +80,7 @@ export default function GeneralOrgSettings() {
                 return toast.error(result?.message || "Error");
             }
 
-            const newPathname = getOrgPagePathname(result?.slug || orgData?.slug, "/settings");
+            const newPathname = OrgPagePath(result?.slug || orgData?.slug, "settings");
             RefreshPage(navigate, newPathname);
             toast.success(result?.message || "Success");
         } finally {

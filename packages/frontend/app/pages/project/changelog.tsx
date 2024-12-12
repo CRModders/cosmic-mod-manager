@@ -1,5 +1,6 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { cn, getProjectVersionPagePathname, projectFileUrl } from "@root/utils";
+import { cn, projectFileUrl } from "@root/utils";
+import { UserProfilePath, VersionPagePath } from "@root/utils/urls";
 import { getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getLoaderFromString } from "@shared/lib/utils/convertors";
@@ -28,7 +29,7 @@ export default function VersionChangelogs() {
     const ctx = useProjectData();
 
     if (!ctx.projectData || !ctx.allProjectVersions?.length) return null;
-    return <ChangelogsList projectData={ctx.projectData} versionsList={ctx.allProjectVersions} />;
+    return <ChangelogsList projectType={ctx.projectType} projectData={ctx.projectData} versionsList={ctx.allProjectVersions} />;
 }
 
 interface FilterItems {
@@ -37,7 +38,13 @@ interface FilterItems {
     releaseChannels: string[];
 }
 
-function ChangelogsList({ projectData, versionsList }: { projectData: ProjectDetailsData; versionsList: ProjectVersionData[] }) {
+interface ListProps {
+    projectData: ProjectDetailsData;
+    versionsList: ProjectVersionData[];
+    projectType: string;
+}
+
+function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
     const { theme } = useTheme();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
@@ -277,7 +284,7 @@ function ChangelogsList({ projectData, versionsList }: { projectData: ProjectDet
 
                                     <h2 className="leading-tight">
                                         <Link
-                                            to={getProjectVersionPagePathname(projectData.type[0], projectData.slug, version.slug)}
+                                            to={VersionPagePath(projectType, projectData.slug, version.slug)}
                                             className="text-[1.25rem] font-bold flex items-baseline gap-2"
                                         >
                                             {version.title}
@@ -285,7 +292,7 @@ function ChangelogsList({ projectData, versionsList }: { projectData: ProjectDet
                                     </h2>
                                     <span>
                                         by{" "}
-                                        <Link to={`/user/${version.author.userName}`} className="link_blue hover:underline">
+                                        <Link to={UserProfilePath(version.author.userName)} className="link_blue hover:underline">
                                             {version.author.userName}
                                         </Link>
                                     </span>

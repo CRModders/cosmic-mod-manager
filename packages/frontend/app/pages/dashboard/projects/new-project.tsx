@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate } from "react-router";
-import { getProjectPagePathname } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
+import { ProjectPagePath } from "@root/utils/urls";
 import { projectTypes } from "@shared/config/project";
 import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
@@ -13,6 +12,7 @@ import { ProjectVisibility } from "@shared/types";
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -78,7 +78,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 return toast.error(result?.message || "Error");
             }
 
-            RefreshPage(navigate, getProjectPagePathname(result?.type?.[0], result?.urlSlug));
+            RefreshPage(navigate, ProjectPagePath(result?.type?.[0], result?.urlSlug));
             return toast.success(result?.message || "Success");
         } finally {
             setIsLoading(false);

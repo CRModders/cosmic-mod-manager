@@ -1,13 +1,14 @@
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useLocation } from "react-router";
-import { cn, getProjectPagePathname, getProjectVersionPagePathname, imageUrl, isCurrLinkActive } from "@root/utils";
+import { cn, imageUrl } from "@root/utils";
+import { ProjectPagePath, VersionPagePath, isCurrLinkActive } from "@root/utils/urls";
 import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@shared/config/game-versions";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
-import type { ProjectDetailsData, ProjectVersionData } from "@shared/types/api";
+import type { ProjectVersionData } from "@shared/types/api";
 import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, InfoIcon, WrenchIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -28,13 +29,13 @@ import {
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useProjectData } from "~/hooks/project";
 
-interface Props {
-    projectData: ProjectDetailsData;
-    allProjectVersions: ProjectVersionData[];
-}
+export default function InteractiveDownloadPopup() {
+    const ctx = useProjectData();
+    const projectData = ctx.projectData;
+    const allProjectVersions = ctx.allProjectVersions;
 
-export default function InteractiveDownloadPopup({ projectData, allProjectVersions }: Props) {
     const [showAllVersions, setShowAllVersions] = useState(false);
 
     const supportedGameVersionsList = getGameVersionsFromValues(projectData?.gameVersions || []).filter(
@@ -104,11 +105,7 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
 
     if (!projectData || !allProjectVersions) return null;
 
-    const isVersionDetailsPage = isCurrLinkActive(
-        getProjectPagePathname(projectData.type[0], projectData.slug, "/version/"),
-        location.pathname,
-        false,
-    );
+    const isVersionDetailsPage = isCurrLinkActive(ProjectPagePath(ctx.projectType, projectData.slug, "version/"), location.pathname, false);
 
     return (
         <Dialog>
@@ -155,6 +152,7 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
                     >
                         <Button
                             variant="outline"
+                            // biome-ignore lint/a11y/useSemanticElements: <explanation>
                             role="combobox"
                             className="w-full justify-between text-extra-muted-foreground"
                             disabled={projectData.gameVersions.length < 2}
@@ -182,6 +180,7 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
                         <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
                             <Button
                                 variant="outline"
+                                // biome-ignore lint/a11y/useSemanticElements: <explanation>
                                 role="combobox"
                                 className="w-full justify-between text-extra-muted-foreground"
                                 disabled={projectData.loaders.length < 2}
@@ -241,12 +240,7 @@ export default function InteractiveDownloadPopup({ projectData, allProjectVersio
                         )
                     )}
                     {selectedGameVersion ? (
-                        <AvailableVersionsList
-                            selectedGameVersion={selectedGameVersion}
-                            selectedLoader={selectedLoader}
-                            allProjectVersions={allProjectVersions}
-                            projedata={projectData}
-                        />
+                        <AvailableVersionsList selectedGameVersion={selectedGameVersion} selectedLoader={selectedLoader} />
                     ) : null}
                 </DialogBody>
             </DialogContent>
@@ -278,15 +272,17 @@ function getVersionData(gameVersion: string, loader: string, versionsList: Proje
 interface AvailableVersionsListProps {
     selectedGameVersion: string;
     selectedLoader: string | null;
-    allProjectVersions: ProjectVersionData[];
-    projedata: ProjectDetailsData;
 }
 
-function AvailableVersionsList({ selectedGameVersion, selectedLoader, allProjectVersions, projedata }: AvailableVersionsListProps) {
+function AvailableVersionsList({ selectedGameVersion, selectedLoader }: AvailableVersionsListProps) {
+    const ctx = useProjectData();
+    const projectdata = ctx.projectData;
+    const allProjectVersions = ctx.allProjectVersions;
+
     const { show: showDownloadAnimation, isVisible: isDownloadAnimationVisible } = useContext(DownloadAnimationContext);
 
     const versionsList = useMemo(() => {
-        if (!projedata || !allProjectVersions) return [];
+        if (!projectdata || !allProjectVersions) return [];
         const list: ProjectVersionData[] = [];
         for (const version of allProjectVersions) {
             if (version.gameVersions.includes(selectedGameVersion) && (!selectedLoader || version.loaders.includes(selectedLoader))) {
@@ -302,7 +298,7 @@ function AvailableVersionsList({ selectedGameVersion, selectedLoader, allProject
             }
         }
         return list;
-    }, [selectedGameVersion, selectedLoader, allProjectVersions, projedata]);
+    }, [selectedGameVersion, selectedLoader, allProjectVersions, projectdata]);
 
     if (!versionsList.length)
         return (
@@ -322,7 +318,7 @@ function AvailableVersionsList({ selectedGameVersion, selectedLoader, allProject
                             <div className="flex flex-col items-start justify-center gap-1">
                                 <DialogClose asChild>
                                     <Link
-                                        to={getProjectVersionPagePathname(projedata.type[0], projedata.slug, version.slug)}
+                                        to={VersionPagePath(ctx.projectType, projectdata.slug, version.slug)}
                                         className="font-bold text-foreground leading-none"
                                     >
                                         {version.versionNumber}

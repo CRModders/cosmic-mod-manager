@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router";
+import { UserProfilePath } from "@root/utils/urls";
 import type { Notification } from "@shared/types/api";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -100,7 +101,7 @@ export function TeamInviteNotification({
                     <div className="flex items-center justify-start gap-x-1 flex-wrap">
                         <Link
                             aria-label={invitedBy.userName || (notification.body?.invitedBy as string)}
-                            to={`/user/${invitedBy.userName}`}
+                            to={UserProfilePath(invitedBy.userName)}
                             className="flex items-center justify-center gap-1 font-semibold hover:underline"
                         >
                             <ImgWrapper
