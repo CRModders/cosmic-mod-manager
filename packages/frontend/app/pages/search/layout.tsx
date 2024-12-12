@@ -6,13 +6,14 @@ import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router";
+import { Outlet, useNavigate, useSearchParams } from "react-router";
 import { ViewType } from "~/components/layout/search-list-item";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipProvider, TooltipTemplate } from "~/components/ui/tooltip";
+import { useProjectType } from "~/hooks/project";
 import FilterSidebar from "./sidebar";
 import "./styles.css";
 
@@ -33,12 +34,8 @@ export default function SearchPageLayout() {
     const [showFilters, setShowFilters] = useState(false);
 
     const navigate = useNavigate();
-    const location = useLocation();
 
-    const firstPath = location.pathname.split("/")?.[1];
-    const typeStr = firstPath?.slice(0, -1);
-    if (!typeStr) return null;
-
+    const typeStr = useProjectType();
     const type = getProjectTypeFromName(typeStr);
 
     const viewType = getSearchDisplayPreference(type);

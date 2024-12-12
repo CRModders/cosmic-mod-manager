@@ -1,23 +1,19 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
+import { PageUrl } from "@root/utils/urls";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
-import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
-import type { MetaArgs } from "react-router";
+import { useProjectType } from "~/hooks/project";
 import { SearchResultsPage } from "~/pages/search/page";
 
 export default SearchResultsPage;
 
-export function meta(props: MetaArgs) {
-    const firstPath = props.location.pathname.split("/")?.[1];
-    const typeStr = firstPath?.slice(0, -1);
-    if (!typeStr) return null;
-
-    const type = getProjectTypeFromName(typeStr);
+export function meta() {
+    const type = `${useProjectType()}s`;
 
     return MetaTags({
-        title: `Search ${type}s`,
-        description: `Search and download your favorite cosmic reach ${type}s with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`,
-        url: `${Config.FRONTEND_URL}/${type}s`,
+        title: `Search ${type}`,
+        description: `Search and download your favorite cosmic reach ${type} with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`,
+        url: `${Config.FRONTEND_URL}${PageUrl(type)}`,
         image: `${Config.FRONTEND_URL}/icon.png`,
         suffixTitle: true,
     });

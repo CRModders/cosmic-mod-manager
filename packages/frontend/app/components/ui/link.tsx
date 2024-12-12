@@ -1,5 +1,5 @@
 import { cn } from "@root/utils";
-import { isCurrLinkActive } from "@root/utils/urls";
+import { PageUrl, isCurrLinkActive } from "@root/utils/urls";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
 import type { LinkProps } from "react-router";
@@ -14,7 +14,11 @@ const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) =
     const data = useRouteLoaderData<RootOutletData>("root");
     const viewTransitions = data?.viewTransitions;
 
-    return <RemixLink ref={ref} {...props} viewTransition={viewTransitions} />;
+    let to = PageUrl(props.to.toString());
+    if (props.to.toString().startsWith("http")) to = props.to.toString();
+    if (props.to.toString().startsWith("mailto")) to = props.to.toString();
+
+    return <RemixLink ref={ref} {...props} to={to} viewTransition={viewTransitions} />;
 });
 export default Link;
 
@@ -47,8 +51,10 @@ export function ButtonLink({
             to={url}
             className={cn(
                 "bg_hover_stagger w-full h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
-                isCurrLinkActive(url, location.pathname, exactTailMatch) && activityIndicator && "bg-shallow-background/70 text-foreground",
-                isCurrLinkActive(url, location.pathname, exactTailMatch) && `active ${activeClassName}`,
+                isCurrLinkActive(PageUrl(url), location.pathname, exactTailMatch) &&
+                    activityIndicator &&
+                    "bg-shallow-background/70 text-foreground",
+                isCurrLinkActive(PageUrl(url), location.pathname, exactTailMatch) && `active ${activeClassName}`,
                 className,
             )}
         >

@@ -1,6 +1,7 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { PageUrl } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import type { LinkedProvidersListData } from "@shared/types";
 import { useLoaderData } from "react-router";
@@ -29,7 +30,7 @@ export function meta() {
         title: "Account settings",
         description: `Your ${SITE_NAME_SHORT} account settings`,
         image: `${Config.FRONTEND_URL}/icon.png`,
-        url: `${Config.FRONTEND_URL}/settings/account`,
+        url: `${Config.FRONTEND_URL}${PageUrl("settings/account")}`,
         suffixTitle: true,
     });
 }

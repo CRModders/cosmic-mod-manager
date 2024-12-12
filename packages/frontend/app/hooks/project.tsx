@@ -1,3 +1,4 @@
+import { useLangPrefix } from "@root/utils/urls";
 import { getCurrMember } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
@@ -20,13 +21,12 @@ export interface ProjectContextData {
 }
 
 export function useProjectData(): ProjectContextData {
+    const langPrefix = useLangPrefix();
     const session = useSession();
-    const location = useLocation();
-    const typeStr = location.pathname?.split("/")[1];
 
-    const projectType = typeStr === "project" ? "project" : getProjectTypeFromName(typeStr);
+    const projectType = useProjectType();
     // Getting the loader data
-    const loaderData = useRouteLoaderData(`${projectType}__data-wrapper`) as ProjectLoaderData;
+    const loaderData = useRouteLoaderData(`${langPrefix}__${projectType}__data-wrapper`) as ProjectLoaderData;
 
     // We can safely return incomplete data, because the data-wrapper will handle not found cases
     // So no component using this hook will break
@@ -71,4 +71,15 @@ export function useProjectData(): ProjectContextData {
         currUsersMembership: currUsersMembership,
         dependencies: deps,
     };
+}
+
+export function useProjectType() {
+    const location = useLocation();
+    const langPrefix = useLangPrefix();
+
+    const typeIndex = langPrefix.length ? 2 : 1;
+    let typeStr = location.pathname?.split("/")[typeIndex];
+    if (typeStr.endsWith("s")) typeStr = typeStr.slice(0, -1);
+
+    return typeStr === "project" ? "project" : getProjectTypeFromName(typeStr);
 }

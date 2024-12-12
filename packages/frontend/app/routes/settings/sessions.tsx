@@ -1,6 +1,7 @@
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { PageUrl } from "@root/utils/urls";
 import type { SessionListData } from "@shared/types/api";
 import { useLoaderData } from "react-router";
 import Redirect from "~/components/ui/redirect";
@@ -28,7 +29,7 @@ export function meta() {
         title: "User Sessions",
         description: "All the devices where you are logged in",
         image: `${Config.FRONTEND_URL}/icon.png`,
-        url: `${Config.FRONTEND_URL}/settings/sessions`,
+        url: `${Config.FRONTEND_URL}${PageUrl("settings/sessions")}`,
         suffixTitle: true,
     });
 }

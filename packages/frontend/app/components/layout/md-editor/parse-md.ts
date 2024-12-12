@@ -1,3 +1,4 @@
+import { PageUrl } from "@root/utils/urls";
 import MarkdownIt from "markdown-it";
 import type {
     FilterXSS as _FilterXSS,
@@ -58,7 +59,12 @@ export const configuredXss = new FilterXSS({
             const endIndex = strSlice.indexOf('"') || strSlice.indexOf('\\"');
             const url = strSlice.slice(0, endIndex);
 
-            return `<${tag} title="${url}" ${html.slice(3)}`;
+            if (url.startsWith("http") || url.startsWith("mailto:")) {
+                return `<${tag} title="${url}" ${html.slice(3)}`;
+            }
+
+            const sameSiteUrl = PageUrl(url);
+            return `<${tag} title="${sameSiteUrl}" ${html.slice(3).replace(url, sameSiteUrl)}`;
         }
     },
     onIgnoreTagAttr: (tag, name, value) => {

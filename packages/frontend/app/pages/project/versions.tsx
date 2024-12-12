@@ -558,7 +558,7 @@ const VersionName = ({ title, number, url }: { title: string; number: string; ur
             <Link prefetch="render" to={url} className="noClickRedirect leading-tight font-bold text-foreground md:whitespace-nowrap">
                 {number}
             </Link>
-            <span className="leading-tight font-medium text-muted-foreground/85 text-sm md:whitespace-nowrap">{title}</span>
+            <span className="leading-snug font-medium text-muted-foreground/85 text-[0.77rem] md:whitespace-nowrap">{title}</span>
         </div>
     );
 };

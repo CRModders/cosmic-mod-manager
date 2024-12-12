@@ -195,7 +195,7 @@ export function ProfileSettingsPage({ session }: Props) {
                             )}
                         />
 
-                        <div className="w-full flex flex-wrap items-center mt-2 gap-x-5 gap-y-2">
+                        <div className="w-full flex flex-wrap items-center mt-2 gap-x-3 gap-y-2">
                             <Button
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
@@ -209,6 +209,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
                                 Save changes
                             </Button>
+
                             <VariantButtonLink url={UserProfilePath(session.userName)}>
                                 <UserIcon className="w-btn-icon h-btn-icon" />
                                 Visit your profile
