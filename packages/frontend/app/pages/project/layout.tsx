@@ -38,7 +38,7 @@ import { Button, buttonVariants } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import Chip from "~/components/ui/chip";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
-import Link, { ButtonLink, VariantButtonLink, useCustomNavigate } from "~/components/ui/link";
+import Link, { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -59,7 +59,7 @@ export default function ProjectPageLayout() {
     const projectData = ctx.projectData;
 
     const navigate = useNavigate();
-    const customNavigate = useCustomNavigate();
+    const customNavigate = useNavigate();
     const location = useLocation();
 
     if (!projectData) return null;

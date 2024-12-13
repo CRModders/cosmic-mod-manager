@@ -8,7 +8,6 @@ import { createOrganisationFormSchema } from "@shared/schemas/organisation";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { Button, CancelButton } from "~/components/ui/button";
@@ -25,6 +24,7 @@ import {
 } from "~/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { useNavigate } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 

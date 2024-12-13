@@ -11,12 +11,23 @@ export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds =
 const langRegex = /^\/[a-z]{2}(?:-[A-Z]{2})?(?=\/|$)/;
 
 export function useLangPrefix(trimLeadingSlash = true) {
-    const location = useLocation();
-    const match = location.pathname.match(langRegex);
+    const location = getCurrPath();
+
+    const match = location.match(langRegex);
     const prefix = match ? match[0] : "";
 
     if (trimLeadingSlash) return removeLeading("/", prefix);
     return prefix;
+}
+
+function getCurrPath() {
+    // Can't use hooks outside of components, so we need to check if we're in a browser environments
+    if (globalThis.window) {
+        return window.location.pathname;
+    }
+
+    // We can totally use the hook during server-side rendering
+    return useLocation().pathname;
 }
 
 // ? URL Formatters
@@ -29,6 +40,8 @@ export function useLangPrefix(trimLeadingSlash = true) {
  * @returns The constructed URL path as a string.
  */
 export function PageUrl(_path: string, extra?: string) {
+    if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
+
     const langPrefix = useLangPrefix(false);
     let p = _path === "/" ? "" : prepend("/", _path);
 

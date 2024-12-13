@@ -35,7 +35,7 @@ import { CommandSeparator } from "~/components/ui/command";
 import { copyTextToClipboard } from "~/components/ui/copy-btn";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import Link, { useCustomNavigate, VariantButtonLink } from "~/components/ui/link";
+import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { MultiSelect } from "~/components/ui/multi-select";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "~/components/ui/release-channel-pill";
 import { Separator } from "~/components/ui/separator";
@@ -388,7 +388,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
     const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
 
-    const customNavigate = useCustomNavigate();
+    const customNavigate = useNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const versionPagePathname = (versionSlug: string) => VersionPagePath(projectType, projectData.slug, versionSlug);

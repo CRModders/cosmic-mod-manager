@@ -2,8 +2,8 @@ import { cn } from "@root/utils";
 import { PageUrl, isCurrLinkActive } from "@root/utils/urls";
 import type { VariantProps } from "class-variance-authority";
 import React from "react";
-import type { LinkProps } from "react-router";
-import { Link as RemixLink, useLocation, useNavigate, useRouteLoaderData } from "react-router";
+import type { LinkProps, NavigateFunction, NavigateOptions } from "react-router";
+import { Link as RemixLink, useNavigate as __useNavigate, useLocation, useRouteLoaderData } from "react-router";
 import type { RootOutletData } from "~/root";
 import { buttonVariants } from "./button";
 
@@ -14,11 +14,7 @@ const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) =
     const data = useRouteLoaderData<RootOutletData>("root");
     const viewTransitions = data?.viewTransitions;
 
-    let to = PageUrl(props.to.toString());
-    if (props.to.toString().startsWith("http")) to = props.to.toString();
-    if (props.to.toString().startsWith("mailto")) to = props.to.toString();
-
-    return <RemixLink ref={ref} {...props} to={to} viewTransition={viewTransitions} />;
+    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={viewTransitions} />;
 });
 export default Link;
 
@@ -91,12 +87,12 @@ export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLink
     },
 );
 
-export function useCustomNavigate() {
-    const navigate = useNavigate();
+export function useNavigate() {
+    const navigate = __useNavigate();
 
-    const _navigate = (to: string): void => {
-        navigate(to, { viewTransition: true });
+    const __navigate = (to: string, options?: NavigateOptions): void => {
+        navigate(PageUrl(to), { viewTransition: true, ...options });
     };
 
-    return _navigate;
+    return __navigate as NavigateFunction;
 }

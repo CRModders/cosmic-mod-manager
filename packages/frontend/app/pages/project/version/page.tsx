@@ -120,7 +120,10 @@ export default function VersionPage() {
                         currUsersMembership?.isOwner,
                         session?.role,
                     ) ? (
-                        <VariantButtonLink url="edit" prefetch="render">
+                        <VariantButtonLink
+                            url={VersionPagePath(ctx.projectType, ctx.projectData.slug, versionData.slug, "edit")}
+                            prefetch="render"
+                        >
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
                             Edit
                         </VariantButtonLink>

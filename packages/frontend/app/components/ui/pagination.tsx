@@ -1,11 +1,12 @@
-import type { LinkProps } from "react-router";
 import { cn } from "@root/utils";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
+import type { LinkProps } from "react-router";
 import { Button, type ButtonProps, buttonVariants } from "~/components/ui/button";
 import Link from "~/components/ui/link";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
+    // biome-ignore lint/a11y/noRedundantRoles: <explanation>
     <nav role="navigation" aria-label="pagination" className={cn("mx-auto flex w-full justify-center", className)} {...props} />
 );
 Pagination.displayName = "Pagination";

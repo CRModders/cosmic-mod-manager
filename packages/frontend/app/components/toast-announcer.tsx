@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useNavigate } from "./ui/link";
 
 export default function ToastAnnouncer() {
     const navigate = useNavigate();

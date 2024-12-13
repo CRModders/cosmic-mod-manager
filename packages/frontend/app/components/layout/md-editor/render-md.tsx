@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 // Scripting
 import { cn } from "@root/utils";
 import hljs from "highlight.js/lib/core";
@@ -21,6 +20,7 @@ import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
 import { useEffect } from "react";
 import "~/components/layout/md-editor/highlightjs.css";
+import { useNavigate } from "~/components/ui/link";
 import { configuredXss, md } from "./parse-md";
 
 /* REGISTRATION */

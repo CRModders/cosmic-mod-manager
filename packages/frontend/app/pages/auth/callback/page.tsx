@@ -4,11 +4,11 @@ import { CSRF_STATE_COOKIE_NAMESPACE } from "@shared/config";
 import { getAuthProviderFromString } from "@shared/lib/utils/convertors";
 import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { FormErrorMessage } from "~/components/ui/form-message";
-import Link from "~/components/ui/link";
+import Link, { useNavigate } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 
 export default function OAuthCallbackPage() {

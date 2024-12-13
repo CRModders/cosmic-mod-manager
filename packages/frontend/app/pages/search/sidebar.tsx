@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router";
 import { cn } from "@root/utils";
 import GAME_VERSIONS, { isExperimentalGameVersion } from "@shared/config/game-versions";
 import {
@@ -17,6 +16,7 @@ import { TagIcon } from "~/components/tag-icons";
 import { Button } from "~/components/ui/button";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { useNavigate } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
 

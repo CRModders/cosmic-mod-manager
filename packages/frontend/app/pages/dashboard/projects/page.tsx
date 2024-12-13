@@ -8,7 +8,7 @@ import { ProjectStatusIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import CopyBtn from "~/components/ui/copy-btn";
-import Link, { useCustomNavigate } from "~/components/ui/link";
+import Link, { useNavigate } from "~/components/ui/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import CreateNewProjectDialog from "./new-project";
 
@@ -37,7 +37,7 @@ export default function ProjectsPage({ projects }: Props) {
 }
 
 export function ProjectsListTable({ projects }: { projects: ProjectListItem[] }) {
-    const customNavigate = useCustomNavigate();
+    const customNavigate = useNavigate();
 
     return (
         <div className="w-full mt-2">
