@@ -14,7 +14,7 @@ const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) =
     const data = useRouteLoaderData<RootOutletData>("root");
     const viewTransitions = data?.viewTransitions;
 
-    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={viewTransitions} />;
+    return <RemixLink ref={ref} {...props} to={PageUrl(props.to.toString())} viewTransition={viewTransitions} />;
 });
 export default Link;
 
