@@ -19,7 +19,7 @@ import Navbar from "./components/layout/Navbar/navbar";
 import Footer from "./components/layout/footer";
 import LoaderBar from "./components/loader-bar";
 import ToastAnnouncer from "./components/toast-announcer";
-import { WanderingCubesSpinner } from "./components/ui/spinner";
+import { SuspenseFallback } from "./components/ui/spinner";
 import ContextProviders from "./providers";
 import ErrorView from "./routes/error-view";
 
@@ -61,27 +61,32 @@ export default function App() {
 
     return useMemo(
         () => (
-            <ContextProviders theme={data.theme}>
-                <ValidateClientSession />
-                <ClientOnly Element={ToastAnnouncer} />
-                <ClientOnly Element={ToastAnnouncer} />
-                <ClientOnly Element={LoaderBar} />
+            <ClientOnly
+                fallback={<SuspenseFallback />}
+                Element={() => (
+                    <ContextProviders theme={data.theme}>
+                        <ValidateClientSession />
+                        <ClientOnly Element={ToastAnnouncer} />
+                        <ClientOnly Element={ToastAnnouncer} />
+                        <ClientOnly Element={LoaderBar} />
 
-                {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
-                <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
+                        {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
+                        <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
-                <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
-                    <Navbar session={data.session} notifications={[]} />
+                        <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
+                            <Navbar session={data.session} notifications={[]} />
 
-                    <div className="full_page container px-4 sm:px-8">
-                        <Outlet context={data satisfies RootOutletData} />
-                    </div>
+                            <div className="full_page container px-4 sm:px-8">
+                                <Outlet context={data satisfies RootOutletData} />
+                            </div>
 
-                    <Footer />
-                </div>
+                            <Footer />
+                        </div>
 
-                <DownloadRipple />
-            </ContextProviders>
+                        <DownloadRipple />
+                    </ContextProviders>
+                )}
+            />
         ),
         [data?.session, data?.viewTransitions],
     );
@@ -169,7 +174,7 @@ export function meta() {
 }
 
 export function HydrateFallback() {
-    return <WanderingCubesSpinner />;
+    return <SuspenseFallback />;
 }
 
 export function ErrorBoundary() {
