@@ -1,8 +1,8 @@
-import { useLangPrefix } from "@root/utils/urls";
+import { useLocale, usePathname } from "@root/utils/urls";
 import { getCurrMember } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
-import { useLocation, useRouteLoaderData } from "react-router";
+import { useRouteLoaderData } from "react-router";
 import type { ProjectLoaderData } from "~/routes/project/data-wrapper";
 import { useSession } from "./session";
 
@@ -21,7 +21,7 @@ export interface ProjectContextData {
 }
 
 export function useProjectData(): ProjectContextData {
-    const langPrefix = useLangPrefix();
+    const langPrefix = useLocale();
     const session = useSession();
 
     const projectType = useProjectType();
@@ -74,11 +74,11 @@ export function useProjectData(): ProjectContextData {
 }
 
 export function useProjectType() {
-    const location = useLocation();
-    const langPrefix = useLangPrefix();
+    const pathname = usePathname();
+    const langPrefix = useLocale();
 
     const typeIndex = langPrefix.length ? 2 : 1;
-    let typeStr = location.pathname?.split("/")[typeIndex];
+    let typeStr = pathname?.split("/")[typeIndex];
     if (typeStr.endsWith("s")) typeStr = typeStr.slice(0, -1);
 
     return typeStr === "project" ? "project" : getProjectTypeFromName(typeStr);

@@ -185,7 +185,7 @@ export default function ProjectVersionsPage() {
             ) : null}
 
             {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
-                <div className="w-full flex flex-wrap items-center justify-start gap-2">
+                <div className="flex flex-wrap items-center justify-start gap-2">
                     {loadersFilterVisible ? (
                         <MultiSelect
                             selectedValues={filters.loaders}
@@ -355,9 +355,9 @@ export default function ProjectVersionsPage() {
     );
 }
 
-const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => {
+function UploadVersionLinkCard({ uploadPageUrl }: { uploadPageUrl: string }) {
     return (
-        <Card className="p-card-surround w-full flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
+        <Card className="p-card-surround flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
             <VariantButtonLink url={uploadPageUrl} variant="default" prefetch="render">
                 <UploadIcon className="w-btn-icon h-btn-icon" />
                 Upload a version
@@ -369,7 +369,7 @@ const UploadVersionLinkCard = ({ uploadPageUrl }: { uploadPageUrl: string }) => 
             </div>
         </Card>
     );
-};
+}
 
 interface VersionsTableProps {
     projectType: string;
@@ -391,7 +391,9 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
     const customNavigate = useNavigate();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
-    const versionPagePathname = (versionSlug: string) => VersionPagePath(projectType, projectData.slug, versionSlug);
+    function versionPagePathname(versionSlug: string) {
+        return VersionPagePath(projectType, projectData.slug, versionSlug);
+    }
 
     const Pagination =
         (allProjectVersions?.length || 0) > perPageLimit ? (
@@ -400,7 +402,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
 
     if (!allProjectVersions.length) {
         return (
-            <div className="w-full flex items-center justify-center py-6">
+            <div className="flex items-center justify-center py-6">
                 <span className="text-lg italic text-extra-muted-foreground">No project versions to show</span>
             </div>
         );
@@ -410,7 +412,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
         <>
             {allProjectVersions?.length ? (
                 <TooltipProvider>
-                    <Card className="w-full overflow-hidden">
+                    <Card className="overflow-hidden">
                         <Table>
                             <TableHeader className="hidden md:table-header-group">
                                 <TableRow className="hover:bg-transparent dark:hover:bg-transparent h-16">
@@ -453,7 +455,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                         <TableCell className="md:hidden pl-table-side-pad-sm">
                                             {/* MOBILE ONLY */}
                                             <div className="w-full flex flex-col items-start justify-start gap-1.5">
-                                                <div className="w-full flex items-center justify-start gap-2.5">
+                                                <div className="w-full flex items-center justify-start gap-2.5" title={version.title}>
                                                     <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
                                                     <VersionName
                                                         title={version.title}
@@ -478,7 +480,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                         </TableCell>
 
                                         {/* MID WIDTH AND ABOVE */}
-                                        <TableCell className="hidden md:table-cell">
+                                        <TableCell className="hidden md:table-cell" title={version.title}>
                                             <VersionName
                                                 title={version.title}
                                                 number={version.versionNumber}
@@ -547,23 +549,23 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                 </TooltipProvider>
             ) : null}
 
-            {Pagination ? <div className="w-full flex items-center justify-center">{Pagination}</div> : null}
+            {Pagination ? <div className="flex items-center justify-center">{Pagination}</div> : null}
         </>
     );
 }
 
-const VersionName = ({ title, number, url }: { title: string; number: string; url: string }) => {
+function VersionName({ title, number, url }: { title: string; number: string; url: string }) {
     return (
-        <div className="flex flex-col items-start justify-center overflow-hidden max-w-[24ch] lg:max-w-[32ch]" title={number}>
+        <div className="flex flex-col items-start justify-center overflow-hidden max-w-[24ch] lg:max-w-[32ch]">
             <Link prefetch="render" to={url} className="noClickRedirect leading-tight font-bold text-foreground md:whitespace-nowrap">
                 {number}
             </Link>
             <span className="leading-snug font-medium text-muted-foreground/85 text-[0.77rem] md:whitespace-nowrap">{title}</span>
         </div>
     );
-};
+}
 
-const GameVersions = ({ gameVersions, verbose }: { gameVersions: string[]; verbose: boolean }) => {
+function GameVersions({ gameVersions, verbose }: { gameVersions: string[]; verbose: boolean }) {
     if (verbose) {
         return formatGameVersionsList_verbose(gameVersions).map((version) => (
             <Chip key={version} className="text-muted-foreground">
@@ -577,7 +579,7 @@ const GameVersions = ({ gameVersions, verbose }: { gameVersions: string[]; verbo
             {version}
         </Chip>
     ));
-};
+}
 
 const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
     const { theme } = useTheme();

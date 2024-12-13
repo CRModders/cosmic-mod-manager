@@ -10,17 +10,17 @@ export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds =
 // A lang code will either be empty, a 2-letter code or a 2-letter code followed by specific region code
 const langRegex = /^\/[a-z]{2}(?:-[A-Z]{2})?(?=\/|$)/;
 
-export function useLangPrefix(trimLeadingSlash = true) {
-    const location = getCurrPath();
+export function useLocale(trimLeadingSlash = true) {
+    const pathname = usePathname();
 
-    const match = location.match(langRegex);
-    const prefix = match ? match[0] : "";
+    const match = pathname.match(langRegex);
+    const locale = match ? match[0] : "";
 
-    if (trimLeadingSlash) return removeLeading("/", prefix);
-    return prefix;
+    if (trimLeadingSlash) return removeLeading("/", locale);
+    return locale;
 }
 
-function getCurrPath() {
+export function usePathname() {
     // Can't use hooks outside of components, so we need to check if we're in a browser environments
     if (globalThis.window) {
         return window.location.pathname;
@@ -42,7 +42,7 @@ function getCurrPath() {
 export function PageUrl(_path: string, extra?: string) {
     if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
 
-    const langPrefix = useLangPrefix(false);
+    const langPrefix = useLocale(false);
     let p = _path === "/" ? "" : prepend("/", _path);
 
     // Make sure not to overwrite the language prefix if it already exists

@@ -14,7 +14,7 @@ const Chip = ({ children, className, style }: ChipProps) => {
         <span
             style={style}
             className={cn(
-                "flex items-center gap-1 text-sm font-semibold text-extra-muted-foreground bg-shallow-background/75 px-2 py-[0.15rem] rounded-full text-nowrap whitespace-nowrap",
+                "flex items-center gap-1 text-sm font-semibold text-extra-muted-foreground bg-shallow-background/75 px-2 py-[0.13rem] rounded-full text-nowrap whitespace-nowrap",
                 className,
             )}
         >
