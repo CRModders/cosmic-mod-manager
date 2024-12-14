@@ -343,6 +343,7 @@ const FilterCategory = ({
     collapsible = true,
     defaultOpen = true,
 }: FilterCategoryProps) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(defaultOpen);
     if (!items.length) return null;
 
@@ -370,7 +371,14 @@ const FilterCategory = ({
             <div className={cn("w-full flex flex-col", !isOpen && collapsible && "hidden", listWrapperClassName)}>
                 {items.map((item) => {
                     const itemValue = typeof item === "string" ? item : item.value;
-                    const _itemLabel = typeof item === "string" ? item : item.label;
+                    let _itemLabel = typeof item === "string" ? item : item.label;
+
+                    // @ts-ignore
+                    const tagTranslation = t.search.tags[itemValue];
+                    if (tagTranslation) {
+                        _itemLabel = tagTranslation;
+                    }
+
                     const itemLabel = formatLabel ? CapitalizeAndFormatString(_itemLabel) || "" : _itemLabel;
 
                     return (

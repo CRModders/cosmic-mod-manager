@@ -19,9 +19,11 @@ import { Form, FormField } from "~/components/ui/form";
 import { FormErrorMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 import "./../styles.css";
 
 export default function TagsSettingsPage() {
+    const { t } = useTranslation();
     const projectData = useProjectData().projectData;
 
     const [isLoading, setIsLoading] = useState(false);
@@ -97,11 +99,14 @@ export default function TagsSettingsPage() {
                                     render={({ field }) => (
                                         <div className="autofit-grid w-full grid mt-2">
                                             {allAvailableCategories.map((category) => {
+                                                // @ts-ignore
+                                                const categoryName = t.search.tags[category.name] || category.name;
+
                                                 return (
                                                     <LabelledCheckbox
-                                                        title={`${CapitalizeAndFormatString(category.name)} (${CapitalizeAndFormatString(category.header)})`}
-                                                        key={category.name}
-                                                        name={category.name}
+                                                        title={`${CapitalizeAndFormatString(categoryName)} (${CapitalizeAndFormatString(category.header)})`}
+                                                        key={categoryName}
+                                                        name={categoryName}
                                                         checked={field.value.includes(category.name)}
                                                         onCheckedChange={(e) => {
                                                             if (e === true) {
@@ -122,7 +127,7 @@ export default function TagsSettingsPage() {
                                                     >
                                                         <span className="flex items-center justify-start gap-1">
                                                             <TagIcon name={category.name} />
-                                                            {CapitalizeAndFormatString(category.name)}
+                                                            {CapitalizeAndFormatString(categoryName)}
                                                         </span>
                                                     </LabelledCheckbox>
                                                 );
@@ -146,10 +151,13 @@ export default function TagsSettingsPage() {
                                     render={({ field }) => (
                                         <div className="autofit-grid w-full grid mt-2">
                                             {form.getValues().categories.map((tag) => {
+                                                // @ts-ignore
+                                                const tagName = t.search.tags[tag] || tag;
+
                                                 return (
                                                     <LabelledCheckbox
-                                                        key={tag}
-                                                        name={tag}
+                                                        key={tagName}
+                                                        name={tagName}
                                                         className="w-fit"
                                                         checked={field.value.includes(tag)}
                                                         disabled={
@@ -166,7 +174,7 @@ export default function TagsSettingsPage() {
                                                     >
                                                         <span className="flex items-center justify-start gap-1">
                                                             <TagIcon name={tag} />
-                                                            {CapitalizeAndFormatString(tag)}
+                                                            {CapitalizeAndFormatString(tagName)}
                                                         </span>
                                                     </LabelledCheckbox>
                                                 );

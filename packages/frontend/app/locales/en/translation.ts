@@ -1,4 +1,5 @@
 import { Rules } from "./legal";
+import tags from "./tags";
 
 export default {
     common: {
@@ -172,6 +173,8 @@ export default {
         license: "License",
         openSourceOnly: "Open source only",
         clearFilters: "Clear all filters",
+
+        tags: tags,
     },
 
     project: {

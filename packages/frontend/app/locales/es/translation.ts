@@ -1,5 +1,6 @@
 import type { Locale } from "../types";
 import { Rules } from "./legal";
+import tags from "./tags";
 
 export default {
     common: {
@@ -173,6 +174,8 @@ export default {
         license: "Licencia",
         openSourceOnly: "Solo código abierto",
         clearFilters: "Borrar todos los filtros",
+
+        tags: tags,
     },
 
     project: {
