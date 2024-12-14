@@ -1,8 +1,9 @@
+import { PageUrl } from "@root/utils/urls";
 import { Navigate } from "react-router";
 import ClientOnly from "../client-only";
 
 export default function Redirect({ to }: { to: string }) {
-    return <ClientOnly fallback={<RedirectFallback />} Element={() => <Navigate to={to} replace={true} />} />;
+    return <ClientOnly fallback={<RedirectFallback />} Element={() => <Navigate to={PageUrl(to)} replace={true} />} />;
 }
 
 function RedirectFallback() {
