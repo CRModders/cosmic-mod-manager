@@ -1,7 +1,8 @@
-import { useLoaderData } from "react-router";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { SITE_NAME_SHORT } from "@shared/config";
+import { useLoaderData } from "react-router";
+import { SuspenseFallback } from "~/components/ui/spinner";
 import NotificationsHistoryPage from "~/pages/dashboard/notification/history";
 import { clientLoader as NotificationsDataLoader } from "./page";
 
@@ -20,6 +21,10 @@ export default function _NotificationsHistory() {
 
 export async function clientLoader() {
     return await NotificationsDataLoader();
+}
+
+export function HydrateFallback() {
+    return <SuspenseFallback />;
 }
 
 export function meta() {

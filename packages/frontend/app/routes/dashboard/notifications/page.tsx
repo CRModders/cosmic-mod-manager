@@ -6,6 +6,7 @@ import { SITE_NAME_SHORT } from "@shared/config";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@shared/types/api";
 import type { UserProfileData } from "@shared/types/api/user";
 import { useLoaderData } from "react-router";
+import { SuspenseFallback } from "~/components/ui/spinner";
 import NotificationsPage from "~/pages/dashboard/notification/page";
 
 export default function _Notifications() {
@@ -65,6 +66,10 @@ export async function clientLoader(): Promise<LoaderData> {
         orgs,
         users,
     };
+}
+
+export function HydrateFallback() {
+    return <SuspenseFallback />;
 }
 
 export function meta() {
