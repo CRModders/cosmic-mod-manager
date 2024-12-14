@@ -45,6 +45,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigg
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
+import { useTranslation } from "~/locales/provider";
 import "./../styles.css";
 
 interface FilterItems {
@@ -54,6 +55,7 @@ interface FilterItems {
 }
 
 export default function ProjectVersionsPage() {
+    const { t } = useTranslation();
     const session = useSession();
     const { theme } = useTheme();
 
@@ -220,7 +222,7 @@ export default function ProjectVersionsPage() {
                             customTrigger={
                                 <Button variant="secondary-inverted">
                                     <FilterIcon className="w-btn-icon h-btn-icon" />
-                                    Game versions
+                                    {t.search.gameVersions}
                                     <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
@@ -233,7 +235,7 @@ export default function ProjectVersionsPage() {
                                             onCheckedChange={(checked) => setShowExperimentalGameVersions(checked === true)}
                                             className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
                                         >
-                                            Show all versions
+                                            {t.form.showAllVersions}
                                         </LabelledCheckbox>
                                     </>
                                 ) : null
@@ -256,7 +258,7 @@ export default function ProjectVersionsPage() {
                             customTrigger={
                                 <Button variant="secondary-inverted">
                                     <FilterIcon className="w-btn-icon h-btn-icon" />
-                                    Channels
+                                    {t.search.channels}
                                     <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
@@ -271,7 +273,7 @@ export default function ProjectVersionsPage() {
                         >
                             <span className="flex items-center justify-center gap-1">
                                 <FlaskConicalIcon className="w-btn-icon h-btn-icon" />
-                                Show dev versions
+                                {t.project.showDevVersions}
                             </span>
                         </LabelledCheckbox>
                     ) : null}
@@ -282,7 +284,7 @@ export default function ProjectVersionsPage() {
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
                         <ChipButton onClick={resetFilters}>
-                            Clear all filters
+                            {t.search.clearFilters}
                             <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ) : null}
@@ -356,16 +358,18 @@ export default function ProjectVersionsPage() {
 }
 
 function UploadVersionLinkCard({ uploadPageUrl }: { uploadPageUrl: string }) {
+    const { t } = useTranslation();
+
     return (
         <Card className="p-card-surround flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
             <VariantButtonLink url={uploadPageUrl} variant="default" prefetch="render">
                 <UploadIcon className="w-btn-icon h-btn-icon" />
-                Upload a version
+                {t.project.uploadVersion}
             </VariantButtonLink>
 
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
                 <InfoIcon className="h-btn-icon w-btn-icon" />
-                Upload a new project version
+                {t.project.uploadNewVersion}
             </div>
         </Card>
     );
@@ -380,6 +384,7 @@ interface VersionsTableProps {
 }
 
 function ProjectVersionsListTable({ projectType, projectData, allProjectVersions, canEditVersion, anyFilterEnabled }: VersionsTableProps) {
+    const { t } = useTranslation();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
 
@@ -403,7 +408,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
     if (!allProjectVersions.length) {
         return (
             <div className="flex items-center justify-center py-6">
-                <span className="text-lg italic text-extra-muted-foreground">No project versions to show</span>
+                <span className="text-lg italic text-extra-muted-foreground">{t.project.noProjectVersions}</span>
             </div>
         );
     }
@@ -424,17 +429,17 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                     {/* MID WIDTH AND ABOVE */}
                                     <TableHead className="hidden md:table-cell w-10 pl-table-side-pad"> </TableHead>
                                     {/* MID WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:table-cell">Name</TableHead>
+                                    <TableHead className="hidden md:table-cell">{t.form.name}</TableHead>
                                     {/* MID WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:table-cell">Compatibility</TableHead>
+                                    <TableHead className="hidden md:table-cell">{t.project.compatibility}</TableHead>
 
                                     {/* MID WIDTH AND BELOW XL*/}
-                                    <TableHead className="hidden md:table-cell xl:hidden">Stats</TableHead>
+                                    <TableHead className="hidden md:table-cell xl:hidden">{t.project.stats}</TableHead>
 
                                     {/* XL WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:hidden xl:table-cell">Published</TableHead>
+                                    <TableHead className="hidden md:hidden xl:table-cell">{t.project.published}</TableHead>
                                     {/* XL WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:hidden xl:table-cell">Downloads</TableHead>
+                                    <TableHead className="hidden md:hidden xl:table-cell">{t.project.downloads}</TableHead>
 
                                     {/* MID WIDTH AND ABOVE */}
                                     <TableHead className="hidden md:table-cell pr-table-side-pad"> </TableHead>
@@ -634,6 +639,7 @@ const DownloadsCount = ({ downloads, iconVisible = true }: { downloads: number; 
 };
 
 const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: string; canEditVersion: boolean }) => {
+    const { t } = useTranslation();
     const [dropDownOpen, setDropDownOpen] = useState(false);
 
     return (
@@ -659,7 +665,7 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                     }}
                 >
                     <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                    Open in new tab
+                    {t.project.openInNewTab}
                 </VariantButtonLink>
 
                 <Button
@@ -672,7 +678,7 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                     }}
                 >
                     <LinkIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                    Copy link
+                    {t.project.copyLink}
                 </Button>
 
                 {canEditVersion ? (
@@ -688,7 +694,7 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                             }}
                         >
                             <EditIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                            Edit
+                            {t.form.edit}
                         </VariantButtonLink>
                     </>
                 ) : null}

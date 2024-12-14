@@ -1,33 +1,29 @@
 import { AuthActionIntent, type AuthProvider } from "@shared/types";
 import { useState } from "react";
-import { useOutletContext } from "react-router";
+import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import Link from "~/components/ui/link";
-import Redirect from "~/components/ui/redirect";
 import { Separator } from "~/components/ui/separator";
-import type { RootOutletData } from "~/root";
+import { useTranslation } from "~/locales/provider";
 import OAuthProvidersWidget from "../oauth-providers";
 
 export default function SignUpPage() {
+    const { t } = useTranslation();
+
     const [isLoading, setIsLoading] = useState<{
         value: boolean;
         provider: AuthProvider | null;
     }>({ value: false, provider: null });
 
-    const { session } = useOutletContext<RootOutletData>();
-    if (session?.id) {
-        return <Redirect to="/dashboard" />;
-    }
-
     return (
         <aside className="w-full flex items-center justify-center py-12 min-h-[100vh]">
             <Card className="w-full max-w-md relative">
                 <CardHeader className="mb-1">
-                    <CardTitle>Sign Up</CardTitle>
+                    <CardTitle>{t.form.signup}</CardTitle>
                 </CardHeader>
                 <CardContent className="w-full flex flex-col items-start justify-start gap-4">
                     <div className="w-full flex flex-col items-start justify-start gap-2">
-                        <p>Signup using any of the auth providers:</p>
+                        <p>{t.auth.signupWithProviders}</p>
                         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <OAuthProvidersWidget
                                 actionIntent={AuthActionIntent.SIGN_UP}
@@ -37,25 +33,15 @@ export default function SignUpPage() {
                         </div>
                     </div>
 
-                    <p className="text-muted-foreground">
-                        By creating an account, you agree to our{" "}
-                        <Link className="text_link" to="/legal/terms">
-                            Terms
-                        </Link>{" "}
-                        and{" "}
-                        <Link className="text_link" to="/legal/privacy">
-                            Privacy Policy
-                        </Link>
-                        .
-                    </p>
+                    <MarkdownRenderBox text={t.auth.aggrement} divElem />
 
                     <Separator />
 
                     <div className="w-full flex flex-col items-center justify-center gap-1">
                         <p className="text-center">
-                            <span className="text-muted-foreground">Already have an account?&nbsp;</span>
-                            <Link prefetch="render" to="/login" aria-label="Login" className="text_link">
-                                Login
+                            <span className="text-muted-foreground">{t.auth.alreadyHaveAccount}</span>{" "}
+                            <Link prefetch="render" to="/login" aria-label={t.form.login} className="text_link">
+                                {t.form.login}
                             </Link>
                         </p>
                     </div>

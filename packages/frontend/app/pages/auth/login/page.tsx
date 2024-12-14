@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { LoginFormSchema } from "@shared/schemas/auth";
@@ -7,6 +6,7 @@ import { AuthActionIntent, AuthProvider } from "@shared/types";
 import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -18,11 +18,14 @@ import HorizontalSeparator from "~/components/ui/hr-separator";
 import { Input } from "~/components/ui/input";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import OAuthProvidersWidget from "../oauth-providers";
 
 export default function LoginPage() {
+    const { t } = useTranslation();
     const [formError, setFormError] = useState("");
     const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -62,7 +65,7 @@ export default function LoginPage() {
         <main className="full_page w-full flex items-center justify-center py-12">
             <Card className="w-full max-w-md relative">
                 <CardHeader className="mb-1">
-                    <CardTitle>Log In</CardTitle>
+                    <CardTitle>{t.form.login_withSpace}</CardTitle>
                 </CardHeader>
                 <CardContent className="w-full flex flex-col items-start justify-start gap-4">
                     <Form {...loginForm}>
@@ -75,25 +78,23 @@ export default function LoginPage() {
                                 control={loginForm.control}
                                 name="email"
                                 render={({ field }) => (
-                                    <>
-                                        <FormItem>
-                                            <FormLabel>
-                                                Email
-                                                <FormMessage />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    type="email"
-                                                    placeholder="example@abc.com"
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                        field.onChange(e);
-                                                        setFormError("");
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    </>
+                                    <FormItem>
+                                        <FormLabel>
+                                            {t.auth.email}
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                type="email"
+                                                placeholder="example@abc.com"
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                    field.onChange(e);
+                                                    setFormError("");
+                                                }}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
                                 )}
                             />
 
@@ -101,25 +102,23 @@ export default function LoginPage() {
                                 control={loginForm.control}
                                 name="password"
                                 render={({ field }) => (
-                                    <>
-                                        <FormItem>
-                                            <FormLabel>
-                                                Password
-                                                <FormMessage />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    placeholder="********"
-                                                    type="password"
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                        field.onChange(e);
-                                                        setFormError("");
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    </>
+                                    <FormItem>
+                                        <FormLabel>
+                                            {t.auth.password}
+                                            <FormMessage />
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                placeholder="********"
+                                                type="password"
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                    field.onChange(e);
+                                                    setFormError("");
+                                                }}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
                                 )}
                             />
 
@@ -131,7 +130,7 @@ export default function LoginPage() {
                                 ) : (
                                     <LogInIcon className="w-[1.1rem] h-[1.1rem]" />
                                 )}
-                                Login
+                                {t.form.login}
                             </Button>
                         </form>
                     </Form>
@@ -151,15 +150,15 @@ export default function LoginPage() {
 
                     <div className="w-full flex flex-col items-center justify-center mt-4">
                         <div className="text-center">
-                            <span className="text-muted-foreground">Don't have an account?&nbsp;</span>
+                            <span className="text-muted-foreground">{t.auth.dontHaveAccount}</span>{" "}
                             <Link prefetch="render" to="/signup" aria-label="Sign up" className="text_link">
-                                Sign up
+                                {t.form.signup}
                             </Link>
                         </div>
                         <div className="text-center">
-                            <span className="text-muted-foreground">Forgot password?&nbsp;</span>
+                            <span className="text-muted-foreground">{t.auth.forgotPassword}</span>{" "}
                             <Link prefetch="render" to="/change-password" aria-label="Change password" className="text_link">
-                                Change password
+                                {t.auth.changePassword}
                             </Link>
                         </div>
                     </div>

@@ -1,14 +1,15 @@
 import Link from "~/components/ui/link";
+import { useTranslation } from "~/locales/provider";
 
-const SessionsPageLink = () => {
+export default function SessionsPageLink() {
+    const { t } = useTranslation();
+
     return (
         <div className="w-full flex items-center justify-start gap-1 text-sm">
-            Didn't request the email?
+            {t.auth.didntRequest}
             <Link to="/settings/sessions" className="text_link">
-                Check loggedIn sessions
+                {t.auth.checkSessions}
             </Link>
         </div>
     );
-};
-
-export default SessionsPageLink;
+}

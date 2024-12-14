@@ -24,6 +24,7 @@ import { releaseChannelTextColor } from "~/components/ui/release-channel-pill";
 import { TooltipTemplate } from "~/components/ui/tooltip";
 import { useProjectData } from "~/hooks/project";
 import useTheme from "~/hooks/theme";
+import { useTranslation } from "~/locales/provider";
 
 export default function VersionChangelogs() {
     const ctx = useProjectData();
@@ -45,6 +46,7 @@ interface ListProps {
 }
 
 function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
+    const { t } = useTranslation();
     const { theme } = useTheme();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
@@ -161,7 +163,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             customTrigger={
                                 <Button variant="secondary-inverted">
                                     <FilterIcon className="w-btn-icon h-btn-icon" />
-                                    Game versions
+                                    {t.search.gameVersions}
                                     <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
@@ -174,7 +176,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                             onCheckedChange={(checked) => setShowAllVersions(checked === true)}
                                             className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
                                         >
-                                            Show all versions
+                                            {t.form.showAllVersions}
                                         </LabelledCheckbox>
                                     </>
                                 ) : null
@@ -197,7 +199,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             customTrigger={
                                 <Button variant="secondary-inverted">
                                     <FilterIcon className="w-btn-icon h-btn-icon" />
-                                    Channels
+                                    {t.search.channels}
                                     <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
@@ -210,7 +212,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
                         <ChipButton onClick={resetFilters}>
-                            Clear all filters
+                            {t.search.clearFilters}
                             <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ) : null}
@@ -313,7 +315,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         onClick={showDownloadAnimation}
                                     >
                                         <DownloadIcon className="w-btn-icon h-btn-icon" />
-                                        Download
+                                        {t.common.download}
                                     </a>
                                 ) : null}
                             </div>

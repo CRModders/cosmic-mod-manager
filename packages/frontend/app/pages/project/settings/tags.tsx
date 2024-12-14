@@ -99,6 +99,7 @@ export default function TagsSettingsPage() {
                                             {allAvailableCategories.map((category) => {
                                                 return (
                                                     <LabelledCheckbox
+                                                        title={`${CapitalizeAndFormatString(category.name)} (${CapitalizeAndFormatString(category.header)})`}
                                                         key={category.name}
                                                         name={category.name}
                                                         checked={field.value.includes(category.name)}

@@ -10,6 +10,7 @@ import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { useNavigate } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useTranslation } from "~/locales/provider";
 import { acceptTeamInvite, leaveTeam } from "~/pages/project/settings/members/utils";
 
 interface Props {
@@ -48,10 +49,11 @@ export function TeamInviteNotification({
     icon,
     fallbackIcon,
 }: Props) {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean | "accept" | "decline">(false);
 
-    const acceptInvite = async () => {
+    async function acceptInvite() {
         if (isLoading) return;
         setIsLoading("accept");
 
@@ -69,9 +71,9 @@ export function TeamInviteNotification({
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
-    const declineInvite = async () => {
+    async function declineInvite() {
         if (isLoading) return;
         setIsLoading("decline");
 
@@ -88,7 +90,7 @@ export function TeamInviteNotification({
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <li className="w-full flex flex-col gap-2 bg-background/75 rounded p-card-surround" aria-label="Team Invite">
@@ -139,7 +141,7 @@ export function TeamInviteNotification({
                                             )}
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Accept</TooltipContent>
+                                    <TooltipContent>{t.common.accept}</TooltipContent>
                                 </Tooltip>
 
                                 <Tooltip>
@@ -158,7 +160,7 @@ export function TeamInviteNotification({
                                             )}
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Decline</TooltipContent>
+                                    <TooltipContent>{t.common.decline}</TooltipContent>
                                 </Tooltip>
                             </>
                         )}
@@ -175,7 +177,7 @@ export function TeamInviteNotification({
                                         <CheckCheckIcon className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Mark as read</TooltipContent>
+                                <TooltipContent>{t.dashboard.markRead}</TooltipContent>
                             </Tooltip>
                         )}
                         {showDeleteButton && (
@@ -191,7 +193,7 @@ export function TeamInviteNotification({
                                         <Trash2Icon className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Delete notification</TooltipContent>
+                                <TooltipContent>{t.dashboard.deleteNotif}</TooltipContent>
                             </Tooltip>
                         )}
                     </div>
@@ -206,12 +208,12 @@ export function TeamInviteNotification({
                         ) : (
                             <CheckIcon strokeWidth={2.2} className="w-btn-icon h-btn-icon" />
                         )}
-                        Accept
+                        {t.common.accept}
                     </Button>
 
                     <Button variant={"secondary-destructive-inverted"} size="sm" disabled={!!isLoading} onClick={declineInvite}>
                         {isLoading === "decline" ? <LoadingSpinner size="xs" /> : <XIcon className="w-btn-icon h-btn-icon" />}
-                        Decline
+                        {t.common.decline}
                     </Button>
                 </div>
             )}
@@ -222,7 +224,7 @@ export function TeamInviteNotification({
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <span>
-                                Received <TimePassedSince date={notification.dateCreated} />
+                                {t.dashboard.received} <TimePassedSince date={notification.dateCreated} />
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>

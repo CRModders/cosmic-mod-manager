@@ -24,12 +24,14 @@ import { FormattedDate } from "~/components/ui/date";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "~/components/ui/dialog";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 
 const RemoveGalleryImage = lazy(() => import("./remove-img"));
 const EditGalleryImage = lazy(() => import("./edit-img"));
 const UploadGalleryImageForm = lazy(() => import("./upload-img"));
 
 export default function ProjectGallery() {
+    const { t } = useTranslation();
     const session = useSession();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
@@ -51,7 +53,7 @@ export default function ProjectGallery() {
                     </Suspense>
                     <div className="flex items-center justify-center gap-2 text-muted-foreground">
                         <InfoIcon className="h-btn-icon w-btn-icon" />
-                        Upload a new gallery image
+                        {t.project.uploadNewImg}
                     </div>
                 </Card>
             ) : null}
@@ -104,6 +106,8 @@ const GalleryItemCard = ({
     setdialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     currUsersMembership: TeamMember | null;
 }) => {
+    const { t } = useTranslation();
+
     return (
         <div
             className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2"
@@ -161,7 +165,7 @@ const GalleryItemCard = ({
                                 <RemoveGalleryImage id={galleryItem.id} projectData={projectData}>
                                     <Button variant={"secondary"} size={"sm"}>
                                         <Trash2Icon className="w-btn-icon-sm h-btn-icon-sm" />
-                                        Remove
+                                        {t.form.remove}
                                     </Button>
                                 </RemoveGalleryImage>
                             </Suspense>

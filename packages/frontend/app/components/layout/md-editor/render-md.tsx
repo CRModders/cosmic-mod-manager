@@ -72,7 +72,7 @@ export const renderHighlightedString = (string: string) =>
         }).render(string),
     );
 
-export const MarkdownRenderBox = ({ text, className }: { text: string; className?: string }) => {
+export const MarkdownRenderBox = ({ text, className, divElem }: { text: string; className?: string; divElem?: boolean }) => {
     const navigate = useNavigate();
 
     // Use React router to handle internal links
@@ -102,6 +102,16 @@ export const MarkdownRenderBox = ({ text, className }: { text: string; className
             mdBox.removeEventListener("click", handleNavigate);
         };
     }, []);
+
+    if (divElem === true) {
+        return (
+            <div
+                className={cn("w-full overflow-auto markdown-body thin-scrollbar", className)}
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                dangerouslySetInnerHTML={{ __html: renderHighlightedString(text) }}
+            />
+        );
+    }
 
     return (
         <section

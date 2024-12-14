@@ -11,12 +11,61 @@ import {
 import { Outlet } from "react-router";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
+import { useTranslation } from "~/locales/provider";
 
 export default function DashboardLayout() {
+    const { t } = useTranslation();
+
+    const SidePanelLinks = [
+        {
+            name: t.dashboard.overview,
+            href: "/dashboard",
+            icon: <LayoutDashboardIcon size="1rem" />,
+        },
+        {
+            name: t.dashboard.notifications,
+            href: "/dashboard/notifications",
+            icon: <BellIcon size="1rem" />,
+        },
+        {
+            name: t.dashboard.activeReports,
+            href: "/dashboard/reports",
+            icon: <FlagIcon size="1rem" />,
+        },
+        {
+            name: t.dashboard.analytics,
+            href: "/dashboard/analytics",
+            icon: <BarChart2Icon size="1rem" />,
+        },
+    ];
+
+    const ManagementPagesLinks = [
+        {
+            name: t.dashboard.projects,
+            href: "/dashboard/projects",
+            icon: <LayoutListIcon size="1rem" />,
+        },
+        {
+            name: t.dashboard.organizations,
+            href: "/dashboard/organizations",
+            icon: <Building2Icon size="1rem" />,
+        },
+        {
+            name: t.dashboard.collections,
+            href: "/dashboard/collections",
+            icon: <LibraryIcon size="1rem" />,
+        },
+        {
+            name: t.dashboard.revenue,
+            href: "/dashboard/revenue",
+            icon: <DollarSignIcon size="1rem" />,
+        },
+    ];
+
     return (
         <Panel className="pb-12">
             <PanelAside aside>
-                <PanelAsideNavCard label="Dashboard">
+                <PanelAsideNavCard label={t.dashboard.dashboard}>
                     {SidePanelLinks.map((link) => (
                         <ButtonLink url={link.href} key={link.href} className="relative" preventScrollReset>
                             {link.icon}
@@ -24,7 +73,7 @@ export default function DashboardLayout() {
                         </ButtonLink>
                     ))}
 
-                    <span className="text-lg font-semibold mt-3">Manage</span>
+                    <span className="text-lg font-semibold mt-3">{t.dashboard.manage}</span>
                     {ManagementPagesLinks.map((link) => (
                         <ButtonLink url={link.href} key={link.href} preventScrollReset>
                             {link.icon}
@@ -39,50 +88,3 @@ export default function DashboardLayout() {
         </Panel>
     );
 }
-
-const baseUrlPrefix = "/dashboard";
-const SidePanelLinks = [
-    {
-        name: "Overview",
-        href: `${baseUrlPrefix}`,
-        icon: <LayoutDashboardIcon size="1rem" />,
-    },
-    {
-        name: "Notifications",
-        href: `${baseUrlPrefix}/notifications`,
-        icon: <BellIcon size="1rem" />,
-    },
-    {
-        name: "Active reports",
-        href: `${baseUrlPrefix}/reports`,
-        icon: <FlagIcon size="1rem" />,
-    },
-    {
-        name: "Analytics",
-        href: `${baseUrlPrefix}/analytics`,
-        icon: <BarChart2Icon size="1rem" />,
-    },
-];
-
-const ManagementPagesLinks = [
-    {
-        name: "Projects",
-        href: `${baseUrlPrefix}/projects`,
-        icon: <LayoutListIcon size="1rem" />,
-    },
-    {
-        name: "Organizations",
-        href: `${baseUrlPrefix}/organizations`,
-        icon: <Building2Icon size="1rem" />,
-    },
-    {
-        name: "Collections",
-        href: `${baseUrlPrefix}/collections`,
-        icon: <LibraryIcon size="1rem" />,
-    },
-    {
-        name: "Revenue",
-        href: `${baseUrlPrefix}/revenue`,
-        icon: <DollarSignIcon size="1rem" />,
-    },
-];

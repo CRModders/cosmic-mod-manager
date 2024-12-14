@@ -3,6 +3,7 @@ import { loaders } from "@shared/config/project";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useTranslation } from "~/locales/provider";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -44,6 +45,8 @@ export const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
 
 export function timeSince(pastTime: Date): string {
     try {
+        const { t } = useTranslation();
+
         const now = new Date();
         const diff = now.getTime() - pastTime.getTime();
 
@@ -56,24 +59,24 @@ export function timeSince(pastTime: Date): string {
         const years = Math.round(days / 365.25);
 
         if (seconds < 60) {
-            return "just now";
+            return t.date.justNow;
         }
         if (minutes < 60) {
-            return minutes === 1 ? "a minute ago" : `${minutes} minutes ago`;
+            return t.date.minuteAgo(minutes);
         }
         if (hours < 24) {
-            return hours === 1 ? "an hour ago" : `${hours} hours ago`;
+            return t.date.hourAgo(hours);
         }
         if (days < 7) {
-            return days === 1 ? "yesterday" : `${days} days ago`;
+            return t.date.dayAgo(days);
         }
         if (weeks < 4) {
-            return weeks === 1 ? "last week" : `${weeks} weeks ago`;
+            return t.date.weekAgo(weeks);
         }
         if (months < 12) {
-            return months === 1 ? "last month" : `${months} months ago`;
+            return t.date.monthAgo(months);
         }
-        return years === 1 ? "last year" : `${years} years ago`;
+        return t.date.yearAgo(years);
     } catch (error) {
         console.error(error);
         return "";

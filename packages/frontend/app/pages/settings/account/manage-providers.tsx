@@ -12,15 +12,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "~/
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import { authProvidersList } from "~/pages/auth/oauth-providers";
 
 export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAuthProviders: LinkedProvidersListData[] }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
 
     const navigate = useNavigate();
     const location = useLocation();
 
-    const redirectToOauthPage = async (provider: AuthProvider) => {
+    async function redirectToOauthPage(provider: AuthProvider) {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
@@ -30,18 +32,18 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
 
             if (!response.ok || !result?.url) {
                 setIsLoading({ value: false, provider: null });
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            toast.success("Redirecting...");
+            toast.success(t.common.redirecting);
             window.location.href = result.url;
         } catch (err) {
             console.error(err);
             setIsLoading({ value: false, provider: null });
         }
-    };
+    }
 
-    const removeAuthProvider = async (provider: AuthProvider) => {
+    async function removeAuthProvider(provider: AuthProvider) {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, provider: provider });
@@ -52,29 +54,29 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, location);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading({ value: false, provider: null });
         }
-    };
+    }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"secondary"}>
                     <SettingsIcon className="w-btn-icon h-btn-icon" />
-                    Manage providers
+                    {t.settings.manageProviders}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Linked auth providers</DialogTitle>
+                    <DialogTitle>{t.settings.linkedProviders}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Manage login auth provider for you account</DialogDescription>
+                        <DialogDescription>Manage login auth provider for your account</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody>
@@ -103,7 +105,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                     {additionalProviderDetails.providerAccountEmail}
                                                 </span>
                                             ) : (
-                                                <>Link {Capitalize(authProvider.name)} to your account</>
+                                                t.settings.linkProvider(Capitalize(authProvider.name))
                                             )}
                                         </p>
 
@@ -118,7 +120,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 ) : (
                                                     <Trash2Icon className="w-btn-icon h-btn-icon" />
                                                 )}
-                                                Remove
+                                                {t.form.remove}
                                             </Button>
                                         ) : (
                                             <Button
@@ -131,7 +133,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 ) : (
                                                     <Link2Icon className="w-btn-icon h-btn-icon" />
                                                 )}
-                                                Link
+                                                {t.settings.link}
                                             </Button>
                                         )}
                                     </AccordionContent>

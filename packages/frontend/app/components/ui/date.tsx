@@ -20,5 +20,5 @@ export function FormattedDate(props: FormatDateProps) {
 export function TimePassedSince({ date }: { date: Date | string }) {
     const _date = new Date(date);
 
-    return <>{timeSince(_date)}</>;
+    return timeSince(_date);
 }

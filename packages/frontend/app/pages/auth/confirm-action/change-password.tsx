@@ -12,9 +12,11 @@ import { FormSuccessMessage } from "~/components/ui/form-message";
 import { Input } from "~/components/ui/input";
 import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import SessionsPageLink from "./help-link";
 
 export default function ChangePasswordCard({ code }: { code: string }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<{ value: boolean; action: null | "cancel" | "set" }>({ value: false, action: null });
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -27,7 +29,7 @@ export default function ChangePasswordCard({ code }: { code: string }) {
     });
     form.watch();
 
-    const setNewPassword = async () => {
+    async function setNewPassword() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "set" });
@@ -39,16 +41,16 @@ export default function ChangePasswordCard({ code }: { code: string }) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            return setSuccessMessage(result?.message || "Success");
+            return setSuccessMessage(result?.message || t.common.success);
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
-    const cancelSettingNewPassword = async () => {
+    async function cancelSettingNewPassword() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancel" });
@@ -60,21 +62,21 @@ export default function ChangePasswordCard({ code }: { code: string }) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            return setSuccessMessage(result?.message || "Success");
+            return setSuccessMessage(result?.message || t.common.success);
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
     if (successMessage) {
         return (
             <div className="w-full max-w-md flex flex-col gap-form-elements items-center justify-center">
                 <FormSuccessMessage text={successMessage} className="w-fit" />
                 <Link to="/" className="hover:underline underline-offset-2 font-semibold">
-                    Home
+                    {t.common.home}
                 </Link>
             </div>
         );
@@ -85,7 +87,7 @@ export default function ChangePasswordCard({ code }: { code: string }) {
             <form onSubmit={form.handleSubmit(setNewPassword)} className="w-full max-w-md">
                 <Card className="w-full">
                     <CardHeader>
-                        <CardTitle>Change password</CardTitle>
+                        <CardTitle>{t.auth.changePassword}</CardTitle>
                     </CardHeader>
                     <CardContent className="w-full flex flex-col items-start justify-start gap-form-elements">
                         <FormField
@@ -94,10 +96,10 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel htmlFor="new-password-input">
-                                        New password
+                                        {t.auth.newPass}
                                         <FormMessage />
                                     </FormLabel>
-                                    <Input type="password" placeholder="Enter your new password" id="new-password-input" {...field} />
+                                    <Input type="password" placeholder={t.auth.newPass_label} id="new-password-input" {...field} />
                                 </FormItem>
                             )}
                         />
@@ -108,12 +110,12 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel htmlFor="confirm-new-password-input">
-                                        Confirm password
+                                        {t.auth.confirmPass}
                                         <FormMessage />
                                     </FormLabel>
                                     <Input
                                         type="password"
-                                        placeholder="Re-enter your password"
+                                        placeholder={t.auth.confirmPass_label}
                                         id="confirm-new-password-input"
                                         {...field}
                                     />
@@ -139,7 +141,7 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                                 }
                             >
                                 {isLoading.action === "set" ? <LoadingSpinner size="xs" /> : null}
-                                Change password
+                                {t.auth.changePassword}
                             </Button>
                         </div>
                     </CardContent>

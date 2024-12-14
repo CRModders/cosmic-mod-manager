@@ -3,9 +3,11 @@ import { Outlet } from "react-router";
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "~/components/layout/panel";
 import { ButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 
 export default function SettingsPageLayout() {
     const session = useSession();
+    const { t } = useTranslation();
 
     return (
         <main className="w-full">
@@ -14,22 +16,22 @@ export default function SettingsPageLayout() {
                     <PanelAsideNavCard label="Settings">
                         <ButtonLink url="/settings" prefetch="render" preventScrollReset>
                             <PaintbrushIcon className="size-4" />
-                            Preferences
+                            {t.settings.preferences}
                         </ButtonLink>
                         {session?.id ? (
                             <>
                                 <span className="text-lg font-semibold mt-3">Account</span>
                                 <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
                                     <UserIcon className="size-4" />
-                                    Public profile
+                                    {t.settings.publicProfile}
                                 </ButtonLink>
                                 <ButtonLink url="/settings/account" preventScrollReset>
                                     <ShieldIcon className="size-4" />
-                                    Account and security
+                                    {t.settings.accountAndSecurity}
                                 </ButtonLink>
                                 <ButtonLink url="/settings/sessions" preventScrollReset>
                                     <MonitorSmartphoneIcon className="size-4" />
-                                    Sessions
+                                    {t.settings.sessions}
                                 </ButtonLink>
                             </>
                         ) : null}

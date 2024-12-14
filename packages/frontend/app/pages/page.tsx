@@ -8,6 +8,7 @@ import { BrandIcon, fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import "./styles.css";
 
 interface Props {
@@ -16,10 +17,13 @@ interface Props {
 
 export default function HomePage({ projects }: Props) {
     const session = useSession();
+    const { t } = useTranslation();
+    const nav = t.navbar;
+
     const [gridBgPortal, setGridBgPortal] = useState<Element | null>(null);
 
     // The animation keyframes in "@/app/styles.css" need to be updated according to the number of items in the list
-    const showcaseItems = ["mods", "plugins", "resource packs", "modpacks", "shaders", "mods"];
+    const showcaseItems = [nav.mods, nav.plugins, nav.resourcePacks, nav.modpacks, nav.shaders, nav.mods];
 
     useEffect(() => {
         setGridBgPortal(document.querySelector("#hero_section_bg_portal"));
@@ -45,7 +49,7 @@ export default function HomePage({ projects }: Props) {
                     </div>
 
                     <div className="w-full flex flex-col items-center justify-center gap-1">
-                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">The place for Cosmic Reach</h1>
+                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">{t.homePage.title}</h1>
 
                         <h2 className="h-12 lg:h-[4.5rem] mb-1 overflow-hidden">
                             <span className="hero_section_showcase flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
@@ -69,17 +73,7 @@ export default function HomePage({ projects }: Props) {
 
                         <div className="w-full max-w-xl flex flex-col items-center justify-center">
                             <h2 className="w-full leading-snug text-center text-lg lg:text-xl text-muted-foreground/95">
-                                The best place for your&nbsp;
-                                <a
-                                    href="https://finalforeach.itch.io/cosmic-reach"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    aria-label={"Cosmic Reach"}
-                                    className="text-accent-foreground underline-offset-3 hover:underline"
-                                >
-                                    Cosmic Reach
-                                </a>
-                                &nbsp;mods. Discover, play, and create content, all in one spot.
+                                {t.homePage.desc}
                             </h2>
                         </div>
                     </div>
@@ -87,7 +81,7 @@ export default function HomePage({ projects }: Props) {
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
                         <VariantButtonLink size="lg" variant="default" url="/mods" className="px-6">
                             <CompassIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                            Explore mods
+                            {t.homePage.exploreMods}
                         </VariantButtonLink>
 
                         {!session?.id ? (
@@ -98,12 +92,12 @@ export default function HomePage({ projects }: Props) {
                                 prefetch="render"
                             >
                                 <LogInIcon className="w-btn-icon-md h-btn-icon-md" />
-                                Sign Up
+                                {t.form.signup}
                             </VariantButtonLink>
                         ) : (
                             <VariantButtonLink url="/dashboard/projects" size={"lg"} className="px-6" variant="secondary-inverted">
                                 <LayoutDashboardIcon className="w-btn-icon-md h-btn-icon-md" />
-                                Dashboard
+                                {t.navbar.dashboard}
                             </VariantButtonLink>
                         )}
                     </div>

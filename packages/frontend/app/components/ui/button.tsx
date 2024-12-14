@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@root/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { useTranslation } from "~/locales/provider";
 import { CancelButtonIcon } from "../icons";
 
 const buttonVariants = cva(
@@ -60,10 +61,12 @@ Button.displayName = "Button";
 export { Button, buttonVariants };
 
 export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ variant = "secondary", children, icon, ...props }, ref) => {
+    const { t } = useTranslation();
+
     return (
         <Button variant={variant} ref={ref} {...props}>
             {icon ? icon : <CancelButtonIcon className="w-btn-icon h-btn-icon" />}
-            {children || "Cancel"}
+            {children || t.form.cancel}
         </Button>
     );
 });

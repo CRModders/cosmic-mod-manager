@@ -23,6 +23,7 @@ import { InteractiveLabel } from "~/components/ui/label";
 import { VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     session: LoggedInUserData;
@@ -37,6 +38,7 @@ function initForm(user: LoggedInUserData) {
 }
 
 export function ProfileSettingsPage({ session }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -66,11 +68,11 @@ export function ProfileSettingsPage({ session }: Props) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, location);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
@@ -79,8 +81,8 @@ export function ProfileSettingsPage({ session }: Props) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Profile information</CardTitle>
-                <CardDescription>Your profile information is publicly viewable on {SITE_NAME_SHORT}.</CardDescription>
+                <CardTitle>{t.settings.profileInfo}</CardTitle>
+                <CardDescription>{t.settings.profileInfoDesc(SITE_NAME_SHORT)}</CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -97,7 +99,7 @@ export function ProfileSettingsPage({ session }: Props) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-bold">
-                                        Profile picture
+                                        {t.settings.profilePic}
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="flex flex-wrap items-center justify-start gap-4">
@@ -150,7 +152,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
-                                                Upload icon
+                                                {t.form.uploadIcon}
                                             </InteractiveLabel>
                                         </div>
                                     </div>
@@ -164,7 +166,7 @@ export function ProfileSettingsPage({ session }: Props) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="username-input">
-                                        Username
+                                        {t.form.username}
                                         <FormMessage />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="username-input" autoComplete="off" />
@@ -179,10 +181,10 @@ export function ProfileSettingsPage({ session }: Props) {
                                 <FormItem>
                                     <div className="flex flex-col items-start justify-center">
                                         <FormLabel className="text-foreground font-bold" htmlFor="user-description-input">
-                                            Bio
+                                            {t.settings.bio}
                                             <FormMessage />
                                         </FormLabel>
-                                        <FormDescription>A short description to tell everyone a little bit about you.</FormDescription>
+                                        <FormDescription>{t.settings.bioDesc}</FormDescription>
                                     </div>
 
                                     <Textarea
@@ -207,12 +209,12 @@ export function ProfileSettingsPage({ session }: Props) {
                                 }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                                Save changes
+                                {t.form.saveChanges}
                             </Button>
 
                             <VariantButtonLink url={UserProfilePath(session.userName)}>
                                 <UserIcon className="w-btn-icon h-btn-icon" />
-                                Visit your profile
+                                {t.settings.visitYourProfile}
                             </VariantButtonLink>
                         </div>
                     </form>

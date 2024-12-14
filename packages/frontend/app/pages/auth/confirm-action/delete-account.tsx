@@ -7,9 +7,11 @@ import { Button, CancelButton } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { FormSuccessMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import SessionsPageLink from "./help-link";
 
-const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
+export default function DeleteAccountConfirmationCard({ code }: { code: string }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<{ value: boolean; action: "cancelling" | "confirming" | null }>({
         value: false,
         action: null,
@@ -28,10 +30,10 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
 
             const result = await response.json();
             if (result?.success === true) {
-                return setSuccessMessage(result?.message || "Success");
+                return setSuccessMessage(result?.message || t.common.success);
             }
 
-            return toast.error(result?.message || "Error");
+            return toast.error(result?.message || t.common.error);
         } finally {
             setIsLoading({ value: false, action: null });
         }
@@ -49,10 +51,10 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
 
             const result = await response.json();
             if (result?.success === true) {
-                return setSuccessMessage(result?.message || "Success");
+                return setSuccessMessage(result?.message || t.common.success);
             }
 
-            return toast.error(result?.message || "Error");
+            return toast.error(result?.message || t.common.error);
         } finally {
             setIsLoading({ value: false, action: null });
         }
@@ -60,27 +62,24 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
 
     return (
         <>
-            <title>{`Delete account - ${SITE_NAME_SHORT}`}</title>
+            <title>{`${t.auth.deleteAccount} - ${SITE_NAME_SHORT}`}</title>
             <meta name="description" content={`Confirm to delete your ${SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">
                 <CardHeader>
-                    <CardTitle>Delete account</CardTitle>
+                    <CardTitle>{t.auth.deleteAccount}</CardTitle>
                 </CardHeader>
                 {successMessage ? (
                     <CardContent className="gap-2 items-center justify-center">
                         <FormSuccessMessage text={successMessage} />
                         <a href="/" className="font-semibold hover:underline underline-offset-2">
-                            Home
+                            {t.common.home}
                         </a>
                     </CardContent>
                 ) : (
                     <>
                         <CardContent>
-                            <CardDescription>
-                                Deleting your account will remove all of your data from our database. There is no going back after you
-                                delete your account.
-                            </CardDescription>
+                            <CardDescription>{t.auth.deleteAccountDesc}</CardDescription>
                             <div className="w-full flex items-center justify-end gap-panel-cards mt-3">
                                 <CancelButton
                                     icon={isLoading.action === "cancelling" ? <LoadingSpinner size="xs" /> : null}
@@ -93,7 +92,7 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
                                     ) : (
                                         <Trash2Icon className="w-btn-icon h-btn-icon" />
                                     )}
-                                    Delete
+                                    {t.form.delete}
                                 </Button>
                             </div>
                         </CardContent>
@@ -105,6 +104,4 @@ const DeleteAccountConfirmationCard = ({ code }: { code: string }) => {
             </Card>
         </>
     );
-};
-
-export default DeleteAccountConfirmationCard;
+}

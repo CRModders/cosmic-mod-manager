@@ -27,8 +27,10 @@ import { Input } from "~/components/ui/input";
 import { useNavigate } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
+import { useTranslation } from "~/locales/provider";
 
 export default function CreateNewOrg_Dialog({ children }: { children: React.ReactNode }) {
+    const { t } = useTranslation();
     const [autoFillUrlSlug, setAutoFillUrlSlug] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -56,7 +58,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
 
             if (!response.ok || !result?.success) {
                 enableInteractions();
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             navigate(OrgPagePath(values.slug));
@@ -76,9 +78,9 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Creating an organization</DialogTitle>
+                    <DialogTitle>{t.dashboard.creatingOrg}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Creating a new organization</DialogDescription>
+                        <DialogDescription>{t.dashboard.creatingOrg}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody>
@@ -93,11 +95,11 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="org-name-input">
-                                            Name
+                                            {t.form.name}
                                             <FormMessage />
                                         </FormLabel>
                                         <Input
-                                            placeholder="Enter organization name..."
+                                            placeholder={t.dashboard.enterOrgName}
                                             id="org-name-input"
                                             type="text"
                                             {...field}
@@ -118,7 +120,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="org-url-slug-input">
-                                            URL
+                                            {t.form.url}
                                             <FormMessage />
                                         </FormLabel>
                                         <Input
@@ -141,11 +143,11 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="org-description-input">
-                                            Description
+                                            {t.form.description}
                                             <FormMessage />
                                         </FormLabel>
                                         <Textarea
-                                            placeholder="Enter a short description for your organization..."
+                                            placeholder={t.dashboard.enterOrgDescription}
                                             id="org-description-input"
                                             {...field}
                                             className="resize-none"
@@ -160,7 +162,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                 </DialogClose>
                                 <Button disabled={isLoading || !isFormSubmittable()}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                    Create organization
+                                    {t.dashboard.createOrg}
                                 </Button>
                             </DialogFooter>
                         </form>

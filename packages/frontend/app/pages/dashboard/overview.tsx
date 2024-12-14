@@ -8,6 +8,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import Link, { ButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import { NotificationItem, type NotificationsData } from "./notification/page";
 
 interface Props extends NotificationsData {
@@ -15,6 +16,7 @@ interface Props extends NotificationsData {
 }
 
 export default function OverviewPage({ userProjects, notifications, relatedProjects, relatedOrgs, relatedUsers }: Props) {
+    const { t } = useTranslation();
     const session = useSession();
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
@@ -39,7 +41,7 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
                     <div className="flex flex-col items-start justify-center">
                         <span className="text-xl font-semibold">{session.userName}</span>
                         <Link to={UserProfilePath(session.userName)} className="flex gap-1 items-center justify-center link_blue">
-                            View your profile
+                            {t.settings.visitYourProfile}
                             <ChevronRightIcon className="w-btn-icon h-btn-icon" />
                         </Link>
                     </div>
@@ -49,10 +51,10 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
             <PanelContent_AsideCardLayout>
                 <SectionCard className="w-full">
                     <CardHeader className="w-full flex flex-row items-center justify-between gap-x-6 gap-y-2">
-                        <CardTitle className="w-fit">Notifications</CardTitle>
+                        <CardTitle className="w-fit">{t.dashboard.notifications}</CardTitle>
                         {(unreadNotifications?.length || 0) > 0 ? (
                             <Link to="/dashboard/notifications" className="link_blue flex items-center justify-center">
-                                See all
+                                {t.dashboard.seeAll}
                                 <ChevronRightIcon className="w-btn-icon-md h-btn-icon-md" />
                             </Link>
                         ) : null}
@@ -70,35 +72,35 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
                                     showMarkAsReadButton={false}
                                 />
                             ))}
-
-                            {!unreadNotifications?.length && (
-                                <li aria-label="No unread notifications">
-                                    <span className="text-muted-foreground">You have no unread notifications.</span>
-
-                                    <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
-                                        <HistoryIcon className="w-btn-icon h-btn-icon" />
-                                        View notification history
-                                    </ButtonLink>
-                                </li>
-                            )}
                         </ul>
+
+                        {!unreadNotifications?.length && (
+                            <div aria-label={t.dashboard.noUnreadNotifs}>
+                                <span className="text-muted-foreground">{t.dashboard.noUnreadNotifs}</span>
+
+                                <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
+                                    <HistoryIcon className="w-btn-icon h-btn-icon" />
+                                    {t.dashboard.viewNotifHistory}
+                                </ButtonLink>
+                            </div>
+                        )}
                     </CardContent>
                 </SectionCard>
 
                 <ContentCardTemplate
                     sectionTag
-                    title="Analytics"
+                    title={t.dashboard.analytics}
                     className="w-full flex flex-wrap flex-row items-start justify-start gap-panel-cards"
                 >
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
-                        <span className="text-lg text-muted-foreground font-semibold mb-1">Total downloads</span>
+                        <span className="text-lg text-muted-foreground font-semibold mb-1">{t.dashboard.totalDownloads}</span>
                         <span className="text-2xl font-semibold">{totalDownloads}</span>
-                        <span className="text-muted-foreground">from {totalProjects} projects</span>
+                        <span className="text-muted-foreground">{t.dashboard.fromProjects(totalProjects)}</span>
                     </div>
                     <div className="w-[14rem] flex flex-col items-start justify-center bg-background p-4 rounded">
-                        <span className="text-lg text-muted-foreground font-semibold mb-1">Total followers</span>
+                        <span className="text-lg text-muted-foreground font-semibold mb-1">{t.dashboard.totalFollowers}</span>
                         <span className="text-2xl font-semibold">{totalFollowers}</span>
-                        <span className="text-muted-foreground">from {totalProjects} projects</span>
+                        <span className="text-muted-foreground">{t.dashboard.fromProjects(totalProjects)}</span>
                     </div>
                 </ContentCardTemplate>
             </PanelContent_AsideCardLayout>

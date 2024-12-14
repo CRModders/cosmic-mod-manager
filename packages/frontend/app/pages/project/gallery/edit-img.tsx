@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useLocation, useNavigate } from "react-router";
 import { imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import { updateGalleryImageFormSchema } from "@shared/schemas/project/settings/gallery";
@@ -8,6 +7,7 @@ import type { GalleryItem, ProjectDetailsData } from "@shared/types/api";
 import { Edit3Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import RefreshPage from "~/components/refresh-page";
@@ -27,6 +27,7 @@ import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } fr
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     galleryItem: GalleryItem;
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export default function EditGalleryImage({ galleryItem, projectData }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const navigate = useNavigate();
@@ -50,7 +52,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
     });
     form.watch();
 
-    const updateGalleryImage = async (values: z.infer<typeof updateGalleryImageFormSchema>) => {
+    async function updateGalleryImage(values: z.infer<typeof updateGalleryImageFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
 
@@ -62,17 +64,17 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, location);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
             form.reset();
             setDialogOpen(false);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         if (galleryItem) {
@@ -88,14 +90,14 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
             <DialogTrigger asChild>
                 <Button variant={"secondary"} size={"sm"}>
                     <Edit3Icon className="w-3.5 h-3.5" />
-                    Edit
+                    {t.form.edit}
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[36rem]">
                 <DialogHeader>
-                    <DialogTitle>Edit gallery item</DialogTitle>
+                    <DialogTitle>{t.project.editGalleryImg}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Edit a gallery image</DialogDescription>
+                        <DialogDescription>{t.project.editGalleryImg}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
 
@@ -111,7 +113,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                         <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
 
                                         <div className="flex items-center flex-wrap justify-start gap-x-2">
-                                            <span className="font-semibold">Current image</span>
+                                            <span className="font-semibold">{t.project.currImage}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -126,10 +128,10 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-title">
-                                            Title
+                                            {t.form.title}
                                             <FormMessage />
                                         </FormLabel>
-                                        <Input {...field} placeholder="Enter title..." id="gallery-item-title" />
+                                        <Input {...field} placeholder={t.form.title} id="gallery-item-title" />
                                     </FormItem>
                                 )}
                             />
@@ -140,12 +142,12 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-description">
-                                            Description
+                                            {t.form.description}
                                             <FormMessage />
                                         </FormLabel>
                                         <Textarea
                                             {...field}
-                                            placeholder="Enter description..."
+                                            placeholder={t.form.description}
                                             className="h-fit min-h-14 resize-none"
                                             id="gallery-item-description"
                                         />
@@ -159,10 +161,10 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-ordering">
-                                            Ordering
+                                            {t.form.ordering}
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                Image with higher ordering will be listed first.
+                                                {t.project.galleryOrderingDesc}
                                             </FormDescription>
                                         </FormLabel>
                                         <Input
@@ -175,7 +177,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                                     field.onChange("");
                                                 }
                                             }}
-                                            placeholder="Enter order index..."
+                                            placeholder="1"
                                             min={0}
                                             type="number"
                                             id="gallery-item-ordering"
@@ -190,14 +192,12 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-featured">
-                                            Featured
+                                            {t.form.featured}
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                A featured gallery image shows up in search and your project card. Only one gallery image
-                                                can be featured.
+                                                {t.project.featuredGalleryImgDesc}
                                             </FormDescription>
                                         </FormLabel>
-                                        {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
                                         <Button
                                             variant="secondary"
                                             type="button"
@@ -209,7 +209,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                             ) : (
                                                 <StarIcon className="w-btn-icon-md h-btn-icon-md" />
                                             )}
-                                            {field.value === true ? "Unfeature image" : "Feature image"}
+                                            {field.value === true ? t.project.unfeatureImg : t.project.featureImg}
                                         </Button>
                                     </FormItem>
                                 )}
@@ -222,7 +222,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
 
                                 <Button type="submit" disabled={isLoading}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                                    Save changes
+                                    {t.form.saveChanges}
                                 </Button>
                             </DialogFooter>
                         </form>

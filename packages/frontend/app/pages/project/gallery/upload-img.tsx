@@ -29,12 +29,14 @@ import { Input } from "~/components/ui/input";
 import { InteractiveLabel } from "~/components/ui/label";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     projectData: ProjectDetailsData;
 }
 
 export default function UploadGalleryImageForm({ projectData }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const navigate = useNavigate();
@@ -51,7 +53,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
     });
     form.watch();
 
-    const uploadGalleryImage = async (values: z.infer<typeof addNewGalleryImageFormSchema>) => {
+    async function uploadGalleryImage(values: z.infer<typeof addNewGalleryImageFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
 
@@ -70,17 +72,17 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, location);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
             form.reset();
             setDialogOpen(false);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         if (projectData) {
@@ -93,14 +95,14 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
             <DialogTrigger asChild>
                 <Button variant={"default"}>
                     <UploadIcon className="w-btn-icon h-btn-icon" />
-                    Upload gallery image
+                    {t.project.uploadImg}
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[36rem]">
                 <DialogHeader>
-                    <DialogTitle>Upload an image</DialogTitle>
+                    <DialogTitle>{t.project.uploadNewImg}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Upload a new gallery image</DialogDescription>
+                        <DialogDescription>{t.project.uploadNewImg}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
 
@@ -149,7 +151,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                             <span className="font-semibold">{field.value.name}</span>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-muted-foreground italic">No file choosen</span>
+                                                        <span className="text-muted-foreground italic">{t.form.noFileChosen}</span>
                                                     )}
                                                 </div>
 
@@ -180,10 +182,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-title">
-                                            Title
+                                            {t.form.title}
                                             <FormMessage />
                                         </FormLabel>
-                                        <Input {...field} placeholder="Enter title..." id="gallery-item-title" />
+                                        <Input {...field} placeholder={t.form.title} id="gallery-item-title" />
                                     </FormItem>
                                 )}
                             />
@@ -194,12 +196,12 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-description">
-                                            Description
+                                            {t.form.description}
                                             <FormMessage />
                                         </FormLabel>
                                         <Textarea
                                             {...field}
-                                            placeholder="Enter description..."
+                                            placeholder={t.form.description}
                                             className="h-fit min-h-14 resize-none"
                                             id="gallery-item-description"
                                         />
@@ -213,16 +215,16 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-ordering">
-                                            Ordering
+                                            {t.form.ordering}
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                Image with higher ordering will be listed first.
+                                                {t.project.galleryOrderingDesc}
                                             </FormDescription>
                                         </FormLabel>
                                         <Input
                                             {...field}
                                             onChange={(e) => field.onChange(Number.parseInt(e.target.value))}
-                                            placeholder="Enter order index..."
+                                            placeholder="1"
                                             min={0}
                                             type="number"
                                             id="gallery-item-ordering"
@@ -237,11 +239,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-featured">
-                                            Featured
+                                            {t.form.featured}
                                             <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
-                                                A featured gallery image shows up in search and your project card. Only one gallery image
-                                                can be featured.
+                                                {t.project.featuredGalleryImgDesc}
                                             </FormDescription>
                                         </FormLabel>
                                         {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
@@ -256,7 +257,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                             ) : (
                                                 <StarIcon className="w-btn-icon-md h-btn-icon-md" />
                                             )}
-                                            {field.value === true ? "Unfeature image" : "Feature image"}
+                                            {field.value === true ? t.project.unfeatureImg : t.project.featureImg}
                                         </Button>
                                     </FormItem>
                                 )}
@@ -269,7 +270,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
 
                                 <Button type="submit" disabled={isLoading}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                    Add gallery image
+                                    {t.project.addGalleryImg}
                                 </Button>
                             </DialogFooter>
                         </form>

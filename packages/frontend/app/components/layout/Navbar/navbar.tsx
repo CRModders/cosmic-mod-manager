@@ -1,7 +1,5 @@
 import { cn } from "@root/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
-import { projectTypes } from "@shared/config/project";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import type React from "react";
@@ -10,6 +8,7 @@ import ClientOnly from "~/components/client-only";
 import { BrandIcon } from "~/components/icons";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
+import { useTranslation } from "~/locales/provider";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
@@ -19,19 +18,41 @@ interface NavbarProps {
     notifications: Notification[];
 }
 
-const NavLinks = projectTypes.map((projectType) => {
-    return {
-        label: `${CapitalizeAndFormatString(projectType)}s`,
-        href: `/${createURLSafeSlug(projectType).value}s`,
-    };
-});
-
 export default function Navbar(props: NavbarProps) {
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
+    const { t } = useTranslation();
+    const nav = t.navbar;
 
     const toggleNavMenu = (newState?: boolean) => {
         setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
     };
+
+    const NavLinks = [
+        {
+            label: nav.mods,
+            href: "mods",
+        },
+        {
+            label: nav.datamods,
+            href: "datamods",
+        },
+        {
+            label: nav.resourcePacks,
+            href: "resource-packs",
+        },
+        {
+            label: nav.shaders,
+            href: "shaders",
+        },
+        {
+            label: nav.modpacks,
+            href: "modpacks",
+        },
+        {
+            label: nav.plugins,
+            href: "plugins",
+        },
+    ];
 
     useEffect(() => {
         if (isNavMenuOpen === true) {
@@ -72,7 +93,7 @@ export default function Navbar(props: NavbarProps) {
                             {NavLinks.map((link) => {
                                 return (
                                     <li key={link.href} className="flex items-center justify-center">
-                                        <Navlink href={link.href} label={link.label} className="h-9">
+                                        <Navlink href={link.href} label={link.label} className="h-9 capitalize">
                                             {link.label}
                                         </Navlink>
                                     </li>

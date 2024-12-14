@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import CopyBtn from "~/components/ui/copy-btn";
 import Link, { useNavigate } from "~/components/ui/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import { useTranslation } from "~/locales/provider";
 import CreateNewProjectDialog from "./new-project";
 
 interface Props {
@@ -17,16 +18,18 @@ interface Props {
 }
 
 export default function ProjectsPage({ projects }: Props) {
+    const { t } = useTranslation();
+
     return (
         <Card className="w-full overflow-hidden">
             <CardHeader className="w-full flex flex-row flex-wrap items-start justify-between gap-x-6 gap-y-2">
-                <CardTitle>Projects</CardTitle>
+                <CardTitle>{t.dashboard.projects}</CardTitle>
                 <CreateNewProjectDialog />
             </CardHeader>
             <CardContent className="p-0">
                 {projects.length === 0 ? (
                     <div className="w-full flex items-center justify-start p-6">
-                        <p>You don't have any projects. Click the button above to create one.</p>
+                        <p>{t.dashboard.createProjectInfo}</p>
                     </div>
                 ) : projects.length > 0 ? (
                     <ProjectsListTable projects={projects} />
@@ -37,6 +40,7 @@ export default function ProjectsPage({ projects }: Props) {
 }
 
 export function ProjectsListTable({ projects }: { projects: ProjectListItem[] }) {
+    const { t } = useTranslation();
     const customNavigate = useNavigate();
 
     return (
@@ -46,19 +50,20 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                     <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
                         {/* ICON: VISIBLE ON sm+ width */}
                         <TableHead className="invisible md:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">
-                            Icon
+                            {t.form.icon}
                         </TableHead>
+
                         {/* DETAILS: MOBILE ONLY */}
-                        <TableHead className="invisible md:hidden">Details</TableHead>
+                        <TableHead className="invisible md:hidden">{t.form.details}</TableHead>
 
                         {/* NAME: VISIBLE ON sm+ width */}
-                        <TableHead className="hidden md:table-cell min-w-16 lg:min-w-36">Name</TableHead>
+                        <TableHead className="hidden md:table-cell min-w-16 lg:min-w-36">{t.form.name}</TableHead>
                         {/* ID: VISIBLE ON sm+ width */}
-                        <TableHead className="hidden md:table-cell">ID</TableHead>
+                        <TableHead className="hidden md:table-cell">{t.form.id}</TableHead>
                         {/* TYPE: VISIBLE ON sm+ width */}
-                        <TableHead className="hidden md:table-cell">Type</TableHead>
+                        <TableHead className="hidden md:table-cell">{t.dashboard.type}</TableHead>
                         {/* STATUS: VISIBLE ON sm+ width */}
-                        <TableHead className="hidden md:table-cell">Status</TableHead>
+                        <TableHead className="hidden md:table-cell">{t.dashboard.status}</TableHead>
 
                         {/* SETTINGS LINK: VISIBLE ON sm+ width */}
                         <TableHead className="invisible md:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad"> </TableHead>

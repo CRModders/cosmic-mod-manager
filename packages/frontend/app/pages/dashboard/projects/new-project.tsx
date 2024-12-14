@@ -34,6 +34,7 @@ import { MultiSelect } from "~/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     orgId?: string;
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
+    const { t } = useTranslation();
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [typeSelectorOpen, setTypeSelectorOpen] = useState(false);
     const [visibilitySelectorOpen, setVisibilitySelectorOpen] = useState(false);
@@ -61,7 +63,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
         },
     });
 
-    const createProject = async (values: z.infer<typeof newProjectFormSchema>) => {
+    async function createProject(values: z.infer<typeof newProjectFormSchema>) {
         try {
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
@@ -75,15 +77,15 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
 
             if (!response.ok || !result?.success) {
                 enableInteractions();
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, ProjectPagePath(result?.type?.[0], result?.urlSlug));
-            return toast.success(result?.message || "Success");
+            return toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     const isFormSubmittable = () => {
         const values = form.getValues();
@@ -118,9 +120,9 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 }}
             >
                 <DialogHeader>
-                    <DialogTitle>Creating a project</DialogTitle>
+                    <DialogTitle>{t.dashboard.creatingProject}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Creating a new project</DialogDescription>
+                        <DialogDescription>{t.dashboard.creatingProject}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody>
@@ -137,7 +139,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="project-name-input">
-                                            Name
+                                            {t.form.name}
                                             <FormMessage />
                                         </FormLabel>
                                         <Input
@@ -162,7 +164,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="project-url-slug-input">
-                                            URL
+                                            {t.form.url}
                                             <FormMessage />
                                         </FormLabel>
                                         <Input
@@ -186,10 +188,10 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                     <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                         <div className="flex flex-col items-start justify-center">
                                             <FormLabel className="">
-                                                Project type
+                                                {t.form.projectType}
                                                 <FormMessage />
                                             </FormLabel>
-                                            <FormDescription>Select the appropriate type for your project</FormDescription>
+                                            <FormDescription>{t.dashboard.projectTypeDesc}</FormDescription>
                                         </div>
 
                                         <MultiSelect
@@ -205,7 +207,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             onValueChange={(values) => {
                                                 field.onChange(getProjectTypesFromNames(values));
                                             }}
-                                            placeholder="Choose project type"
+                                            placeholder={t.dashboard.chooseProjectType}
                                             popoverClassname={"type-selector-popover"}
                                         />
                                     </FormItem>
@@ -218,7 +220,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Visibility
+                                            {t.form.visibility}
                                             <FormMessage />
                                         </FormLabel>
                                         <Select
@@ -257,7 +259,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="project-summary-input">
-                                            Summary
+                                            {t.form.summary}
                                             <FormMessage />
                                         </FormLabel>
                                         <Textarea
@@ -284,7 +286,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                     }}
                                 >
                                     {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                    Continue
+                                    {t.form.continue}
                                 </Button>
                             </DialogFooter>
                         </form>

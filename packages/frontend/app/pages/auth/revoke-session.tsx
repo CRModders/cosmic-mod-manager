@@ -1,11 +1,13 @@
-import { useSearchParams } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { FormErrorMessage, FormSuccessMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 export default function RevokeSessionPage() {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState("");
     const [searchParams] = useSearchParams();
@@ -20,9 +22,9 @@ export default function RevokeSessionPage() {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
-            setSuccessMessage(result?.message || "Success");
+            setSuccessMessage(result?.message || t.common.success);
         } catch (err) {
             console.error(err);
         } finally {
@@ -45,7 +47,7 @@ export default function RevokeSessionPage() {
                 ) : successMessage ? (
                     <FormSuccessMessage text={successMessage} className="w-fit" />
                 ) : (
-                    <FormErrorMessage text="Error" className="w-fit" />
+                    <FormErrorMessage text={t.common.error} className="w-fit" />
                 )}
             </div>
         </main>

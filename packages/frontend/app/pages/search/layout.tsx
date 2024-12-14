@@ -1,7 +1,7 @@
 import { cn } from "@root/utils";
 import { projectTypes } from "@shared/config/project";
 import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
-import { Capitalize, CapitalizeAndFormatString } from "@shared/lib/utils";
+import { Capitalize } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
@@ -15,6 +15,7 @@ import { useNavigate } from "~/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipProvider, TooltipTemplate } from "~/components/ui/tooltip";
 import { useProjectType } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 import FilterSidebar from "./sidebar";
 import "./styles.css";
 
@@ -30,6 +31,7 @@ interface UpdateSearchParamProps {
 }
 
 export default function SearchPageLayout() {
+    const { t } = useTranslation();
     const searchInput = useRef<HTMLInputElement>(null);
     const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
@@ -64,6 +66,8 @@ export default function SearchPageLayout() {
         };
     }, []);
 
+    const searchLabel = t.search[typeStr];
+
     return (
         <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
             <FilterSidebar type={type === typeStr ? [type] : projectTypes} showFilters={showFilters} searchParams={searchParams} />
@@ -88,10 +92,10 @@ export default function SearchPageLayout() {
                                 });
                                 navigate(urlPathname);
                             }}
-                            placeholder={`Search ${type}s...`}
+                            placeholder={`${searchLabel}...`}
                             className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
                             id="search-input"
-                            aria-label={`Search ${type}s`}
+                            aria-label={searchLabel}
                         />
 
                         <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-card-background px-1 rounded-[0.2rem] font-mono">
@@ -118,7 +122,7 @@ export default function SearchPageLayout() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectLabel className="text-foreground font-bold">Sort by</SelectLabel>
+                                <SelectLabel className="text-foreground font-bold">{t.search.sortBy}</SelectLabel>
                                 {[
                                     SearchResultSortMethod.RELEVANCE,
                                     SearchResultSortMethod.DOWNLOADS,
@@ -128,7 +132,7 @@ export default function SearchPageLayout() {
                                 ].map((option) => {
                                     return (
                                         <SelectItem key={option} value={option}>
-                                            {CapitalizeAndFormatString(option)}
+                                            {t.search[option]}
                                         </SelectItem>
                                     );
                                 })}
@@ -142,7 +146,7 @@ export default function SearchPageLayout() {
                         onClick={() => setShowFilters((prev) => !prev)}
                     >
                         <FilterIcon className="w-btn-icon h-btn-icon" />
-                        Filters...
+                        {t.search.filters}
                     </Button>
 
                     <ViewTypeToggle projectType={type} viewType={viewType} reRender={reRender} />

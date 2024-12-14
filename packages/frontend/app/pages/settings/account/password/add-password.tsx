@@ -22,8 +22,10 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 const AddPasswordForm = ({ email }: { email: string }) => {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -55,9 +57,9 @@ const AddPasswordForm = ({ email }: { email: string }) => {
             const data = await response.json();
 
             if (!response.ok || data?.success !== true) {
-                return toast.error(data?.message || "");
+                return toast.error(data?.message || t.common.error);
             }
-            toast.success(data?.message || "");
+            toast.success(data?.message || t.common.success);
             form.reset();
         } finally {
             enableInteractions();
@@ -71,13 +73,13 @@ const AddPasswordForm = ({ email }: { email: string }) => {
             <DialogTrigger asChild>
                 <Button variant={"secondary"}>
                     <KeyRoundIcon className="w-btn-icon h-btn-icon" />
-                    Add password
+                    {t.settings.addPass}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add password</DialogTitle>
-                    <DialogDescription>You will be able to use this password to log into your account</DialogDescription>
+                    <DialogTitle>{t.settings.addPass}</DialogTitle>
+                    <DialogDescription>{t.settings.addPassDialogDesc}</DialogDescription>
                 </DialogHeader>
 
                 <DialogBody>
@@ -94,11 +96,11 @@ const AddPasswordForm = ({ email }: { email: string }) => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            New password
+                                            {t.auth.newPass}
                                             <FormMessage />
                                         </FormLabel>
                                         <FormControl>
-                                            <Input {...field} type="password" placeholder="Your new password" spellCheck={false} />
+                                            <Input {...field} type="password" placeholder={t.auth.newPass_label} spellCheck={false} />
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -109,11 +111,11 @@ const AddPasswordForm = ({ email }: { email: string }) => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Confirm password
+                                            {t.auth.confirmPass}
                                             <FormMessage />
                                         </FormLabel>
                                         <FormControl>
-                                            <Input {...field} type="password" placeholder="Re-enter your password" spellCheck={false} />
+                                            <Input {...field} type="password" placeholder={t.auth.confirmNewPassDesc} spellCheck={false} />
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -125,7 +127,7 @@ const AddPasswordForm = ({ email }: { email: string }) => {
                                 </DialogClose>
                                 <Button disabled={!isFormSubmittable || isLoading}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                    Add password
+                                    {t.settings.addPass}
                                 </Button>
                             </DialogFooter>
                         </form>

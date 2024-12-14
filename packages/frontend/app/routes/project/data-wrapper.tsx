@@ -4,23 +4,28 @@ import { resJson, serverFetch } from "@root/utils/server-fetch";
 import { ProjectPagePath } from "@root/utils/urls";
 import { SITE_NAME_SHORT } from "@shared/config";
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
+import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { combineProjectMembers } from "@shared/lib/utils/project";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@shared/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 import { NotFoundPage } from "~/routes/$";
 import type { Route } from "./+types/data-wrapper";
 
 export default function _ProjectDataWrapper() {
+    const { t } = useTranslation();
     const data = useProjectData();
 
     if (!data?.projectData?.id) {
+        const type = getProjectTypeFromName(data?.projectType);
+
         return (
             <NotFoundPage
-                title="Project not found"
-                description={`The ${data?.projectType} with the slug/ID "${data?.projectSlug}" does not exist.`}
+                title={t.error.projectNotFound}
+                description={t.error.projectNotFoundDesc(type, data.projectSlug)}
                 linkHref={`/${data?.projectType}s`}
-                linkLabel={`Browse ${CapitalizeAndFormatString(data.projectType)}s`}
+                linkLabel={t.project.browse[type]}
             />
         );
     }

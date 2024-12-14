@@ -16,6 +16,7 @@ import { DotSeparator } from "~/components/ui/separator";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Switch } from "~/components/ui/switch";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useTranslation } from "~/locales/provider";
 import { authProvidersList } from "~/pages/auth/oauth-providers";
 
 interface Props {
@@ -24,13 +25,14 @@ interface Props {
 }
 
 export default function SessionsPage({ loggedInSessions, session: currSession }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<{ value: boolean; sessionId: string }>({ value: false, sessionId: "" });
     const [showIp, setShowIp] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
 
-    const revokeSession = async (sessionId: string) => {
+    async function revokeSession(sessionId: string) {
         try {
             if (isLoading.value) return;
             setIsLoading({ value: true, sessionId: sessionId });
@@ -42,32 +44,29 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
             RefreshPage(navigate, location);
         } catch (err) {
             console.error(err);
         } finally {
             setIsLoading({ value: false, sessionId: "" });
         }
-    };
+    }
 
     return (
         <Card className="w-full">
             <CardHeader className="gap-3">
                 <div className="flex items-center justify-between gap-x-6 gap-y-2">
-                    <CardTitle>Sessions</CardTitle>
+                    <CardTitle>{t.settings.sessions}</CardTitle>
                     <label className="flex gap-2 items-center justify-center text-sm text-muted-foreground" htmlFor="show-ip-addresses">
-                        Show IP Addresses
+                        {t.settings.showIpAddr}
                         <Switch checked={showIp} onCheckedChange={setShowIp} id="show-ip-addresses" />
                     </label>
                 </div>
-                <CardDescription>
-                    These devices are currently logged into your account, you can revoke any session at any time. If you see something you
-                    don't recognize, immediately revoke the session and change the password of the associated auth provider.
-                </CardDescription>
+                <CardDescription>{t.settings.sessionsDesc}</CardDescription>
             </CardHeader>
             <CardContent className="w-full flex items-center justify-center flex-col gap-form-elements relative min-h-24">
                 {loggedInSessions.map((session) => {
@@ -88,7 +87,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                                 <span>{session.ip}</span>
                                             ) : (
                                                 <span className="text-extra-muted-foreground" title={session.ip || ""}>
-                                                    [IP hidden]
+                                                    [{t.settings.ipHidden}]
                                                 </span>
                                             )}
                                             <CopyBtn text={session.ip || ""} id={`session-ip-${session.id}`} />
@@ -110,7 +109,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                         <Tooltip>
                                             <TooltipTrigger className="cursor-text">
                                                 <span>
-                                                    Last accessed <TimePassedSince date={session.dateLastActive} />
+                                                    {t.settings.lastAccessed} <TimePassedSince date={session.dateLastActive} />
                                                 </span>
                                             </TooltipTrigger>
                                             <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
@@ -123,7 +122,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                         <Tooltip>
                                             <TooltipTrigger className="cursor-text">
                                                 <span>
-                                                    Created <TimePassedSince date={session.dateCreated} />
+                                                    {t.settings.created} <TimePassedSince date={session.dateCreated} />
                                                 </span>
                                             </TooltipTrigger>
                                             <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
@@ -152,18 +151,17 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                                 <span className="capitalize">{session?.providerName}</span>
                                             </TooltipTrigger>
                                             <TooltipContent className="bg-shallower-background dark:bg-shallow-background">
-                                                Session created using {Capitalize(session.providerName)} provider
+                                                {t.settings.sessionCreatedUsing(Capitalize(session?.providerName))}
                                             </TooltipContent>
                                         </Tooltip>
                                     </div>
                                 </div>
                                 <div>
                                     {session.id === currSession?.sessionId ? (
-                                        <span className="text-muted-foreground italic">Current session</span>
+                                        <span className="text-muted-foreground italic">{t.settings.currSession}</span>
                                     ) : (
                                         <Button
                                             variant={"secondary-inverted"}
-                                            className=""
                                             disabled={isLoading.value}
                                             onClick={() => {
                                                 revokeSession(session.id);
@@ -174,7 +172,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                             ) : (
                                                 <XIcon className="w-btn-icon h-btn-icon" />
                                             )}
-                                            Revoke session
+                                            {t.settings.revokeSession}
                                         </Button>
                                     )}
                                 </div>

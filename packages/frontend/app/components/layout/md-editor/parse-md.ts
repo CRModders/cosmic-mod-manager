@@ -64,7 +64,7 @@ export const configuredXss = new FilterXSS({
             }
 
             const sameSiteUrl = PageUrl(url);
-            return `<${tag} title="${sameSiteUrl}" ${html.slice(3).replace(url, sameSiteUrl)}`;
+            return `<${tag} data-discover="true" title="${sameSiteUrl}" ${html.slice(3).replace(url, sameSiteUrl)}`;
         }
     },
     onIgnoreTagAttr: (tag, name, value) => {

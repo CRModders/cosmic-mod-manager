@@ -6,17 +6,20 @@ import { toast } from "sonner";
 import { Button, CancelButton } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { FormSuccessMessage } from "~/components/ui/form-message";
+import Link from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import SessionsPageLink from "./help-link";
 
-const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
+export default function ConfirmNewPasswordCard({ code }: { code: string }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<{ value: boolean; action: "cancelling" | "confirming" | null }>({
         value: false,
         action: null,
     });
     const [successMessage, setSuccessMessage] = useState("");
 
-    const confirmToAddNewPassword = async () => {
+    async function confirmToAddNewPassword() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "confirming" });
@@ -28,16 +31,16 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
 
             const result = await response.json();
             if (result?.success === true) {
-                return setSuccessMessage(result?.message || "Success");
+                return setSuccessMessage(result?.message || t.common.success);
             }
 
-            return toast.error(result?.message || "Error");
+            return toast.error(result?.message || t.common.error);
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
-    const cancelAddingNewPassword = async () => {
+    async function cancelAddingNewPassword() {
         try {
             if (isLoading.value === true) return;
             setIsLoading({ value: true, action: "cancelling" });
@@ -49,38 +52,35 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
 
             const result = await response.json();
             if (result?.success === true) {
-                return setSuccessMessage(result?.message || "Success");
+                return setSuccessMessage(result?.message || t.common.success);
             }
 
-            return toast.error(result?.message || "Error");
+            return toast.error(result?.message || t.common.error);
         } finally {
             setIsLoading({ value: false, action: null });
         }
-    };
+    }
 
     return (
         <>
-            <title>{`Confirm new password - ${SITE_NAME_SHORT}`}</title>
+            <title>{`${t.auth.confirmNewPass} - ${SITE_NAME_SHORT}`}</title>
             <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">
                 <CardHeader>
-                    <CardTitle>Confirm new password</CardTitle>
+                    <CardTitle>{t.auth.confirmNewPass}</CardTitle>
                 </CardHeader>
                 {successMessage ? (
                     <CardContent className="gap-2 items-center justify-center">
                         <FormSuccessMessage text={successMessage} />
-                        <a href="/" className="font-semibold hover:underline underline-offset-2">
-                            Home
-                        </a>
+                        <Link to="/" className="link_blue">
+                            {t.common.home}
+                        </Link>
                     </CardContent>
                 ) : (
                     <>
                         <CardContent>
-                            <CardDescription>
-                                A new password was recently added to your account and is awaiting confirmation. Confirm below if this was
-                                you.
-                            </CardDescription>
+                            <CardDescription>{t.auth.confirmNewPassDesc}</CardDescription>
                             <div className="w-full flex items-center justify-end gap-panel-cards mt-3">
                                 <CancelButton
                                     icon={isLoading.action === "cancelling" ? <LoadingSpinner size="xs" /> : null}
@@ -93,7 +93,7 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
                                     ) : (
                                         <CheckIcon className="w-btn-icon h-btn-icon" />
                                     )}
-                                    Confirm
+                                    {t.form.confirm}
                                 </Button>
                             </div>
                         </CardContent>
@@ -105,6 +105,4 @@ const ConfirmNewPasswordCard = ({ code }: { code: string }) => {
             </Card>
         </>
     );
-};
-
-export default ConfirmNewPasswordCard;
+}

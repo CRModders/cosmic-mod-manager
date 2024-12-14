@@ -17,11 +17,13 @@ import {
     DialogTrigger,
 } from "~/components/ui/dialog";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 export default function DeleteAccountDialog() {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
-    const deleteAccount = async () => {
+    async function deleteAccount() {
         try {
             if (isLoading) return;
             setIsLoading(true);
@@ -30,27 +32,27 @@ export default function DeleteAccountDialog() {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            return toast.success(result?.message as string);
+            return toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"destructive"}>
                     <Trash2Icon className="w-btn-icon h-btn-icon" />
-                    Delete account
+                    {t.auth.deleteAccount}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Delete account
+                        {t.auth.deleteAccount}
                         <VisuallyHidden>
                             <DialogDescription>Delete your {SITE_NAME_LONG.toLowerCase()} account</DialogDescription>
                         </VisuallyHidden>
@@ -58,7 +60,7 @@ export default function DeleteAccountDialog() {
                 </DialogHeader>
 
                 <DialogBody className="w-full flex flex-col items-start justify-start gap-form-elements">
-                    <p>Are you sure you want to delete your account?</p>
+                    <p>{t.settings.sureToDeleteAccount}</p>
 
                     <DialogFooter>
                         <DialogClose asChild disabled={isLoading}>
@@ -67,7 +69,7 @@ export default function DeleteAccountDialog() {
 
                         <Button variant={"destructive"} onClick={deleteAccount} disabled={isLoading}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
-                            Delete
+                            {t.form.delete}
                         </Button>
                     </DialogFooter>
                 </DialogBody>

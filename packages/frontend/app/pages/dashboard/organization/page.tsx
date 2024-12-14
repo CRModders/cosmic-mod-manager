@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { FullWidthSpinner } from "~/components/ui/spinner";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import CreateNewOrg_Dialog from "./new-organization";
 
 interface Props {
@@ -14,22 +15,23 @@ interface Props {
 }
 
 export default function OrganisationDashboardPage({ organisations }: Props) {
+    const { t } = useTranslation();
     const session = useSession();
 
     return (
         <Card className="w-full overflow-hidden">
             <CardHeader className="w-full flex flex-row flex-wrap items-center justify-between gap-x-6 gap-y-2">
-                <CardTitle>Organizations</CardTitle>
+                <CardTitle>{t.dashboard.organizations}</CardTitle>
 
                 <CreateNewOrg_Dialog>
                     <Button>
                         <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
-                        Create organization
+                        {t.dashboard.createAnOrg}
                     </Button>
                 </CreateNewOrg_Dialog>
             </CardHeader>
             <CardContent>
-                {!organisations?.length && <p className="text-muted-foreground">Create an organization!</p>}
+                {!organisations?.length && <p className="text-muted-foreground">{t.dashboard.createAnOrg}</p>}
                 {organisations === undefined ? (
                     <FullWidthSpinner />
                 ) : (

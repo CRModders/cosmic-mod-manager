@@ -24,8 +24,10 @@ import {
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 export default function RemovePasswordForm() {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -52,10 +54,10 @@ export default function RemovePasswordForm() {
 
             const result = await response.json();
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
-            return toast.success(result?.message || "Success");
+            return toast.success(result?.message || t.common.success);
         } finally {
             setDialogOpen(false);
             setIsLoading(false);
@@ -69,15 +71,13 @@ export default function RemovePasswordForm() {
             <DialogTrigger asChild>
                 <Button variant={"secondary-destructive"}>
                     <Trash2Icon className="w-btn-icon h-btn-icon" />
-                    Remove password
+                    {t.settings.removePass}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Remove your account password</DialogTitle>
-                    <DialogDescription>
-                        After removing your password you won't be able to use credentials to log into your account
-                    </DialogDescription>
+                    <DialogTitle>{t.settings.removePassTitle}</DialogTitle>
+                    <DialogDescription>{t.settings.removePassDesc}</DialogDescription>
                 </DialogHeader>
 
                 <DialogBody>
@@ -92,10 +92,10 @@ export default function RemovePasswordForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel htmlFor="password-input">
-                                            Password
+                                            {t.auth.password}
                                             <FormMessage />
                                         </FormLabel>
-                                        <Input {...field} type="password" id="password-input" placeholder="Enter your current password" />
+                                        <Input {...field} type="password" id="password-input" placeholder={t.settings.enterCurrentPass} />
                                     </FormItem>
                                 )}
                             />
@@ -106,7 +106,7 @@ export default function RemovePasswordForm() {
                                 </DialogClose>
                                 <Button type="submit" variant={"destructive"} disabled={isLoading || !form.getValues().password}>
                                     {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
-                                    Remove password
+                                    {t.settings.removePass}
                                 </Button>
                             </DialogFooter>
                         </form>

@@ -45,6 +45,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
+import { useTranslation } from "~/locales/provider";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
 import SecondaryNav from "./secondary-nav";
@@ -52,6 +53,7 @@ import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
 export default function ProjectPageLayout() {
+    const { t } = useTranslation();
     const { theme } = useTheme();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
@@ -102,9 +104,9 @@ export default function ProjectPageLayout() {
             {/* SIDEBAR */}
             <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
                 <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
-                    <h2 className="text-lg font-extrabold">Compatibility</h2>
+                    <h2 className="text-lg font-extrabold">{t.project.compatibility}</h2>
                     <section>
-                        <h3 className="flex font-bold text-muted-foreground pb-1">Game versions</h3>
+                        <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.gameVersions}</h3>
                         <div className="w-full flex flex-wrap gap-1">
                             {getVersionsToDisplay(projectData).map((version) => (
                                 <Chip key={version} className="text-muted-foreground">
@@ -116,7 +118,7 @@ export default function ProjectPageLayout() {
 
                     {listedLoaders.length ? (
                         <section>
-                            <h3 className="flex font-bold text-muted-foreground pb-1">Loaders</h3>
+                            <h3 className="flex font-bold text-muted-foreground pb-1">{t.project.loaders}</h3>
                             <div className="w-full flex flex-wrap gap-1">
                                 {listedLoaders.map((loader) => {
                                     const accentForeground = loader?.metadata?.accent?.foreground;
@@ -145,7 +147,7 @@ export default function ProjectPageLayout() {
 
                     {projectEnvironments?.length ? (
                         <section className="flex flex-wrap items-start justify-start gap-1">
-                            <h3 className="block w-full font-bold text-muted-foreground">Environments</h3>
+                            <h3 className="block w-full font-bold text-muted-foreground">{t.project.environments}</h3>
                             {projectEnvironments.map((item, i) => {
                                 return (
                                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -165,7 +167,7 @@ export default function ProjectPageLayout() {
                         {projectData?.issueTrackerUrl ? (
                             <ExternalLink
                                 url={projectData?.issueTrackerUrl}
-                                label="Report issues"
+                                label={t.project.reportIssues}
                                 icon={<BugIcon className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
@@ -173,7 +175,7 @@ export default function ProjectPageLayout() {
                         {projectData?.projectSourceUrl ? (
                             <ExternalLink
                                 url={projectData?.projectSourceUrl}
-                                label="View source"
+                                label={t.project.viewSource}
                                 icon={<CodeIcon className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
@@ -181,7 +183,7 @@ export default function ProjectPageLayout() {
                         {projectData?.projectWikiUrl ? (
                             <ExternalLink
                                 url={projectData?.projectWikiUrl}
-                                label="Visit wiki"
+                                label={t.project.visitWiki}
                                 icon={<BookOpenIcon className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
@@ -189,7 +191,7 @@ export default function ProjectPageLayout() {
                         {projectData?.discordInviteUrl ? (
                             <ExternalLink
                                 url={projectData?.discordInviteUrl}
-                                label="Join Discord server"
+                                label={t.project.joinDiscord}
                                 icon={<DiscordIcon className="w-btn-icon h-btn-icon fill-current dark:fill-current" />}
                             />
                         ) : null}
@@ -198,7 +200,7 @@ export default function ProjectPageLayout() {
 
                 {(ctx.featuredProjectVersions?.length || 0) > 0 ? (
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
-                        <h2 className="text-lg font-bold pb-2">Featured versions</h2>
+                        <h2 className="text-lg font-bold pb-2">{t.project.featuredVersions}</h2>
                         <TooltipProvider>
                             {ctx.featuredProjectVersions?.map((version) => (
                                 // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -265,7 +267,7 @@ export default function ProjectPageLayout() {
                 ) : null}
 
                 <Card className="p-card-surround grid grid-cols-1 gap-1">
-                    <h2 className="text-lg font-bold pb-1">Creators</h2>
+                    <h2 className="text-lg font-bold pb-1">{t.project.creators}</h2>
                     {projectData.organisation?.id ? (
                         <>
                             <ProjectMember
@@ -273,7 +275,7 @@ export default function ProjectPageLayout() {
                                 url={OrgPagePath(projectData.organisation.slug)}
                                 userName={projectData.organisation.name}
                                 isOwner={false}
-                                roleName={"Organization"}
+                                roleName={t.project.organization}
                                 avatarImageUrl={imageUrl(projectData.organisation.icon)}
                                 avatarClassName="rounded"
                                 fallbackIcon={fallbackOrgIcon}
@@ -299,7 +301,7 @@ export default function ProjectPageLayout() {
                 </Card>
 
                 <Card className="items-start justify-start p-card-surround grid grid-cols-1 gap-1">
-                    <h2 className="text-lg font-bold pb-2">Details</h2>
+                    <h2 className="text-lg font-bold pb-2">{t.project.details}</h2>
 
                     {projectLicenseData?.id || projectLicenseData?.name ? (
                         <div className="flex items-center justify-start gap-2 text-muted-foreground">
@@ -330,7 +332,7 @@ export default function ProjectPageLayout() {
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <CalendarIcon className="w-btn-icon h-btn-icon" />
-                                    Created <TimePassedSince date={projectData.datePublished} />
+                                    {t.settings.created} <TimePassedSince date={projectData.datePublished} />
                                 </p>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -341,7 +343,7 @@ export default function ProjectPageLayout() {
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
-                                    Updated <TimePassedSince date={projectData.dateUpdated} />
+                                    {t.project.updated} <TimePassedSince date={projectData.dateUpdated} />
                                 </p>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -357,19 +359,19 @@ export default function ProjectPageLayout() {
                     className="h-fit bg-card-background rounded-lg px-3 py-2"
                     links={[
                         {
-                            label: "Description",
+                            label: t.form.description,
                             href: "",
                         },
                         {
-                            label: "Gallery",
+                            label: t.project.gallery,
                             href: "/gallery",
                         },
                         {
-                            label: "Changelog",
+                            label: t.project.changelog,
                             href: "/changelog",
                         },
                         {
-                            label: "Versions",
+                            label: t.project.versions,
                             href: "/versions",
                         },
                     ]}

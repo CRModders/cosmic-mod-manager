@@ -1,11 +1,13 @@
 import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function ProjectPage() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
 
     if (!ctx.projectData.description) {
-        return <span className="text-muted-foreground italic text-center">No project description provided</span>;
+        return <span className="text-muted-foreground italic text-center">{t.project.noProjectDesc}</span>;
     }
 
     return (

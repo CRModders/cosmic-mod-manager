@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 import { TeamInviteNotification } from "./item-card";
 
 export interface NotificationsData {
@@ -23,6 +24,7 @@ export interface NotificationsData {
 }
 
 export default function NotificationsPage({ notifications, relatedProjects, relatedOrgs, relatedUsers }: NotificationsData) {
+    const { t } = useTranslation();
     const [markingAsRead, setMarkingAsRead] = useState(false);
     const unreadNotifications = notifications?.filter((notification) => !notification.read);
 
@@ -51,19 +53,19 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
     return (
         <Card className="w-full">
             <CardHeader className="w-full flex flex-row flex-wrap gap-x-4 gap-y-2 items-center justify-between">
-                <CardTitle className="w-fit">Notifications</CardTitle>
+                <CardTitle className="w-fit">{t.dashboard.notifications}</CardTitle>
 
                 {(notifications?.length || 0) > 0 && (
                     <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                         <VariantButtonLink url="/dashboard/notifications/history" className="w-fit">
                             <HistoryIcon className="w-btn-icon-md h-btn-icon-md" />
-                            View history
+                            {t.dashboard.viewHistory}
                         </VariantButtonLink>
 
                         {(unreadNotifications?.length || 0) > 1 && (
                             <Button variant={"secondary-destructive"} disabled={markingAsRead} onClick={markAllAsRead}>
                                 {markingAsRead ? <LoadingSpinner size="xs" /> : <CheckCheckIcon className="w-btn-icon-md h-btn-icon-md" />}
-                                Mark all as read
+                                {t.dashboard.markAllRead}
                             </Button>
                         )}
                     </div>
@@ -71,7 +73,7 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
             </CardHeader>
 
             <CardContent className="flex flex-col gap-panel-cards">
-                {!unreadNotifications?.length && <span className="text-muted-foreground">You don't have any unread notifications.</span>}
+                {!unreadNotifications?.length && <span className="text-muted-foreground">{t.dashboard.noUnreadNotifs}</span>}
 
                 <ul aria-label="Notifications list" className="w-full flex flex-col gap-panel-cards">
                     {unreadNotifications?.map((notification) => (

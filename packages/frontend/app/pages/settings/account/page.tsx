@@ -2,6 +2,7 @@ import type { LinkedProvidersListData, LoggedInUserData } from "@shared/types";
 import { CardContent, CardHeader, CardTitle, SectionCard } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useTranslation } from "~/locales/provider";
 import DeleteAccountDialog from "./delete-account";
 import ManageAuthProviders from "./manage-providers";
 import ManagePassword from "./password/password";
@@ -12,25 +13,27 @@ interface Props {
 }
 
 export default function AccountSettingsPage({ session, linkedAuthProviders }: Props) {
+    const { t } = useTranslation();
+
     return (
         <>
             <SectionCard className="w-full">
                 <CardHeader>
-                    <CardTitle>Account security</CardTitle>
+                    <CardTitle>{t.settings.accountSecurity}</CardTitle>
                 </CardHeader>
                 <CardContent className="gap-6">
                     <div className="flex flex-col items-start justify-center max-w-md w-full gap-1.5">
-                        <Label className="">Email</Label>
+                        <Label className="">{t.auth.email}</Label>
                         <Input readOnly value={session?.email} />
                     </div>
 
                     <div className="w-full flex flex-wrap items-end gap-x-8 justify-between gap-2">
                         <div className="flex flex-col items-start justify-start gap-1.5 flex-shrink-0">
-                            <Label>Password</Label>
+                            <Label>{t.auth.password}</Label>
                             {session.hasAPassword ? (
-                                <p className="text-muted-foreground">Change your account password</p>
+                                <p className="text-muted-foreground">{t.settings.changePassTitle}</p>
                             ) : (
-                                <p className="text-muted-foreground">Add a password to use credentials login</p>
+                                <p className="text-muted-foreground">{t.settings.addPassDesc}</p>
                             )}
                         </div>
 
@@ -39,8 +42,8 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
 
                     <div className="w-full flex flex-wrap items-end gap-x-8 justify-between gap-2">
                         <div className="flex flex-col items-start justify-start gap-1.5">
-                            <Label>Manage authentication providers</Label>
-                            <p className="text-muted-foreground">Add or remove login methods from your account.</p>
+                            <Label>{t.settings.manageAuthProviders}</Label>
+                            <p className="text-muted-foreground">{t.settings.manageProvidersDesc}</p>
                         </div>
 
                         <ManageAuthProviders linkedAuthProviders={linkedAuthProviders || []} />
@@ -50,15 +53,11 @@ export default function AccountSettingsPage({ session, linkedAuthProviders }: Pr
 
             <SectionCard className="w-full">
                 <CardHeader>
-                    <CardTitle>Delete account</CardTitle>
+                    <CardTitle>{t.auth.deleteAccount}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="w-full flex flex-wrap items-center justify-between gap-x-12 gap-y-4">
-                        <p className="text-muted-foreground max-w-xl">
-                            Once you delete your account, there is no going back. Deleting your account will remove all of your data from
-                            our servers.
-                        </p>
-
+                        <p className="text-muted-foreground max-w-[60ch]">{t.auth.deleteAccountDesc}</p>
                         <DeleteAccountDialog />
                     </div>
                 </CardContent>

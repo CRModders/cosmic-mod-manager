@@ -2,6 +2,7 @@ import { cn } from "@root/utils";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { VariantButtonLink } from "~/components/ui/link";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     title?: string | React.ReactNode;
@@ -12,19 +13,21 @@ interface Props {
 }
 
 export function NotFoundPage({ className, title, description, linkHref, linkLabel }: Props) {
+    const { t } = useTranslation();
+
     return (
         <div className={cn("w-full full_page flex flex-col items-center justify-center", className)}>
             <div className="w-full flex flex-col items-center justify-center">
                 <h1 className="w-full text-5xl leading-snug font-extrabold flex items-center justify-center text-center">
-                    {title || "404 | Page not found."}
+                    {title || t.error.pageNotFound}
                 </h1>
             </div>
             <p className="text-lg dark:text-foreground-muted max-w-xl flex items-center justify-center text-center">
-                {description || "Sorry, we couldn't find the page you're looking for."}
+                {description || t.error.pageNotFoundDesc}
             </p>
 
-            <VariantButtonLink variant="link" url={linkHref || "/"} label={linkLabel || "Go to Home page"} className="mt-4 text-lg">
-                {linkLabel || "Home"}
+            <VariantButtonLink variant="link" url={linkHref || "/"} label={linkLabel || t.common.home} className="mt-4 text-lg">
+                {linkLabel || t.common.home}
             </VariantButtonLink>
         </div>
     );

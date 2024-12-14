@@ -18,6 +18,7 @@ import { LabelledCheckbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { useNavigate } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
+import { useTranslation } from "~/locales/provider";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
 
 interface Props {
@@ -38,15 +39,6 @@ const matchesSearch = (strings: string[], query: string) => {
     return false;
 };
 
-const loadersFilterLabel = "Loaders";
-const gameVersionsFilterLabel = "Game versions";
-const environmentFilterLabel = "Environment";
-const categoryFilterLabel = "Categories";
-const featureFilterLabel = "Features";
-const resolutionFilterLabel = "Resolutions";
-const performanceFilterLabel = "Performance impact";
-const licenseFilterLabel = "License";
-
 const filtersKeyList = [
     loaderFilterParamNamespace,
     gameVersionFilterParamNamespace,
@@ -65,6 +57,7 @@ function clearFilters() {
 }
 
 function FilterSidebar({ type, showFilters, searchParams }: Props) {
+    const { t } = useTranslation();
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [query, setQuery] = useState("");
     const _navigate = useNavigate();
@@ -72,6 +65,16 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
     function navigate(to: string) {
         return _navigate(to, { replace: true, preventScrollReset: true });
     }
+
+    // Labels
+    const loadersFilterLabel = t.search.loaders;
+    const gameVersionsFilterLabel = t.search.gameVersions;
+    const environmentFilterLabel = t.search.environment;
+    const categoryFilterLabel = t.search.categories;
+    const featureFilterLabel = t.search.features;
+    const resolutionFilterLabel = t.search.resolutions;
+    const performanceFilterLabel = t.search.performanceImpact;
+    const licenseFilterLabel = t.search.license;
 
     // Filters list
     const loaderFilters = getALlLoaderFilters(type);
@@ -115,7 +118,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
         .filter((performance) => matchesSearch([performance, performanceFilterLabel], query));
 
     // License filters
-    const licenseFilterOptions = [{ value: "oss", label: "Open source only" }].filter((license) =>
+    const licenseFilterOptions = [{ value: "oss", label: t.search.openSourceOnly }].filter((license) =>
         matchesSearch([license.label, license.value, licenseFilterLabel], query),
     );
 
@@ -135,7 +138,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
 
             <div className="flex items-center justify-center gap-2">
                 <Input
-                    placeholder="Search filters..."
+                    placeholder={t.search.searchFilters}
                     value={query}
                     onChange={(e) => {
                         setQuery(e.target.value);
@@ -145,7 +148,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 <Button
                     variant="secondary"
                     className="shrink-0 !w-10 !h-10"
-                    title="Reset filters"
+                    title={t.search.clearFilters}
                     size="icon"
                     onClick={() => {
                         const newUrl = clearFilters();
@@ -196,7 +199,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                         }}
                         className="mt-3 ml-0.5 text-extra-muted-foreground"
                     >
-                        Show all versions
+                        {t.form.showAllVersions}
                     </LabelledCheckbox>
                 }
             />

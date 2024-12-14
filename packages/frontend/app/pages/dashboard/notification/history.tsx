@@ -7,31 +7,34 @@ import {
     BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { useTranslation } from "~/locales/provider";
 import type { NotificationsData } from "./page";
 import { NotificationItem } from "./page";
 
 export default function NotificationsHistoryPage({ notifications, relatedProjects, relatedOrgs, relatedUsers }: NotificationsData) {
+    const { t } = useTranslation();
+
     return (
         <Card className="w-full">
             <CardHeader className="w-full flex flex-col gap-4">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/dashboard/notifications">Notifications</BreadcrumbLink>
+                            <BreadcrumbLink href="/dashboard/notifications">{t.dashboard.notifications}</BreadcrumbLink>
                         </BreadcrumbItem>
 
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>History</BreadcrumbPage>
+                            <BreadcrumbPage>{t.dashboard.history}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
 
-                <CardTitle className="w-fit">Notification History</CardTitle>
+                <CardTitle className="w-fit">{t.dashboard.notifHistory}</CardTitle>
             </CardHeader>
 
             <CardContent className="flex flex-col gap-panel-cards">
-                {!notifications?.length && <span className="text-muted-foreground">You don't have any notifications.</span>}
+                {!notifications?.length && <span className="text-muted-foreground">{t.dashboard.noUnreadNotifs}</span>}
 
                 <ul className="w-full flex flex-col gap-panel-cards">
                     {notifications?.map((notification) => (

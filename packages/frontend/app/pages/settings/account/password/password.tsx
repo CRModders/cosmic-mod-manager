@@ -2,6 +2,7 @@ import type { LoggedInUserData } from "@shared/types";
 import { KeyRound } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import Link from "~/components/ui/link";
+import { useTranslation } from "~/locales/provider";
 import AddPasswordForm from "./add-password";
 import RemovePasswordForm from "./remove-password";
 
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function ManagePassword({ session }: Props) {
+    const { t } = useTranslation();
     if (!session?.hasAPassword) {
         return <AddPasswordForm email={session.email} />;
     }
@@ -19,7 +21,7 @@ export default function ManagePassword({ session }: Props) {
             <Link to="/change-password">
                 <Button variant={"secondary"} tabIndex={-1}>
                     <KeyRound className="w-btn-icon h-btn-icon" />
-                    Change password
+                    {t.auth.changePassword}
                 </Button>
             </Link>
             <RemovePasswordForm />

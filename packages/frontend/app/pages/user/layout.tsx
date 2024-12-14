@@ -12,6 +12,7 @@ import { PageHeader } from "~/components/layout/page-header";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import Chip from "~/components/ui/chip";
 import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -133,7 +134,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
     if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {
         title = "Moderator";
     }
-
+    // <span className="font-semibold text-tiny uppercase text-extra-muted-foreground">{title}</span>
     return (
         <PageHeader
             vtId={userData.id}
@@ -142,7 +143,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             fallbackIcon={fallbackUserIcon}
             title={userData.userName}
             description={userData.bio || ""}
-            titleBadge={title ? <span className="font-semibold text-tiny uppercase text-extra-muted-foreground">{title}</span> : null}
+            titleBadge={title ? <Chip className="text-tiny font-semibold link_blue uppercase">Moderator</Chip> : null}
             threeDotMenu={
                 <>
                     <Button variant="ghost-destructive" className="w-full">

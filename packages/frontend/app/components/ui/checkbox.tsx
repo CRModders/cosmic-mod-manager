@@ -38,7 +38,7 @@ interface LabelledCheckboxProps {
 const LabelledCheckbox = React.forwardRef<
     React.ElementRef<typeof CheckboxPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & LabelledCheckboxProps
->(({ checkBoxId, children, checked, className, checkBoxClassname, onCheckedChange, disabled, name }, ref) => {
+>(({ checkBoxId, children, checked, className, checkBoxClassname, onCheckedChange, disabled, name, ...props }, ref) => {
     return (
         <Label
             className={cn(
@@ -46,6 +46,7 @@ const LabelledCheckbox = React.forwardRef<
                 !disabled && "hover:brightness-[85%] cursor-pointer opacity-100",
                 className,
             )}
+            title={props.title}
         >
             <Checkbox
                 id={checkBoxId}
