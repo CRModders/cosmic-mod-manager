@@ -11,6 +11,7 @@ export default {
         redirecting: "Redireccionando...",
         accept: "Aceptar",
         decline: "Rechazar",
+        download: "Descargar",
     },
 
     navbar: {
@@ -148,21 +149,22 @@ export default {
         "resource-pack": "Buscar paquetes de recursos",
         shader: "Buscar shaders",
         plugin: "Buscar plugins",
-        modpack: "Buscar paquetes de mods",
+        modpack: "Buscar modpacks",
         datamod: "Buscar datamods",
 
         // Sorting methods
         sortBy: "Ordenar por",
         relevance: "Relevancia",
         downloads: "Descargas",
-        follow_count: "Conteo de seguidores",
-        recently_updated: "Recientemente actualizado",
-        recently_published: "Recientemente publicado",
+        follow_count: "Seguidores",
+        recently_updated: "Actualizado recientemente",
+        recently_published: "Publicado recientemente",
 
         filters: "Filtros",
         searchFilters: "Filtros de búsqueda",
         loaders: "Cargadores",
         gameVersions: "Versiones del juego",
+        channels: "Canales",
         environment: "Entorno",
         categories: "Categorías",
         features: "Características",
@@ -170,6 +172,58 @@ export default {
         performanceImpact: "Impacto en el rendimiento",
         license: "Licencia",
         openSourceOnly: "Solo código abierto",
+        clearFilters: "Borrar todos los filtros",
+    },
+
+    project: {
+        compatibility: "Compatibilidad",
+        loaders: "Cargadores",
+        environments: "Entornos",
+        reportIssues: "Reportar problemas",
+        viewSource: "Ver código fuente",
+        visitWiki: "Visitar wiki",
+        joinDiscord: "Unirse al servidor de Discord",
+        featuredVersions: "Versiones destacadas",
+        creators: "Creadores",
+        organization: "Organización",
+        details: "Detalles",
+        updated: "Actualizado", // eg: Actualizado hace 3 días
+        gallery: "Galería",
+        changelog: "Registro de cambios",
+        versions: "Versiones",
+        noProjectDesc: "No se ha proporcionado una descripción del proyecto",
+        uploadNewImg: "Subir una nueva imagen de galería",
+        uploadImg: "Subir imagen de galería",
+        galleryOrderingDesc: "La imagen con un orden más alto se mostrará primero.",
+        featuredGalleryImgDesc:
+            "Una imagen de galería destacada aparece en la búsqueda y en la tarjeta de tu proyecto. Solo se puede destacar una imagen de galería.",
+        addGalleryImg: "Agregar imagen de galería",
+        featureImg: "Destacar imagen",
+        unfeatureImg: "Quitar de destacados",
+        sureToDeleteImg: "¿Estás seguro de que quieres eliminar esta imagen de galería?",
+        deleteImgDesc: "Esto eliminará esta imagen de galería para siempre (sí, para siempre).",
+        editGalleryImg: "Editar imagen de galería",
+        currImage: "Imagen actual",
+
+        // Version
+        uploadVersion: "Subir una versión",
+        uploadNewVersion: "Subir una nueva versión del proyecto",
+        showDevVersions: "Mostrar versiones de desarrollo",
+        noProjectVersions: "No se encontraron versiones del proyecto",
+        stats: "Estadísticas",
+        published: "Publicado", // Used for table headers
+        downloads: "Descargas", // Used for table headers
+        openInNewTab: "Abrir en una nueva pestaña",
+        copyLink: "Copiar enlace",
+
+        browse: {
+            mod: "Explorar mods",
+            datamod: "Explorar datamods",
+            "resource-pack": "Explorar paquetes de recursos",
+            shader: "Explorar shaders",
+            modpack: "Explorar modpacks",
+            plugin: "Explorar plugins",
+        },
     },
 
     footer: {
@@ -197,7 +251,7 @@ export default {
 
     form: {
         login: "Iniciar sesión",
-        login_withSpace: "Iniciar sesión",
+        login_withSpace: "Iniciar Sesión",
         signup: "Registrarse",
         email: "Correo electrónico",
         username: "Nombre de usuario",
@@ -211,13 +265,19 @@ export default {
         projectType: "Tipo de proyecto",
         visibility: "Visibilidad",
         summary: "Resumen",
+        title: "Título",
+        ordering: "Ordenación",
+        featured: "Destacado",
         continue: "Continuar",
         remove: "Eliminar",
         confirm: "Confirmar",
-        delete: "Eliminar",
+        edit: "Editar",
+        delete: "Borrar",
         cancel: "Cancelar",
         saveChanges: "Guardar cambios",
         uploadIcon: "Subir icono",
+        noFileChosen: "No se ha seleccionado ningún archivo",
+        showAllVersions: "Mostrar todas las versiones",
     },
 
     error: {
@@ -226,6 +286,8 @@ export default {
         refresh: "Actualizar",
         pageNotFound: "404 | Página no encontrada.",
         pageNotFoundDesc: "Lo sentimos, no pudimos encontrar la página que estás buscando.",
+        projectNotFound: "Proyecto no encontrado",
+        projectNotFoundDesc: (type: string, slug: string) => `El ${type} con el slug/ID "${slug}" no existe.`,
     },
 
     date: {
