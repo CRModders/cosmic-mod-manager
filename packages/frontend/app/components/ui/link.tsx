@@ -7,14 +7,19 @@ import { Link as RemixLink, useNavigate as __useNavigate, useLocation, useRouteL
 import type { RootOutletData } from "~/root";
 import { buttonVariants } from "./button";
 
-interface CustomLinkProps extends LinkProps {}
+interface CustomLinkProps extends LinkProps {
+    escapeUrlWrapper?: boolean;
+}
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
-const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
+const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>(({ escapeUrlWrapper, ...props }, ref) => {
     const data = useRouteLoaderData<RootOutletData>("root");
     const viewTransitions = data?.viewTransitions;
 
-    return <RemixLink ref={ref} {...props} to={PageUrl(props.to.toString())} viewTransition={viewTransitions} />;
+    let to = props.to;
+    if (escapeUrlWrapper !== true) to = PageUrl(to.toString());
+
+    return <RemixLink ref={ref} {...props} to={to} viewTransition={viewTransitions} />;
 });
 export default Link;
 
@@ -46,7 +51,7 @@ export function ButtonLink({
             {...props}
             to={url}
             className={cn(
-                "bg_hover_stagger w-full h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
+                "bg_hover_stagger w-full min-h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
                 isCurrLinkActive(PageUrl(url), location.pathname, exactTailMatch) &&
                     activityIndicator &&
                     "bg-shallow-background/70 text-foreground",
@@ -87,11 +92,13 @@ export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLink
     },
 );
 
-export function useNavigate() {
+export function useNavigate(escapeUrlWrapper?: boolean) {
     const navigate = __useNavigate();
 
     const __navigate = (to: string, options?: NavigateOptions): void => {
-        navigate(PageUrl(to), { viewTransition: true, ...options });
+        const toUrl = escapeUrlWrapper === true ? to : PageUrl(to);
+
+        navigate(toUrl, { viewTransition: true, ...options });
     };
 
     return __navigate as NavigateFunction;

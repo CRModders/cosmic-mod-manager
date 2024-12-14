@@ -5,11 +5,14 @@
  */
 
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { isbot } from "isbot";
+import { useUrlLocale } from "@root/utils/urls";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
+import { getLocale } from "./locales";
+import { GetLocaleMetadata } from "./locales/meta";
+import { LocaleProvider } from "./locales/provider";
 
 const ABORT_DELAY = 7_000;
 
@@ -19,89 +22,55 @@ export default function handleRequest(
     responseHeaders: Headers,
     reactRouterContext: EntryContext,
 ) {
-    return isbot(request.headers.get("user-agent") || "")
-        ? handleBotRequest(request, responseStatusCode, responseHeaders, reactRouterContext)
-        : handleBrowserRequest(request, responseStatusCode, responseHeaders, reactRouterContext);
+    return handleDocRequest(request, responseStatusCode, responseHeaders, reactRouterContext);
 }
 
-function handleBotRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, reactRouterContext: EntryContext) {
+function handleDocRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, reactRouterContext: EntryContext) {
     return new Promise((resolve, reject) => {
         let shellRendered = false;
-        const { pipe, abort } = renderToPipeableStream(
-            <ServerRouter context={reactRouterContext} url={request.url} abortDelay={ABORT_DELAY} />,
-            {
-                onAllReady() {
-                    shellRendered = true;
-                    const body = new PassThrough();
-                    const stream = createReadableStreamFromReadable(body);
 
-                    responseHeaders.set("Content-Type", "text/html");
+        const localeCode = useUrlLocale(true, new URL(request.url).pathname);
+        getLocale(localeCode).then((initLocaleModule) => {
+            const initLocaleMetadata = GetLocaleMetadata(localeCode);
 
-                    resolve(
-                        new Response(stream, {
-                            headers: responseHeaders,
-                            status: responseStatusCode,
-                        }),
-                    );
+            const { pipe, abort } = renderToPipeableStream(
+                <LocaleProvider initLocale={initLocaleModule} initMetadata={initLocaleMetadata}>
+                    <ServerRouter context={reactRouterContext} url={request.url} abortDelay={ABORT_DELAY} />
+                </LocaleProvider>,
 
-                    pipe(body);
+                {
+                    onShellReady() {
+                        shellRendered = true;
+                        const body = new PassThrough();
+                        const stream = createReadableStreamFromReadable(body);
+
+                        responseHeaders.set("Content-Type", "text/html");
+
+                        resolve(
+                            new Response(stream, {
+                                headers: responseHeaders,
+                                status: responseStatusCode,
+                            }),
+                        );
+
+                        pipe(body);
+                    },
+                    onShellError(error: unknown) {
+                        reject(error);
+                    },
+                    onError(error: unknown) {
+                        responseStatusCode = 500;
+                        // Log streaming rendering errors from inside the shell.  Don't log
+                        // errors encountered during initial shell rendering since they'll
+                        // reject and get logged in handleDocumentRequest.
+                        if (shellRendered) {
+                            console.error(error);
+                        }
+                    },
                 },
-                onShellError(error: unknown) {
-                    reject(error);
-                },
-                onError(error: unknown) {
-                    responseStatusCode = 500;
-                    // Log streaming rendering errors from inside the shell.  Don't log
-                    // errors encountered during initial shell rendering since they'll
-                    // reject and get logged in handleDocumentRequest.
-                    if (shellRendered) {
-                        console.error(error);
-                    }
-                },
-            },
-        );
+            );
 
-        setTimeout(abort, ABORT_DELAY);
-    });
-}
-
-function handleBrowserRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, reactRouterContext: EntryContext) {
-    return new Promise((resolve, reject) => {
-        let shellRendered = false;
-        const { pipe, abort } = renderToPipeableStream(
-            <ServerRouter context={reactRouterContext} url={request.url} abortDelay={ABORT_DELAY} />,
-            {
-                onShellReady() {
-                    shellRendered = true;
-                    const body = new PassThrough();
-                    const stream = createReadableStreamFromReadable(body);
-
-                    responseHeaders.set("Content-Type", "text/html");
-
-                    resolve(
-                        new Response(stream, {
-                            headers: responseHeaders,
-                            status: responseStatusCode,
-                        }),
-                    );
-
-                    pipe(body);
-                },
-                onShellError(error: unknown) {
-                    reject(error);
-                },
-                onError(error: unknown) {
-                    responseStatusCode = 500;
-                    // Log streaming rendering errors from inside the shell.  Don't log
-                    // errors encountered during initial shell rendering since they'll
-                    // reject and get logged in handleDocumentRequest.
-                    if (shellRendered) {
-                        console.error(error);
-                    }
-                },
-            },
-        );
-
-        setTimeout(abort, ABORT_DELAY);
+            setTimeout(abort, ABORT_DELAY);
+        });
     });
 }

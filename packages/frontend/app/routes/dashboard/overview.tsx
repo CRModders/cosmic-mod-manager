@@ -2,7 +2,6 @@ import clientFetch from "@root/utils/client-fetch";
 import { resJson } from "@root/utils/server-fetch";
 import type { ProjectListItem } from "@shared/types/api";
 import { useLoaderData } from "react-router";
-import { WanderingCubesSpinner } from "~/components/ui/spinner";
 import { useSession } from "~/hooks/session";
 import OverviewPage from "~/pages/dashboard/overview";
 import { clientLoader as NotificationsLoader } from "./notifications/page";
@@ -22,10 +21,6 @@ export default function _Overview() {
             relatedProjects={loaderData.projects || []}
         />
     );
-}
-
-export function HydrateFallback() {
-    return <WanderingCubesSpinner />;
 }
 
 export async function clientLoader() {

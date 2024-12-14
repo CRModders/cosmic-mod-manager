@@ -11,11 +11,14 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Trigger>,
-    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { noDefaultStyles?: boolean }
+>(({ className, children, noDefaultStyles, ...props }, ref) => (
     <SelectPrimitive.Trigger
         ref={ref}
-        className={cn("input_box_styles gap-2 w-full neumorphic_shadow justify-between [&>span]:line-clamp-1", className)}
+        className={cn(
+            noDefaultStyles !== true && "input_box_styles gap-2 w-full neumorphic_shadow justify-between [&>span]:line-clamp-1",
+            className,
+        )}
         {...props}
     >
         {children}

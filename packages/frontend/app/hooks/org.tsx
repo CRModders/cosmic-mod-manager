@@ -1,4 +1,4 @@
-import { useLocale } from "@root/utils/urls";
+import { useUrlLocale } from "@root/utils/urls";
 import type { Organisation, ProjectListItem, TeamMember } from "@shared/types/api";
 import { useRouteLoaderData } from "react-router";
 import type { OrgLoaderData } from "~/routes/organization/data-wrapper";
@@ -13,7 +13,7 @@ export interface OrgContextData {
 }
 
 export function useOrgData(): OrgContextData {
-    const langPrefix = useLocale();
+    const langPrefix = useUrlLocale();
     const session = useSession();
     const loaderData = useRouteLoaderData(`${langPrefix}__organization-data-wrapper`) as OrgLoaderData;
 

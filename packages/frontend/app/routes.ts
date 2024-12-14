@@ -2,7 +2,7 @@ import type { RouteConfig } from "@react-router/dev/routes";
 import { remixRoutesOptionAdapter } from "@react-router/remix-routes-option-adapter";
 
 const ProjectTypes = ["project", "mod", "modpack", "shader", "resource-pack", "datamod", "plugin"];
-const langs = ["en"];
+const langs = ["en", "es"];
 
 export default remixRoutesOptionAdapter((defineRoutes) => {
     return defineRoutes((route) => {

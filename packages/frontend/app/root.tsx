@@ -4,6 +4,7 @@ import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
+import { useUrlLocale } from "@root/utils/urls";
 import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
 import { useEffect, useMemo } from "react";
@@ -19,7 +20,9 @@ import Navbar from "./components/layout/Navbar/navbar";
 import Footer from "./components/layout/footer";
 import LoaderBar from "./components/loader-bar";
 import ToastAnnouncer from "./components/toast-announcer";
-import { SuspenseFallback } from "./components/ui/spinner";
+import { parseLocale } from "./locales";
+import SupportedLocales, { en as en_Metadata, GetLocaleMetadata } from "./locales/meta";
+import type { LocaleMetaData } from "./locales/types";
 import ContextProviders from "./providers";
 import ErrorView from "./routes/error-view";
 
@@ -27,13 +30,20 @@ export interface RootOutletData {
     theme: ThemeOptions;
     viewTransitions: boolean;
     session: LoggedInUserData | null;
+    locale: LocaleMetaData;
+    supportedLocales: LocaleMetaData[];
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData() as RootOutletData;
 
     return (
-        <html lang="en" className={data?.theme} style={{ scrollBehavior: data?.viewTransitions ? "auto" : "smooth" }}>
+        <html
+            lang={data.locale.code}
+            dir={data.locale.dir}
+            className={data?.theme}
+            style={{ scrollBehavior: data?.viewTransitions ? "auto" : "smooth" }}
+        >
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,32 +71,27 @@ export default function App() {
 
     return useMemo(
         () => (
-            <ClientOnly
-                fallback={<SuspenseFallback />}
-                Element={() => (
-                    <ContextProviders theme={data.theme}>
-                        <ValidateClientSession />
-                        <ClientOnly Element={ToastAnnouncer} />
-                        <ClientOnly Element={ToastAnnouncer} />
-                        <ClientOnly Element={LoaderBar} />
+            <ContextProviders theme={data.theme}>
+                <ValidateClientSession />
+                <ClientOnly Element={ToastAnnouncer} />
+                <ClientOnly Element={ToastAnnouncer} />
+                <ClientOnly Element={LoaderBar} />
 
-                        {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
-                        <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
+                {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
+                <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
-                        <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
-                            <Navbar session={data.session} notifications={[]} />
+                <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
+                    <Navbar session={data.session} notifications={[]} />
 
-                            <div className="full_page container px-4 sm:px-8">
-                                <Outlet context={data satisfies RootOutletData} />
-                            </div>
+                    <div className="full_page container px-4 sm:px-8">
+                        <Outlet context={data satisfies RootOutletData} />
+                    </div>
 
-                            <Footer />
-                        </div>
+                    <Footer />
+                </div>
 
-                        <DownloadRipple />
-                    </ContextProviders>
-                )}
-            />
+                <DownloadRipple />
+            </ContextProviders>
         ),
         [data?.session, data?.viewTransitions],
     );
@@ -108,10 +113,14 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     const theme = getThemeFromCookie(themePref);
     const viewTransitions = getCookie("viewTransitions", cookie) === "true";
 
+    const currLocale = GetLocaleMetadata(parseLocale(useUrlLocale(true, new URL(request.url).pathname)));
+
     return {
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
+        locale: currLocale || en_Metadata,
+        supportedLocales: SupportedLocales,
     };
 }
 
@@ -171,10 +180,6 @@ export function meta() {
         image: `${Config.FRONTEND_URL}/icon.png`,
         url: Config.FRONTEND_URL,
     });
-}
-
-export function HydrateFallback() {
-    return <SuspenseFallback />;
 }
 
 export function ErrorBoundary() {

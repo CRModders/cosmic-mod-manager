@@ -1,12 +1,23 @@
-import type { LinkProps } from "react-router";
+import { cn } from "@root/utils";
 import { SITE_NAME_LONG } from "@shared/config";
-import { Settings2Icon } from "lucide-react";
+import { GlobeIcon, Settings2Icon } from "lucide-react";
+import { useState } from "react";
+import type { LinkProps } from "react-router";
 import { BrandIcon } from "~/components/icons";
-import Link, { VariantButtonLink } from "~/components/ui/link";
+import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { useRootData } from "~/hooks/root-data";
+import { useTranslation } from "~/locales/provider";
+import { buttonVariants } from "../ui/button";
+import { DotSeparator } from "../ui/separator";
 import ThemeSwitch from "../ui/theme-switcher";
 import "./styles.css";
 
 export default function Footer() {
+    const { t } = useTranslation();
+    const footer = t.footer;
+    const legal = t.legal;
+
     return (
         <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-16 mx-auto">
             <div className="footer-grid container gap-y-5">
@@ -18,41 +29,41 @@ export default function Footer() {
                 </LinksColumn>
 
                 <LinksColumn area="links-1">
-                    <Title>Company</Title>
+                    <Title>{footer.company}</Title>
 
-                    <FooterLink to="/legal/terms" aria-label="Terms and conditions">
-                        Terms
+                    <FooterLink to="/legal/terms" aria-label={t.legal.termsTitle}>
+                        {footer.terms}
                     </FooterLink>
 
-                    <FooterLink to="/legal/privacy" aria-label="Privacy Policy">
-                        Privacy
+                    <FooterLink to="/legal/privacy" aria-label={legal.privacyPolicyTitle}>
+                        {footer.privacy}
                     </FooterLink>
 
-                    <FooterLink to="/legal/rules" aria-label="Content Rules">
-                        Rules
+                    <FooterLink to="/legal/rules" aria-label={legal.rulesTitle}>
+                        {footer.rules}
                     </FooterLink>
                 </LinksColumn>
 
                 <LinksColumn area="links-2">
-                    <Title>Resources</Title>
+                    <Title>{footer.resources}</Title>
 
-                    <FooterLink to="https://docs.crmm.tech" aria-label="Docs" target="_blank">
-                        Docs
+                    <FooterLink to="https://docs.crmm.tech" aria-label={footer.docs} target="_blank">
+                        {footer.docs}
                     </FooterLink>
 
-                    <FooterLink to="/status" aria-label="Status">
-                        Status
+                    <FooterLink to="/status" aria-label={footer.status}>
+                        {footer.status}
                     </FooterLink>
 
-                    <FooterLink to="mailto:support@crmm.tech" aria-label="Support" target="_blank">
-                        Support
+                    <FooterLink to="mailto:support@crmm.tech" aria-label={footer.support} target="_blank">
+                        {footer.support}
                     </FooterLink>
                 </LinksColumn>
 
                 <LinksColumn area="links-3">
-                    <Title>Socials</Title>
-                    <FooterLink to="/about" aria-label="About">
-                        About
+                    <Title>{footer.socials}</Title>
+                    <FooterLink to="/about" aria-label={footer.about}>
+                        {footer.about}
                     </FooterLink>
 
                     <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
@@ -77,6 +88,10 @@ export default function Footer() {
                         <Settings2Icon className="w-btn-icon-md h-btn-icon-md" />
                         Settings
                     </VariantButtonLink>
+
+                    <div className="sm:w-[10rem]">
+                        <LangSwitcher />
+                    </div>
                 </div>
             </div>
         </footer>
@@ -104,5 +119,51 @@ function LinksColumn({ children, area }: { area: string; children: React.ReactNo
         <div style={{ gridArea: area }} className="grid gap-4 h-fit lg:mr-16 place-items-center lg:place-items-start">
             {children}
         </div>
+    );
+}
+
+export function LangSwitcher() {
+    const ctx = useRootData();
+    const [currLang, setCurrLang] = useState(ctx.locale.code);
+    const { changeLocale } = useTranslation();
+    const navigate = useNavigate(true);
+
+    return (
+        <Select
+            onValueChange={(value: string) => {
+                changeLocale(value, navigate);
+                setCurrLang(value);
+            }}
+            value={currLang}
+        >
+            <SelectTrigger noDefaultStyles aria-label={currLang} className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>
+                <GlobeIcon size="1.15rem" className="text-muted-foreground" />
+                <SelectValue className="flex items-center justify-start" placeholder={<p>{currLang}</p>} />
+            </SelectTrigger>
+
+            <SelectContent>
+                <SelectGroup>
+                    {ctx.supportedLocales?.map((locale) => {
+                        return (
+                            <SelectItem
+                                key={locale.code}
+                                value={locale.code}
+                                aria-label={`${locale.nativeName} (${locale.region.displayName})`}
+                            >
+                                <div className="w-full flex items-center justify-center gap-1.5">
+                                    <span className="flex items-end justify-center align-bottom">{locale.nativeName}</span>
+                                    {locale.region && (
+                                        <>
+                                            <DotSeparator className="bg-extra-muted-foreground" />
+                                            <span className="text-sm text-muted-foreground/85">{locale.region.displayName}</span>
+                                        </>
+                                    )}
+                                </div>
+                            </SelectItem>
+                        );
+                    })}
+                </SelectGroup>
+            </SelectContent>
+        </Select>
     );
 }

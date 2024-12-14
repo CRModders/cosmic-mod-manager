@@ -1,4 +1,4 @@
-import { useLocale, usePathname } from "@root/utils/urls";
+import { usePathname, useUrlLocale } from "@root/utils/urls";
 import { getCurrMember } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@shared/types/api";
@@ -21,7 +21,7 @@ export interface ProjectContextData {
 }
 
 export function useProjectData(): ProjectContextData {
-    const langPrefix = useLocale();
+    const langPrefix = useUrlLocale();
     const session = useSession();
 
     const projectType = useProjectType();
@@ -75,7 +75,7 @@ export function useProjectData(): ProjectContextData {
 
 export function useProjectType() {
     const pathname = usePathname();
-    const langPrefix = useLocale();
+    const langPrefix = useUrlLocale();
 
     const typeIndex = langPrefix.length ? 2 : 1;
     let typeStr = pathname?.split("/")[typeIndex];

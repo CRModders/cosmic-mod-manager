@@ -10,8 +10,8 @@ export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds =
 // A lang code will either be empty, a 2-letter code or a 2-letter code followed by specific region code
 const langRegex = /^\/[a-z]{2}(?:-[A-Z]{2})?(?=\/|$)/;
 
-export function useLocale(trimLeadingSlash = true) {
-    const pathname = usePathname();
+export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
+    const pathname = customPathname ? customPathname : usePathname();
 
     const match = pathname.match(langRegex);
     const locale = match ? match[0] : "";
@@ -42,7 +42,7 @@ export function usePathname() {
 export function PageUrl(_path: string, extra?: string) {
     if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
 
-    const langPrefix = useLocale(false);
+    const langPrefix = useUrlLocale(false);
     let p = _path === "/" ? "" : prepend("/", _path);
 
     // Make sure not to overwrite the language prefix if it already exists
@@ -82,14 +82,22 @@ export function UserProfilePath(username: string, extra?: string) {
     return pathname;
 }
 
-function prepend(str: string, path: string) {
+export function prepend(str: string, path: string) {
     return path.startsWith(str) ? path : `${str}${path}`;
 }
 
-function removeLeading(str: string, path: string) {
-    return path.startsWith(str) ? path.slice(str.length) : path;
+export function append(str: string, path: string) {
+    return path.endsWith(str) ? path : `${path}${str}`;
 }
 
-function removeTrailing(str: string, path: string) {
-    return path.endsWith(str) ? path.slice(0, -1 * str.length) : path;
+export function removeLeading(str: string, path: string) {
+    if (!path.startsWith(str)) return path;
+
+    return removeLeading(str, path.slice(str.length));
+}
+
+export function removeTrailing(str: string, path: string) {
+    if (!path.endsWith(str)) return path;
+
+    return removeTrailing(str, path.slice(0, -1 * str.length));
 }
