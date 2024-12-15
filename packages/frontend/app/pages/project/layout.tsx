@@ -9,6 +9,7 @@ import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import { ProjectVisibility } from "@shared/types";
 import type { ProjectDetailsData, TeamMember } from "@shared/types/api";
 import {
+    ArrowUpRightIcon,
     BookOpenIcon,
     BookTextIcon,
     BookmarkIcon,
@@ -22,7 +23,6 @@ import {
     GitCommitHorizontalIcon,
     HeartIcon,
     SettingsIcon,
-    SquareArrowOutUpRightIcon,
     TagsIcon,
 } from "lucide-react";
 import type React from "react";
@@ -555,8 +555,10 @@ function ExternalLink({ url, label, icon }: { url: string; icon: React.ReactNode
             rel="noopener noreferrer"
         >
             {icon}
-            {label}
-            <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
+            <span>
+                {label}
+                <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline ml-1" />
+            </span>
         </Link>
     );
 }
