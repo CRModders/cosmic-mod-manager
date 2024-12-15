@@ -78,7 +78,7 @@ export default function ProjectSettingsLayout() {
                         <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
                         {SidePanelLinks.map((link) => (
                             <ButtonLink
-                                prefetch={link.prefetch ? "render" : undefined}
+                                prefetch={link.prefetch !== false ? "render" : undefined}
                                 key={link.href}
                                 url={`${baseUrl}/${link.href}`}
                                 preventScrollReset

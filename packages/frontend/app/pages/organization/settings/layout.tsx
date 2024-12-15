@@ -69,7 +69,7 @@ export default function OrgSettingsLayout() {
                         <div className="w-full flex flex-col gap-1">
                             <span className="text-xl font-semibold text-muted-foreground mt-1 mb-0.5">Organization settings</span>
                             {SidePanelLinks.map((link) => (
-                                <ButtonLink key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                                <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
                                     {link.icon}
                                     {link.name}
                                 </ButtonLink>

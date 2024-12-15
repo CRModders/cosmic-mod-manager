@@ -108,7 +108,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 ) : (
                     <Button className="space-y-0">
                         <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
-                        Create a project
+                        {t.dashboard.createProject}
                     </Button>
                 )}
             </DialogTrigger>

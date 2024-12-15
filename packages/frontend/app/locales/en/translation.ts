@@ -239,6 +239,7 @@ export default {
         support: "Support",
         socials: "Socials",
         about: "About",
+        changeTheme: "Change theme",
     },
 
     legal: {

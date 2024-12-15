@@ -76,17 +76,11 @@ export default function Footer() {
                 </LinksColumn>
 
                 <div style={{ gridArea: "buttons" }} className="grid grid-cols-1 h-fit gap-2 place-items-center lg:place-items-start">
-                    <ThemeSwitch
-                        // className="pl-1 bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background gap-0"
-                        label="Change theme"
-                        noDefaultStyle
-                        variant="outline"
-                        className="rounded-full px-1 gap-0"
-                    />
+                    <ThemeSwitch label={t.footer.changeTheme} noDefaultStyle variant="outline" className="rounded-full px-1 gap-0" />
 
                     <VariantButtonLink prefetch="render" url="/settings" variant="outline" className="rounded-full">
                         <Settings2Icon className="w-btn-icon-md h-btn-icon-md" />
-                        Settings
+                        {t.common.settings}
                     </VariantButtonLink>
 
                     <div className="sm:w-[10rem]">
