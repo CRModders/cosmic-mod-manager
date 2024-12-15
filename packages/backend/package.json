@@ -2,8 +2,10 @@
     "name": "crmm-backend",
     "scripts": {
         "dev": "bun run --hot src/index.ts",
+        "start": "bun src/index.ts",
         "prisma-generate": "prisma generate",
-        "prisma-push": "prisma db push"
+        "prisma-push": "prisma db push",
+        "deploy": "cross-env NODE_ENV=production pm2 deploy pm2.config.cjs backend"
     },
     "dependencies": {
         "@oslojs/encoding": "^1.1.0",

@@ -4,11 +4,12 @@
     "sideEffects": false,
     "type": "module",
     "scripts": {
-        "build": "react-router build",
+        "build": "cross-env NODE_ENV=production react-router build",
         "dev": "react-router dev",
         "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
         "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc"
+        "typecheck": "react-router typegen && tsc",
+        "deploy": "cross-env NODE_ENV=production pm2 deploy pm2.config.cjs frontend"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.1",
