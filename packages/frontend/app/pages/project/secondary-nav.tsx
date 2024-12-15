@@ -21,7 +21,7 @@ function SecondaryNav({
                             <ButtonLink
                                 prefetch="render"
                                 url={`${urlBase}${link.href}`}
-                                className="h-10 px-4 py-0 rounded font-semibold"
+                                className="h-10 px-4 py-0 rounded font-semibold capitalize"
                                 onClick={(e) => onClick?.(e, link)}
                                 preventScrollReset
                             >

@@ -6,6 +6,7 @@ import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from
 import { fallbackUserIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { NotificationBadge } from "~/components/ui/badge";
+import { useTranslation } from "~/locales/provider";
 import { LoginButton, SignOutBtn } from "./nav-button";
 import { NavMenuLink } from "./navbar";
 
@@ -20,7 +21,8 @@ interface MobileNavProps {
     }[];
 }
 
-export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavProps) => {
+export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu, NavLinks }: MobileNavProps) {
+    const { t } = useTranslation();
     const unreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     return (
@@ -65,28 +67,28 @@ export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu
                                 {[
                                     {
                                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
-                                        label: "Profile",
+                                        label: t.navbar.profile,
                                         url: UserProfilePath(session.userName),
                                     },
                                     {
                                         icon: <BellIcon className="w-btn-icon h-btn-icon" />,
-                                        label: "Notifications",
+                                        label: t.dashboard.notifications,
                                         url: "/dashboard/notifications",
                                         notificationBadge: unreadNotifications,
                                     },
                                     {
                                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
-                                        label: "Settings",
+                                        label: t.common.settings,
                                         url: "/settings/profile",
                                     },
                                     {
                                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
-                                        label: "Projects",
+                                        label: t.dashboard.projects,
                                         url: "/dashboard/projects",
                                     },
                                     {
                                         icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
-                                        label: "Organizations",
+                                        label: t.dashboard.organizations,
                                         url: "/dashboard/organizations",
                                     },
                                 ]?.map((link) => {
@@ -127,14 +129,14 @@ export const MobileNav = ({ session, notifications, isNavMenuOpen, toggleNavMenu
             </div>
         </div>
     );
-};
+}
 
 interface HamMenuProps {
     isNavMenuOpen: boolean;
     toggleNavMenu: (newState?: boolean) => void;
 }
 
-export const HamMenu = ({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) => {
+export function HamMenu({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) {
     const handleHamMenuClick = () => {
         toggleNavMenu();
     };
@@ -153,4 +155,4 @@ export const HamMenu = ({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) => {
             </div>
         </button>
     );
-};
+}

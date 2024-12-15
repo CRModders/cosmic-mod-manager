@@ -4,7 +4,7 @@ import clientFetch from "@root/utils/client-fetch";
 import { UserProfilePath } from "@root/utils/urls";
 import { ProjectPermissionsList } from "@shared/config/project";
 import { hasRootAccess } from "@shared/config/roles";
-import { CapitalizeAndFormatString, doesMemberHaveAccess } from "@shared/lib/utils";
+import { doesMemberHaveAccess } from "@shared/lib/utils";
 import { updateTeamMemberFormSchema } from "@shared/schemas/project/settings/members";
 import { handleFormError } from "@shared/schemas/utils";
 import { type LoggedInUserData, ProjectPermission } from "@shared/types";
@@ -23,6 +23,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/
 import { Input } from "~/components/ui/input";
 import Link from "~/components/ui/link";
 import { Switch } from "~/components/ui/switch";
+import { useTranslation } from "~/locales/provider";
 import { RemoveMemberDialog, TransferOwnershipDialog } from "./dialogs";
 
 interface ProjectTeamMemberProps {
@@ -42,6 +43,7 @@ export const ProjectTeamMember = ({
     projectTeamId,
     doesProjectHaveOrg,
 }: ProjectTeamMemberProps) => {
+    const { t } = useTranslation();
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -54,7 +56,7 @@ export const ProjectTeamMember = ({
     });
     form.watch();
 
-    const updateMemberDetails = async (values: z.infer<typeof updateTeamMemberFormSchema>) => {
+    async function updateMemberDetails(values: z.infer<typeof updateTeamMemberFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
         try {
@@ -65,15 +67,15 @@ export const ProjectTeamMember = ({
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await fetchProjectData();
-            return toast.success("Member updated successfully");
+            return toast.success(t.projectSettings.memberUpdated);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     const canEditMember = doesMemberHaveAccess(
         ProjectPermission.EDIT_MEMBER,
@@ -118,7 +120,7 @@ export const ProjectTeamMember = ({
                         >
                             {member.userName}
                             {member.isOwner && (
-                                <span className="flex items-baseline justify-center shrink-0" title="Owner">
+                                <span className="flex items-baseline justify-center shrink-0" title={t.projectSettings.owner}>
                                     <CrownIcon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                                 </span>
                             )}
@@ -132,7 +134,7 @@ export const ProjectTeamMember = ({
                     {member.accepted === false && (
                         <span className="flex items-center justify-center gap-1.5 font-bold text-orange-500 dark:text-orange-400">
                             <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
-                            Pending
+                            {t.projectSettings.pending}
                         </span>
                     )}
 
@@ -162,17 +164,15 @@ export const ProjectTeamMember = ({
                                 <FormItem className="flex-col md:flex-row justify-between">
                                     <div className="flex flex-col items-start justify-center">
                                         <FormLabel className="font-bold" htmlFor={`member-role-input_${member.id}`}>
-                                            Role
+                                            {t.projectSettings.role}
                                             <FormMessage />
                                         </FormLabel>
-                                        <span className="text-muted-foreground/90">
-                                            The title of the role that this member plays for this project.
-                                        </span>
+                                        <span className="text-muted-foreground/90">{t.projectSettings.roleDesc}</span>
                                     </div>
                                     <Input
                                         {...field}
                                         disabled={!canEditMember}
-                                        placeholder="Role"
+                                        placeholder={t.projectSettings.role}
                                         className="w-[24ch]"
                                         id={`member-role-input_${member.id}`}
                                     />
@@ -187,7 +187,7 @@ export const ProjectTeamMember = ({
                                 name="permissions"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="font-bold">Permissions</FormLabel>
+                                        <FormLabel className="font-bold">{t.projectSettings.permissions}</FormLabel>
                                         <div
                                             className="w-full grid gap-x-4 gap-y-1"
                                             style={{
@@ -211,7 +211,7 @@ export const ProjectTeamMember = ({
                                                             }
                                                         }}
                                                     >
-                                                        {CapitalizeAndFormatString(permissionName)}
+                                                        {t.projectSettings.perms[permissionName]}
                                                     </LabelledCheckbox>
                                                 );
                                             })}
@@ -234,14 +234,14 @@ export const ProjectTeamMember = ({
                                 }}
                             >
                                 <SaveIcon className="w-btn-icon h-btn-icon" />
-                                Save changes
+                                {t.form.saveChanges}
                             </Button>
 
                             {!member.isOwner && canRemoveMembers && (
                                 <RemoveMemberDialog member={member} refreshData={fetchProjectData}>
                                     <Button type="button" variant="secondary-destructive" size="sm" disabled={isLoading}>
                                         <UserXIcon className="w-btn-icon h-btn-icon" />
-                                        Remove member
+                                        {t.projectSettings.removeMember}
                                     </Button>
                                 </RemoveMemberDialog>
                             )}
@@ -250,7 +250,7 @@ export const ProjectTeamMember = ({
                                 <TransferOwnershipDialog member={member} teamId={projectTeamId} refreshData={fetchProjectData}>
                                     <Button variant="secondary" size="sm" disabled={isLoading}>
                                         <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
-                                        Transfer ownership
+                                        {t.projectSettings.transferOwnership}
                                     </Button>
                                 </TransferOwnershipDialog>
                             ) : null}
@@ -271,6 +271,7 @@ interface OrgTeamMemberProps {
 }
 
 export function OrgTeamMember({ session, project, orgMember, fetchProjectData, currUsersMembership }: OrgTeamMemberProps) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -304,7 +305,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
     });
     form.watch();
 
-    const updateMemberDetails = async (values: z.infer<typeof updateTeamMemberFormSchema>) => {
+    async function updateMemberDetails(values: z.infer<typeof updateTeamMemberFormSchema>) {
         if (isLoading || !projectMembership) return;
         setIsLoading(true);
         try {
@@ -315,17 +316,17 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await fetchProjectData();
-            return toast.success("Member updated successfully");
+            return toast.success(t.projectSettings.memberUpdated);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
-    const removePermissionOverride = async () => {
+    async function removePermissionOverride() {
         if (isLoading || !projectMembership) return;
         setIsLoading(true);
         try {
@@ -335,17 +336,17 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await fetchProjectData();
-            return toast.success("Member updated");
+            return toast.success(t.projectSettings.memberUpdated);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
-    const addPermissionOverride = async (values: z.infer<typeof updateTeamMemberFormSchema>) => {
+    async function addPermissionOverride(values: z.infer<typeof updateTeamMemberFormSchema>) {
         if (isLoading || projectMembership) return;
         setIsLoading(true);
         try {
@@ -359,15 +360,15 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await fetchProjectData();
-            return toast.success("Member updated");
+            return toast.success(t.projectSettings.memberUpdated);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         form.reset({
@@ -400,7 +401,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                         >
                             {effectiveMembership.userName}
                             {orgMember.isOwner && (
-                                <span className="flex items-baseline justify-center shrink-0" title="Owner">
+                                <span className="flex items-baseline justify-center shrink-0" title={t.projectSettings.owner}>
                                     <CrownIcon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                                 </span>
                             )}
@@ -414,7 +415,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                     {effectiveMembership.accepted === false && (
                         <span className="flex items-center justify-center gap-1.5 font-bold text-orange-500 dark:text-orange-400">
                             <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
-                            Pending
+                            {t.projectSettings.pending}
                         </span>
                     )}
 
@@ -440,13 +441,10 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                         <FormItem className="flex-row justify-between items-center gap-x-4 sm:gap-x-8">
                             <div className="flex flex-col items-start justify-center gap-1">
                                 <FormLabel className="font-bold" htmlFor={`override-perms-input_${effectiveMembership.id}`}>
-                                    Override values
+                                    {t.projectSettings.overrideValues}
                                     <FormMessage />
                                 </FormLabel>
-                                <span className="text-muted-foreground/90 leading-tight">
-                                    Override organization default values and assign custom permissions and roles to this user on the
-                                    project.
-                                </span>
+                                <span className="text-muted-foreground/90 leading-tight">{t.projectSettings.overrideValuesDesc}</span>
                             </div>
                             <Switch
                                 id={`override-perms-input_${effectiveMembership.id}`}
@@ -464,16 +462,14 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                                 <FormItem className="flex-col md:flex-row justify-between">
                                     <div className="flex flex-col items-start justify-center gap-1">
                                         <FormLabel className="font-bold" htmlFor={`member-role-input_${effectiveMembership.id}`}>
-                                            Role
+                                            {t.projectSettings.role}
                                             <FormMessage />
                                         </FormLabel>
-                                        <span className="text-muted-foreground/90 leading-tight">
-                                            The title of the role that this member plays for this project.
-                                        </span>
+                                        <span className="text-muted-foreground/90 leading-tight">{t.projectSettings.roleDesc}</span>
                                     </div>
                                     <Input
                                         {...field}
-                                        placeholder="Role"
+                                        placeholder={t.projectSettings.role}
                                         className="w-[24ch]"
                                         id={`member-role-input_${effectiveMembership.id}`}
                                     />
@@ -512,7 +508,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                                                             }
                                                         }}
                                                     >
-                                                        {CapitalizeAndFormatString(permissionName)}
+                                                        {t.projectSettings.perms[permissionName]}
                                                     </LabelledCheckbox>
                                                 );
                                             })}
@@ -538,7 +534,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                                 }}
                             >
                                 <SaveIcon className="w-btn-icon h-btn-icon" />
-                                Save changes
+                                {t.form.saveChanges}
                             </Button>
                         </div>
                     </form>

@@ -18,12 +18,11 @@ import {
     TextQuoteIcon,
     UnderlineIcon,
     VideoIcon,
-    XIcon,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { MarkdownRenderBox } from "~/components/layout/md-editor/render-md";
-import { Button } from "~/components/ui/button";
+import { Button, CancelButton } from "~/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -40,83 +39,8 @@ import { Label } from "~/components/ui/label";
 import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useTranslation } from "~/locales/provider";
 import "./highlightjs.css";
-
-const IconButton = ({
-    children,
-    tooltipContent,
-    disabled,
-    onClick,
-    ...props
-}: {
-    children: React.ReactNode;
-    tooltipContent?: React.ReactNode;
-    disabled?: boolean;
-    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
-}) => {
-    return (
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    size={"icon"}
-                    type="button"
-                    variant={"secondary"}
-                    tabIndex={disabled ? -1 : 0}
-                    disabled={disabled}
-                    className="h-8 w-8 text-muted-foreground"
-                    onClick={onClick}
-                    {...props}
-                >
-                    {children}
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>{tooltipContent}</TooltipContent>
-        </Tooltip>
-    );
-};
-
-const Separator = () => {
-    return <span className="hidden h-10 w-[0.1rem] bg-shallow-background lg:flex" />;
-};
-
-const BtnGroup = ({ children }: { children: React.ReactNode }) => {
-    return <div className="flex items-center justify-center gap-x-1.5 gap-y-0.5">{children}</div>;
-};
-
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>vscode
-function setCursorPosition(textarea: any, position: number[]) {
-    try {
-        if (textarea.setSelectionRange) {
-            textarea.focus();
-            textarea.setSelectionRange(position[0], position[1]);
-        } else if (textarea.createTextRange) {
-            const range = textarea.createTextRange();
-            range.collapse(true);
-            range.moveEnd("character", position[0]);
-            range.moveStart("character", position[1]);
-            range.select();
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-function getTextareaSelectedText(textarea: HTMLTextAreaElement) {
-    const selectionStart = textarea.selectionStart;
-    const selectionEnd = textarea.selectionEnd;
-
-    return textarea.value.slice(selectionStart, selectionEnd) || "";
-}
-
-const getYoutubeIframe = (url: string, _altText: string) => {
-    const youtubeRegex =
-        /^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9_-]{7,15})(?:[?&][a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+)*$/;
-    const match = youtubeRegex.exec(url);
-    if (match) {
-        return `<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${match[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>${textSeparatorChar}`;
-    }
-    return "";
-};
 
 type Props = {
     editorValue: string;
@@ -127,19 +51,20 @@ type Props = {
 
 const textSeparatorChar = "{|}";
 
-const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClassName }: Props) => {
-    const [previewOn, setPreviewOn] = useState(false);
+export default function MarkdownEditor({ editorValue, setEditorValue, placeholder, textAreaClassName }: Props) {
+    const { t } = useTranslation();
+    const [previewOpen, setPreviewOn] = useState(false);
     const editorTextarea = useRef<HTMLTextAreaElement>(null);
     const [lastSelectionRange, setLastSelectionRange] = useState<number[] | null>();
     const [wordWrap, setWordWrap] = useState(false);
     const [keyboardShortcutsModalOpen, setKeyboardShortcutsModalOpen] = useState(false);
 
-    const toggleTextAtCursorsLine = (
+    function toggleTextAtCursorsLine(
         text: string,
         atLineStart?: boolean,
         actionType?: "ADD_FRAGMENT" | "DELETE_FRAGMENT" | "",
         replaceSelectedText: string | null = null,
-    ) => {
+    ) {
         if (editorTextarea.current?.selectionStart === undefined) return;
         // selectionStart and selectionEnd index, if nothing's selected both will be the same
         const selectionStart = editorTextarea.current.selectionStart;
@@ -216,29 +141,29 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
         }
 
         editorTextarea.current.focus();
-    };
+    }
 
-    const Bold = () => {
+    function Bold() {
         toggleTextAtCursorsLine(`**${textSeparatorChar}**`);
-    };
-    const Italic = () => {
+    }
+    function Italic() {
         toggleTextAtCursorsLine(`_${textSeparatorChar}_`);
-    };
-    const Underline = () => {
+    }
+    function Underline() {
         toggleTextAtCursorsLine(`<u>${textSeparatorChar}</u>`);
-    };
-    const UnorderedList = () => {
+    }
+    function UnorderedList() {
         toggleTextAtCursorsLine("- ", true);
-    };
-    const Quote = () => {
+    }
+    function Quote() {
         toggleTextAtCursorsLine("> ", true);
-    };
-    const CodeBlock = () => {
+    }
+    function CodeBlock() {
         toggleTextAtCursorsLine(`\`\`\`\n${textSeparatorChar}\n\`\`\``);
-    };
-    const Spoiler = () => {
+    }
+    function Spoiler() {
         toggleTextAtCursorsLine(`<details>\n<summary>Spoiler</summary>\n\n${textSeparatorChar}\n\n</details>`);
-    };
+    }
 
     useEffect(() => {
         if (lastSelectionRange?.length) {
@@ -279,8 +204,8 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                     <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                         <BtnGroup>
                             <IconButton
-                                tooltipContent={"Heading 1"}
-                                disabled={previewOn}
+                                tooltipContent={t.editor.heading1}
+                                disabled={previewOpen}
                                 onClick={() => {
                                     toggleTextAtCursorsLine("# ", true);
                                 }}
@@ -288,8 +213,8 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                                 <Heading1Icon className="h-5 w-5" />
                             </IconButton>
                             <IconButton
-                                tooltipContent={"Heading 2"}
-                                disabled={previewOn}
+                                tooltipContent={t.editor.heading2}
+                                disabled={previewOpen}
                                 onClick={() => {
                                     toggleTextAtCursorsLine("## ", true);
                                 }}
@@ -297,8 +222,8 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                                 <Heading2Icon className="h-5 w-5" />
                             </IconButton>
                             <IconButton
-                                tooltipContent={"Heading 3"}
-                                disabled={previewOn}
+                                tooltipContent={t.editor.heading3}
+                                disabled={previewOpen}
                                 onClick={() => {
                                     toggleTextAtCursorsLine("### ", true);
                                 }}
@@ -308,54 +233,54 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                         </BtnGroup>
                         <Separator />
                         <BtnGroup>
-                            <IconButton tooltipContent={"Bold"} disabled={previewOn} onClick={Bold}>
+                            <IconButton tooltipContent={t.editor.bold} disabled={previewOpen} onClick={Bold}>
                                 <BoldIcon className="h-5 w-5" />
                             </IconButton>
-                            <IconButton tooltipContent={"Italic"} disabled={previewOn} onClick={Italic}>
+                            <IconButton tooltipContent={t.editor.italic} disabled={previewOpen} onClick={Italic}>
                                 <ItalicIcon className="h-5 w-5" />
                             </IconButton>
-                            <IconButton tooltipContent={"Underline"} disabled={previewOn} onClick={Underline}>
+                            <IconButton tooltipContent={t.editor.underline} disabled={previewOpen} onClick={Underline}>
                                 <UnderlineIcon className="h-5 w-5" />
                             </IconButton>
                             <IconButton
-                                tooltipContent={"Strikethrough"}
-                                disabled={previewOn}
+                                tooltipContent={t.editor.strikethrough}
+                                disabled={previewOpen}
                                 onClick={() => {
                                     toggleTextAtCursorsLine(`~~${textSeparatorChar}~~`);
                                 }}
                             >
                                 <StrikethroughIcon className="h-5 w-5" />
                             </IconButton>
-                            <IconButton tooltipContent={"Code"} disabled={previewOn} onClick={CodeBlock}>
+                            <IconButton tooltipContent={t.editor.code} disabled={previewOpen} onClick={CodeBlock}>
                                 <CodeIcon className="h-5 w-5" />
                             </IconButton>
-                            <IconButton tooltipContent={"Spoiler"} disabled={previewOn} onClick={Spoiler}>
+                            <IconButton tooltipContent={t.editor.spoiler} disabled={previewOpen} onClick={Spoiler}>
                                 <ScanEyeIcon className="h-btn-icon w-btn-icon" />
                             </IconButton>
                         </BtnGroup>
                         <Separator />
                         <BtnGroup>
-                            <IconButton tooltipContent={"Bulleted list"} disabled={previewOn} onClick={UnorderedList}>
+                            <IconButton tooltipContent={t.editor.bulletedList} disabled={previewOpen} onClick={UnorderedList}>
                                 <ListIcon className="h-5 w-5" />
                             </IconButton>
                             <IconButton
-                                tooltipContent={"Numbered list"}
-                                disabled={previewOn}
+                                tooltipContent={t.editor.numberedList}
+                                disabled={previewOpen}
                                 onClick={() => {
                                     toggleTextAtCursorsLine("1. ", true);
                                 }}
                             >
                                 <ListOrderedIcon className="h-5 w-5" />
                             </IconButton>
-                            <IconButton tooltipContent={"Quote"} disabled={previewOn} onClick={Quote}>
+                            <IconButton tooltipContent={t.editor.quote} disabled={previewOpen} onClick={Quote}>
                                 <TextQuoteIcon className="h-5 w-5" />
                             </IconButton>
                         </BtnGroup>
                         <Separator />
                         <BtnGroup>
                             <LinkInsertionModal
-                                disabled={previewOn}
-                                modalTitle="Insert link"
+                                disabled={previewOpen}
+                                modalTitle={t.editor.insertLink}
                                 getMarkdownString={(url: string, altText: string, isPreview?: boolean) => {
                                     let selectedText = "";
                                     if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
@@ -368,21 +293,21 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                                     const linkLabel = altText || selectedText || url;
                                     toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
                                 }}
-                                altTextInputLabel="Label"
-                                altTextInputPlaceholder="Enter label..."
-                                urlInputLabel="URL"
-                                urlInputPlaceholder="Enter the link's URL..."
+                                altTextInputLabel={t.editor.label}
+                                altTextInputPlaceholder={t.editor.enterLabel}
+                                urlInputLabel={t.form.url}
+                                urlInputPlaceholder={t.editor.enterUrl}
                                 isAltTextRequired={false}
                                 altTextInputVisible={true}
                             >
-                                <IconButton tooltipContent={"Link"} disabled={previewOn}>
+                                <IconButton tooltipContent={t.editor.link} disabled={previewOpen}>
                                     <LinkIcon className="h-4 w-4" />
                                 </IconButton>
                             </LinkInsertionModal>
 
                             <LinkInsertionModal
-                                disabled={previewOn}
-                                modalTitle="Insert image"
+                                disabled={previewOpen}
+                                modalTitle={t.editor.insertImage}
                                 getMarkdownString={(url: string, altText: string, isPreview = false) => {
                                     let selectedText = "";
                                     if (editorTextarea.current) selectedText = getTextareaSelectedText(editorTextarea.current);
@@ -395,49 +320,49 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                                     const linkLabel = altText || selectedText || url;
                                     toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT", linkLabel);
                                 }}
-                                altTextInputLabel="Description (alt text)"
-                                altTextInputPlaceholder="Describe the image..."
-                                urlInputLabel="URL"
-                                urlInputPlaceholder="Enter the image URL..."
+                                altTextInputLabel={t.editor.imgAlt}
+                                altTextInputPlaceholder={t.editor.imgAltDesc}
+                                urlInputLabel={t.form.url}
+                                urlInputPlaceholder={t.editor.enterImgUrl}
                                 isAltTextRequired={false}
                                 altTextInputVisible={true}
                             >
-                                <IconButton tooltipContent={"Image"} disabled={previewOn}>
+                                <IconButton tooltipContent={t.editor.image} disabled={previewOpen}>
                                     <ImageIcon className="h-4 w-4" />
                                 </IconButton>
                             </LinkInsertionModal>
 
                             <LinkInsertionModal
-                                disabled={previewOn}
-                                modalTitle="Insert YouTube video"
+                                disabled={previewOpen}
+                                modalTitle={t.editor.inserYtVideo}
                                 getMarkdownString={getYoutubeIframe}
                                 insertFragmentFunc={(markdownString: string, _url: string, _altText: string) => {
                                     toggleTextAtCursorsLine(markdownString, false, "ADD_FRAGMENT");
                                 }}
                                 altTextInputLabel=""
                                 altTextInputPlaceholder=""
-                                urlInputLabel="YouTube video URL"
-                                urlInputPlaceholder="Enter YouTube video URL"
+                                urlInputLabel={t.editor.ytVideoUrl}
+                                urlInputPlaceholder={t.editor.enterYtUrl}
                                 isAltTextRequired={false}
                                 altTextInputVisible={false}
                             >
-                                <IconButton tooltipContent={"Video"} disabled={previewOn}>
+                                <IconButton tooltipContent={"Video"} disabled={previewOpen}>
                                     <VideoIcon className="h-5 w-5" />
                                 </IconButton>
                             </LinkInsertionModal>
                         </BtnGroup>
                     </div>
                     <div className="flex items-center justify-center gap-2">
-                        <Switch id="markdown-editor-preview-toggle-switch" checked={previewOn} onCheckedChange={setPreviewOn} />
+                        <Switch id="markdown-editor-preview-toggle-switch" checked={previewOpen} onCheckedChange={setPreviewOn} />
                         <Label htmlFor="markdown-editor-preview-toggle-switch" className="text-base">
-                            Preview
+                            {t.editor.preview}
                         </Label>
                     </div>
                 </div>
 
                 <div className="mt-2 flex w-full items-start justify-center gap-2">
                     {/* Editor area */}
-                    <div className={cn("flex w-full flex-col items-center justify-center gap-2", previewOn === true && "hidden")}>
+                    <div className={cn("flex w-full flex-col items-center justify-center gap-2", previewOpen === true && "hidden")}>
                         <Textarea
                             name="markdown-textarea"
                             placeholder={placeholder}
@@ -511,7 +436,7 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
                         </div>
                     </div>
 
-                    {previewOn && (
+                    {previewOpen && (
                         <div
                             className={cn(
                                 "flex w-full overflow-auto items-center justify-center rounded border-2 border-shallow-background p-4",
@@ -525,19 +450,81 @@ const MarkdownEditor = ({ editorValue, setEditorValue, placeholder, textAreaClas
             </div>
         </TooltipProvider>
     );
+}
+
+interface IconButtonProps {
+    children: React.ReactNode;
+    tooltipContent?: React.ReactNode;
+    disabled?: boolean;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
+}
+
+const IconButton = ({ children, tooltipContent, disabled, onClick, ...props }: IconButtonProps) => {
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button
+                    size={"icon"}
+                    type="button"
+                    variant={"secondary"}
+                    tabIndex={disabled ? -1 : 0}
+                    disabled={disabled}
+                    className="h-8 w-8 text-muted-foreground"
+                    onClick={onClick}
+                    {...props}
+                >
+                    {children}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>{tooltipContent}</TooltipContent>
+        </Tooltip>
+    );
 };
 
-export default MarkdownEditor;
+function Separator() {
+    return <span className="hidden h-10 w-[0.1rem] bg-shallow-background lg:flex" />;
+}
 
-const EditorModal = ({
-    disabled,
-    title,
-    trigger,
-    children,
-    modalOpen,
-    setModalOpen,
-    insertFragmentFunc,
-}: {
+function BtnGroup({ children }: { children: React.ReactNode }) {
+    return <div className="flex items-center justify-center gap-x-1.5 gap-y-0.5">{children}</div>;
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>vscode
+function setCursorPosition(textarea: any, position: number[]) {
+    try {
+        if (textarea.setSelectionRange) {
+            textarea.focus();
+            textarea.setSelectionRange(position[0], position[1]);
+        } else if (textarea.createTextRange) {
+            const range = textarea.createTextRange();
+            range.collapse(true);
+            range.moveEnd("character", position[0]);
+            range.moveStart("character", position[1]);
+            range.select();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function getTextareaSelectedText(textarea: HTMLTextAreaElement) {
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+
+    return textarea.value.slice(selectionStart, selectionEnd) || "";
+}
+
+const getYoutubeIframe = (url: string, _altText: string) => {
+    const youtubeRegex =
+        /^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9_-]{7,15})(?:[?&][a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+)*$/;
+    const match = youtubeRegex.exec(url);
+    if (match) {
+        return `<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${match[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>${textSeparatorChar}`;
+    }
+    return "";
+};
+
+interface EditorModalProps {
     disabled: boolean;
     title: string;
     modalOpen: boolean;
@@ -545,7 +532,11 @@ const EditorModal = ({
     trigger: React.ReactNode;
     children: React.ReactNode;
     insertFragmentFunc: () => void;
-}) => {
+}
+
+function EditorModal({ disabled, title, trigger, children, modalOpen, setModalOpen, insertFragmentFunc }: EditorModalProps) {
+    const { t } = useTranslation();
+
     return (
         <Dialog
             open={modalOpen}
@@ -567,10 +558,7 @@ const EditorModal = ({
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button className="gap-2" variant={"secondary"} type="button">
-                                <XIcon className="h-4 w-4" />
-                                Cancel
-                            </Button>
+                            <CancelButton type="button" />
                         </DialogClose>
 
                         <Button
@@ -582,28 +570,16 @@ const EditorModal = ({
                             }}
                         >
                             <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
-                            Insert
+                            {t.editor.insert}
                         </Button>
                     </DialogFooter>
                 </DialogBody>
             </DialogContent>
         </Dialog>
     );
-};
+}
 
-const LinkInsertionModal = ({
-    modalTitle,
-    disabled,
-    insertFragmentFunc,
-    getMarkdownString,
-    altTextInputLabel,
-    altTextInputPlaceholder,
-    urlInputLabel,
-    urlInputPlaceholder,
-    isAltTextRequired,
-    altTextInputVisible,
-    children,
-}: {
+interface InsertLinkModalProps {
     modalTitle: string;
     disabled: boolean;
     altTextInputLabel: string;
@@ -615,7 +591,23 @@ const LinkInsertionModal = ({
     urlInputPlaceholder: string;
     insertFragmentFunc: (markdownString: string, url: string, altText: string) => void;
     getMarkdownString: (url: string, altText: string, isPreview?: boolean) => string;
-}) => {
+}
+
+function LinkInsertionModal({
+    modalTitle,
+    disabled,
+    insertFragmentFunc,
+    getMarkdownString,
+    altTextInputLabel,
+    altTextInputPlaceholder,
+    urlInputLabel,
+    urlInputPlaceholder,
+    isAltTextRequired,
+    altTextInputVisible,
+    children,
+}: InsertLinkModalProps) {
+    const { t } = useTranslation();
+
     const [url, setUrl] = useState("");
     const [urlAltText, setUrlAltText] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
@@ -697,7 +689,7 @@ const LinkInsertionModal = ({
             ) : null}
 
             <div className="flex w-full flex-col items-start justify-center gap-1.5">
-                <Label>Preview</Label>
+                <Label>{t.editor.preview}</Label>
                 <div
                     tabIndex={-1}
                     className={cn(
@@ -711,7 +703,7 @@ const LinkInsertionModal = ({
             </div>
         </EditorModal>
     );
-};
+}
 
 export function cleanUrl(input: string): string {
     let url: URL;
@@ -741,7 +733,7 @@ export function cleanUrl(input: string): string {
     return url.toString();
 }
 
-const KeyboardShortcutsDialog = ({
+function KeyboardShortcutsDialog({
     open,
     setOpen,
     children,
@@ -749,7 +741,7 @@ const KeyboardShortcutsDialog = ({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     children: React.ReactNode;
-}) => {
+}) {
     const shortcutsString =
         "|  Action  |  Shortcut  |\n|---|---|\n|  Bold  | <kbd>alt</kbd> <kbd>b</kbd>  |\n|  Italic  | <kbd>alt</kbd> <kbd>i</kbd>  |\n|  Underline  | <kbd>alt</kbd> <kbd>u</kbd>  |\n|  Code  |  <kbd>alt</kbd> <kbd>c</kbd>  |\n|  Spoiler  |  <kbd>alt</kbd> <kbd>s</kbd>  |\n|  Quote  |  <kbd>alt</kbd> <kbd>q</kbd>  |\n|  Bulleted list  |  <kbd>alt</kbd> <kbd>l</kbd>  |\n|  Toggle word wrap  |  <kbd>alt</kbd> <kbd>z</kbd>  |";
 
@@ -770,4 +762,4 @@ const KeyboardShortcutsDialog = ({
             </DialogContent>
         </Dialog>
     );
-};
+}

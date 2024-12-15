@@ -499,7 +499,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
                             <MarkdownRenderBox divElem text={t.projectSettings.typeToVerify(name)} />
 
                             <Input
-                                placeholder="Type here..."
+                                placeholder={t.projectSettings.typeHere}
                                 className="w-full sm:w-[32ch]"
                                 onChange={(e) => {
                                     if (e.target.value === name) {

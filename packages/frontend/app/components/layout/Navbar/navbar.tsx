@@ -1,5 +1,6 @@
 import { cn } from "@root/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
+import { Capitalize } from "@shared/lib/utils";
 import type { LoggedInUserData } from "@shared/types";
 import type { Notification } from "@shared/types/api";
 import type React from "react";
@@ -29,27 +30,27 @@ export default function Navbar(props: NavbarProps) {
 
     const NavLinks = [
         {
-            label: nav.mods,
+            label: Capitalize(nav.mods),
             href: "mods",
         },
         {
-            label: nav.datamods,
+            label: Capitalize(nav.datamods),
             href: "datamods",
         },
         {
-            label: nav["resource-packs"],
+            label: Capitalize(nav["resource-packs"]),
             href: "resource-packs",
         },
         {
-            label: nav.shaders,
+            label: Capitalize(nav.shaders),
             href: "shaders",
         },
         {
-            label: nav.modpacks,
+            label: Capitalize(nav.modpacks),
             href: "modpacks",
         },
         {
-            label: nav.plugins,
+            label: Capitalize(nav.plugins),
             href: "plugins",
         },
     ];

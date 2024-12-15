@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     teamId: string;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch, isOrg }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<z.infer<typeof inviteTeamMemberFormSchema>>({
@@ -30,7 +32,7 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
 
     async function inviteMember(values: z.infer<typeof inviteTeamMemberFormSchema>) {
         if (!canInviteMembers) {
-            return toast.error("You don't have access to manage member invites");
+            return toast.error(t.projectSettings.cantManageInvites);
         }
 
         if (isLoading || !values.userName) return;
@@ -43,24 +45,24 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await dataRefetch();
-            return;
         } finally {
             setIsLoading(false);
         }
     }
 
+    const teamType = isOrg ? t.project.organization : t.project.project;
+    const inviteDesc = isOrg ? t.projectSettings.inviteOrgMemberDesc : t.projectSettings.inviteProjectMemberDesc;
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(inviteMember)} className="w-full flex flex-col gap-2">
                 <div className="w-full flex flex-col gap-1.5">
-                    <h3 className="leading-none text-lg font-bold">Invite a member</h3>
-                    <span className="leading-none text-muted-foreground">
-                        Enter the username of the person you'd like to invite to be a member of this {isOrg ? "organization" : "project"}.
-                    </span>
+                    <h3 className="leading-none text-lg font-bold">{t.projectSettings.inviteMember}</h3>
+                    <span className="leading-none text-muted-foreground">{inviteDesc}</span>
                 </div>
 
                 <FormField
@@ -73,14 +75,14 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
                             </FormLabel>
 
                             <div className="w-full flex flex-wrap gap-x-4 gap-y-2">
-                                <Input {...field} className="w-full md:w-[32ch]" placeholder="Username" id="username-input" />
+                                <Input {...field} className="w-full md:w-[32ch]" placeholder={t.form.username} id="username-input" />
                                 <Button type="submit" disabled={!canInviteMembers || isLoading}>
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
                                         <UserPlusIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.25} />
                                     )}
-                                    Invite
+                                    {t.projectSettings.invite}
                                 </Button>
                             </div>
                         </FormItem>

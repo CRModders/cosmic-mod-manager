@@ -332,7 +332,7 @@ export default function ProjectPageLayout() {
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <CalendarIcon className="w-btn-icon h-btn-icon" />
-                                    {t.settings.created} <TimePassedSince date={projectData.datePublished} />
+                                    {t.settings.created(TimePassedSince({ date: projectData.datePublished }))}
                                 </p>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -343,7 +343,7 @@ export default function ProjectPageLayout() {
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
                                     <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
-                                    {t.project.updated} <TimePassedSince date={projectData.dateUpdated} />
+                                    {t.project.updatedAt(TimePassedSince({ date: projectData.dateUpdated }))}
                                 </p>
                             </TooltipTrigger>
                             <TooltipContent>

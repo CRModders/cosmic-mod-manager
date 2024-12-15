@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackOrgIcon } from "~/components/icons";
+import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import RefreshPage from "~/components/refresh-page";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -36,6 +37,7 @@ import { InteractiveLabel } from "~/components/ui/label";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 import { useOrgData } from "~/hooks/org";
+import { useTranslation } from "~/locales/provider";
 
 const getInitialValues = (orgData: Organisation) => {
     return {
@@ -47,6 +49,7 @@ const getInitialValues = (orgData: Organisation) => {
 };
 
 export default function GeneralOrgSettings() {
+    const { t } = useTranslation();
     const orgData = useOrgData().orgData;
 
     const [isLoading, setIsLoading] = useState(false);
@@ -77,12 +80,12 @@ export default function GeneralOrgSettings() {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             const newPathname = OrgPagePath(result?.slug || orgData?.slug, "settings");
             RefreshPage(navigate, newPathname);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
@@ -90,7 +93,7 @@ export default function GeneralOrgSettings() {
 
     return (
         <>
-            <ContentCardTemplate title="Organization information">
+            <ContentCardTemplate title={t.organization.orgInfo}>
                 <Form {...form}>
                     <form
                         onSubmit={(e) => {
@@ -104,7 +107,7 @@ export default function GeneralOrgSettings() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-bold">
-                                        Icon
+                                        {t.form.icon}
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="flex flex-wrap items-center justify-start gap-4">
@@ -156,7 +159,7 @@ export default function GeneralOrgSettings() {
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
-                                                Upload icon
+                                                {t.form.uploadIcon}
                                             </InteractiveLabel>
                                             {form.getValues().icon ? (
                                                 <Button
@@ -167,7 +170,7 @@ export default function GeneralOrgSettings() {
                                                     }}
                                                 >
                                                     <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                                    Remove icon
+                                                    {t.form.removeIcon}
                                                 </Button>
                                             ) : null}
                                         </div>
@@ -182,7 +185,7 @@ export default function GeneralOrgSettings() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="org-name-input">
-                                        Name
+                                        {t.form.name}
                                         <FormMessage />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="org-name-input" autoComplete="off" />
@@ -196,7 +199,7 @@ export default function GeneralOrgSettings() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="org-slug-input">
-                                        URL
+                                        {t.form.url}
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
@@ -224,7 +227,7 @@ export default function GeneralOrgSettings() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="org-description-input">
-                                        Description
+                                        {t.form.description}
                                         <FormMessage />
                                     </FormLabel>
                                     <Textarea
@@ -249,7 +252,7 @@ export default function GeneralOrgSettings() {
                                 }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                                Save changes
+                                {t.form.saveChanges}
                             </Button>
                         </div>
                     </form>
@@ -262,11 +265,12 @@ export default function GeneralOrgSettings() {
 }
 
 function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [submittable, setSubmittable] = useState(false);
     const navigate = useNavigate();
 
-    const deleteOrg = async () => {
+    async function deleteOrg() {
         if (!submittable || isLoading) return;
         setIsLoading(true);
         try {
@@ -276,7 +280,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             toast.success(data?.message || "Success");
@@ -284,38 +288,34 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
-        <ContentCardTemplate title="Delete project" className="w-full flex flex-col gap-4">
-            <p className="text-muted-foreground">
-                Deleting your organization will transfer all of its projects to the organization owner. This action cannot be undone.
-            </p>
+        <ContentCardTemplate title={t.organization.deleteOrg} className="w-full flex flex-col gap-4">
+            <p className="text-muted-foreground">{t.organization.deleteOrgDesc}</p>
 
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="destructive">
                         <Trash2Icon className="w-btn-icon h-btn-icon" />
-                        Delete organization
+                        {t.organization.deleteOrg}
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Are you sure you want to delete {name}?</DialogTitle>
+                        <DialogTitle>{t.organization.sureToDeleteOrg}</DialogTitle>
                         <VisuallyHidden>
-                            <DialogDescription>Delete organization {name}</DialogDescription>
+                            <DialogDescription>{t.organization.deleteOrgNamed(name)}</DialogDescription>
                         </VisuallyHidden>
                     </DialogHeader>
                     <DialogBody className="text-muted-foreground flex flex-col gap-4">
-                        <p className="leading-snug">This will delete this organization forever (like forever ever).</p>
+                        <p className="leading-snug">{t.organization.deletionWarning}</p>
 
                         <div className="w-full flex flex-col gap-1">
-                            <span className="font-bold flex items-center justify-start gap-1.5">
-                                To verify, type<em className="font-normal">{name}</em>below:
-                            </span>
+                            <MarkdownRenderBox text={t.projectSettings.typeToVerify(name)} divElem />
 
                             <Input
-                                placeholder="Type here..."
+                                placeholder={t.projectSettings.typeHere}
                                 className="w-full sm:w-[32ch]"
                                 onChange={(e) => {
                                     if (e.target.value === name) {
@@ -332,7 +332,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteOrg}>
                                 {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
-                                Delete organization
+                                {t.organization.deleteOrg}
                             </Button>
                         </DialogFooter>
                     </DialogBody>

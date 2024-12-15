@@ -15,6 +15,7 @@ import {
     DialogTrigger,
 } from "~/components/ui/dialog";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 interface RemoveMemberDialogProps {
     member: TeamMember;
@@ -23,6 +24,7 @@ interface RemoveMemberDialogProps {
 }
 
 export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemberDialogProps) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
     async function removeTeamMember() {
@@ -35,11 +37,11 @@ export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemb
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await refreshData();
-            return toast.success("Member removed successfully");
+            return toast.success(t.projectSettings.memberRemoved);
         } finally {
             setIsLoading(false);
         }
@@ -50,17 +52,17 @@ export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemb
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Remove member</DialogTitle>
+                    <DialogTitle>{t.projectSettings.removeMember}</DialogTitle>
                 </DialogHeader>
                 <DialogBody className="flex flex-col gap-4">
-                    <p>Are you sure you want to remove {member.userName} from this team?</p>
+                    <p>{t.projectSettings.sureToRemoveMember(member.userName)}</p>
                     <DialogFooter>
                         <DialogClose asChild>
                             <CancelButton />
                         </DialogClose>
                         <Button type="button" variant="destructive" disabled={isLoading} onClick={removeTeamMember}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <UserXIcon className="w-btn-icon h-btn-icon" />}
-                            Remove member
+                            {t.projectSettings.removeMember}
                         </Button>
                     </DialogFooter>
                 </DialogBody>
@@ -77,6 +79,7 @@ interface TransferOwnershipDialogProps {
 }
 
 export function TransferOwnershipDialog({ member, teamId, refreshData, children }: TransferOwnershipDialogProps) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
     async function transferOwnership() {
@@ -90,11 +93,11 @@ export function TransferOwnershipDialog({ member, teamId, refreshData, children 
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
             await refreshData();
-            return toast.success(data?.message || "Ownership transferred successfully");
+            return toast.success(data?.message || t.projectSettings.ownershipTransfered);
         } finally {
             setIsLoading(false);
         }
@@ -105,17 +108,17 @@ export function TransferOwnershipDialog({ member, teamId, refreshData, children 
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Transfer Ownership</DialogTitle>
+                    <DialogTitle>{t.projectSettings.transferOwnership}</DialogTitle>
                 </DialogHeader>
                 <DialogBody className="flex flex-col gap-4">
-                    <p>Are you sure you want to make {member.userName} the owner of this team?</p>
+                    <p>{t.projectSettings.sureToTransferOwnership(member.userName)}</p>
                     <DialogFooter>
                         <DialogClose asChild>
                             <CancelButton />
                         </DialogClose>
                         <Button variant="destructive" size="sm" disabled={isLoading} onClick={transferOwnership}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />}
-                            Transfer ownership
+                            {t.projectSettings.transferOwnership}
                         </Button>
                     </DialogFooter>
                 </DialogBody>

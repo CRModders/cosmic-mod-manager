@@ -3,6 +3,7 @@ import { UsersIcon } from "lucide-react";
 import { fallbackOrgIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import Link from "~/components/ui/link";
+import { useTranslation } from "~/locales/provider";
 
 interface ListItemCardProps {
     vtId: string;
@@ -46,13 +47,15 @@ interface OrgListItemCard extends Omit<ListItemCardProps, "children"> {
     members: number;
 }
 
-export const OrgListItemCard = ({ members, ...props }: OrgListItemCard) => {
+export function OrgListItemCard({ members, ...props }: OrgListItemCard) {
+    const { t } = useTranslation();
+
     return (
         <ListItemCard {...props} fallbackIcon={fallbackOrgIcon}>
             <div className="flex gap-1 items-center justify-center whitespace-nowrap">
                 <UsersIcon className="text-extra-muted-foreground font-medium w-btn-icon h-btn-icon" />
-                {members > 1 ? `${members} members` : `${members} member`}
+                {t.organization.membersCount(members)}
             </div>
         </ListItemCard>
     );
-};
+}

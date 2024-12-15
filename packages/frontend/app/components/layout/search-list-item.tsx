@@ -8,6 +8,7 @@ import { TagIcon } from "~/components/tag-icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import Link from "~/components/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useTranslation } from "~/locales/provider";
 import { fallbackProjectIcon } from "../icons";
 import { FormattedDate, TimePassedSince } from "../ui/date";
 import "./styles.css";
@@ -44,6 +45,7 @@ export default function SearchListItem({ viewType = ViewType.LIST, ...props }: S
 }
 
 function BaseView(props: SearchListItemProps) {
+    const { t } = useTranslation();
     const projectCategoriesData = getProjectCategoriesDataFromNames(props.featuredCategories);
     const loadersData = getLoadersFromNames(props.loaders);
 
@@ -198,10 +200,7 @@ function BaseView(props: SearchListItemProps) {
                                 <CalendarIcon className="w-[1.1rem] h-[1.1rem]" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
-                                        <span>Published</span>
-                                        <span>
-                                            <TimePassedSince date={props.datePublished} />
-                                        </span>
+                                        {t.project.publishedAt(TimePassedSince({ date: props.datePublished }))}
                                     </p>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -214,10 +213,7 @@ function BaseView(props: SearchListItemProps) {
 
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
-                                        <span>Updated</span>
-                                        <span>
-                                            <TimePassedSince date={props.dateUpdated} />
-                                        </span>
+                                        {t.project.updatedAt(TimePassedSince({ date: props.dateUpdated }))}
                                     </p>
                                 </TooltipTrigger>
                                 <TooltipContent>

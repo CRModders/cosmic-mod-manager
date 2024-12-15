@@ -16,8 +16,10 @@ import {
 } from "~/components/ui/breadcrumb";
 import { ButtonLink } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
+import { useTranslation } from "~/locales/provider";
 
 export default function OrgSettingsLayout() {
+    const { t } = useTranslation();
     const ctx = useOrgData();
     const orgData = ctx.orgData;
     const projects = ctx.orgProjects;
@@ -34,7 +36,7 @@ export default function OrgSettingsLayout() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink href="/dashboard/organizations">Organizations</BreadcrumbLink>
+                                    <BreadcrumbLink href="/dashboard/organizations">{t.dashboard.organizations}</BreadcrumbLink>
                                 </BreadcrumbItem>
 
                                 <BreadcrumbSeparator />
@@ -44,7 +46,7 @@ export default function OrgSettingsLayout() {
 
                                 <BreadcrumbSeparator />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Settings</BreadcrumbPage>
+                                    <BreadcrumbPage>{t.common.settings}</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -61,14 +63,35 @@ export default function OrgSettingsLayout() {
                             <div className="flex flex-col items-start justify-start">
                                 <span className="text-lg font-semibold">{orgData.name}</span>
                                 <span className="flex items-center justify-center gap-1 text-muted-foreground">
-                                    {projects?.length || 0} {projects?.length === 1 ? "project" : "projects"}
+                                    {t.user.projectsCount(projects?.length || 0)}
                                 </span>
                             </div>
                         </div>
 
                         <div className="w-full flex flex-col gap-1">
-                            <span className="text-xl font-semibold text-muted-foreground mt-1 mb-0.5">Organization settings</span>
-                            {SidePanelLinks.map((link) => (
+                            <span className="text-xl font-semibold text-muted-foreground mt-1 mb-0.5">{t.organization.orgSettings}</span>
+                            {[
+                                {
+                                    name: t.dashboard.overview,
+                                    href: "settings",
+                                    icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
+                                },
+                                {
+                                    name: t.projectSettings.members,
+                                    href: "settings/members",
+                                    icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
+                                },
+                                {
+                                    name: t.dashboard.projects,
+                                    href: "settings/projects",
+                                    icon: <CubeIcon className="w-btn-icon h-btn-icon" />,
+                                },
+                                {
+                                    name: t.dashboard.analytics,
+                                    href: "settings/analytics",
+                                    icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
+                                },
+                            ].map((link) => (
                                 <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
                                     {link.icon}
                                     {link.name}
@@ -85,26 +108,3 @@ export default function OrgSettingsLayout() {
         </>
     );
 }
-
-const SidePanelLinks = [
-    {
-        name: "Overview",
-        href: "settings",
-        icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Members",
-        href: "settings/members",
-        icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Projects",
-        href: "settings/projects",
-        icon: <CubeIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Analytics",
-        href: "settings/analytics",
-        icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
-    },
-];

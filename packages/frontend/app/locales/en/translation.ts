@@ -15,6 +15,7 @@ export default {
         download: "Download",
         report: "Report",
         copyId: "Copy ID",
+        all: "All",
     },
 
     navbar: {
@@ -32,6 +33,8 @@ export default {
         plugins: "plugins",
         signout: "Sign Out",
         dashboard: "Dashboard",
+        profile: "Profile",
+        skipToMainContent: "Skip to main content",
     },
 
     homePage: {
@@ -88,7 +91,7 @@ export default {
         manageProviders: "Manage providers",
         linkedProviders: "Linked auth providers",
         linkProvider: (provider: string) => `Link ${provider} to your account`,
-        link: "Link",
+        link: "Link", // Link as create a link
         sureToDeleteAccount: "Are you sure you want to delete your account?",
         profileInfo: "Profile information",
         profileInfoDesc: (site: string) => `Your profile information is publicly viewable on ${site}.`,
@@ -100,8 +103,8 @@ export default {
         sessionsDesc:
             "These devices are currently logged into your account, you can revoke any session at any time. If you see something you don't recognize, immediately revoke the session and change the password of the associated auth provider.",
         ipHidden: "IP Hidden",
-        lastAccessed: "Last accessed",
-        created: "Created", // eg: Created a month ago
+        lastAccessed: (when: string) => `Last accessed ${when}`,
+        created: (when: string) => `Created ${when}`, // eg: Created a month ago
         sessionCreatedUsing: (providerName: string) => `Session created using ${providerName}`,
         currSession: "Current session",
         revokeSession: "Revoke session",
@@ -192,7 +195,8 @@ export default {
         organization: "Organization",
         project: "Project",
         details: "Details",
-        updated: "Updated", // eg: Updated 3 days ago
+        updatedAt: (when: string) => `Updated ${when}`, // eg: Updated 3 days ago
+        publishedAt: (when: string) => `Published ${when}`, // eg: Published 3 days ago
         gallery: "Gallery",
         changelog: "Changelog",
         versions: "Versions",
@@ -353,6 +357,95 @@ export default {
         deleteProjectDesc2:
             "If you proceed, all versions and any attached data will be removed from our servers. This may break other projects, so be careful.",
         typeToVerify: (projectName: string) => `To verify, type **${projectName}** below:`,
+        typeHere: "Type here...",
+        manageMembers: "Manage members",
+        leftProjectTeam: "You have left the project team",
+        leaveOrg: "Leave organization",
+        leaveProject: "Leave project",
+        leaveOrgDesc: "Remove yourself as a member of this organization.",
+        leaveProjectDesc: "Remove yourself as a member of this project.",
+        sureToLeaveTeam: "Are you sure you want to leave this team?",
+        cantManageInvites: "You don't have access to manage member invites",
+        inviteMember: "Invite a member",
+        inviteProjectMemberDesc: "Enter the username of the person you'd like to invite to be a member of this project.",
+        inviteOrgMemberDesc: "Enter the username of the person you'd like to invite to be a member of this organization.",
+        invite: "Invite",
+        memberUpdated: "Member updated successfully",
+        pending: "Pending",
+        role: "Role",
+        roleDesc: "The title of the role that this member plays for this project.",
+        permissions: "Permissions",
+        perms: {
+            upload_version: "Upload version",
+            delete_version: "Delete version",
+            edit_details: "Edit details",
+            edit_description: "Edit description",
+            manage_invites: "Manage invites",
+            remove_member: "Remove member",
+            edit_member: "Edit member",
+            delete_project: "Delete project",
+            view_analytics: "View analytics",
+            view_revenue: "View revenue",
+        },
+        owner: "Owner",
+        removeMember: "Remove member",
+        transferOwnership: "Transfer ownership",
+        overrideValues: "Override values",
+        overrideValuesDesc: " Override organization default values and assign custom permissions and roles to this user on the project.",
+        projectNotManagedByOrg:
+            "This project is not managed by an organization. If you are the member of any organizations, you can transfer management to one of them.",
+        transferManagementToOrg: "Transfer management",
+        selectOrg: "Select organization",
+        projectManagedByOrg: (orgName: string) =>
+            `This project is managed by ${orgName}. The defaults for member permissions are set in the organization settings. You may override them below.`,
+        removeFromOrg: "Remove from organization",
+        memberRemoved: "Member removed successfully",
+        sureToRemoveMember: (memberName: string) => `Are you sure you want to remove ${memberName} from this team?`,
+        ownershipTransfered: "Ownership transferred successfully",
+        sureToTransferOwnership: (memberName: string) => `Are you sure you want to transfer ownership to ${memberName}?`,
+    },
+
+    organization: {
+        orgDoesntHaveProjects: "This organization doesn't have any projects yet.",
+        manageProjects: "Manage projects",
+        orgSettings: "Organization settings",
+        transferProjectsTip: "You can transfer your existing projects to this organisation from: Project settings > Members",
+        noProjects_CreateOne: "This organization don't have any projects. Click the button above to create one.",
+        orgInfo: "Organization information",
+        deleteOrg: "Delete organization",
+        deleteOrgDesc:
+            "Deleting your organization will transfer all of its projects to the organization owner. This action cannot be undone.",
+        sureToDeleteOrg: "Are you sure you want to delete this organization?",
+        deleteOrgNamed: (orgName: string) => `Delete organization ${orgName}`,
+        deletionWarning: "This will delete this organization forever (like forever ever).",
+
+        membersCount: (count: number) => {
+            switch (count) {
+                case 1:
+                    return "1 member";
+                default:
+                    return `${count} members`;
+            }
+        },
+        perms: {
+            edit_details: "Edit details",
+            manage_invites: "Manage invites",
+            remove_member: "Remove member",
+            edit_member: "Edit member",
+            add_project: "Add project",
+            remove_project: "Remove project",
+            delete_organization: "Delete organization",
+            edit_member_default_permissions: "Edit member default permissions",
+        },
+    },
+
+    user: {
+        doesntHaveProjects: (user: string) => `${user} doesn't have any projects yet.`,
+        isntPartOfAnyOrgs: (user: string) => `${user} is not a member of any Organization.`,
+        moderator: "Moderator",
+        projectsCount: (count: number) => (count === 1 ? "1 project" : `${count} projects`),
+        downloads: (count: string) => `${count} downloads`,
+        joined: (when: string) => `Joined ${when}`, // eg: Joined 2 months ago
     },
 
     footer: {
@@ -420,6 +513,37 @@ export default {
         pageNotFoundDesc: "Sorry, we couldn't find the page you're looking for.",
         projectNotFound: "Project not found",
         projectNotFoundDesc: (type: string, slug: string) => `The ${type} with the slug/ID "${slug}" does not exist.`,
+    },
+
+    editor: {
+        heading1: "Heading 1",
+        heading2: "Heading 2",
+        heading3: "Heading 3",
+        bold: "Bold",
+        italic: "Italic",
+        underline: "Underline",
+        strikethrough: "Strikethrough",
+        code: "Code",
+        spoiler: "Spoiler",
+        bulletedList: "Bulleted list",
+        numberedList: "Numbered list",
+        quote: "Quote",
+        insertLink: "Insert link",
+        label: "Label",
+        enterLabel: "Enter label",
+        link: "Link", // Link as a noun (url)
+        enterUrl: "Enter the link URL",
+        insertImage: "Insert image",
+        imgAlt: "Description (alt text)",
+        imgAltDesc: "Enter a description for the image",
+        enterImgUrl: "Enter the image URL",
+        image: "Image",
+        inserYtVideo: "Insert YouTube video",
+        ytVideoUrl: "YouTube video URL",
+        enterYtUrl: "Enter the YouTube video URL",
+        video: "Video",
+        preview: "Preview",
+        insert: "Insert",
     },
 
     date: {

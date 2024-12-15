@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 export function LoginButton({
     className,
@@ -21,17 +22,19 @@ export function LoginButton({
     className?: string;
     onClick?: () => void;
 }) {
+    const { t } = useTranslation();
+
     return (
         <VariantButtonLink
             prefetch="render"
             url="/login"
             className={className}
             variant="secondary-inverted"
-            aria-label="Login"
+            aria-label={t.form.login_withSpace}
             onClick={onClick}
         >
             <LogInIcon className="w-btn-icon h-btn-icon" />
-            Log In
+            {t.form.login_withSpace}
         </VariantButtonLink>
     );
 }
@@ -43,6 +46,7 @@ interface NavbuttonProps {
 }
 
 export default function NavButton({ session, notifications, toggleNavMenu }: NavbuttonProps) {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
 
     if (session === undefined) {
@@ -83,20 +87,20 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                 {[
                     {
                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
-                        label: "Profile",
+                        label: t.navbar.profile,
                         url: UserProfilePath(session.userName),
                         matchExactUrl: false,
                     },
                     {
                         icon: <BellIcon className="w-btn-icon h-btn-icon" />,
-                        label: "Notifications",
+                        label: t.dashboard.notifications,
                         url: "/dashboard/notifications",
                         matchExactUrl: false,
                         notificationBadge: undreadNotifications,
                     },
                     {
                         icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
-                        label: "Settings",
+                        label: t.common.settings,
                         url: "/settings/profile",
                         matchExactUrl: false,
                     },
@@ -114,19 +118,19 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                 {[
                     {
                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
-                        label: "Projects",
+                        label: t.dashboard.projects,
                         url: "/dashboard/projects",
                         matchExactUrl: false,
                     },
                     {
                         icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
-                        label: "Organizations",
+                        label: t.dashboard.organizations,
                         url: "/dashboard/organizations",
                         matchExactUrl: false,
                     },
                     {
                         icon: <LayoutDashboardIcon className="w-btn-icon h-btn-icon" />,
-                        label: "Dashboard",
+                        label: t.dashboard.dashboard,
                         url: "/dashboard",
                         matchExactUrl: true,
                     },
@@ -151,6 +155,7 @@ type Props = {
 };
 
 export function SignOutBtn({ className, disabled = false }: Props) {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
     const handleClick = async () => {
@@ -174,7 +179,7 @@ export function SignOutBtn({ className, disabled = false }: Props) {
             className={cn("h-nav-item text-danger-foreground items-center justify-start", className)}
         >
             {loading ? <LoadingSpinner size="xs" /> : <LogOutIcon className="w-btn-icon h-btn-icon" />}
-            Sign out
+            {t.navbar.signout}
         </ButtonLink>
     );
 }

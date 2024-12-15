@@ -22,6 +22,7 @@ import {
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import { OrgTeamMember, ProjectTeamMember } from "./edit-member";
 import InviteMemberForm from "./invite-member";
 import { RemoveProjectFromOrg, TransferProjectManagementCard } from "./transfer-management";
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
+    const { t } = useTranslation();
     // Session cant be null here, as the user is redirected to login if they are not logged in
     const session = useSession() as LoggedInUserData;
 
@@ -49,14 +51,14 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
         session?.role,
     );
 
-    const refreshProjectData = async (path: string | Location = location) => {
+    async function refreshProjectData(path: string | Location = location) {
         RefreshPage(navigate, path);
-    };
+    }
 
     return (
         <>
             <Card className="w-full flex flex-col p-card-surround gap-4">
-                <CardTitle>Manage members</CardTitle>
+                <CardTitle>{t.projectSettings.manageMembers}</CardTitle>
                 <InviteMemberForm teamId={projectData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshProjectData} />
                 {currUsersMembership ? (
                     <LeaveTeam teamId={projectData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshProjectData} />
@@ -97,50 +99,56 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
     );
 }
 
-export function LeaveTeam({
-    currUsersMembership,
-    teamId,
-    refreshData,
-    isOrgTeam,
-}: { currUsersMembership: TeamMember; teamId: string; isOrgTeam?: boolean; refreshData: () => Promise<void> }) {
+interface LeaveTeamProps {
+    currUsersMembership: TeamMember;
+    teamId: string;
+    isOrgTeam?: boolean;
+    refreshData: () => Promise<void>;
+}
+
+export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam }: LeaveTeamProps) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleLeaveProject = async () => {
+    async function handleLeaveProject() {
         if (isLoading) return;
         setIsLoading(true);
 
         try {
             const data = await leaveTeam(teamId);
-            if (!data?.success) return toast.error(data?.message || "Error");
+            if (!data?.success) return toast.error(data?.message || t.common.error);
 
             await refreshData();
-            return toast.success("You have left the project team");
+            return toast.success(t.projectSettings.leftProjectTeam);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
+
+    const leaveTeamMsg = isOrgTeam ? t.projectSettings.leaveOrg : t.projectSettings.leaveProject;
+    const leaveTeamDesc = isOrgTeam ? t.projectSettings.leaveOrgDesc : t.projectSettings.leaveProjectDesc;
 
     return (
         <div className="w-full flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
             <div>
-                <h2 className="text-lg font-semibold">{isOrgTeam === true ? "Leave organisation" : "Leave project"}</h2>
-                <p className="text-muted-foreground">Remove yourself as a member of this {isOrgTeam ? "organization" : "project"}.</p>
+                <h2 className="text-lg font-semibold">{leaveTeamMsg}</h2>
+                <p className="text-muted-foreground">{leaveTeamDesc}</p>
             </div>
 
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="secondary-destructive" disabled={currUsersMembership.isOwner || currUsersMembership.teamId !== teamId}>
                         <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
-                        Leave {isOrgTeam ? "organisation" : "project"}
+                        {leaveTeamMsg}
                     </Button>
                 </DialogTrigger>
 
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Leave project</DialogTitle>
+                        <DialogTitle>{leaveTeamMsg}</DialogTitle>
                     </DialogHeader>
                     <DialogBody className="flex flex-col gap-4">
-                        <p>Are you sure you want to leave this team?</p>
+                        <p>{t.projectSettings.sureToLeaveTeam}</p>
                         <DialogFooter>
                             <DialogClose asChild>
                                 <CancelButton />
@@ -151,7 +159,7 @@ export function LeaveTeam({
                                 ) : (
                                     <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
                                 )}
-                                Leave {isOrgTeam ? "organisation" : "project"}
+                                {leaveTeamMsg}
                             </Button>
                         </DialogFooter>
                     </DialogBody>

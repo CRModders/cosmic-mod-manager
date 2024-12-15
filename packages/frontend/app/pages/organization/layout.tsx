@@ -2,7 +2,6 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { imageUrl } from "@root/utils";
 import { OrgPagePath } from "@root/utils/urls";
 import { isModerator } from "@shared/config/roles";
-import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { getProjectTypesFromNames } from "@shared/lib/utils/convertors";
 import type { LoggedInUserData } from "@shared/types";
 import type { Organisation, TeamMember } from "@shared/types/api";
@@ -17,12 +16,14 @@ import { VariantButtonLink } from "~/components/ui/link";
 import { Separator } from "~/components/ui/separator";
 import { useOrgData } from "~/hooks/org";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import TeamInvitationBanner from "../project/join-project-banner";
 import { ProjectMember } from "../project/layout";
 import SecondaryNav from "../project/secondary-nav";
 import "./styles.css";
 
 export default function OrgPageLayout() {
+    const { t } = useTranslation();
     const session = useSession();
     const ctx = useOrgData();
     const projects = ctx.orgProjects;
@@ -67,9 +68,9 @@ export default function OrgPageLayout() {
                         className="bg-card-background rounded-lg px-3 py-2"
                         urlBase={OrgPagePath(orgData.slug)}
                         links={[
-                            { label: "All", href: "" },
+                            { label: t.common.all, href: "" },
                             ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-                                label: `${CapitalizeAndFormatString(type)}s` || "",
+                                label: t.navbar[`${type}s`],
                                 href: `/${type}s`,
                             })),
                         ]}
@@ -80,7 +81,7 @@ export default function OrgPageLayout() {
                     <Outlet />
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
-                        <p className="text-lg text-muted-foreground italic text-center">This organization doesn't have any projects yet.</p>
+                        <p className="text-lg text-muted-foreground italic text-center">{t.organization.orgDoesntHaveProjects}</p>
                     </div>
                 )}
             </div>
@@ -90,6 +91,8 @@ export default function OrgPageLayout() {
 }
 
 function PageSidebar({ members }: { members: TeamMember[] }) {
+    const { t } = useTranslation();
+
     return (
         <aside
             style={{
@@ -99,7 +102,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
         >
             <Card>
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-lg ">Members</CardTitle>
+                    <CardTitle className="text-lg ">{t.dashboard.projects}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-1">
                     {members.map((member) => {
@@ -132,6 +135,7 @@ interface OrgInfoHeaderProps {
 }
 
 function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUsersMembership, fetchOrgData }: OrgInfoHeaderProps) {
+    const { t } = useTranslation();
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
@@ -144,7 +148,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 titleBadge={
                     <div className="ml-2 flex items-center justify-center gap-1.5 font-bold text-extra-muted-foreground">
                         <Building2Icon className="w-btn-icon h-btn-icon" />
-                        Organization
+                        {t.project.organization}
                     </div>
                 }
                 threeDotMenu={
@@ -153,7 +157,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                             <>
                                 <VariantButtonLink variant="ghost" url={OrgPagePath(orgData.slug, "settings/projects")} prefetch="render">
                                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                                    Manage projects
+                                    {t.organization.manageProjects}
                                 </VariantButtonLink>
                                 <Separator className="my-0.5" />
                             </>
@@ -167,7 +171,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                                 }}
                             >
                                 <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
-                                Copy ID
+                                {t.common.copyId}
                             </Button>
                         </PopoverClose>
                     </>
@@ -176,26 +180,22 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                     currUsersMembership?.id || isModerator(session?.role) ? (
                         <VariantButtonLink variant="secondary-inverted" url={OrgPagePath(orgData.slug, "settings")}>
                             <SettingsIcon className="w-btn-icon h-btn-icon" />
-                            Manage
+                            {t.dashboard.manage}
                         </VariantButtonLink>
                     ) : null
                 }
             >
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <UsersIcon className="w-[1.1rem] h-[1.1rem]" />
-                    <span className="font-semibold">
-                        {orgData.members.length} {orgData.members.length > 1 ? "Members" : "Member"}
-                    </span>
+                    <span className="font-semibold">{t.organization.membersCount(orgData.members.length)}</span>
                 </div>
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">
-                        {totalProjects} {totalProjects > 1 ? "Projects" : "Project"}
-                    </span>
+                    <span className="font-semibold">{t.user.projectsCount(totalProjects)}</span>
                 </div>
                 <div className="flex items-center gap-2 pr-4">
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{totalDownloads} downloads</span>
+                    <span className="font-semibold">{t.user.downloads(`${totalDownloads}`)}</span>
                 </div>
             </PageHeader>
 

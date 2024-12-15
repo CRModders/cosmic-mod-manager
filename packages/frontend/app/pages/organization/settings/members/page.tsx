@@ -5,11 +5,13 @@ import RefreshPage from "~/components/refresh-page";
 import { CardTitle, SectionCard } from "~/components/ui/card";
 import { useOrgData } from "~/hooks/org";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import InviteMemberForm from "~/pages/project/settings/members/invite-member";
 import { LeaveTeam } from "~/pages/project/settings/members/page";
 import { OrgTeamMember } from "./edit-member";
 
 export default function OrgMemberSettings() {
+    const { t } = useTranslation();
     const session = useSession();
     const ctx = useOrgData();
     const currUsersMembership = ctx.currUsersMembership;
@@ -35,7 +37,7 @@ export default function OrgMemberSettings() {
             <title>{`Members - ${orgData.name}`}</title>
 
             <SectionCard className="w-full flex flex-col p-card-surround gap-4">
-                <CardTitle>Manage members</CardTitle>
+                <CardTitle>{t.projectSettings.manageMembers}</CardTitle>
                 <InviteMemberForm teamId={orgData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshOrgData} isOrg />
                 <LeaveTeam teamId={orgData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshOrgData} />
             </SectionCard>

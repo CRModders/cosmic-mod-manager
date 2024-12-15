@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     organisations: Organisation[];
@@ -20,12 +21,13 @@ interface Props {
 }
 
 export function TransferProjectManagementCard({ organisations, projectId }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrg, setSelectedOrg] = useState<undefined | string>(undefined);
     const navigate = useNavigate();
     const location = useLocation();
 
-    const transferProject = async () => {
+    async function transferProject() {
         try {
             if (isLoading || !selectedOrg) return;
             setIsLoading(true);
@@ -46,23 +48,20 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Organization</CardTitle>
+                <CardTitle>{t.project.organization}</CardTitle>
             </CardHeader>
             <CardContent className="w-full flex flex-col gap-4">
-                <CardDescription className="max-w-[80ch] leading-tight">
-                    This project is not managed by an organization. If you are the member of any organizations, you can transfer management
-                    to one of them.
-                </CardDescription>
+                <CardDescription className="max-w-[80ch] leading-tight">{t.projectSettings.projectNotManagedByOrg}</CardDescription>
 
                 <div className="w-full flex flex-wrap gap-3">
                     <Select value={selectedOrg} onValueChange={setSelectedOrg}>
                         <SelectTrigger className="w-fit gap-2 min-w-full sm:min-w-[42ch]">
-                            <SelectValue placeholder="Select organization" />
+                            <SelectValue placeholder={t.projectSettings.selectOrg} />
                         </SelectTrigger>
                         <SelectContent>
                             {organisations.map((organisation) => (
@@ -75,7 +74,7 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
 
                     <Button disabled={!selectedOrg} onClick={transferProject}>
                         {isLoading ? <LoadingSpinner size="xs" /> : <CheckIcon className="w-btn-icon-md h-btn-icon-md" />}
-                        Transfer management
+                        {t.projectSettings.transferManagementToOrg}
                     </Button>
                 </div>
             </CardContent>
@@ -89,11 +88,12 @@ interface RemoveProjectFromOrgProps {
 }
 
 export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgProps) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
-    const removeProjectFromOrg = async () => {
+    async function removeProjectFromOrg() {
         try {
             if (isLoading) return;
             setIsLoading(true);
@@ -113,18 +113,15 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Organization</CardTitle>
+                <CardTitle>{t.project.organization}</CardTitle>
             </CardHeader>
             <CardContent className="w-full flex flex-col gap-4">
-                <CardDescription className="max-w-[80ch] leading-tight">
-                    This project is managed by {org.name}. The defaults for member permissions are set in the organization settings. You may
-                    override them below.
-                </CardDescription>
+                <CardDescription className="max-w-[80ch] leading-tight">{t.projectSettings.projectManagedByOrg(org.name)}</CardDescription>
 
                 <div className="w-full flex flex-wrap gap-3">
                     <div className="w-full">
@@ -141,7 +138,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
 
                     <Button onClick={removeProjectFromOrg} variant="secondary">
                         {isLoading ? <LoadingSpinner size="xs" /> : <Building2Icon className="w-btn-icon-md h-btn-icon-md" />}
-                        Remove from organization
+                        {t.projectSettings.removeFromOrg}
                     </Button>
                 </div>
             </CardContent>

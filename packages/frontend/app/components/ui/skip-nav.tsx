@@ -1,9 +1,12 @@
+import { useTranslation } from "~/locales/provider";
+
 interface SkipNavProps {
     children?: React.ReactNode;
     mainId?: string;
 }
 
 export const SkipNav = ({ mainId, children }: SkipNavProps) => {
+    const { t } = useTranslation();
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         const main = document.getElementById(mainId || "main");
@@ -19,7 +22,7 @@ export const SkipNav = ({ mainId, children }: SkipNavProps) => {
             className="sr-only focus:not-sr-only text-foreground underline !w-fit !px-6 !py-0.5 rounded-md !absolute top-1 left-1 bg-background"
             onClick={handleClick}
         >
-            {children ? children : <>Skip to main content</>}
+            {children ? children : t.navbar.skipToMainContent}
         </a>
     );
 };

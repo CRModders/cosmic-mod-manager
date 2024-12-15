@@ -14,7 +14,7 @@ interface ImgLoaderProps {
 
 const loadedImages = new Set<string>();
 
-export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, setLoaded, thumbnailSrc }: ImgLoaderProps) => {
+export function ImgLoader({ src, alt, className, wrapperClassName, spinner, setLoaded, thumbnailSrc }: ImgLoaderProps) {
     const _spinner = spinner || (
         <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
     );
@@ -52,4 +52,4 @@ export const ImgLoader = ({ src, alt, className, wrapperClassName, spinner, setL
             {!isImageLoaded ? _spinner : null}
         </div>
     );
-};
+}

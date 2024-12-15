@@ -100,8 +100,8 @@ export default {
         sessionsDesc:
             "Estos dispositivos están actualmente conectados a tu cuenta, puedes revocar cualquier sesión en cualquier momento. Si ves algo que no reconoces, revoca la sesión inmediatamente y cambia la contraseña del proveedor de autenticación asociado.",
         ipHidden: "IP Oculta",
-        lastAccessed: "Último acceso",
-        created: "Creado", // eg: Created a month ago
+        lastAccessed: (when: string) => `Último acceso ${when}`,
+        created: (when: string) => `Creado ${when}`, // eg: Created a month ago
         sessionCreatedUsing: (providerName: string) => `Sesión creada usando ${providerName}`,
         currSession: "Sesión actual",
         revokeSession: "Revocar sesión",
@@ -192,7 +192,7 @@ export default {
         organization: "Organización",
         project: "Proyecto",
         details: "Detalles",
-        updated: "Actualizado", // eg: Updated 3 days ago
+        updatedAt: (when) => `Actualizado ${when}`, // eg: Updated 3 days ago
         gallery: "Galería",
         changelog: "Registro de cambios",
         versions: "Versiones",
