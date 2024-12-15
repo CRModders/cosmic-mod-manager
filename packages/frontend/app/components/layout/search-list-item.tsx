@@ -146,7 +146,8 @@ function BaseView(props: SearchListItemProps) {
                     return (
                         <span className="flex gap-1 items-center justify-center" key={category.name} aria-label={category.name}>
                             <TagIcon name={category.name} />
-                            {CapitalizeAndFormatString(category.name)}
+                            {/* @ts-ignore */}
+                            {t.search.tags[category.name] || CapitalizeAndFormatString(category.name)}
                         </span>
                     );
                 })}

@@ -102,7 +102,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
         >
             <Card>
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-lg ">{t.dashboard.projects}</CardTitle>
+                    <CardTitle className="text-lg ">{t.projectSettings.members}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-1">
                     {members.map((member) => {

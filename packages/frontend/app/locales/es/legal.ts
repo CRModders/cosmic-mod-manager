@@ -1,9 +1,4 @@
-export interface RulesProps {
-    title: string;
-    supportEmail: string;
-    privacyPageUrl: string;
-    termsPageUrl: string;
-}
+import type { RulesProps } from "~/locales/en/legal";
 
 export function Rules(props: RulesProps) {
     return `

@@ -476,7 +476,8 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                         <div className="flex items-center gap-2">
                             {projectData.featuredCategories.map((category) => (
                                 <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
-                                    {Capitalize(category)}
+                                    {/* @ts-ignore */}
+                                    {t.search.tags[category] || Capitalize(category)}
                                 </Chip>
                             ))}
                         </div>

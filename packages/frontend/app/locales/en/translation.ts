@@ -465,7 +465,6 @@ export default {
     legal: {
         rulesTitle: "Content Rules",
         rules: Rules,
-
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",
         securityNoticeTitle: "Security Notice",
