@@ -40,7 +40,7 @@ export default function TagsSettingsPage() {
     });
     form.watch();
 
-    const updateTags = async (values: z.infer<typeof updateProjectTagsFormSchema>) => {
+    async function updateTags(values: z.infer<typeof updateProjectTagsFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
         try {
@@ -51,23 +51,25 @@ export default function TagsSettingsPage() {
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                toast.error(data?.message || "Error");
+                toast.error(data?.message || t.common.error);
                 return;
             }
 
             RefreshPage(navigate, location);
-            toast.success(data?.message || "Tags updated");
+            toast.success(data?.message || t.common.success);
             return;
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     if (!projectData) return null;
     const allAvailableCategories = getValidProjectCategories(projectData.type);
     const isSubmitBtnDisabled =
         JSON.stringify(form.getValues().categories.sort()) === JSON.stringify(projectData.categories.sort()) &&
         JSON.stringify(form.getValues().featuredCategories.sort()) === JSON.stringify(projectData.featuredCategories.sort());
+
+    const projectType = t.navbar[projectData.type[0]];
 
     return (
         <Form {...form}>
@@ -79,20 +81,15 @@ export default function TagsSettingsPage() {
             >
                 <Card className="w-full flex flex-col p-card-surround gap-4">
                     <div className="w-full flex flex-col items-start justify-start gap-1">
-                        <CardTitle>Tags</CardTitle>
-                        <span className="text-muted-foreground">
-                            Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.
-                        </span>
+                        <CardTitle>{t.projectSettings.tags}</CardTitle>
+                        <span className="text-muted-foreground">{t.projectSettings.tagsDesc}</span>
                     </div>
 
                     {allAvailableCategories?.length ? (
                         <>
                             <div className="w-full flex flex-col items-start justify-start">
-                                <span className="text-lg font-bold">Categories</span>
-                                <span className="text-muted-foreground">
-                                    Select all categories that reflect the themes or function of your{" "}
-                                    {CapitalizeAndFormatString(projectData.type[0])?.toLowerCase()}.
-                                </span>
+                                <span className="text-lg font-bold">{t.search.categories}</span>
+                                <span className="text-muted-foreground">{t.projectSettings.tagsDesc2(projectType.toLowerCase())}</span>
                                 <FormField
                                     control={form.control}
                                     name="categories"
@@ -140,10 +137,10 @@ export default function TagsSettingsPage() {
                             <div className="w-full flex flex-col items-start justify-start">
                                 <span className="flex items-center justify-center gap-2 text-lg font-bold">
                                     <StarIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
-                                    Featured Categories
+                                    {t.projectSettings.featuredCategories}
                                 </span>
                                 <span className="text-muted-foreground">
-                                    You can feature up to {MAX_FEATURED_PROJECT_TAGS} of your most relevant tags.
+                                    {t.projectSettings.featuredCategoriesDesc(MAX_FEATURED_PROJECT_TAGS)}
                                 </span>
                                 <FormField
                                     control={form.control}
@@ -184,9 +181,7 @@ export default function TagsSettingsPage() {
                                 />
 
                                 {!form.getValues().categories?.length ? (
-                                    <span className="text-muted-foreground">
-                                        Select at least one category in order to feature a category.
-                                    </span>
+                                    <span className="text-muted-foreground">{t.projectSettings.selectAtLeastOneCategory}</span>
                                 ) : null}
                             </div>
 
@@ -202,7 +197,7 @@ export default function TagsSettingsPage() {
                                     }}
                                 >
                                     {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                                    Save Changes
+                                    {t.form.saveChanges}
                                 </Button>
                             </div>
                         </>

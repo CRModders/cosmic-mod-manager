@@ -27,8 +27,10 @@ import {
 } from "~/components/ui/breadcrumb";
 import { ButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function ProjectSettingsLayout() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
 
@@ -41,7 +43,7 @@ export default function ProjectSettingsLayout() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={PageUrl("dashboard", "projects")}>Projects</BreadcrumbLink>
+                                <BreadcrumbLink href={PageUrl("dashboard", "projects")}>{t.dashboard.projects}</BreadcrumbLink>
                             </BreadcrumbItem>
 
                             <BreadcrumbSeparator />
@@ -51,7 +53,7 @@ export default function ProjectSettingsLayout() {
 
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>Settings</BreadcrumbPage>
+                                <BreadcrumbPage>{t.common.settings}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -75,8 +77,8 @@ export default function ProjectSettingsLayout() {
                     </div>
 
                     <div className="w-full flex flex-col gap-1">
-                        <span className="text-xl font-semibold mt-1 mb-0.5">Project settings</span>
-                        {SidePanelLinks.map((link) => (
+                        <span className="text-xl font-semibold mt-1 mb-0.5">{t.projectSettings.settings}</span>
+                        {links().sidePanel.map((link) => (
                             <ButtonLink
                                 prefetch={link.prefetch !== false ? "render" : undefined}
                                 key={link.href}
@@ -88,8 +90,8 @@ export default function ProjectSettingsLayout() {
                             </ButtonLink>
                         ))}
 
-                        <span className="text-lg font-semibold mt-2">View</span>
-                        {viewPageLinks.map((link) => (
+                        <span className="text-lg font-semibold mt-2">{t.projectSettings.view}</span>
+                        {links().viewPages.map((link) => (
                             <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
@@ -99,8 +101,8 @@ export default function ProjectSettingsLayout() {
                             </ButtonLink>
                         ))}
 
-                        <span className="text-lg font-semibold mt-2">Upload</span>
-                        {UploadPageLinks.map((link) => (
+                        <span className="text-lg font-semibold mt-2">{t.projectSettings.upload}</span>
+                        {links().uploadPages.map((link) => (
                             <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
@@ -119,58 +121,63 @@ export default function ProjectSettingsLayout() {
         </Panel>
     );
 }
+function links() {
+    const { t } = useTranslation();
 
-const SidePanelLinks = [
-    {
-        name: "General",
-        href: "settings",
-        icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Tags",
-        href: "settings/tags",
-        icon: <TagsIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Description",
-        href: "settings/description",
-        icon: <TextIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "License",
-        href: "settings/license",
-        icon: <CopyrightIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Links",
-        href: "settings/links",
-        icon: <LinkIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Members",
-        href: "settings/members",
-        icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
-        prefetch: false,
-    },
-];
+    return {
+        sidePanel: [
+            {
+                name: t.projectSettings.general,
+                href: "settings",
+                icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.projectSettings.tags,
+                href: "settings/tags",
+                icon: <TagsIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.form.description,
+                href: "settings/description",
+                icon: <TextIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.search.license,
+                href: "settings/license",
+                icon: <CopyrightIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.projectSettings.links,
+                href: "settings/links",
+                icon: <LinkIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.projectSettings.members,
+                href: "settings/members",
+                icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
+                prefetch: false,
+            },
+        ],
 
-const viewPageLinks = [
-    {
-        name: "Analytics",
-        href: "settings/analytics",
-        icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
-    },
-];
+        viewPages: [
+            {
+                name: t.dashboard.analytics,
+                href: "settings/analytics",
+                icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
+            },
+        ],
 
-const UploadPageLinks = [
-    {
-        name: "Gallery",
-        href: "gallery",
-        icon: <ImageIcon className="w-btn-icon h-btn-icon" />,
-    },
-    {
-        name: "Versions",
-        href: "versions",
-        icon: <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />,
-    },
-];
+        uploadPages: [
+            {
+                name: t.project.gallery,
+                href: "gallery",
+                icon: <ImageIcon className="w-btn-icon h-btn-icon" />,
+            },
+            {
+                name: t.project.versions,
+                href: "versions",
+                icon: <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />,
+            },
+        ],
+    };
+}

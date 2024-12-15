@@ -18,6 +18,7 @@ import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem } from "~/components/ui/form";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -28,6 +29,7 @@ import {
 } from "./_components";
 
 export default function EditVersionPage() {
+    const { t } = useTranslation();
     const { versionSlug } = useParams();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
@@ -131,7 +133,7 @@ export default function EditVersionPage() {
                 >
                     <UploadVersionPageTopCard
                         isLoading={isLoading}
-                        submitBtnLabel="Save changes"
+                        submitBtnLabel={t.form.saveChanges}
                         submitBtnIcon={<SaveIcon className="w-btn-icon-md h-btn-icon-md" />}
                         versionPageUrl={versionsPageUrl}
                         versionTitle={form.getValues().title}
@@ -171,7 +173,7 @@ export default function EditVersionPage() {
 
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                         <div className="overflow-auto flex flex-col gap-panel-cards">
-                            <ContentCardTemplate title="Changelog">
+                            <ContentCardTemplate title={t.project.changelog}>
                                 <FormField
                                     control={form.control}
                                     name="changelog"
@@ -183,7 +185,7 @@ export default function EditVersionPage() {
                                 />
                             </ContentCardTemplate>
 
-                            <ContentCardTemplate title="Dependencies">
+                            <ContentCardTemplate title={t.version.dependencies}>
                                 <FormField
                                     control={form.control}
                                     name="dependencies"
@@ -200,7 +202,7 @@ export default function EditVersionPage() {
                                 />
                             </ContentCardTemplate>
 
-                            <ContentCardTemplate title="Files" className="gap-form-elements">
+                            <ContentCardTemplate title={t.version.files} className="gap-form-elements">
                                 {/* PRIMARY FILE */}
                                 <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-2 gap-x-4 gap-y-2">
                                     <div className="flex items-center justify-start gap-1.5">
@@ -212,14 +214,14 @@ export default function EditVersionPage() {
                                                 <span className="whitespace-nowrap ml-0.5">
                                                     ({parseFileSize(versionData?.primaryFile?.size || 0)})
                                                 </span>{" "}
-                                                <span className="text-muted-foreground italic ml-1">Primary</span>
+                                                <span className="text-muted-foreground italic ml-1">{t.version.primary}</span>
                                             </span>
                                         </div>
                                     </div>
 
                                     <Button disabled type="button" variant="secondary-dark">
                                         <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                        Remove
+                                        {t.form.remove}
                                     </Button>
                                 </div>
 

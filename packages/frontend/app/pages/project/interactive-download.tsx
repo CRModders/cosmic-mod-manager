@@ -1,4 +1,3 @@
-import { Tooltip } from "@radix-ui/react-tooltip";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cn, imageUrl } from "@root/utils";
 import { ProjectPagePath, VersionPagePath, isCurrLinkActive } from "@root/utils/urls";
@@ -6,13 +5,13 @@ import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameV
 import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { VersionReleaseChannel } from "@shared/types";
 import type { ProjectVersionData } from "@shared/types/api";
-import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, InfoIcon, WrenchIcon } from "lucide-react";
+import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, WrenchIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { DownloadAnimationContext } from "~/components/download-animation";
 import { fallbackProjectIcon } from "~/components/icons";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { LabelledCheckbox } from "~/components/ui/checkbox";
 import ComboBox from "~/components/ui/combobox";
 import { CommandSeparator } from "~/components/ui/command";
@@ -28,10 +27,11 @@ import {
 } from "~/components/ui/dialog";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { ReleaseChannelBadge } from "~/components/ui/release-channel-pill";
-import { TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function InteractiveDownloadPopup() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
     const allProjectVersions = ctx.allProjectVersions;
@@ -65,7 +65,7 @@ export default function InteractiveDownloadPopup() {
                 label: gameVersion.label,
                 value: gameVersion.value,
                 disabled: !projectVersion.loaders.includes(selectedLoader),
-                disabledReason: `${projectData.name} does not support ${gameVersion.label} for ${CapitalizeAndFormatString(selectedLoader)}`,
+                disabledReason: t.project.doesNotSupport(projectData.name, gameVersion.label, CapitalizeAndFormatString(selectedLoader)),
             });
         }
         return list;
@@ -89,7 +89,11 @@ export default function InteractiveDownloadPopup() {
                 label: CapitalizeAndFormatString(loader) || "",
                 value: loader,
                 disabled: !projectVersion.loaders.includes(loader),
-                disabledReason: `${projectData.name} does not support ${CapitalizeAndFormatString(loader)} for ${getGameVersionFromValue(selectedGameVersion)?.label}`,
+                disabledReason: t.project.doesNotSupport(
+                    projectData.name,
+                    CapitalizeAndFormatString(loader),
+                    CapitalizeAndFormatString(selectedGameVersion),
+                ),
             });
         }
         return list;
@@ -112,7 +116,7 @@ export default function InteractiveDownloadPopup() {
             <DialogTrigger asChild>
                 <Button variant={isVersionDetailsPage ? "secondary-inverted" : "default"}>
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                    Download
+                    {t.common.download}
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -124,9 +128,9 @@ export default function InteractiveDownloadPopup() {
                         className="h-9 w-9 rounded-md"
                         fallback={fallbackProjectIcon}
                     />
-                    <DialogTitle>Download {projectData.name}</DialogTitle>
+                    <DialogTitle>{t.project.downloadProject(projectData.name)}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Downlad iris</DialogDescription>
+                        <DialogDescription>{t.project.downloadProject(projectData.name)}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody className="flex flex-col items-center justify-center gap-3">
@@ -144,7 +148,7 @@ export default function InteractiveDownloadPopup() {
                                         onCheckedChange={(checked) => setShowAllVersions(checked === true)}
                                         className="text-extra-muted-foreground px-2 pb-2 ml-2 mt-1"
                                     >
-                                        Show all versions
+                                        {t.form.showAllVersions}
                                     </LabelledCheckbox>
                                 </>
                             ) : null
@@ -162,13 +166,13 @@ export default function InteractiveDownloadPopup() {
                                 <span className="text-muted-foreground">
                                     {selectedGameVersion ? (
                                         <>
-                                            Game version:{" "}
+                                            {t.project.gameVersion}{" "}
                                             <em className="not-italic text-foreground/90">
                                                 {getGameVersionFromValue(selectedGameVersion)?.label}
                                             </em>
                                         </>
                                     ) : (
-                                        <>Select game version</>
+                                        t.project.selectGameVersion
                                     )}
                                 </span>
                             </span>
@@ -176,69 +180,30 @@ export default function InteractiveDownloadPopup() {
                         </Button>
                     </ComboBox>
 
-                    {(projectData.loaders?.length || 0) > 1 ? (
-                        <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
-                            <Button
-                                variant="outline"
-                                // biome-ignore lint/a11y/useSemanticElements: <explanation>
-                                role="combobox"
-                                className="w-full justify-between text-extra-muted-foreground"
-                                disabled={projectData.loaders.length < 2}
-                            >
-                                <span className="flex items-center justify-start gap-2 font-medium">
-                                    <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
-                                    <span className="text-muted-foreground">
-                                        {selectedLoader ? (
-                                            <>
-                                                Platform:{" "}
-                                                <em className="not-italic text-foreground/90">
-                                                    {CapitalizeAndFormatString(selectedLoader)}
-                                                </em>
-                                            </>
-                                        ) : (
-                                            <>Select platform</>
-                                        )}
-                                    </span>
+                    <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
+                        <Button
+                            variant="outline"
+                            // biome-ignore lint/a11y/useSemanticElements: <explanation>
+                            role="combobox"
+                            className="w-full justify-between text-extra-muted-foreground"
+                        >
+                            <span className="flex items-center justify-start gap-2 font-medium">
+                                <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <span className="text-muted-foreground">
+                                    {selectedLoader ? (
+                                        <>
+                                            {t.project.platform}{" "}
+                                            <em className="not-italic text-foreground/90">{CapitalizeAndFormatString(selectedLoader)}</em>
+                                        </>
+                                    ) : (
+                                        t.project.selectPlatform
+                                    )}
                                 </span>
-                                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
-                            </Button>
-                        </ComboBox>
-                    ) : (
-                        (projectData.loaders?.length || 0) === 1 && (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div
-                                            className={cn(
-                                                buttonVariants({ variant: "outline" }),
-                                                "w-full flex items-center justify-between text-extra-muted-foreground hover:bg-transparent cursor-not-allowed opacity-50",
-                                            )}
-                                        >
-                                            <span className="flex items-center justify-start gap-2 font-medium">
-                                                <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
-                                                <span className="text-muted-foreground">
-                                                    {selectedLoader ? (
-                                                        <>
-                                                            Platform:{" "}
-                                                            <em className="not-italic text-foreground/90">
-                                                                {CapitalizeAndFormatString(selectedLoader)}
-                                                            </em>
-                                                        </>
-                                                    ) : (
-                                                        <>Select platform</>
-                                                    )}
-                                                </span>
-                                            </span>
-                                            <InfoIcon className="ml-2 h-4 w-4 shrink-0" />
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        {projectData.name} is only available for {CapitalizeAndFormatString(projectData.loaders[0])}
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        )
-                    )}
+                            </span>
+                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
+                        </Button>
+                    </ComboBox>
+
                     {selectedGameVersion ? (
                         <AvailableVersionsList selectedGameVersion={selectedGameVersion} selectedLoader={selectedLoader} />
                     ) : null}

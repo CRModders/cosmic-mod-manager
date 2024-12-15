@@ -18,6 +18,7 @@ import { ContentCardTemplate } from "~/components/layout/panel";
 import RefreshPage from "~/components/refresh-page";
 import { Form, FormField, FormItem } from "~/components/ui/form";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 import {
     AddDependencies,
     FeaturedBtn,
@@ -29,6 +30,7 @@ import {
 } from "./_components";
 
 export default function UploadVersionPage() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
 
@@ -52,7 +54,7 @@ export default function UploadVersionPage() {
 
     const handleSubmit = async (data: z.infer<typeof newVersionFormSchema>) => {
         if (!(data.primaryFile instanceof File)) {
-            toast.error("Primary file is required");
+            toast.error(t.version.primaryFileRequired);
             return;
         }
 
@@ -148,7 +150,7 @@ export default function UploadVersionPage() {
 
                     <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                         <div className="overflow-auto max-w-full flex flex-col gap-panel-cards">
-                            <ContentCardTemplate title="Changelog">
+                            <ContentCardTemplate title={t.project.changelog}>
                                 <FormField
                                     control={form.control}
                                     name="changelog"
@@ -160,7 +162,7 @@ export default function UploadVersionPage() {
                                 />
                             </ContentCardTemplate>
 
-                            <ContentCardTemplate title="Dependencies">
+                            <ContentCardTemplate title={t.version.dependencies}>
                                 <FormField
                                     control={form.control}
                                     name="dependencies"
@@ -177,7 +179,7 @@ export default function UploadVersionPage() {
                                 />
                             </ContentCardTemplate>
 
-                            <ContentCardTemplate title="Files" className="gap-form-elements">
+                            <ContentCardTemplate title={t.version.files} className="gap-form-elements">
                                 <FormField
                                     control={form.control}
                                     name="primaryFile"

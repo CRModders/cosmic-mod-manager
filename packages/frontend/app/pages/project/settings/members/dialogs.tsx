@@ -25,7 +25,7 @@ interface RemoveMemberDialogProps {
 export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemberDialogProps) {
     const [isLoading, setIsLoading] = useState(false);
 
-    const removeTeamMember = async () => {
+    async function removeTeamMember() {
         if (isLoading) return;
         setIsLoading(true);
         try {
@@ -43,7 +43,7 @@ export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemb
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Dialog>
@@ -79,7 +79,7 @@ interface TransferOwnershipDialogProps {
 export function TransferOwnershipDialog({ member, teamId, refreshData, children }: TransferOwnershipDialogProps) {
     const [isLoading, setIsLoading] = useState(false);
 
-    const transferOwnership = async () => {
+    async function transferOwnership() {
         if (isLoading) return;
         setIsLoading(true);
         try {
@@ -98,7 +98,7 @@ export function TransferOwnershipDialog({ member, teamId, refreshData, children 
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Dialog>

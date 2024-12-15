@@ -23,7 +23,7 @@ export default function HomePage({ projects }: Props) {
     const [gridBgPortal, setGridBgPortal] = useState<Element | null>(null);
 
     // The animation keyframes in "@/app/styles.css" need to be updated according to the number of items in the list
-    const showcaseItems = [nav.mods, nav.plugins, nav.resourcePacks, nav.modpacks, nav.shaders, nav.mods];
+    const showcaseItems = [nav.mods, nav.plugins, nav["resource-packs"], nav.modpacks, nav.shaders, nav.mods];
 
     useEffect(() => {
         setGridBgPortal(document.querySelector("#hero_section_bg_portal"));

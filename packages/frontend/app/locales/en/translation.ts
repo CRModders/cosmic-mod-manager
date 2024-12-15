@@ -1,3 +1,4 @@
+import type { Translation } from "../types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -12,6 +13,8 @@ export default {
         accept: "Accept",
         decline: "Decline",
         download: "Download",
+        report: "Report",
+        copyId: "Copy ID",
     },
 
     navbar: {
@@ -19,8 +22,8 @@ export default {
         mods: "mods",
         datamod: "datamod",
         datamods: "datamods",
-        resourcePack: "resource pack",
-        resourcePacks: "resource packs",
+        "resource-pack": "resource pack",
+        "resource-packs": "resource packs",
         shader: "shader",
         shaders: "shaders",
         modpack: "modpack",
@@ -179,7 +182,6 @@ export default {
 
     project: {
         compatibility: "Compatibility",
-        loaders: "Loaders",
         environments: "Environments",
         reportIssues: "Report issues",
         viewSource: "View source",
@@ -188,6 +190,7 @@ export default {
         featuredVersions: "Featured versions",
         creators: "Creators",
         organization: "Organization",
+        project: "Project",
         details: "Details",
         updated: "Updated", // eg: Updated 3 days ago
         gallery: "Gallery",
@@ -217,6 +220,20 @@ export default {
         downloads: "Downloads", // Used for table headers
         openInNewTab: "Open in new tab",
         copyLink: "Copy link",
+        doesNotSupport: (project: string, version: string, loader: string) => {
+            return `${project} does not support ${version} for ${loader}`;
+        },
+        downloadProject: (project: string) => `Download ${project}`,
+        gameVersion: "Game version:",
+        selectGameVersion: "Select game version",
+        platform: "Platform:",
+        selectPlatform: "Select platform",
+        onlyAvailableFor: (project: string, platform: string) => `${project} is only available for ${platform}`,
+        noVersionsAvailableFor: (gameVersion: string, loader: string) => `No versions available for ${gameVersion} on ${loader}`,
+        declinedInvitation: "Declined invitation",
+        teamInvitationTitle: (teamType: string) => `Invitation to join ${teamType}`, // teamType = organization | project
+        teamInviteDesc: (teamType: string, role: string) =>
+            `You've been invited be a member of this ${teamType} with the role of '${role}'.`,
 
         browse: {
             mod: "Browse mods",
@@ -226,6 +243,116 @@ export default {
             modpack: "Browse modpacks",
             plugin: "Browse plugins",
         },
+    },
+
+    version: {
+        deleteVersion: "Delete version",
+        sureToDelete: "Are you sure you want to delete this version?",
+        deleteDesc: "This will remove this version forever (like really forever).",
+        enterVersionTitle: "Enter the version title...",
+        feature: "Feature version",
+        unfeature: "Unfeature version",
+        featured: "Featured",
+        releaseChannel: "Release channel",
+        versionNumber: "Version number",
+        selectLoaders: "Select loaders",
+        selectVersions: "Select versions",
+        cantAddCurrProject: "You cannot add the current project as a dependency",
+        cantAddDuplicateDep: "You cannot add the same dependency twice",
+        addDep: "Add dependency",
+        enterProjectId: "Enter the project ID/Slug",
+        enterVersionId: "Enter the version ID/Slug",
+        dependencies: "Dependencies",
+        files: "Files",
+
+        depencency: {
+            required: "Required",
+            optional: "Optional",
+            incompatible: "Incompatible",
+            embedded: "Embedded",
+            required_desc: (version: string) => `Version ${version} is required`,
+            optional_desc: (version: string) => `Version ${version} is optional`,
+            incompatible_desc: (version: string) => `Version ${version} is incompatible`,
+            embedded_desc: (version: string) => `Version ${version} is embedded`,
+        },
+
+        primary: "Primary",
+        noPrimaryFile: "No primary file chosen",
+        chooseFile: "Choose file",
+        replaceFile: "Replace file",
+        uploadExtraFiles: "Upload additional files",
+        uploadExtraFilesDesc: "Used for additional files like sources, documentation, etc.",
+        selectFiles: "Select files",
+        primaryFileRequired: "Primary file is required",
+        metadata: "Metadata",
+        devReleasesNote: "NOTE:- Older dev releases will be automatically deleted after a new dev release is published.",
+        publicationDate: "Publication date",
+        publisher: "Publisher",
+        versionID: "Version ID",
+        copySha1: "Copy SHA-1 hash",
+        copySha512: "Copy SHA-512 hash",
+        copyFileUrl: "Copy file URL",
+    },
+
+    projectSettings: {
+        settings: "Project settings",
+        general: "General",
+        tags: "Tags",
+        links: "Links",
+        members: "Members",
+        view: "View",
+        upload: "Upload",
+        externalLinks: "External links",
+        issueTracker: "Issue tracker",
+        issueTrackerDesc: "A place for users to report bugs, issues, and concerns about your project.",
+        sourceCode: "Source code",
+        sourceCodeDesc: "A page/repository containing the source code for your project.",
+        wikiPage: "Wiki page",
+        wikiPageDesc: "A page containing information, documentation, and help for the project.",
+        discordInvite: "Discord invite",
+        discordInviteDesc: "An invitation link to your Discord server.",
+        licenseDesc1: (projectType: string) =>
+            `It is very important to choose a proper license for your ${projectType}. You may choose one from our list or provide a custom license. You may also provide a custom URL to your chosen license; otherwise, the license text will be displayed.`,
+        licenseDesc2:
+            "Enter a valid [SPDX license identifier](https://spdx.org/licenses) in the marked area. If your license does not have a SPDX identifier (for example, if you created the license yourself or if the license is Cosmic Reach specific), simply check the box and enter the name of the license instead.",
+        selectLicense: "Select license",
+        custom: "Custom",
+        licenseName: "License name",
+        licenseUrl: "License URL (optional)",
+        spdxId: "SPDX identifier",
+        doesntHaveSpdxId: "License does not have a SPDX identifier",
+        tagsDesc: "Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.",
+        tagsDesc2: (projectType: string) => `Select all categories that reflect the themes or function of your ${projectType}.`,
+        featuredCategories: "Featured categories",
+        featuredCategoriesDesc: (count: number) => `You can feature up to ${count} of your most relevant tags.`,
+        selectAtLeastOneCategory: "Select at least one category in order to feature a category.",
+        projectInfo: "Project information",
+        clientSide: "Client-side",
+        clientSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the client side.`,
+        serverSide: "Server-side",
+        serverSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the logical server.`,
+        unknown: "Unknown",
+        required: "Required",
+        optional: "Optional",
+        unsupported: "Unsupported",
+        visibilityDesc:
+            "Listed and archived projects are visible in search. Unlisted projects are published, but not visible in search or on user profiles. Private projects are only accessible by members of the project.",
+        ifApproved: "If approved by the moderators:",
+        visibleInSearch: "Visible in search",
+        visibleOnProfile: "Visible on profile",
+        visibleViaUrl: "Visible via URL",
+        visibleToMembersOnly: "Only members will be able to view the project",
+        listed: "Listed",
+        private: "Pivate",
+        unlisted: "Unlisted",
+        archived: "Archived",
+        deleteProject: "Delete project",
+        deleteProjectDesc: (site: string) =>
+            `Removes your project from ${site}'s servers and search. Clicking on this will delete your project, so be extra careful!`,
+        sureToDeleteProject: "Are you sure you want to delete this project?",
+        deleteProjectDesc2:
+            "If you proceed, all versions and any attached data will be removed from our servers. This may break other projects, so be careful.",
+        typeToVerify: (projectName: string) => `To verify, type **${projectName}** below:`,
     },
 
     footer: {
@@ -272,6 +399,7 @@ export default {
         ordering: "Ordering",
         featured: "Featured",
         continue: "Continue",
+        submit: "Submit",
         remove: "Remove",
         confirm: "Confirm",
         edit: "Edit",
@@ -279,6 +407,7 @@ export default {
         cancel: "Cancel",
         saveChanges: "Save Changes",
         uploadIcon: "Upload icon",
+        removeIcon: "Remove icon",
         noFileChosen: "No file chosen",
         showAllVersions: "Show all versions",
     },
@@ -344,4 +473,4 @@ export default {
             }
         },
     },
-};
+} satisfies Translation;

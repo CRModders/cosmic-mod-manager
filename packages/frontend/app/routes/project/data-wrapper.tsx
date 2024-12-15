@@ -23,7 +23,7 @@ export default function _ProjectDataWrapper() {
         return (
             <NotFoundPage
                 title={t.error.projectNotFound}
-                description={t.error.projectNotFoundDesc(type, data.projectSlug)}
+                description={t.error.projectNotFoundDesc(t.navbar[type], data.projectSlug)}
                 linkHref={`/${data?.projectType}s`}
                 linkLabel={t.project.browse[type]}
             />

@@ -29,12 +29,14 @@ import ReleaseChannelChip from "~/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
+import { useTranslation } from "~/locales/provider";
 import NotFoundPage from "~/routes/$";
 import { ProjectMember } from "../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
 export default function VersionPage() {
+    const { t } = useTranslation();
     const { projectSlug, versionSlug } = useParams();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
@@ -66,7 +68,7 @@ export default function VersionPage() {
                     <BreadcrumbList className="flex items-center">
                         <BreadcrumbItem>
                             <BreadcrumbLink href={`${projectPageUrl}/versions`} className="text-base">
-                                Versions
+                                {t.project.versions}
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="flex items-center justify-center">
@@ -83,7 +85,7 @@ export default function VersionPage() {
                     {versionData.featured ? (
                         <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
                             <StarIcon className="w-btn-icon h-btn-icon" />
-                            Featured
+                            {t.version.featured}
                         </span>
                     ) : null}
                 </div>
@@ -98,7 +100,7 @@ export default function VersionPage() {
                                     onClick={showDownloadAnimation}
                                 >
                                     <DownloadIcon className="w-btn-icon h-btn-icon" />
-                                    Download
+                                    {t.common.download}
                                 </VariantButtonLink>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -110,7 +112,7 @@ export default function VersionPage() {
                     {!currUsersMembership?.userId ? (
                         <Button variant={"secondary"}>
                             <FlagIcon className="w-btn-icon h-btn-icon" />
-                            Report
+                            {t.common.report}
                         </Button>
                     ) : null}
 
@@ -125,7 +127,7 @@ export default function VersionPage() {
                             prefetch="render"
                         >
                             <Edit3Icon className="w-btn-icon h-btn-icon" />
-                            Edit
+                            {t.form.edit}
                         </VariantButtonLink>
                     ) : null}
 
@@ -140,7 +142,6 @@ export default function VersionPage() {
                                 projectData={ctx.projectData}
                                 projectSlug={ctx.projectData.slug}
                                 versionSlug={versionData.slug}
-                                featured={versionData.featured}
                             />
                         </Suspense>
                     ) : null}
@@ -150,13 +151,13 @@ export default function VersionPage() {
             <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_min-content] gap-panel-cards items-start justify-start">
                 <div className="overflow-auto flex flex-col gap-panel-cards items-start justify-start">
                     {versionData.changelog?.length ? (
-                        <ContentCardTemplate title="Changelog">
+                        <ContentCardTemplate title={t.project.changelog}>
                             <MarkdownRenderBox text={versionData.changelog} />
                         </ContentCardTemplate>
                     ) : null}
 
                     {versionData.dependencies.length ? (
-                        <ContentCardTemplate title="Dependencies" className="gap-2">
+                        <ContentCardTemplate title={t.version.dependencies} className="gap-2">
                             {versionData.dependencies.map((dependency) => {
                                 const dependencyProject = projectDependencies.projects.find(
                                     (project) => project.id === dependency.projectId,
@@ -189,13 +190,11 @@ export default function VersionPage() {
                                         <div className="flex flex-col items-start justify-center">
                                             <span className="font-bold">{dependencyProject.name}</span>
                                             <span className="text-muted-foreground/85">
-                                                {dependencyVersion?.id ? (
-                                                    <>
-                                                        Version {dependencyVersion.versionNumber} is {dependency.dependencyType}
-                                                    </>
-                                                ) : (
-                                                    <>{CapitalizeAndFormatString(dependency.dependencyType)}</>
-                                                )}
+                                                {dependencyVersion
+                                                    ? t.version.depencency[`${dependency.dependencyType}_desc`](
+                                                          dependencyVersion.versionNumber,
+                                                      )
+                                                    : t.version.depencency[dependency.dependencyType]}
                                             </span>
                                         </div>
                                     </Link>
@@ -204,7 +203,7 @@ export default function VersionPage() {
                         </ContentCardTemplate>
                     ) : null}
 
-                    <ContentCardTemplate title="Files" className="gap-2">
+                    <ContentCardTemplate title={t.version.files} className="gap-2">
                         {versionData.primaryFile?.id ? (
                             <FileDetailsItem
                                 fileName={versionData.primaryFile.name}
@@ -238,19 +237,19 @@ export default function VersionPage() {
                 </div>
 
                 <Card className="p-card-surround grid grid-cols-1 w-full sm:min-w-[19rem] text-muted-foreground gap-3">
-                    <h3 className="text-lg font-bold text-foreground">Metadata</h3>
+                    <h3 className="text-lg font-bold text-foreground">{t.version.metadata}</h3>
                     <div className="grid grid-cols-1 gap-5">
                         {[
                             {
-                                label: "Release channel",
+                                label: t.version.releaseChannel,
                                 content: <ReleaseChannelChip releaseChannel={versionData.releaseChannel} className="mt-0.5" />,
                             },
                             {
-                                label: "Version number",
+                                label: t.version.versionNumber,
                                 content: <span className="leading-none">{versionData.versionNumber}</span>,
                             },
                             {
-                                label: "Loaders",
+                                label: t.search.loaders,
                                 content: versionData.loaders.length ? (
                                     <span className="leading-none">
                                         {versionData.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}
@@ -258,17 +257,17 @@ export default function VersionPage() {
                                 ) : null,
                             },
                             {
-                                label: "Game versions",
+                                label: t.search.gameVersions,
                                 content: (
                                     <span className="leading-tight">{formatGameVersionsListString_verbose(versionData.gameVersions)}</span>
                                 ),
                             },
                             {
-                                label: "Downloads",
+                                label: t.project.downloads,
                                 content: <span className="leading-none"> {versionData.downloads} </span>,
                             },
                             {
-                                label: "Publication date",
+                                label: t.version.publicationDate,
                                 content: (
                                     <span className="leading-none">
                                         <FormattedDate date={versionData.datePublished} />
@@ -276,7 +275,7 @@ export default function VersionPage() {
                                 ),
                             },
                             {
-                                label: "Publisher",
+                                label: t.version.publisher,
                                 content: (
                                     <ProjectMember
                                         userName={versionData.author.userName}
@@ -287,7 +286,7 @@ export default function VersionPage() {
                                 ),
                             },
                             {
-                                label: "Version ID",
+                                label: t.version.versionID,
                                 content: <CopyBtn text={versionData.id} id="version-page-version-id" label={versionData.id} />,
                             },
                         ].map((item) => {
@@ -326,6 +325,8 @@ const FileDetailsItem = ({
     sha512_hash,
     showDownloadAnimation,
 }: FileDetailsItemProps) => {
+    const { t } = useTranslation();
+
     return (
         <ContextMenu>
             <ContextMenuTrigger asChild>
@@ -361,24 +362,24 @@ const FileDetailsItem = ({
                         onClick={showDownloadAnimation}
                     >
                         <DownloadIcon className="w-btn-icon h-btn-icon" />
-                        Download
+                        {t.common.download}
                     </VariantButtonLink>
                 </div>
             </ContextMenuTrigger>
             <ContextMenuContent>
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha1_hash)}>
                     <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
-                    Copy sha1 hash
+                    {t.version.copySha1}
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha512_hash)}>
                     <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
-                    Copy sha512 hash
+                    {t.version.copySha512}
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(downloadLink)}>
                     <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
-                    Copy file URL
+                    {t.version.copyFileUrl}
                 </ContextMenuItem>
             </ContextMenuContent>
         </ContextMenu>

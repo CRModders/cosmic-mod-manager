@@ -35,6 +35,7 @@ import { MultiSelect } from "~/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { TooltipProvider, TooltipTemplate } from "~/components/ui/tooltip";
+import { useTranslation } from "~/locales/provider";
 
 interface VersionTitleInputProps {
     name: string;
@@ -44,9 +45,11 @@ interface VersionTitleInputProps {
     onChange: (value: string) => void;
 }
 export function VersionTitleInput({ name, value, disabled, inputRef, onChange }: VersionTitleInputProps) {
+    const { t } = useTranslation();
+
     return (
         <Input
-            placeholder="Enter the version title..."
+            placeholder={t.version.enterVersionTitle}
             className="!h-12 !py-1 !px-4 text-xl font-semibold !text-muted-foreground"
             name={name}
             value={value}
@@ -63,10 +66,12 @@ interface FeaturedBtnProps {
     setFeatured: (value: boolean) => void;
 }
 export function FeaturedBtn({ isLoading, featured, setFeatured }: FeaturedBtnProps) {
+    const { t } = useTranslation();
+
     return (
         <Button variant="secondary" disabled={isLoading} type="button" onClick={() => setFeatured(!featured)}>
             <StarIcon className={cn("w-btn-icon h-btn-icon", featured === true && "fill-current")} />
-            {featured === true ? "Unfeature version" : "Feature version"}
+            {featured === true ? t.version.unfeature : t.version.feature}
         </Button>
     );
 }
@@ -93,12 +98,14 @@ export function UploadVersionPageTopCard({
     submitBtnIcon,
     onSubmitBtnClick,
 }: UploadVersionPageTopCardProps) {
+    const { t } = useTranslation();
+
     return (
         <Card className="w-full p-card-surround flex flex-col items-start justify-start gap-3">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href={versionPageUrl}>Versions</BreadcrumbLink>
+                        <BreadcrumbLink href={versionPageUrl}>{t.project.versions}</BreadcrumbLink>
                     </BreadcrumbItem>
 
                     <BreadcrumbSeparator />
@@ -113,14 +120,14 @@ export function UploadVersionPageTopCard({
             <div className="w-full flex flex-wrap gap-x-panel-cards gap-y-2 items-center justify-start">
                 <Button type="submit" disabled={isLoading} onClick={onSubmitBtnClick}>
                     {isLoading ? <LoadingSpinner size="xs" /> : submitBtnIcon}
-                    {submitBtnLabel || "Submit"}
+                    {submitBtnLabel || t.form.submit}
                 </Button>
 
                 {featuredBtn}
 
                 <VariantButtonLink variant="secondary" url={backUrl} prefetch="render">
                     <CancelButtonIcon className="w-btn-icon h-btn-icon" />
-                    Cancel
+                    {t.form.cancel}
                 </VariantButtonLink>
             </div>
         </Card>
@@ -132,17 +139,18 @@ interface MetadataInputCardProps {
     formControl: Control<FieldValues> | undefined;
 }
 export function MetadataInputCard({ projectType, formControl }: MetadataInputCardProps) {
+    const { t } = useTranslation();
     const [showAllVersions, setShowAllVersions] = useState(false);
     const availableLoaders = getLoadersByProjectType(projectType);
 
     return (
-        <ContentCardTemplate className="w-full min-w-[19rem] px-card-surround flex flex-col gap-form-elements" title="Metadata">
+        <ContentCardTemplate className="w-full min-w-[19rem] px-card-surround flex flex-col gap-form-elements" title={t.version.metadata}>
             <FormField
                 control={formControl}
                 name="releaseChannel"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Release channel</FormLabel>
+                        <FormLabel>{t.version.releaseChannel}</FormLabel>
                         <Select value={field.value} onValueChange={field.onChange}>
                             <SelectTrigger>
                                 <SelectValue />
@@ -151,9 +159,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                     <TooltipProvider>
                                         <TooltipTemplate
                                             className="max-w-sm bg-shallow-background text-start text-foreground-bright"
-                                            content={
-                                                "NOTE:- Older dev releases will be automatically deleted after a new dev release is published."
-                                            }
+                                            content={t.version.devReleasesNote}
                                         >
                                             <CircleAlertIcon className="w-btn-icon h-btn-icon text-warning-foreground ml-auto cursor-help" />
                                         </TooltipTemplate>
@@ -182,7 +188,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                 name="versionNumber"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Version number</FormLabel>
+                        <FormLabel>{t.version.versionNumber}</FormLabel>
                         <Input
                             placeholder="# a.b.c"
                             {...field}
@@ -200,7 +206,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                     name="loaders"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel htmlFor="supported-loaders-filter-input">Loaders</FormLabel>
+                            <FormLabel htmlFor="supported-loaders-filter-input">{t.search.loaders}</FormLabel>
 
                             <MultiSelect
                                 options={availableLoaders.map((loader) => ({
@@ -209,7 +215,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 }))}
                                 onValueChange={field.onChange}
                                 selectedValues={field.value || []}
-                                placeholder="Select loaders"
+                                placeholder={t.version.selectLoaders}
                                 searchBox={false}
                             />
                         </FormItem>
@@ -222,7 +228,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                 name="gameVersions"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel htmlFor="supported-game-versions-filter-input">Game versions</FormLabel>
+                        <FormLabel htmlFor="supported-game-versions-filter-input">{t.search.gameVersions}</FormLabel>
 
                         <MultiSelect
                             options={GAME_VERSIONS.filter(
@@ -231,7 +237,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                             allOptions={GAME_VERSIONS.map((version) => ({ label: version.label, value: version.value }))}
                             onValueChange={field.onChange}
                             selectedValues={field.value || []}
-                            placeholder="Select versions"
+                            placeholder={t.version.selectVersions}
                             fixedFooter={
                                 <>
                                     <CommandSeparator />
@@ -241,7 +247,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                         onCheckedChange={(checked) => setShowAllVersions(checked === true)}
                                         className="text-extra-muted-foreground pl-3.5 mt-1"
                                     >
-                                        Show all versions
+                                        {t.form.showAllVersions}
                                     </LabelledCheckbox>
                                 </>
                             }
@@ -260,6 +266,7 @@ interface AddDependenciesProps {
     dependenciesData: DependencyData | null;
 }
 export function AddDependencies({ dependencies, setDependencies, currProjectId, dependenciesData }: AddDependenciesProps) {
+    const { t } = useTranslation();
     const [isfetchingData, setIsFetchingData] = useState(false);
     const [dependsOn, setDependsOn] = useState(DependsOn.PROJECT);
     const [projectSlug, setProjectSlug] = useState("");
@@ -275,7 +282,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
 
     function addNewDependency(projectId: string, versionId: string | null, type: DependencyType) {
         if (projectId === currProjectId) {
-            toast.error("You cannot add the current project as a dependency");
+            toast.error(t.version.cantAddCurrProject);
             return;
         }
         setDependencies([...(dependencies || []), { projectId, versionId: versionId, dependencyType: type }]);
@@ -320,7 +327,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
             if (!project) return;
 
             if (!isDependencyValid(project.id)) {
-                return toast.error("You cannot add the same dependency twice");
+                return toast.error(t.version.cantAddDuplicateDep);
             }
 
             addNewDependency(project.id, null, dependencyType);
@@ -352,7 +359,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
             if (!project || !version) return;
 
             if (!isDependencyValid(project.id)) {
-                return toast.error("You cannot add the same dependency twice");
+                return toast.error(t.version.cantAddDuplicateDep);
             }
 
             addNewDependency(project.id, version.id, dependencyType);
@@ -412,7 +419,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
             ) : null}
 
             <div className="w-full flex flex-col gap-1">
-                <span className="font-semibold text-muted-foreground">Add dependency</span>
+                <span className="font-semibold text-muted-foreground">{t.version.addDep}</span>
                 <div className="w-full flex flex-col items-start justify-center gap-2">
                     <Select
                         defaultValue={DependsOn.PROJECT}
@@ -428,11 +435,11 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
                         </SelectContent>
                     </Select>
 
-                    <Input placeholder={"Enter the project ID/slug"} value={projectSlug} onChange={(e) => setProjectSlug(e.target.value)} />
+                    <Input placeholder={t.version.enterProjectId} value={projectSlug} onChange={(e) => setProjectSlug(e.target.value)} />
 
                     {dependsOn === DependsOn.VERSION ? (
                         <Input
-                            placeholder={"Enter the version ID/slug"}
+                            placeholder={t.version.enterVersionId}
                             value={versionSlug}
                             onChange={(e) => setVersionSlug(e.target.value)}
                         />
@@ -458,7 +465,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
 
                     <Button onClick={addDependencyHandler} type="button" disabled={isfetchingData}>
                         {isfetchingData ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
-                        Add dependency
+                        {t.version.addDep}
                     </Button>
                 </div>
             </div>
@@ -475,6 +482,7 @@ interface DependencyItemProps {
 }
 
 function DependencyItem({ dependencyData, versionId, projectId, dependencyType, removeDependency }: DependencyItemProps) {
+    const { t } = useTranslation();
     const dependencyProject = dependencyData.projects.find((project) => project.id === projectId);
     const dependencyVersion = dependencyData.versions.find((version) => version.id === versionId);
 
@@ -487,20 +495,16 @@ function DependencyItem({ dependencyData, versionId, projectId, dependencyType, 
                 <div className="flex flex-col items-start justify-start">
                     <span className="font-bold text-foreground">{dependencyProject.name}</span>
                     <span>
-                        {dependencyVersion ? (
-                            <>
-                                Version {dependencyVersion.versionNumber} is {dependencyType}
-                            </>
-                        ) : (
-                            CapitalizeAndFormatString(dependencyType)
-                        )}
+                        {dependencyVersion
+                            ? t.version.depencency[`${dependencyType}_desc`](dependencyVersion.versionNumber)
+                            : t.version.depencency[dependencyType]}
                     </span>
                 </div>
             </div>
 
             <Button variant="secondary" type="button" onClick={() => removeDependency(projectId, versionId)}>
                 <Trash2Icon className="w-btn-icon h-btn-icon" />
-                Remove
+                {t.form.remove}
             </Button>
         </div>
     );
@@ -511,6 +515,8 @@ export function SelectPrimaryFileInput({
     selectedFile,
     inputId,
 }: { children: React.ReactNode; selectedFile?: File | FileObjectType; inputId: string }) {
+    const { t } = useTranslation();
+
     return (
         <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background/85 rounded px-4 py-2 gap-x-4 gap-y-2">
             <div className="flex items-center justify-start gap-1.5">
@@ -520,15 +526,15 @@ export function SelectPrimaryFileInput({
                     <span className="flex items-center flex-wrap justify-start gap-x-2">
                         <strong className="font-semibold">{selectedFile.name}</strong>{" "}
                         <span className="whitespace-nowrap ml-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
-                        <span className="text-muted-foreground italic ml-1">Primary</span>
+                        <span className="text-muted-foreground italic ml-1">{t.version.primary}</span>
                     </span>
                 ) : (
-                    <span className="text-muted-foreground italic">No primary file choosen</span>
+                    <span className="text-muted-foreground italic">{t.version.noPrimaryFile}</span>
                 )}
             </div>
 
             <InteractiveLabel htmlFor={inputId} className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}>
-                {selectedFile ? "Replace file" : "Choose file"}
+                {selectedFile ? t.version.replaceFile : t.version.chooseFile}
             </InteractiveLabel>
         </div>
     );
@@ -586,6 +592,8 @@ function AdditionalFiles({
     inputId,
     onChange,
 }: { children: React.ReactNode; selectedFiles?: (File | FileObjectType)[]; inputId: string; onChange: (...event: unknown[]) => void }) {
+    const { t } = useTranslation();
+
     const deleteFileFromList = (index: number) => {
         if (!selectedFiles?.length) return;
         onChange([...selectedFiles.slice(0, index), ...selectedFiles.slice(index + 1)]);
@@ -597,8 +605,8 @@ function AdditionalFiles({
 
             <div className="w-full flex flex-wrap items-center justify-between gap-x-6">
                 <div className="flex flex-col">
-                    <span className="font-semibold">Upload additional files</span>
-                    <span className="text-sm text-muted-foreground mb-1">Used for files such as sources or Javadocs.</span>
+                    <span className="font-semibold">{t.version.uploadExtraFiles}</span>
+                    <span className="text-sm text-muted-foreground mb-1">{t.version.uploadExtraFilesDesc}</span>
                 </div>
 
                 <InteractiveLabel
@@ -610,7 +618,7 @@ function AdditionalFiles({
                     )}
                 >
                     <UploadIcon className="w-btn-icon h-btn-icon" />
-                    Select files
+                    {t.version.selectFiles}
                 </InteractiveLabel>
             </div>
 
@@ -632,7 +640,7 @@ function AdditionalFiles({
 
                             <Button variant={"secondary-dark"} onClick={() => deleteFileFromList(index)}>
                                 <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                Remove
+                                {t.form.remove}
                             </Button>
                         </div>
                     ))}

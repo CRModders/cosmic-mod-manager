@@ -1,9 +1,9 @@
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useNavigate } from "react-router";
 import clientFetch from "@root/utils/client-fetch";
 import type { ProjectDetailsData } from "@shared/types/api";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import RefreshPage from "~/components/refresh-page";
 import { Button, CancelButton } from "~/components/ui/button";
@@ -19,19 +19,20 @@ import {
     DialogTrigger,
 } from "~/components/ui/dialog";
 import { LoadingSpinner } from "~/components/ui/spinner";
+import { useTranslation } from "~/locales/provider";
 
 interface Props {
     projectData: ProjectDetailsData;
     projectSlug: string;
     versionSlug: string;
-    featured: boolean;
 }
 
-const DeleteVersionDialog = ({ projectData, projectSlug, versionSlug, featured }: Props) => {
+export default function DeleteVersionDialog({ projectData, projectSlug, versionSlug }: Props) {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    const deleteVersion = async () => {
+    async function deleteVersion() {
         if (isLoading) return;
         setIsLoading(true);
         try {
@@ -41,34 +42,34 @@ const DeleteVersionDialog = ({ projectData, projectSlug, versionSlug, featured }
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             RefreshPage(navigate, `/${projectData?.type[0]}/${projectSlug}/versions`);
-            return toast.success(result?.message || "Success");
+            return toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"secondary-destructive"}>
                     <Trash2Icon className="h-btn-icon w-btn-icon" />
-                    Delete
+                    {t.form.delete}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Are you sure you want to delete this version?</DialogTitle>
+                    <DialogTitle>{t.version.sureToDelete}</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Delete version</DialogDescription>
+                        <DialogDescription>{t.version.deleteVersion}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
 
                 <DialogBody className="flex flex-col items-start justify-start gap-4">
-                    <span className="text-muted-foreground">This will remove this version forever (like really forever).</span>
+                    <span className="text-muted-foreground">{t.version.deleteDesc}</span>
 
                     <DialogFooter>
                         <DialogClose asChild disabled={isLoading}>
@@ -77,13 +78,11 @@ const DeleteVersionDialog = ({ projectData, projectSlug, versionSlug, featured }
 
                         <Button variant={"destructive"} onClick={deleteVersion} disabled={isLoading}>
                             {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon" />}
-                            Delete
+                            {t.form.delete}
                         </Button>
                     </DialogFooter>
                 </DialogBody>
             </DialogContent>
         </Dialog>
     );
-};
-
-export default DeleteVersionDialog;
+}

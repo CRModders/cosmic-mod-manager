@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import clientFetch from "@root/utils/client-fetch";
 import { FEATURED_LICENSE_OPTIONS } from "@shared/config/license-list";
-import { CapitalizeAndFormatString } from "@shared/lib/utils";
 import { updateProjectLicenseFormSchema } from "@shared/schemas/project/settings/license";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
+import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import RefreshPage from "~/components/refresh-page";
 import { Button } from "~/components/ui/button";
 import { Card, CardTitle } from "~/components/ui/card";
@@ -18,8 +18,10 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "~/components/
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function LicenseSettingsPage() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
 
@@ -47,7 +49,7 @@ export default function LicenseSettingsPage() {
         const data = await res.json();
 
         if (!res.ok || !data?.success) {
-            return toast.error(data?.message || "Error");
+            return toast.error(data?.message || t.common.error);
         }
 
         RefreshPage(navigate, location);
@@ -75,31 +77,22 @@ export default function LicenseSettingsPage() {
         if (isCustomLicense && !showCustomLicenseInputFields) setShowCustomLicenseInputFields(true);
     }, [isCustomLicense]);
 
+    const projectType = t.navbar[projectData.type[0]];
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(updateLicense)} className="w-full">
                 <Card className="w-full p-card-surround flex flex-col gap-4">
-                    <CardTitle>License</CardTitle>
+                    <CardTitle>{t.search.license}</CardTitle>
                     <div className="w-full flex flex-col md:flex-row items-start justify-between gap-x-6 gap-y-2">
-                        <p className="flex flex-col gap-1.5 leading-snug text-muted-foreground">
-                            <span>
-                                It is very important to choose a proper license for your{" "}
-                                {CapitalizeAndFormatString(projectData?.type[0])?.toLowerCase()}. You may choose one from our list or
-                                provide a custom license. You may also provide a custom URL to your chosen license; otherwise, the license
-                                text will be displayed.
-                            </span>
-                            {isCustomLicense ? (
-                                <span>
-                                    Enter a valid{" "}
-                                    <a href="https://spdx.org/licenses/" className="link_blue">
-                                        SPDX license identifier
-                                    </a>{" "}
-                                    in the marked area. If your license does not have a SPDX identifier (for example, if you created the
-                                    license yourself or if the license is Cosmic Reach specific), simply check the box and enter the name of
-                                    the license instead.
-                                </span>
-                            ) : null}
-                        </p>
+                        <MarkdownRenderBox
+                            divElem
+                            text={`
+${t.projectSettings.licenseDesc1(projectType)} \n
+${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
+`}
+                        />
+
                         <div className="w-full md:w-[48ch] min-w-[32ch] flex flex-col items-start justify-start">
                             <FormField
                                 control={form.control}
@@ -129,7 +122,9 @@ export default function LicenseSettingsPage() {
                                                 }}
                                             >
                                                 <Button variant={"secondary"} className="w-full justify-between overflow-hidden">
-                                                    {isCustomLicense ? "Custom" : selectedFeaturedLicense?.name || "Select license..."}
+                                                    {isCustomLicense
+                                                        ? t.projectSettings.custom
+                                                        : selectedFeaturedLicense?.name || t.projectSettings.selectLicense}
                                                     <ChevronDownIcon className="w-btn-icon h-btn-icon shrink-0" />
                                                 </Button>
                                             </ComboBox>
@@ -152,7 +147,7 @@ export default function LicenseSettingsPage() {
                                             }
                                         }}
                                     >
-                                        <span className="sm:text-nowrap">License does not have a SPDX identifier</span>
+                                        <span className="sm:text-nowrap">{t.projectSettings.doesntHaveSpdxId}</span>
                                     </LabelledCheckbox>
                                     {doesNotHaveASpdxId && (
                                         <FormField
@@ -163,7 +158,7 @@ export default function LicenseSettingsPage() {
                                                     <FormLabel>
                                                         <FormMessage />
                                                     </FormLabel>
-                                                    <Input {...field} placeholder="License name" />
+                                                    <Input {...field} placeholder={t.projectSettings.licenseName} />
                                                 </FormItem>
                                             )}
                                         />
@@ -178,7 +173,7 @@ export default function LicenseSettingsPage() {
                                                     <FormLabel>
                                                         <FormMessage />
                                                     </FormLabel>
-                                                    <Input {...field} placeholder="SPDX identifier" />
+                                                    <Input {...field} placeholder={t.projectSettings.spdxId} />
                                                 </FormItem>
                                             )}
                                         />
@@ -194,7 +189,7 @@ export default function LicenseSettingsPage() {
                                         <FormLabel>
                                             <FormMessage />
                                         </FormLabel>
-                                        <Input {...field} placeholder="License URL (optional)" />
+                                        <Input {...field} placeholder={t.projectSettings.licenseUrl} />
                                     </FormItem>
                                 )}
                             />
@@ -202,7 +197,7 @@ export default function LicenseSettingsPage() {
                     </div>
                     <Button type="submit" className="w-fit" disabled={!hasFormChanged || form.formState.isSubmitting}>
                         {form.formState.isSubmitting ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                        Save changes
+                        {t.form.saveChanges}
                     </Button>
                 </Card>
             </form>

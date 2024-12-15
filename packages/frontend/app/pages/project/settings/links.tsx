@@ -13,8 +13,10 @@ import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } fr
 import { Input } from "~/components/ui/input";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function ExternalLinksSettingsPage() {
+    const { t } = useTranslation();
     const projectData = useProjectData().projectData;
 
     const navigate = useNavigate();
@@ -31,7 +33,7 @@ export default function ExternalLinksSettingsPage() {
     });
     form.watch();
 
-    const updateLinks = async (values: z.infer<typeof updateExternalLinksFormSchema>) => {
+    async function updateLinks(values: z.infer<typeof updateExternalLinksFormSchema>) {
         const res = await clientFetch(`/api/project/${projectData?.slug}/external-links`, {
             method: "PATCH",
             body: JSON.stringify(values),
@@ -44,7 +46,7 @@ export default function ExternalLinksSettingsPage() {
 
         RefreshPage(navigate, location);
         return toast.success(data?.message);
-    };
+    }
 
     const formValues = form.getValues();
     const hasFormChanged =
@@ -55,7 +57,7 @@ export default function ExternalLinksSettingsPage() {
 
     return (
         <Card className="w-full flex flex-col items-start justify-start gap-6 p-card-surround">
-            <CardTitle>External links</CardTitle>
+            <CardTitle>{t.projectSettings.externalLinks}</CardTitle>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(updateLinks)} className="w-full flex flex-col items-start justify-start gap-4">
                     <FormField
@@ -65,9 +67,9 @@ export default function ExternalLinksSettingsPage() {
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
                                 <FormLabel htmlFor="issue-tracker-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
-                                        <span className="font-bold">Issue tracker</span>
+                                        <span className="font-bold">{t.projectSettings.issueTracker}</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
-                                            A place for users to report bugs, issues, and concerns about your project.
+                                            {t.projectSettings.issueTrackerDesc}
                                         </FormDescription>
                                     </span>
                                     <FormMessage />
@@ -91,9 +93,9 @@ export default function ExternalLinksSettingsPage() {
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
                                 <FormLabel htmlFor="source-code-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
-                                        <span className="font-bold">Source code</span>
+                                        <span className="font-bold">{t.projectSettings.sourceCode}</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
-                                            A page/repository containing the source code for your project
+                                            {t.projectSettings.sourceCodeDesc}
                                         </FormDescription>
                                     </span>
                                     <FormMessage />
@@ -117,9 +119,9 @@ export default function ExternalLinksSettingsPage() {
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
                                 <FormLabel htmlFor="wiki-page-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
-                                        <span className="font-bold">Wiki page</span>
+                                        <span className="font-bold">{t.projectSettings.wikiPage}</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
-                                            A page containing information, documentation, and help for the project.
+                                            {t.projectSettings.wikiPageDesc}
                                         </FormDescription>
                                     </span>
                                     <FormMessage />
@@ -143,9 +145,9 @@ export default function ExternalLinksSettingsPage() {
                             <FormItem className="flex md:flex-row items-center justify-between gap-x-4">
                                 <FormLabel htmlFor="discord-invite-url-input">
                                     <span className="flex flex-col items-start justify-start gap-1">
-                                        <span className="font-bold">Discord invite</span>
+                                        <span className="font-bold">{t.projectSettings.discordInvite}</span>
                                         <FormDescription className="text-base font-normal text-muted-foreground">
-                                            An invitation link to your Discord server.
+                                            {t.projectSettings.discordInviteDesc}
                                         </FormDescription>
                                     </span>
                                     <FormMessage />
@@ -165,7 +167,7 @@ export default function ExternalLinksSettingsPage() {
                     <div className="w-full flex items-center justify-end">
                         <Button type="submit" disabled={!hasFormChanged || form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                            Save changes
+                            {t.form.saveChanges}
                         </Button>
                     </div>
                 </form>

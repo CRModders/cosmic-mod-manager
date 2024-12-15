@@ -37,7 +37,7 @@ export default function Navbar(props: NavbarProps) {
             href: "datamods",
         },
         {
-            label: nav.resourcePacks,
+            label: nav["resource-packs"],
             href: "resource-packs",
         },
         {

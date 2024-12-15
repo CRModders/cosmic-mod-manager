@@ -4,8 +4,25 @@ import type { Locale } from "./types";
 import { fillEmptyKeys } from "./utils";
 
 export async function getLocale(locale: string): Promise<Locale> {
-    const localeModule = await getLocaleFile(parseLocale(locale));
-    return fillEmptyKeys(localeModule, en);
+    const localeModule = await getLocaleFile(locale);
+    return fillEmptyKeys(localeModule.default, en);
+}
+
+export async function getLocaleFile(locale: string) {
+    let module = null;
+
+    switch (parseLocale(locale)) {
+        case "es":
+            module = await import("./es/translation");
+            break;
+
+        // case "en":
+        default:
+            module = await import("./en/translation");
+            break;
+    }
+
+    return module;
 }
 
 export function parseLocale(code: string) {
@@ -14,21 +31,4 @@ export function parseLocale(code: string) {
     }
 
     return "en";
-}
-
-export async function getLocaleFile(locale: string): Promise<Locale> {
-    let module = null;
-
-    switch (locale) {
-        case "es":
-            module = await import("./es/translation");
-            break;
-
-        // case "en":
-        default:
-            return en;
-    }
-
-    if (module) return module.default;
-    return en;
 }

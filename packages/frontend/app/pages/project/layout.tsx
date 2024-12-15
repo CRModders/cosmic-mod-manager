@@ -118,7 +118,7 @@ export default function ProjectPageLayout() {
 
                     {listedLoaders.length ? (
                         <section>
-                            <h3 className="flex font-bold text-muted-foreground pb-1">{t.project.loaders}</h3>
+                            <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.loaders}</h3>
                             <div className="w-full flex flex-wrap gap-1">
                                 {listedLoaders.map((loader) => {
                                     const accentForeground = loader?.metadata?.accent?.foreground;
@@ -391,6 +391,7 @@ interface HeaderProps {
 }
 
 function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetchProjectData }: HeaderProps) {
+    const { t } = useTranslation();
     const session = useSession();
     let invitedMember = null;
 
@@ -443,7 +444,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                     <>
                         <Button variant="ghost-destructive" className="w-full">
                             <FlagIcon className="w-btn-icon h-btn-icon" />
-                            Report
+                            {t.common.report}
                         </Button>
 
                         <PopoverClose asChild>
@@ -455,7 +456,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                 }}
                             >
                                 <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
-                                Copy ID
+                                {t.common.copyId}
                             </Button>
                         </PopoverClose>
                     </>

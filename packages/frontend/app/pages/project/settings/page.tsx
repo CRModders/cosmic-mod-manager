@@ -3,8 +3,9 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cn, imageUrl } from "@root/utils";
 import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
+import { SITE_NAME_SHORT } from "@shared/config";
 import { projectTypes } from "@shared/config/project";
-import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
+import { CapitalizeAndFormatString, createURLSafeSlug } from "@shared/lib/utils";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@shared/lib/utils/convertors";
 import { generalProjectSettingsFormSchema } from "@shared/schemas/project/settings/general";
 import { handleFormError, validImgFileExtensions } from "@shared/schemas/utils";
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { fallbackProjectIcon } from "~/components/icons";
+import MarkdownRenderBox from "~/components/layout/md-editor/render-md";
 import { ContentCardTemplate } from "~/components/layout/panel";
 import RefreshPage from "~/components/refresh-page";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -41,8 +43,10 @@ import { LoadingSpinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useProjectData } from "~/hooks/project";
+import { useTranslation } from "~/locales/provider";
 
 export default function GeneralSettingsPage() {
+    const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
 
@@ -78,12 +82,12 @@ export default function GeneralSettingsPage() {
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                return toast.error(result?.message || "Error");
+                return toast.error(result?.message || t.common.error);
             }
 
             const newSlug: string = result?.slug || projectData.slug;
             RefreshPage(navigate, `/${ctx.projectType}/${newSlug}/settings`);
-            toast.success(result?.message || "Success");
+            toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
@@ -91,7 +95,7 @@ export default function GeneralSettingsPage() {
 
     return (
         <>
-            <ContentCardTemplate title="Project information">
+            <ContentCardTemplate title={t.projectSettings.projectInfo}>
                 <Form {...form}>
                     <form
                         onSubmit={(e) => {
@@ -105,7 +109,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-bold">
-                                        Icon
+                                        {t.form.icon}
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="flex flex-wrap items-center justify-start gap-4">
@@ -157,7 +161,7 @@ export default function GeneralSettingsPage() {
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
                                                 <UploadIcon className="w-btn-icon h-btn-icon" />
-                                                Upload icon
+                                                {t.form.uploadIcon}
                                             </InteractiveLabel>
                                             {form.getValues().icon ? (
                                                 <Button
@@ -168,7 +172,7 @@ export default function GeneralSettingsPage() {
                                                     }}
                                                 >
                                                     <Trash2Icon className="w-btn-icon h-btn-icon" />
-                                                    Remove icon
+                                                    {t.form.removeIcon}
                                                 </Button>
                                             ) : null}
                                         </div>
@@ -183,7 +187,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="project-name-input">
-                                        Name
+                                        {t.form.name}
                                         <FormMessage />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="project-name-input" autoComplete="off" />
@@ -197,7 +201,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="project-slug-input">
-                                        URL
+                                        {t.form.url}
                                         <FormMessage />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
@@ -225,7 +229,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-bold" htmlFor="project-summary-input">
-                                        Summary
+                                        {t.form.summary}
                                         <FormMessage />
                                     </FormLabel>
                                     <Textarea
@@ -245,10 +249,10 @@ export default function GeneralSettingsPage() {
                                 <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
                                         <FormLabel className="text-foreground font-bold">
-                                            Project type
+                                            {t.form.projectType}
                                             <FormMessage />
                                         </FormLabel>
-                                        <span className="text-muted-foreground">Select the appropriate type for your project</span>
+                                        <span className="text-muted-foreground">{t.dashboard.projectTypeDesc}</span>
                                     </div>
 
                                     <MultiSelect
@@ -262,7 +266,7 @@ export default function GeneralSettingsPage() {
                                         onValueChange={(values) => {
                                             field.onChange(getProjectTypesFromNames(values));
                                         }}
-                                        placeholder="Choose project type"
+                                        placeholder={t.dashboard.chooseProjectType}
                                         className="w-fit sm:min-w-[15rem] sm:w-fit sm:max-w-[20rem]"
                                         popoverClassname="min-w-[15rem]"
                                     />
@@ -277,11 +281,11 @@ export default function GeneralSettingsPage() {
                                 <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
                                         <FormLabel className="text-foreground font-bold">
-                                            Client-side
+                                            {t.projectSettings.clientSide}
                                             <FormMessage />
                                         </FormLabel>
                                         <span className="text-muted-foreground">
-                                            Select based on if the {projectData.type[0]} has functionality on the client side.
+                                            {t.projectSettings.clientSideDesc(t.navbar[projectData.type[0]])}
                                         </span>
                                     </div>
 
@@ -290,10 +294,14 @@ export default function GeneralSettingsPage() {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
+                                            <SelectItem value={ProjectSupport.REQUIRED}>
+                                                {t.projectSettings[ProjectSupport.REQUIRED]}
+                                            </SelectItem>
+                                            <SelectItem value={ProjectSupport.OPTIONAL}>
+                                                {t.projectSettings[ProjectSupport.OPTIONAL]}
+                                            </SelectItem>
                                             <SelectItem value={ProjectSupport.UNSUPPORTED}>
-                                                {Capitalize(ProjectSupport.UNSUPPORTED)}
+                                                {t.projectSettings[ProjectSupport.UNSUPPORTED]}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -308,11 +316,11 @@ export default function GeneralSettingsPage() {
                                 <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
                                         <FormLabel className="text-foreground font-bold">
-                                            Server-side
+                                            {t.projectSettings.serverSide}
                                             <FormMessage />
                                         </FormLabel>
                                         <span className="text-muted-foreground">
-                                            Select based on if the {projectData.type[0]} has functionality on the logical server.
+                                            {t.projectSettings.serverSideDesc(t.navbar[projectData.type[0]])}
                                         </span>
                                     </div>
 
@@ -321,10 +329,14 @@ export default function GeneralSettingsPage() {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value={ProjectSupport.REQUIRED}>{Capitalize(ProjectSupport.REQUIRED)}</SelectItem>
-                                            <SelectItem value={ProjectSupport.OPTIONAL}>{Capitalize(ProjectSupport.OPTIONAL)}</SelectItem>
+                                            <SelectItem value={ProjectSupport.REQUIRED}>
+                                                {t.projectSettings[ProjectSupport.REQUIRED]}
+                                            </SelectItem>
+                                            <SelectItem value={ProjectSupport.OPTIONAL}>
+                                                {t.projectSettings[ProjectSupport.OPTIONAL]}
+                                            </SelectItem>
                                             <SelectItem value={ProjectSupport.UNSUPPORTED}>
-                                                {Capitalize(ProjectSupport.UNSUPPORTED)}
+                                                {t.projectSettings[ProjectSupport.UNSUPPORTED]}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -339,18 +351,14 @@ export default function GeneralSettingsPage() {
                                 <FormItem className="w-full flex flex-wrap flex-row items-center justify-between gap-x-6">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
                                         <FormLabel className="text-foreground font-bold">
-                                            Visibility
+                                            {t.form.visibility}
                                             <FormMessage />
                                         </FormLabel>
                                         <div className="max-w-[68ch] flex flex-col items-start justify-start text-muted-foreground gap-1.5">
-                                            <p className="leading-tight">
-                                                Listed and archived projects are visible in search. Unlisted projects are published, but not
-                                                visible in search or on user profiles. Private projects are only accessible by members of
-                                                the project.
-                                            </p>
+                                            <p className="leading-tight">{t.projectSettings.visibilityDesc}</p>
 
                                             {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
-                                                <span>If approved by the moderators:</span>
+                                                <span>{t.projectSettings.ifApproved}</span>
                                             ) : null}
 
                                             <div className="flex flex-col items-start justify-center">
@@ -361,7 +369,7 @@ export default function GeneralSettingsPage() {
                                                     ) : (
                                                         <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
-                                                    Visible in search
+                                                    {t.projectSettings.visibleInSearch}
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
@@ -370,7 +378,7 @@ export default function GeneralSettingsPage() {
                                                     ) : (
                                                         <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
-                                                    Visible on profile
+                                                    {t.projectSettings.visibleOnProfile}
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.PRIVATE ? (
@@ -381,34 +389,34 @@ export default function GeneralSettingsPage() {
                                                                         <TriangleAlertIcon className="w-btn-icon h-btn-icon text-orange-600 dark:text-orange-400" />
                                                                     </span>
                                                                 </TooltipTrigger>
-                                                                <TooltipContent>
-                                                                    Only members will be able to view the project
-                                                                </TooltipContent>
+                                                                <TooltipContent>{t.projectSettings.visibleToMembersOnly}</TooltipContent>
                                                             </Tooltip>
                                                         </TooltipProvider>
                                                     ) : (
                                                         <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     )}
-                                                    Visible via URL
+                                                    {t.projectSettings.visibleViaUrl}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <Select name={field.name} value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Visibility">
+                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label={t.form.visibility}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value={ProjectVisibility.LISTED}>{Capitalize(ProjectVisibility.LISTED)}</SelectItem>
+                                            <SelectItem value={ProjectVisibility.LISTED}>
+                                                {t.projectSettings[ProjectVisibility.LISTED]}
+                                            </SelectItem>
                                             <SelectItem value={ProjectVisibility.ARCHIVED}>
-                                                {Capitalize(ProjectVisibility.ARCHIVED)}
+                                                {t.projectSettings[ProjectVisibility.ARCHIVED]}
                                             </SelectItem>
                                             <SelectItem value={ProjectVisibility.UNLISTED}>
-                                                {Capitalize(ProjectVisibility.UNLISTED)}
+                                                {t.projectSettings[ProjectVisibility.UNLISTED]}
                                             </SelectItem>
                                             <SelectItem value={ProjectVisibility.PRIVATE}>
-                                                {Capitalize(ProjectVisibility.PRIVATE)}
+                                                {t.projectSettings[ProjectVisibility.PRIVATE]}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -428,7 +436,7 @@ export default function GeneralSettingsPage() {
                                 }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
-                                Save changes
+                                {t.form.saveChanges}
                             </Button>
                         </div>
                     </form>
@@ -441,6 +449,7 @@ export default function GeneralSettingsPage() {
 }
 
 function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [submittable, setSubmittable] = useState(false);
     const navigate = useNavigate();
@@ -455,10 +464,10 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
             const data = await res.json();
 
             if (!res.ok || !data?.success) {
-                return toast.error(data?.message || "Error");
+                return toast.error(data?.message || t.common.error);
             }
 
-            toast.success(data?.message || "Success");
+            toast.success(data?.message || t.common.success);
             RefreshPage(navigate, "/dashboard/projects");
         } finally {
             setIsLoading(false);
@@ -466,35 +475,28 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
     };
 
     return (
-        <ContentCardTemplate title="Delete project" className="w-full flex flex-col gap-4">
-            <p className="text-muted-foreground">
-                Removes your project from CRMM's servers and search. Clicking on this will delete your project, so be extra careful!
-            </p>
+        <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-col gap-4">
+            <p className="text-muted-foreground">{t.projectSettings.deleteProjectDesc(SITE_NAME_SHORT)}</p>
 
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="destructive">
                         <Trash2Icon className="w-btn-icon h-btn-icon" />
-                        Delete project
+                        {t.projectSettings.deleteProject}
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Are you sure you want to delete this project?</DialogTitle>
+                        <DialogTitle>{t.projectSettings.sureToDeleteProject}</DialogTitle>
                         <VisuallyHidden>
-                            <DialogDescription>Delete your project</DialogDescription>
+                            <DialogDescription>{t.projectSettings.deleteProject}</DialogDescription>
                         </VisuallyHidden>
                     </DialogHeader>
                     <DialogBody className="text-muted-foreground flex flex-col gap-4">
-                        <p className="leading-snug">
-                            If you proceed, all versions and any attached data will be removed from our servers. This may break other
-                            projects, so be careful.
-                        </p>
+                        <p className="leading-snug">{t.projectSettings.deleteProjectDesc2}</p>
 
                         <div className="w-full flex flex-col gap-1">
-                            <span className="font-bold flex items-center justify-start gap-1.5">
-                                To verify, type<em className="font-normal">{name}</em>below:
-                            </span>
+                            <MarkdownRenderBox divElem text={t.projectSettings.typeToVerify(name)} />
 
                             <Input
                                 placeholder="Type here..."
@@ -514,7 +516,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteProject}>
                                 {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
-                                Delete project
+                                {t.projectSettings.deleteProject}
                             </Button>
                         </DialogFooter>
                     </DialogBody>
