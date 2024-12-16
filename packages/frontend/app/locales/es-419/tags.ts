@@ -46,7 +46,7 @@ export default {
     quests: "Misiones",
     realistic: "Realista",
     reflections: "Reflejos",
-    "semi-realistic": "Semirealista",
+    "semi-realistic": "Semirrealista",
     shadows: "Sombras",
     simplistic: "Simple",
     social: "Social",
