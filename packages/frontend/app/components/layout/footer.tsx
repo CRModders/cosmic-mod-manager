@@ -2,7 +2,7 @@ import { cn } from "@root/utils";
 import { useUrlLocale } from "@root/utils/urls";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { GlobeIcon, Settings2Icon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { LinkProps } from "react-router";
 import { BrandIcon } from "~/components/icons";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
@@ -150,9 +150,13 @@ function LinksColumn({ children, area }: { area: string; children: React.ReactNo
 
 export function LangSwitcher() {
     const ctx = useRootData();
-    const [currLang, setCurrLang] = useState(formatLocaleCode(ctx.locale));
-    const { changeLocale } = useTranslation();
+    const { locale, changeLocale } = useTranslation();
+    const [currLang, setCurrLang] = useState(formatLocaleCode(locale));
     const navigate = useNavigate(true);
+
+    useEffect(() => {
+        setCurrLang(formatLocaleCode(locale));
+    }, [locale]);
 
     return (
         <Select
