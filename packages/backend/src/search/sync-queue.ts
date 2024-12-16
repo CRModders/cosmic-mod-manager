@@ -47,7 +47,7 @@ const requiredProjectFields = {
     ...teamSelect,
     organisation: {
         select: {
-            name: true,
+            slug: true,
         },
     },
     gallery: {
@@ -104,7 +104,7 @@ async function syncProjects(cursor: null | string) {
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
 
-            const author = project.organisation?.name || project.team.members?.[0]?.user?.userName;
+            const author = project.organisation?.slug || project.team.members?.[0]?.user?.userName;
             const featured_gallery = project.gallery[0] ? projectGalleryFileUrl(project.id, project.gallery[0].thumbnailFileId) : null;
 
             formattedProjectsData.push({
@@ -128,7 +128,7 @@ async function syncProjects(cursor: null | string) {
                 featured_gallery: featured_gallery,
                 color: project.color,
                 author: author,
-                isOrgOwned: !!project.organisation?.name,
+                isOrgOwned: !!project.organisation?.slug,
             });
         }
 

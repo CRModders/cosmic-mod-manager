@@ -30,7 +30,7 @@ export async function updateOrg(
 ): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: orgId }, { slug: orgId }],
+            OR: [{ id: orgId }, { slug: orgId.toLowerCase() }],
         },
         select: {
             id: true,
@@ -102,7 +102,7 @@ export async function updateOrgIcon(
 ): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: orgId }, { slug: orgId }],
+            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
         },
         select: {
             id: true,
@@ -172,7 +172,7 @@ export async function updateOrgIcon(
 export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: orgId }, { slug: orgId }],
+            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
         },
         select: {
             id: true,
@@ -214,7 +214,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
 export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: orgId }, { slug: orgId }],
+            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
         },
         select: {
             id: true,

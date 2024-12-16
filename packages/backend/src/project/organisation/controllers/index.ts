@@ -21,7 +21,7 @@ import type { z } from "zod";
 export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string): Promise<RouteHandlerResponse> {
     const organisation = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: slug }, { slug: slug }],
+            OR: [{ id: slug }, { slug: slug.toLowerCase() }],
         },
         include: {
             team: {
@@ -194,7 +194,7 @@ export async function getOrganisationProjects(
 ): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: slug }, { slug: slug }],
+            OR: [{ id: slug }, { slug: slug.toLowerCase() }],
         },
         include: {
             projects: {
