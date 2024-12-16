@@ -20,6 +20,17 @@ const SupportedLocales = [
             displayName: "España",
         },
     }),
+        meta({
+        code: "es",
+        name: "Spanish (Latin America)",
+        nativeName: "Español (Latinoamérica)",
+        dir: "ltr",
+        region: {
+            code: "419",
+            name: "Latin America",
+            displayName: "Latinoamérica",
+        },
+    }),
 ];
 
 export default SupportedLocales;
