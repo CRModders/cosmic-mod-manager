@@ -64,7 +64,7 @@ export default {
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
         deleteAccountDesc:
-            "Eliminar tu cuenta eliminará todos tus datos de nuestra base de datos. No hay vuelta atrás después de eliminar tu cuenta.",
+            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
