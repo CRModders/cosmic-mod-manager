@@ -58,4 +58,4 @@ export default {
     utility: "Utilidad",
     "vanilla-like": "Similar a vanilla",
     worldgen: "Generación de mundo",
-} satisfies Translation;
+} satisfies typeof tags;
