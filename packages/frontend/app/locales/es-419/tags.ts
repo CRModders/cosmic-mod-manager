@@ -1,4 +1,4 @@
-import type { Translation } from "../types";
+import type tags from "~/locales/en/tags";
 
 export default {
     adventure: "Aventura",
