@@ -2,9 +2,9 @@ import { disableInteractions, enableInteractions } from "@root/utils/dom";
 import { prepend, removeLeading, removeTrailing, usePathname, useUrlLocale } from "@root/utils/urls";
 import { type ReactNode, createContext, use, useState } from "react";
 import type { NavigateFunction } from "react-router";
-import { getLocale, parseLocale } from ".";
+import { formatLocaleCode, getLocale, parseLocale } from ".";
 import en from "./en/translation";
-import { GetLocaleMetadata, en as en_Metadata } from "./meta";
+import { DefaultLocale, GetLocaleMetadata } from "./meta";
 import type { Locale, LocaleMetaData } from "./types";
 
 interface LocaleContext {
@@ -13,42 +13,26 @@ interface LocaleContext {
     changeLocale: (locale: string, navigate?: NavigateFunction) => void;
 }
 const LocaleContext = createContext<LocaleContext>({
-    locale: en_Metadata,
+    locale: DefaultLocale,
     t: en,
     changeLocale: (locale: string, navigate?: NavigateFunction) => {},
 });
 
 export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
     const [locale, setLocale] = useState(initLocale);
-    const [localeMetadata, setLocaleMetadata] = useState(initMetadata || en_Metadata);
-
-    function formatUrl(locale: LocaleMetaData) {
-        // Get the current pathname
-        const pathname = usePathname();
-        // Get the current locale prefix and prepend a slash in front of it
-        const currLocalePrefix = prepend("/", useUrlLocale());
-
-        // Change the prefix based on the new locale
-        const newPrefix = locale.code === "en" ? "" : locale.code;
-
-        // Remove the current locale prefix from the pathname
-        const pathnameWithoutLocale = prepend("/", removeLeading(currLocalePrefix, pathname));
-
-        // Prepend the new locale prefix to the pathname, and remove any trailing slashes
-        return removeTrailing("/", prepend(newPrefix, pathnameWithoutLocale));
-    }
+    const [localeMetadata, setLocaleMetadata] = useState(initMetadata || DefaultLocale);
 
     async function changeLocale(locale: string, navigate?: NavigateFunction) {
         disableInteractions();
 
         if (navigate) {
             const newLangMetadata = GetLocaleMetadata(locale);
-            const newUrl = formatUrl(newLangMetadata || en_Metadata);
+            const newUrl = formatUrlWithLocalePrefix(newLangMetadata || DefaultLocale);
             navigate(newUrl, { preventScrollReset: true });
         }
 
         setLocale(await getLocale(locale));
-        setLocaleMetadata(GetLocaleMetadata(parseLocale(locale)) || en_Metadata);
+        setLocaleMetadata(GetLocaleMetadata(parseLocale(locale)) || DefaultLocale);
 
         enableInteractions();
     }
@@ -64,6 +48,25 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
             {children}
         </LocaleContext>
     );
+}
+
+export function formatUrlWithLocalePrefix(locale: LocaleMetaData, omitDefaultLocale = true) {
+    // Get the current pathname
+    const pathname = usePathname();
+    // Get the current locale prefix and prepend a slash in front of it
+    const currLocalePrefix = prepend("/", useUrlLocale());
+
+    // Change the prefix based on the new locale
+    let localeCode = formatLocaleCode(locale);
+    if (omitDefaultLocale === true && localeCode === formatLocaleCode(DefaultLocale)) {
+        localeCode = "";
+    }
+
+    // Remove the current locale prefix from the pathname
+    const pathnameWithoutLocale = prepend("/", removeLeading(currLocalePrefix, pathname));
+
+    // Prepend the new locale prefix to the pathname, and remove any trailing slashes
+    return removeTrailing("/", prepend(localeCode, pathnameWithoutLocale));
 }
 
 interface Props {

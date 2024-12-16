@@ -29,6 +29,8 @@ export default function HomePage({ projects }: Props) {
         setGridBgPortal(document.querySelector("#hero_section_bg_portal"));
     }, []);
 
+    const titleParts = t.homePage.title.split("{{projectType}}");
+
     return (
         <>
             {gridBgPortal
@@ -48,30 +50,32 @@ export default function HomePage({ projects }: Props) {
                         <BrandIcon className="text-accent-foreground" size="16rem" />
                     </div>
 
-                    <div className="w-full flex flex-col items-center justify-center gap-1">
-                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground text-center">{t.homePage.title}</h1>
+                    <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-4">
+                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground inline-flex items-center justify-center gap-x-2.5 lg:gap-x-4 flex-wrap">
+                            {titleParts[0]}{" "}
+                            <div className="inline-block h-12 lg:h-[4.5rem] mb-1 overflow-hidden">
+                                <span className="hero_section_showcase inline-flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
+                                    {showcaseItems?.map((item, index) => {
+                                        return (
+                                            <strong
+                                                key={`${item}${
+                                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                    index
+                                                }`}
+                                                className="flex font-bold items-center justify-center h-12 lg:h-[4.5rem] text-4xl lg:text-6xl bg-clip-text bg-accent-background text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background leading-loose"
+                                                // @ts-ignore
+                                                style={{ "--index": index + 1 }}
+                                            >
+                                                {item}
+                                            </strong>
+                                        );
+                                    })}
+                                </span>
+                            </div>{" "}
+                            {titleParts[1]}
+                        </h1>
 
-                        <h2 className="h-12 lg:h-[4.5rem] mb-1 overflow-hidden">
-                            <span className="hero_section_showcase flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
-                                {showcaseItems?.map((item, index) => {
-                                    return (
-                                        <strong
-                                            key={`${item}${
-                                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                index
-                                            }`}
-                                            className="flex font-bold items-center justify-center h-12 lg:h-[4.5rem] text-4xl lg:text-6xl bg-clip-text bg-accent-background text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background leading-loose"
-                                            // @ts-ignore
-                                            style={{ "--index": index + 1 }}
-                                        >
-                                            {item}
-                                        </strong>
-                                    );
-                                })}
-                            </span>
-                        </h2>
-
-                        <div className="w-full max-w-xl flex flex-col items-center justify-center">
+                        <div className="w-full max-w-2xl flex flex-col items-center justify-center">
                             <h2 className="w-full leading-snug text-center text-lg lg:text-xl text-muted-foreground/95">
                                 {t.homePage.desc}
                             </h2>

@@ -1,4 +1,4 @@
-import type { Locale } from "../types";
+import type { Locale } from "~/locales/types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -38,7 +38,7 @@ export default {
     },
 
     homePage: {
-        title: "El lugar para Cosmic Reach",
+        title: "El lugar para {{projectType}} de Cosmic Reach",
         desc: "El mejor lugar para tus mods de Cosmic Reach. Descubre, juega y crea contenido, todo en un solo lugar.",
         exploreMods: "Explorar mods",
     },
@@ -462,11 +462,12 @@ export default {
         socials: "Redes sociales",
         about: "Acerca de",
         changeTheme: "Cambiar tema",
+        siteOfferedIn: (site: string) => `Ofrecido por ${site} en:`,
     },
 
     legal: {
         rulesTitle: "Reglas de Contenido",
-        rules: Rules,
+        contentRules: Rules,
         termsTitle: "Términos de Uso",
         copyrightPolicyTitle: "Política de Derechos de Autor",
         securityNoticeTitle: "Aviso de Seguridad",

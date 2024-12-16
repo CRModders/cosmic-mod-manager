@@ -6,7 +6,8 @@ export interface LocaleMetaData {
     nativeName: string; // Español
     dir: "ltr" | "rtl";
 
-    region: {
+    // Optional region information (if the locale is regional variant of the language)
+    region?: {
         code: string; // ES
         name: string; // Spain
         displayName: string; // España

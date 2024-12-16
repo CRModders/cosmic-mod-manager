@@ -1,4 +1,5 @@
 import { useLocation } from "react-router";
+import { parseLocale } from "~/locales";
 
 export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
     if (exactEnds === true) {
@@ -14,10 +15,13 @@ export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
     const pathname = customPathname ? customPathname : usePathname();
 
     const match = pathname.match(langRegex);
-    const locale = match ? match[0] : "";
+    const matchString = match ? match[0] : "";
 
-    if (trimLeadingSlash) return removeLeading("/", locale);
-    return locale;
+    let urlPrefix = parseLocale(removeLeading("/", matchString));
+    if (urlPrefix === "en" && !matchString.includes("en")) urlPrefix = "";
+
+    if (trimLeadingSlash === true) return urlPrefix;
+    return prepend("/", urlPrefix);
 }
 
 export function usePathname() {

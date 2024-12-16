@@ -1,4 +1,4 @@
-import type { Translation } from "../types";
+import type { Translation } from "~/locales/types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -38,7 +38,7 @@ export default {
     },
 
     homePage: {
-        title: "The place for Cosmic Reach",
+        title: "The place for Cosmic Reach {{projectType}}",
         desc: "The best place for your Cosmic Reach mods. Discover, play, and create content, all in one spot.",
         exploreMods: "Explore mods",
     },
@@ -91,7 +91,7 @@ export default {
         manageProviders: "Manage providers",
         linkedProviders: "Linked auth providers",
         linkProvider: (provider: string) => `Link ${provider} to your account`,
-        link: "Link", // Link as create a link
+        link: "Link", // Verb
         sureToDeleteAccount: "Are you sure you want to delete your account?",
         profileInfo: "Profile information",
         profileInfoDesc: (site: string) => `Your profile information is publicly viewable on ${site}.`,
@@ -460,11 +460,12 @@ export default {
         socials: "Socials",
         about: "About",
         changeTheme: "Change theme",
+        siteOfferedIn: (site: string) => `${site} offered in:`,
     },
 
     legal: {
         rulesTitle: "Content Rules",
-        rules: Rules,
+        contentRules: Rules,
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",
         securityNoticeTitle: "Security Notice",
@@ -530,7 +531,7 @@ export default {
         insertLink: "Insert link",
         label: "Label",
         enterLabel: "Enter label",
-        link: "Link", // Link as a noun (url)
+        link: "Link", // Noun
         enterUrl: "Enter the link URL",
         insertImage: "Insert image",
         imgAlt: "Description (alt text)",

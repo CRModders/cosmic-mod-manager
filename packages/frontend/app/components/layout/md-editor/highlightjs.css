@@ -64,6 +64,16 @@
     @apply pl-10;
 }
 
+.markdown-body p:has(+ ul),
+.markdown-body p:has(+ ol) {
+    @apply mb-1;
+}
+
+.markdown-body li p:has(+ ul),
+.markdown-body li p:has(+ ol) {
+    @apply mb-0;
+}
+
 .markdown-body ul li {
     list-style-type: disc;
 }
@@ -168,19 +178,19 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
     @apply border-[0.2rem] border-shallow-background rounded p-2 pb-0 open:pb-2;
 }
 
-.markdown-body details > summary {
+.markdown-body details>summary {
     @apply font-bold bg-shallow-background m-[-0.5rem] mb-0 py-2 px-3 cursor-pointer rounded-md hover:bg-shallow-background/75;
 }
 
-.markdown-body details[open] > summary {
+.markdown-body details[open]>summary {
     @apply mb-2 rounded-bl-none rounded-br-none;
 }
 
-.markdown-body details[open] > :last-child:not(summary) {
+.markdown-body details[open]> :last-child:not(summary) {
     @apply !mb-0;
 }
 
-.markdown-body > :last-child {
+.markdown-body> :last-child {
     @apply !mb-0;
 }
 

@@ -20,8 +20,8 @@ import Navbar from "./components/layout/Navbar/navbar";
 import Footer from "./components/layout/footer";
 import LoaderBar from "./components/loader-bar";
 import ToastAnnouncer from "./components/toast-announcer";
-import { parseLocale } from "./locales";
-import SupportedLocales, { en as en_Metadata, GetLocaleMetadata } from "./locales/meta";
+import { formatLocaleCode, parseLocale } from "./locales";
+import SupportedLocales, { DefaultLocale, GetLocaleMetadata } from "./locales/meta";
 import type { LocaleMetaData } from "./locales/types";
 import ContextProviders from "./providers";
 import ErrorView from "./routes/error-view";
@@ -32,6 +32,7 @@ export interface RootOutletData {
     session: LoggedInUserData | null;
     locale: LocaleMetaData;
     supportedLocales: LocaleMetaData[];
+    defaultLocale: LocaleMetaData;
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -39,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
     return (
         <html
-            lang={data.locale.code}
+            lang={formatLocaleCode(data.locale)}
             dir={data.locale.dir}
             className={data?.theme}
             style={{ scrollBehavior: data?.viewTransitions ? "auto" : "smooth" }}
@@ -119,8 +120,9 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
-        locale: currLocale || en_Metadata,
+        locale: currLocale || DefaultLocale,
         supportedLocales: SupportedLocales,
+        defaultLocale: DefaultLocale,
     };
 }
 

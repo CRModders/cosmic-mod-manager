@@ -1,5 +1,6 @@
 import { cn } from "@root/utils";
-import { SITE_NAME_LONG } from "@shared/config";
+import { useUrlLocale } from "@root/utils/urls";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
 import { GlobeIcon, Settings2Icon } from "lucide-react";
 import { useState } from "react";
 import type { LinkProps } from "react-router";
@@ -7,20 +8,23 @@ import { BrandIcon } from "~/components/icons";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { useRootData } from "~/hooks/root-data";
-import { useTranslation } from "~/locales/provider";
+import { formatLocaleCode } from "~/locales";
+import SupportedLocales from "~/locales/meta";
+import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
 import { buttonVariants } from "../ui/button";
 import { DotSeparator } from "../ui/separator";
 import ThemeSwitch from "../ui/theme-switcher";
 import "./styles.css";
 
 export default function Footer() {
-    const { t } = useTranslation();
+    const ctx = useRootData();
+    const { t, changeLocale } = useTranslation();
     const footer = t.footer;
     const legal = t.legal;
 
     return (
-        <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-16 mx-auto">
-            <div className="footer-grid container gap-y-5">
+        <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-8 mx-auto">
+            <div className="footer-grid container gap-y-5 pb-12">
                 <LinksColumn area="logo">
                     <span className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none" title={SITE_NAME_LONG}>
                         <BrandIcon size="2.75rem" aria-label="CRMM Logo" />
@@ -88,6 +92,34 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+
+            <div className="container flex items-center justify-start gap-x-3 gap-y-2">
+                <span>{t.footer.siteOfferedIn(SITE_NAME_SHORT)}</span>
+
+                {SupportedLocales.map((locale) => {
+                    const region = locale.region;
+                    const label = region ? `${locale.nativeName} (${region.displayName})` : locale.nativeName;
+
+                    const isCurrLocale = formatLocaleCode(locale) === useUrlLocale();
+
+                    return (
+                        <Link
+                            key={formatLocaleCode(locale)}
+                            to={formatUrlWithLocalePrefix(locale, isCurrLocale === true)}
+                            className="link_blue hover:underline"
+                            aria-label={label}
+                            title={label}
+                            preventScrollReset
+                            escapeUrlWrapper
+                            onClick={() => {
+                                changeLocale(formatLocaleCode(locale));
+                            }}
+                        >
+                            {locale.nativeName}
+                        </Link>
+                    );
+                })}
+            </div>
         </footer>
     );
 }
@@ -118,7 +150,7 @@ function LinksColumn({ children, area }: { area: string; children: React.ReactNo
 
 export function LangSwitcher() {
     const ctx = useRootData();
-    const [currLang, setCurrLang] = useState(ctx.locale.code);
+    const [currLang, setCurrLang] = useState(formatLocaleCode(ctx.locale));
     const { changeLocale } = useTranslation();
     const navigate = useNavigate(true);
 
@@ -138,20 +170,24 @@ export function LangSwitcher() {
             <SelectContent>
                 <SelectGroup>
                     {ctx.supportedLocales?.map((locale) => {
+                        const region = locale.region;
+                        const label = region ? `${locale.nativeName} (${region.displayName})` : locale.nativeName;
+
                         return (
                             <SelectItem
                                 key={locale.code}
-                                value={locale.code}
-                                aria-label={`${locale.nativeName} (${locale.region.displayName})`}
+                                value={formatLocaleCode(locale)}
+                                aria-label={label}
+                                title={`${label} => /${formatLocaleCode(locale)}`}
                             >
                                 <div className="w-full flex items-center justify-center gap-1.5">
                                     <span className="flex items-end justify-center align-bottom">{locale.nativeName}</span>
-                                    {locale.region && (
+                                    {region ? (
                                         <>
                                             <DotSeparator className="bg-extra-muted-foreground" />
-                                            <span className="text-sm text-muted-foreground/85">{locale.region.displayName}</span>
+                                            <span className="text-sm text-muted-foreground/85">{region.displayName}</span>
                                         </>
-                                    )}
+                                    ) : null}
                                 </div>
                             </SelectItem>
                         );

@@ -1,32 +1,29 @@
+import { formatLocaleCode } from ".";
 import type { LocaleMetaData } from "./types";
 
-export const en = meta({
-    code: "en",
-    name: "English",
-    nativeName: "English",
-    dir: "ltr",
-    region: {
-        code: "GB",
-        name: "United Kingdom",
-        displayName: "UK",
-    },
-});
+const SupportedLocales = [
+    meta({
+        code: "en",
+        name: "English",
+        nativeName: "English",
+        dir: "ltr",
+    }),
 
-export const es = meta({
-    code: "es",
-    name: "Spanish",
-    nativeName: "Español",
-    dir: "ltr",
-    region: {
-        code: "ES",
-        name: "Spain",
-        displayName: "España",
-    },
-});
-
-const SupportedLocales = [en, es];
+    meta({
+        code: "es",
+        name: "Spanish",
+        nativeName: "Español",
+        dir: "ltr",
+        region: {
+            code: "ES",
+            name: "Spain",
+            displayName: "España",
+        },
+    }),
+];
 
 export default SupportedLocales;
+export const DefaultLocale = SupportedLocales[0];
 
 // Helpers
 function meta(locale: LocaleMetaData) {
@@ -34,5 +31,5 @@ function meta(locale: LocaleMetaData) {
 }
 
 export function GetLocaleMetadata(code: string) {
-    return SupportedLocales.find((locale) => locale.code === code);
+    return SupportedLocales.find((locale) => locale.code === code || formatLocaleCode(locale) === code);
 }

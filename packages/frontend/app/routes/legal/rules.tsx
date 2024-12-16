@@ -14,7 +14,7 @@ export default function ContentRules() {
     return (
         <MarkdownRenderBox
             className="bg-card-background bright-heading p-6 pt-0 rounded-lg"
-            text={t.legal.rules({
+            text={t.legal.contentRules({
                 title: t.legal.rulesTitle,
                 supportEmail: "support@crmm.tech",
                 privacyPageUrl: PageUrl("legal/privacy"),

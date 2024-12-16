@@ -1,8 +1,10 @@
 import type { RouteConfig } from "@react-router/dev/routes";
 import { remixRoutesOptionAdapter } from "@react-router/remix-routes-option-adapter";
+import { formatLocaleCode } from "./locales";
+import SupportedLocales from "./locales/meta";
 
 const ProjectTypes = ["project", "mod", "modpack", "shader", "resource-pack", "datamod", "plugin"];
-const langs = ["en", "es"];
+const langs = SupportedLocales.map((locale) => formatLocaleCode(locale));
 
 export default remixRoutesOptionAdapter((defineRoutes) => {
     return defineRoutes((route) => {
