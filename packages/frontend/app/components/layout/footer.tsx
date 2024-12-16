@@ -93,7 +93,7 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="container flex items-center justify-start gap-x-3 gap-y-2">
+            <div className="container flex items-center justify-start gap-x-3 gap-y-2 text-[small]">
                 <span>{t.footer.siteOfferedIn(SITE_NAME_SHORT)}</span>
 
                 {SupportedLocales.map((locale) => {
