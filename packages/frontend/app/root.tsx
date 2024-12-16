@@ -4,7 +4,7 @@ import clientFetch from "@root/utils/client-fetch";
 import Config from "@root/utils/config";
 import { MetaTags } from "@root/utils/meta";
 import { resJson, serverFetch } from "@root/utils/server-fetch";
-import { useUrlLocale } from "@root/utils/urls";
+import { PageUrl, removeLeading, useUrlLocale } from "@root/utils/urls";
 import { SITE_NAME_LONG } from "@shared/config";
 import type { LoggedInUserData } from "@shared/types";
 import { useEffect, useMemo } from "react";
@@ -99,6 +99,7 @@ export default function App() {
 }
 
 export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletData> {
+    const reqUrl = new URL(request.url);
     let session: LoggedInUserData | null = null;
     const cookie = request.headers.get("Cookie") || "";
 
@@ -114,13 +115,35 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     const theme = getThemeFromCookie(themePref);
     const viewTransitions = getCookie("viewTransitions", cookie) === "true";
 
-    const currLocale = GetLocaleMetadata(parseLocale(useUrlLocale(true, new URL(request.url).pathname)));
+    const urlLocalePrefix = useUrlLocale(true, reqUrl.pathname);
+    const urlLocale = GetLocaleMetadata(parseLocale(urlLocalePrefix)) || DefaultLocale;
+    const cookieLocale = GetLocaleMetadata(parseLocale(getCookie("locale", cookie) || "")) || DefaultLocale;
+
+    let currLocale = urlLocale;
+    if (!urlLocalePrefix) {
+        currLocale = cookieLocale;
+    }
+
+    // If there's no lang prefix and user has a non default localse set, redirect to the url with user's locale prefix
+    if (!urlLocalePrefix.length && formatLocaleCode(cookieLocale) !== formatLocaleCode(urlLocale)) {
+        const localeFormattedPath = PageUrl(reqUrl.pathname, undefined, formatLocaleCode(currLocale));
+        const redirectUrl = new URL(localeFormattedPath, Config.FRONTEND_URL);
+        throw Response.redirect(redirectUrl, 302);
+    }
+
+    // If the url prefix is same as the default and the user's set locale is the same as the default,
+    // redirect to the url without the default locale prefix
+    if (urlLocalePrefix === formatLocaleCode(DefaultLocale) && urlLocalePrefix === formatLocaleCode(cookieLocale)) {
+        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(formatLocaleCode(DefaultLocale), "");
+        const redirectUrl = new URL(pathWithoutDefaultLocale, Config.FRONTEND_URL);
+        throw Response.redirect(redirectUrl, 302);
+    }
 
     return {
         theme,
         viewTransitions,
         session: session as LoggedInUserData | null,
-        locale: currLocale || DefaultLocale,
+        locale: currLocale,
         supportedLocales: SupportedLocales,
         defaultLocale: DefaultLocale,
     };

@@ -1,6 +1,14 @@
 import { cn } from "@root/utils";
 import { projectTypes } from "@shared/config/project";
-import { defaultSortBy, pageOffsetParamNamespace, searchQueryParamNamespace, sortByParamNamespace } from "@shared/config/search";
+import {
+    MAX_SEARCH_LIMIT,
+    defaultSearchLimit,
+    defaultSortBy,
+    pageOffsetParamNamespace,
+    searchLimitParamNamespace,
+    searchQueryParamNamespace,
+    sortByParamNamespace,
+} from "@shared/config/search";
 import { Capitalize } from "@shared/lib/utils";
 import { getProjectTypeFromName } from "@shared/lib/utils/convertors";
 import { ProjectType, SearchResultSortMethod } from "@shared/types";
@@ -47,6 +55,7 @@ export default function SearchPageLayout() {
     // Param values
     const searchQuery = searchParams.get(searchQueryParamNamespace) || "";
     const sortBy = searchParams.get(sortByParamNamespace);
+    const showPerPage = searchParams.get(searchLimitParamNamespace);
 
     // Search box focus
     const handleSearchInputFocus = (e: KeyboardEvent) => {
@@ -93,12 +102,12 @@ export default function SearchPageLayout() {
                                 navigate(urlPathname, { viewTransition: false });
                             }}
                             placeholder={`${searchLabel}...`}
-                            className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
+                            className="text-md font-medium !pl-9 focus:[&>kbd]:invisible"
                             id="search-input"
                             aria-label={searchLabel}
                         />
 
-                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 bg-card-background px-1 rounded-[0.2rem] font-mono">
+                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1 rounded-[0.3rem] bg-shallower-background/50 border border-shallower-background/85">
                             /
                         </kbd>
                     </label>
@@ -117,7 +126,7 @@ export default function SearchPageLayout() {
                         }}
                         name="sort-by"
                     >
-                        <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted" aria-label="sort-by">
+                        <SelectTrigger className="w-48 lg:min-w-58 dark:text-foreground-muted" title={t.search.sortBy}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -133,6 +142,37 @@ export default function SearchPageLayout() {
                                     return (
                                         <SelectItem key={option} value={option}>
                                             {t.search[option]}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        value={showPerPage || defaultSearchLimit.toString()}
+                        onValueChange={(val) => {
+                            const urlPathname = updateSearchParam({
+                                key: searchLimitParamNamespace,
+                                value: val,
+                                deleteIfMatches: `${defaultSearchLimit}`,
+                                newParamsInsertionMode: "replace",
+                            });
+                            navigate(urlPathname, { viewTransition: false });
+                        }}
+                        name="Show per page"
+                    >
+                        <SelectTrigger className="w-fit dark:text-foreground-muted" title={t.search.showPerPage}>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel className="text-foreground font-bold">{t.search.showPerPage}</SelectLabel>
+                                {[10, defaultSearchLimit, 50, MAX_SEARCH_LIMIT].map((option) => {
+                                    const optionStr = option.toString();
+                                    return (
+                                        <SelectItem key={option} value={optionStr}>
+                                            {optionStr}
                                         </SelectItem>
                                     );
                                 })}

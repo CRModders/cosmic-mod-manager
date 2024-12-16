@@ -17,20 +17,22 @@ export function SearchResultsPage() {
 
     const location = useLocation();
     const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type === typeStr ? type : undefined));
+    let showPerPage = Number.parseInt(searchParams.get("perPage") || defaultSearchLimit.toString());
+    if (!isNumber(showPerPage)) showPerPage = defaultSearchLimit;
 
-    const refetchSearchResults = async () => {
-        await searchResult.refetch();
-    };
-
-    const pagesCount = Math.ceil((searchResult.data?.estimatedTotalHits || 0) / defaultSearchLimit);
+    const pagesCount = Math.ceil((searchResult.data?.estimatedTotalHits || 0) / showPerPage);
     const pageOffsetParamValue = searchParams.get(pageOffsetParamNamespace);
     let activePage = pageOffsetParamValue ? Number.parseInt(pageOffsetParamValue || "1") : 1;
     if (!isNumber(activePage)) activePage = 1;
 
     const pagination =
-        (searchResult.data?.estimatedTotalHits || 0) > defaultSearchLimit ? (
+        (searchResult.data?.estimatedTotalHits || 0) > showPerPage ? (
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageOffsetParamNamespace} />
         ) : null;
+
+    async function refetchSearchResults() {
+        await searchResult.refetch();
+    }
 
     useEffect(() => {
         refetchSearchResults();
@@ -66,6 +68,7 @@ export function SearchResultsPage() {
                         datePublished={new Date(project.datePublished)}
                         showDatePublished={searchParams.get(sortByParamNamespace) === SearchResultSortMethod.RECENTLY_PUBLISHED}
                         author={project?.author || ""}
+                        isOrgOwned={project.isOrgOwned}
                     />
                 ))}
             </section>

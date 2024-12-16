@@ -1,14 +1,13 @@
-import { cn } from "@root/utils";
-import { useUrlLocale } from "@root/utils/urls";
+import { cn, setCookie } from "@root/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@shared/config";
-import { GlobeIcon, Settings2Icon } from "lucide-react";
+import { ArrowUpRightIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { LinkProps } from "react-router";
+import { type LinkProps, useLocation } from "react-router";
 import { BrandIcon } from "~/components/icons";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { useRootData } from "~/hooks/root-data";
-import { formatLocaleCode } from "~/locales";
+import { formatLocaleCode, parseLocale } from "~/locales";
 import SupportedLocales from "~/locales/meta";
 import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
 import { buttonVariants } from "../ui/button";
@@ -17,10 +16,12 @@ import ThemeSwitch from "../ui/theme-switcher";
 import "./styles.css";
 
 export default function Footer() {
-    const ctx = useRootData();
     const { t, changeLocale } = useTranslation();
     const footer = t.footer;
     const legal = t.legal;
+
+    // Just to trigger a re-render when the url changes to keep the locale in sync
+    useLocation();
 
     return (
         <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-8 mx-auto">
@@ -53,6 +54,7 @@ export default function Footer() {
 
                     <FooterLink to="https://docs.crmm.tech" aria-label={footer.docs} target="_blank">
                         {footer.docs}
+                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
                     </FooterLink>
 
                     <FooterLink to="/status" aria-label={footer.status}>
@@ -61,6 +63,7 @@ export default function Footer() {
 
                     <FooterLink to="mailto:support@crmm.tech" aria-label={footer.support} target="_blank">
                         {footer.support}
+                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
                     </FooterLink>
                 </LinksColumn>
 
@@ -72,10 +75,12 @@ export default function Footer() {
 
                     <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
                         Github
+                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
                     </FooterLink>
 
                     <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite" target="_blank">
                         Discord
+                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
                     </FooterLink>
                 </LinksColumn>
 
@@ -100,19 +105,20 @@ export default function Footer() {
                     const region = locale.region;
                     const label = region ? `${locale.nativeName} (${region.displayName})` : locale.nativeName;
 
-                    const isCurrLocale = formatLocaleCode(locale) === useUrlLocale();
+                    const formattedCode = formatLocaleCode(locale);
 
                     return (
                         <Link
-                            key={formatLocaleCode(locale)}
-                            to={formatUrlWithLocalePrefix(locale, isCurrLocale === true)}
+                            key={formattedCode}
+                            to={formatUrlWithLocalePrefix(locale)}
                             className="link_blue hover:underline"
                             aria-label={label}
                             title={label}
                             preventScrollReset
                             escapeUrlWrapper
                             onClick={() => {
-                                changeLocale(formatLocaleCode(locale));
+                                setLocaleCookie(formattedCode);
+                                changeLocale(formattedCode);
                             }}
                         >
                             {locale.nativeName}
@@ -133,7 +139,7 @@ function FooterLink({ children, ...props }: LinkProps) {
         <Link
             {...props}
             prefetch="viewport"
-            className="w-fit flex items-center justify-center lg:justify-start gap-2 leading-none text-muted-foreground hover:text-foreground hover:underline"
+            className="w-fit flex items-center justify-center lg:justify-start gap-1 leading-none text-muted-foreground hover:text-foreground hover:underline"
         >
             {children}
         </Link>
@@ -161,6 +167,7 @@ export function LangSwitcher() {
     return (
         <Select
             onValueChange={(value: string) => {
+                setLocaleCookie(parseLocale(value));
                 changeLocale(value, navigate);
             }}
             value={currLang}
@@ -199,4 +206,8 @@ export function LangSwitcher() {
             </SelectContent>
         </Select>
     );
+}
+
+function setLocaleCookie(locale: string) {
+    setCookie("locale", locale);
 }

@@ -46,7 +46,9 @@ const requiredProjectFields = {
     color: true,
     ...teamSelect,
     organisation: {
-        select: teamSelect,
+        select: {
+            name: true,
+        },
     },
     gallery: {
         where: {
@@ -76,6 +78,7 @@ export interface ProjectSearchDocument {
     author: string;
     featured_gallery: string | null;
     color: string | null;
+    isOrgOwned: boolean;
 }
 
 async function syncProjects(cursor: null | string) {
@@ -101,7 +104,7 @@ async function syncProjects(cursor: null | string) {
         for (const project of projects) {
             if (project.gameVersions.length === 0) continue;
 
-            const author = project.team.members?.[0] || project.organisation?.team.members?.[0];
+            const author = project.organisation?.name || project.team.members?.[0]?.user?.userName;
             const featured_gallery = project.gallery[0] ? projectGalleryFileUrl(project.id, project.gallery[0].thumbnailFileId) : null;
 
             formattedProjectsData.push({
@@ -120,11 +123,12 @@ async function syncProjects(cursor: null | string) {
                 datePublished: project.datePublished,
                 dateUpdated: project.dateUpdated,
                 openSource: !!project.projectSourceUrl,
-                author: author?.user?.userName,
                 clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
                 serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
                 featured_gallery: featured_gallery,
                 color: project.color,
+                author: author,
+                isOrgOwned: !!project.organisation?.name,
             });
         }
 

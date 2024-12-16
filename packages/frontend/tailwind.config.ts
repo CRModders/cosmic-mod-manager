@@ -53,6 +53,7 @@ export default {
                 base: "var(--font-base)",
                 md: "var(--font-md)",
                 lg: "var(--font-lg)",
+                "lg-plus": "var(--font-lg-plus)",
                 xl: "var(--font-xl)",
                 "2xl": "var(--font-2xl)",
             },

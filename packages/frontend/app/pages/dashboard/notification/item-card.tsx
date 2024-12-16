@@ -123,7 +123,7 @@ export function TeamInviteNotification({
 
                 <TooltipProvider>
                     <div className="flex items-center justify-center gap-2">
-                        {concise === true && (
+                        {notification.read === false && concise === true && (
                             <>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
@@ -199,8 +199,7 @@ export function TeamInviteNotification({
                     </div>
                 </TooltipProvider>
             </div>
-
-            {concise === false && (
+            {notification.read === false && concise === false && (
                 <div className="w-fit flex items-center justify-start gap-x-2 gap-y-1">
                     <Button size="sm" disabled={!!isLoading} onClick={acceptInvite}>
                         {isLoading === "accept" ? (

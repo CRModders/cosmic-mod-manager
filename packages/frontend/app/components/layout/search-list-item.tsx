@@ -1,9 +1,9 @@
 import { cn, imageUrl } from "@root/utils";
-import { ProjectPagePath, UserProfilePath } from "@root/utils/urls";
+import { OrgPagePath, ProjectPagePath, UserProfilePath } from "@root/utils/urls";
 import { CapitalizeAndFormatString, getProjectCategoriesDataFromNames } from "@shared/lib/utils";
 import { getLoadersFromNames } from "@shared/lib/utils/convertors";
 import type { ProjectSupport } from "@shared/types";
-import { CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
+import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
 import { TagIcon } from "~/components/tag-icons";
 import { ImgWrapper } from "~/components/ui/avatar";
 import Link from "~/components/ui/link";
@@ -38,6 +38,7 @@ interface SearchListItemProps {
     showDatePublished?: boolean;
     viewType?: ViewType;
     vtId: string; // View Transition ID
+    isOrgOwned?: boolean;
 }
 
 export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
@@ -106,25 +107,25 @@ function BaseView(props: SearchListItemProps) {
                 />
             </Link>
 
-            <div
-                className={cn("h-fit flex flex-wrap gap-x-1 items-baseline justify-start", galleryViewType && "mr-card-surround flex-col")}
-                style={{ gridArea: "title" }}
-            >
+            <div className={cn("h-fit", galleryViewType && "mr-card-surround")} style={{ gridArea: "title" }}>
                 <Link
                     to={projectPageUrl}
-                    className="text-xl font-bold leading-none break-words sm:text-wrap mr-1"
+                    className={cn("w-fit text-xl font-bold leading-none break-words sm:text-wrap", galleryViewType && "block")}
                     aria-label={props.projectName}
                 >
                     {props.projectName}
-                </Link>
-
+                </Link>{" "}
                 {props.author && (
-                    <span className="">
+                    <>
                         by{" "}
-                        <Link to={UserProfilePath(props.author)} className="underline hover:brightness-110">
-                            {props.author}
+                        <Link
+                            to={props.isOrgOwned ? OrgPagePath(props.author) : UserProfilePath(props.author)}
+                            className="underline hover:brightness-110"
+                            title={props.isOrgOwned ? `${props.author} (${t.project.organization})` : props.author}
+                        >
+                            {props.author} {props.isOrgOwned && <Building2Icon className="inline w-4 h-4" />}
                         </Link>
-                    </span>
+                    </>
                 )}
             </div>
 
@@ -143,22 +144,30 @@ function BaseView(props: SearchListItemProps) {
                 style={{ gridArea: "tags" }}
             >
                 {projectCategoriesData.map((category) => {
+                    // @ts-ignore
+                    const tagName = t.search.tags[category.name] || CapitalizeAndFormatString(category.name);
+
                     return (
-                        <span className="flex gap-1 items-center justify-center" key={category.name} aria-label={category.name}>
+                        <span
+                            className="flex gap-1 items-center justify-center"
+                            key={category.name}
+                            aria-label={category.name}
+                            title={`${tagName} (${CapitalizeAndFormatString(category.header)})`}
+                        >
                             <TagIcon name={category.name} />
-                            {/* @ts-ignore */}
-                            {t.search.tags[category.name] || CapitalizeAndFormatString(category.name)}
+                            {tagName}
                         </span>
                     );
                 })}
 
                 {loadersData.map((loader) => {
                     if (loader.metadata.visibleInTagsList === false) return null;
+                    const loaderName = CapitalizeAndFormatString(loader.name);
 
                     return (
-                        <span key={loader.name} className="flex gap-1 items-center justify-center" aria-label={loader.name}>
+                        <span key={loader.name} className="flex gap-1 items-center justify-center" title={`${loaderName} (Loader)`}>
                             <TagIcon name={loader.name} />
-                            {CapitalizeAndFormatString(loader.name)}
+                            {loaderName}
                         </span>
                     );
                 })}
@@ -170,20 +179,20 @@ function BaseView(props: SearchListItemProps) {
                     gridArea: "stats",
                 }}
             >
-                <div className="flex flex-wrap justify-end items-end gap-x-5">
-                    <div className="h-fit flex items-center justify-end gap-1.5">
-                        <DownloadIcon className="w-[1.17rem] h-[1.17rem]" />
-                        <p className="flex items-baseline justify-center gap-1">
-                            <strong className="text-lg">{props.downloads}</strong>
-                            {!galleryViewType && <span className="hidden sm:inline-block">downloads</span>}
+                <div className={cn("grow flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
+                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                        <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
+                        <p>
+                            <strong className="text-lg-plus font-extrabold">{props.downloads}</strong>{" "}
+                            {!galleryViewType && <span className="hidden sm:inline lowercase">{t.search.downloads}</span>}
                         </p>
                     </div>
 
-                    <div className="h-fit flex items-center justify-end gap-1.5">
-                        <HeartIcon className="w-[1.13rem] h-[1.13rem]" />
-                        <p className="flex items-baseline justify-center gap-1">
-                            <strong className="text-lg">{props.followers}</strong>
-                            {!galleryViewType && <span className="hidden sm:inline-block">followers</span>}
+                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                        <HeartIcon className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
+                        <p>
+                            <strong className="text-lg-plus font-extrabold">{props.followers}</strong>{" "}
+                            {!galleryViewType && <span className="hidden sm:inline">{t.search.followers}</span>}
                         </p>
                     </div>
                 </div>
@@ -198,7 +207,7 @@ function BaseView(props: SearchListItemProps) {
                     <TooltipProvider>
                         {props.showDatePublished === true ? (
                             <Tooltip>
-                                <CalendarIcon className="w-[1.1rem] h-[1.1rem]" />
+                                <CalendarIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
                                         {t.project.publishedAt(TimePassedSince({ date: props.datePublished }))}
@@ -210,8 +219,7 @@ function BaseView(props: SearchListItemProps) {
                             </Tooltip>
                         ) : (
                             <Tooltip>
-                                <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem]" />
-
+                                <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
                                         {t.project.updatedAt(TimePassedSince({ date: props.dateUpdated }))}

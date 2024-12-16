@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import { parseLocale } from "~/locales";
+import { DefaultLocale } from "~/locales/meta";
 
 export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
     if (exactEnds === true) {
@@ -18,7 +19,7 @@ export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
     const matchString = match ? match[0] : "";
 
     let urlPrefix = parseLocale(removeLeading("/", matchString));
-    if (urlPrefix === "en" && !matchString.includes("en")) urlPrefix = "";
+    if (urlPrefix === DefaultLocale.code && !matchString.includes(DefaultLocale.code)) urlPrefix = "";
 
     if (trimLeadingSlash === true) return urlPrefix;
     return prepend("/", urlPrefix);
@@ -41,12 +42,13 @@ export function usePathname() {
  *
  * @param _path - The main path segment of the URL.
  * @param extra - An optional additional path segment to append to the URL.
+ * @param prefix - An optional language prefix to prepend to the URL.
  * @returns The constructed URL path as a string.
  */
-export function PageUrl(_path: string, extra?: string) {
+export function PageUrl(_path: string, extra?: string, prefix?: string) {
     if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
 
-    const langPrefix = useUrlLocale(false);
+    const langPrefix = typeof prefix === "string" ? prefix : useUrlLocale(false);
     let p = _path === "/" ? "" : prepend("/", _path);
 
     // Make sure not to overwrite the language prefix if it already exists
@@ -95,12 +97,14 @@ export function append(str: string, path: string) {
 }
 
 export function removeLeading(str: string, path: string) {
+    if (!str.length) return path;
     if (!path.startsWith(str)) return path;
 
-    return removeLeading(str, path.slice(str.length));
+    return removeLeading(str, path.slice(str.length || 1));
 }
 
 export function removeTrailing(str: string, path: string) {
+    if (!str.length) return path;
     if (!path.endsWith(str)) return path;
 
     return removeTrailing(str, path.slice(0, -1 * str.length));

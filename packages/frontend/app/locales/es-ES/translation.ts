@@ -159,6 +159,7 @@ export default {
         datamod: "Buscar datamods",
 
         // Sorting methods
+        showPerPage: "Mostrar por página",
         sortBy: "Ordenar por",
         relevance: "Relevancia",
         downloads: "Descargas",
@@ -166,6 +167,7 @@ export default {
         recently_updated: "Recientemente actualizado",
         recently_published: "Recientemente publicado",
 
+        followers: "Seguidores",
         filters: "Filtros",
         searchFilters: "Filtros de búsqueda",
         loaders: "Cargadores",

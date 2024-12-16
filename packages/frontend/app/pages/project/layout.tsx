@@ -470,6 +470,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                     <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{projectData.followers}</span>
                 </div>
+
                 {(projectData.featuredCategories?.length || 0) > 0 ? (
                     <div className="hidden md:flex items-center gap-3 pr-4">
                         <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />

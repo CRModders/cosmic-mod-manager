@@ -9,6 +9,7 @@
     --font-base: 1rem;
     --font-md: 1.125rem;
     --font-lg: 1.17rem;
+    --font-lg-plus: 1.25rem;
     --font-xl: 1.5rem;
     --font-2xl: 2.17rem;
 
@@ -181,11 +182,7 @@ body.no-scrollbar {
 
     .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
         --surround-width: 0.17rem;
-        box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) #3b82f6;
-    }
-
-    .dark .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
-        box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) #60a5fa;
+        box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) hsla(var(--accent-background));
     }
 
     .input_box_styles:not(.no_input_box_styles) {
@@ -215,16 +212,6 @@ body.no-scrollbar {
         @apply link_blue hover:underline hover:brightness-110;
     }
 
-    a {
-        text-underline-offset: 2px;
-    }
-
-    a,
-    button,
-    input[type="checkbox"] {
-        transition: font-size 150ms ease;
-        @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
-    }
 
     .items-baseline-with-fallback {
         align-items: center;
@@ -241,6 +228,26 @@ body.no-scrollbar {
     .text-shadow {
         text-shadow: 1px 1px 8px black, -1px -1px 8px black;
     }
+}
+
+a {
+    text-underline-offset: 2px;
+}
+
+a,
+button,
+input[type="checkbox"] {
+    transition: font-size 150ms ease;
+    @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
+}
+
+.lucide-arrow-up-right {
+    transition: translate 250ms ease;
+}
+
+a:hover .lucide-arrow-up-right,
+a:focus-visible .lucide-arrow-up-right {
+    translate: 0.1rem -0.1rem;
 }
 
 .thin-scrollbar {

@@ -161,6 +161,7 @@ export interface ProjectListItem {
     color: string | null;
 
     author?: string; // The author's username
+    isOrgOwned?: boolean;
 }
 
 export interface Notification {
