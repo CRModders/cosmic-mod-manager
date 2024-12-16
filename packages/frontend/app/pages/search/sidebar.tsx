@@ -63,7 +63,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
     const _navigate = useNavigate();
 
     function navigate(to: string) {
-        return _navigate(to, { replace: true, preventScrollReset: true });
+        return _navigate(to, { viewTransition: true, preventScrollReset: true });
     }
 
     // Labels

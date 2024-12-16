@@ -38,6 +38,7 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }: Pagina
             !isActive && "bg-card-background hover:bg-card-background/70 dark:bg-shallow-background dark:hover:bg-shallow-background/85",
             className,
         )}
+        viewTransition={false}
         {...props}
     />
 );

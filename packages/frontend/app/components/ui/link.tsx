@@ -19,7 +19,7 @@ const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>(({ escapeUrlWr
     let to = props.to;
     if (escapeUrlWrapper !== true) to = PageUrl(to.toString());
 
-    return <RemixLink ref={ref} {...props} to={to} viewTransition={viewTransitions} />;
+    return <RemixLink viewTransition={viewTransitions} ref={ref} {...props} to={to} />;
 });
 export default Link;
 

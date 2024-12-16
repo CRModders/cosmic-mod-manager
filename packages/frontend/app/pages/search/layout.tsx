@@ -90,7 +90,7 @@ export default function SearchPageLayout() {
                                     newParamsInsertionMode: "replace",
                                     customURLModifier: deletePageOffsetParam,
                                 });
-                                navigate(urlPathname);
+                                navigate(urlPathname, { viewTransition: false });
                             }}
                             placeholder={`${searchLabel}...`}
                             className="text-lg font-semibold !pl-9 focus:[&>kbd]:invisible"
@@ -113,7 +113,7 @@ export default function SearchPageLayout() {
                                 newParamsInsertionMode: "replace",
                                 customURLModifier: deletePageOffsetParam,
                             });
-                            navigate(urlPathname);
+                            navigate(urlPathname, { viewTransition: false });
                         }}
                         name="sort-by"
                     >
