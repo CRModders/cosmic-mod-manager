@@ -10,7 +10,7 @@ export default {
     challenging: "Desafiante",
     "colored-lighting": "Iluminación coloreada",
     combat: "Combate",
-    "core-shaders": "Shaders principales",
+    "core-shaders": "Shaders integrados",
     cursed: "Extravagante",
     decoration: "Decoración",
     economy: "Economía",
