@@ -1,5 +1,5 @@
 import { cn } from "@root/utils";
-import { defaultSearchLimit, pageOffsetParamNamespace, sortByParamNamespace } from "@shared/config/search";
+import { defaultSearchLimit, pageOffsetParamNamespace, searchLimitParamNamespace, sortByParamNamespace } from "@shared/config/search";
 import { isNumber } from "@shared/lib/utils";
 import { SearchResultSortMethod } from "@shared/types";
 import type { ProjectListItem } from "@shared/types/api";
@@ -17,7 +17,7 @@ export function SearchResultsPage() {
 
     const location = useLocation();
     const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type === typeStr ? type : undefined));
-    let showPerPage = Number.parseInt(searchParams.get("perPage") || defaultSearchLimit.toString());
+    let showPerPage = Number.parseInt(searchParams.get(searchLimitParamNamespace) || defaultSearchLimit.toString());
     if (!isNumber(showPerPage)) showPerPage = defaultSearchLimit;
 
     const pagesCount = Math.ceil((searchResult.data?.estimatedTotalHits || 0) / showPerPage);
