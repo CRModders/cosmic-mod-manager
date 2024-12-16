@@ -33,12 +33,12 @@ export function useProjectData(): ProjectContextData {
     if (!loaderData?.projectData?.id)
         // @ts-ignore
         return {
-            projectSlug: loaderData.projectSlug || "",
+            projectSlug: loaderData?.projectSlug || "",
             projectType: projectType,
         };
 
     // Formatting the loader data
-    const project = loaderData.projectData as ProjectDetailsData;
+    const project = loaderData?.projectData as ProjectDetailsData;
 
     const featuredProjectVersions: ProjectVersionData[] = [];
     for (const version of loaderData.versions || []) {
@@ -79,7 +79,7 @@ export function useProjectType() {
 
     const typeIndex = langPrefix.length ? 2 : 1;
     let typeStr = pathname?.split("/")[typeIndex];
-    if (typeStr.endsWith("s")) typeStr = typeStr.slice(0, -1);
+    if (typeStr?.endsWith("s")) typeStr = typeStr.slice(0, -1);
 
     return typeStr === "project" ? "project" : getProjectTypeFromName(typeStr);
 }
