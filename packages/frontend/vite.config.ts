@@ -23,7 +23,14 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                experimentalMinChunkSize: 5_000, // 5kb
+                experimentalMinChunkSize: 33_000, // 5kb
+                format: "es",
+                manualChunks: (id) => {
+                    if (id.includes("node_modules")) {
+                        return "vendor";
+                    }
+                    return "app";
+                },
             },
         },
     },
