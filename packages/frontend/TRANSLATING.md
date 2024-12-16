@@ -27,7 +27,7 @@
     ```
 
 > [!NOTE]
-> Only add the `region` field if you are adding a regional variant of a language, otherwise you can omit that field.
+> Add the `region` field only if you are adding a regional variant of a language, otherwise you can omit that field.
 
 
 2. Create the language folder in `/packages/frontend/app/locales` directory. \
