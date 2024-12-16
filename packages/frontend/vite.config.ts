@@ -20,5 +20,12 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                experimentalMinChunkSize: 5_000, // 5kb
+            },
+        },
+    },
     plugins: [reactRouter(), tsconfigPaths()],
 });
