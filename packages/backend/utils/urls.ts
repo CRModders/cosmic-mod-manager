@@ -15,17 +15,17 @@ export function projectIconUrl(projectId: string, icon: string | null) {
     if (icon.startsWith("http")) return icon;
 
     // Otherwise, construct and return the CDN URL
-    return cdnUrl(`${projectId}/${icon}`);
+    return cdnUrl(`project/${projectId}/${icon}`);
 }
 
 export function projectGalleryFileUrl(projectId: string, galleryFile: string) {
     if (galleryFile.startsWith("http")) return galleryFile;
-    return cdnUrl(`${projectId}/gallery/${encodeURIComponent(galleryFile)}`);
+    return cdnUrl(`project/${projectId}/gallery/${encodeURIComponent(galleryFile)}`);
 }
 
 export function versionFileUrl(projectId: string, versionId: string, fileName: string, useCacheCdn?: boolean) {
     if (fileName.startsWith("http")) return fileName;
-    return cdnUrl(`${projectId}/version/${versionId}/${encodeURIComponent(fileName)}`, useCacheCdn);
+    return cdnUrl(`project/${projectId}/version/${versionId}/${encodeURIComponent(fileName)}`, useCacheCdn);
 }
 
 export function orgIconUrl(orgId: string, icon: string | null) {

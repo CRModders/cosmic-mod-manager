@@ -78,7 +78,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/auth/auth-providers`](/packages/backend/src/auth/router.ts#L28) |
 | DELETE    | [`/auth/sessions`](/packages/backend/src/auth/router.ts#L28) |
 | DELETE    | [`/auth/sessions/{RevokeCode}`](/packages/backend/src/auth/router.ts#L28) |
-| GET    | [`/cdn/data/{projectID}/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
-| GET    | [`/cdn/data/{projectID}/gallery/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
-| GET    | [`/cdn/data/{projectID}/version/{versionID}/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
+| GET    | [`/cdn/data/project/{projectID}/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
+| GET    | [`/cdn/data/project/{projectID}/gallery/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
+| GET    | [`/cdn/data/project/{projectID}/version/{versionID}/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |
 | GET    | [`/cdn/data/organization/{orgID}/{FILE_NAME}`](/packages/backend/src/cdn/router.ts#L22) |

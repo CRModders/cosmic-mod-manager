@@ -19,9 +19,14 @@ export const corsAllowCdn = cors({
 
 cdnRouter.use(corsAllowCdn);
 
+// TODO: Remove these three later and just ust the /project prefix
 cdnRouter.get("/data/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
 cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
 cdnRouter.get("/data/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
+
+cdnRouter.get("/data/project/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
+cdnRouter.get("/data/project/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
+cdnRouter.get("/data/project/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
 
 cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
 cdnRouter.get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get);
