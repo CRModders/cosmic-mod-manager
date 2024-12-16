@@ -22,8 +22,8 @@ const SupportedLocales = [
     }),
         meta({
         code: "es",
-        name: "Spanish (Latin America)",
-        nativeName: "Español (Latinoamérica)",
+        name: "Spanish",
+        nativeName: "Español",
         dir: "ltr",
         region: {
             code: "419",
