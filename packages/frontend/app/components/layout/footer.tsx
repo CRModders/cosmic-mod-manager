@@ -162,7 +162,6 @@ export function LangSwitcher() {
         <Select
             onValueChange={(value: string) => {
                 changeLocale(value, navigate);
-                setCurrLang(value);
             }}
             value={currLang}
         >
