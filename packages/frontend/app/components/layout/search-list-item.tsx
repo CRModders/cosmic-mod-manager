@@ -106,10 +106,10 @@ function BaseView(props: SearchListItemProps) {
                 />
             </Link>
 
-            <div className={cn("h-fit", galleryViewType && "mr-card-surround")} style={{ gridArea: "title" }}>
+            <div className={cn("h-fit mobile-break-words", galleryViewType && "mr-card-surround")} style={{ gridArea: "title" }}>
                 <Link
                     to={projectPageUrl}
-                    className={cn("w-fit text-xl font-bold leading-none break-words sm:text-wrap", galleryViewType && "block")}
+                    className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block")}
                     aria-label={props.projectName}
                 >
                     {props.projectName}
@@ -178,7 +178,7 @@ function BaseView(props: SearchListItemProps) {
                     gridArea: "stats",
                 }}
             >
-                <div className={cn("grow flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
+                <div className={cn("flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p>

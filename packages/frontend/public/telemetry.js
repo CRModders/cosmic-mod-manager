@@ -22,6 +22,7 @@
     const tag = attr(`${_data}tag`);
     const autoTrack = attr(`${_data}auto-track`) !== _false;
     const excludeSearch = attr(`${_data}exclude-search`) === _true;
+    const excludeHash = attr(`${_data}exclude-hash`) === _true;
     const domain = attr(`${_data}domains`) || "";
     const domains = domain.split(",").map((n) => n.trim());
     const endpoint = "https://api-gateway.umami.dev/api/send";
@@ -50,31 +51,35 @@
         return encodeURI(str);
     };
 
-    const parseURL = (url) => {
+    function parseURL(url) {
         try {
             // use location.origin as the base to handle cases where the url is a relative path
             const { pathname, search, hash } = new URL(url, origin);
             url = pathname + search + hash;
-        } catch (e) {
-            /* empty */
+        } catch {
+            url = "";
         }
-        return excludeSearch ? url.split("?")[0] : url;
-    };
 
-    const getPayload = () => ({
-        website,
-        hostname,
-        screen,
-        language,
-        title: encode(title),
-        url: encode(currentUrl),
-        referrer: encode(currentRef),
-        tag: tag ? tag : undefined,
-    });
+        if (excludeSearch) url = url.split("?")[0];
+        if (excludeHash) url = url.split("#")[0];
+        return url;
+    }
+
+    function getPayload() {
+        return {
+            website,
+            hostname,
+            screen,
+            language,
+            title: encode(title),
+            url: encode(currentUrl),
+            referrer: encode(currentRef),
+            tag: tag ? tag : undefined,
+        };
+    }
 
     /* Event handlers */
-
-    const handlePush = (state, title, url) => {
+    function handlePush(state, title, url) {
         if (!url) return;
         currentRef = currentUrl;
         currentUrl = parseURL(url.toString());
@@ -82,9 +87,9 @@
         if (currentUrl !== currentRef) {
             setTimeout(track, delayDuration);
         }
-    };
+    }
 
-    const handlePathChanges = () => {
+    function handlePathChanges() {
         const hook = (_this, method, callback) => {
             const orig = _this[method];
 
@@ -97,7 +102,7 @@
 
         history.pushState = hook(history, "pushState", handlePush);
         history.replaceState = hook(history, "replaceState", handlePush);
-    };
+    }
 
     const handleTitleChanges = () => {
         const observer = new MutationObserver(([entry]) => {

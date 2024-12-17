@@ -1,7 +1,7 @@
 /* ? Search List Item List View*/
 .search-list-item.list {
     display: grid;
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: max-content 1fr;
     grid-template-rows: min-content 1fr min-content min-content;
     grid-template-areas:
         "icon title"
@@ -12,7 +12,7 @@
 
 .search-list-item.gallery {
     display: grid;
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: max-content 1fr;
     grid-template-rows: min-content min-content 1fr min-content min-content;
     grid-template-areas:
         "gallery gallery"
@@ -46,7 +46,7 @@
 /* LG+ */
 @media screen and (min-width: 63rem) {
     .search-list-item.list {
-        grid-template-columns: min-content 1fr min-content;
+        grid-template-columns: max-content 1fr min-content;
         grid-template-rows: min-content 1fr auto;
         grid-template-areas:
             "icon title stats"
@@ -121,5 +121,17 @@
         grid-template-columns: repeat(5, auto);
         grid-template-rows: auto;
         grid-template-areas: "logo links-1 links-2 links-3 buttons buttons";
+    }
+}
+
+.mobile-break-words {
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+@media (min-width: 30rem) {
+    .mobile-break-words {
+        word-break: normal;
+        overflow-wrap: normal;
     }
 }
