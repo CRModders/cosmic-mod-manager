@@ -123,10 +123,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 name="image"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="w-full flex flex-col items-center justify-center">
+                                        <div className="w-full grid grid-cols-1">
                                             <div
                                                 className={cn(
-                                                    "w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-3 gap-x-4 gap-y-2",
+                                                    "flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-3 gap-x-4 gap-y-2",
                                                     field.value && "rounded-b-none",
                                                 )}
                                             >
@@ -148,7 +148,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                     <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
                                                     {field.value ? (
                                                         <div className="flex items-center flex-wrap justify-start gap-x-2">
-                                                            <span className="font-semibold">{field.value.name}</span>
+                                                            <span className="font-semibold break-words break-all">{field.value.name}</span>
                                                         </div>
                                                     ) : (
                                                         <span className="text-muted-foreground italic">{t.form.noFileChosen}</span>
@@ -159,7 +159,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                     htmlFor="gallery-image-input"
                                                     className={cn(buttonVariants({ variant: "secondary-dark" }), "cursor-pointer")}
                                                 >
-                                                    {field.value ? "Replace file" : "Choose file"}
+                                                    {field.value ? t.version.replaceFile : t.version.chooseFile}
                                                 </InteractiveLabel>
                                             </div>
                                             {field.value ? (

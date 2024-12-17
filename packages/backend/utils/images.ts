@@ -11,9 +11,11 @@ interface ResizeProps {
 }
 
 export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
-    let kernel: ResizeProps["kernel"] = props.kernel || sharp.kernel.nearest;
-    if (file.size >= 2048) kernel = sharp.kernel.lanczos3;
+    let defaultKernel: ResizeProps["kernel"] = sharp.kernel.nearest;
+    // Don't use nearest neighbor for large images
+    if (file.size >= 512) defaultKernel = sharp.kernel.lanczos3;
 
+    const kernel: ResizeProps["kernel"] = props.kernel || defaultKernel;
     if (!props.width && !props.height) {
         throw new Error("Either width or height must be provided to resize the image");
     }
