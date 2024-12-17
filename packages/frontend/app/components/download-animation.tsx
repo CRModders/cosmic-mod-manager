@@ -1,7 +1,6 @@
 import { cn } from "@root/utils";
 import { DownloadIcon } from "lucide-react";
 import { createContext, useContext, useState } from "react";
-import "./styles.css";
 
 export const DownloadRipple = () => {
     const { isAnimationPlaying, isVisible } = useContext(DownloadAnimationContext);

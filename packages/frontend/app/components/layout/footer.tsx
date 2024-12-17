@@ -13,7 +13,6 @@ import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
 import { buttonVariants } from "../ui/button";
 import { DotSeparator } from "../ui/separator";
 import ThemeSwitch from "../ui/theme-switcher";
-import "./styles.css";
 
 export default function Footer() {
     const { t, changeLocale } = useTranslation();
@@ -98,7 +97,7 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="container flex items-center justify-start gap-x-3 gap-y-2 text-[small]">
+            <div className="container flex flex-wrap items-center justify-start gap-x-3 gap-y-2 text-[small]">
                 <span>{t.footer.siteOfferedIn(SITE_NAME_SHORT)}</span>
 
                 {SupportedLocales.map((locale) => {
@@ -185,7 +184,7 @@ export function LangSwitcher() {
 
                         return (
                             <SelectItem
-                                key={locale.code}
+                                key={label}
                                 value={formatLocaleCode(locale)}
                                 aria-label={label}
                                 title={`${label} => /${formatLocaleCode(locale)}`}

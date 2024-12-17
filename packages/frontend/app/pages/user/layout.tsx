@@ -19,7 +19,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import SecondaryNav from "../project/secondary-nav";
-import "./styles.css";
 
 interface Props {
     children: React.ReactNode;

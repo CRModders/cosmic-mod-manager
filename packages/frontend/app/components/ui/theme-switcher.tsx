@@ -4,7 +4,6 @@ import type { VariantProps } from "class-variance-authority";
 import { MoonIcon, SunIcon } from "~/components/icons";
 import { Button, type buttonVariants } from "~/components/ui/button";
 import useTheme from "~/hooks/theme";
-import "./styles.css";
 
 type variant = VariantProps<typeof buttonVariants>["variant"];
 

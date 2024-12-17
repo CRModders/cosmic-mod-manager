@@ -1,6 +1,10 @@
+@import "./layouts.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 :root {
     /* FONT SIZES */

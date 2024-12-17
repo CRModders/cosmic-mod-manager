@@ -20,7 +20,6 @@ import { useTranslation } from "~/locales/provider";
 import TeamInvitationBanner from "../project/join-project-banner";
 import { ProjectMember } from "../project/layout";
 import SecondaryNav from "../project/secondary-nav";
-import "./styles.css";
 
 export default function OrgPageLayout() {
     const { t } = useTranslation();

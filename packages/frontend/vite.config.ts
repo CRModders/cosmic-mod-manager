@@ -24,6 +24,10 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: (id) => {
+                    // CSS
+                    if (id.endsWith(".css") && id.includes("components")) return "component-styles";
+                    if (id.endsWith(".css")) return "styles";
+
                     // Libs
                     if (id.includes("/react")) return "react";
                     if (id.includes("/radix") || id.includes("lucide")) return "ui-lib";
@@ -57,5 +61,6 @@ export default defineConfig({
             },
         },
     },
+    // @ts-ignore
     plugins: [reactRouter(), tsconfigPaths()],
 });

@@ -11,7 +11,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 import { useTranslation } from "~/locales/provider";
 import { fallbackProjectIcon } from "../icons";
 import { FormattedDate, TimePassedSince } from "../ui/date";
-import "./styles.css";
 
 export enum ViewType {
     GALLERY = "gallery",

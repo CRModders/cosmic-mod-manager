@@ -20,7 +20,6 @@ import { FormErrorMessage } from "~/components/ui/form-message";
 import { LoadingSpinner } from "~/components/ui/spinner";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
-import "./../styles.css";
 
 export default function TagsSettingsPage() {
     const { t } = useTranslation();

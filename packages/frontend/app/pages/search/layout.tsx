@@ -25,7 +25,6 @@ import { TooltipProvider, TooltipTemplate } from "~/components/ui/tooltip";
 import { useProjectType } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import FilterSidebar from "./sidebar";
-import "./styles.css";
 
 interface UpdateSearchParamProps {
     key: string;

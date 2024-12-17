@@ -1,6 +1,5 @@
 import { cn } from "@root/utils";
 import { useEffect } from "react";
-import "./styles.css";
 
 type LoaderSizes = "xs" | "sm" | "default" | "lg" | "xl" | "2xl";
 

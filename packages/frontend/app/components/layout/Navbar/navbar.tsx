@@ -12,7 +12,6 @@ import ThemeSwitch from "~/components/ui/theme-switcher";
 import { useTranslation } from "~/locales/provider";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
-import "./styles.css";
 
 interface NavbarProps {
     session: LoggedInUserData | null;

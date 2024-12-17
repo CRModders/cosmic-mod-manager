@@ -46,7 +46,6 @@ import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
-import "./../styles.css";
 
 interface FilterItems {
     loaders: string[];

@@ -9,7 +9,6 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
-import "./styles.css";
 
 interface Props {
     projects: ProjectListItem[];

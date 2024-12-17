@@ -49,7 +49,6 @@ import { useTranslation } from "~/locales/provider";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
 import SecondaryNav from "./secondary-nav";
-import "./styles.css";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
 export default function ProjectPageLayout() {
