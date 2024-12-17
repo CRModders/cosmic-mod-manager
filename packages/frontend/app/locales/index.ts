@@ -16,6 +16,10 @@ export async function getLocaleFile(locale: string) {
             module = await import("./es-ES/translation");
             break;
 
+        case "es-419":
+            module = await import("./es-419/translation");
+            break;
+
         // case "en":
         default:
             module = await import("./en/translation");

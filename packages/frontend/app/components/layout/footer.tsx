@@ -25,7 +25,7 @@ export default function Footer() {
 
     return (
         <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-8 mx-auto">
-            <div className="footer-grid container gap-y-5 pb-12">
+            <div className="footer-grid container gap-y-5 pb-16">
                 <LinksColumn area="logo">
                     <span className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none" title={SITE_NAME_LONG}>
                         <BrandIcon size="2.75rem" aria-label="CRMM Logo" />
@@ -92,7 +92,7 @@ export default function Footer() {
                         {t.common.settings}
                     </VariantButtonLink>
 
-                    <div className="sm:w-[10rem]">
+                    <div className="">
                         <LangSwitcher />
                     </div>
                 </div>
@@ -121,7 +121,7 @@ export default function Footer() {
                                 changeLocale(formattedCode);
                             }}
                         >
-                            {locale.nativeName}
+                            {label}
                         </Link>
                     );
                 })}
@@ -190,7 +190,7 @@ export function LangSwitcher() {
                                 aria-label={label}
                                 title={`${label} => /${formatLocaleCode(locale)}`}
                             >
-                                <div className="w-full flex items-center justify-center gap-1.5">
+                                <div className="w-full flex items-center justify-center gap-1.5 break-words">
                                     <span className="flex items-end justify-center align-bottom">{locale.nativeName}</span>
                                     {region ? (
                                         <>

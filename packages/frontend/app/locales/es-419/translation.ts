@@ -63,8 +63,7 @@ export default {
         confirmPass: "Confirmar contraseña",
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
-        deleteAccountDesc:
-            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
+        deleteAccountDesc: "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
@@ -238,8 +237,7 @@ export default {
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `No hay versiones disponibles para la ${gameVersion} en ${loader}`,
         declinedInvitation: "Invitación rechazada",
         teamInvitationTitle: (teamType: string) => `Invitación para unirse a ${teamType}`, // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) =>
-            `Has sido invitado a ser miembro de este ${teamType} con el rol de '${role}'.`,
+        teamInviteDesc: (teamType: string, role: string) => `Has sido invitado a ser miembro de este ${teamType} con el rol de '${role}'.`,
 
         browse: {
             mod: "Explorar mods",
@@ -291,7 +289,8 @@ export default {
         selectFiles: "Seleccionar archivos",
         primaryFileRequired: "Se requiere un archivo principal",
         metadata: "Metadatos",
-        devReleasesNote: "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
+        devReleasesNote:
+            "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
         publicationDate: "Fecha de publicación",
         publisher: "Editor",
         versionID: "ID de versión",
@@ -327,7 +326,8 @@ export default {
         licenseUrl: "URL de la licencia (opcional)",
         spdxId: "Identificador SPDX",
         doesntHaveSpdxId: "La licencia no tiene un identificador SPDX",
-        tagsDesc: "Es importante etiquetar correctamente para ayudar a las personas a encontrar tu mod. Asegúrate de seleccionar todas las etiquetas que correspondan.",
+        tagsDesc:
+            "Es importante etiquetar correctamente para ayudar a las personas a encontrar tu mod. Asegúrate de seleccionar todas las etiquetas que correspondan.",
         tagsDesc2: (projectType: string) => `Selecciona todas las categorías que reflejen los temas o la función de tu ${projectType}.`,
         featuredCategories: "Categorías destacadas",
         featuredCategoriesDesc: (count: number) => `Puedes destacar hasta ${count} de tus etiquetas más relevantes.`,
@@ -393,7 +393,8 @@ export default {
         removeMember: "Eliminar miembro",
         transferOwnership: "Transferir propiedad",
         overrideValues: "Sobrescribir valores",
-        overrideValuesDesc: "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
+        overrideValuesDesc:
+            "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
         projectNotManagedByOrg:
             "Este proyecto no está gestionado por una organización. Si eres miembro de alguna organización, puedes transferir la gestión a una de ellas.",
         transferManagementToOrg: "Transferir gestión",
@@ -467,7 +468,7 @@ export default {
 
     legal: {
         rulesTitle: "Reglas de contenido",
-        contentRules: Reglas,
+        contentRules: Rules,
         termsTitle: "Términos de uso",
         copyrightPolicyTitle: "Política de derechos de autor",
         securityNoticeTitle: "Aviso de seguridad",

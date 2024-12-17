@@ -20,7 +20,7 @@ const SupportedLocales = [
             displayName: "España",
         },
     }),
-        meta({
+    meta({
         code: "es",
         name: "Spanish",
         nativeName: "Español",

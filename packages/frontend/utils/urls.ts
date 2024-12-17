@@ -1,6 +1,6 @@
 import { useLocation } from "react-router";
-import { parseLocale } from "~/locales";
-import { DefaultLocale } from "~/locales/meta";
+import { formatLocaleCode, parseLocale } from "~/locales";
+import SupportedLocales, { DefaultLocale } from "~/locales/meta";
 
 export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
     if (exactEnds === true) {
@@ -9,8 +9,10 @@ export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds =
     return currUrl.includes(targetUrl);
 }
 
-// A lang code will either be empty, a 2-letter code or a 2-letter code followed by specific region code
-const langRegex = /^\/[a-z]{2}(?:-[A-Z]{2})?(?=\/|$)/;
+// The url lang prefix can be any of the supported locales which follows a / after it or it's the end of the string
+// eg: /en/search, /en
+const langCodes = SupportedLocales.map((l) => formatLocaleCode(l));
+const langRegex = new RegExp(`^\\/(${langCodes.join("|")})(?=\\/|$)`);
 
 export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
     const pathname = customPathname ? customPathname : usePathname();
