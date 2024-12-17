@@ -393,7 +393,7 @@ export default {
         removeMember: "Remove member",
         transferOwnership: "Transfer ownership",
         overrideValues: "Override values",
-        overrideValuesDesc: " Override organization default values and assign custom permissions and roles to this user on the project.",
+        overrideValuesDesc: "Override organization default values and assign custom permissions and roles to this user on the project.",
         projectNotManagedByOrg:
             "This project is not managed by an organization. If you are the member of any organizations, you can transfer management to one of them.",
         transferManagementToOrg: "Transfer management",
