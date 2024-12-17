@@ -32,8 +32,8 @@ function ComboBox({ options, value, setValue, inputLabel, children, footerItem, 
                 <Command className="border border-shallow-background">
                     {inputBox === false ? null : <CommandInput placeholder={inputLabel || "Search..."} />}
                     <TooltipProvider delayDuration={200}>
-                        <CommandList className="">
-                            <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandList>
+                            <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
                                 {options.map((option) => (
                                     <CommandItem

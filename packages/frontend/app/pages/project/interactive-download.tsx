@@ -180,29 +180,33 @@ export default function InteractiveDownloadPopup() {
                         </Button>
                     </ComboBox>
 
-                    <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
-                        <Button
-                            variant="outline"
-                            // biome-ignore lint/a11y/useSemanticElements: <explanation>
-                            role="combobox"
-                            className="w-full justify-between text-extra-muted-foreground"
-                        >
-                            <span className="flex items-center justify-start gap-2 font-medium">
-                                <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
-                                <span className="text-muted-foreground">
-                                    {selectedLoader ? (
-                                        <>
-                                            {t.project.platform}{" "}
-                                            <em className="not-italic text-foreground/90">{CapitalizeAndFormatString(selectedLoader)}</em>
-                                        </>
-                                    ) : (
-                                        t.project.selectPlatform
-                                    )}
+                    {loadersList.length > 0 && (
+                        <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
+                            <Button
+                                variant="outline"
+                                // biome-ignore lint/a11y/useSemanticElements: <explanation>
+                                role="combobox"
+                                className="w-full justify-between text-extra-muted-foreground"
+                            >
+                                <span className="flex items-center justify-start gap-2 font-medium">
+                                    <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    <span className="text-muted-foreground">
+                                        {selectedLoader ? (
+                                            <>
+                                                {t.project.platform}{" "}
+                                                <em className="not-italic text-foreground/90">
+                                                    {CapitalizeAndFormatString(selectedLoader)}
+                                                </em>
+                                            </>
+                                        ) : (
+                                            t.project.selectPlatform
+                                        )}
+                                    </span>
                                 </span>
-                            </span>
-                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
-                        </Button>
-                    </ComboBox>
+                                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
+                            </Button>
+                        </ComboBox>
+                    )}
 
                     {selectedGameVersion ? (
                         <AvailableVersionsList selectedGameVersion={selectedGameVersion} selectedLoader={selectedLoader} />
