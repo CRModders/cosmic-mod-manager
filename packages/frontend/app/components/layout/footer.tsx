@@ -163,6 +163,8 @@ export function LangSwitcher() {
         setCurrLang(formatLocaleCode(locale));
     }, [locale]);
 
+    const currLocaleLabel = locale.region ? `${locale.nativeName} (${locale.region.displayName})` : locale.nativeName;
+
     return (
         <Select
             onValueChange={(value: string) => {
@@ -171,7 +173,14 @@ export function LangSwitcher() {
             }}
             value={currLang}
         >
-            <SelectTrigger noDefaultStyles aria-label={currLang} className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>
+            <SelectTrigger
+                noDefaultStyles
+                aria-label={currLang}
+                className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}
+                style={{
+                    minWidth: `calc(${currLocaleLabel.length}ch + 1.3rem)`,
+                }}
+            >
                 <GlobeIcon size="1.15rem" className="text-muted-foreground" />
                 <SelectValue className="flex items-center justify-start" placeholder={<p>{currLang}</p>} />
             </SelectTrigger>

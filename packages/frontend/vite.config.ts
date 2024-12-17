@@ -3,6 +3,12 @@ import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { formatLocaleCode } from "./app/locales";
+import SupportedLocales, { DefaultLocale } from "./app/locales/meta";
+
+const localesList = SupportedLocales.map((locale) => formatLocaleCode(locale)).filter(
+    (locale) => locale !== formatLocaleCode(DefaultLocale),
+);
 
 export default defineConfig({
     server: {
@@ -24,6 +30,12 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: (id) => {
+                    // Locales
+                    for (const locale of localesList) {
+                        if (id.includes(`locales/${locale}`)) return locale;
+                    }
+                    if (id.includes("locales/en")) return "en";
+
                     // CSS
                     if (id.endsWith(".css") && id.includes("components")) return "component-styles";
                     if (id.endsWith(".css")) return "styles";
