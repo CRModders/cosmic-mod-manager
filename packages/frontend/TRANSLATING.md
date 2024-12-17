@@ -75,4 +75,5 @@ If your lang's metadata doesn't have region field then just `LANG_CODE` (eg: `en
     ```
 
 > [!IMPORTANT]
-> If you decide to copy paste an existing lang folder and then edit that with the translation, make sure you don't use the default `en` for that, if you do you'll need to change the `TypeScript` types imported in the files.
+> If you decide to copy paste an existing lang folder and then edit that with the translation, make sure you don't use the default `en` for that, if you do you'll need to change the `TypeScript` types imported in the files. \
+> I'd recommend you to use a code editor that supports typescript because there are types available for all the translation keys so your editor will let you know when something doesn't match the expected type.
