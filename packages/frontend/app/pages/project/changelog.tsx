@@ -319,7 +319,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     </a>
                                 ) : null}
                             </div>
-                            {version.changelog ? <MarkdownRenderBox text={version.changelog} className="mr-2" /> : null}
+                            {version.changelog ? (
+                                <MarkdownRenderBox addIdToHeadings={false} text={version.changelog} className="mr-2" />
+                            ) : null}
                         </div>
                     );
                 })}

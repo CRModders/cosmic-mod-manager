@@ -55,6 +55,7 @@
 .markdown-body h6,
 .markdown-body li,
 .markdown-body p {
+    position: relative;
     word-wrap: break-word;
     overflow-wrap: anywhere !important;
 }
@@ -198,6 +199,30 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 .markdown-body video {
     @apply aspect-video w-full xl:w-[850px] max-w-full h-auto;
 }
+
+.markdown-body h1 .anchor,
+.markdown-body h2 .anchor,
+.markdown-body h3 .anchor,
+.markdown-body h4 .anchor {
+    padding: 0 0.1rem;
+    display: inline-block;
+    opacity: 0;
+    font-size: clamp(0.87rem, 0.95em, 1.7rem);
+    @apply text-extra-muted-foreground/75;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h1:focus-within .anchor,
+.markdown-body h2:focus-within .anchor,
+.markdown-body h3:focus-within .anchor,
+.markdown-body h4:focus-within .anchor {
+    opacity: 1;
+}
+
+
 
 /* CODE BLOCK THEME */
 

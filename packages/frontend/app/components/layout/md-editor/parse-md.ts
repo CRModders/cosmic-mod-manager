@@ -47,10 +47,12 @@ export const configuredXss = new FilterXSS({
         },
     },
     onTag: (tag, html, { isClosing }) => {
+        // Lazy load images in markdown
         if (tag === "img" && !isClosing) {
             return `<${tag} loading="lazy" ${html.slice(5)}`;
         }
 
+        // Add data-discover to internal links so that react-router can fetch the manifest for those routes
         if (tag === "a" && !isClosing) {
             const startIndex = html.indexOf("href=");
             if (startIndex === -1) return html;
@@ -59,7 +61,8 @@ export const configuredXss = new FilterXSS({
             const endIndex = strSlice.indexOf('"') || strSlice.indexOf('\\"');
             const url = strSlice.slice(0, endIndex);
 
-            if (url.startsWith("http") || url.startsWith("mailto:")) {
+            if (url.startsWith("http") || url.startsWith("mailto:") || url.startsWith("#")) {
+                if (html.includes("title=")) return html;
                 return `<${tag} title="${url}" ${html.slice(3)}`;
             }
 
