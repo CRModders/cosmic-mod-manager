@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 
 const rootDir = "/var/www/cosmic-mod-manager";
-const frontendDir = `${rootDir}/source/packages/frontend`; // Root of the frontend
+const frontendDir = `${rootDir}/source/apps/frontend`; // Root of the frontend
 const reloadFrontend = "pm2 reload pm2.config.cjs --only crmm-frontend";
 
 const apps = [
