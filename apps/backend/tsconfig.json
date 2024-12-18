@@ -31,6 +31,11 @@
         ".",
         "./../../packages/utils/src"
     ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "pm2.config.cjs"
+    ],
     "references": [
         {
             "path": "./../../packages/utils"

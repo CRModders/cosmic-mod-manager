@@ -4,6 +4,10 @@
         "./.react-router/types",
         "./../../packages/components"
     ],
+    "exclude": [
+        "node_modules",
+        "build",
+    ],
     "compilerOptions": {
         "lib": [
             "ESNext",

@@ -1,15 +1,9 @@
-# cosmic-mod-manager
+# CRMM (Cosmic Reach Mod Manager)
+A repository for Cosmic Reach mods, like modrinth for minecraft.
 
-To install dependencies:
+-> [TRANSLATING.md](/packages/frontend/TRANSLATING.md)
 
-```bash
-bun install
-```
+## For devs
+See [DEVELOPMENT.md](/DEVELOPMENT.md) for dev environment setup instructions.
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.37. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Available API endpoints -> [ENDPOINTS.md](/ENDPOINTS.md)
