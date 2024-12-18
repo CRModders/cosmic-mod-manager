@@ -133,7 +133,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
 
             const headingParts = part.split("# ");
             const headingType = parseMdHeading(`#${headingParts[0]}`);
-            const heading = `<${headingType} id="${id}">${headingParts[1]} ${anchor}</${headingType}>`;
+            const heading = `<${headingType} id="${id}">${headingParts[1]} ${anchor}</${headingType}>\n `;
             parts[i] = heading;
         }
 

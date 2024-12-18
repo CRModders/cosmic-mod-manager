@@ -155,7 +155,7 @@ export default function GeneralOrgSettings() {
                                             fallback={fallbackOrgIcon}
                                         />
 
-                                        <div className="flex flex-col items-center justify-center gap-2">
+                                        <div className="flex flex-col items-start justify-center gap-2">
                                             <InteractiveLabel
                                                 htmlFor="org-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}

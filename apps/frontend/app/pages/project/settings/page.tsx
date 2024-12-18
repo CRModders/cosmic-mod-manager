@@ -157,7 +157,7 @@ export default function GeneralSettingsPage() {
                                             fallback={fallbackProjectIcon}
                                         />
 
-                                        <div className="flex flex-col items-center justify-center gap-2">
+                                        <div className="flex flex-col items-start justify-center gap-2">
                                             <InteractiveLabel
                                                 htmlFor="project-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
