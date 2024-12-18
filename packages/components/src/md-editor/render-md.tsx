@@ -92,7 +92,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
 
             if (target.getAttribute("href")?.startsWith("#")) {
                 e.preventDefault();
-                navigate(`${target.pathname}${target.search}${target.hash}`, { preventScrollReset: true });
+                navigate(`${target.pathname}${target.search}${target.hash}`, { viewTransition: true, preventScrollReset: true });
                 return;
             }
 
@@ -102,7 +102,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
             if (![currHost, `www.${currHost}`].includes(targetHost)) return;
 
             e.preventDefault();
-            navigate(`${target.pathname}${target.search}`);
+            navigate(`${target.pathname}${target.search}`, { viewTransition: true });
         } catch {}
     }
 
