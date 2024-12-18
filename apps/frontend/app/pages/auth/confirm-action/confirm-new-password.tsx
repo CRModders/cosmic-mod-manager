@@ -1,12 +1,12 @@
 import { Button, CancelButton } from "@app/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@app/components/ui/card";
 import { FormSuccessMessage } from "@app/components/ui/form-message";
-import Link from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { SITE_NAME_SHORT } from "@app/utils/config";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import SessionsPageLink from "./help-link";

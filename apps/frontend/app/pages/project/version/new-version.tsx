@@ -14,7 +14,7 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import MarkdownEditor from "~/components//md-editor";
+import MarkdownEditor from "~/components/md-editor";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

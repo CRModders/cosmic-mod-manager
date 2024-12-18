@@ -9,7 +9,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
-import { ButtonLink } from "@app/components/ui/link";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { imageUrl } from "@app/utils/url";
 import {
@@ -25,6 +24,7 @@ import {
     UsersIcon,
 } from "lucide-react";
 import { Outlet } from "react-router";
+import { ButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import { PageUrl, ProjectPagePath } from "~/utils/urls";

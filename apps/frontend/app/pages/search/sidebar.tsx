@@ -2,7 +2,6 @@ import { TagIcon } from "@app/components/icons/tag-icons";
 import { Button } from "@app/components/ui/button";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { Input } from "@app/components/ui/input";
-import { useNavigate } from "@app/components/ui/link";
 import { cn } from "@app/components/utils";
 import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/config/game-versions";
 import {
@@ -18,6 +17,7 @@ import { ProjectType, TagHeaderType } from "@app/utils/types";
 import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { useNavigate } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";

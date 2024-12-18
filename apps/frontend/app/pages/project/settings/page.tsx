@@ -2,7 +2,7 @@ import { fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { ImgWrapper } from "@app/components/ui/avatar";
-import { Button, CancelButton, buttonVariants } from "@app/components/ui/button";
+import { Button, buttonVariants } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -41,6 +41,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
+import { CancelButton } from "~/components/ui/button";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

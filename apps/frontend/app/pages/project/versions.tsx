@@ -8,7 +8,6 @@ import Chip, { ChipButton } from "@app/components/ui/chip";
 import { CommandSeparator } from "@app/components/ui/command";
 import { copyTextToClipboard } from "@app/components/ui/copy-btn";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@app/components/ui/dropdown-menu";
-import Link, { useNavigate, VariantButtonLink } from "@app/components/ui/link";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
@@ -41,6 +40,7 @@ import {
 import { useContext, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
+import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";

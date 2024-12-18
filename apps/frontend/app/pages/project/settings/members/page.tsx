@@ -1,5 +1,5 @@
 import RefreshPage from "@app/components/misc/refresh-page";
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import { Card, CardTitle } from "@app/components/ui/card";
 import {
     Dialog,
@@ -20,6 +20,7 @@ import type { Organisation, TeamMember } from "@app/utils/types/api";
 import { UserXIcon } from "lucide-react";
 import { useState } from "react";
 import { type Location, useLocation, useNavigate } from "react-router";
+import { CancelButton } from "~/components/ui/button";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";

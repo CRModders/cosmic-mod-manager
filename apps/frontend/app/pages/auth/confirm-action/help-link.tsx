@@ -1,4 +1,4 @@
-import Link from "@app/components/ui/link";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 
 export default function SessionsPageLink() {

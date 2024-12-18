@@ -1,6 +1,6 @@
 import { FormErrorMessage } from "@app/components/ui/form-message";
-import Link from "@app/components/ui/link";
 import { ConfirmationType } from "@app/utils/types";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import ChangePasswordCard from "./change-password";
 import ConfirmNewPasswordCard from "./confirm-new-password";

@@ -5,7 +5,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { FormErrorMessage } from "@app/components/ui/form-message";
 import HorizontalSeparator from "@app/components/ui/hr-separator";
 import { Input } from "@app/components/ui/input";
-import Link from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
@@ -17,6 +16,7 @@ import { LogInIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import OAuthProvidersWidget from "../oauth-providers";

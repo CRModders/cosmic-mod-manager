@@ -12,7 +12,6 @@ import {
 } from "@app/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
-import { useNavigate } from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
@@ -25,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { OrgPagePath } from "~/utils/urls";

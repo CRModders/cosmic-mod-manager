@@ -1,6 +1,6 @@
-import { ButtonLink } from "@app/components/ui/link";
 import { cn } from "@app/components/utils";
 import { Capitalize } from "@app/utils/string";
+import { ButtonLink } from "~/components/ui/link";
 
 interface LinkItem {
     label: string;

@@ -3,7 +3,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@app/compo
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import HorizontalSeparator from "@app/components/ui/hr-separator";
 import { Input } from "@app/components/ui/input";
-import Link from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { z } from "@app/utils/schemas";
@@ -12,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

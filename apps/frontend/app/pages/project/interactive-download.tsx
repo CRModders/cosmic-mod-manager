@@ -15,7 +15,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import Link, { VariantButtonLink } from "@app/components/ui/link";
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
@@ -27,6 +26,7 @@ import { imageUrl } from "@app/utils/url";
 import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, WrenchIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import { ProjectPagePath, VersionPagePath, isCurrLinkActive } from "~/utils/urls";

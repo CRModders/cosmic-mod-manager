@@ -1,6 +1,5 @@
 import RefreshPage from "@app/components/misc/refresh-page";
 import { FormErrorMessage } from "@app/components/ui/form-message";
-import Link, { useNavigate } from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { CSRF_STATE_COOKIE_NAMESPACE } from "@app/utils/config";
@@ -9,6 +8,7 @@ import { getCookie } from "@app/utils/cookie";
 import { AuthActionIntent, AuthProvider } from "@app/utils/types";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router";
+import Link, { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

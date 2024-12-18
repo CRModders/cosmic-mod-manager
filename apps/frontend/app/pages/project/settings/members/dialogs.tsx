@@ -1,4 +1,4 @@
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -14,6 +14,7 @@ import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { TeamMember } from "@app/utils/types/api";
 import { ArrowRightLeftIcon, UserXIcon } from "lucide-react";
 import { useState } from "react";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

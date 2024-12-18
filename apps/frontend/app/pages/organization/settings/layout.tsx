@@ -9,11 +9,11 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
-import { ButtonLink } from "@app/components/ui/link";
 import { SITE_NAME_SHORT } from "@app/utils/config";
 import { imageUrl } from "@app/utils/url";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet } from "react-router";
+import { ButtonLink } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath } from "~/utils/urls";

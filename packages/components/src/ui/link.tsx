@@ -55,7 +55,7 @@ export function ButtonLink({
     );
 }
 
-interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
+export interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     children: React.ReactNode;
     url: string;
     className?: string;

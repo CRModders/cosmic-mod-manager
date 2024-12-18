@@ -1,12 +1,12 @@
 import { BrandIcon, fallbackProjectIcon } from "@app/components/icons";
 import { ImgWrapper } from "@app/components/ui/avatar";
-import Link, { VariantButtonLink } from "@app/components/ui/link";
 import { cn } from "@app/components/utils";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import { ProjectPagePath } from "~/utils/urls";

@@ -7,8 +7,6 @@ import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import Chip from "@app/components/ui/chip";
-import { FormattedDate, TimePassedSince } from "@app/components/ui/date";
-import Link, { ButtonLink, VariantButtonLink } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
@@ -43,6 +41,8 @@ import {
 import type React from "react";
 import { Suspense, useContext } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
+import { FormattedDate, TimePassedSince } from "~/components/ui/date";
+import Link, { ButtonLink, VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";

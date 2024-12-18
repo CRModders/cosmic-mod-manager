@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@app/
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { InteractiveLabel } from "@app/components/ui/label";
-import { VariantButtonLink } from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
@@ -22,6 +21,7 @@ import { SaveIcon, UploadIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
+import { VariantButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { UserProfilePath } from "~/utils/urls";

@@ -1,4 +1,4 @@
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -16,6 +16,7 @@ import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { SITE_NAME_LONG } from "@app/utils/config";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

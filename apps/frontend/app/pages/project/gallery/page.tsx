@@ -1,7 +1,6 @@
 import { ImgLoader } from "@app/components/misc/img-loading-spinner";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
-import { FormattedDate } from "@app/components/ui/date";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@app/components/ui/dialog";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
@@ -23,6 +22,7 @@ import {
     XIcon,
 } from "lucide-react";
 import { Suspense, lazy, useEffect, useState } from "react";
+import { FormattedDate } from "~/components/ui/date";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";

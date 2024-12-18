@@ -1,5 +1,5 @@
 import RefreshPage from "@app/components/misc/refresh-page";
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -32,6 +32,7 @@ import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { ProjectPagePath } from "~/utils/urls";

@@ -14,8 +14,6 @@ import { Button } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@app/components/ui/context-menu";
 import CopyBtn, { copyTextToClipboard } from "@app/components/ui/copy-btn";
-import { FormattedDate } from "@app/components/ui/date";
-import Link, { VariantButtonLink } from "@app/components/ui/link";
 import ReleaseChannelChip from "@app/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
@@ -29,6 +27,8 @@ import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon
 import { Suspense, lazy, useContext } from "react";
 import { useParams } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
+import { FormattedDate } from "~/components/ui/date";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";

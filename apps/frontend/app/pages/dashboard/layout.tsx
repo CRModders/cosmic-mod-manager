@@ -1,5 +1,4 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
-import { ButtonLink } from "@app/components/ui/link";
 import {
     BarChart2Icon,
     BellIcon,
@@ -11,6 +10,7 @@ import {
     LibraryIcon,
 } from "lucide-react";
 import { Outlet } from "react-router";
+import { ButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 
 export default function DashboardLayout() {

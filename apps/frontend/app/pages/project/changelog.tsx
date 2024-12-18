@@ -5,8 +5,6 @@ import { Card } from "@app/components/ui/card";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { ChipButton } from "@app/components/ui/chip";
 import { CommandSeparator } from "@app/components/ui/command";
-import { FormattedDate } from "@app/components/ui/date";
-import Link from "@app/components/ui/link";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
 import { TooltipProvider, TooltipTemplate } from "@app/components/ui/tooltip";
@@ -20,6 +18,8 @@ import { ChevronDownIcon, DownloadIcon, FilterIcon, FlaskConicalIcon, XCircleIco
 import { useContext, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
+import { FormattedDate } from "~/components/ui/date";
+import Link from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";

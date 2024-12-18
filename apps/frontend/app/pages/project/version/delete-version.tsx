@@ -1,5 +1,5 @@
 import RefreshPage from "@app/components/misc/refresh-page";
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -18,6 +18,7 @@ import type { ProjectDetailsData } from "@app/utils/types/api";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

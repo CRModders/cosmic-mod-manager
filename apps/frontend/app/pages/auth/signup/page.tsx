@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
-import Link from "@app/components/ui/link";
 import { Separator } from "@app/components/ui/separator";
 import { AuthActionIntent, type AuthProvider } from "@app/utils/types";
 import { useState } from "react";
 import MarkdownRenderBox from "~/components/md-renderer";
+import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import OAuthProvidersWidget from "../oauth-providers";
 

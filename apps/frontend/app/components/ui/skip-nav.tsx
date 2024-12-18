@@ -5,7 +5,7 @@ interface SkipNavProps {
     mainId?: string;
 }
 
-export const SkipNav = ({ mainId, children }: SkipNavProps) => {
+export function SkipNav({ mainId, children }: SkipNavProps) {
     const { t } = useTranslation();
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
@@ -25,4 +25,4 @@ export const SkipNav = ({ mainId, children }: SkipNavProps) => {
             {children ? children : t.navbar.skipToMainContent}
         </a>
     );
-};
+}

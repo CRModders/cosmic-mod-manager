@@ -25,7 +25,7 @@
         "allowImportingTsExtensions": true,
         "esModuleInterop": true,
         "verbatimModuleSyntax": true,
-        "noEmit": true,
+        "emitDeclarationOnly": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "strict": true,

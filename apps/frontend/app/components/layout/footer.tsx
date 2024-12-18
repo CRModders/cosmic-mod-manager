@@ -9,11 +9,11 @@ import { ArrowUpRightIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type LinkProps, useLocation } from "react-router";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
+import ThemeSwitch from "~/components/ui/theme-switcher";
 import { useRootData } from "~/hooks/root-data";
 import { formatLocaleCode, parseLocale } from "~/locales";
 import SupportedLocales from "~/locales/meta";
 import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
-import ThemeSwitch from "../ui/theme-switcher";
 import "./styles.css";
 
 export default function Footer() {
