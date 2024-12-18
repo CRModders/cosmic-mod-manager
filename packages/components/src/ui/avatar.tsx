@@ -8,10 +8,9 @@ interface Props {
     fallback?: React.ReactNode;
     loading?: "eager" | "lazy";
     vtId?: string; // View Transition ID
-    viewTransitions?: boolean;
 }
 
-export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewTransitions }: Props) {
+export function ImgWrapper({ vtId, src, alt, className, loading, fallback }: Props) {
     if (!src) {
         return (
             <div
@@ -25,7 +24,7 @@ export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewT
         );
     }
 
-    const style = vtId && viewTransitions === true ? { viewTransitionName: removeNumbers(vtId) } : {};
+    const style = vtId ? { viewTransitionName: removeNumbers(vtId) } : {};
 
     return (
         <img

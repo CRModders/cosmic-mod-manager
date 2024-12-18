@@ -65,6 +65,12 @@
     @apply pl-10;
 }
 
+
+.markdown-body li:not(:has(> p)),
+.markdown-body li > p {
+    @apply mb-1.5;
+}
+
 .markdown-body p:has(+ ul),
 .markdown-body p:has(+ ol) {
     @apply mb-1;
@@ -72,7 +78,7 @@
 
 .markdown-body li p:has(+ ul),
 .markdown-body li p:has(+ ol) {
-    @apply mb-0;
+    @apply mb-1;
 }
 
 .markdown-body ul li {
@@ -129,7 +135,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 }
 
 .markdown-body pre {
-    @apply mt-4 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/60 rounded overflow-x-auto;
+    @apply mt-3 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/60 rounded overflow-x-auto;
 }
 
 .markdown-body pre code {

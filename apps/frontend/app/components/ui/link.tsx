@@ -5,8 +5,7 @@ import DefaultLink, {
 } from "@app/components/ui/link";
 import React from "react";
 import type { NavigateFunction, NavigateOptions } from "react-router";
-import { useRouteLoaderData } from "react-router";
-import type { RootOutletData } from "~/root";
+import { useRootData } from "~/hooks/root-data";
 import { PageUrl } from "~/utils/urls";
 
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
@@ -16,30 +15,36 @@ interface Props extends Omit<React.ComponentProps<typeof DefaultLink>, "viewTran
 }
 
 const Link = React.forwardRef<HTMLAnchorElement, Props>(({ escapeUrlWrapper, ...props }, ref) => {
-    const data = useRouteLoaderData<RootOutletData>("root");
-    const viewTransitions = data?.viewTransitions;
+    const viewTransitions = useRootData()?.viewTransitions;
 
     let to = props.to;
     if (escapeUrlWrapper !== true) to = PageUrl(to.toString());
 
-    return <DefaultLink viewTransitions={viewTransitions} ref={ref} {...props} to={to} />;
+    return <DefaultLink {...props} viewTransition={viewTransitions} ref={ref} to={to} />;
 });
 export default Link;
 
 type ButtonLinkProps = React.ComponentProps<typeof DefaultButtonLink>;
 export function ButtonLink(props: ButtonLinkProps) {
-    return <DefaultButtonLink {...props} url={PageUrl(props.url)} />;
+    const viewTransitions = useRootData()?.viewTransitions;
+
+    return <DefaultButtonLink {...props} url={PageUrl(props.url)} viewTransition={viewTransitions} />;
 }
 
-export const VariantButtonLink = DefaultVariantButtonLink;
+type VariantButtonLinkProps = React.ComponentProps<typeof DefaultVariantButtonLink>;
+export function VariantButtonLink(props: VariantButtonLinkProps) {
+    const viewTransitions = useRootData()?.viewTransitions;
+    return <DefaultVariantButtonLink {...props} url={PageUrl(props.url)} viewTransition={viewTransitions} />;
+}
 
 export function useNavigate(escapeUrlWrapper?: boolean) {
     const navigate = __useNavigate();
+    const viewTransitions = useRootData()?.viewTransitions;
 
     const __navigate = (to: string, options?: NavigateOptions): void => {
         const toUrl = escapeUrlWrapper === true ? to : PageUrl(to);
 
-        navigate(toUrl, { viewTransition: true, ...options });
+        navigate(toUrl, { ...options, viewTransition: viewTransitions });
     };
 
     return __navigate as NavigateFunction;

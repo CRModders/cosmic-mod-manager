@@ -6,13 +6,13 @@ import { Link as RemixLink, useNavigate as __useNavigate, useLocation } from "re
 import { cn } from "~/utils";
 import { buttonVariants } from "./button";
 
-interface CustomLinkProps extends LinkProps {
-    viewTransitions?: boolean;
-}
+interface CustomLinkProps extends LinkProps {}
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
-const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>(({ viewTransitions, ...props }, ref) => {
-    return <RemixLink viewTransition={viewTransitions} ref={ref} {...props} to={props.to} />;
+const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
+    console.log(props.viewTransition);
+
+    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={props.viewTransition} />;
 });
 export default Link;
 
@@ -65,6 +65,7 @@ export interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     tabIndex?: number;
     preventScrollReset?: boolean;
     prefetch?: PrefetchBehavior;
+    viewTransition?: boolean;
 }
 
 export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLinkProps>(
