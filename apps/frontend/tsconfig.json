@@ -7,6 +7,7 @@
     "exclude": [
         "node_modules",
         "build",
+        "pm2.config.cjs"
     ],
     "compilerOptions": {
         "lib": [
