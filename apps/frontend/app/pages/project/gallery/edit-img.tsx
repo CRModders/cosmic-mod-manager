@@ -25,8 +25,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit3Icon, FileIcon, SaveIcon, StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { CancelButton } from "~/components/ui/button";
+import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

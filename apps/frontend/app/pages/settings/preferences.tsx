@@ -3,7 +3,8 @@ import { CardContent, CardDescription, CardHeader, CardTitle, SectionCard } from
 import { Switch } from "@app/components/ui/switch";
 import { setCookie } from "@app/utils/cookie";
 import { disableInteractions } from "@app/utils/dom";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
+import { useNavigate } from "~/components/ui/link";
 import { useRootData } from "~/hooks/root-data";
 import { useTranslation } from "~/locales/provider";
 

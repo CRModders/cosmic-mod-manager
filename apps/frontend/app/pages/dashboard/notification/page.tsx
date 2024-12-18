@@ -9,8 +9,8 @@ import type { Notification, OrganisationListItem, ProjectListItem } from "@app/u
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { CheckCheckIcon, HistoryIcon } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { VariantButtonLink } from "~/components/ui/link";
+import { useLocation } from "react-router";
+import { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { OrgPagePath, ProjectPagePath } from "~/utils/urls";

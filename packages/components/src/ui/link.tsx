@@ -10,9 +10,7 @@ interface CustomLinkProps extends LinkProps {}
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
 const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
-    console.log(props.viewTransition);
-
-    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={props.viewTransition} />;
+    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={props.viewTransition !== false} />;
 });
 export default Link;
 

@@ -40,9 +40,9 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { Suspense, useContext } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
-import Link, { ButtonLink, VariantButtonLink } from "~/components/ui/link";
+import Link, { ButtonLink, VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";

@@ -10,7 +10,8 @@ import { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settin
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SaveIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
+import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

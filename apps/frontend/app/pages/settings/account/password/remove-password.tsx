@@ -22,8 +22,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { CancelButton } from "~/components/ui/button";
+import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 

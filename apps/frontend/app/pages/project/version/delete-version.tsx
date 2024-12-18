@@ -17,8 +17,8 @@ import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import type { ProjectDetailsData } from "@app/utils/types/api";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { CancelButton } from "~/components/ui/button";
+import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 
