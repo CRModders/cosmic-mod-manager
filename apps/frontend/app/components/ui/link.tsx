@@ -33,13 +33,13 @@ export function VariantButtonLink(props: VariantButtonLinkProps) {
     return <DefaultVariantButtonLink {...props} url={PageUrl(props.url)} viewTransition={viewTransitions} />;
 }
 
-export function useNavigate(escapeUrlWrapper?: boolean) {
+export function useNavigate(escapeUrlWrapper?: boolean, initOptions?: NavigateOptions) {
     const navigate = __useNavigate();
 
     const __navigate = (to: string, options?: NavigateOptions): void => {
         const toUrl = escapeUrlWrapper === true ? to : PageUrl(to);
 
-        navigate(toUrl, { ...options, viewTransition: true });
+        navigate(toUrl, { viewTransition: true, ...initOptions, ...options });
     };
 
     return __navigate as NavigateFunction;

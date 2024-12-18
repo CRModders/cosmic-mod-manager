@@ -43,7 +43,7 @@ export default function SearchPageLayout() {
     const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(undefined, { viewTransition: false });
 
     const typeStr = useProjectType();
     const type = getProjectTypeFromName(typeStr);
