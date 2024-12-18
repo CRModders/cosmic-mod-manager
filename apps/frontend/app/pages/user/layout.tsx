@@ -1,5 +1,4 @@
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "@app/components/icons";
-import { PageHeader } from "@app/components/misc/page-header";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
@@ -13,6 +12,7 @@ import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { imageUrl } from "@app/utils/url";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
+import { PageHeader } from "~/components/page-header";
 import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";

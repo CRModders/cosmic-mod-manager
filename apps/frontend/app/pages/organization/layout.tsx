@@ -1,5 +1,4 @@
 import { CubeIcon, fallbackOrgIcon } from "@app/components/icons";
-import { PageHeader } from "@app/components/misc/page-header";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
@@ -12,6 +11,7 @@ import type { Organisation, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, ClipboardCopyIcon, DownloadIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet, useLocation } from "react-router";
+import { PageHeader } from "~/components/page-header";
 import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useSession } from "~/hooks/session";

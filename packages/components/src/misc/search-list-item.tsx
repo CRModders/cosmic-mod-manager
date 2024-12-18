@@ -43,6 +43,7 @@ interface SearchListItemProps {
     ProjectPagePath: ProjectPagePath;
     OrgPagePath: OrgPagePath;
     UserProfilePath: UserProfilePath;
+    viewTransitions?: boolean;
 }
 
 export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
@@ -108,6 +109,7 @@ function BaseView(props: SearchListItemProps) {
                     alt={props.projectName}
                     fallback={fallbackProjectIcon}
                     className="h-24 w-24 rounded-xl"
+                    viewTransitions={props.viewTransitions}
                 />
             </Link>
 

@@ -13,9 +13,20 @@ interface ListItemCardProps {
     children: React.ReactNode;
     fallbackIcon?: React.ReactNode;
     className?: string;
+    viewTransitions?: boolean;
 }
 
-export function ListItemCard({ vtId, title, url, icon, description, children, fallbackIcon, className }: ListItemCardProps) {
+export function ListItemCard({
+    vtId,
+    title,
+    url,
+    icon,
+    description,
+    children,
+    fallbackIcon,
+    className,
+    viewTransitions,
+}: ListItemCardProps) {
     return (
         <Link
             to={url}
@@ -27,6 +38,7 @@ export function ListItemCard({ vtId, title, url, icon, description, children, fa
         >
             <ImgWrapper
                 vtId={vtId}
+                viewTransitions={viewTransitions}
                 src={icon || ""}
                 alt={title}
                 fallback={fallbackIcon}

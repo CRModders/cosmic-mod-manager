@@ -1,7 +1,6 @@
 import { DiscordIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import tagIcons from "@app/components/icons/tag-icons";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
-import { PageHeader } from "@app/components/misc/page-header";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button, buttonVariants } from "@app/components/ui/button";
@@ -41,6 +40,7 @@ import {
 import type React from "react";
 import { Suspense, useContext } from "react";
 import { Outlet, useLocation } from "react-router";
+import { PageHeader } from "~/components/page-header";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { ButtonLink, VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
