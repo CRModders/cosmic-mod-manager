@@ -1,17 +1,16 @@
 {
-    "name": "crmm",
+    "name": "cosmic-mod-manager",
     "module": "index.ts",
     "type": "module",
     "dependencies": {
-        "ua-parser-js": "^1.0.38"
+        "@biomejs/biome": "^1.9.4"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
     },
-    "devDependencies": {
-        "@biomejs/biome": "1.9.4",
-        "@types/bun": "latest",
-        "@types/ua-parser-js": "^0.7.39"
-    },
-    "workspaces": ["packages/*"]
+    "workspaces": ["packages/*", "apps/*"],
+    "trustedDependencies": ["@biomejs/biome", "@prisma/client", "@prisma/engines", "esbuild", "prisma", "sharp"]
 }

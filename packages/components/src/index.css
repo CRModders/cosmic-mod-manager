@@ -1,0 +1,276 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* FONT SIZES */
+    --font-tiny: 0.75rem;
+    --font-sm: 0.87rem;
+    --font-base: 1rem;
+    --font-md: 1.125rem;
+    --font-lg: 1.17rem;
+    --font-lg-plus: 1.25rem;
+    --font-xl: 1.5rem;
+    --font-2xl: 2.17rem;
+
+    /* DARK THEME */
+    --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
+    --foreground-bright-dark: var(--text-tint-hue), var(--body-text-saturation), 98%;
+    --foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 91%;
+    --muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 80%;
+    --extra-muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 64%;
+    --background-dark: var(--bg-tint-hue), var(--bg-saturation), 8%;
+    --card-background-dark: var(--bg-tint-hue), var(--bg-saturation), 15%;
+    --accent-background-dark: var(--accent-color-hue), 85%, 62%;
+    --shallow-background-dark: var(--bg-tint-hue), var(--bg-saturation), 24%;
+    --shallower-background-dark: var(--bg-tint-hue), var(--bg-saturation), 32%;
+    --danger-background-dark: 0, 92%, 65%;
+    --danger-foreground-dark: 0, 91%, 71%;
+    --warning-background-dark: 35, 74%, 48%;
+    --warning-foreground-dark: 33, 82%, 58%;
+    --success-background-dark: 160, 84%, 39%;
+    --success-foreground-dark: 158, 64%, 52%;
+    --link-foreground-dark: 213, 94%, 74%;
+    --link-hover-foreground-dark: 210, 80%, 87%;
+
+    /* LIGHT THEME */
+    --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
+    --foreground-bright-light: var(--text-tint-hue), var(--body-text-saturation), 8%;
+    --foreground-light: var(--text-tint-hue), var(--body-text-saturation), 16%;
+    --muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 26%;
+    --extra-muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 38%;
+    --background-light: var(--bg-tint-hue), var(--bg-saturation), 92%;
+    --card-background-light: var(--bg-tint-hue), var(--bg-saturation), 100%;
+    --accent-background-light: var(--accent-color-hue), 80%, 54%;
+    --shallow-background-light: var(--bg-tint-hue), var(--bg-saturation), 92%;
+    --shallower-background-light: var(--bg-tint-hue), var(--bg-saturation), 82%;
+
+    --danger-background-light: 0, 75%, 46%;
+    --danger-foreground-light: 0, 65%, 52%;
+    --warning-background-light: 36, 86%, 44%;
+    --warning-foreground-light: 38, 92%, 44%;
+    --success-background-light: 160, 90%, 30%;
+    --success-foreground-light: 158, 94%, 28%;
+    --link-foreground-light: 208, 88%, 36%;
+    --link-hover-foreground-light: 205, 80%, 20%;
+}
+
+html,
+html body {
+    color: hsla(var(--foreground));
+    background-color: hsla(var(--background));
+    font-size: var(--font-base);
+    font-weight: 400;
+    scrollbar-gutter: stable;
+    width: 100%;
+
+    transition: filter 300ms ease;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+
+    --scrollbar-width: 9px;
+    --scrollbar-height: 8px;
+    --scrollbar-radius: 9px;
+}
+
+/* Dark is the default theme */
+html,
+.dark {
+    --accent-color-hue: 345;
+    --bg-tint-hue: 215;
+    --bg-saturation: 12%;
+    --text-tint-hue: 208;
+    --body-text-saturation: 16%;
+
+    --foreground: var(--foreground-dark);
+    --foreground-bright: var(--foreground-bright-dark);
+    --accent-foreground: var(--accent-foreground-dark);
+    --muted-foreground: var(--muted-foreground-dark);
+    --extra-muted-foreground: var(--extra-muted-foreground-dark);
+    --background: var(--background-dark);
+    --card-background: var(--card-background-dark);
+    --accent-background: var(--accent-background-dark);
+    --shallow-background: var(--shallow-background-dark);
+    --shallower-background: var(--shallower-background-dark);
+    --danger-background: var(--danger-background-dark);
+    --danger-foreground: var(--danger-foreground-dark);
+    --warning-background: var(--warning-background-dark);
+    --warning-foreground: var(--warning-foreground-dark);
+    --success-background: var(--success-background-dark);
+    --success-foreground: var(--success-foreground-dark);
+    --link-foreground: var(--link-foreground-dark);
+    --link-hover-foreground: var(--link-hover-foreground-dark);
+
+    color-scheme: dark;
+}
+
+.light {
+    --accent-color-hue: 343;
+    --bg-tint-hue: 215;
+    --bg-saturation: 13%;
+    --text-tint-hue: 208;
+    --body-text-saturation: 16%;
+
+    --foreground: var(--foreground-light);
+    --foreground-bright: var(--foreground-bright-light);
+    --accent-foreground: var(--accent-foreground-light);
+    --muted-foreground: var(--muted-foreground-light);
+    --extra-muted-foreground: var(--extra-muted-foreground-light);
+    --background: var(--background-light);
+    --card-background: var(--card-background-light);
+    --accent-background: var(--accent-background-light);
+    --shallow-background: var(--shallow-background-light);
+    --shallower-background: var(--shallower-background-light);
+    --danger-background: var(--danger-background-light);
+    --danger-foreground: var(--danger-foreground-light);
+    --warning-background: var(--warning-background-light);
+    --warning-foreground: var(--warning-foreground-light);
+    --success-background: var(--success-background-light);
+    --success-foreground: var(--success-foreground-light);
+    --link-foreground: var(--link-foreground-light);
+    --link-hover-foreground: var(--link-hover-foreground-light);
+
+    color-scheme: light;
+}
+
+::-webkit-scrollbar {
+    width: var(--scrollbar-width, 8px);
+    height: var(--scrollbar-height, 8px);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: hsla(var(--extra-muted-foreground), 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: hsla(var(--extra-muted-foreground), 0.6);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: hsla(var(--extra-muted-foreground), 0.75);
+}
+
+body ::-webkit-scrollbar-thumb {
+    border-radius: var(--scrollbar-radius, 9px);
+}
+
+body.navmenu-open,
+body.no-scrollbar {
+    overflow: hidden;
+}
+
+*:focus {
+    outline: transparent;
+}
+
+
+
+@layer components {
+    .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)), 0 0 0 0.175rem transparent; */
+    }
+
+    .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
+        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)), 0 0 0 0.175rem transparent; */
+    }
+
+    .focus_ring:not(.no_focus_ring) {
+        --surround-width: 0.17rem;
+        box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) hsla(var(--accent-background));
+        transition-property: background-color, box-shadow, color;
+        transition-duration: 150ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .keyboard_focus_ring:not(.no_keyboard_focus_ring) {
+        --surround-width: 0.17rem;
+        box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) hsla(var(--accent-background));
+    }
+
+    .input_box_styles:not(.no_input_box_styles) {
+        @apply h-10 rounded flex items-center bg-shallow-background dark:bg-shallow-background/70 text-foreground px-3 py-2 placeholder:text-extra-muted-foreground focus-visible:outline-none focus-visible:focus_ring focus-visible:bg-shallow-background/50 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .navLinkText {
+        @apply font-semibold text-foreground hover:text-muted-foreground;
+    }
+
+    .full_page:not(.no_full_page) {
+        min-height: 100vh;
+        min-height: min(100vh, 67rem);
+        min-height: clamp(45rem, 100vh, 67rem);
+    }
+
+    .bg_hover_stagger:not(.no_bg_hover_stagger) {
+        transition: background-color 300ms ease;
+        @apply hover:duration-0 group-hover:duration-0;
+    }
+
+    .link_blue {
+        @apply text-link-foreground;
+    }
+
+    .text_link {
+        @apply link_blue hover:underline hover:brightness-110;
+    }
+
+
+    .items-baseline-with-fallback {
+        align-items: center;
+        align-items: baseline;
+    }
+
+    .absolute-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .text-shadow {
+        text-shadow: 1px 1px 8px black, -1px -1px 8px black;
+    }
+}
+
+a {
+    text-underline-offset: 2px;
+}
+
+a,
+button,
+input[type="checkbox"] {
+    transition: font-size 150ms ease;
+    @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
+}
+
+.lucide-arrow-up-right {
+    transition: translate 250ms ease;
+}
+
+a:hover .lucide-arrow-up-right,
+a:focus-visible .lucide-arrow-up-right {
+    translate: 0.1rem -0.1rem;
+}
+
+.thin-scrollbar {
+    --scrollbar-width: var(--scrollbar-width, 0.35rem);
+    --scrollbar-height: var(--scrollbar-width, 0.25rem);
+    --scrollbar-radius: 0.3rem;
+}
+
+.thin-scrollbar.medium {
+    --scrollbar-width: 0.5rem;
+    --scrollbar-height: 0.5rem;
+    --scrollbar-radius: 0.5rem;
+}
+
+img {
+    vertical-align: center;
+    font-style: italic;
+}
+
+.disable-interactions {
+    user-select: none;
+    pointer-events: none;
+    filter: brightness(80%);
+}

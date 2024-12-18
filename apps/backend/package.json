@@ -1,0 +1,40 @@
+{
+    "name": "@app/backend",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "dev": "bun run --hot src/index.ts",
+        "start": "bun src/index.ts",
+        "prisma-generate": "prisma generate",
+        "prisma-push": "prisma db push",
+        "deploy": "cross-env NODE_ENV=production pm2 deploy pm2.config.cjs backend"
+    },
+    "dependencies": {
+        "@oslojs/encoding": "^1.1.0",
+        "@prisma/client": "^6.0.1",
+        "hono": "^4.4.12",
+        "ioredis": "^5.4.1",
+        "ip": "^2.0.1",
+        "meilisearch": "^0.42.0",
+        "nanoid": "^5.0.7",
+        "nodemailer": "^6.9.16",
+        "semver": "^7.6.3",
+        "sharp": "^0.33.5"
+    },
+    "devDependencies": {
+        "@app/utils": "workspace:*",
+        "@types/bun": "latest",
+        "@types/ioredis": "^5.0.0",
+        "@types/ip": "^1.1.3",
+        "@types/nodemailer": "^6.4.17",
+        "@types/semver": "^7.5.8",
+        "@types/xml2js": "^0.4.14",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.4.5",
+        "prisma": "^6.0.1",
+        "xml2js": "^0.6.2"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    }
+}

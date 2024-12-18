@@ -1,0 +1,13 @@
+node_modules
+uploads
+.env
+
+meilisearch
+private
+redis
+script.ts
+
+# redis files
+dump.rdb
+dumps
+data.ms

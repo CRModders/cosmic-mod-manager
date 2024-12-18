@@ -1,0 +1,28 @@
+[data-view-transition="theme-switch"]::view-transition-group(root) {
+    animation-duration: .5s;
+}
+
+[data-view-transition="theme-switch"]::view-transition-new(root),
+[data-view-transition="theme-switch"]::view-transition-old(root) {
+    mix-blend-mode: normal;
+}
+
+[data-view-transition="theme-switch"]::view-transition-new(root) {
+    animation-timing-function: ease-in;
+    animation-name: reveal-theme;
+}
+
+[data-view-transition="theme-switch"]::view-transition-old(root),
+.dark[data-view-transition="theme-switch"]::view-transition-old(root) {
+    animation: none;
+}
+
+@keyframes reveal-theme {
+    from {
+        clip-path: circle(0 at var(--click-x, 81.8%) var(--click-y, 1.85rem));
+    }
+
+    to {
+        clip-path: circle(135% at var(--click-x, 81.8%) var(--click-y, 1.85rem));
+    }
+}
