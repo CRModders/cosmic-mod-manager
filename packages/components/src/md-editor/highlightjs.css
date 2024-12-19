@@ -65,20 +65,13 @@
     @apply pl-10;
 }
 
-
 .markdown-body li:not(:has(> p)),
-.markdown-body li > p {
-    @apply mb-1.5;
-}
-
+.markdown-body li > p,
 .markdown-body p:has(+ ul),
-.markdown-body p:has(+ ol) {
-    @apply mb-1;
-}
-
+.markdown-body p:has(+ ol),
 .markdown-body li p:has(+ ul),
 .markdown-body li p:has(+ ol) {
-    @apply mb-1;
+    @apply mb-2;
 }
 
 .markdown-body ul li {

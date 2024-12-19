@@ -113,7 +113,10 @@ function BaseView(props: SearchListItemProps) {
                 />
             </Link>
 
-            <div className={cn("h-fit mobile-break-words", galleryViewType && "mr-card-surround")} style={{ gridArea: "title" }}>
+            <div
+                className={cn("h-fit whitespace-break-spaces text-wrap", galleryViewType && "mr-card-surround")}
+                style={{ gridArea: "title" }}
+            >
                 <Link
                     to={projectPageUrl}
                     className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block")}
@@ -126,17 +129,23 @@ function BaseView(props: SearchListItemProps) {
                         by{" "}
                         <Link
                             to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
-                            className="underline hover:brightness-110"
+                            className="underline hover:brightness-110 mobile-break-words"
                             title={props.isOrgOwned ? `${props.author} (${t.project.organization})` : props.author}
                         >
-                            {props.author} {props.isOrgOwned && <Building2Icon className="inline w-4 h-4" />}
+                            {props.author}
+                            {props.isOrgOwned ? (
+                                <>
+                                    {" "}
+                                    <Building2Icon className="inline w-4 h-4" />
+                                </>
+                            ) : null}
                         </Link>
                     </>
                 )}
             </div>
 
             <p
-                className={cn("leading-tight sm:text-pretty max-w-[80ch]", galleryViewType && "mx-card-surround")}
+                className={cn("leading-tight sm:text-pretty max-w-[80ch] mobile-break-words", galleryViewType && "mx-card-surround")}
                 style={{ gridArea: "summary" }}
             >
                 {props.summary}
