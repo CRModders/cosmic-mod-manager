@@ -1,7 +1,11 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
 
+import LoaderBar from "@app/components/misc/loader-bar";
+import { SuspenseFallback } from "@app/components/ui/spinner";
 import type { Route } from "./+types/root";
-import Navbar from "./components/navbar/Navbar";
+import Navbar from "./components/navbar";
+import TitleBar from "./components/title-bar";
+import { PathSegmentsContextProvider } from "./hooks/path-segments";
 import "./index.css";
 
 export const links: Route.LinksFunction = () => [
@@ -21,13 +25,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Meta />
                 <Links />
             </head>
-            <body className="antialiased">
-                <div className="w-full h-[100vh] relative grid grid-cols-[auto_1fr]">
-                    <Navbar />
-                    {children}
-                </div>
-                <ScrollRestoration />
-                <Scripts />
+            <body className="antialiased bg-card-background">
+                <PathSegmentsContextProvider>
+                    <div className="w-full h-[100vh] relative grid grid-cols-[auto_1fr]">
+                        <Navbar />
+
+                        <div className="grid grid-rows-[auto_1fr] overflow-y-auto">
+                            <TitleBar />
+                            {children}
+                        </div>
+                    </div>
+                    <ScrollRestoration />
+                    <Scripts />
+                </PathSegmentsContextProvider>
             </body>
         </html>
     );
@@ -35,10 +45,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     return (
-        <main className="px-4 overflow-y-auto">
+        <main className="px-4 overflow-y-auto bg-background rounded-tl-lg relative">
             <Outlet />
+            <LoaderBar height={2.75} />
         </main>
     );
+}
+
+export function HydrateFallback() {
+    return <SuspenseFallback />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

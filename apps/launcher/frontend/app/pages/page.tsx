@@ -1,21 +1,26 @@
-import { ListFiles } from "@wails/App";
 import { useEffect, useState } from "react";
 
-export default function HomePage() {
-    const [files, setFiles] = useState<string[]>([]);
+interface Props {
+    files: string[];
+}
 
-    async function fetchFiles() {
-        setFiles(await ListFiles());
-    }
+interface LocationHistory {
+    length: number;
+    state: unknown;
+}
+
+export default function HomePage(props: Props) {
+    const [history, setHistory] = useState<LocationHistory | null>(null);
 
     useEffect(() => {
-        fetchFiles();
+        setHistory({ length: window.history.length, state: window.history.state });
     }, []);
 
     return (
         <div>
             <h1>Home Page</h1>
-            <pre>{JSON.stringify(files, null, 4)}</pre>
+            <pre>{JSON.stringify(history, null, 4)}</pre>
+            <pre>{JSON.stringify(props.files, null, 4)}</pre>
         </div>
     );
 }

@@ -29,6 +29,9 @@
             "~/*": [
                 "./app/*"
             ],
+            "@/*": [
+                "./*"
+            ],
             "@app/components/*": [
                 "./../../../packages/components/src/*"
             ],

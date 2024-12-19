@@ -69,7 +69,7 @@ const LoadingBar = forwardRef<LoadingBarRef, IProps>(
         };
 
         const loaderContainerStyle: CSSProperties = {
-            position: "fixed",
+            position: "absolute",
             top: 0,
             left: 0,
             height,

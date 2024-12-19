@@ -25,6 +25,7 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
+		Frameless: true,
 		OnStartup: app.startup,
 		Bind: []interface{}{
 			app,

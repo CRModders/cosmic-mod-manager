@@ -6,42 +6,48 @@ import LoadingBar, { type LoadingBarRef } from "./rtk-loading-indicator";
 let timeoutRef: number | undefined = undefined;
 let loaderStarted = false;
 
-export default function LoaderBar() {
-	const navigation = useNavigation();
-	const ref = useRef<LoadingBarRef>(null);
+interface Props {
+    height?: number;
+    instantStart?: boolean;
+}
 
-	function loadingStart() {
-		ref.current?.staticStart(99.99);
-		loaderStarted = true;
-	}
+export default function LoaderBar(props: Props) {
+    const navigation = useNavigation();
+    const ref = useRef<LoadingBarRef>(null);
 
-	function loadingEnd() {
-		if (interactionsDisabled()) enableInteractions();
-		if (!loaderStarted) return;
+    function loadingStart() {
+        ref.current?.staticStart(99.99);
+        loaderStarted = true;
+    }
 
-		ref.current?.complete();
-		loaderStarted = false;
-	}
+    function loadingEnd() {
+        if (interactionsDisabled()) enableInteractions();
+        if (!loaderStarted) return;
 
-	useEffect(() => {
-		if (timeoutRef) window.clearTimeout(timeoutRef);
+        ref.current?.complete();
+        loaderStarted = false;
+    }
 
-		if (navigation.state === "loading" || navigation.state === "submitting") {
-			timeoutRef = window.setTimeout(loadingStart, 100);
-		}
+    useEffect(() => {
+        if (timeoutRef) window.clearTimeout(timeoutRef);
 
-		if (navigation.state === "idle") loadingEnd();
-	}, [navigation.location?.pathname]);
+        if (navigation.state === "loading" || navigation.state === "submitting") {
+            if (props.instantStart) loadingStart();
+            else timeoutRef = window.setTimeout(loadingStart, 100);
+        }
 
-	return (
-		<LoadingBar
-			ref={ref}
-			className="!bg-gradient-to-r from-accent-background/85 to-accent-background"
-			loaderSpeed={1200}
-			shadow={true}
-			height={2.25}
-			transitionTime={350}
-			waitingTime={250}
-		/>
-	);
+        if (navigation.state === "idle") loadingEnd();
+    }, [navigation.location?.pathname]);
+
+    return (
+        <LoadingBar
+            ref={ref}
+            className="!bg-gradient-to-r from-accent-background/85 to-accent-background"
+            loaderSpeed={1200}
+            shadow={true}
+            height={props.height || 2.25}
+            transitionTime={350}
+            waitingTime={250}
+        />
+    );
 }

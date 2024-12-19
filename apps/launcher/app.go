@@ -23,14 +23,41 @@ func (a *App) startup(ctx context.Context) {
 // List directory files
 // Just a test function
 func (a *App) ListFiles() []string {
-	files, err := os.ReadDir("./")
+	return GetDirFiles("./")
+}
+
+func GetDirFiles(dir string) []string {
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var fileNames []string
+	filesList := []string{}
 	for _, file := range files {
-		fileNames = append(fileNames, file.Name())
+		fileName := file.Name()
+		if IsExcludedDir(&fileName) {
+			continue
+		}
+
+		if file.IsDir() {
+			nestedFiles := GetDirFiles(dir + fileName + "/")
+			filesList = append(filesList, nestedFiles...)
+		} else {
+			filesList = append(filesList, dir+fileName)
+		}
 	}
-	return fileNames
+
+	return filesList
+}
+
+func IsExcludedDir(dirName *string) bool {
+	excludedDirs := []string{"node_modules", ".git", "dist", "build", "wailsjs", ".react-router"}
+
+	for _, excludedDir := range excludedDirs {
+		if *dirName == excludedDir {
+			return true
+		}
+	}
+
+	return false
 }

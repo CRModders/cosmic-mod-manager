@@ -5,10 +5,10 @@ import { ButtonLink } from "~/components/ui/link";
 
 export default function Navbar() {
     return (
-        <header className="bg-card-background p-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] place-items-center">
+        <header className="p-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-1 place-items-center">
             <div className="grid grid-cols-1 gap-4 place-items-center">
                 <ImgWrapper
-                    className="w-12 h-12 rounded-md"
+                    className="w-11 h-11 rounded-md"
                     src="https://i.pinimg.com/736x/54/f4/b5/54f4b55a59ff9ddf2a2655c7f35e4356.jpg"
                     alt="Avatar"
                 />
