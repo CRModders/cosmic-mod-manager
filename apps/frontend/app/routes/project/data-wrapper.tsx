@@ -17,6 +17,8 @@ export default function _ProjectDataWrapper() {
     const { t } = useTranslation();
     const data = useProjectData();
 
+    if (!data?.projectSlug || !data?.projectType) return null;
+
     if (!data?.projectData?.id) {
         const type = getProjectTypeFromName(data?.projectType);
 
