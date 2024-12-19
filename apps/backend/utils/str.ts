@@ -9,10 +9,13 @@ export function generateDbId() {
     return nanoid(STRING_ID_LENGTH);
 }
 
-export function tryJsonParse(str: string) {
-    try {
-        return JSON.parse(str);
-    } catch (error) {
-        return null;
-    }
+export function parseJson<T extends object>(str: string | null): Promise<T | null> {
+    return new Promise((resolve) => {
+        try {
+            if (str == null) resolve(str);
+            else resolve(JSON.parse(str));
+        } catch (error) {
+            resolve(null);
+        }
+    });
 }

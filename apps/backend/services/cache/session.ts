@@ -1,9 +1,10 @@
+import type { GlobalUserRole } from "@app/utils/types";
 import type { User } from "@prisma/client";
 import redis from "~/services/redis";
 import { hashString } from "~/src/auth/helpers";
 import type { ContextUserData } from "~/types";
 import { SESSION_IDS_NAMESPACE, SESSION_TOKENS_NAMESPACE, USER_DATA_NAMESPACE } from "~/types/namespaces";
-import { tryJsonParse } from "~/utils/str";
+import { parseJson } from "~/utils/str";
 import { cacheKey } from "./utils";
 
 const SESSION_CACHE_EXPIRY_seconds = 300;
@@ -11,7 +12,7 @@ const SESSION_CACHE_EXPIRY_seconds = 300;
 // ? Get Session Cache
 export async function getUserDataCache(userId: string): Promise<User | null> {
     const userData = await redis.get(cacheKey(userId, USER_DATA_NAMESPACE));
-    const user = userData ? (tryJsonParse(userData) as User) : null;
+    const user = userData ? await parseJson<User>(userData) : null;
 
     if (!user) return null;
     return user;
@@ -24,7 +25,7 @@ export async function getSessionCacheFromId(sessionId: string): Promise<ContextU
     const user = await getUserDataCache(userId);
     if (!user) return null;
 
-    return { ...user, sessionId: sessionId };
+    return { ...user, role: user.role as GlobalUserRole, sessionId: sessionId };
 }
 
 export async function getSessionCacheFromToken(token: string, isHashed = false): Promise<ContextUserData | null> {

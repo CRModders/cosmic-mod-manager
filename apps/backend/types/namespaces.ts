@@ -8,3 +8,5 @@ export const CSRF_STATE_NAMESPACE = "csrf-state";
 export const USER_DATA_NAMESPACE = "session-data";
 export const SESSION_TOKENS_NAMESPACE = "session-tokens";
 export const SESSION_IDS_NAMESPACE = "session-ids";
+
+export const STATISTICS_NAMESPACE = "statistics";

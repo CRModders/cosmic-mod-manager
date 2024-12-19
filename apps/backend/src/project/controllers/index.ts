@@ -16,7 +16,7 @@ import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
 import { isNumber } from "~/utils";
 import { HTTP_STATUS } from "~/utils/http";
-import { tryJsonParse } from "~/utils/str";
+import { parseJson } from "~/utils/str";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 import { projectDetailsFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
@@ -153,7 +153,7 @@ export async function checkProjectSlugValidity(slug: string): Promise<RouteHandl
     return { data: { id: project.id }, status: HTTP_STATUS.OK };
 }
 
-export async function getManyProjects(userSession: ContextUserData | undefined, projectIds: string[]): Promise<RouteHandlerResponse> {
+export async function getManyProjects(userSession: ContextUserData | undefined, projectIds: string[]) {
     const list = await prisma.project.findMany({
         where: {
             id: {
@@ -205,18 +205,15 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
     return { data: projectsList, status: HTTP_STATUS.OK };
 }
 
-export async function getRandomProjects(
-    userSession: ContextUserData | undefined,
-    count: number,
-    cached = false,
-): Promise<RouteHandlerResponse> {
+export async function getRandomProjects(userSession: ContextUserData | undefined, count: number, cached = false) {
     let projectsCount = 20;
     if (isNumber(count) && count > 0 && count <= 100) {
         projectsCount = count;
     }
 
     if (cached) {
-        const cachedData = tryJsonParse((await redis.get(`random-projects-cache:${count}`)) || "");
+        const cache = await redis.get(`random-projects-cache:${count}`);
+        const cachedData = await parseJson<ProjectListItem>(cache);
         if (cachedData) {
             return { data: cachedData, status: HTTP_STATUS.OK };
         }
