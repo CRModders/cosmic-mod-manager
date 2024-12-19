@@ -1,0 +1,11 @@
+@import "./../../../../packages/components/src/index.css";
+@import "./font.css";
+
+html,
+html body {
+    scrollbar-gutter: unset;
+}
+
+body>* {
+    --scrollbar-radius: 0;
+}

@@ -10,7 +10,7 @@ interface CustomLinkProps extends LinkProps {}
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
 const Link = React.forwardRef<HTMLAnchorElement, CustomLinkProps>((props, ref) => {
-    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={true} />;
+    return <RemixLink ref={ref} {...props} to={props.to} viewTransition={props.viewTransition !== false} />;
 });
 export default Link;
 
@@ -26,32 +26,29 @@ interface ButtonLinkProps extends Omit<LinkProps, "to"> {
     preventScrollReset?: boolean;
 }
 
-export function ButtonLink({
-    url,
-    children,
-    className,
-    exactTailMatch = true,
-    activityIndicator = true,
-    activeClassName,
-    ...props
-}: ButtonLinkProps) {
-    const location = useLocation();
+export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+    ({ url, children, className, exactTailMatch = true, activityIndicator = true, activeClassName, ...props }, ref) => {
+        const location = useLocation();
 
-    return (
-        <Link
-            {...props}
-            to={url}
-            className={cn(
-                "bg_hover_stagger w-full min-h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
-                isCurrLinkActive(url, location.pathname, exactTailMatch) && activityIndicator && "bg-shallow-background/70 text-foreground",
-                isCurrLinkActive(url, location.pathname, exactTailMatch) && `active ${activeClassName}`,
-                className,
-            )}
-        >
-            {children}
-        </Link>
-    );
-}
+        return (
+            <Link
+                {...props}
+                to={url}
+                ref={ref}
+                className={cn(
+                    "bg_hover_stagger w-full min-h-10 px-4 py-2 font-medium text-muted-foreground flex items-center justify-start gap-2 whitespace-nowrap hover:bg-shallow-background/60",
+                    isCurrLinkActive(url, location.pathname, exactTailMatch) &&
+                        activityIndicator &&
+                        "bg-shallow-background/70 text-foreground",
+                    isCurrLinkActive(url, location.pathname, exactTailMatch) && `active ${activeClassName}`,
+                    className,
+                )}
+            >
+                {children}
+            </Link>
+        );
+    },
+);
 
 export interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     children: React.ReactNode;

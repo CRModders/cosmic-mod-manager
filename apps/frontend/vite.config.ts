@@ -77,7 +77,6 @@ export default defineConfig({
             },
         },
     },
-    // @ts-ignore
     plugins: [reactRouter(), tsconfigPaths()],
 });
 

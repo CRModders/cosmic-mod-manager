@@ -10,24 +10,24 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "font-[600] bg-accent-background text-card-background dark:text-background hover:bg-accent-background/90 neumorphic_shadow [--shadow-alpha:0.25]",
+                    "font-[600] bg-accent-background text-card-background dark:text-background hover:bg-accent-background/90 [--shadow-alpha:0.25]",
                 destructive:
-                    "font-[600] bg-danger-background text-card-background dark:text-background hover:bg-danger-background/90 neumorphic_shadow [--shadow-alpha:1]",
+                    "font-[600] bg-danger-background text-card-background dark:text-background hover:bg-danger-background/90 [--shadow-alpha:1]",
 
                 outline: "border border-shallow-background hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
 
                 secondary:
-                    "bg-shallow-background dark:bg-shallow-background/70 text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background neumorphic_shadow",
+                    "bg-shallow-background dark:bg-shallow-background/70 text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
                 "secondary-no-shadow":
                     "bg-shallow-background dark:bg-shallow-background/70 text-muted-foreground hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
                 "secondary-inverted":
-                    "text-muted-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
+                    "text-muted-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background",
                 "secondary-destructive":
-                    "text-danger-foreground bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background neumorphic_shadow",
+                    "text-danger-foreground bg-shallow-background dark:bg-shallow-background/70 hover:bg-shallow-background/70 hover:dark:bg-shallow-background",
                 "secondary-destructive-inverted":
-                    "text-danger-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background neumorphic_shadow",
+                    "text-danger-foreground bg-card-background dark:bg-shallow-background/70 hover:bg-card-background/70 dark:hover:bg-shallow-background",
                 "secondary-dark":
-                    "text-muted-foreground bg-card-background dark:bg-card-background/70 hover:bg-card-background/70 hover:dark:bg-card-background neumorphic_shadow",
+                    "text-muted-foreground bg-card-background dark:bg-card-background/70 hover:bg-card-background/70 hover:dark:bg-card-background",
 
                 ghost: "text-muted-foreground hover:bg-shallow-background hover:dark:bg-shallow-background/75",
                 "ghost-no-shadow": "text-muted-foreground hover:bg-shallow-background hover:dark:bg-shallow-background/75",
