@@ -23,4 +23,7 @@ startTransition(async () => {
             <HydratedRouter />
         </LocaleProvider>,
     );
+
+    // @ts-ignore
+    window.hydrated = true;
 });

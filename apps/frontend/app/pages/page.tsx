@@ -4,18 +4,20 @@ import { cn } from "@app/components/utils";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import { ProjectPagePath } from "~/utils/urls";
+import starryBg from "./starry-bg?url";
 
 interface Props {
     projects: ProjectListItem[];
 }
 
 export default function HomePage({ projects }: Props) {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const session = useSession();
     const { t } = useTranslation();
     const nav = t.navbar;
@@ -29,16 +31,32 @@ export default function HomePage({ projects }: Props) {
         setGridBgPortal(document.querySelector("#hero_section_bg_portal"));
     }, []);
 
+    function drawStars() {
+        if (canvasRef?.current?.dataset?.drawn) return;
+
+        try {
+            // @ts-ignore
+            window.drawStars(undefined, true);
+        } catch {}
+
+        setTimeout(() => {
+            drawStars();
+        }, 100);
+    }
+
+    useEffect(() => {
+        drawStars();
+    }, []);
+
     const titleParts = t.homePage.title.split("{{projectType}}");
 
     return (
         <>
             {gridBgPortal
                 ? createPortal(
-                      <div className="relative w-full h-[115vh] lg:max-h-[100vh] flex items-center justify-center overflow-hidden">
-                          <div className="absolute w-full h-full hero_section_grid_bg top-0 left-0">
-                              <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent via-transparent to-background" />
-                          </div>
+                      <div className="overflow-hidden relative grid grid-cols-1 grid-rows-1">
+                          <canvas ref={canvasRef} id="starry_bg_canvas" className="w-full full_page col-span-full row-span-full" />
+                          <div className="hero_section_fading_bg w-full h-full bg-gradient-to-b from-transparent to-background col-span-full row-span-full" />
                       </div>,
                       gridBgPortal,
                   )
@@ -109,6 +127,8 @@ export default function HomePage({ projects }: Props) {
 
                 <ShowCase projects={projects} />
             </main>
+
+            <script type="module" src={starryBg} />
         </>
     );
 }

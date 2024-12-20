@@ -199,8 +199,8 @@ body.no-scrollbar {
 
     .full_page:not(.no_full_page) {
         min-height: 100vh;
-        min-height: min(100vh, 67rem);
-        min-height: clamp(45rem, 100vh, 67rem);
+        min-height: min(100vh, 68rem);
+        min-height: clamp(45rem, 100vh, 68rem);
     }
 
     .bg_hover_stagger:not(.no_bg_hover_stagger) {
