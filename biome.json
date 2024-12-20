@@ -1,11 +1,21 @@
 {
     "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
-        "ignore": ["node_modules/*", "apps/**/node_modules/*", "dist/*"],
+        "ignore": [
+            "./**/node_modules/*",
+            "./**/dist/*",
+            "./**/build/*",
+            "./**/public/*",
+            "./**/pm2.config.cjs",
+            "./**/.react-router/*",
+            "./**/wailsjs/*",
+            "./**/entry.*.tsx"
+        ],
         "include": ["./*"]
     },
     "linter": {
         "enabled": true,
+        "ignore": ["./**/*.css"],
         "rules": {
             "correctness": {
                 "useExhaustiveDependencies": "off"

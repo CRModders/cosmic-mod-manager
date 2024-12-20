@@ -4,7 +4,7 @@
  * For more information, see https://remix.run/file-conventions/entry.client
  */
 
-import { startTransition } from "react";
+import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 import { useUrlLocale } from "~/utils/urls";
@@ -18,8 +18,10 @@ startTransition(async () => {
 
     hydrateRoot(
         document,
-        <LocaleProvider initLocale={initLocaleModule} initMetadata={initLocaleMetadata}>
-            <HydratedRouter />
-        </LocaleProvider>,
+        <StrictMode>
+            <LocaleProvider initLocale={initLocaleModule} initMetadata={initLocaleMetadata}>
+                <HydratedRouter />
+            </LocaleProvider>
+        </StrictMode>,
     );
 });

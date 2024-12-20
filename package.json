@@ -2,10 +2,11 @@
     "name": "cosmic-mod-manager",
     "module": "index.ts",
     "type": "module",
-    "dependencies": {
-        "@biomejs/biome": "^1.9.4"
+    "scripts": {
+        "lint": "biome lint"
     },
     "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
         "@types/bun": "latest"
     },
     "peerDependencies": {

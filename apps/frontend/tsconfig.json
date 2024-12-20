@@ -2,7 +2,7 @@
     "include": [
         ".",
         "./.react-router/types",
-        "./../../packages/components"
+        "./../../packages/components",
     ],
     "exclude": [
         "node_modules",
