@@ -7,7 +7,7 @@ import { SearchResultSortMethod } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useLocation, useOutletContext } from "react-router";
+import { useLocation, useNavigation, useOutletContext } from "react-router";
 import SearchListItem, { ViewType } from "~/components/search-list-item";
 import type { SearchOutlet } from "./layout";
 import { getSearchResultsQuery } from "./loader";
@@ -15,8 +15,12 @@ import { getSearchResultsQuery } from "./loader";
 export function SearchResultsPage() {
     const { type, typeStr, viewType, searchParams } = useOutletContext<SearchOutlet>();
 
-    const location = useLocation();
+    const currLocation = useLocation();
+    const nextLocation = useNavigation().location;
+
+    const location = nextLocation || currLocation;
     const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type === typeStr ? type : undefined));
+
     let showPerPage = Number.parseInt(searchParams.get(searchLimitParamNamespace) || defaultSearchLimit.toString());
     if (!isNumber(showPerPage)) showPerPage = defaultSearchLimit;
 

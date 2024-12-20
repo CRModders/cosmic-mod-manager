@@ -20,7 +20,7 @@ import { Capitalize } from "@app/utils/string";
 import { ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Outlet, useSearchParams } from "react-router";
+import { Outlet, useNavigation, useSearchParams } from "react-router";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectType } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
@@ -37,24 +37,30 @@ interface UpdateSearchParamProps {
     customURLModifier?: (url: URL) => URL;
 }
 
+let updateSearchParam_timeoutRef: number | undefined;
+
 export default function SearchPageLayout() {
     const { t } = useTranslation();
     const searchInput = useRef<HTMLInputElement>(null);
-    const [searchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
 
-    const navigate = useNavigate(undefined, { viewTransition: false });
+    const nextLocation = useNavigation().location;
+    const nextSearchParams = new URLSearchParams(nextLocation?.search);
+    const [currSearchParams] = useSearchParams();
+    const searchParams = nextLocation?.search ? nextSearchParams : currSearchParams;
 
+    // Param values
+    const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
+    const sortBy = searchParams.get(sortByParamNamespace);
+    const showPerPage = searchParams.get(searchLimitParamNamespace);
+    const [searchTerm_state, setSearchTerm_state] = useState(searchQueryParam);
+
+    const navigate = useNavigate(undefined, { viewTransition: false });
     const typeStr = useProjectType();
     const type = getProjectTypeFromName(typeStr);
 
     const viewType = getSearchDisplayPreference(type);
     const [_, reRender] = useState("0");
-
-    // Param values
-    const searchQuery = searchParams.get(searchQueryParamNamespace) || "";
-    const sortBy = searchParams.get(sortByParamNamespace);
-    const showPerPage = searchParams.get(searchLimitParamNamespace);
 
     // Search box focus
     const handleSearchInputFocus = (e: KeyboardEvent) => {
@@ -67,11 +73,28 @@ export default function SearchPageLayout() {
     };
 
     useEffect(() => {
-        document.addEventListener("keyup", handleSearchInputFocus);
+        if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
 
-        return () => {
-            document.removeEventListener("keyup", handleSearchInputFocus);
-        };
+        updateSearchParam_timeoutRef = window.setTimeout(() => {
+            const urlPathname = updateSearchParam({
+                key: searchQueryParamNamespace,
+                value: searchTerm_state,
+                deleteIfFalsyValue: true,
+                newParamsInsertionMode: "replace",
+                customURLModifier: deletePageOffsetParam,
+            });
+            navigate(urlPathname, { viewTransition: false });
+        }, 200);
+    }, [searchTerm_state]);
+
+    // Update the state when the search param changes
+    useEffect(() => {
+        setSearchTerm_state(searchQueryParam);
+    }, [nextLocation?.pathname]);
+
+    useEffect(() => {
+        document.addEventListener("keyup", handleSearchInputFocus);
+        return () => document.removeEventListener("keyup", handleSearchInputFocus);
     }, []);
 
     const searchLabel = t.search[typeStr];
@@ -88,18 +111,8 @@ export default function SearchPageLayout() {
                         />
                         <Input
                             ref={searchInput}
-                            value={searchQuery}
-                            onChange={(e) => {
-                                const val = e.target.value;
-                                const urlPathname = updateSearchParam({
-                                    key: searchQueryParamNamespace,
-                                    value: val,
-                                    deleteIfFalsyValue: true,
-                                    newParamsInsertionMode: "replace",
-                                    customURLModifier: deletePageOffsetParam,
-                                });
-                                navigate(urlPathname, { viewTransition: false });
-                            }}
+                            value={searchTerm_state}
+                            onChange={(e) => setSearchTerm_state(e.target.value || "")}
                             placeholder={`${searchLabel}...`}
                             className="text-md font-medium !pl-9 focus:[&>kbd]:invisible"
                             id="search-input"
