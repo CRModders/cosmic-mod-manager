@@ -129,13 +129,8 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
             const id = createURLSafeSlug(headingContent).value;
             if (!id) continue;
 
-            const anchor = `<a class="anchor" title="Link for ${headingContent}" href="#${id}">#</a>`;
-
-            const hashIndex = part.indexOf("# ");
-            const headingParts = [part.slice(0, hashIndex), part.slice(hashIndex + 2)];
-            const headingType = parseMdHeading(`#${headingParts[0]}`);
-            const heading = `<${headingType} id="${id}">${headingParts[1]}${anchor}</${headingType}>\n `;
-            parts[i] = heading;
+            const anchor = `<a class="anchor" id="${id}" title="Permalink: ${headingContent}" href="#${id}">#</a>`;
+            parts[i] = renderHighlightedString(`${part} ${anchor}`, urlModifier);
         }
 
         return parts.join("\n");
