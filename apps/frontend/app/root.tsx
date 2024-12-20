@@ -145,7 +145,7 @@ export default function App() {
             <ValidateClientSession />
             <ClientOnly Element={ToastAnnouncer} />
             <ClientOnly Element={ToastAnnouncer} />
-            <ClientOnly Element={() => <LoaderBar />} />
+            <ClientOnly Element={LoaderBar} />
 
             {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
             <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />

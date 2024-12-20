@@ -9,7 +9,7 @@
             "./**/pm2.config.cjs",
             "./**/.react-router/*",
             "./**/wailsjs/*",
-            "./**/entry.*.tsx"
+            "./**/entry.server.tsx"
         ],
         "include": ["./*"]
     },

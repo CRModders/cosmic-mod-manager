@@ -11,11 +11,15 @@ interface Props {
     instantStart?: boolean;
 }
 
-export default function LoaderBar(props: Props) {
+export default function LoaderBar(props?: Props) {
+    if (!props) props = {};
+
     const navigation = useNavigation();
     const ref = useRef<LoadingBarRef>(null);
 
     function loadingStart() {
+        if (loaderStarted) return;
+
         ref.current?.staticStart(99.99);
         loaderStarted = true;
     }
@@ -32,7 +36,7 @@ export default function LoaderBar(props: Props) {
         if (timeoutRef) window.clearTimeout(timeoutRef);
 
         if (navigation.state === "loading" || navigation.state === "submitting") {
-            if (props.instantStart) loadingStart();
+            if (props.instantStart === true) loadingStart();
             else timeoutRef = window.setTimeout(loadingStart, 100);
         }
 
