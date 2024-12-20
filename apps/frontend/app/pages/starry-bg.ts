@@ -1,17 +1,7 @@
 import { MersenneTwister } from "@app/utils/random";
-
 const m = new MersenneTwister();
 
-main();
-
-async function main() {
-    while (true) {
-        // @ts-ignore
-        if (!window.hydrated) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        } else break;
-    }
-
+export default async function main() {
     let stars: Star[] = [];
     let meteors: Meteor[] = [];
 

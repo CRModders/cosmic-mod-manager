@@ -10,7 +10,7 @@ import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import { ProjectPagePath } from "~/utils/urls";
-import starryBg from "./starry-bg?url";
+import DrawStarsBg from "./starry-bg";
 
 interface Props {
     projects: ProjectListItem[];
@@ -45,6 +45,10 @@ export default function HomePage({ projects }: Props) {
     }
 
     useEffect(() => {
+        // Initial run
+        DrawStarsBg();
+
+        // Redraw stars
         drawStars();
     }, []);
 
@@ -127,8 +131,6 @@ export default function HomePage({ projects }: Props) {
 
                 <ShowCase projects={projects} />
             </main>
-
-            <script type="module" src={starryBg} />
         </>
     );
 }
