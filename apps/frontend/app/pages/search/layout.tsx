@@ -21,6 +21,7 @@ import { ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigation, useSearchParams } from "react-router";
+import { useSpinnerCtx } from "~/components/global-spinner";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectType } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
@@ -41,6 +42,8 @@ let updateSearchParam_timeoutRef: number | undefined;
 
 export default function SearchPageLayout() {
     const { t } = useTranslation();
+    const { showSpinner } = useSpinnerCtx();
+
     const searchInput = useRef<HTMLInputElement>(null);
     const [showFilters, setShowFilters] = useState(false);
 
@@ -105,10 +108,16 @@ export default function SearchPageLayout() {
             <main id="main" style={{ gridArea: "content" }} className="h-fit grid grid-cols-1 gap-panel-cards">
                 <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2">
                     <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
-                        <SearchIcon
-                            aria-label="Search Icon"
-                            className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground absolute left-2.5 top-[50%] translate-y-[-50%]"
-                        />
+                        <span className="absolute left-2.5 top-[50%] translate-y-[-50%] grid grid-cols-1 grid-rows-1">
+                            <Spinner className={cn("col-span-full row-span-full opacity-0", showSpinner && "opacity-100")} />
+                            <SearchIcon
+                                aria-label="Search Icon"
+                                className={cn(
+                                    "w-btn-icon-md h-btn-icon-md text-extra-muted-foreground col-span-full row-span-full opacity-100 transition-opacity duration-500",
+                                    showSpinner && "opacity-0",
+                                )}
+                            />
+                        </span>
                         <Input
                             ref={searchInput}
                             value={searchTerm_state}
@@ -169,6 +178,7 @@ export default function SearchPageLayout() {
                                 value: val,
                                 deleteIfMatches: `${defaultSearchLimit}`,
                                 newParamsInsertionMode: "replace",
+                                customURLModifier: deletePageOffsetParam,
                             });
                             navigate(urlPathname, { viewTransition: false });
                         }}
@@ -216,6 +226,17 @@ export default function SearchPageLayout() {
                 />
             </main>
         </div>
+    );
+}
+
+function Spinner({ className }: { className?: string }) {
+    return (
+        <div
+            className={cn(
+                "w-[1.17rem] h-[1.17rem] border-[0.17rem] rounded-full border-accent-background border-t-transparent transition-opacity animate-spin duration-500",
+                className,
+            )}
+        />
     );
 }
 

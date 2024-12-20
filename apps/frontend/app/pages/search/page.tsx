@@ -1,5 +1,4 @@
 import PaginatedNavigation from "@app/components/misc/pagination-nav";
-import { LoadingSpinner } from "@app/components/ui/spinner";
 import { cn } from "@app/components/utils";
 import { defaultSearchLimit, pageOffsetParamNamespace, searchLimitParamNamespace, sortByParamNamespace } from "@app/utils/config/search";
 import { isNumber } from "@app/utils/number";
@@ -8,6 +7,7 @@ import type { ProjectListItem } from "@app/utils/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigation, useOutletContext } from "react-router";
+import { useSpinnerCtx } from "~/components/global-spinner";
 import SearchListItem, { ViewType } from "~/components/search-list-item";
 import type { SearchOutlet } from "./layout";
 import { getSearchResultsQuery } from "./loader";
@@ -15,6 +15,7 @@ import { getSearchResultsQuery } from "./loader";
 export function SearchResultsPage() {
     const { type, typeStr, viewType, searchParams } = useOutletContext<SearchOutlet>();
 
+    const { setShowSpinner } = useSpinnerCtx();
     const currLocation = useLocation();
     const nextLocation = useNavigation().location;
 
@@ -41,6 +42,10 @@ export function SearchResultsPage() {
     useEffect(() => {
         refetchSearchResults();
     }, [searchParams]);
+
+    useEffect(() => {
+        setShowSpinner(searchResult.isFetching);
+    }, [searchResult.isFetching]);
 
     return (
         <>
@@ -84,9 +89,7 @@ export function SearchResultsPage() {
             )}
 
             {!searchResult.data?.hits?.length && searchResult.isFetching && (
-                <div className="w-full flex items-center justify-center py-8">
-                    <LoadingSpinner />
-                </div>
+                <div className="w-full flex items-center justify-center py-8">...</div>
             )}
 
             {pagination}

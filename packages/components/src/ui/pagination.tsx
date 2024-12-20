@@ -44,6 +44,7 @@ const PaginationLink = ({ className, isActive, size = "icon", ...props }: Pagina
             className,
         )}
         viewTransition={false}
+        preventScrollReset
         {...props}
     />
 );
@@ -99,7 +100,7 @@ PaginationNext.displayName = "PaginationNext";
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
     <span aria-hidden className={cn("flex h-iconified-btn w-iconified-btn items-center justify-center", className)} {...props}>
-        <MoreHorizontalIcon className="w-btn-icon h-btn-icon" />
+        <MoreHorizontalIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
         <span className="sr-only">More pages</span>
     </span>
 );
