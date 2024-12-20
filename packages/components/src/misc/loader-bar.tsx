@@ -6,10 +6,8 @@ import LoadingBar, { type LoadingBarRef } from "./rtk-loading-indicator";
 let timeoutRef: number | undefined = undefined;
 let loaderStarted = false;
 
-interface Props {
-    height?: number;
+interface Props extends Partial<React.ComponentProps<typeof LoadingBar>> {
     instantStart?: boolean;
-    fixedPosition?: boolean;
 }
 
 export default function LoaderBar(props?: Props) {
@@ -19,13 +17,11 @@ export default function LoaderBar(props?: Props) {
     const ref = useRef<LoadingBarRef>(null);
 
     function loadingStart() {
-        console.log("loadingStart");
         ref.current?.continuousStart(60);
         loaderStarted = true;
     }
 
     function loadingEnd() {
-        console.log("loadingEnd");
         if (interactionsDisabled()) enableInteractions();
         if (!loaderStarted) return;
 
@@ -34,8 +30,6 @@ export default function LoaderBar(props?: Props) {
     }
 
     useEffect(() => {
-        console.log("navigation.state", navigation.state);
-
         if (timeoutRef) window.clearTimeout(timeoutRef);
 
         if (navigation.state === "loading" || navigation.state === "submitting") {
@@ -54,12 +48,12 @@ export default function LoaderBar(props?: Props) {
         <LoadingBar
             ref={ref}
             className="!bg-gradient-to-r from-accent-background/85 to-accent-background"
-            fixedPosition={props.fixedPosition}
             loaderSpeed={1200}
             shadow={true}
             height={props.height || 2.25}
             transitionTime={350}
             waitingTime={250}
+            {...props}
         />
     );
 }

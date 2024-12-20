@@ -1,4 +1,4 @@
-import { Quit, WindowMinimise, WindowToggleMaximise } from "@/wailsjs/runtime/runtime";
+import { Quit, WindowMinimise, WindowToggleMaximise } from "@/wailsjs/runtime";
 import { Button } from "@app/components/ui/button";
 import { cn } from "@app/components/utils";
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";

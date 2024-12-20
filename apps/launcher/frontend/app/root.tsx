@@ -1,7 +1,7 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
-
 import LoaderBar from "@app/components/misc/loader-bar";
 import { SuspenseFallback } from "@app/components/ui/spinner";
+import { useEffect } from "react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
 import type { Route } from "./+types/root";
 import Navbar from "./components/navbar";
 import TitleBar from "./components/title-bar";
@@ -18,26 +18,24 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className="dark overflow-hidden rounded">
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <Meta />
                 <Links />
             </head>
-            <body className="antialiased bg-card-background">
-                <PathSegmentsContextProvider>
-                    <div className="w-full h-[100vh] relative grid grid-cols-[auto_1fr]">
+            <body className="antialiased bg-card-background rounded overflow-hidden">
+                <div className="w-full h-[100vh] relative grid grid-cols-[auto_1fr]">
+                    <PathSegmentsContextProvider>
                         <Navbar />
+                        {children}
+                    </PathSegmentsContextProvider>
+                </div>
 
-                        <div className="grid grid-rows-[auto_1fr] overflow-y-auto">
-                            <TitleBar />
-                            {children}
-                        </div>
-                    </div>
-                    <ScrollRestoration />
-                    <Scripts />
-                </PathSegmentsContextProvider>
+                <ScrollRestoration />
+                <Scripts />
+                <PreventResizeOnScrollbar />
             </body>
         </html>
     );
@@ -45,10 +43,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     return (
-        <main className="px-4 overflow-y-auto bg-background rounded-tl-lg relative">
-            <Outlet />
-            <LoaderBar height={2.75} />
-        </main>
+        <div className="grid grid-rows-[auto_1fr] overflow-y-auto">
+            <TitleBar />
+
+            <div
+                className="grid grid-cols-[auto_1fr] bg-background rounded-tl-lg relative overflow-y-auto"
+                style={{
+                    // @ts-ignore
+                    "-webkit-app-region": "no-drag",
+                }}
+            >
+                <div>
+                    <LoaderBar height={2.5} fixedPosition={false} />
+                </div>
+
+                <main className="px-4 overflow-y-auto">
+                    <Outlet />
+                </main>
+            </div>
+        </div>
     );
 }
 
@@ -80,4 +93,21 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
             )}
         </main>
     );
+}
+
+function PreventResizeOnScrollbar() {
+    function preventResizeNearScrollbar(e: UIEvent) {
+        console.log(e.target);
+        // const isNearScrollbar = window.innerWidth -  < 16;
+    }
+
+    useEffect(() => {
+        window.addEventListener("resize", preventResizeNearScrollbar);
+
+        return () => {
+            window.removeEventListener("resize", preventResizeNearScrollbar);
+        };
+    }, []);
+
+    return null;
 }

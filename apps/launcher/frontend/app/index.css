@@ -4,6 +4,8 @@
 html,
 html body {
     scrollbar-gutter: unset;
+    -webkit-app-region: no-drag;
+    --wails-draggable: no-drag;
 }
 
 body > * {

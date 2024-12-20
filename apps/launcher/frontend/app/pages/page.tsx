@@ -19,8 +19,8 @@ export default function HomePage(props: Props) {
     return (
         <div>
             <h1>Home Page</h1>
-            <pre>{JSON.stringify(history, null, 4)}</pre>
-            <pre>{JSON.stringify(props.files, null, 4)}</pre>
+            <pre className="text-lg">{JSON.stringify(history, null, 4)}</pre>
+            <pre className="text-lg">{JSON.stringify(props.files, null, 4)}</pre>
         </div>
     );
 }

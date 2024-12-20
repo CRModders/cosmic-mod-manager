@@ -137,10 +137,12 @@ body {
 ::-webkit-scrollbar {
     width: var(--scrollbar-width, 8px);
     height: var(--scrollbar-height, 8px);
+    --wails-draggable: no-drag;
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: hsla(var(--extra-muted-foreground), 0.5);
+    --wails-draggable: no-drag;
 }
 
 ::-webkit-scrollbar-thumb:hover {

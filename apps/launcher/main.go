@@ -19,8 +19,10 @@ func main() {
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:            "CRMM",
-		Width:            1024,
-		Height:           768,
+		Width:            1280,
+		Height:           800,
+		MinWidth:         960,
+		MinHeight:        720,
 		BackgroundColour: &options.RGBA{R: 228, G: 232, B: 236, A: 1},
 		AssetServer: &assetserver.Options{
 			Assets: assets,
