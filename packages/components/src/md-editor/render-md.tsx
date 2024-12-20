@@ -129,10 +129,10 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
             const id = createURLSafeSlug(headingContent).value;
             if (!id) continue;
 
-            const anchor = `<a class="anchor" title="${headingContent}" href="#${id}">#</a>`;
+            const anchor = `<a class="anchor" title="Link for ${headingContent}" href="#${id}">#</a>`;
 
             const hashIndex = part.indexOf("# ");
-            const headingParts = [part.slice(0, hashIndex + 1), part.slice(hashIndex + 2)];
+            const headingParts = [part.slice(0, hashIndex), part.slice(hashIndex + 2)];
             const headingType = parseMdHeading(`#${headingParts[0]}`);
             const heading = `<${headingType} id="${id}">${headingParts[1]}${anchor}</${headingType}>\n `;
             parts[i] = heading;
@@ -144,7 +144,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
     if (divElem === true) {
         return (
             <div
-                className={cn("w-full overflow-auto markdown-body thin-scrollbar", className)}
+                className={cn("w-full overflow-auto markdown-body", className)}
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
                 dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}
             />
@@ -153,7 +153,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
 
     return (
         <section
-            className={cn("w-full overflow-auto markdown-body thin-scrollbar", className)}
+            className={cn("w-full overflow-auto markdown-body", className)}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}
         />

@@ -130,7 +130,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
     return (
         <aside
             className={cn(
-                "relative thin-scrollbar h-fit flex flex-col gap-3 p-card-surround bg-card-background rounded-lg",
+                "relative h-fit flex flex-col gap-3 p-card-surround bg-card-background rounded-lg",
                 !showFilters && "hidden lg:flex",
             )}
             style={{ gridArea: "sidebar" }}

@@ -165,7 +165,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         {searchBox === false ? null : (
                             <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} size={1} className="w-full" />
                         )}
-                        <CommandList className="thin-scrollbar">
+                        <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
                                 {options.map((option) => {

@@ -1,6 +1,11 @@
 @import "./../../../../packages/components/src/index.css";
 @import "./font.css";
 
+
+:root {
+    --scrollbar-radius: 0;
+}
+
 html,
 html body {
     scrollbar-gutter: unset;
@@ -8,6 +13,8 @@ html body {
     --wails-draggable: no-drag;
 }
 
-body > * {
-    --scrollbar-radius: 0;
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb {
+    -webkit-app-region: no-drag;
+    --wails-draggable: no-drag;
 }
