@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+    color-scheme: dark;
+
     /* FONT SIZES */
     --font-tiny: 0.75rem;
     --font-sm: 0.87rem;
@@ -56,7 +58,7 @@
 }
 
 html,
-html body {
+body {
     color: hsla(var(--foreground));
     background-color: hsla(var(--background));
     font-size: var(--font-base);
@@ -74,7 +76,6 @@ html body {
 }
 
 /* Dark is the default theme */
-html,
 .dark {
     --accent-color-hue: 345;
     --bg-tint-hue: 215;

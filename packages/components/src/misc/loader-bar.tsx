@@ -9,6 +9,7 @@ let loaderStarted = false;
 interface Props {
     height?: number;
     instantStart?: boolean;
+    fixedPosition?: boolean;
 }
 
 export default function LoaderBar(props?: Props) {
@@ -18,13 +19,13 @@ export default function LoaderBar(props?: Props) {
     const ref = useRef<LoadingBarRef>(null);
 
     function loadingStart() {
-        if (loaderStarted) return;
-
-        ref.current?.staticStart(99.99);
+        console.log("loadingStart");
+        ref.current?.continuousStart(60);
         loaderStarted = true;
     }
 
     function loadingEnd() {
+        console.log("loadingEnd");
         if (interactionsDisabled()) enableInteractions();
         if (!loaderStarted) return;
 
@@ -33,20 +34,27 @@ export default function LoaderBar(props?: Props) {
     }
 
     useEffect(() => {
+        console.log("navigation.state", navigation.state);
+
         if (timeoutRef) window.clearTimeout(timeoutRef);
 
         if (navigation.state === "loading" || navigation.state === "submitting") {
             if (props.instantStart === true) loadingStart();
-            else timeoutRef = window.setTimeout(loadingStart, 100);
+            else {
+                timeoutRef = window.setTimeout(loadingStart, 100);
+            }
         }
 
-        if (navigation.state === "idle") loadingEnd();
-    }, [navigation.location?.pathname]);
+        if (navigation.state === "idle") {
+            loadingEnd();
+        }
+    }, [navigation.state]);
 
     return (
         <LoadingBar
             ref={ref}
             className="!bg-gradient-to-r from-accent-background/85 to-accent-background"
+            fixedPosition={props.fixedPosition}
             loaderSpeed={1200}
             shadow={true}
             height={props.height || 2.25}
