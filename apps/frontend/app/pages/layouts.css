@@ -8,7 +8,6 @@
 @import "./../../../../packages/components/src/ui/styles.css";
 @import "./../../../../packages/components/src/md-editor/highlightjs.css";
 
-
 @layer view-transitions {
     @view-transition {
         navigation: auto;

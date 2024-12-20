@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [
-            "ESNext",
-            "DOM"
-        ],
+        "lib": ["ESNext", "DOM"],
         "composite": true,
         "target": "ESNext",
         "module": "ESNext",
@@ -19,18 +16,11 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
         "paths": {
-            "~/*": [
-                "./src/*"
-            ],
-            "@app/utils/*": [
-                "./../utils/src/*"
-            ]
+            "~/*": ["./src/*"],
+            "@app/utils/*": ["./../utils/src/*"]
         }
     },
-    "include": [
-        ".",
-        "./../utils/src"
-    ],
+    "include": [".", "./../utils/src"],
     "references": [
         {
             "path": "./../utils"

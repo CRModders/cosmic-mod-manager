@@ -6,6 +6,6 @@ html body {
     scrollbar-gutter: unset;
 }
 
-body>* {
+body > * {
     --scrollbar-radius: 0;
 }
