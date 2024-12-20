@@ -4,7 +4,7 @@ import type { ThemeOptions } from "@app/components/types";
 import { SITE_NAME_LONG } from "@app/utils/config";
 import { getCookie, getThemeFromCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import type { LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import ClientOnly from "~/components/client-only";
@@ -140,31 +140,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
     const data = useLoaderData() as RootOutletData;
 
-    return useMemo(
-        () => (
-            <ContextProviders theme={data.theme}>
-                <ValidateClientSession />
-                <ClientOnly Element={ToastAnnouncer} />
-                <ClientOnly Element={ToastAnnouncer} />
-                <ClientOnly Element={LoaderBar} />
+    return (
+        <ContextProviders theme={data.theme}>
+            <ValidateClientSession />
+            <ClientOnly Element={ToastAnnouncer} />
+            <ClientOnly Element={ToastAnnouncer} />
+            <ClientOnly Element={() => <LoaderBar />} />
 
-                {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
-                <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
+            {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
+            <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
 
-                <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
-                    <Navbar session={data.session} notifications={[]} />
+            <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
+                <Navbar session={data.session} notifications={[]} />
 
-                    <div className="full_page container px-4 sm:px-8">
-                        <Outlet context={data satisfies RootOutletData} />
-                    </div>
-
-                    <Footer />
+                <div className="full_page container px-4 sm:px-8">
+                    <Outlet context={data satisfies RootOutletData} />
                 </div>
 
-                <DownloadRipple />
-            </ContextProviders>
-        ),
-        [data?.session, data?.viewTransitions],
+                <Footer />
+            </div>
+
+            <DownloadRipple />
+        </ContextProviders>
     );
 }
 
