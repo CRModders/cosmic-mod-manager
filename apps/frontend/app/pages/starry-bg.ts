@@ -157,7 +157,7 @@ function drawMeteor(ctx: CanvasRenderingContext2D, meteor: Meteor, theme: ThemeC
             linearGradient.addColorStop(i, `rgba(${rgb}, ${calculateExponentialAlpha(currentAlpha, k, i)})`);
             currentAlpha = calculateExponentialAlpha(initialAlpha, k, i);
         }
-        linearGradient.addColorStop(1, `rgba(${rgb}, ${calculateExponentialAlpha(initialAlpha, k, 1)})`);
+        linearGradient.addColorStop(1, `rgba(${rgb}, ${calculateExponentialAlpha(currentAlpha, k, 1)})`);
     }
 
     ctx.strokeStyle = linearGradient;
