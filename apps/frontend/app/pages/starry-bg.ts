@@ -151,13 +151,13 @@ function drawMeteor(ctx: CanvasRenderingContext2D, meteor: Meteor, theme: ThemeC
     {
         const stepSize = 0.17;
         const initialAlpha = 1;
-        const k = 1.5;
+        const k = 1.75;
         let currentAlpha = initialAlpha;
         for (let i = 0; i < 1; i += stepSize) {
             linearGradient.addColorStop(i, `rgba(${rgb}, ${calculateExponentialAlpha(currentAlpha, k, i)})`);
             currentAlpha = calculateExponentialAlpha(initialAlpha, k, i);
         }
-        linearGradient.addColorStop(1, `rgba(${rgb}, ${currentAlpha})`);
+        linearGradient.addColorStop(1, `rgba(${rgb}, ${calculateExponentialAlpha(initialAlpha, k, 1);})`);
     }
 
     ctx.strokeStyle = linearGradient;
@@ -175,11 +175,11 @@ function drawMeteor(ctx: CanvasRenderingContext2D, meteor: Meteor, theme: ThemeC
         meteor.length / 2,
     );
 
-    const stepSize = 0.1;
-    const initialAlpha = 0.6;
+    const stepSize = 0.07;
+    const initialAlpha = 0.7;
     const k = 4;
     let currentAlpha = initialAlpha;
-    for (let i = 0; i <= 1; i += stepSize) {
+    for (let i = 0; i < 1; i += stepSize) {
         radialGradient.addColorStop(i, `rgba(${rgb}, ${calculateExponentialAlpha(currentAlpha, k, i)})`);
         currentAlpha = calculateExponentialAlpha(initialAlpha, k, i);
     }
