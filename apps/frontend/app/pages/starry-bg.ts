@@ -149,15 +149,15 @@ function drawMeteor(ctx: CanvasRenderingContext2D, meteor: Meteor, theme: ThemeC
     const rgb = theme.bg_rgb.join(", ");
     const linearGradient = ctx.createLinearGradient(meteor.position.x, meteor.position.y, endX, endY);
     {
-        const stepSize = 0.1;
+        const stepSize = 0.17;
         const initialAlpha = 1;
         const k = 1.5;
         let currentAlpha = initialAlpha;
-        for (let i = 0; i <= 1; i += stepSize) {
+        for (let i = 0; i < 1; i += stepSize) {
             linearGradient.addColorStop(i, `rgba(${rgb}, ${calculateExponentialAlpha(currentAlpha, k, i)})`);
             currentAlpha = calculateExponentialAlpha(initialAlpha, k, i);
         }
-        linearGradient.addColorStop(1, `rgba(${rgb}, 0)`);
+        linearGradient.addColorStop(1, `rgba(${rgb}, ${currentAlpha})`);
     }
 
     ctx.strokeStyle = linearGradient;
