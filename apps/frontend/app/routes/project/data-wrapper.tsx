@@ -140,10 +140,13 @@ export function meta(props: Route.MetaArgs) {
         ...orgObj,
     });
 
+    // Use the organization name if the project is under an organization
+    const author = project.organisation?.name || creator?.userName;
+
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
         description: project.summary,
-        siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${creator?.userName} on ${SITE_NAME_SHORT}`,
+        siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${author} on ${SITE_NAME_SHORT}`,
         image: project.icon || "",
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}`,
         ldJson: ldJson,

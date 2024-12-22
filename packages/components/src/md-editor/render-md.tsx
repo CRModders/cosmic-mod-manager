@@ -1,5 +1,4 @@
 // Coding
-import { createURLSafeSlug } from "@app/utils/string";
 import hljs from "highlight.js/lib/core";
 import diff from "highlight.js/lib/languages/diff";
 // Configs
@@ -126,10 +125,10 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
             if (!isHeading(part)) continue;
 
             const headingContent = parseHeadingContent(part);
-            const id = createURLSafeSlug(headingContent).value;
+            const id = createIdForHeading(headingContent);
             if (!id) continue;
 
-            const anchor = `<a class="anchor" id="${id}" title="Permalink: ${headingContent}" href="#${id}">#</a>`;
+            const anchor = `<a class="anchor" id="${id}" title="Permalink: ${escapeSpecialChars(headingContent)}" href="#${id}">#</a>`;
             parts[i] = renderHighlightedString(`${part}${anchor}`, urlModifier);
         }
 
@@ -182,27 +181,22 @@ function parseHeadingContent(str: string) {
     }
 }
 
-function parseMdHeading(str: string) {
-    switch (str.trim()) {
-        case "#":
-            return "h1";
+function escapeSpecialChars(str: string) {
+    // unescape already escaped characters to avoid double escaping
+    str = str.replaceAll('\\"', '"').replaceAll("\\'", "'");
 
-        case "##":
-            return "h2";
+    return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;")
+        .replaceAll("`", "&#96;");
+}
 
-        case "###":
-            return "h3";
-
-        case "####":
-            return "h4";
-
-        case "#####":
-            return "h5";
-
-        case "######":
-            return "h6";
-
-        default:
-            return "p";
-    }
+function createIdForHeading(str: string) {
+    return str
+        .toLowerCase()
+        .replaceAll(" ", "-")
+        .replaceAll(/[^a-z0-9-]/g, "");
 }

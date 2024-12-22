@@ -5,7 +5,7 @@ import { ButtonLink } from "~/components/ui/link";
 
 export default function Navbar() {
     return (
-        <header className="p-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-1 place-items-center">
+        <header className="main-nav p-3 grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-1 place-items-center">
             <div className="grid grid-cols-1 gap-4 place-items-center">
                 <ImgWrapper
                     className="w-11 h-11 rounded-md"
