@@ -1,9 +1,9 @@
 import { SITE_NAME_SHORT } from "@app/utils/config";
-import type { Organisation, ProjectListItem, TeamMember } from "@app/utils/types/api";
+import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useOrgData } from "~/hooks/org";
 import Config from "~/utils/config";
-import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "~/utils/meta";
+import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { OrgPagePath } from "~/utils/urls";
 import NotFoundPage from "../$";
@@ -74,39 +74,10 @@ export function meta(props: Route.MetaArgs) {
         });
     }
 
-    const owner = orgData.members.find((member) => member.isOwner) as TeamMember;
-    const members = orgData.members.filter((member) => !member.isOwner);
-
-    const membersLdJson = members.map((member) =>
-        UserLdJson({
-            ...member,
-            id: member.userId,
-            name: member.userName,
-            bio: "",
-        }),
-    );
-
-    const projectsJson = data.orgProjects?.map((project) => ProjectLdJson(project));
-    let projectObj = {};
-    if ((projectsJson?.length || 0) > 0) projectObj = { memberOf: projectsJson };
-
-    const ldJson = OrganizationLdJson(orgData, {
-        "@context": "https://schema.org",
-        founder: UserLdJson({
-            ...owner,
-            id: owner.userId,
-            name: owner.userName,
-            bio: "",
-        }),
-        member: membersLdJson,
-        ...projectObj,
-    });
-
     return MetaTags({
         title: `${orgData.name} - Organization`,
         description: `${orgData.description} - View the organization ${orgData.name} on ${SITE_NAME_SHORT}`,
         image: orgData.icon || "",
         url: `${Config.FRONTEND_URL}${OrgPagePath(orgData.slug)}`,
-        ldJson: ldJson,
     });
 }

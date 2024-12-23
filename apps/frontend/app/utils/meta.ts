@@ -1,8 +1,9 @@
 import { SITE_NAME_SHORT } from "@app/utils/config";
-import { DateToISOStr } from "@app/utils/date";
 import type { MetaDescriptor } from "react-router";
-import Config from "~/utils/config";
-import { ProjectPagePath, UserProfilePath } from "~/utils/urls";
+import { formatLocaleCode } from "~/locales";
+import SupportedLocales, { DefaultLocale } from "~/locales/meta";
+import { formatUrlWithLocalePrefix } from "~/locales/provider";
+import { prepend, removeTrailing } from "./urls";
 
 type MetaTags =
     | {
@@ -12,9 +13,9 @@ type MetaTags =
           image: string;
           url: string;
           parentMetaTags?: MetaDescriptor[];
-          ldJson?: LdJsonObject;
           suffixTitle?: boolean;
           linksOnly?: false;
+          authorProfile?: string;
       }
     | {
           title?: string;
@@ -23,9 +24,9 @@ type MetaTags =
           image?: string;
           url: string;
           parentMetaTags?: MetaDescriptor[];
-          ldJson?: LdJsonObject;
           linksOnly: true;
           suffixTitle?: boolean;
+          authorProfile?: string;
       };
 
 export function MetaTags(props: MetaTags): MetaDescriptor[] {
@@ -34,26 +35,31 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
     }
     if (!props.parentMetaTags) props.parentMetaTags = [];
 
+    const alternateLocaleLinks = SupportedLocales.map((locale) => {
+        return {
+            tagName: "link",
+            rel: "alternate",
+            hrefLang: formatLocaleCode(locale),
+            href: formatFullUrlWithLocale(props.url, locale, false),
+        };
+    });
+
     const links = mergeMetaTagsList(props.parentMetaTags, [
         {
             tagName: "link",
             rel: "canonical",
-            href: props.url,
+            href: formatFullUrlWithLocale(props.url, undefined, true),
         },
         {
             tagName: "link",
             rel: "alternate",
             hrefLang: "x-default",
-            href: props.url,
+            href: formatFullUrlWithLocale(props.url, DefaultLocale, true),
         },
-        {
-            tagName: "link",
-            rel: "alternate",
-            hrefLang: "en",
-            href: props.url,
-        },
-        { property: "og:url", content: props.url },
-        { name: "twitter:url", content: props.url },
+        ...alternateLocaleLinks,
+        { property: "og:url", content: formatFullUrlWithLocale(props.url) },
+        { name: "twitter:url", content: formatFullUrlWithLocale(props.url) },
+        ...(props.authorProfile ? [AuthorLink(props.authorProfile)] : []),
     ]);
 
     if (props.linksOnly) {
@@ -75,10 +81,6 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { name: "twitter:description", content: props.description },
         { name: "twitter:image", content: props.image },
     ]);
-
-    if (props.ldJson !== undefined) {
-        mergedMeta.push({ "script:ld+json": props.ldJson });
-    }
 
     return mergedMeta;
 }
@@ -109,89 +111,19 @@ function mergeMetaTagsList(originalList: MetaDescriptor[], newItems: MetaDescrip
     return combinedList;
 }
 
-type LdJsonObject = {
-    [Key in string]: LdJsonValue;
-} & {
-    [Key in string]?: LdJsonValue | undefined;
-};
-type LdJsonArray = LdJsonValue[] | readonly LdJsonValue[];
-type LdJsonPrimitive = string | number | boolean | null;
-type LdJsonValue = LdJsonPrimitive | LdJsonObject | LdJsonArray;
-
-interface UserLdJsonData {
-    id: string;
-    name: string | null;
-    userName: string;
-    bio: string | null;
-    avatar: string | null;
-}
-
-export function UserLdJson(user: UserLdJsonData, otherData?: LdJsonObject): LdJsonObject {
+function AuthorLink(url: string) {
     return {
-        "@type": "Person",
-        "@id": LdJsonId(user.id, LdJsonIdType.Person),
-        name: user.userName,
-        alternateName: user.name,
-        url: `${Config.FRONTEND_URL}${UserProfilePath(user.userName)}`,
-        description: user.bio,
-        image: user.avatar,
-        identifier: `user-${user.id}`,
-        ...otherData,
+        tagName: "link",
+        rel: "author",
+        href: url,
     };
 }
 
-interface ProjectLdJsonData {
-    id: string;
-    name: string;
-    slug: string;
-    icon: string | null;
-    summary: string;
-    type: string[];
-    datePublished: Date | string;
-    dateUpdated: Date | string;
-}
+// Get language specific URL for a given link
+export function formatFullUrlWithLocale(link: string | URL, targetLocale = DefaultLocale, omitDefaultLocale = true) {
+    const url = new URL(link);
 
-export function ProjectLdJson(project: ProjectLdJsonData, otherData?: LdJsonObject): LdJsonObject {
-    return {
-        "@type": "CreativeWork",
-        "@id": LdJsonId(project.id, LdJsonIdType.CreativeWork),
-        name: project.name,
-        url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}`,
-        description: project.summary,
-        image: project.icon,
-        thumbnailUrl: project.icon,
-        dateCreated: DateToISOStr(project.datePublished),
-        dateModified: DateToISOStr(project.dateUpdated),
-        ...otherData,
-    };
-}
-
-interface OrganizationLdJsonData {
-    id: string;
-    name: string;
-    slug: string;
-    description: string | null;
-    icon: string | null;
-}
-
-export function OrganizationLdJson(org: OrganizationLdJsonData, otherData?: LdJsonObject): LdJsonObject {
-    return {
-        "@type": "Organization",
-        "@id": LdJsonId(org.id, LdJsonIdType.Organization),
-        name: org.name,
-        description: org.description,
-        url: `${Config.FRONTEND_URL}/organization/${org.slug}`,
-        logo: org.icon,
-        ...otherData,
-    };
-}
-
-export enum LdJsonIdType {
-    Person = "person",
-    CreativeWork = "creativework",
-    Organization = "organization",
-}
-
-export function LdJsonId(id: string, type: LdJsonIdType): string {
-    return `${Config.FRONTEND_URL}/#/schema/${type}/${id}`;
+    const formattedPath = formatUrlWithLocalePrefix(targetLocale, omitDefaultLocale, url.pathname);
+    const newUrl = `${url.origin}${prepend("/", formattedPath)}${url.search}${url.hash}`;
+    return removeTrailing("/", newUrl);
 }

@@ -1,4 +1,5 @@
 import { BrandIcon, fallbackProjectIcon } from "@app/components/icons";
+import { MicrodataItemProps } from "@app/components/microdata";
 import { ImgWrapper } from "@app/components/ui/avatar";
 import { cn } from "@app/components/utils";
 import type { ProjectListItem } from "@app/utils/types/api";
@@ -93,7 +94,10 @@ export default function HomePage({ projects }: Props) {
                         </h1>
 
                         <div className="w-full max-w-2xl flex flex-col items-center justify-center">
-                            <h2 className="w-full leading-snug text-center text-lg lg:text-xl text-muted-foreground/95">
+                            <h2
+                                itemProp={MicrodataItemProps.description}
+                                className="w-full leading-snug text-center text-lg lg:text-xl text-muted-foreground/95"
+                            >
                                 {t.homePage.desc}
                             </h2>
                         </div>

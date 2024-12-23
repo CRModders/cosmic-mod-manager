@@ -1,4 +1,5 @@
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "@app/components/icons";
+import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
@@ -41,7 +42,7 @@ export default function UserPageLayout({ userData, projectsList, orgsList, child
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
     return (
-        <main className="profile-page-layout pb-12 gap-panel-cards">
+        <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
             <ProfilePageHeader userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div
                 className="h-fit grid grid-cols-1 gap-panel-cards"
@@ -159,6 +160,9 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
                         >
                             <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
                             {t.common.copyId}
+                            <span itemProp={MicrodataItemProps.itemid} className="sr-only">
+                                {userData.id}
+                            </span>
                         </Button>
                     </PopoverClose>
                 </>

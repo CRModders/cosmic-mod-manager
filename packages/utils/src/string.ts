@@ -17,9 +17,13 @@ export function Capitalize(str: string, eachWord = false) {
     return newStr;
 }
 
+export function FormatString(str: string) {
+    return str.replaceAll("_", " ").replaceAll("-", " ");
+}
+
 export function CapitalizeAndFormatString<T extends string | null | undefined>(str: T): T {
     if (!str) return str;
-    return Capitalize(str.toLowerCase()).replaceAll("_", " ").replaceAll("-", " ") as T;
+    return Capitalize(FormatString(str.toLowerCase())) as T;
 }
 
 export function createURLSafeSlug(slug: string, additionalAllowedChars?: string) {

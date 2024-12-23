@@ -1,5 +1,6 @@
 import { MoreVertical } from "lucide-react";
 import type { CSSProperties } from "react";
+import { MicrodataItemProps } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
 import { Button } from "~/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/ui/popover";
@@ -38,14 +39,15 @@ export function PageHeader({
 }: PageHeaderProps) {
     return (
         <div
+            {...props}
             className={cn(
                 "page-header w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background",
                 className,
             )}
-            {...props}
         >
             <div className="flex gap-5">
                 <ImgWrapper
+                    itemProp={MicrodataItemProps.image}
                     vtId={vtId}
                     viewTransitions={viewTransitions}
                     src={icon || ""}
@@ -56,10 +58,17 @@ export function PageHeader({
                 />
                 <div className="flex flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                        <h1 className="m-0 text-xl font-extrabold leading-tight text-foreground-bright">{title}</h1>
+                        <h1 itemProp={MicrodataItemProps.name} className="m-0 text-xl font-extrabold leading-tight text-foreground-bright">
+                            {title}
+                        </h1>
                         {titleBadge}
                     </div>
-                    <p className="text-muted-foreground leading-tight line-clamp-4 max-w-[70ch] text-pretty">{description}</p>
+                    <p
+                        itemProp={MicrodataItemProps.description}
+                        className="text-muted-foreground leading-tight line-clamp-4 max-w-[70ch] text-pretty"
+                    >
+                        {description}
+                    </p>
                     <div className="pt-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>
                 </div>
             </div>

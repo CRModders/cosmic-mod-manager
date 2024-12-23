@@ -6,6 +6,7 @@ import type { ProjectSupport } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
 import { TagIcon } from "~/icons/tag-icons";
+import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
 import Link from "~/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/ui/tooltip";
@@ -65,6 +66,9 @@ function BaseView(props: SearchListItemProps) {
         <article
             // biome-ignore lint/a11y/useSemanticElements: <explanation>
             role="listitem"
+            itemProp={MicrodataItemProps.works}
+            itemScope
+            itemType={itemType(MicrodataItemType.CreativeWork)}
             className={cn(
                 "search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
                 listViewType && "p-card-surround",
@@ -103,6 +107,7 @@ function BaseView(props: SearchListItemProps) {
                 }}
             >
                 <ImgWrapper
+                    itemProp={MicrodataItemProps.image}
                     vtId={props.vtId}
                     loading="lazy"
                     src={imageUrl(props.icon)}
@@ -118,11 +123,12 @@ function BaseView(props: SearchListItemProps) {
                 style={{ gridArea: "title" }}
             >
                 <Link
+                    itemProp={MicrodataItemProps.url}
                     to={projectPageUrl}
                     className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block")}
                     aria-label={props.projectName}
                 >
-                    {props.projectName}
+                    <span itemProp={MicrodataItemProps.name}>{props.projectName}</span>
                 </Link>{" "}
                 {props.author && (
                     <>
@@ -145,6 +151,7 @@ function BaseView(props: SearchListItemProps) {
             </div>
 
             <p
+                itemProp={MicrodataItemProps.description}
                 className={cn("leading-tight sm:text-pretty max-w-[80ch] mobile-break-words", galleryViewType && "mx-card-surround")}
                 style={{ gridArea: "summary" }}
             >
@@ -152,6 +159,9 @@ function BaseView(props: SearchListItemProps) {
             </p>
 
             <div
+                itemProp={MicrodataItemProps.about}
+                itemScope
+                itemType={itemType(MicrodataItemType.Thing)}
                 className={cn(
                     "flex items-center justify-start gap-x-4 gap-y-0 flex-wrap text-extra-muted-foreground",
                     galleryViewType && "mx-card-surround",
@@ -170,7 +180,7 @@ function BaseView(props: SearchListItemProps) {
                             title={`${tagName} (${CapitalizeAndFormatString(category.header)})`}
                         >
                             <TagIcon name={category.name} />
-                            {tagName}
+                            <span itemProp={MicrodataItemProps.name}>{tagName}</span>
                         </span>
                     );
                 })}

@@ -1,7 +1,7 @@
 import type React from "react";
 import { cn } from "~/utils";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLElement> {
     src: string;
     alt: string;
     className?: string;
@@ -11,10 +11,11 @@ interface Props {
     viewTransitions?: boolean;
 }
 
-export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewTransitions }: Props) {
+export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewTransitions, ...props }: Props) {
     if (!src) {
         return (
             <div
+                {...props}
                 className={cn(
                     "h-24 w-24 flex items-center justify-center rounded bg-shallow-background border border-shallow-background shrink-0",
                     className,
@@ -29,6 +30,7 @@ export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewT
 
     return (
         <img
+            {...props}
             src={src}
             loading={loading}
             alt={alt}

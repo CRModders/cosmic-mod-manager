@@ -5,7 +5,7 @@ import type { MetaDescriptor } from "react-router";
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import UserPageLayout from "~/pages/user/layout";
 import Config from "~/utils/config";
-import { LdJsonId, LdJsonIdType, MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "~/utils/meta";
+import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { UserProfilePath } from "~/utils/urls";
 import NotFoundPage from "../$";
@@ -92,35 +92,12 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
         });
     }
 
-    const orgsData = orgs?.map((org) => OrganizationLdJson(org));
-    let memberOf = {};
-    if (orgsData?.length) memberOf = { memberOf: orgsData };
-
-    const userJson = UserLdJson(userData, {
-        ...memberOf,
-    });
-
-    // Projects
-    const projectsJson = projects?.map((project) =>
-        ProjectLdJson(project, {
-            creator: {
-                "@id": LdJsonId(userData.id, LdJsonIdType.Person),
-            },
-        }),
-    );
-
-    const ldJson = {
-        "@context": "https://schema.org",
-        "@graph": [userJson, ...(projectsJson || [])],
-    };
-
     return MetaTags({
         title: userData?.userName || "",
         description: `${userData?.bio} - Download ${userData?.userName}'s projects on ${SITE_NAME_SHORT}`,
         image: image,
         url: `${Config.FRONTEND_URL}${UserProfilePath(userData?.userName)}`,
         suffixTitle: true,
-        ldJson: ldJson,
     });
 }
 

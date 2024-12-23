@@ -50,11 +50,9 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
     );
 }
 
-export function formatUrlWithLocalePrefix(locale: LocaleMetaData, omitDefaultLocale = true) {
-    // Get the current pathname
-    const pathname = usePathname();
+export function formatUrlWithLocalePrefix(locale: LocaleMetaData, omitDefaultLocale = true, pathname = usePathname()) {
     // Get the current locale prefix and prepend a slash in front of it
-    const currLocalePrefix = prepend("/", useUrlLocale());
+    const currLocalePrefix = prepend("/", useUrlLocale(undefined, pathname));
 
     // Change the prefix based on the new locale
     let localeCode = formatLocaleCode(locale);

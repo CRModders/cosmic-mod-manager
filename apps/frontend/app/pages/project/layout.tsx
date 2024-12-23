@@ -1,5 +1,6 @@
 import { DiscordIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import tagIcons from "@app/components/icons/tag-icons";
+import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { ImgWrapper } from "@app/components/ui/avatar";
@@ -95,7 +96,11 @@ export default function ProjectPageLayout() {
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
 
     return (
-        <main className="project-page-layout w-full max-w-full pb-12 gap-panel-cards">
+        <main
+            className="project-page-layout w-full max-w-full pb-12 gap-panel-cards"
+            itemScope
+            itemType={itemType(MicrodataItemType.CreativeWork)}
+        >
             <ProjectInfoHeader
                 projectData={projectData}
                 fetchProjectData={async () => RefreshPage(navigate, location)}
@@ -519,13 +524,21 @@ export function ProjectMember({
     avatarClassName,
     fallbackIcon,
 }: ProjectMemberProps) {
+    const isOrg = roleName.toLowerCase() === "organization" && url !== undefined;
+
     return (
         <ButtonLink
+            itemScope
+            itemType={itemType(isOrg ? MicrodataItemType.Organization : MicrodataItemType.Person)}
+            itemProp={MicrodataItemProps.member}
             aria-label={userName}
             url={url || UserProfilePath(userName)}
             className={cn("py-1.5 px-2 h-fit items-start gap-3 font-normal hover:bg-background/75", className)}
         >
+            <link itemProp={MicrodataItemProps.url} href={url || UserProfilePath(userName)} />
+
             <ImgWrapper
+                itemProp={MicrodataItemProps.image}
                 vtId={vtId}
                 src={imageUrl(avatarImageUrl)}
                 alt={userName}
@@ -535,7 +548,7 @@ export function ProjectMember({
             />
             <div className="w-full flex flex-col items-start justify-start overflow-hidden">
                 <div className="flex items-baseline-with-fallback justify-center gap-1">
-                    <span className="font-semibold leading-tight" title={userName}>
+                    <span itemProp={MicrodataItemProps.name} className="font-semibold leading-tight" title={userName}>
                         {userName}
                     </span>
                     {isOwner === true && (

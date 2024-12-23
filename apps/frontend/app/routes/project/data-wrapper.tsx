@@ -1,6 +1,5 @@
 import { SITE_NAME_SHORT } from "@app/utils/config";
 import { getProjectTypeFromName } from "@app/utils/convertors";
-import { combineProjectMembers } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@app/utils/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
@@ -8,9 +7,9 @@ import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import { NotFoundPage } from "~/routes/$";
 import Config from "~/utils/config";
-import { MetaTags, OrganizationLdJson, ProjectLdJson, UserLdJson } from "~/utils/meta";
+import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import { ProjectPagePath } from "~/utils/urls";
+import { ProjectPagePath, UserProfilePath } from "~/utils/urls";
 import type { Route } from "./+types/data-wrapper";
 
 export default function _ProjectDataWrapper() {
@@ -95,53 +94,10 @@ export function meta(props: Route.MetaArgs) {
         });
     }
 
-    const allMembers = Array.from(combineProjectMembers(project.members, project.organisation?.members || []).values());
-    const creator = allMembers.find((member) => member.isOwner);
-    const contributors = project.members.filter((member) => !member.isOwner);
-
-    const creatorJson = creator
-        ? UserLdJson(
-              {
-                  ...creator,
-                  id: creator.userId,
-                  name: creator.userName,
-                  bio: "",
-              },
-              {
-                  role: "Creator",
-              },
-          )
-        : {};
-
-    const projectMembersJson = contributors.map((member) =>
-        UserLdJson(
-            {
-                ...member,
-                id: member.userId,
-                name: member.userName,
-                bio: "",
-            },
-            { role: member.role },
-        ),
-    );
-
-    const orgJson = project.organisation ? OrganizationLdJson(project.organisation) : null;
-
-    let contributorObj = {};
-    if (projectMembersJson.length > 0) contributorObj = { contributor: projectMembersJson };
-
-    let orgObj = {};
-    if (orgJson) orgObj = { publisher: orgJson };
-
-    const ldJson = ProjectLdJson(project, {
-        "@context": "https://schema.org",
-        creator: creatorJson,
-        ...contributorObj,
-        ...orgObj,
-    });
-
-    // Use the organization name if the project is under an organization
+    const creator = project.members.find((member) => member.isOwner);
     const author = project.organisation?.name || creator?.userName;
+
+    const authorProfileLink = creator?.userName ? `${Config.FRONTEND_URL}${UserProfilePath(creator.userName)}` : undefined;
 
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
@@ -149,7 +105,7 @@ export function meta(props: Route.MetaArgs) {
         siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${author} on ${SITE_NAME_SHORT}`,
         image: project.icon || "",
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}`,
-        ldJson: ldJson,
+        authorProfile: authorProfileLink,
     });
 }
 

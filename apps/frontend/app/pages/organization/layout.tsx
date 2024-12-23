@@ -1,4 +1,5 @@
 import { CubeIcon, fallbackOrgIcon } from "@app/components/icons";
+import { MicrodataItemType, itemType } from "@app/components/microdata";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
@@ -46,7 +47,7 @@ export default function OrgPageLayout() {
     }
 
     return (
-        <main className="org-page-layout pb-12 gap-panel-cards">
+        <main className="org-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Organization)}>
             <OrgInfoHeader
                 session={session}
                 orgData={orgData}

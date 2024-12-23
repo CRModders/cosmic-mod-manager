@@ -1,11 +1,12 @@
+import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { ImgLoader } from "@app/components/misc/img-loading-spinner";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@app/components/ui/dialog";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
-import { DateToISOStr } from "@app/utils/date";
 import { doesMemberHaveAccess } from "@app/utils/project";
+import { FormatString } from "@app/utils/string";
 import { type LoggedInUserData, ProjectPermission } from "@app/utils/types";
 import type { GalleryItem, ProjectDetailsData, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -60,7 +61,15 @@ export default function ProjectGallery() {
             ) : null}
 
             {projectData.gallery?.length ? (
-                <div className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+                <div
+                    itemScope
+                    itemType={itemType(MicrodataItemType.ImageGallery)}
+                    className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
+                >
+                    <h2 className="col-span-full sr-only" itemProp={MicrodataItemProps.name}>
+                        A gallery showcasing the {projectData.name} {FormatString(projectData.type[0])}
+                    </h2>
+
                     {projectData.gallery.map((galleryItem, index) => (
                         <GalleryItemCard
                             session={session}
@@ -110,10 +119,11 @@ const GalleryItemCard = ({
     const { t } = useTranslation();
 
     return (
-        <div
-            className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2"
+        <figure
             itemScope
-            itemType="http://schema.org/ImageObject"
+            itemProp={MicrodataItemProps.image}
+            itemType={itemType(MicrodataItemType.ImageObject)}
+            className="grid grid-cols-1 grid-rows-[min-content,_1fr] bg-card-background rounded-lg p-2"
         >
             <button
                 type="button"
@@ -125,28 +135,25 @@ const GalleryItemCard = ({
                 aria-label={`View ${galleryItem.name}`}
             >
                 <img
+                    itemProp={MicrodataItemProps.contentUrl}
                     loading="lazy"
                     src={imageUrl(galleryItem.imageThumbnail)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
-                    itemProp="thumbnail"
                 />
             </button>
 
-            <meta itemProp="contentUrl" content={imageUrl(galleryItem.image)} />
-            <meta itemProp="name" content={galleryItem.name} />
-            <meta itemProp="description" content={galleryItem.description || galleryItem.name} />
-            <meta itemProp="datePublished" content={DateToISOStr(galleryItem.dateCreated) || ""} />
-
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
                 <div className="w-full flex flex-col items-start justify-start ">
-                    <span className="flex items-center justify-start gap-2 text-lg font-bold">
+                    <span itemProp={MicrodataItemProps.name} className="flex items-center justify-start gap-2 text-lg font-bold">
                         {galleryItem.name}
                         {galleryItem.featured === true ? (
                             <StarIcon className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" />
                         ) : null}
                     </span>
-                    <span className="text-muted-foreground leading-tight">{galleryItem.description}</span>
+                    <figcaption itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight">
+                        {galleryItem.description}
+                    </figcaption>
                 </div>
                 <div className="w-full flex flex-col items-start justify-start gap-1.5 mt-1">
                     <p className="flex gap-1.5 items-center justify-center text-muted-foreground">
@@ -174,7 +181,7 @@ const GalleryItemCard = ({
                     ) : null}
                 </div>
             </div>
-        </div>
+        </figure>
     );
 };
 

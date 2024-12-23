@@ -19,9 +19,7 @@ export default function _NotificationsHistory() {
     );
 }
 
-export async function clientLoader() {
-    return await NotificationsDataLoader();
-}
+export const clientLoader = NotificationsDataLoader;
 
 export function HydrateFallback() {
     return <SuspenseFallback />;

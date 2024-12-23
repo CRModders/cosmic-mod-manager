@@ -21,6 +21,7 @@ import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { PageUrl, removeLeading, useUrlLocale } from "~/utils/urls";
 import type { Route } from "./+types/root";
+import { PageBreadCrumbs } from "./hooks/breadcrumb";
 import indexCss from "./index.css?url";
 import { formatLocaleCode, parseLocale } from "./locales";
 
@@ -86,6 +87,8 @@ export default function App() {
 
             <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
                 <Navbar session={data.session} notifications={[]} />
+
+                <PageBreadCrumbs />
 
                 <div className="full_page container px-4 sm:px-8">
                     <Outlet context={data satisfies RootOutletData} />
