@@ -9,6 +9,12 @@ export interface GameVersion {
 
 const GAME_VERSIONS: GameVersion[] = [
     {
+        label: "0.3.12",
+        value: "0.3.12",
+        releaseType: GameVersionReleaseType.ALPHA,
+        major: false,
+    },
+    {
         label: "0.3.11",
         value: "0.3.11",
         releaseType: GameVersionReleaseType.ALPHA,

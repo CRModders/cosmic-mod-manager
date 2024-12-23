@@ -145,7 +145,7 @@ export function DateFromStr(date: string | Date) {
     }
 }
 
-export function DateToISOStr(date: string | Date) {
+export function DateToISOStr(date: string | Date): string | null {
     try {
         return new Date(date).toISOString();
     } catch (error) {
