@@ -288,12 +288,9 @@ export async function editProjectMember(
     }
 
     const updatedPerms = {
-        permissions: [] as ProjectPermission[],
-        organisationPermissions: [] as OrganisationPermission[],
+        permissions: formData.permissions || [],
+        organisationPermissions: team.organisation?.id ? formData.organisationPermissions : [],
     };
-
-    if (team.project?.id) updatedPerms.permissions = formData.permissions || [];
-    else if (team.organisation?.id) updatedPerms.organisationPermissions = formData.organisationPermissions || [];
 
     await prisma.teamMember.update({
         where: {
