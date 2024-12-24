@@ -1,6 +1,5 @@
 import { CancelButtonIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -36,6 +35,7 @@ import { imageUrl } from "@app/utils/url";
 import { CircleAlertIcon, FileIcon, PlusIcon, StarIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import type { Control, FieldValues, RefCallBack } from "react-hook-form";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { VariantButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

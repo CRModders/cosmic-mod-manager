@@ -24,7 +24,7 @@ import OAuthProvidersWidget from "../oauth-providers";
 export default function LoginPage() {
     const { t } = useTranslation();
     const [formError, setFormError] = useState("");
-    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -39,8 +39,8 @@ export default function LoginPage() {
 
     const handleCredentialLogin = async (formData: z.infer<typeof LoginFormSchema>) => {
         try {
-            if (isLoading.value === true) return;
-            setIsLoading({ value: true, provider: AuthProvider.CREDENTIAL });
+            if (isLoading === true) return;
+            setIsLoading(true);
             disableInteractions();
 
             const response = await clientFetch(`/api/auth/${AuthActionIntent.SIGN_IN}/${AuthProvider.CREDENTIAL}`, {
@@ -57,7 +57,7 @@ export default function LoginPage() {
             toast.success(result?.message || "Success");
             RefreshPage(navigate, location);
         } finally {
-            setIsLoading({ value: false, provider: null });
+            setIsLoading(false);
         }
     };
 
@@ -124,12 +124,8 @@ export default function LoginPage() {
 
                             {formError && <FormErrorMessage text={formError} />}
 
-                            <Button type="submit" aria-label="Login" className="w-full h-form-submit-btn" disabled={isLoading.value}>
-                                {isLoading.provider === AuthProvider.CREDENTIAL ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <LogInIcon className="w-[1.1rem] h-[1.1rem]" />
-                                )}
+                            <Button type="submit" aria-label="Login" className="w-full h-form-submit-btn" disabled={isLoading}>
+                                {isLoading ? <LoadingSpinner size="xs" /> : <LogInIcon className="w-[1.1rem] h-[1.1rem]" />}
                                 {t.form.login}
                             </Button>
                         </form>
@@ -140,11 +136,7 @@ export default function LoginPage() {
                     <div className="w-full flex flex-col items-start justify-start gap-2">
                         <p>Login using:</p>
                         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <OAuthProvidersWidget
-                                actionIntent={AuthActionIntent.SIGN_IN}
-                                isLoading={isLoading}
-                                setIsLoading={setIsLoading}
-                            />
+                            <OAuthProvidersWidget actionIntent={AuthActionIntent.SIGN_IN} />
                         </div>
                     </div>
 

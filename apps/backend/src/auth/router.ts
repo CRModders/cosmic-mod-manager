@@ -70,10 +70,19 @@ async function currSession_get(ctx: Context) {
 
 async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
     try {
+        const userSession = getUserFromCtx(ctx);
+        if (userSession?.id && intent !== AuthActionIntent.LINK) return invalidReqestResponse(ctx, "You are already logged in!");
+
         const authProvider = ctx.req.param("authProvider");
         if (!authProvider) return ctx.json({ success: false, message: "Invalid auth provider" }, HTTP_STATUS.BAD_REQUEST);
 
+        const redirect = ctx.req.query("redirect") === "true";
         const url = getOAuthUrl(ctx, authProvider, intent);
+
+        if (redirect) {
+            return ctx.redirect(url);
+        }
+
         return ctx.json({ success: true, url }, HTTP_STATUS.OK);
     } catch (error) {
         return serverErrorResponse(ctx);

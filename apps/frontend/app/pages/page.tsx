@@ -1,12 +1,12 @@
 import { BrandIcon, fallbackProjectIcon } from "@app/components/icons";
 import { MicrodataItemProps } from "@app/components/microdata";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { cn } from "@app/components/utils";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { CompassIcon, LayoutDashboardIcon, LogInIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
@@ -65,13 +65,13 @@ export default function HomePage({ projects }: Props) {
             <main className="w-full hero_section">
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <div className="p-6">
-                        <BrandIcon className="text-accent-foreground" size="16rem" />
+                        <BrandIcon className="text-accent-foreground" size="15rem" />
                     </div>
 
                     <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-4">
-                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground inline-flex items-center justify-center gap-x-2.5 lg:gap-x-4 flex-wrap">
+                        <h1 className="text-4xl lg:text-6xl font-medium text-foreground inline-flex text-center items-center justify-center gap-x-2.5 lg:gap-x-4 flex-wrap">
                             {titleParts[0]}{" "}
-                            <div className="inline-block h-12 lg:h-[4.5rem] mb-1 overflow-hidden">
+                            <div className="inline-block h-12 lg:h-[4.5rem] mb-1 max-w-full overflow-hidden">
                                 <span className="hero_section_showcase inline-flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
                                     {showcaseItems?.map((item, index) => {
                                         return (
@@ -80,7 +80,10 @@ export default function HomePage({ projects }: Props) {
                                                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                                     index
                                                 }`}
-                                                className="flex font-bold items-center justify-center h-12 lg:h-[4.5rem] text-4xl lg:text-6xl bg-clip-text bg-accent-background text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background leading-loose"
+                                                className={cn(
+                                                    "flex font-bold items-center justify-center h-12 lg:h-[4.5rem] text-4xl lg:text-6xl bg-clip-text leading-loose text-nowrap whitespace-nowrap",
+                                                    "bg-accent-background text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background",
+                                                )}
                                                 // @ts-ignore
                                                 style={{ "--index": index + 1 }}
                                             >

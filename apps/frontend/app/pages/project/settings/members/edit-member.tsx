@@ -1,5 +1,4 @@
 import { fallbackUserIcon } from "@app/components/icons";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
@@ -20,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { ImgWrapper } from "~/components/ui/avatar";
 import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

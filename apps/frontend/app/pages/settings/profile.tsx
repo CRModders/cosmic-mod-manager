@@ -1,6 +1,5 @@
 import { fallbackUserIcon } from "@app/components/icons";
 import RefreshPage from "@app/components/misc/refresh-page";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@app/components/ui/card";
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
@@ -21,7 +20,8 @@ import { SaveIcon, UploadIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router";
-import { useNavigate, VariantButtonLink } from "~/components/ui/link";
+import { ImgWrapper } from "~/components/ui/avatar";
+import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { UserProfilePath } from "~/utils/urls";

@@ -83,7 +83,7 @@ export default function App() {
             <ClientOnly Element={LoaderBar} />
 
             {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
-            <div id="hero_section_bg_portal" className="absolute top-0 left-0 w-full" />
+            <div id="hero_section_bg_portal" className="absolute top-0 left-0" />
 
             <div className="w-full min-h-[100vh] relative grid grid-rows-[auto_1fr_auto]">
                 <Navbar session={data.session} notifications={[]} />

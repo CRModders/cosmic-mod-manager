@@ -1,6 +1,5 @@
 import { fallbackProjectIcon } from "@app/components/icons";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import ComboBox from "@app/components/ui/combobox";
@@ -26,6 +25,7 @@ import { imageUrl } from "@app/utils/url";
 import { ChevronsUpDownIcon, DownloadIcon, Gamepad2Icon, WrenchIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
+import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";

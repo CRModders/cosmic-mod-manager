@@ -1,6 +1,5 @@
 import { CubeIcon, fallbackOrgIcon } from "@app/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@app/components/misc/panel";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -13,6 +12,7 @@ import { SITE_NAME_SHORT } from "@app/utils/config";
 import { imageUrl } from "@app/utils/url";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet } from "react-router";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useTranslation } from "~/locales/provider";

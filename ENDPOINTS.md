@@ -2,7 +2,7 @@ Base URL: `https://api.crmm.tech/api` <br />
 NOTE:- `/cdn` urls are not under the base `/api`
 
 ### Value Types
-* [`AuthProvider`](/packages/utils/src/types/index.ts#L2) &ndash; github, gitlab, discord, google, credential
+* [`AuthProvider`](/packages/utils/src/types/index.ts#L13) &ndash; github, gitlab, discord, google
 
 ### Endpoints
 | Type   | Endpoint  |
@@ -43,6 +43,9 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | DELETE    | [`/project/{ID\|slug}/gallery/{ID}`](/apps/backend/src/project/router.ts#L32) |
 | GET    | [`/project/{ID\|slug}/version`](/apps/backend/src/project/version/router.ts#L14) |
 | GET    | [`/project/{ID\|slug}/version/{ID\|slug}`](/apps/backend/src/project/version/router.ts#L14) |
+| GET    | [`/project/{ID\|slug}/version/latest`](/apps/backend/src/project/version/router.ts#L14) |
+| GET    | [`/project/{ID\|slug}/version/{ID\|slug}/primary-file`](/apps/backend/src/project/version/router.ts#L14) |
+| GET    | [`/project/{ID\|slug}/version/latest/primary-file`](/apps/backend/src/project/version/router.ts#L14) |
 | POST    | [`/project/{ID\|slug}/version`](/apps/backend/src/project/version/router.ts#L14) |
 | PATCH    | [`/project/{ID\|slug}/version/{ID\|slug}`](/apps/backend/src/project/version/router.ts#L14) |
 | DELETE    | [`/project/{ID\|slug}/version/{ID\|slug}`](/apps/backend/src/project/version/router.ts#L14) |
@@ -82,3 +85,4 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/cdn/data/project/{projectID}/gallery/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
 | GET    | [`/cdn/data/project/{projectID}/version/{versionID}/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
 | GET    | [`/cdn/data/organization/{orgID}/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
+| GET    | [`/cdn/data/user/{userID}/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |

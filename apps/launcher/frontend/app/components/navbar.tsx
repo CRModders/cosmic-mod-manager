@@ -1,6 +1,6 @@
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import { HomeIcon, LibraryIcon, PlusIcon, SearchIcon, SettingsIcon } from "lucide-react";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 
 export default function Navbar() {

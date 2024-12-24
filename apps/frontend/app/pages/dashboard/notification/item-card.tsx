@@ -1,5 +1,4 @@
 import { fallbackUserIcon } from "@app/components/icons";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
@@ -7,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/c
 import type { Notification } from "@app/utils/types/api";
 import { CalendarIcon, CheckCheckIcon, CheckIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";

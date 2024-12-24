@@ -1,7 +1,6 @@
 import { fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import {
     Dialog,
@@ -40,6 +39,7 @@ import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, UploadIcon, XIcon }
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import MarkdownRenderBox from "~/components/md-renderer";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";

@@ -1,5 +1,4 @@
 import { ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import CopyBtn from "@app/components/ui/copy-btn";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@app/components/ui/table";
@@ -9,6 +8,7 @@ import type { ProjectPublishingStatus } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { SettingsIcon } from "lucide-react";
+import { ImgWrapper } from "~/components/ui/avatar";
 import Link, { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import { ProjectPagePath } from "~/utils/urls";

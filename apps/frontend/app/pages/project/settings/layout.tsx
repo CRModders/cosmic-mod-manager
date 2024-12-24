@@ -1,6 +1,5 @@
 import { ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@app/components/misc/panel";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -24,6 +23,7 @@ import {
     UsersIcon,
 } from "lucide-react";
 import { Outlet } from "react-router";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";

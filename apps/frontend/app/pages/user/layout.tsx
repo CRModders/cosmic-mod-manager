@@ -1,7 +1,6 @@
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "@app/components/icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { ContentCardTemplate } from "@app/components/misc/panel";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import Chip from "@app/components/ui/chip";
 import { PopoverClose } from "@app/components/ui/popover";
@@ -14,6 +13,7 @@ import type { UserProfileData } from "@app/utils/types/api/user";
 import { imageUrl } from "@app/utils/url";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
 import { PageHeader } from "~/components/page-header";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";

@@ -5,11 +5,11 @@ import { userIconUrl, versionFileUrl } from "~/utils/urls";
 
 import { gameVersionsList } from "@app/utils/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
+import type { Prisma } from "@prisma/client";
 import { getFilesFromId } from "~/src/project/queries/file";
 import { formatTeamMemberData, projectMembersSelect } from "~/src/project/queries/project";
 import { isProjectAccessible } from "~/src/project/utils";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 
 export const versionFields = {
@@ -29,20 +29,14 @@ export const versionFields = {
     dependencies: true,
 };
 
-interface VersionSelect {
-    featured?: boolean;
-    id?: string;
-}
-
 export async function getAllProjectVersions(
     slug: string,
     userSession: ContextUserData | undefined,
     featuredOnly = false,
-    versionId = "",
-): Promise<RouteHandlerResponse> {
-    const whereSelect: VersionSelect = {};
+    where?: Prisma.VersionWhereInput,
+) {
+    const whereSelect: Prisma.VersionWhereInput = where || {};
     if (featuredOnly) whereSelect.featured = true;
-    if (versionId) whereSelect.id = versionId;
 
     const project = await prisma.project.findFirst({
         where: {
@@ -157,15 +151,40 @@ export async function getAllProjectVersions(
     return { data: { success: true, data: versionsList }, status: HTTP_STATUS.OK };
 }
 
-export async function getProjectVersionData(
-    projectSlug: string,
-    versionId: string,
-    userSession: ContextUserData,
-): Promise<RouteHandlerResponse> {
-    const res = await getAllProjectVersions(projectSlug, userSession, false, versionId);
+export async function getProjectVersionData(projectSlug: string, versionId: string, userSession: ContextUserData | undefined) {
+    const res = await getAllProjectVersions(projectSlug, userSession, false, {
+        id: versionId,
+    });
     // @ts-ignore
     const list = res.data?.data as ProjectVersionData[];
     if (Array.isArray(list)) {
+        if (!list.length) return notFoundResponseData(`Version "${versionId}" not found`);
+
+        return { data: { success: true, data: list[0] }, status: res.status };
+    }
+
+    return res;
+}
+
+interface GetLatestVersionFilters {
+    releaseChannel?: string;
+    gameVersion?: string;
+    loader?: string;
+}
+
+export async function getLatestVersion(projectSlug: string, userSession: ContextUserData | undefined, filters: GetLatestVersionFilters) {
+    const whereInput: Prisma.VersionWhereInput = {};
+    if (filters.releaseChannel?.length) whereInput.releaseChannel = filters.releaseChannel;
+    if (filters.gameVersion?.length) whereInput.gameVersions = { has: filters.gameVersion };
+    if (filters.loader?.length) whereInput.loaders = { has: filters.loader };
+
+    // @ts-ignore
+    const res = await getAllProjectVersions(projectSlug, userSession, false, whereInput);
+    // @ts-ignore
+    const list = res.data?.data as ProjectVersionData[];
+    if (Array.isArray(list)) {
+        if (!list.length) return notFoundResponseData("No version found for your query!");
+
         return { data: { success: true, data: list[0] }, status: res.status };
     }
 

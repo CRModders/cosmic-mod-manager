@@ -1,7 +1,6 @@
 import { fallbackProjectIcon } from "@app/components/icons";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
 import { ContentCardTemplate } from "@app/components/misc/panel";
-import { ImgWrapper } from "@app/components/ui/avatar";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -27,6 +26,7 @@ import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon
 import { Suspense, lazy, useContext } from "react";
 import { useParams } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
+import { ImgWrapper } from "~/components/ui/avatar";
 import { FormattedDate } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
