@@ -29,6 +29,7 @@ export default function ReleaseChannelChip({ releaseChannel, labelClassName, cla
 export function ReleaseChannelBadge({ releaseChannel, className }: Props) {
     return (
         <div
+            aria-hidden
             className={cn(
                 "rounded-full h-10 aspect-square shrink-0 flex items-center justify-center",
                 releaseChannelTextColor(releaseChannel as VersionReleaseChannel),
@@ -37,7 +38,6 @@ export function ReleaseChannelBadge({ releaseChannel, className }: Props) {
             )}
         >
             <ReleaseChannelIcon releaseChannel={releaseChannel as VersionReleaseChannel} className="w-5 h-5" />
-            <span className="sr-only">{CapitalizeAndFormatString(releaseChannel)}</span>
         </div>
     );
 }

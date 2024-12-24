@@ -87,7 +87,11 @@ export async function getAllProjectVersions(
 
     const versionsList: ProjectVersionData[] = [];
     const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
-    for (const version of project.versions) {
+
+    for (let i = 0; i < project.versions.length; i++) {
+        const version = project.versions[i];
+        const nextVersion = project.versions[i + 1];
+
         let primaryFile: VersionFile | null = null;
         const files: VersionFile[] = [];
 
@@ -145,6 +149,7 @@ export async function getAllProjectVersions(
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
             })),
+            isDuplicate: nextVersion !== undefined && nextVersion?.changelog !== null && nextVersion?.changelog === version.changelog,
         });
     }
 

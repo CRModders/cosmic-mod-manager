@@ -274,7 +274,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                         <div key={version.id} className="w-full pl-7 mb-4 relative dark:text-muted-foreground">
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                                 <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
-                                    <ChangelogBar releaseChannel={version.releaseChannel} />
+                                    <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={version.isDuplicate} />
                                     {version.releaseChannel === VersionReleaseChannel.DEV ? (
                                         <TooltipProvider>
                                             <TooltipTemplate content="Dev release!" className="font-normal">
@@ -318,7 +318,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     </a>
                                 ) : null}
                             </div>
-                            {version.changelog ? (
+                            {version.changelog && !version.isDuplicate ? (
                                 <MarkdownRenderBox addIdToHeadings={false} text={version.changelog} className="mr-2" />
                             ) : null}
                         </div>
@@ -331,12 +331,12 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
     );
 }
 
-function ChangelogBar({ releaseChannel }: { releaseChannel: VersionReleaseChannel }) {
+function ChangelogBar({ releaseChannel, isDuplicate }: { releaseChannel: VersionReleaseChannel; isDuplicate: boolean }) {
     return (
         <>
             <div
                 className={cn(
-                    "absolute w-1 h-full bg-current top-2.5 left-2 rounded-full",
+                    "changelog-bar absolute w-1 h-full top-2.5 left-2 rounded-full",
                     releaseChannel === VersionReleaseChannel.RELEASE
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA
@@ -344,9 +344,11 @@ function ChangelogBar({ releaseChannel }: { releaseChannel: VersionReleaseChanne
                           : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
                             ? "text-danger-background"
                             : "",
+
+                    isDuplicate && "duplicate",
                 )}
             >
-                <span className="absolute top-0 left-[-0.5rem] w-4 h-4 rounded-full bg-current translate-x-[0.125rem]" />
+                <span className="absolute top-0 left-[-0.5rem] w-4 h-4 rounded-full translate-x-[0.125rem] bg-current" />
             </div>
         </>
     );

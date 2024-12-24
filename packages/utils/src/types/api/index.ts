@@ -136,6 +136,7 @@ export interface ProjectVersionData {
     primaryFile: VersionFile | null;
     author: VersionAuthor;
     dependencies: DependencyListData[];
+    isDuplicate: boolean;
 }
 
 export interface ProjectListItem {
