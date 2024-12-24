@@ -15,7 +15,7 @@ import { UserProfilePath } from "~/utils/urls";
 
 interface Props {
     notification: Notification;
-    markNotificationAsRead: () => Promise<void>;
+    markNotificationAsRead: (refresh?: boolean) => Promise<void>;
     deleteNotification: () => Promise<void>;
     markingAsRead: boolean;
     deletingNotification: boolean;
@@ -60,7 +60,7 @@ export function TeamInviteNotification({
         try {
             const teamId = notification.body?.teamId as string;
             const result = await acceptTeamInvite(teamId);
-            markNotificationAsRead();
+            markNotificationAsRead(false);
 
             if (!result?.success) {
                 return toast.error(result?.message || "Failed to accept team invite");
@@ -172,7 +172,7 @@ export function TeamInviteNotification({
                                         variant="ghost-inverted"
                                         className="text-extra-muted-foreground"
                                         disabled={deletingNotification || markingAsRead}
-                                        onClick={markNotificationAsRead}
+                                        onClick={() => markNotificationAsRead()}
                                     >
                                         <CheckCheckIcon className="w-btn-icon h-btn-icon" />
                                     </Button>

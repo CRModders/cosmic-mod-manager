@@ -10,7 +10,7 @@ import type { UserProfileData } from "@app/utils/types/api/user";
 import { CheckCheckIcon, HistoryIcon } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { useNavigate, VariantButtonLink } from "~/components/ui/link";
+import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import { OrgPagePath, ProjectPagePath } from "~/utils/urls";
@@ -111,7 +111,7 @@ export function NotificationItem({
     const navigate = useNavigate();
     const location = useLocation();
 
-    const markNotificationAsRead = async () => {
+    async function markNotificationAsRead(refresh = true) {
         if (deletingNotification || markingAsRead) return;
         setMarkingAsRead(true);
         try {
@@ -124,13 +124,13 @@ export function NotificationItem({
                 return;
             }
 
-            RefreshPage(navigate, location);
+            if (refresh) RefreshPage(navigate, location);
         } finally {
             setMarkingAsRead(false);
         }
-    };
+    }
 
-    const deleteNotification = async () => {
+    async function deleteNotification(refresh = true) {
         if (markingAsRead) return;
         setDeletingNotification(true);
         try {
@@ -143,11 +143,11 @@ export function NotificationItem({
                 return;
             }
 
-            RefreshPage(navigate, location);
+            if (refresh) RefreshPage(navigate, location);
         } finally {
             setDeletingNotification(false);
         }
-    };
+    }
 
     switch (notification.type) {
         case NotificationType.TEAM_INVITE:
