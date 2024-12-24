@@ -121,6 +121,7 @@ export async function getAllProjectVersions(
         const allMembers = combineProjectMembers(project.team.members, project.organisation?.team.members || []);
         const authorData = allMembers.get(version.author.id);
         const formattedAuthor = authorData ? formatTeamMemberData(authorData) : null;
+        const isDuplicate = nextVersion?.changelog && nextVersion.changelog.length > 0 && nextVersion?.changelog === version.changelog;
 
         versionsList.push({
             id: version.id,
@@ -149,7 +150,7 @@ export async function getAllProjectVersions(
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
             })),
-            isDuplicate: nextVersion !== undefined && nextVersion?.changelog !== null && nextVersion?.changelog === version.changelog,
+            isDuplicate: isDuplicate === true,
         });
     }
 
