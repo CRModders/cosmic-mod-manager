@@ -26,7 +26,7 @@ export default function _() {
         else {
             versionData = ctx.allProjectVersions?.filter((ver) => {
                 if (gameVersion?.length && !ver.gameVersions.includes(gameVersion)) return false;
-                if (loader?.length && !ver.loaders.includes("loader")) return false;
+                if (loader?.length && !ver.loaders.includes(loader)) return false;
                 if (releaseChannel?.length && ver.releaseChannel !== releaseChannel.toLowerCase()) return false;
 
                 return true;
