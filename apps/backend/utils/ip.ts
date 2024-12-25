@@ -29,7 +29,7 @@ export function convertToIPv6(src: string): string | null {
  * @returns A 64-bit number representing the significant octets of the IP.
  */
 export function stripIp(ip: string): bigint {
-    const buffer = _IP.toBuffer(ip);
+    const buffer = _IP.toBuffer(ip) as Buffer;
 
     if (ip.startsWith("::ffff:")) {
         // IPv4-mapped address

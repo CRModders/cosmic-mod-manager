@@ -20,47 +20,37 @@ import { parseFileSize } from "@app/utils/number";
 import { doesMemberHaveAccess } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectPermission } from "@app/utils/types";
+import type { ProjectVersionData } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { formatGameVersionsListString_verbose } from "@app/utils/version/format-verbose";
 import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon, LinkIcon, StarIcon } from "lucide-react";
 import { Suspense, lazy, useContext } from "react";
-import { useParams } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { FormattedDate } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
-import { useProjectData } from "~/hooks/project";
+import type { ProjectContextData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
-import NotFoundPage from "~/routes/$";
 import { ProjectPagePath, VersionPagePath } from "~/utils/urls";
 import { ProjectMember } from "../layout";
 
 const DeleteVersionDialog = lazy(() => import("./delete-version"));
 
-export default function VersionPage() {
+interface Props {
+    ctx: ProjectContextData;
+    versionData: ProjectVersionData;
+    projectSlug: string;
+    versionSlug: string;
+}
+
+export default function VersionPage({ ctx, versionData, projectSlug, versionSlug }: Props) {
     const { t } = useTranslation();
-    const { projectSlug, versionSlug } = useParams();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const session = useSession();
-    const ctx = useProjectData();
     const currUsersMembership = ctx.currUsersMembership;
     const projectDependencies = ctx.dependencies;
-
-    let versionData = ctx.allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
-    if (versionSlug === "latest") versionData = ctx.allProjectVersions[0];
-
-    if (!versionData || !projectSlug || !versionSlug)
-        return (
-            <NotFoundPage
-                className="no_full_page py-16"
-                title="Version not found"
-                description="The version you are looking for doesn't exist"
-                linkLabel="See versions list"
-                linkHref={ProjectPagePath(ctx.projectType, projectSlug || "", "versions")}
-            />
-        );
 
     const projectPageUrl = ProjectPagePath(ctx.projectType, projectSlug);
 

@@ -2,14 +2,52 @@ import { SITE_NAME_SHORT } from "@app/utils/config";
 import { formatDate } from "@app/utils/date";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
-import type { MetaArgs } from "react-router";
+import { type MetaArgs, useParams, useSearchParams } from "react-router";
+import { useProjectData } from "~/hooks/project";
 import VersionPage from "~/pages/project/version/page";
+import NotFoundPage from "~/routes/$";
 import type { ProjectLoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { ProjectPagePath } from "~/utils/urls";
 
-export default VersionPage;
+export default function _() {
+    const ctx = useProjectData();
+    const { projectSlug, versionSlug } = useParams();
+    const [searchParams] = useSearchParams();
+
+    let versionData = ctx.allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    if (versionSlug === "latest") {
+        const gameVersion = searchParams.get("gameVersion");
+        const loader = searchParams.get("loader");
+        const releaseChannel = searchParams.get("releaseChannel");
+
+        if (!gameVersion && !loader && !releaseChannel) versionData = ctx.allProjectVersions[0];
+        else {
+            versionData = ctx.allProjectVersions?.filter((ver) => {
+                if (gameVersion?.length && !ver.gameVersions.includes(gameVersion)) return false;
+                if (loader?.length && !ver.loaders.includes("loader")) return false;
+                if (releaseChannel?.length && ver.releaseChannel !== releaseChannel.toLowerCase()) return false;
+
+                return true;
+            })[0];
+        }
+    }
+
+    if (!versionData || !projectSlug || !versionSlug) {
+        return (
+            <NotFoundPage
+                className="no_full_page py-16"
+                title="Version not found"
+                description="The version you are looking for doesn't exist"
+                linkLabel="See versions list"
+                linkHref={ProjectPagePath(ctx.projectType, projectSlug || "", "versions")}
+            />
+        );
+    }
+
+    return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} versionSlug={versionSlug} />;
+}
 
 export function meta(props: MetaArgs) {
     const parentMetaTags = props.matches?.at(-3)?.meta;

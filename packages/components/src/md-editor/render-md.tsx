@@ -129,7 +129,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
             if (!id) continue;
 
             const anchor = `<a class="anchor" id="${id}" title="Permalink: ${escapeSpecialChars(headingContent)}" href="#${id}">#</a>`;
-            parts[i] = renderHighlightedString(`${part}${anchor}`, urlModifier);
+            parts[i] = renderHighlightedString(`${part.trim()}${anchor}`, urlModifier);
         }
 
         return parts.join("\n");

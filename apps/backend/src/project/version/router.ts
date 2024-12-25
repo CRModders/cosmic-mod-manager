@@ -16,9 +16,9 @@ const versionRouter = new Hono();
 
 versionRouter.get("/", getReqRateLimiter, versions_get);
 
-// The /latest endpoint accepts optional query params: releaseChannel, gameVersion and loader
+// latest is a special version id, it accepts optional query params: releaseChannel, gameVersion and loader
 // It returns the latest version which matches all the provided filters
-// eg: /latest?releaseChannel=release&gameVersion=0.3.1&loader=quilt
+// eg: /version/latest?releaseChannel=release&gameVersion=0.3.1&loader=quilt
 // Can be helpful to simplify the implementation of auto updating mods
 versionRouter.get("/:versionId", getReqRateLimiter, async (ctx) => version_get(ctx));
 versionRouter.get("/:versionId/primary-file", getReqRateLimiter, async (ctx) => version_get(ctx, true));
