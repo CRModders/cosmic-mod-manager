@@ -153,7 +153,7 @@ export async function getAllProjectVersions(
 
 export async function getProjectVersionData(projectSlug: string, versionId: string, userSession: ContextUserData | undefined) {
     const res = await getAllProjectVersions(projectSlug, userSession, false, {
-        id: versionId,
+        OR: [{ id: versionId }, { slug: versionId }],
     });
     // @ts-ignore
     const list = res.data?.data as ProjectVersionData[];
