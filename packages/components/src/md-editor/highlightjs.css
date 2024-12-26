@@ -71,7 +71,17 @@
 .markdown-body p:has(+ ol),
 .markdown-body li p:has(+ ul),
 .markdown-body li p:has(+ ol) {
-    @apply mb-3;
+    @apply mb-2;
+}
+
+ul li:last-child,
+ol li:last-child {
+    @apply mb-0;
+}
+
+li ul li:first-child,
+li ol li:first-child {
+    @apply mt-1;
 }
 
 .markdown-body ul li {
