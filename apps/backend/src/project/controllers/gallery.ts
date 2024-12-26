@@ -23,7 +23,7 @@ export async function addNewGalleryImage(
     slug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof addNewGalleryImageFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
         select: {
@@ -81,7 +81,6 @@ export async function addNewGalleryImage(
     // Save the thumbnail image
     const [thumbnailImg, thumbnailFileType] = await resizeImageToWebp(formData.image, fileType, {
         width: GALLERY_IMG_THUMBNAIL_WIDTH,
-        resizeGifs: true,
         fit: "contain",
         withoutEnlargement: true,
     });

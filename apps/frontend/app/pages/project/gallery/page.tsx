@@ -67,7 +67,7 @@ export default function ProjectGallery() {
                     className="w-full grid gap-panel-cards grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3"
                 >
                     <h2 className="col-span-full sr-only" itemProp={MicrodataItemProps.name}>
-                        A gallery showcasing the {projectData.name} {FormatString(projectData.type[0])}
+                        {`A gallery showcasing the ${projectData.name} ${FormatString(projectData.type[0])}`}
                     </h2>
 
                     {projectData.gallery.map((galleryItem, index) => (

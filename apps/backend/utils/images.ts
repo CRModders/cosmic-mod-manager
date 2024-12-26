@@ -4,7 +4,6 @@ import sharp from "sharp";
 interface ResizeProps {
     width?: number;
     height?: number;
-    resizeGifs?: boolean;
     fit?: keyof sharp.FitEnum;
     kernel?: keyof sharp.KernelEnum;
     withoutEnlargement?: sharp.ResizeOptions["withoutEnlargement"];
@@ -12,33 +11,29 @@ interface ResizeProps {
 
 export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
     let defaultKernel: ResizeProps["kernel"] = sharp.kernel.nearest;
+
     // Don't use nearest neighbor for large images
-    if (file.size >= 512) defaultKernel = sharp.kernel.lanczos3;
+    if (file.size >= 1024) defaultKernel = sharp.kernel.lanczos3;
 
     const kernel: ResizeProps["kernel"] = props.kernel || defaultKernel;
-    if (!props.width && !props.height) {
-        throw new Error("Either width or height must be provided to resize the image");
-    }
-
-    if (inputFileType === FileType.GIF && props.resizeGifs !== true) {
-        // GIFs loose animation when resized
-        return [file, inputFileType];
-    }
+    const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();
-    const sharpInstance = sharp(imgBuffer);
+    const sharpInstance = sharp(imgBuffer, { animated: isAnimated }).resize({
+        width: props.width,
+        height: props.height,
+        fit: props.fit,
+        kernel: kernel,
+        withoutEnlargement: props.withoutEnlargement === true,
+        background: {
+            r: 0,
+            g: 0,
+            b: 0,
+            alpha: 0,
+        },
+    });
 
-    const resizedImgBuffer = await sharpInstance
-        .webp()
-        .resize({
-            width: props.width,
-            height: props.height,
-            fit: props.fit,
-            kernel: kernel,
-            withoutEnlargement: props.withoutEnlargement === true,
-        })
-        .toArray();
-
+    const resizedImgBuffer = await sharpInstance.webp().toArray();
     return [new File(resizedImgBuffer, "__resized-webp-img__"), FileType.WEBP];
 }
 
