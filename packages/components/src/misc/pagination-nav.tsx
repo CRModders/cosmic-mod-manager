@@ -16,11 +16,7 @@ interface Props {
 }
 
 export default function PaginatedNavigation({ pagesCount, activePage, searchParamKey = "page", includeHashInURL }: Props) {
-    function isPageActive(page: number | undefined) {
-        return activePage === page;
-    }
-
-    function generateLinkHref(page: number) {
+    function paginationUrl(page: number) {
         const currUrl = new URL(window.location.href);
         if (page === 1) currUrl.searchParams.delete(searchParamKey);
         else currUrl.searchParams.set(searchParamKey, page.toString());
@@ -31,6 +27,36 @@ export default function PaginatedNavigation({ pagesCount, activePage, searchPara
             .replace(window.location.hash, includeHashInURL === true ? window.location.hash : "");
     }
 
+    return (
+        <Pagination>
+            <PaginationContent>
+                <PaginationItem className="mr-1 sm:mr-2">
+                    <PaginationPrevious to={activePage === 1 ? "" : paginationUrl(activePage - 1)} />
+                </PaginationItem>
+
+                <PaginationLinks activePage={activePage} pagesCount={pagesCount} paginationUrl={paginationUrl} />
+
+                <PaginationItem className="ml-1 sm:ml-2">
+                    <PaginationNext to={activePage > pagesCount - 1 ? "" : paginationUrl(activePage + 1)} />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    );
+}
+
+interface PaginationLinksProps {
+    pagesCount: number;
+    activePage: number;
+    paginationUrl: (page: number) => string;
+}
+
+function PaginationLinks({ pagesCount, activePage, paginationUrl }: PaginationLinksProps) {
+    const MAX_CONTINUOUS_PAGE_LINKS = 5;
+
+    function isPageActive(page: number | undefined) {
+        return activePage === page;
+    }
+
     const pages = (() => {
         const list: number[] = new Array(pagesCount);
         for (let i = 0; i < pagesCount; i++) {
@@ -39,103 +65,105 @@ export default function PaginatedNavigation({ pagesCount, activePage, searchPara
         return list;
     })();
 
+    // For less than 7 pages, no need to show ellipsis, all pages can be listed at once
+    if (pagesCount < 7) {
+        return pages.map((page) => {
+            return (
+                <PaginationItem key={page}>
+                    <PaginationLink to={paginationUrl(page)} isActive={isPageActive(page)}>
+                        {page.toString()}
+                    </PaginationLink>
+                </PaginationItem>
+            );
+        });
+    }
+    // Below here we can be sure that pages count is >= 7, so no need to check for that
+
+    // If the active page is less than max number of continuous page links we want, we can show all starting pages
+    if (activePage < MAX_CONTINUOUS_PAGE_LINKS) {
+        return (
+            <>
+                {pages.slice(0, MAX_CONTINUOUS_PAGE_LINKS).map((page) => {
+                    return (
+                        <PaginationItem key={page}>
+                            <PaginationLink to={paginationUrl(page)} isActive={isPageActive(page)}>
+                                {page.toString()}
+                            </PaginationLink>
+                        </PaginationItem>
+                    );
+                })}
+
+                <PaginationItem>
+                    <PaginationEllipsis />
+                </PaginationItem>
+
+                <PaginationItem>
+                    <PaginationLink to={paginationUrl(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
+                        {pages.at(-1)?.toString()}
+                    </PaginationLink>
+                </PaginationItem>
+            </>
+        );
+    }
+
+    // If active page is less than ma
+    if (activePage <= pagesCount - (MAX_CONTINUOUS_PAGE_LINKS - 1)) {
+        return (
+            <>
+                <PaginationItem>
+                    <PaginationLink to={paginationUrl(1)} isActive={isPageActive(1)}>
+                        1
+                    </PaginationLink>
+                </PaginationItem>
+
+                <PaginationItem>
+                    <PaginationEllipsis />
+                </PaginationItem>
+
+                {pages.slice(activePage - 2, activePage + 1).map((page) => {
+                    return (
+                        <PaginationItem key={page}>
+                            <PaginationLink to={paginationUrl(page)} isActive={isPageActive(page)}>
+                                {page.toString()}
+                            </PaginationLink>
+                        </PaginationItem>
+                    );
+                })}
+
+                <PaginationItem>
+                    <PaginationEllipsis />
+                </PaginationItem>
+
+                <PaginationItem>
+                    <PaginationLink to={paginationUrl(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
+                        {pages.at(-1)?.toString()}
+                    </PaginationLink>
+                </PaginationItem>
+            </>
+        );
+    }
+
     return (
-        <Pagination>
-            <PaginationContent>
-                <PaginationItem className="mr-1 sm:mr-2">
-                    <PaginationPrevious to={activePage === 1 ? "" : generateLinkHref(activePage - 1)} />
-                </PaginationItem>
+        <>
+            <PaginationItem>
+                <PaginationLink to={paginationUrl(1)} isActive={isPageActive(1)}>
+                    1
+                </PaginationLink>
+            </PaginationItem>
 
-                {pagesCount < 7 ? (
-                    pages.map((page) => {
-                        return (
-                            <PaginationItem key={page}>
-                                <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
-                                    {page.toString()}
-                                </PaginationLink>
-                            </PaginationItem>
-                        );
-                    })
-                ) : activePage < 5 ? (
-                    <>
-                        {pages.slice(0, 5).map((page) => {
-                            return (
-                                <PaginationItem key={page}>
-                                    <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
-                                        {page.toString()}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            );
-                        })}
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
-                                {pages.at(-1)?.toString()}
-                            </PaginationLink>
-                        </PaginationItem>
-                    </>
-                ) : activePage >= 5 && activePage <= pagesCount - 4 ? (
-                    <>
-                        <PaginationItem>
-                            <PaginationLink to={generateLinkHref(1)} isActive={isPageActive(1)}>
-                                1
-                            </PaginationLink>
-                        </PaginationItem>
+            <PaginationItem>
+                <PaginationEllipsis />
+            </PaginationItem>
 
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-
-                        {pages.slice(activePage - 2, activePage + 1).map((page) => {
-                            return (
-                                <PaginationItem key={page}>
-                                    <PaginationLink to={generateLinkHref(page)} isActive={isPageActive(page)}>
-                                        {page.toString()}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            );
-                        })}
-
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <PaginationLink to={generateLinkHref(pages[pagesCount - 1])} isActive={isPageActive(pages.at(-1))}>
-                                {pages.at(-1)?.toString()}
-                            </PaginationLink>
-                        </PaginationItem>
-                    </>
-                ) : (
-                    <>
-                        <PaginationItem>
-                            <PaginationLink to={generateLinkHref(1)} isActive={isPageActive(1)}>
-                                1
-                            </PaginationLink>
-                        </PaginationItem>
-
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-
-                        {pages.slice(-5).map((item) => {
-                            return (
-                                <PaginationItem key={item}>
-                                    <PaginationLink to={generateLinkHref(item)} isActive={isPageActive(item)}>
-                                        {item.toString()}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            );
-                        })}
-                    </>
-                )}
-
-                <PaginationItem className="ml-1 sm:ml-2">
-                    <PaginationNext to={activePage > pagesCount - 1 ? "" : generateLinkHref(activePage + 1)} />
-                </PaginationItem>
-            </PaginationContent>
-        </Pagination>
+            {pages.slice(-1 * MAX_CONTINUOUS_PAGE_LINKS).map((item) => {
+                return (
+                    <PaginationItem key={item}>
+                        <PaginationLink to={paginationUrl(item)} isActive={isPageActive(item)}>
+                            {item.toString()}
+                        </PaginationLink>
+                    </PaginationItem>
+                );
+            })}
+        </>
     );
 }

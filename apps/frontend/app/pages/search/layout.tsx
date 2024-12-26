@@ -76,6 +76,7 @@ export default function SearchPageLayout() {
     };
 
     useEffect(() => {
+        if (searchQueryParam === searchTerm_state) return;
         if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
 
         updateSearchParam_timeoutRef = window.setTimeout(() => {
