@@ -26,7 +26,7 @@ After you've installed the `postgresql-server` you'll need to initialize the dat
 sudo postgresql-setup --initdb
 ```
 
-Change the `var/lib/pgsql/data/pg_hba.conf` file to allow direct local connections:
+Change the `/var/lib/pgsql/data/pg_hba.conf` file to allow direct local connections:
 
 ```diff
 
@@ -78,7 +78,7 @@ Keep in mind that you'll need to start the database again after a reboot.
 ## Project Backend Setup
 - Clone the repo in your folder of choice.
 - `cd` into the project root and run `bun install` to install all deps.
-- Now go into `/packages/backend` and run `bunx prisma generate` and `bunx prisma db push` to synchronise the database with the schema.
+- Now go into `/apps/backend` and run `bunx prisma generate` and `bunx prisma db push` to synchronise the database with the schema.
 - `env` file
     ```ini
     FRONTEND_URL="http://localhost:3000"
@@ -131,12 +131,12 @@ Keep in mind that you'll need to start the database again after a reboot.
     Your database url will look something like this
     `postgresql://DB_USER:PASSWORD@localhost:5432/DB_NAME?schema=public`
 
-    Paste this env in a `.env` file in `/packages/backend`.
+    Paste this env in a `.env` file in `/apps/backend`.
 
 
 ## Running the app backend
 - Start the postgres server if not running
-- `cd` into `/packages/backend`
+- `cd` into `/apps/backend`
 - Start the redis server: `redis-server --port 5501`
 - Start the meilisearch server: `meilisearch --master-key MEILISEARCH_MASTER_KEY` \
     Must be same as specified in the env
@@ -149,8 +149,8 @@ Keep in mind that you'll need to start the database again after a reboot.
 <summary>If you'd like to start all these with one command, you can make use of the pm2 config.</summary>
 
 - Install [pm2](https://pm2.keymetrics.io/docs/usage/quick-start).
-- Adjust the executable paths and and project path in [pm2 config](/packages/backend/pm2.config.cjs). (Use absolute paths)
-- `cd` into `/packages/backend`
+- Adjust the executable paths and and project path in [pm2 config](/apps/backend/pm2.config.cjs). (Use absolute paths)
+- `cd` into `/apps/backend`
 - Create `redis` and `meilisearch` folders.
 - Run `pm2 start pm2.config.cjs`. It will start all three processes. You can manage them using pm2 cli. \
 
@@ -160,11 +160,9 @@ Keep in mind that you'll need to start the database again after a reboot.
 
 
 ## Running the app frontend
-- `cd` into `/packages/frontend`
-- Change the urls to localhost ones in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2)
+- `cd` into `/apps/frontend`
 - Run `bun run dev`
 - The frontend server will start on [localhost:3000](http://localhost:3000)
-- NOTE: Make sure to change back those urls in the config.ts when making a commit.
 
 If you wish to only work on the frontend, you can totally skip the backend setup and just proxy the requests to the hosted backend. \
-Set `proxy: true` in [`utils/config.ts`](/packages/frontend/utils/config.ts#L2) and now all the api requests will be made to the prod backend.
+Set `proxy: true` in [`app/utils/config.ts`](/apps/frontend/app/utils/config.ts#L15) and change `BACKEND_URL` and `BACKEND_URL_LOCAL` to `https://api.crmm.tech`; and now all the api requests will be made to the prod backend.
