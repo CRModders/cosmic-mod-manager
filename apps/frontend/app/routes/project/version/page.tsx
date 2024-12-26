@@ -46,7 +46,7 @@ export default function _() {
         );
     }
 
-    return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} versionSlug={versionSlug} />;
+    return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} />;
 }
 
 export function meta(props: MetaArgs) {

@@ -41,10 +41,9 @@ interface Props {
     ctx: ProjectContextData;
     versionData: ProjectVersionData;
     projectSlug: string;
-    versionSlug: string;
 }
 
-export default function VersionPage({ ctx, versionData, projectSlug, versionSlug }: Props) {
+export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
     const { t } = useTranslation();
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
@@ -185,8 +184,8 @@ export default function VersionPage({ ctx, versionData, projectSlug, versionSlug
                                             <span className="text-muted-foreground/85">
                                                 {dependencyVersion
                                                     ? t.version.depencency[`${dependency.dependencyType}_desc`](
-                                                          dependencyVersion.versionNumber,
-                                                      )
+                                                        dependencyVersion.versionNumber,
+                                                    )
                                                     : t.version.depencency[dependency.dependencyType]}
                                             </span>
                                         </div>
@@ -211,20 +210,20 @@ export default function VersionPage({ ctx, versionData, projectSlug, versionSlug
 
                         {versionData.files?.length
                             ? versionData.files.map((file) => {
-                                  if (file.isPrimary) return null;
-                                  return (
-                                      <FileDetailsItem
-                                          key={file.id}
-                                          fileName={file.name}
-                                          fileSize={file.size}
-                                          isPrimary={false}
-                                          downloadLink={file.url}
-                                          sha1_hash={file.sha1_hash}
-                                          sha512_hash={file.sha512_hash}
-                                          showDownloadAnimation={showDownloadAnimation}
-                                      />
-                                  );
-                              })
+                                if (file.isPrimary) return null;
+                                return (
+                                    <FileDetailsItem
+                                        key={file.id}
+                                        fileName={file.name}
+                                        fileSize={file.size}
+                                        isPrimary={false}
+                                        downloadLink={file.url}
+                                        sha1_hash={file.sha1_hash}
+                                        sha512_hash={file.sha512_hash}
+                                        showDownloadAnimation={showDownloadAnimation}
+                                    />
+                                );
+                            })
                             : null}
                     </ContentCardTemplate>
                 </div>

@@ -366,6 +366,9 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
             }
 
             addNewDependency(project.id, version.id, dependencyType);
+
+            // This is just to update the list of dependencies data so that we can show the details of those deps
+            // like icons and stuff, it's totally unrelated to adding or removing deps from the current version (kinda like totally for display purposes)
             setDependencyData((prev) => ({
                 ...prev,
                 projects: [
@@ -513,11 +516,13 @@ function DependencyItem({ dependencyData, versionId, projectId, dependencyType, 
     );
 }
 
-export function SelectPrimaryFileInput({
-    children,
-    selectedFile,
-    inputId,
-}: { children: React.ReactNode; selectedFile?: File | FileObjectType; inputId: string }) {
+interface PrimaryFileInputProps {
+    children: React.ReactNode;
+    selectedFile?: File | FileObjectType;
+    inputId: string;
+}
+
+export function SelectPrimaryFileInput({ children, selectedFile, inputId }: PrimaryFileInputProps) {
     const { t } = useTranslation();
 
     return (

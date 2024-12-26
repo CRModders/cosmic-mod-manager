@@ -1,5 +1,5 @@
 import { FileType } from "@app/utils/types";
-import sharp = require("sharp");
+import sharp from "sharp";
 
 interface ResizeProps {
     width?: number;

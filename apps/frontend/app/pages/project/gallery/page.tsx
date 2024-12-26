@@ -135,12 +135,13 @@ const GalleryItemCard = ({
                 aria-label={`View ${galleryItem.name}`}
             >
                 <img
-                    itemProp={MicrodataItemProps.contentUrl}
+                    itemProp={MicrodataItemProps.thumbnailUrl}
                     loading="lazy"
                     src={imageUrl(galleryItem.imageThumbnail)}
                     alt={galleryItem.name}
                     className="w-full h-full object-contain cursor-pointer hover:brightness-75 transition-all duration-300"
                 />
+                <link itemProp={MicrodataItemProps.contentUrl} href={imageUrl(galleryItem.image)} />
             </button>
 
             <div className="w-full grid grid-cols-1 place-content-between gap-2 p-2 pb-1 ">
