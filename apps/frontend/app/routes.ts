@@ -80,6 +80,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                         route("", path("organization/settings/page.tsx"), { index: true, id: `${lang}__org-general-settings` });
                         route("projects", path("organization/settings/projects.tsx"), { id: `${lang}__org-projects-settings` });
                         route("members", path("organization/settings/members.tsx"), { id: `${lang}__org-members-settings` });
+                        route("*", path("$.tsx"), { id: `${lang}__org-settings-not-found` });
                     });
 
                     route("", path("organization/layout.tsx"), { id: `${lang}__organization__layout` }, () => {

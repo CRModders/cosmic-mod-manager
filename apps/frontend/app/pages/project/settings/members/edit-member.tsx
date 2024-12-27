@@ -6,6 +6,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/componen
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { Switch } from "@app/components/ui/switch";
+import { cn } from "@app/components/utils";
 import { ProjectPermissionsList } from "@app/utils/config/project";
 import { hasRootAccess } from "@app/utils/config/roles";
 import { doesMemberHaveAccess } from "@app/utils/project";
@@ -16,7 +17,7 @@ import { type LoggedInUserData, ProjectPermission } from "@app/utils/types";
 import type { ProjectDetailsData, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRightLeftIcon, ChevronDownIcon, ChevronUpIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
+import { ArrowRightLeftIcon, ChevronDownIcon, CrownIcon, RefreshCcwIcon, SaveIcon, UserXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImgWrapper } from "~/components/ui/avatar";
@@ -139,11 +140,7 @@ export const ProjectTeamMember = ({
                     )}
 
                     <Button size="icon" variant="ghost" onClick={() => setDetailsOpen((prev) => !prev)}>
-                        {detailsOpen ? (
-                            <ChevronUpIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                        ) : (
-                            <ChevronDownIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                        )}
+                        <ChevronDownIcon className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")} />
                     </Button>
                 </div>
             </div>
@@ -420,11 +417,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                     )}
 
                     <Button size="icon" variant="ghost" onClick={() => setDetailsOpen((prev) => !prev)}>
-                        {detailsOpen ? (
-                            <ChevronUpIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                        ) : (
-                            <ChevronDownIcon className="w-btn-icon-lg h-btn-icon-lg" />
-                        )}
+                        <ChevronDownIcon className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")} />
                     </Button>
                 </div>
             </div>

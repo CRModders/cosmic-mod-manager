@@ -1,4 +1,4 @@
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogBody,
@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";

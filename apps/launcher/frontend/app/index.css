@@ -1,7 +1,6 @@
 @import "./../../../../packages/components/src/index.css";
 @import "./font.css";
 
-
 :root {
     --scrollbar-radius: 0;
 }

@@ -81,7 +81,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 return toast.error(result?.message || t.common.error);
             }
 
-            RefreshPage(navigate, ProjectPagePath(result?.type?.[0], result?.urlSlug));
+            RefreshPage(navigate, ProjectPagePath(result?.type?.[0], result?.urlSlug, "version/new"));
             return toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);

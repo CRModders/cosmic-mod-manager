@@ -72,7 +72,13 @@ export function FeaturedBtn({ isLoading, featured, setFeatured }: FeaturedBtnPro
     const { t } = useTranslation();
 
     return (
-        <Button variant="secondary" disabled={isLoading} type="button" onClick={() => setFeatured(!featured)}>
+        <Button
+            variant="secondary"
+            disabled={isLoading}
+            type="button"
+            onClick={() => setFeatured(!featured)}
+            title="Featured versions show up in your project sidebar."
+        >
             <StarIcon className={cn("w-btn-icon h-btn-icon", featured === true && "fill-current")} />
             {featured === true ? t.version.unfeature : t.version.feature}
         </Button>
@@ -426,6 +432,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
 
             <div className="w-full flex flex-col gap-1">
                 <span className="font-semibold text-muted-foreground">{t.version.addDep}</span>
+
                 <div className="w-full flex flex-col items-start justify-center gap-2">
                     <Select
                         defaultValue={DependsOn.PROJECT}
@@ -462,10 +469,10 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
                         <SelectContent>
                             <SelectItem value={DependencyType.REQUIRED}>{CapitalizeAndFormatString(DependencyType.REQUIRED)}</SelectItem>
                             <SelectItem value={DependencyType.OPTIONAL}>{CapitalizeAndFormatString(DependencyType.OPTIONAL)}</SelectItem>
+                            <SelectItem value={DependencyType.EMBEDDED}>{CapitalizeAndFormatString(DependencyType.EMBEDDED)}</SelectItem>
                             <SelectItem value={DependencyType.INCOMPATIBLE}>
                                 {CapitalizeAndFormatString(DependencyType.INCOMPATIBLE)}
                             </SelectItem>
-                            <SelectItem value={DependencyType.EMBEDDED}>{CapitalizeAndFormatString(DependencyType.EMBEDDED)}</SelectItem>
                         </SelectContent>
                     </Select>
 

@@ -2,6 +2,7 @@ import { fallbackOrgIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button, buttonVariants } from "@app/components/ui/button";
+import { Card, CardContent } from "@app/components/ui/card";
 import {
     Dialog,
     DialogBody,
@@ -36,7 +37,9 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
+import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
+import { LeaveTeam } from "~/pages/project/settings/members/page";
 import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
 import { OrgPagePath } from "~/utils/urls";
@@ -53,9 +56,12 @@ const getInitialValues = (orgData: Organisation) => {
 export default function GeneralOrgSettings() {
     const { t } = useTranslation();
     const orgData = useOrgData().orgData;
+    const session = useSession();
 
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const orgMembership = orgData.members.find((m) => m.userId === session?.id);
 
     const initialValues = getInitialValues(orgData);
     const form = useForm<z.infer<typeof orgSettingsFormSchema>>({
@@ -261,6 +267,19 @@ export default function GeneralOrgSettings() {
                 </Form>
             </ContentCardTemplate>
 
+            <Card>
+                <CardContent className="pt-card-surround">
+                    {orgMembership?.id ? (
+                        <LeaveTeam
+                            teamId={orgData.teamId}
+                            currUsersMembership={orgMembership}
+                            refreshData={async () => navigate(OrgPagePath(orgData.slug))}
+                            isOrgTeam
+                        />
+                    ) : null}
+                </CardContent>
+            </Card>
+
             <DeleteOrgDialog name={orgData.name} slug={orgData.slug} />
         </>
     );
@@ -293,8 +312,8 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
     }
 
     return (
-        <ContentCardTemplate title={t.organization.deleteOrg} className="w-full flex flex-col gap-4">
-            <p className="text-muted-foreground">{t.organization.deleteOrgDesc}</p>
+        <ContentCardTemplate title={t.organization.deleteOrg} className="w-full flex-row flex flex-wrap gap-4 justify-between">
+            <p className="text-muted-foreground max-w-[65ch]">{t.organization.deleteOrgDesc}</p>
 
             <Dialog>
                 <DialogTrigger asChild>

@@ -1,15 +1,21 @@
-import { BrandIcon } from "@app/components/icons";
+import { BrandIcon, CubeIcon } from "@app/components/icons";
+import { Button } from "@app/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@app/components/ui/dropdown-menu";
+import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
+import { Building2Icon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
 import { useTranslation } from "~/locales/provider";
+import CreateNewOrg_Dialog from "~/pages/dashboard/organization/new-organization";
+import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
@@ -103,7 +109,11 @@ export default function Navbar(props: NavbarProps) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-4">
-                        {MemoizedThemeSwitch}
+                        <div className="hidden lg:flex">
+                            <CreateThingsPopup />
+                        </div>
+
+                        <div className="flex lg:hidden">{MemoizedThemeSwitch}</div>
 
                         <div className="hidden lg:flex">
                             <NavButton session={props.session} notifications={props.notifications} toggleNavMenu={toggleNavMenu} />
@@ -179,5 +189,41 @@ export function NavMenuLink({
         >
             {children ? children : label}
         </ButtonLink>
+    );
+}
+
+function CreateThingsPopup() {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { t } = useTranslation();
+
+    return (
+        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost-inverted" size="sm">
+                    <PlusIcon className="w-5 h-5" />
+
+                    <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", dropdownOpen && "rotate-180")} />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <CreateNewProjectDialog
+                    trigger={
+                        <Button className="space-y-0 justify-start" variant="ghost" size="sm">
+                            <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                            {t.dashboard.createProject}
+                        </Button>
+                    }
+                />
+
+                <Separator />
+
+                <CreateNewOrg_Dialog>
+                    <Button className="space-y-0 justify-start" variant="ghost" size="sm">
+                        <Building2Icon className="w-btn-icon-md h-btn-icon-md" />
+                        {t.dashboard.createOrg}
+                    </Button>
+                </CreateNewOrg_Dialog>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }

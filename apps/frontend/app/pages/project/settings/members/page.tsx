@@ -130,8 +130,13 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
     const leaveTeamMsg = isOrgTeam ? t.projectSettings.leaveOrg : t.projectSettings.leaveProject;
     const leaveTeamDesc = isOrgTeam ? t.projectSettings.leaveOrgDesc : t.projectSettings.leaveProjectDesc;
 
+    const disabled = currUsersMembership.isOwner || currUsersMembership.teamId !== teamId;
+    const disabledReason = currUsersMembership.isOwner
+        ? "Transfer ownership of this project to someone else to leave the team!"
+        : "You're the only member of this team!";
+
     return (
-        <div className="w-full flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <div className="w-full flex flex-wrap items-center justify-between gap-x-6 gap-y-2" title={disabled ? disabledReason : undefined}>
             <div>
                 <h2 className="text-lg font-semibold">{leaveTeamMsg}</h2>
                 <p className="text-muted-foreground">{leaveTeamDesc}</p>
@@ -139,7 +144,7 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
 
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="secondary-destructive" disabled={currUsersMembership.isOwner || currUsersMembership.teamId !== teamId}>
+                    <Button variant="secondary-destructive" disabled={disabled}>
                         <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
                         {leaveTeamMsg}
                     </Button>

@@ -119,7 +119,7 @@ function BaseView(props: SearchListItemProps) {
             </Link>
 
             <div
-                className={cn("h-fit whitespace-break-spaces text-wrap leading-none", galleryViewType && "mr-card-surround")}
+                className={cn("h-fit whitespace-break-spaces text-wrap leading-snug", galleryViewType && "mr-card-surround")}
                 style={{ gridArea: "title" }}
             >
                 <Link
@@ -135,7 +135,7 @@ function BaseView(props: SearchListItemProps) {
                         by{" "}
                         <Link
                             to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
-                            className="underline hover:brightness-110 mobile-break-words leading-none"
+                            className="underline hover:brightness-110 mobile-break-words leading-snug"
                             title={props.isOrgOwned ? `${props.author} (${t.project.organization})` : props.author}
                         >
                             {props.author}
@@ -224,9 +224,9 @@ function BaseView(props: SearchListItemProps) {
 
                 <div
                     className={cn(
-                        "h-fit flex items-center gap-1.5 whitespace-nowrap mt-auto",
-                        listViewType && "justify-end ml-auto",
-                        galleryViewType && "justify-start",
+                        "h-fit flex items-center gap-1.5 whitespace-nowrap",
+                        listViewType && "justify-end ml-auto mt-auto",
+                        galleryViewType && "justify-start my-auto",
                     )}
                 >
                     <TooltipProvider>

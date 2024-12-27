@@ -2,6 +2,7 @@ import { fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button, buttonVariants } from "@app/components/ui/button";
+import { Card, CardContent } from "@app/components/ui/card";
 import {
     Dialog,
     DialogBody,
@@ -43,14 +44,18 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
+import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
+import { ProjectPagePath } from "~/utils/urls";
+import { LeaveTeam } from "./members/page";
 
 export default function GeneralSettingsPage() {
     const { t } = useTranslation();
     const ctx = useProjectData();
     const projectData = ctx.projectData;
+    const session = useSession();
 
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -445,6 +450,19 @@ export default function GeneralSettingsPage() {
                 </Form>
             </ContentCardTemplate>
 
+            <Card>
+                <CardContent className="pt-card-surround">
+                    {ctx.currUsersMembership?.id && projectData.members.some((m) => m.userId === session?.id) ? (
+                        <LeaveTeam
+                            currUsersMembership={ctx.currUsersMembership}
+                            teamId={ctx.projectData.teamId}
+                            isOrgTeam={false}
+                            refreshData={async () => navigate(ProjectPagePath(projectData.type[0], projectData.slug))}
+                        />
+                    ) : null}
+                </CardContent>
+            </Card>
+
             <DeleteProjectDialog name={projectData.name} slug={projectData.slug} />
         </>
     );
@@ -477,8 +495,8 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
     };
 
     return (
-        <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-col gap-4">
-            <p className="text-muted-foreground">{t.projectSettings.deleteProjectDesc(SITE_NAME_SHORT)}</p>
+        <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-row flex-wrap gap-4 justify-between">
+            <p className="text-muted-foreground max-w-[65ch]">{t.projectSettings.deleteProjectDesc(SITE_NAME_SHORT)}</p>
 
             <Dialog>
                 <DialogTrigger asChild>
