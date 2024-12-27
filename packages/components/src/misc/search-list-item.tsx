@@ -119,13 +119,13 @@ function BaseView(props: SearchListItemProps) {
             </Link>
 
             <div
-                className={cn("h-fit whitespace-break-spaces text-wrap leading-snug", galleryViewType && "mr-card-surround")}
+                className={cn("h-fit whitespace-break-spaces text-wrap leading-none", galleryViewType && "mr-card-surround leading-tight")}
                 style={{ gridArea: "title" }}
             >
                 <Link
                     itemProp={MicrodataItemProps.url}
                     to={projectPageUrl}
-                    className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block")}
+                    className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block leading-tight")}
                     aria-label={props.projectName}
                 >
                     <span itemProp={MicrodataItemProps.name}>{props.projectName}</span>
@@ -135,7 +135,10 @@ function BaseView(props: SearchListItemProps) {
                         by{" "}
                         <Link
                             to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
-                            className="underline hover:brightness-110 mobile-break-words leading-snug"
+                            className={cn(
+                                "underline hover:brightness-110 mobile-break-words leading-none",
+                                galleryViewType && "leading-tight",
+                            )}
                             title={props.isOrgOwned ? `${props.author} (${t.project.organization})` : props.author}
                         >
                             {props.author}
