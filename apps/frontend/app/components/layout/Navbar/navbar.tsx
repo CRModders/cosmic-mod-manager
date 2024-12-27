@@ -10,6 +10,7 @@ import type { Notification } from "@app/utils/types/api";
 import { Building2Icon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigation } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
@@ -193,16 +194,21 @@ export function NavMenuLink({
 }
 
 function CreateThingsPopup() {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const navigation = useNavigation();
+    const [popoverOpen, setPopoverOpen] = useState(false);
     const { t } = useTranslation();
 
+    useEffect(() => {
+        setPopoverOpen(false);
+    }, [navigation.location?.pathname]);
+
     return (
-        <Popover open={dropdownOpen} onOpenChange={setDropdownOpen}>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
                 <Button variant="ghost-inverted" size="sm">
                     <PlusIcon className="w-5 h-5" />
 
-                    <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", dropdownOpen && "rotate-180")} />
+                    <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")} />
                 </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="min-w-fit p-1">
