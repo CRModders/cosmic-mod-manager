@@ -375,7 +375,7 @@ export default {
         memberUpdated: "Member updated successfully",
         pending: "Pending",
         role: "Role",
-        roleDesc: "The title of the role that this member plays for this project.",
+        roleDesc: "The title of the role that this member plays for this team.",
         permissions: "Permissions",
         perms: {
             upload_version: "Upload version",

@@ -375,7 +375,7 @@ export default {
         memberUpdated: "Miembro actualizado con éxito",
         pending: "Pendiente",
         role: "Rol",
-        roleDesc: "El título del rol que este miembro desempeña para este proyecto.",
+        roleDesc: "El título del rol que este miembro desempeña para este equipo.",
         permissions: "Permisos",
         perms: {
             upload_version: "Subir versión",
