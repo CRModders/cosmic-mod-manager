@@ -450,18 +450,18 @@ export default function GeneralSettingsPage() {
                 </Form>
             </ContentCardTemplate>
 
-            <Card>
-                <CardContent className="pt-card-surround">
-                    {ctx.currUsersMembership?.id && projectData.members.some((m) => m.userId === session?.id) ? (
+            {ctx.currUsersMembership?.id && projectData.members.some((m) => m.userId === session?.id) ? (
+                <Card>
+                    <CardContent className="pt-card-surround">
                         <LeaveTeam
                             currUsersMembership={ctx.currUsersMembership}
                             teamId={ctx.projectData.teamId}
                             isOrgTeam={false}
                             refreshData={async () => navigate(ProjectPagePath(projectData.type[0], projectData.slug))}
                         />
-                    ) : null}
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            ) : null}
 
             <DeleteProjectDialog name={projectData.name} slug={projectData.slug} />
         </>

@@ -267,18 +267,18 @@ export default function GeneralOrgSettings() {
                 </Form>
             </ContentCardTemplate>
 
-            <Card>
-                <CardContent className="pt-card-surround">
-                    {orgMembership?.id ? (
+            {orgMembership?.id ? (
+                <Card>
+                    <CardContent className="pt-card-surround">
                         <LeaveTeam
                             teamId={orgData.teamId}
                             currUsersMembership={orgMembership}
                             refreshData={async () => navigate(OrgPagePath(orgData.slug))}
                             isOrgTeam
                         />
-                    ) : null}
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            ) : null}
 
             <DeleteOrgDialog name={orgData.name} slug={orgData.slug} />
         </>
