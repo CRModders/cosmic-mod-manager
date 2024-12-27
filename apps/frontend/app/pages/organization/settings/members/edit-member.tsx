@@ -29,7 +29,7 @@ import { UserProfilePath } from "~/utils/urls";
 interface OrgTeamMemberProps {
     org: Organisation;
     member: TeamMember;
-    currMember: TeamMember;
+    currMember: TeamMember | null;
     fetchOrgData: () => Promise<void>;
     session: LoggedInUserData | null;
 }
@@ -78,24 +78,24 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
 
     const canEditMember = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_MEMBER,
-        currMember.organisationPermissions,
-        currMember.isOwner,
+        currMember?.organisationPermissions,
+        currMember?.isOwner,
         session?.role,
     );
     const canEditDefaultPermissions = doesOrgMemberHaveAccess(
         OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
-        currMember.organisationPermissions,
-        currMember.isOwner,
+        currMember?.organisationPermissions,
+        currMember?.isOwner,
         session?.role,
     );
-    const canAddPermissions = hasRootAccess(currMember.isOwner, session?.role);
+    const canAddPermissions = hasRootAccess(currMember?.isOwner, session?.role);
     const canRemoveMembers = doesOrgMemberHaveAccess(
         OrganisationPermission.REMOVE_MEMBER,
-        currMember.organisationPermissions,
-        currMember.isOwner,
+        currMember?.organisationPermissions,
+        currMember?.isOwner,
         session?.role,
     );
-    const canTransferOwnership = hasRootAccess(currMember.isOwner, session?.role) && member.isOwner === false && member.accepted;
+    const canTransferOwnership = hasRootAccess(currMember?.isOwner, session?.role) && member.isOwner === false && member.accepted;
 
     return (
         <Card className="w-full flex flex-col gap-4 p-card-surround">

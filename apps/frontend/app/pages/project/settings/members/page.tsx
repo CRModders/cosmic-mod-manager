@@ -102,7 +102,7 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
 }
 
 interface LeaveTeamProps {
-    currUsersMembership: TeamMember;
+    currUsersMembership: TeamMember | null;
     teamId: string;
     isOrgTeam?: boolean;
     refreshData: () => Promise<void>;
@@ -130,10 +130,11 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
     const leaveTeamMsg = isOrgTeam ? t.projectSettings.leaveOrg : t.projectSettings.leaveProject;
     const leaveTeamDesc = isOrgTeam ? t.projectSettings.leaveOrgDesc : t.projectSettings.leaveProjectDesc;
 
-    const disabled = currUsersMembership.isOwner || currUsersMembership.teamId !== teamId;
-    const disabledReason = currUsersMembership.isOwner
-        ? "Transfer ownership of this project to someone else to leave the team!"
-        : "You're the only member of this team!";
+    const disabled = currUsersMembership?.isOwner || currUsersMembership?.teamId !== teamId;
+    const disabledReason =
+        currUsersMembership?.isOwner === true
+            ? "Transfer ownership of this project to someone else to leave the team!"
+            : "You're the only member of this team!";
 
     return (
         <div className="w-full flex flex-wrap items-center justify-between gap-x-6 gap-y-2" title={disabled ? disabledReason : undefined}>

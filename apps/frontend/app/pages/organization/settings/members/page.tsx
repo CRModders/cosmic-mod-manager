@@ -25,11 +25,10 @@ export default function OrgMemberSettings() {
         RefreshPage(navigate, location);
     }
 
-    if (!currUsersMembership) return null;
     const canInviteMembers = doesOrgMemberHaveAccess(
         OrganisationPermission.MANAGE_INVITES,
-        currUsersMembership.organisationPermissions,
-        currUsersMembership.isOwner,
+        currUsersMembership?.organisationPermissions,
+        currUsersMembership?.isOwner,
         session?.role,
     );
 
