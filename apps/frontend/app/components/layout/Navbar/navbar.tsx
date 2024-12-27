@@ -1,6 +1,6 @@
 import { BrandIcon, CubeIcon } from "@app/components/icons";
 import { Button } from "@app/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@app/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
@@ -197,15 +197,15 @@ function CreateThingsPopup() {
     const { t } = useTranslation();
 
     return (
-        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-            <DropdownMenuTrigger asChild>
+        <Popover open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <PopoverTrigger asChild>
                 <Button variant="ghost-inverted" size="sm">
                     <PlusIcon className="w-5 h-5" />
 
                     <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", dropdownOpen && "rotate-180")} />
                 </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            </PopoverTrigger>
+            <PopoverContent align="end" className="min-w-fit p-1">
                 <CreateNewProjectDialog
                     trigger={
                         <Button className="space-y-0 justify-start" variant="ghost" size="sm">
@@ -223,7 +223,7 @@ function CreateThingsPopup() {
                         {t.dashboard.createOrg}
                     </Button>
                 </CreateNewOrg_Dialog>
-            </DropdownMenuContent>
-        </DropdownMenu>
+            </PopoverContent>
+        </Popover>
     );
 }

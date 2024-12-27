@@ -84,7 +84,7 @@ export function PageHeader({
                                     <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 p-2">
+                            <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 px-1 py-1">
                                 {threeDotMenu}
                             </PopoverContent>
                         </Popover>

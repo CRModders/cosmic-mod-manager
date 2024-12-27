@@ -155,17 +155,25 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                     <>
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <>
-                                <VariantButtonLink variant="ghost" url={OrgPagePath(orgData.slug, "settings/projects")} prefetch="render">
+                                <VariantButtonLink
+                                    variant="ghost"
+                                    url={OrgPagePath(orgData.slug, "settings/projects")}
+                                    prefetch="render"
+                                    size="sm"
+                                >
                                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
                                     {t.organization.manageProjects}
                                 </VariantButtonLink>
-                                <Separator className="my-0.5" />
+
+                                <Separator />
                             </>
                         ) : null}
+
                         <PopoverClose asChild>
                             <Button
                                 className="w-full justify-start"
                                 variant="ghost"
+                                size="sm"
                                 onClick={() => {
                                     navigator.clipboard.writeText(orgData.id);
                                 }}

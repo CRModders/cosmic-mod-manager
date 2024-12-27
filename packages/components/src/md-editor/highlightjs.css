@@ -108,6 +108,12 @@ li ol li:first-child {
     @apply text-[1.17rem];
 }
 
+.markdown-body > *:first-child,
+.markdown-body > *:first-child,
+.markdown-body > *:first-child {
+    padding-top: 0;
+}
+
 .markdown-body blockquote {
     @apply ml-6 px-4 border-l-[0.25rem] border-shallower-background;
 }

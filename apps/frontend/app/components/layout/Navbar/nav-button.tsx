@@ -1,7 +1,8 @@
 import { fallbackUserIcon } from "@app/components/icons";
 import { NotificationBadge } from "@app/components/ui/badge";
 import { Button } from "@app/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@app/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
+import { Separator } from "@app/components/ui/separator";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { cn } from "@app/components/utils";
 import { disableInteractions } from "@app/utils/dom";
@@ -67,8 +68,8 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
     }
 
     return (
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger asChild>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
                 <Button
                     size="lg"
                     variant="ghost"
@@ -83,8 +84,8 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     />
                     {undreadNotifications > 0 ? <NotificationBadge className="min-h-1.5 min-w-1.5" /> : null}
                 </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-52 p-2 flex flex-col gap-1">
+            </PopoverTrigger>
+            <PopoverContent align="end" className="min-w-52 p-1.5 flex flex-col gap-1">
                 {[
                     {
                         icon: <UserIcon className="w-btn-icon h-btn-icon" />,
@@ -115,7 +116,9 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                         </ButtonLink>
                     );
                 })}
-                <DropdownMenuSeparator />
+
+                <Separator className="my-0.5" />
+
                 {[
                     {
                         icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
@@ -143,10 +146,12 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                         </ButtonLink>
                     );
                 })}
-                <DropdownMenuSeparator />
+
+                <Separator className="my-0.5" />
+
                 <SignOutBtn disabled={!isOpen} />
-            </DropdownMenuContent>
-        </DropdownMenu>
+            </PopoverContent>
+        </Popover>
     );
 }
 

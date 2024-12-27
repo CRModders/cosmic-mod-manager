@@ -7,8 +7,8 @@ import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import Chip, { ChipButton } from "@app/components/ui/chip";
 import { CommandSeparator } from "@app/components/ui/command";
 import { copyTextToClipboard } from "@app/components/ui/copy-btn";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@app/components/ui/dropdown-menu";
 import { MultiSelect } from "@app/components/ui/multi-select";
+import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
 import { FullWidthSpinner } from "@app/components/ui/spinner";
@@ -640,11 +640,11 @@ const DownloadsCount = ({ downloads, iconVisible = true }: { downloads: number; 
 
 const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: string; canEditVersion: boolean }) => {
     const { t } = useTranslation();
-    const [dropDownOpen, setDropDownOpen] = useState(false);
+    const [popoverOpen, setPopoverOpen] = useState(false);
 
     return (
-        <DropdownMenu open={dropDownOpen} onOpenChange={setDropDownOpen}>
-            <DropdownMenuTrigger asChild>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+            <PopoverTrigger asChild>
                 <Button
                     variant="ghost-no-shadow"
                     size="icon"
@@ -653,15 +653,16 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                 >
                     <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
                 </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="noClickRedirect p-1.5">
+            </PopoverTrigger>
+            <PopoverContent align="end" className="noClickRedirect p-1 gap-1 min-w-fit">
                 <VariantButtonLink
+                    className="justify-start"
                     url={versionPageUrl}
-                    variant={"ghost-no-shadow"}
-                    size={"sm"}
+                    variant="ghost-no-shadow"
+                    size="sm"
                     target="_blank"
                     onClick={() => {
-                        setDropDownOpen(false);
+                        setPopoverOpen(false);
                     }}
                 >
                     <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
@@ -670,11 +671,11 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
 
                 <Button
                     variant={"ghost-no-shadow"}
-                    size={"sm"}
+                    size="sm"
                     className="justify-start"
                     onClick={() => {
                         copyTextToClipboard(`${Config.FRONTEND_URL}${versionPageUrl}`);
-                        setDropDownOpen(false);
+                        setPopoverOpen(false);
                     }}
                 >
                     <LinkIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
@@ -683,14 +684,14 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
 
                 {canEditVersion ? (
                     <>
-                        <Separator className="my-0.5" />
+                        <Separator />
                         <VariantButtonLink
                             url={`${versionPageUrl}/edit`}
                             variant={"ghost-no-shadow"}
                             className="justify-start"
-                            size={"sm"}
+                            size="sm"
                             onClick={() => {
-                                setDropDownOpen(false);
+                                setPopoverOpen(false);
                             }}
                         >
                             <EditIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
@@ -698,7 +699,7 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                         </VariantButtonLink>
                     </>
                 ) : null}
-            </DropdownMenuContent>
-        </DropdownMenu>
+            </PopoverContent>
+        </Popover>
     );
 };

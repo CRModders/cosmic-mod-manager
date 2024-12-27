@@ -448,7 +448,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 }
                 threeDotMenu={
                     <>
-                        <Button variant="ghost-destructive" className="w-full">
+                        <Button variant="ghost-destructive" className="w-full" size="sm">
                             <FlagIcon className="w-btn-icon h-btn-icon" />
                             {t.common.report}
                         </Button>
@@ -457,6 +457,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                             <Button
                                 className="w-full"
                                 variant="ghost"
+                                size="sm"
                                 onClick={() => {
                                     navigator.clipboard.writeText(projectData.id);
                                 }}

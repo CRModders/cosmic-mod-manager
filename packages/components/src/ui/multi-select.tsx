@@ -162,9 +162,14 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                     onEscapeKeyDown={() => handleTogglePopover(false)}
                 >
                     <Command className="border border-shallow-background">
-                        {searchBox === false ? null : (
-                            <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} size={1} className="w-full" />
-                        )}
+                        <CommandInput
+                            placeholder="Search..."
+                            onKeyDown={handleInputKeyDown}
+                            size={1}
+                            className="w-full"
+                            wrapperClassName={cn(searchBox === false && "w-0 h-0 overflow-hidden opacity-0")}
+                            {...(searchBox === false ? { readOnly: true } : {})}
+                        />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
