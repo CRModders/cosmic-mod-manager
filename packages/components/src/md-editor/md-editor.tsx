@@ -481,7 +481,7 @@ function Separator() {
 }
 
 function BtnGroup({ children }: { children: React.ReactNode }) {
-    return <div className="flex items-center justify-center gap-x-1.5 gap-y-0.5">{children}</div>;
+    return <div className="flex items-center justify-start flex-wrap gap-x-1.5 gap-y-0.5">{children}</div>;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>vscode
