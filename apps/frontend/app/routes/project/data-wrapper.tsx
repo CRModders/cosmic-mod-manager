@@ -5,7 +5,7 @@ import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@a
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
-import { NotFoundPage } from "~/routes/$";
+import NotFoundPage from "~/pages/not-found";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";

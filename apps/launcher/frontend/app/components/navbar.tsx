@@ -2,6 +2,7 @@ import { ImgWrapper } from "@app/components/ui/avatar";
 import { Button } from "@app/components/ui/button";
 import { HomeIcon, LibraryIcon, PlusIcon, SearchIcon, SettingsIcon } from "lucide-react";
 import { ButtonLink } from "~/components/ui/link";
+import CreateInstance from "./dialogs/create-instance";
 
 export default function Navbar() {
     return (
@@ -26,14 +27,16 @@ export default function Navbar() {
             <span />
 
             <div className="grid grid-cols-1 gap-2">
-                <Button
-                    size="icon"
-                    variant="secondary"
-                    className="!w-12 !h-12 px-0 py-0 flex items-center justify-center"
-                    title="Create instance"
-                >
-                    <PlusIcon className="w-6 h-6" />
-                </Button>
+                <CreateInstance>
+                    <Button
+                        size="icon"
+                        variant="secondary"
+                        className="!w-12 !h-12 px-0 py-0 flex items-center justify-center"
+                        title="Create instance"
+                    >
+                        <PlusIcon className="w-6 h-6" />
+                    </Button>
+                </CreateInstance>
 
                 <Navlink href={"/settings"} title="Settings">
                     <SettingsIcon className="w-6 h-6" />

@@ -361,7 +361,7 @@ export default {
         typeToVerify: (projectName: string) => `Para verificar, escribe **${projectName}** abajo:`,
         typeHere: "Escribe aquí...",
         manageMembers: "Gestionar miembros",
-        leftProjectTeam: "Has salido del equipo del proyecto",
+        leftProjectTeam: "Has salido del equipo",
         leaveOrg: "Salir de la organización",
         leaveProject: "Salir del proyecto",
         leaveOrgDesc: "Eliminarte como miembro de esta organización.",

@@ -67,7 +67,7 @@ export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ 
     return (
         <Button variant={variant} ref={ref} {...props}>
             {icon ? icon : <CancelButtonIcon className="w-btn-icon h-btn-icon" />}
-            {children}
+            {children || "Cancel"}
         </Button>
     );
 });

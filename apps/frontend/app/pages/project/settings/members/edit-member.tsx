@@ -36,14 +36,14 @@ interface ProjectTeamMemberProps {
     doesProjectHaveOrg: boolean;
 }
 
-export const ProjectTeamMember = ({
+export function ProjectTeamMember({
     session,
     member,
     currUsersMembership,
     fetchProjectData,
     projectTeamId,
     doesProjectHaveOrg,
-}: ProjectTeamMemberProps) => {
+}: ProjectTeamMemberProps) {
     const { t } = useTranslation();
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -257,7 +257,7 @@ export const ProjectTeamMember = ({
             )}
         </Card>
     );
-};
+}
 
 interface OrgTeamMemberProps {
     session: LoggedInUserData | null;
@@ -377,6 +377,14 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
     useEffect(() => {
         setOverridePerms(!!permsOverridden);
     }, [permsOverridden]);
+
+    let submitButtonDisabled = false;
+    if (isLoading === true) submitButtonDisabled = true;
+    else if (canEditMember === false) submitButtonDisabled = true;
+    // If the form hasn't been changed and the toggle to override member permissions is still the same, the submitButton will be disabled
+    else if (form.formState.isDirty === false && !!permsOverridden === overridePerms) {
+        submitButtonDisabled = true;
+    }
 
     return (
         <Card className="w-full flex flex-col gap-4 p-card-surround">
@@ -515,7 +523,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                             <Button
                                 type="submit"
                                 size="sm"
-                                disabled={isLoading || !form.formState.isDirty || (!permsOverridden && !overridePerms) || !canEditMember}
+                                disabled={submitButtonDisabled}
                                 onClick={async () => {
                                     if (permsOverridden && !overridePerms) return await removePermissionOverride();
 

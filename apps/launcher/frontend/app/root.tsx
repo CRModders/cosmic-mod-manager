@@ -1,20 +1,13 @@
+import { GetGameVersions } from "@/wailsjs/go/backend/App";
+import type { backend } from "@/wailsjs/go/models";
 import LoaderBar from "@app/components/misc/loader-bar";
 import { SuspenseFallback } from "@app/components/ui/spinner";
-import { useEffect } from "react";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse } from "react-router";
 import type { Route } from "./+types/root";
 import Navbar from "./components/navbar";
 import TitleBar from "./components/title-bar";
 import { PathSegmentsContextProvider } from "./hooks/path-segments";
 import "./index.css";
-
-export const links: Route.LinksFunction = () => [
-    {
-        rel: "preconnect",
-        href: "https://fonts.gstatic.com",
-        crossOrigin: "anonymous",
-    },
-];
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
@@ -35,7 +28,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
                 <ScrollRestoration />
                 <Scripts />
-                <PreventResizeOnScrollbar />
             </body>
         </html>
     );
@@ -63,6 +55,21 @@ export default function App() {
             </div>
         </div>
     );
+}
+
+export interface RootData {
+    gameVersions: backend.GameVersion[];
+}
+
+export async function clientLoader(): Promise<RootData> {
+    console.log("ClientLoader running...");
+    const versions = await GetGameVersions();
+
+    return { gameVersions: versions };
+}
+
+export function shouldRevalidate() {
+    return false;
 }
 
 export function HydrateFallback() {
@@ -95,19 +102,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     );
 }
 
-function PreventResizeOnScrollbar() {
-    function preventResizeNearScrollbar(e: UIEvent) {
-        console.log(e.target);
-        // const isNearScrollbar = window.innerWidth -  < 16;
-    }
-
-    useEffect(() => {
-        window.addEventListener("resize", preventResizeNearScrollbar);
-
-        return () => {
-            window.removeEventListener("resize", preventResizeNearScrollbar);
-        };
-    }, []);
-
-    return null;
-}
+export const links: Route.LinksFunction = () => [
+    {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+    },
+];

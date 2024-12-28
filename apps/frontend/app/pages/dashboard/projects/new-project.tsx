@@ -88,11 +88,11 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
         }
     }
 
-    const isFormSubmittable = () => {
+    function isFormSubmittable() {
         const values = form.getValues();
         const isFormInvalid = !values.name || !values.slug || !values.visibility || !values.summary || !values.type?.length;
         return !isFormInvalid;
-    };
+    }
 
     return (
         <Dialog

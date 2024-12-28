@@ -100,6 +100,11 @@ export default function GeneralSettingsPage() {
         }
     };
 
+    if (!session?.id) return;
+
+    const isProjectTeamMember = projectData.members.some((member) => member.userId === session.id);
+    const isOrgMember = projectData.organisation?.members?.some((member) => member.userId === session.id && member.accepted);
+
     return (
         <>
             <ContentCardTemplate title={t.projectSettings.projectInfo}>
@@ -450,14 +455,15 @@ export default function GeneralSettingsPage() {
                 </Form>
             </ContentCardTemplate>
 
-            {ctx.currUsersMembership?.id && projectData.members.some((m) => m.userId === session?.id) ? (
+            {isProjectTeamMember && !isOrgMember ? (
+                // If the user is a member of the project, show the leave project button
                 <Card>
                     <CardContent className="pt-card-surround">
                         <LeaveTeam
                             currUsersMembership={ctx.currUsersMembership}
                             teamId={ctx.projectData.teamId}
                             isOrgTeam={false}
-                            refreshData={async () => navigate(ProjectPagePath(projectData.type[0], projectData.slug))}
+                            refreshData={async () => RefreshPage(navigate, ProjectPagePath(projectData.type[0], projectData.slug))}
                         />
                     </CardContent>
                 </Card>

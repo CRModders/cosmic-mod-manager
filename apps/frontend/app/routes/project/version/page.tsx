@@ -4,14 +4,14 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
 import { type MetaArgs, useParams, useSearchParams } from "react-router";
 import { useProjectData } from "~/hooks/project";
+import NotFoundPage from "~/pages/not-found";
 import VersionPage from "~/pages/project/version/page";
-import NotFoundPage from "~/routes/$";
 import type { ProjectLoaderData as projectDataLoader } from "~/routes/project/data-wrapper";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { ProjectPagePath } from "~/utils/urls";
 
-export default function _() {
+export default function VersionPageRoute() {
     const ctx = useProjectData();
     const { projectSlug, versionSlug } = useParams();
     const [searchParams] = useSearchParams();
@@ -34,7 +34,7 @@ export default function _() {
         }
     }
 
-    if (!versionData || !projectSlug || !versionSlug) {
+    if (!versionData?.id || !projectSlug || !versionSlug) {
         return (
             <NotFoundPage
                 className="no_full_page py-16"

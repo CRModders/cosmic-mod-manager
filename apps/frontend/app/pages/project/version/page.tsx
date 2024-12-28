@@ -328,21 +328,19 @@ const FileDetailsItem = ({
                         isPrimary ? "bg-shallow-background" : "bg-shallow-background/70",
                     )}
                 >
-                    <div className="flex items-center justify-start gap-1.5">
+                    <div>
                         <FileIcon
                             className={cn(
-                                "flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
+                                "inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
                                 !isPrimary && "text-extra-muted-foreground",
                             )}
                         />
 
-                        <div className="flex items-center flex-wrap justify-start gap-x-2">
-                            <span className={!isPrimary ? "text-muted-foreground" : ""}>
-                                <strong className="font-semibold">{fileName}</strong>{" "}
-                                <span className="whitespace-nowrap ml-0.5">({parseFileSize(fileSize)})</span>{" "}
-                                {isPrimary ? <span className="text-muted-foreground italic ml-1">Primary</span> : null}
-                            </span>
-                        </div>
+                        <span className={!isPrimary ? "text-muted-foreground" : ""}>
+                            <strong className="font-semibold">{fileName}</strong>{" "}
+                            <span className="whitespace-nowrap ml-0.5">({parseFileSize(fileSize)})</span>{" "}
+                            {isPrimary ? <span className="text-muted-foreground italic ml-1">Primary</span> : null}
+                        </span>
                     </div>
 
                     <VariantButtonLink

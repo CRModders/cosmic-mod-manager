@@ -3,12 +3,12 @@ import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { MetaDescriptor } from "react-router";
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
+import NotFoundPage from "~/pages/not-found";
 import UserPageLayout from "~/pages/user/layout";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { UserProfilePath } from "~/utils/urls";
-import NotFoundPage from "../$";
 import type { Route } from "./+types/layout";
 
 export interface UserOutletData {

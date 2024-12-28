@@ -57,12 +57,15 @@ export default function ProjectMemberSettingsPage({ userOrgs }: Props) {
         RefreshPage(navigate, path);
     }
 
+    const isProjectTeamMember = projectData.members.some((member) => member.userId === session.id);
+    const isOrgMember = projectData.organisation?.members?.some((member) => member.userId === session.id && member.accepted);
+
     return (
         <>
             <Card className="w-full flex flex-col p-card-surround gap-4">
                 <CardTitle>{t.projectSettings.manageMembers}</CardTitle>
                 <InviteMemberForm teamId={projectData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshProjectData} />
-                {currUsersMembership ? (
+                {isProjectTeamMember && !isOrgMember ? (
                     <LeaveTeam teamId={projectData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshProjectData} />
                 ) : null}
             </Card>

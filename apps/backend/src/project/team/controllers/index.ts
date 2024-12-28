@@ -8,17 +8,11 @@ import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-atte
 import prisma from "~/services/prisma";
 import { createOrgTeamInviteNotification, createProjectTeamInviteNotification } from "~/src/user/notification/controllers/helpers";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 import { generateDbId } from "~/utils/str";
 import { teamPermsSelectObj } from "../../queries/project";
 
-export async function inviteMember(
-    ctx: Context,
-    userSession: ContextUserData,
-    userSlug: string,
-    teamId: string,
-): Promise<RouteHandlerResponse> {
+export async function inviteMember(ctx: Context, userSession: ContextUserData, userSlug: string, teamId: string) {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: {
@@ -147,7 +141,7 @@ export async function inviteMember(
     return { data: { success: true }, status: HTTP_STATUS.OK };
 }
 
-export async function acceptProjectTeamInvite(ctx: Context, userSession: ContextUserData, teamId: string): Promise<RouteHandlerResponse> {
+export async function acceptProjectTeamInvite(ctx: Context, userSession: ContextUserData, teamId: string) {
     const targetTeamMember = await prisma.teamMember.findFirst({
         where: {
             teamId: teamId,
@@ -173,24 +167,68 @@ export async function acceptProjectTeamInvite(ctx: Context, userSession: Context
     return { data: { success: true, message: "Joined successfully" }, status: HTTP_STATUS.OK };
 }
 
-export async function leaveProjectTeam(ctx: Context, userSession: ContextUserData, teamId: string): Promise<RouteHandlerResponse> {
+export async function leaveProjectTeam(ctx: Context, userSession: ContextUserData, teamId: string) {
     const targetTeamMember = await prisma.teamMember.findFirst({
         where: {
             teamId: teamId,
             userId: userSession.id,
         },
+        include: {
+            team: {
+                select: {
+                    // Check if this team belongs to an organization
+                    organisation: {
+                        select: {
+                            id: true,
+                        },
+                    },
+
+                    // Check if the user is also the part of the organization this team's project belongs to
+                    project: {
+                        where: {
+                            organisation: {
+                                team: {
+                                    members: { some: { userId: userSession.id, accepted: true } },
+                                },
+                            },
+                        },
+                    },
+
+                    // NOTE: A team will never have both project and organisation
+                },
+            },
+        },
     });
     if (!targetTeamMember?.id) {
         await addInvalidAuthAttempt(ctx);
-        return invalidReqestResponseData("You're not a member of this project team");
+        return invalidReqestResponseData("You're not a member of this team");
     }
     if (targetTeamMember.isOwner === true) return invalidReqestResponseData("You can't leave the team while you're the owner");
 
+    // If this is a project team, the project is part of an organization and, the user is also part of the organization
+    // Then the user shouldn't be allowed to leave the project team directly, this would cause the overriden permissions to reset to default
+    // which might be a bad thing in some cases
+    const project = targetTeamMember.team.project;
+    if (project?.id && project.organisationId) {
+        return invalidReqestResponseData(
+            "You can't leave the project team directly, please leave the parent organization in order to be removed from this project team!",
+        );
+    }
+
+    // Remove the member from the team
     await prisma.teamMember.delete({
         where: {
             id: targetTeamMember.id,
         },
     });
+
+    // If this is an organization team, remove the member from all the projects of the organization
+    // This should only be done if the user is an accepted member of the organization
+    // Reason: If the user is still a pending member of the organization, then the only reason they are in any of the org project's team
+    // is because they were explicitly added to the project, we don't want to remove members from the project in this case
+    if (targetTeamMember.team.organisation?.id && targetTeamMember.accepted === true) {
+        await removeMemberFromAllOrgProjects(targetTeamMember.team.organisation.id, targetTeamMember.userId);
+    }
 
     return { data: { success: true, message: "Left the project team" }, status: HTTP_STATUS.OK };
 }
@@ -201,7 +239,7 @@ export async function editProjectMember(
     targetMemberId: string,
     teamId: string,
     formData: z.infer<typeof updateTeamMemberFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: {
@@ -310,7 +348,7 @@ export async function overrideOrgMember(
     userSession: ContextUserData,
     teamId: string,
     formData: z.infer<typeof overrideOrgMemberFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: {
@@ -357,7 +395,7 @@ export async function overrideOrgMember(
     // Check if the user is a member of the organisation
     const orgMember = team.project.organisation.team.members.find((member) => member.userId === formData.userId);
     if (!orgMember) return notFoundResponseData("User is not a part of this project's organisation");
-    if (!orgMember.accepted) return invalidReqestResponseData("User is still a pending member of the organisation");
+    if (!orgMember.accepted) return invalidReqestResponseData("User is still a pending member of the organization");
 
     // Check if the user is already a member of the project team
     const existingMember = team.members.find((member) => member.userId === formData.userId);
@@ -387,12 +425,7 @@ export async function overrideOrgMember(
     return { data: { success: true }, status: HTTP_STATUS.OK };
 }
 
-export async function removeProjectMember(
-    ctx: Context,
-    userSession: ContextUserData,
-    targetMemberId: string,
-    teamId: string,
-): Promise<RouteHandlerResponse> {
+export async function removeProjectMember(ctx: Context, userSession: ContextUserData, targetMemberId: string, teamId: string) {
     const team = await prisma.team.findUnique({
         where: { id: teamId },
         select: {
@@ -400,6 +433,7 @@ export async function removeProjectMember(
             members: {
                 select: {
                     id: true,
+                    accepted: true,
                     isOwner: true,
                     userId: true,
                     permissions: true,
@@ -454,21 +488,23 @@ export async function removeProjectMember(
     }
     if (targetMember.isOwner === true) return invalidReqestResponseData("You can't remove the owner of the team");
 
+    // Remove the member from the team
     await prisma.teamMember.delete({
         where: {
             id: targetMember.id,
         },
     });
 
+    // If this is an organization team, remove the member from all the projects of the organization
+    // For more info, check the comment in the leaveProjectTeam function
+    if (team.organisation?.id && targetMember.accepted === true) {
+        await removeMemberFromAllOrgProjects(team.organisation.id, targetMember.userId);
+    }
+
     return { data: { success: true }, status: HTTP_STATUS.OK };
 }
 
-export async function changeTeamOwner(
-    ctx: Context,
-    userSession: ContextUserData,
-    teamId: string,
-    targetUserId: string,
-): Promise<RouteHandlerResponse> {
+export async function changeTeamOwner(ctx: Context, userSession: ContextUserData, teamId: string, targetUserId: string) {
     const team = await prisma.team.findUnique({
         where: {
             id: teamId,
@@ -523,4 +559,37 @@ export async function changeTeamOwner(
     ]);
 
     return { data: { success: true, message: "Team owner changed" }, status: HTTP_STATUS.OK };
+}
+
+async function removeMemberFromAllOrgProjects(orgId: string, userId: string) {
+    const orgProjects = await prisma.project.findMany({
+        where: {
+            organisationId: orgId,
+            team: {
+                members: {
+                    some: {
+                        userId: userId,
+                    },
+                },
+            },
+        },
+        select: {
+            team: {
+                select: {
+                    id: true,
+                },
+            },
+        },
+    });
+
+    const teamIds = orgProjects.map((project) => project.team.id);
+
+    await prisma.teamMember.deleteMany({
+        where: {
+            teamId: {
+                in: teamIds,
+            },
+            userId: userId,
+        },
+    });
 }

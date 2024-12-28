@@ -273,7 +273,7 @@ export default function GeneralOrgSettings() {
                         <LeaveTeam
                             teamId={orgData.teamId}
                             currUsersMembership={orgMembership}
-                            refreshData={async () => navigate(OrgPagePath(orgData.slug))}
+                            refreshData={async () => RefreshPage(navigate, OrgPagePath(orgData.slug))}
                             isOrgTeam
                         />
                     </CardContent>

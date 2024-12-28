@@ -1,26 +1,13 @@
-import { useEffect, useState } from "react";
+import useRootData from "~/hooks/root-data";
 
-interface Props {
-    files: string[];
-}
-
-interface LocationHistory {
-    length: number;
-    state: unknown;
-}
-
-export default function HomePage(props: Props) {
-    const [history, setHistory] = useState<LocationHistory | null>(null);
-
-    useEffect(() => {
-        setHistory({ length: window.history.length, state: window.history.state });
-    }, []);
+export default function HomePage() {
+    const ctx = useRootData();
 
     return (
         <div>
             <h1>Home Page</h1>
-            <pre className="text-lg">{JSON.stringify(history, null, 4)}</pre>
-            <pre className="text-lg">{JSON.stringify(props.files, null, 4)}</pre>
+
+            <pre>{JSON.stringify(ctx?.gameVersions, null, 4)}</pre>
         </div>
     );
 }

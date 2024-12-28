@@ -145,7 +145,7 @@ export function UploadVersionPageTopCard({
 
 interface MetadataInputCardProps {
     projectType: ProjectType[];
-    formControl: Control<FieldValues> | undefined;
+    formControl: Control<FieldValues>;
 }
 export function MetadataInputCard({ projectType, formControl }: MetadataInputCardProps) {
     const { t } = useTranslation();
@@ -534,11 +534,12 @@ export function SelectPrimaryFileInput({ children, selectedFile, inputId }: Prim
 
     return (
         <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background/85 rounded px-4 py-2 gap-x-4 gap-y-2">
-            <div className="flex items-center justify-start gap-1.5">
-                {children}
-                <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
+            {children}
+
+            <div>
+                <FileIcon className="inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
                 {selectedFile ? (
-                    <span className="flex items-center flex-wrap justify-start gap-x-2">
+                    <span className="inline-flex items-center flex-wrap justify-start gap-x-2">
                         <strong className="font-semibold">{selectedFile.name}</strong>{" "}
                         <span className="whitespace-nowrap ml-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
                         <span className="text-muted-foreground italic ml-1">{t.version.primary}</span>
@@ -644,13 +645,11 @@ function AdditionalFiles({
                             key={`${file.name}-${index}`}
                             className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background/75 rounded px-4 py-2 gap-x-4 gap-y-2"
                         >
-                            <div className="flex items-center justify-start gap-1.5">
+                            <div className="text-muted-foreground">
                                 {children}
-                                <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
-                                <span className="flex items-center flex-wrap justify-start gap-x-2">
-                                    <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
-                                    <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
-                                </span>
+                                <FileIcon className="mr-1.5 inline w-btn-icon h-btn-icon text-muted-foreground" />
+                                <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
+                                <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
                             </div>
 
                             <Button variant={"secondary-dark"} onClick={() => deleteFileFromList(index)}>

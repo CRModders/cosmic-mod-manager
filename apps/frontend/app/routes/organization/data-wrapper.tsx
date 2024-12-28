@@ -2,11 +2,11 @@ import { SITE_NAME_SHORT } from "@app/utils/config";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useOrgData } from "~/hooks/org";
+import NotFoundPage from "~/pages/not-found";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { OrgPagePath } from "~/utils/urls";
-import NotFoundPage from "../$";
 import type { Route } from "./+types/data-wrapper";
 
 export default function _OrgDataWrapper() {
