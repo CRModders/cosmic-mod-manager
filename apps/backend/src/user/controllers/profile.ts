@@ -137,11 +137,7 @@ export async function getUserAvatar(
     return fileId;
 }
 
-export async function getAllVisibleProjects(
-    userSession: ContextUserData | undefined,
-    userSlug: string,
-    listedProjectsOnly: boolean,
-): Promise<RouteHandlerResponse> {
+export async function getAllVisibleProjects(userSession: ContextUserData | undefined, userSlug: string, listedProjectsOnly: boolean) {
     const user = await prisma.user.findFirst({
         where: {
             OR: [
@@ -214,6 +210,7 @@ export async function getAllVisibleProjects(
             loaders: project.loaders,
             featured_gallery: null,
             color: project.color,
+            visibility: project.visibility as ProjectVisibility,
         });
     }
 

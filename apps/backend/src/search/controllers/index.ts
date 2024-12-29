@@ -88,6 +88,7 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
             featured_gallery: project.featured_gallery,
             color: project.color || null,
             isOrgOwned: project.isOrgOwned,
+            visibility: project.visibility,
         });
     }
 

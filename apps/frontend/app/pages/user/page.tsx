@@ -35,6 +35,7 @@ export default function UserProjectsList({ projectsList }: Props) {
                         datePublished={new Date(project.datePublished)}
                         color={project.color}
                         featuredGallery={null}
+                        visibility={project.visibility}
                     />
                 );
             })}

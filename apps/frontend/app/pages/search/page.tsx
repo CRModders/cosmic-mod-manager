@@ -78,6 +78,7 @@ export function SearchResultsPage() {
                         showDatePublished={searchParams.get(sortByParamNamespace) === SearchResultSortMethod.RECENTLY_PUBLISHED}
                         author={project?.author || ""}
                         isOrgOwned={project.isOrgOwned}
+                        visibility={project.visibility}
                     />
                 ))}
             </section>

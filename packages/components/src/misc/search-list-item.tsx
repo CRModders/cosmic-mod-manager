@@ -2,12 +2,13 @@ import { categories } from "@app/utils/config/project";
 import { getLoadersFromNames } from "@app/utils/convertors";
 import { getProjectCategoriesDataFromNames } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
-import type { ProjectSupport } from "@app/utils/types";
+import { type ProjectSupport, ProjectVisibility } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
 import { TagIcon } from "~/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
+import Chip from "~/ui/chip";
 import Link from "~/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/ui/tooltip";
 import { cn } from "~/utils";
@@ -38,8 +39,9 @@ interface SearchListItemProps {
     datePublished: Date;
     showDatePublished?: boolean;
     viewType?: ViewType;
-    vtId: string; // View Transition ID
     isOrgOwned?: boolean;
+    visibility: ProjectVisibility;
+    vtId: string; // View Transition ID
     t?: ReturnType<typeof getDefaultStrings>;
     ProjectPagePath: ProjectPagePath;
     OrgPagePath: OrgPagePath;
@@ -128,10 +130,13 @@ function BaseView(props: SearchListItemProps) {
                     className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block leading-tight")}
                     aria-label={props.projectName}
                 >
-                    <span itemProp={MicrodataItemProps.name}>{props.projectName}</span>
-                </Link>{" "}
+                    <span itemProp={MicrodataItemProps.name} className={cn("leading-none", galleryViewType && "leading-tight")}>
+                        {props.projectName}
+                    </span>
+                </Link>
                 {props.author && (
                     <>
+                        {" "}
                         by{" "}
                         <Link
                             to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
@@ -149,6 +154,14 @@ function BaseView(props: SearchListItemProps) {
                                 </>
                             ) : null}
                         </Link>
+                    </>
+                )}
+                {props.visibility === ProjectVisibility.ARCHIVED && (
+                    <>
+                        {" "}
+                        <Chip className="inline leading-none text-sm font-medium bg-warning-background/15 text-warning-foreground ml-1">
+                            {t.projectSettings.archived}
+                        </Chip>
                     </>
                 )}
             </div>
@@ -276,6 +289,9 @@ function getDefaultStrings() {
             organization: "Organization",
             updatedAt: (when: string) => `Updated ${when}`,
             publishedAt: (when: string) => `Published ${when}`,
+        },
+        projectSettings: {
+            archived: "Archived",
         },
         search: {
             tags: tags,

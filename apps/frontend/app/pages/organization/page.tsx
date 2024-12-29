@@ -33,6 +33,7 @@ function OrganizationPage() {
                         datePublished={new Date(project.datePublished)}
                         featuredGallery={project.featured_gallery}
                         color={project.color}
+                        visibility={project.visibility}
                     />
                 );
             })}

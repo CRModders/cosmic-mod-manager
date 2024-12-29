@@ -421,7 +421,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 description={projectData.summary}
                 titleBadge={
                     projectData.visibility === ProjectVisibility.ARCHIVED ? (
-                        <Chip className="bg-warning-background/15 text-warning-foreground">Archived</Chip>
+                        <Chip className="bg-warning-background/15 text-warning-foreground">{t.projectSettings.archived}</Chip>
                     ) : null
                 }
                 actionBtns={

@@ -43,6 +43,7 @@ const requiredProjectFields = {
     clientSide: true,
     serverSide: true,
     projectSourceUrl: true,
+    visibility: true,
     color: true,
     ...teamSelect,
     organisation: {
@@ -79,6 +80,7 @@ export interface ProjectSearchDocument {
     featured_gallery: string | null;
     color: string | null;
     isOrgOwned: boolean;
+    visibility: ProjectVisibility;
 }
 
 async function syncProjects(cursor: null | string) {
@@ -129,6 +131,7 @@ async function syncProjects(cursor: null | string) {
                 color: project.color,
                 author: author,
                 isOrgOwned: !!project.organisation?.slug,
+                visibility: project.visibility as ProjectVisibility,
             });
         }
 

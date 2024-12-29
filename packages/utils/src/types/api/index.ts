@@ -151,7 +151,7 @@ export interface ProjectListItem {
     dateUpdated: Date;
     datePublished: Date;
     status?: ProjectPublishingStatus;
-    visibility?: ProjectVisibility;
+    visibility: ProjectVisibility;
     clientSide?: ProjectSupport;
     serverSide?: ProjectSupport;
     featuredCategories: string[];
