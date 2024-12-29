@@ -65,7 +65,7 @@ export function PageHeader({
                     </div>
                     <p
                         itemProp={MicrodataItemProps.description}
-                        className="text-muted-foreground leading-tight line-clamp-4 max-w-[70ch] text-pretty"
+                        className="text-muted-foreground leading-tight max-w-[70ch] text-pretty"
                     >
                         {description}
                     </p>
