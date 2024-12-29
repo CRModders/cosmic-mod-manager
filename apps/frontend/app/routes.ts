@@ -56,6 +56,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                             route("gallery", path("project/gallery.tsx"), { id: `${lang}__${type}__gallery` });
                             route("changelog", path("project/changelog.tsx"), { id: `${lang}__${type}__changelog` });
                             route("versions", path("project/versions.tsx"), { id: `${lang}__${type}__versions` });
+                            route("version", path("project/versions.tsx"), { id: `${lang}__${type}__versions_alternate` });
                             route("version/:versionSlug", path("project/version/page.tsx"), { id: `${lang}__${type}__version__page` });
                             route("version/new", path("project/version/new.tsx"), { id: `${lang}__${type}__version__new` });
                             route("version/:versionSlug/edit", path("project/version/edit.tsx"), { id: `${lang}__${type}__version__edit` });
