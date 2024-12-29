@@ -166,10 +166,12 @@ async function syncSearchDb() {
     }
 }
 
-function queueSearchDbSync() {
+async function queueSearchDbSync() {
     // @ts-ignore
     const intervalId = global.intervalId;
     if (intervalId) clearInterval(intervalId);
+
+    await syncSearchDb();
 
     // @ts-ignore
     global.intervalId = setInterval(() => {
@@ -182,8 +184,5 @@ index.updateFilterableAttributes(["categories", "loaders", "type", "gameVersions
 index.updateSortableAttributes(["downloads", "followers", "dateUpdated", "datePublished"]);
 index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]);
 index.updateSearchableAttributes(["name", "slug", "summary", "author"]);
-
-// Initial sync on server start
-syncSearchDb();
 
 export default queueSearchDbSync;

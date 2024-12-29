@@ -16,7 +16,7 @@ export async function startSitemapGenerator() {
 
     queued = true;
 
-    generateSitemap();
+    await generateSitemap();
     setInterval(generateSitemap, SITEMAP_REFRESH_INTERVAL_s * 1000);
 }
 

@@ -81,11 +81,6 @@ Bun.serve({
     },
 });
 
-// Start the sync queues
-queueDownloadsCounterQueueProcessing();
-queueSearchDbSync();
-startSitemapGenerator();
-
 async function apiDetails(ctx: Context) {
     return ctx.json(
         {
@@ -98,3 +93,8 @@ async function apiDetails(ctx: Context) {
         HTTP_STATUS.OK,
     );
 }
+
+// Start the sync queues
+await queueDownloadsCounterQueueProcessing();
+await queueSearchDbSync();
+await startSitemapGenerator();
