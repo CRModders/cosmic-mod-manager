@@ -85,6 +85,12 @@ function getBreadCrumbsFromUrl() {
                 }
             }
 
+            // Replace urls like /mod/sodium/version with /mod/sodium/versions
+            if (href.endsWith("/version") && href.indexOf("/version") > 0) {
+                href = href.replace("/version", "/versions");
+                label = t.project.versions;
+            }
+
             // Remove not existing urls
             if (href === "/user") return null;
             if (href === "/organization") return null;
