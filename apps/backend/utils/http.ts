@@ -1,17 +1,10 @@
 import type { Context } from "hono";
 import { deleteCookie as honoDeleteCookie, setCookie as honoSetCookie } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
-import type { StatusCode } from "hono/utils/http-status";
 import type { RouteHandlerResponse } from "~/types/http";
 import env from "./env";
 
-type statusCodeNames = "OK" | "BAD_REQUEST" | "UNAUTHENTICATED" | "UNAUTHORIZED" | "NOT_FOUND" | "TOO_MANY_REQUESTS" | "SERVER_ERROR";
-
-type httpStatusCodes = {
-    [key in statusCodeNames]: StatusCode;
-};
-
-export const HTTP_STATUS: httpStatusCodes = {
+export const HTTP_STATUS = {
     OK: 200,
     BAD_REQUEST: 400,
     UNAUTHENTICATED: 401,
@@ -19,7 +12,9 @@ export const HTTP_STATUS: httpStatusCodes = {
     NOT_FOUND: 404,
     TOO_MANY_REQUESTS: 429,
     SERVER_ERROR: 500,
-};
+    TEMPORARY_REDIRECT: 307,
+    PERMANENT_REDIRECT: 308,
+} as const;
 
 export function serverErrorResponse(ctx: Context, message?: string) {
     const res = serverErrorResponseData(message);

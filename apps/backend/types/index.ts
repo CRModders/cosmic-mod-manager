@@ -20,3 +20,8 @@ export interface ContextUserData extends User {
 export enum FILE_STORAGE_SERVICE {
     LOCAL = "local",
 }
+
+export enum HashAlgorithms {
+    SHA1 = "sha1",
+    SHA512 = "sha512",
+}

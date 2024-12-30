@@ -178,7 +178,7 @@ export async function isAnyDuplicateFile({ projectId, files }: isAnyDuplicateFil
         sha1_hashes.push(hash);
     }
 
-    const dbFilesData = await prisma.file.findMany({
+    const duplicateFiles = await prisma.file.findMany({
         where: {
             sha1_hash: {
                 in: sha1_hashes,
@@ -186,42 +186,10 @@ export async function isAnyDuplicateFile({ projectId, files }: isAnyDuplicateFil
         },
     });
 
-    if (dbFilesData.length === 0) return false;
+    // If there were no existing files that means the files aren't duplicate
+    if (duplicateFiles.length === 0) return false;
 
-    // List of files which has matching hashes
-    const dbFileIds = new Set<string>();
-    const dbFilesMap = new Map<string, DBFile>();
-
-    for (const file of dbFilesData) {
-        dbFileIds.add(file.id);
-        dbFilesMap.set(file.id, file);
-    }
-
-    // Corresponding versionFile of those files
-    const versionFiles = await prisma.versionFile.findMany({
-        where: {
-            fileId: {
-                in: Array.from(dbFileIds),
-            },
-        },
-        include: {
-            version: true,
-        },
-    });
-
-    if (!versionFiles?.length) return false;
-
-    const associatedProjectIds = new Set<string>();
-    for (const versionFile of versionFiles) {
-        associatedProjectIds.add(versionFile.version.projectId);
-    }
-
-    // Check if the file is associated with another project or is from the same project
-    for (const associatedProjectId of Array.from(associatedProjectIds)) {
-        if (associatedProjectId !== projectId) return true;
-    }
-
-    return false;
+    return true;
 }
 
 // Aggregators

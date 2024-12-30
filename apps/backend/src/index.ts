@@ -23,6 +23,7 @@ import tagsRouter from "./tags";
 import bulkUserActionsRouter from "./user/bulk_actions/router";
 import notificationRouter from "./user/notification/router";
 import userRouter from "./user/router";
+import { versionFileRouter, versionFiles_Router } from "./version-file/router";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 const corsAllowedOrigins = env.CORS_ALLOWED_URLS.split(" ");
@@ -63,6 +64,8 @@ app.route("/api/notifications", notificationRouter); // Uses the userSession's u
 app.route("/api/user/:userId/notifications", notificationRouter);
 
 app.route("/api/project", projectRouter);
+app.route("/api/version-file", versionFileRouter);
+app.route("/api/version-files", versionFiles_Router);
 app.route("/api/projects", bulkProjectsRouter);
 
 app.route("/api/team", teamRouter);

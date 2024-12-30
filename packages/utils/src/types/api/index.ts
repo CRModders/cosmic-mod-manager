@@ -122,6 +122,7 @@ export interface DependencyListData {
 
 export interface ProjectVersionData {
     id: string;
+    projectId: string;
     title: string;
     versionNumber: string;
     changelog: string | null;
@@ -136,7 +137,7 @@ export interface ProjectVersionData {
     primaryFile: VersionFile | null;
     author: VersionAuthor;
     dependencies: DependencyListData[];
-    isDuplicate: boolean;
+    isDuplicate?: boolean;
 }
 
 export interface ProjectListItem {

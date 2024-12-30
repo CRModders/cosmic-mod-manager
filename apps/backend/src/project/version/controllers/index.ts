@@ -11,6 +11,7 @@ import { formatTeamMemberData, projectMembersSelect } from "~/src/project/querie
 import { isProjectAccessible } from "~/src/project/utils";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
+import { GetReleaseChannelFilter } from "~/utils/project";
 
 export const versionFields = {
     id: true,
@@ -119,6 +120,7 @@ export async function getAllProjectVersions(
 
         versionsList.push({
             id: version.id,
+            projectId: project.id,
             title: version.title,
             versionNumber: version.versionNumber,
             slug: version.slug,
@@ -174,7 +176,7 @@ interface GetLatestVersionFilters {
 
 export async function getLatestVersion(projectSlug: string, userSession: ContextUserData | undefined, filters: GetLatestVersionFilters) {
     const whereInput: Prisma.VersionWhereInput = {};
-    if (filters.releaseChannel?.length) whereInput.releaseChannel = filters.releaseChannel;
+    if (filters.releaseChannel?.length) whereInput.releaseChannel = { in: GetReleaseChannelFilter(filters.releaseChannel) };
     if (filters.gameVersion?.length) whereInput.gameVersions = { has: filters.gameVersion };
     if (filters.loader?.length) whereInput.loaders = { has: filters.loader };
 

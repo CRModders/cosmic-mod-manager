@@ -16,6 +16,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/search/filters/resolutions`](/apps/backend/src/search/router.ts#L26) |
 | GET    | [`/search/filters/performance-impact`](/apps/backend/src/search/router.ts#L26) |
 | GET    | [`/search/filters/license`](/apps/backend/src/search/router.ts#L26) |
+| | |
 | GET    | [`/tags/categories`](/apps/backend/src/tags.ts#L13) |
 | GET    | [`/tags/game-versions`](/apps/backend/src/tags.ts#L13) |
 | GET    | [`/tags/loaders`](/apps/backend/src/tags.ts#L13) |
@@ -23,6 +24,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/tags/licenses/featured`](/apps/backend/src/tags.ts#L13) |
 | GET    | [`/tags/licenses/{ID}`](/apps/backend/src/tags.ts#L13) |
 | GET    | [`/tags/project-types`](/apps/backend/src/tags.ts#L13) |
+| | |
 | GET    | [`/project`](/apps/backend/src/project/router.ts#L32) |
 | GET    | [`/projects`](/apps/backend/src/project/bulk_router.ts#L9) |
 | GET    | [`/projects/random`](/apps/backend/src/project/bulk_router.ts#L9) |
@@ -49,17 +51,26 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | POST    | [`/project/{ID\|slug}/version`](/apps/backend/src/project/version/router.ts#L14) |
 | PATCH    | [`/project/{ID\|slug}/version/{ID\|slug}`](/apps/backend/src/project/version/router.ts#L14) |
 | DELETE    | [`/project/{ID\|slug}/version/{ID\|slug}`](/apps/backend/src/project/version/router.ts#L14) |
+| | |
+| GET    | [`/version-file/{hash}`](/apps/backend/src/version-file/router.ts#L22) |
+| GET    | [`/version-file/{hash}/download`](/apps/backend/src/version-file/router.ts#L23) |
+| POST    | [`/version-file/{hash}/update`](/apps/backend/src/version-file/router.ts#L23) |
+| POST    | [`/version-files`](/apps/backend/src/version-file/router.ts#L100) |
+| POST    | [`/version-files/update`](/apps/backend/src/version-file/router.ts#L100) |
+| | |
 | POST    | [`/team/{ID}/invite`](/apps/backend/src/project/team/router.ts#L20) |
 | PATCH    | [`/team/{ID}/invite`](/apps/backend/src/project/team/router.ts#L20) |
 | POST    | [`/team/{ID}/leave`](/apps/backend/src/project/team/router.ts#L20) |
 | PATCH    | [`/team/{ID}/member/{ID}`](/apps/backend/src/project/team/router.ts#L20) |
 | DELETE    | [`/team/{ID}/member/{ID}`](/apps/backend/src/project/team/router.ts#L20) |
+| | |
 | GET    | [`/user`](/apps/backend/src/user/router.ts#L34) |
 | GET    | [`/users`](/apps/backend/src/user/bulk_actions/router.ts#L7) |
 | GET    | [`/user/{ID\|username}`](/apps/backend/src/user/router.ts#L34) |
 | GET    | [`/user/{ID\|username}/projects`](/apps/backend/src/user/router.ts#L34) |
 | PATCH    | [`/user`](/apps/backend/src/user/router.ts#L34) |
 | DELETE    | [`/user`](/apps/backend/src/user/router.ts#L34) |
+| | |
 | POST    | [`/delete-account`](/apps/backend/src/user/router.ts#L34) |
 | POST    | [`/confirmation-action`](/apps/backend/src/user/router.ts#L34) |
 | DELETE    | [`/confirmation-action`](/apps/backend/src/user/router.ts#L34) |
@@ -68,6 +79,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | DELETE    | [`/password`](/apps/backend/src/user/router.ts#L34) |
 | POST    | [`/change-password`](/apps/backend/src/user/router.ts#L34) |
 | PATCH    | [`/password`](/apps/backend/src/user/router.ts#L34) |
+| | |
 | GET    | [`/auth/me`](/apps/backend/src/auth/router.ts#L28) |
 | GET    | [`/auth/signin/{AuthProvider}`](/apps/backend/src/auth/router.ts#L28) |
 | GET    | [`/auth/signup/{AuthProvider}`](/apps/backend/src/auth/router.ts#L28) |
@@ -81,6 +93,7 @@ NOTE:- `/cdn` urls are not under the base `/api`
 | GET    | [`/auth/auth-providers`](/apps/backend/src/auth/router.ts#L28) |
 | DELETE    | [`/auth/sessions`](/apps/backend/src/auth/router.ts#L28) |
 | DELETE    | [`/auth/sessions/{RevokeCode}`](/apps/backend/src/auth/router.ts#L28) |
+| | |
 | GET    | [`/cdn/data/project/{projectID}/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
 | GET    | [`/cdn/data/project/{projectID}/gallery/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
 | GET    | [`/cdn/data/project/{projectID}/version/{versionID}/{FILE_NAME}`](/apps/backend/src/cdn/router.ts#L22) |
