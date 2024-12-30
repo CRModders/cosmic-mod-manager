@@ -47,7 +47,7 @@ export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
     );
 }
 
-export const WanderingCubesSpinner = ({ className }: { className?: string }) => {
+export function WanderingCubesSpinner({ className }: { className?: string }) {
     return (
         <span
             className={cn("wandering_cubes_animation flex items-center justify-center text-muted-foreground", className)}
@@ -60,17 +60,17 @@ export const WanderingCubesSpinner = ({ className }: { className?: string }) => 
             </span>
         </span>
     );
-};
+}
 
-export const FullPageSpinner = ({ size, className }: { size?: LoaderSizes; className?: string }) => {
+export function FullPageSpinner({ size, className }: { size?: LoaderSizes; className?: string }) {
     return (
         <div className={cn("w-full full_page flex items-center justify-center", className)}>
             <LoadingSpinner size={size} />
         </div>
     );
-};
+}
 
-export const FullWidthSpinner = ({
+export function FullWidthSpinner({
     size,
     className,
     customSpinner,
@@ -78,38 +78,39 @@ export const FullWidthSpinner = ({
     size?: LoaderSizes;
     className?: string;
     customSpinner?: React.ReactNode;
-}) => {
+}) {
     return (
         <div className={cn("w-full flex items-center justify-center py-12", className)}>
             {customSpinner ? customSpinner : <LoadingSpinner size={size} />}
         </div>
     );
-};
+}
 
-export const SuspenseFallback = ({ className, spinnerClassName }: { className?: string; spinnerClassName?: string }) => {
+export function SuspenseFallback({ className, spinnerClassName }: { className?: string; spinnerClassName?: string }) {
     return (
         <div className={cn("w-full flex items-center justify-center py-12", className)}>
             <WanderingCubesSpinner className={spinnerClassName} />
         </div>
     );
-};
+}
 
-export const AbsolutePositionedSpinner = ({
-    size,
-    className,
-    spinnerWrapperClassName,
-    backdropBgClassName,
-    preventScroll = false,
-}: {
+interface AbsoluteSpinnerProps {
     size?: LoaderSizes;
     className?: string;
     spinnerWrapperClassName?: string;
     backdropBgClassName?: string;
     preventScroll?: boolean;
-}) => {
+}
+
+export function AbsolutePositionedSpinner({
+    size,
+    className,
+    spinnerWrapperClassName,
+    backdropBgClassName,
+    preventScroll = false,
+}: AbsoluteSpinnerProps) {
     useEffect(() => {
         if (preventScroll !== true) return;
-
         document.body.classList.add("no-scrollbar");
 
         return () => {
@@ -140,4 +141,4 @@ export const AbsolutePositionedSpinner = ({
             </div>
         </div>
     );
-};
+}

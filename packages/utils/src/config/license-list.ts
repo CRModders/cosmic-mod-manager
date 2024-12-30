@@ -1,9 +1,9 @@
 export const LICNESE_REFERENCE_LINK = "https://spdx.org/licenses";
 
-export const licenseRefLink = (licenseId: string) => {
+export function licenseRefLink(licenseId: string) {
     if (["custom", "all-rights-reserved"].includes(licenseId)) return null;
     return `https://spdx.org/licenses/${licenseId}`;
-};
+}
 
 export interface SPDX_LICENSE {
     name: string;

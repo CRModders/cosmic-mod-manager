@@ -9,7 +9,7 @@ type Props = {
     children?: React.ReactNode;
 };
 
-export const FormErrorMessage = ({ text, className, labelClassName, children }: Props) => {
+export function FormErrorMessage({ text, className, labelClassName, children }: Props) {
     return (
         <div
             className={cn(
@@ -21,9 +21,9 @@ export const FormErrorMessage = ({ text, className, labelClassName, children }: 
             {children ? children : <p className={cn("leading-snug", labelClassName)}>{text}</p>}
         </div>
     );
-};
+}
 
-export const FormSuccessMessage = ({ text, className, labelClassName, children }: Props) => {
+export function FormSuccessMessage({ text, className, labelClassName, children }: Props) {
     return (
         <div
             className={cn(
@@ -35,4 +35,4 @@ export const FormSuccessMessage = ({ text, className, labelClassName, children }
             {children ? children : <p className={cn("leading-snug", labelClassName)}>{text}</p>}
         </div>
     );
-};
+}

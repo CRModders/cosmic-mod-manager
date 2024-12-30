@@ -9,7 +9,7 @@ function gameVersionIndex(version: GameVersion, referenceList: GameVersion[]): n
     return -1;
 }
 
-export const groupContinuousVersions = (versions: string[]): GameVersion[][] => {
+export function groupContinuousVersions(versions: string[]): GameVersion[][] {
     let referenceList = GAME_VERSIONS;
     const groupedList: GameVersion[][] = [[]];
     const sortedVersions = getGameVersionsFromValues(
@@ -43,6 +43,7 @@ export const groupContinuousVersions = (versions: string[]): GameVersion[][] => 
         if (nextItem && gameVersionIndex(nextItem, referenceList) !== refListIndex + 1) {
             groupedList.push([]);
         }
+
         // If the next item is experimental and the current item is not or vice versa, start a new group
         else if (nextItem && currItemIsExperimental !== nextItemIsExperimental) {
             groupedList.push([]);
@@ -50,7 +51,7 @@ export const groupContinuousVersions = (versions: string[]): GameVersion[][] => 
     }
 
     return groupedList;
-};
+}
 
 export function formatGameVersionsList_verbose(list: string[]): string[] {
     if (!list.length) return [];

@@ -99,7 +99,7 @@ export function sortVersionsWithReference(versions: string[], referenceList: str
     return versions.sort((a, b) => referenceList.indexOf(a) - referenceList.indexOf(b));
 }
 
-export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
+export function getProjectCategoriesDataFromNames(categoryNames: string[]) {
     const uniqueCategoryNames = Array.from(new Set(categoryNames));
     const categoriesData = [];
 
@@ -109,9 +109,9 @@ export const getProjectCategoriesDataFromNames = (categoryNames: string[]) => {
     }
 
     return categoriesData;
-};
+}
 
-export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibility = true) => {
+export function getAllLoaderCategories(projectType?: ProjectType, checkTagVisibility = true) {
     const allLoadersList = new Set<Loader>();
 
     for (const loader of loaders) {
@@ -124,9 +124,9 @@ export const getAllLoaderCategories = (projectType?: ProjectType, checkTagVisibi
     }
 
     return Array.from(allLoadersList);
-};
+}
 
-export const getALlLoaderFilters = (projectType: ProjectType[]) => {
+export function getALlLoaderFilters(projectType: ProjectType[]) {
     if (!projectType?.length) return [];
 
     const list = new Set<Loader>();
@@ -142,9 +142,9 @@ export const getALlLoaderFilters = (projectType: ProjectType[]) => {
     }
 
     return Array.from(list);
-};
+}
 
-export const getLoadersByProjectType = (projectType: ProjectType[]) => {
+export function getLoadersByProjectType(projectType: ProjectType[]) {
     const loadersList = new Set<Loader>();
 
     for (const loader of loaders) {
@@ -157,7 +157,7 @@ export const getLoadersByProjectType = (projectType: ProjectType[]) => {
     }
 
     return Array.from(loadersList);
-};
+}
 
 export const compatibleProjectTypes = {
     [ProjectType.MODPACK]: [],
@@ -168,7 +168,7 @@ export const compatibleProjectTypes = {
     [ProjectType.PLUGIN]: [ProjectType.MOD],
 };
 
-export const filterInCompatibleProjectTypes = (primaryType: ProjectType, currTypes: ProjectType[]) => {
+export function filterInCompatibleProjectTypes(primaryType: ProjectType, currTypes: ProjectType[]) {
     const filteredTypes = [primaryType];
     const compatibleTypes: ProjectType[] = compatibleProjectTypes[primaryType];
 
@@ -179,9 +179,9 @@ export const filterInCompatibleProjectTypes = (primaryType: ProjectType, currTyp
     }
 
     return filteredTypes;
-};
+}
 
-export const validateProjectTypesCompatibility = (types: ProjectType[]) => {
+export function validateProjectTypesCompatibility(types: ProjectType[]) {
     if (types.length < 2) return types;
 
     if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
@@ -192,7 +192,7 @@ export const validateProjectTypesCompatibility = (types: ProjectType[]) => {
     if (types.includes(ProjectType.PLUGIN)) return filterInCompatibleProjectTypes(ProjectType.PLUGIN, types);
 
     return ["project"];
-};
+}
 
 export function FormatProjectTypes(types: string[]) {
     if (types.length === 1) return CapitalizeAndFormatString(types[0]);

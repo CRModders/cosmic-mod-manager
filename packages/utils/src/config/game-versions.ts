@@ -499,23 +499,23 @@ export default GAME_VERSIONS;
 
 export const gameVersionsList = GAME_VERSIONS.map((version) => version.value);
 
-export const getGameVersionFromLabel = (label: string): GameVersion | null => {
+export function getGameVersionFromLabel(label: string): GameVersion | null {
     return GAME_VERSIONS.find((version) => version.label === label) || null;
-};
+}
 
-export const getGameVersionFromValue = (value: string): GameVersion | null => {
+export function getGameVersionFromValue(value: string): GameVersion | null {
     return GAME_VERSIONS.find((version) => version.value === value) || null;
-};
+}
 
-export const getGameVersionsFromLabels = (labels: string[]): GameVersion[] => {
+export function getGameVersionsFromLabels(labels: string[]): GameVersion[] {
     return labels.map((label) => getGameVersionFromLabel(label)).filter((version) => version !== null) as GameVersion[];
-};
+}
 
-export const getGameVersionsFromValues = (values: string[]): GameVersion[] => {
+export function getGameVersionsFromValues(values: string[]): GameVersion[] {
     return values.map((value) => getGameVersionFromValue(value)).filter((version) => version !== null) as GameVersion[];
-};
+}
 
-export const isExperimentalGameVersion = (releaseType: GameVersionReleaseType) => {
+export function isExperimentalGameVersion(releaseType: GameVersionReleaseType) {
     return [
         GameVersionReleaseType.SNAPSHOT,
         GameVersionReleaseType.PRE_RELEASE,
@@ -523,4 +523,4 @@ export const isExperimentalGameVersion = (releaseType: GameVersionReleaseType) =
         // GameVersionReleaseType.ALPHA,
         // GameVersionReleaseType.BETA,
     ].includes(releaseType);
-};
+}

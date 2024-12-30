@@ -55,7 +55,7 @@ async function flushDownloadsCounterQueue() {
     await redis.del(DOWNLOADS_QUEUE_KEY);
 }
 
-const getDownloadsCounterQueue = async (flushQueue = false) => {
+async function getDownloadsCounterQueue(flushQueue = false) {
     const list = await redis.lrange(DOWNLOADS_QUEUE_KEY, 0, -1);
     if (flushQueue === true) await flushDownloadsCounterQueue();
 
@@ -68,10 +68,6 @@ const getDownloadsCounterQueue = async (flushQueue = false) => {
     }
 
     return listItems;
-};
-
-async function getDownloadsCounterQueueLength() {
-    return await redis.llen(DOWNLOADS_QUEUE_KEY);
 }
 
 async function processDownloads() {

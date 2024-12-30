@@ -7,12 +7,11 @@ import prisma from "~/services/prisma";
 import { createNewAuthAccount, getAuthProviderProfileData } from "~/src/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/src/auth/helpers/session";
 import { getUserAvatar } from "~/src/user/controllers/profile";
-import type { RouteHandlerResponse } from "~/types/http";
 import { getImageFromHttpUrl } from "~/utils/file";
 import { HTTP_STATUS } from "~/utils/http";
 import { generateDbId } from "~/utils/str";
 
-export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tokenExchangeCode: string): Promise<RouteHandlerResponse> => {
+export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tokenExchangeCode: string) {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
 
     if (
@@ -120,4 +119,4 @@ export const oAuthSignUpHandler = async (ctx: Context, authProvider: string, tok
         },
         status: HTTP_STATUS.OK,
     };
-};
+}

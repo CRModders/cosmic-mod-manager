@@ -56,8 +56,8 @@ hljs.registerAliases(["toml"], { languageName: "ini" });
 hljs.registerAliases(["yml"], { languageName: "yaml" });
 hljs.registerAliases(["html", "htm", "xhtml", "mcui", "fxml"], { languageName: "xml" });
 
-export const renderHighlightedString = (string: string, urlModifier?: (url: string) => string) =>
-    configureXss(urlModifier).process(
+export function renderHighlightedString(string: string, urlModifier?: (url: string) => string) {
+    return configureXss(urlModifier).process(
         md({
             highlight: (str: string, lang: string) => {
                 if (lang && hljs.getLanguage(lang)) {
@@ -70,6 +70,7 @@ export const renderHighlightedString = (string: string, urlModifier?: (url: stri
             },
         }).render(string),
     );
+}
 
 interface Props {
     text: string;

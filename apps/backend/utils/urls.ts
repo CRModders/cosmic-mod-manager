@@ -1,6 +1,8 @@
 import env from "./env";
 
-const CDN_PREFIX = (useCacheCdn?: boolean) => `${useCacheCdn ? env.CACHE_CDN_URL : env.CDN_SERVER_URL}/cdn/data`;
+function CDN_PREFIX(useCacheCdn?: boolean) {
+    return `${useCacheCdn ? env.CACHE_CDN_URL : env.CDN_SERVER_URL}/cdn/data`;
+}
 
 export function cdnUrl(path: string, useCacheCdn = true) {
     if (!path) return null;

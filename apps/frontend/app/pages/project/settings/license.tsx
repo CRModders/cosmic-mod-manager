@@ -41,7 +41,7 @@ export default function LicenseSettingsPage() {
         },
     });
 
-    const updateLicense = async (values: z.infer<typeof updateProjectLicenseFormSchema>) => {
+    async function updateLicense(values: z.infer<typeof updateProjectLicenseFormSchema>) {
         const res = await clientFetch(`/api/project/${projectData?.slug}/license`, {
             method: "PATCH",
             body: JSON.stringify(values),
@@ -55,7 +55,7 @@ export default function LicenseSettingsPage() {
 
         RefreshPage(navigate, location);
         return toast.success(data?.message);
-    };
+    }
 
     const currLicenseId = form.watch("id");
     const currLicenseName = form.watch("name");

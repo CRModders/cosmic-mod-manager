@@ -15,7 +15,7 @@ interface SearchResult {
 
 let searchResultsFetchReqAbortController: AbortController;
 
-export const getSearchResults = async (params: string, type?: ProjectType) => {
+export async function getSearchResults(params: string, type?: ProjectType) {
     if (searchResultsFetchReqAbortController) searchResultsFetchReqAbortController.abort();
     searchResultsFetchReqAbortController = new AbortController();
 
@@ -28,13 +28,13 @@ export const getSearchResults = async (params: string, type?: ProjectType) => {
     const data = await resJson(res);
 
     return (data || {}) as SearchResult;
-};
+}
 
-export const getSearchResultsQuery = (params: string, type?: ProjectType) => {
+export function getSearchResultsQuery(params: string, type?: ProjectType) {
     return {
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(params, type),
         refetchOnMount: true,
         staleTime: 5 * 1000,
     } satisfies UseQueryOptions;
-};
+}

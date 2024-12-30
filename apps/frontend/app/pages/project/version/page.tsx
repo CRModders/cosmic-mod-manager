@@ -308,7 +308,7 @@ interface FileDetailsItemProps {
     showDownloadAnimation?: () => void;
 }
 
-const FileDetailsItem = ({
+function FileDetailsItem({
     fileName,
     fileSize,
     isPrimary,
@@ -316,7 +316,7 @@ const FileDetailsItem = ({
     sha1_hash,
     sha512_hash,
     showDownloadAnimation,
-}: FileDetailsItemProps) => {
+}: FileDetailsItemProps) {
     const { t } = useTranslation();
 
     return (
@@ -374,4 +374,4 @@ const FileDetailsItem = ({
             </ContextMenuContent>
         </ContextMenu>
     );
-};
+}

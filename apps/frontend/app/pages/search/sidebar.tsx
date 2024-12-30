@@ -28,7 +28,7 @@ interface Props {
     searchParams: URLSearchParams;
 }
 
-const matchesSearch = (strings: string[], query: string) => {
+function matchesSearch(strings: string[], query: string) {
     const queryLower = query.toLowerCase();
     for (const str of strings) {
         const strLower = str.toLowerCase();
@@ -38,7 +38,7 @@ const matchesSearch = (strings: string[], query: string) => {
         }
     }
     return false;
-};
+}
 
 const filtersKeyList = [
     loaderFilterParamNamespace,
@@ -332,7 +332,7 @@ interface FilterCategoryProps {
     defaultOpen?: boolean;
 }
 
-const FilterCategory = ({
+function FilterCategory({
     items,
     selectedItems,
     label,
@@ -343,7 +343,7 @@ const FilterCategory = ({
     footerItem,
     collapsible = true,
     defaultOpen = true,
-}: FilterCategoryProps) => {
+}: FilterCategoryProps) {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(defaultOpen);
     if (!items.length) return null;
@@ -400,4 +400,4 @@ const FilterCategory = ({
             {!isOpen && collapsible ? null : footerItem}
         </section>
     );
-};
+}

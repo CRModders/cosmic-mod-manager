@@ -166,7 +166,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
 
     useEffect(() => {
         let blockKeydownEvent = false;
-        const handler = (e: KeyboardEvent) => {
+        function handler(e: KeyboardEvent) {
             if (e.key === "/" && e.ctrlKey) {
                 e.preventDefault();
 
@@ -174,7 +174,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                 blockKeydownEvent = true;
                 setKeyboardShortcutsModalOpen(!keyboardShortcutsModalOpen);
             }
-        };
+        }
 
         function resetKeyDownEventBlocking() {
             blockKeydownEvent = false;
@@ -509,7 +509,7 @@ function getTextareaSelectedText(textarea: HTMLTextAreaElement) {
     return textarea.value.slice(selectionStart, selectionEnd) || "";
 }
 
-const getYoutubeIframe = (url: string, _altText: string) => {
+function getYoutubeIframe(url: string, _altText: string) {
     const youtubeRegex =
         /^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9_-]{7,15})(?:[?&][a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+)*$/;
     const match = youtubeRegex.exec(url);
@@ -517,7 +517,7 @@ const getYoutubeIframe = (url: string, _altText: string) => {
         return `<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${match[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>${textSeparatorChar}`;
     }
     return "";
-};
+}
 
 interface EditorModalProps {
     disabled: boolean;

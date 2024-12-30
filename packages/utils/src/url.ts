@@ -3,7 +3,7 @@ export function imageUrl(url: undefined | string | null) {
     return url;
 }
 
-export const isUrl = (str: string) => {
+export function isUrl(str: string) {
     try {
         new URL(str);
 
@@ -11,4 +11,4 @@ export const isUrl = (str: string) => {
     } catch (error) {
         return false;
     }
-};
+}

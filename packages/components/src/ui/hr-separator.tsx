@@ -1,4 +1,4 @@
-const HorizontalSeparator = ({ text = "OR" }: { text?: string }) => {
+function HorizontalSeparator({ text = "OR" }: { text?: string }) {
     return (
         <div className="w-full flex items-center gap-4">
             <hr className="bg-shallow-background border-none w-full h-[0.1rem] flex-1" />
@@ -6,6 +6,6 @@ const HorizontalSeparator = ({ text = "OR" }: { text?: string }) => {
             <hr className="bg-shallow-background border-none w-full h-[0.1rem] flex-1" />
         </div>
     );
-};
+}
 
 export default HorizontalSeparator;

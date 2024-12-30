@@ -36,11 +36,11 @@ export function VariantButtonLink(props: VariantButtonLinkProps) {
 export function useNavigate(escapeUrlWrapper?: boolean, initOptions?: NavigateOptions) {
     const navigate = __useNavigate();
 
-    const __navigate = (to: string, options?: NavigateOptions): void => {
+    function __navigate(to: string, options?: NavigateOptions): void {
         const toUrl = escapeUrlWrapper === true ? to : PageUrl(to);
 
         navigate(toUrl, { viewTransition: true, ...initOptions, ...options });
-    };
+    }
 
     return __navigate as NavigateFunction;
 }

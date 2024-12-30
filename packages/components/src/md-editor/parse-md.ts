@@ -151,7 +151,7 @@ export function configureXss(urlModifier?: (url: string) => string) {
     });
 }
 
-export const md = (options = {}) => {
+export function md(options = {}) {
     const md = new MarkdownIt("default", {
         html: true,
         linkify: true,
@@ -187,8 +187,8 @@ export const md = (options = {}) => {
     };
 
     return md;
-};
+}
 
-export const renderString = (string: string, xssProcessor = configureXss()) => {
+export function renderString(string: string, xssProcessor = configureXss()) {
     return xssProcessor.process(md().render(string));
-};
+}

@@ -18,7 +18,7 @@ interface Props {
     type?: ProjectType;
 }
 
-export const searchProjects = async (props: Props): Promise<RouteHandlerResponse> => {
+export async function searchProjects(props: Props): Promise<RouteHandlerResponse> {
     const index = meilisearch.index(projectSearchNamespace);
     let sortBy = null;
 
@@ -95,4 +95,4 @@ export const searchProjects = async (props: Props): Promise<RouteHandlerResponse
     result.hits = projects;
 
     return { data: result, status: HTTP_STATUS.OK };
-};
+}

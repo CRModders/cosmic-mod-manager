@@ -50,10 +50,10 @@ function Theme({ children, initTheme, storageKey = "theme" }: { children: React.
     useEffect(() => {
         const media = window.matchMedia(MEDIA);
 
-        const handleMediaQuery = (e: MediaQueryList | MediaQueryListEvent) => {
+        function handleMediaQuery(e: MediaQueryList | MediaQueryListEvent) {
             const newTheme = e.matches ? ThemeOptions.DARK : ThemeOptions.LIGHT;
             applyTheme(newTheme);
-        };
+        }
 
         // Intentionally use deprecated listener methods to support iOS & old browsers
         media.addEventListener("change", handleMediaQuery);

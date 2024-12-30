@@ -610,10 +610,10 @@ function AdditionalFiles({
 }: { children: React.ReactNode; selectedFiles?: (File | FileObjectType)[]; inputId: string; onChange: (...event: unknown[]) => void }) {
     const { t } = useTranslation();
 
-    const deleteFileFromList = (index: number) => {
+    function deleteFileFromList(index: number) {
         if (!selectedFiles?.length) return;
         onChange([...selectedFiles.slice(0, index), ...selectedFiles.slice(index + 1)]);
-    };
+    }
 
     return (
         <FormItem className="w-full flex flex-col items-start justify-center gap-0 mb-0">

@@ -134,7 +134,6 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
     if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {
         title = t.user.moderator;
     }
-    // <span className="font-semibold text-tiny uppercase text-extra-muted-foreground">{title}</span>
     return (
         <PageHeader
             vtId={userData.id}
@@ -143,7 +142,13 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             fallbackIcon={fallbackUserIcon}
             title={userData.userName}
             description={userData.bio || ""}
-            titleBadge={title ? <Chip className="text-tiny font-semibold link_blue uppercase">{title}</Chip> : null}
+            titleBadge={
+                title ? (
+                    <Chip className="font-semibold text-purple-600 dark:text-purple-400 !text-tiny uppercase bg-card-background">
+                        {title}
+                    </Chip>
+                ) : null
+            }
             threeDotMenu={
                 <>
                     <Button variant="ghost-destructive" className="w-full" size="sm">

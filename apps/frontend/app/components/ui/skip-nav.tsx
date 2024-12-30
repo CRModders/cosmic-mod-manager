@@ -7,14 +7,14 @@ interface SkipNavProps {
 
 export function SkipNav({ mainId, children }: SkipNavProps) {
     const { t } = useTranslation();
-    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
         const main = document.getElementById(mainId || "main");
         if (main) {
             main.tabIndex = -1;
             main.focus();
         }
-    };
+    }
 
     return (
         <a

@@ -99,15 +99,7 @@ export default function ProjectGallery() {
     );
 }
 
-const GalleryItemCard = ({
-    session,
-    projectData,
-    galleryItem,
-    index,
-    setActiveIndex,
-    setdialogOpen,
-    currUsersMembership,
-}: {
+interface GalleryItemCardProps {
     session: LoggedInUserData | null;
     projectData: ProjectDetailsData;
     galleryItem: GalleryItem;
@@ -115,7 +107,17 @@ const GalleryItemCard = ({
     setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
     setdialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     currUsersMembership: TeamMember | null;
-}) => {
+}
+
+function GalleryItemCard({
+    session,
+    projectData,
+    galleryItem,
+    index,
+    setActiveIndex,
+    setdialogOpen,
+    currUsersMembership,
+}: GalleryItemCardProps) {
     const { t } = useTranslation();
 
     return (
@@ -184,7 +186,7 @@ const GalleryItemCard = ({
             </div>
         </figure>
     );
-};
+}
 
 function ImageDialog({
     galleryItem,

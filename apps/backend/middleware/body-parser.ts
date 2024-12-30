@@ -1,7 +1,7 @@
 import type { Context, Next } from "hono";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 
-const bodyParserMiddleware = async (ctx: Context, next: Next) => {
+export default async function bodyParserMiddleware(ctx: Context, next: Next) {
     try {
         const contentType = ctx.req.header()?.["content-type"];
         let body: unknown;
@@ -18,6 +18,4 @@ const bodyParserMiddleware = async (ctx: Context, next: Next) => {
     } catch (error) {}
 
     await next();
-};
-
-export default bodyParserMiddleware;
+}

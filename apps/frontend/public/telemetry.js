@@ -33,7 +33,7 @@
 
     /* Helper functions */
 
-    const encode = (str) => {
+    function encode(str) {
         if (!str) {
             return undefined;
         }
@@ -49,7 +49,7 @@
         }
 
         return encodeURI(str);
-    };
+    }
 
     function parseURL(url) {
         try {
@@ -90,7 +90,7 @@
     }
 
     function handlePathChanges() {
-        const hook = (_this, method, callback) => {
+        function hook(_this, method, callback) {
             const orig = _this[method];
 
             return (...args) => {
@@ -98,7 +98,7 @@
 
                 return orig.apply(_this, args);
             };
-        };
+        }
 
         history.pushState = hook(history, "pushState", handlePush);
         history.replaceState = hook(history, "replaceState", handlePush);
@@ -124,9 +124,11 @@
         document.addEventListener(
             "click",
             async (e) => {
-                const isSpecialTag = (tagName) => ["BUTTON", "A"].includes(tagName);
+                function isSpecialTag(tagName) {
+                    return ["BUTTON", "A"].includes(tagName);
+                }
 
-                const trackElement = async (el) => {
+                async function trackElement(el) {
                     const attr = el.getAttribute.bind(el);
                     const eventName = attr(eventNameAttribute);
 
@@ -143,9 +145,9 @@
 
                         return track(eventName, eventData);
                     }
-                };
+                }
 
-                const findParentTag = (rootElem, maxSearchDepth) => {
+                function findParentTag(rootElem, maxSearchDepth) {
                     let currentElement = rootElem;
                     for (let i = 0; i < maxSearchDepth; i++) {
                         if (isSpecialTag(currentElement.tagName)) {
@@ -156,7 +158,7 @@
                             return null;
                         }
                     }
-                };
+                }
 
                 const el = e.target;
                 const parentElement = isSpecialTag(el.tagName) ? el : findParentTag(el, 10);
@@ -231,7 +233,7 @@
         }
     }
 
-    const track = (obj, data) => {
+    function track(obj, data) {
         if (typeof obj === "string") {
             return send({
                 ...getPayload(),
@@ -246,9 +248,11 @@
             return send(obj(getPayload()));
         }
         return send(getPayload());
-    };
+    }
 
-    const identify = (data) => send({ ...getPayload(), data }, "identify");
+    function identify(data) {
+        return send({ ...getPayload(), data }, "identify");
+    }
 
     /* Start */
 

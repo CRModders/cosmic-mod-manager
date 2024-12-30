@@ -15,7 +15,7 @@ type Props = {
 };
 
 const timeoutRef = new Map<string, number>();
-const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, maxLabelChars }: Props) => {
+function CopyBtn({ id, text, label, className, labelClassName, iconClassName, maxLabelChars }: Props) {
     const [showTickIcon, setShowTickIcon] = useState(false);
 
     function copyText() {
@@ -56,11 +56,11 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
             </div>
         </Button>
     );
-};
+}
 
 export default CopyBtn;
 
-export const copyTextToClipboard = (text: unknown) => {
+export function copyTextToClipboard(text: unknown) {
     try {
         navigator.clipboard.writeText(`${text}`);
         return true;
@@ -68,4 +68,4 @@ export const copyTextToClipboard = (text: unknown) => {
         console.error(error);
         return false;
     }
-};
+}

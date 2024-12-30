@@ -586,7 +586,7 @@ function GameVersions({ gameVersions, verbose }: { gameVersions: string[]; verbo
     ));
 }
 
-const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
+function ProjectLoaders({ versionLoaders }: { versionLoaders: string[] }) {
     const { theme } = useTheme();
 
     return (
@@ -616,9 +616,9 @@ const ProjectLoaders = ({ versionLoaders }: { versionLoaders: string[] }) => {
             })}
         </>
     );
-};
+}
 
-const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string | Date; iconVisible?: boolean }) => {
+function DatePublished({ dateStr, iconVisible = true }: { dateStr: string | Date; iconVisible?: boolean }) {
     return (
         <TooltipTemplate content={<FormattedDate date={dateStr} />}>
             <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap cursor-help">
@@ -627,18 +627,18 @@ const DatePublished = ({ dateStr, iconVisible = true }: { dateStr: string | Date
             </span>
         </TooltipTemplate>
     );
-};
+}
 
-const DownloadsCount = ({ downloads, iconVisible = true }: { downloads: number; iconVisible?: boolean }) => {
+function DownloadsCount({ downloads, iconVisible = true }: { downloads: number; iconVisible?: boolean }) {
     return (
         <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium">
             {iconVisible === true ? <DownloadIcon className="w-3.5 h-3.5" /> : null}
             {downloads}
         </span>
     );
-};
+}
 
-const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: string; canEditVersion: boolean }) => {
+function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: string; canEditVersion: boolean }) {
     const { t } = useTranslation();
     const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -702,4 +702,4 @@ const ThreeDotMenu = ({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
             </PopoverContent>
         </Popover>
     );
-};
+}

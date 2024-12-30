@@ -53,19 +53,26 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("flex flex-col gap-1 px-card-surround pb-4 text-left border-b border-b-shallow-background", className)} {...props} />
-);
+function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            className={cn("flex flex-col gap-1 px-card-surround pb-4 text-left border-b border-b-shallow-background", className)}
+            {...props}
+        />
+    );
+}
 DialogHeader.displayName = "DialogHeader";
 
-const DialogBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("px-card-surround", className)} {...props} />
-);
+function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    return <div className={cn("px-card-surround", className)} {...props} />;
+}
 DialogBody.displayName = "DialogHeader";
 
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("w-full flex flex-col-reverse sm:flex-row sm:justify-end gap-form-elements gap-y-2", className)} {...props} />
-);
+function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div className={cn("w-full flex flex-col-reverse sm:flex-row sm:justify-end gap-form-elements gap-y-2", className)} {...props} />
+    );
+}
 DialogFooter.displayName = "DialogFooter";
 
 const DialogTitle = React.forwardRef<

@@ -31,9 +31,9 @@ export default function Navbar(props: NavbarProps) {
     const { t } = useTranslation();
     const nav = t.navbar;
 
-    const toggleNavMenu = (newState?: boolean) => {
+    function toggleNavMenu(newState?: boolean) {
         setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
-    };
+    }
 
     const NavLinks = [
         {
@@ -156,7 +156,7 @@ export function Navlink({ href, label, children, className }: NavlinkProps) {
         <ButtonLink
             url={href}
             prefetch="render"
-            className={cn("hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold", className)}
+            className={cn("bg-background hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold", className)}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >
             {children ? children : label}
@@ -177,8 +177,8 @@ export function NavMenuLink({
     return (
         <ButtonLink
             url={href}
-            activeClassName="bg-shallower-background dark:bg-shallow-background"
             className={cn("w-full", className)}
+            activeClassName="bg-shallower-background dark:bg-shallow-background"
             tabIndex={isDisabled ? -1 : tabIndex}
             onClick={() => {
                 if (closeNavMenuOnLinkClick === true) {
@@ -203,7 +203,7 @@ function CreateThingsPopup() {
     return (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
-                <Button variant="ghost-inverted" size="sm" aria-label="Create new project or organization">
+                <Button variant="ghost-inverted" size="sm" aria-label="Create new project or organization" className="bg-background">
                     <PlusIcon className="w-5 h-5" />
                     <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")} />
                 </Button>

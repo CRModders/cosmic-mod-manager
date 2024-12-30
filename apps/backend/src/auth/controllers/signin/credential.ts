@@ -7,11 +7,10 @@ import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-atte
 import prisma from "~/services/prisma";
 import { matchPassword } from "~/src/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/src/auth/helpers/session";
-import type { RouteHandlerResponse } from "~/types/http";
 import { AUTH_COOKIE_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS } from "~/utils/http";
 
-const credentialSignIn = async (ctx: Context, formData: z.infer<typeof LoginFormSchema>): Promise<RouteHandlerResponse> => {
+async function credentialSignIn(ctx: Context, formData: z.infer<typeof LoginFormSchema>) {
     const wrongCredsMsg = "Incorrect email or password";
 
     const user = await prisma.user.findUnique({
@@ -50,6 +49,6 @@ const credentialSignIn = async (ctx: Context, formData: z.infer<typeof LoginForm
         data: { success: true, message: `Logged in as ${user.name}` },
         status: HTTP_STATUS.OK,
     };
-};
+}
 
 export default credentialSignIn;

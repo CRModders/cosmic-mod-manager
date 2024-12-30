@@ -52,7 +52,7 @@ export default function UploadVersionPage() {
     const projectPageUrl = ProjectPagePath(ctx.projectType, projectData.slug);
     const versionsPageUrl = `${projectPageUrl}/versions`;
 
-    const handleSubmit = async (data: z.infer<typeof newVersionFormSchema>) => {
+    async function handleSubmit(data: z.infer<typeof newVersionFormSchema>) {
         if (!(data.primaryFile instanceof File)) {
             toast.error(t.version.primaryFileRequired);
             return;
@@ -94,7 +94,7 @@ export default function UploadVersionPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <>

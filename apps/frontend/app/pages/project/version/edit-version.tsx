@@ -78,7 +78,7 @@ export default function EditVersionPage() {
     });
     form.watch();
 
-    const handleSubmit = async (values: z.infer<typeof updateVersionFormSchema>) => {
+    async function handleSubmit(values: z.infer<typeof updateVersionFormSchema>) {
         if (isLoading || !projectData) return;
         setIsLoading(true);
         disableInteractions();
@@ -116,7 +116,7 @@ export default function EditVersionPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     if (!projectData || !versionData?.id) return null;
     const versionsPageUrl = ProjectPagePath(ctx.projectType, projectData.slug, "versions");

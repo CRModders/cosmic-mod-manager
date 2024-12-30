@@ -5,15 +5,17 @@ import { Button, type ButtonProps, buttonVariants } from "~/ui/button";
 import Link from "~/ui/link";
 import { cn } from "~/utils";
 
-const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-    <nav
-        // biome-ignore lint/a11y/noRedundantRoles: <explanation>
-        role="navigation"
-        aria-label="pagination"
-        className={cn("mx-auto flex w-full justify-center", className)}
-        {...props}
-    />
-);
+function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+    return (
+        <nav
+            // biome-ignore lint/a11y/noRedundantRoles: <explanation>
+            role="navigation"
+            aria-label="pagination"
+            className={cn("mx-auto flex w-full justify-center", className)}
+            {...props}
+        />
+    );
+}
 Pagination.displayName = "Pagination";
 
 const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<"ul">>(({ className, ...props }, ref) => (
@@ -31,26 +33,29 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, "size"> &
     LinkProps;
 
-const PaginationLink = ({ className, isActive, size = "icon", ...props }: PaginationLinkProps) => (
-    <Link
-        aria-current={isActive ? "page" : undefined}
-        className={cn(
-            buttonVariants({
-                variant: isActive ? "default" : "secondary",
-                size,
-            }),
-            "transition-none h-9",
-            !isActive && "bg-card-background hover:bg-card-background/70 dark:bg-shallow-background dark:hover:bg-shallow-background/85",
-            className,
-        )}
-        viewTransition={false}
-        preventScrollReset
-        {...props}
-    />
-);
+function PaginationLink({ className, isActive, size = "icon", ...props }: PaginationLinkProps) {
+    return (
+        <Link
+            aria-current={isActive ? "page" : undefined}
+            className={cn(
+                buttonVariants({
+                    variant: isActive ? "default" : "secondary",
+                    size,
+                }),
+                "transition-none h-9",
+                !isActive &&
+                    "bg-card-background hover:bg-card-background/70 dark:bg-shallow-background dark:hover:bg-shallow-background/85",
+                className,
+            )}
+            viewTransition={false}
+            preventScrollReset
+            {...props}
+        />
+    );
+}
 PaginationLink.displayName = "PaginationLink";
 
-const PaginationPrevious = ({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) => {
+function PaginationPrevious({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) {
     const icon = <ChevronLeftIcon className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
@@ -71,10 +76,10 @@ const PaginationPrevious = ({ className, to, ...props }: React.ComponentProps<ty
             {icon}
         </PaginationLink>
     );
-};
+}
 PaginationPrevious.displayName = "PaginationPrevious";
 
-const PaginationNext = ({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) => {
+function PaginationNext({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) {
     const icon = <ChevronRightIcon className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
@@ -95,15 +100,17 @@ const PaginationNext = ({ className, to, ...props }: React.ComponentProps<typeof
             {icon}
         </PaginationLink>
     );
-};
+}
 PaginationNext.displayName = "PaginationNext";
 
-const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-    <span aria-hidden className={cn("flex h-iconified-btn w-iconified-btn items-center justify-center", className)} {...props}>
-        <MoreHorizontalIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
-        <span className="sr-only">More pages</span>
-    </span>
-);
+function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span">) {
+    return (
+        <span aria-hidden className={cn("flex h-iconified-btn w-iconified-btn items-center justify-center", className)} {...props}>
+            <MoreHorizontalIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
+            <span className="sr-only">More pages</span>
+        </span>
+    );
+}
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious };

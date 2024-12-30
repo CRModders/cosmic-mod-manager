@@ -9,7 +9,7 @@ interface ChipProps {
     style?: React.CSSProperties;
 }
 
-const Chip = ({ children, className, style }: ChipProps) => {
+function Chip({ children, className, style }: ChipProps) {
     return (
         <span
             style={style}
@@ -21,7 +21,7 @@ const Chip = ({ children, className, style }: ChipProps) => {
             {children}
         </span>
     );
-};
+}
 
 export const ChipButton = forwardRef<HTMLDivElement, ButtonProps>(
     ({ variant = "secondary-inverted", className, children, id, onClick, style }, ref) => {

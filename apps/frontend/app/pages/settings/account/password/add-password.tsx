@@ -25,7 +25,7 @@ import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 
-const AddPasswordForm = ({ email }: { email: string }) => {
+function AddPasswordForm({ email }: { email: string }) {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,7 +44,7 @@ const AddPasswordForm = ({ email }: { email: string }) => {
         !!form.getValues()?.newPassword &&
         form.getValues().newPassword === form.getValues().confirmNewPassword;
 
-    const addNewPassword = async (values: z.infer<typeof setNewPasswordFormSchema>) => {
+    async function addNewPassword(values: z.infer<typeof setNewPasswordFormSchema>) {
         if (isLoading || !isFormSubmittable) return;
         setIsLoading(true);
         disableInteractions();
@@ -67,7 +67,7 @@ const AddPasswordForm = ({ email }: { email: string }) => {
             setIsLoading(false);
             setIsDialogOpen(false);
         }
-    };
+    }
 
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -137,6 +137,6 @@ const AddPasswordForm = ({ email }: { email: string }) => {
             </DialogContent>
         </Dialog>
     );
-};
+}
 
 export default AddPasswordForm;

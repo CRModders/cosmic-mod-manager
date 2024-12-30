@@ -2,9 +2,9 @@ export const lowerCaseAlphabets = "abcdefghijklmnopqrstuvwxyz";
 export const upperCaseAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const digits = "0123456789";
 
-export const trimWhitespaces = (str: string) => {
+export function trimWhitespaces(str: string) {
     return str.replace(/\s/g, "");
-};
+}
 
 export function Capitalize(str: string, eachWord = false) {
     if (eachWord === false) return `${str[0].toUpperCase()}${str.slice(1)}`;

@@ -66,14 +66,14 @@ export default function SearchPageLayout() {
     const [_, reRender] = useState("0");
 
     // Search box focus
-    const handleSearchInputFocus = (e: KeyboardEvent) => {
+    function handleSearchInputFocus(e: KeyboardEvent) {
         if (e.ctrlKey || e.altKey || e.metaKey) return;
 
         if (e.key === "/") {
             e.stopPropagation();
             if (searchInput.current) searchInput.current.focus();
         }
-    };
+    }
 
     useEffect(() => {
         if (searchQueryParam === searchTerm_state) return;

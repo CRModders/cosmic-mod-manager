@@ -28,9 +28,9 @@ export function VariantButtonLink(props: VariantButtonLinkProps) {
 export function useNavigate(initOptions?: NavigateOptions) {
     const navigate = __useNavigate();
 
-    const __navigate = (to: string, options?: NavigateOptions): void => {
+    function __navigate(to: string, options?: NavigateOptions): void {
         navigate(to, { viewTransition: true, ...initOptions, ...options });
-    };
+    }
 
     return __navigate as NavigateFunction;
 }

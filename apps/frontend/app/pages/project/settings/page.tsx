@@ -67,7 +67,7 @@ export default function GeneralSettingsPage() {
     });
     form.watch();
 
-    const saveSettings = async (values: z.infer<typeof generalProjectSettingsFormSchema>) => {
+    async function saveSettings(values: z.infer<typeof generalProjectSettingsFormSchema>) {
         if (isLoading) return;
         setIsLoading(true);
 
@@ -98,7 +98,7 @@ export default function GeneralSettingsPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     if (!session?.id) return;
 

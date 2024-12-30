@@ -44,14 +44,14 @@ import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
 import { OrgPagePath } from "~/utils/urls";
 
-const getInitialValues = (orgData: Organisation) => {
+function getInitialValues(orgData: Organisation) {
     return {
         icon: orgData.icon || "",
         name: orgData.name,
         slug: orgData.slug,
         description: orgData.description || "",
     };
-};
+}
 
 export default function GeneralOrgSettings() {
     const { t } = useTranslation();

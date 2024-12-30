@@ -37,7 +37,7 @@ export default function LoginPage() {
         },
     });
 
-    const handleCredentialLogin = async (formData: z.infer<typeof LoginFormSchema>) => {
+    async function handleCredentialLogin(formData: z.infer<typeof LoginFormSchema>) {
         try {
             if (isLoading === true) return;
             setIsLoading(true);
@@ -59,7 +59,7 @@ export default function LoginPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <main className="full_page w-full flex items-center justify-center py-12">

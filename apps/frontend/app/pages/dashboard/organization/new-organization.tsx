@@ -45,7 +45,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
         },
     });
 
-    const createOrganisation = async (values: z.infer<typeof createOrganisationFormSchema>) => {
+    async function createOrganisation(values: z.infer<typeof createOrganisationFormSchema>) {
         try {
             if (isLoading || !isFormSubmittable()) return;
             setIsLoading(true);
@@ -66,7 +66,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     function isFormSubmittable() {
         const values = form.getValues();

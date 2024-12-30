@@ -47,24 +47,28 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWit
 ));
 BreadcrumbPage.displayName = "BreadcrumbPage";
 
-const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<"li">) => (
-    <li
-        role="presentation"
-        aria-hidden="true"
-        className={cn("[&>svg]:w-btn-icon [&>svg]:h-btn-icon text-muted-foreground", className)}
-        {...props}
-    >
-        {children ?? <ChevronRightIcon />}
-    </li>
-);
+function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<"li">) {
+    return (
+        <li
+            role="presentation"
+            aria-hidden="true"
+            className={cn("[&>svg]:w-btn-icon [&>svg]:h-btn-icon text-muted-foreground", className)}
+            {...props}
+        >
+            {children ?? <ChevronRightIcon />}
+        </li>
+    );
+}
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
-const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-    <span role="presentation" aria-hidden="true" className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
-        <MoreHorizontalIcon className="w-btn-icon h-btn-icon" />
-        <span className="sr-only">More</span>
-    </span>
-);
+function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span">) {
+    return (
+        <span role="presentation" aria-hidden="true" className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
+            <MoreHorizontalIcon className="w-btn-icon h-btn-icon" />
+            <span className="sr-only">More</span>
+        </span>
+    );
+}
 BreadcrumbEllipsis.displayName = "BreadcrumbElipssis";
 
 export { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator };
