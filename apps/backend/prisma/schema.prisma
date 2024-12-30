@@ -229,8 +229,8 @@ model File {
     name           String  @db.VarChar(64)
     size           Int
     type           String  @db.VarChar(32)
-    sha1_hash      String? @unique @db.VarChar(256)
-    sha512_hash    String? @unique @db.VarChar(256)
+    sha1_hash      String? @db.VarChar(256)
+    sha512_hash    String? @db.VarChar(256)
     url            String  @db.VarChar(256)
     storageService String  @db.VarChar(32)
 }
