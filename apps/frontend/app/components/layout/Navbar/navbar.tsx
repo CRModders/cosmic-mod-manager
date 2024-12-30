@@ -110,9 +110,7 @@ export default function Navbar(props: NavbarProps) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="hidden lg:flex">
-                            <CreateThingsPopup />
-                        </div>
+                        <div className="hidden lg:flex">{props.session?.id ? <CreateThingsPopup /> : MemoizedThemeSwitch}</div>
 
                         <div className="flex lg:hidden">{MemoizedThemeSwitch}</div>
 
