@@ -5,7 +5,7 @@ import { getFileType } from "@app/utils/convertors";
 import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
 import { type GlobalUserRole, ProjectVisibility } from "@app/utils/types";
 import type { File as DBFile, VersionFile } from "@prisma/client";
-import { sort } from "semver";
+import { rsort } from "semver";
 import prisma from "~/services/prisma";
 import { deleteProjectVersionFile, saveProjectVersionFile } from "~/services/storage";
 import { createFilePathSafeString } from "~/services/storage/utils";
@@ -227,7 +227,7 @@ export async function isAnyDuplicateFile({ projectId, files }: isAnyDuplicateFil
 // Aggregators
 export function aggregateVersions(versionsList: string[]) {
     const uniqueItems = Array.from(new Set(versionsList));
-    return sort(uniqueItems);
+    return rsort(uniqueItems);
 }
 
 export function aggregateGameVersions(versions: string[]) {

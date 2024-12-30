@@ -253,7 +253,7 @@ function ViewTypeToggle({
     viewType,
     reRender,
 }: { projectType: ProjectType; viewType: ViewType; reRender: (str: string) => void }) {
-    const toggleViewType = () => {
+    function toggleViewType() {
         let newDisplayType = viewType;
         if (viewType === ViewType.LIST) {
             newDisplayType = ViewType.GALLERY;
@@ -263,7 +263,7 @@ function ViewTypeToggle({
 
         reRender(Math.random().toString());
         saveSearchDisplayPreference(projectType, newDisplayType);
-    };
+    }
 
     return (
         <TooltipProvider>

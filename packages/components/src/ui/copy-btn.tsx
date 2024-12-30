@@ -18,7 +18,7 @@ const timeoutRef = new Map<string, number>();
 const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, maxLabelChars }: Props) => {
     const [showTickIcon, setShowTickIcon] = useState(false);
 
-    const copyText = () => {
+    function copyText() {
         const existingTimeout = timeoutRef.get(id);
         if (existingTimeout) clearTimeout(existingTimeout);
 
@@ -28,9 +28,9 @@ const CopyBtn = ({ id, text, label, className, labelClassName, iconClassName, ma
         setShowTickIcon(true);
         const timeoutId = window.setTimeout(() => {
             setShowTickIcon(false);
-        }, 2_000);
+        }, 2000);
         timeoutRef.set(id, timeoutId);
-    };
+    }
 
     return (
         <Button

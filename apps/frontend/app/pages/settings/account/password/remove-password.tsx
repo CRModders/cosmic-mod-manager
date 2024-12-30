@@ -43,7 +43,7 @@ export default function RemovePasswordForm() {
         },
     });
 
-    const removeAccountPassword = async () => {
+    async function removeAccountPassword() {
         try {
             if (isLoading) return;
             setIsLoading(true);
@@ -66,7 +66,7 @@ export default function RemovePasswordForm() {
 
             RefreshPage(navigate, location);
         }
-    };
+    }
 
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

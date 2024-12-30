@@ -68,11 +68,11 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
         }
     };
 
-    const isFormSubmittable = () => {
+    function isFormSubmittable() {
         const values = form.getValues();
         const isFormInvalid = !values.name || !values.slug || !values.description;
         return !isFormInvalid;
-    };
+    }
 
     return (
         <Dialog>

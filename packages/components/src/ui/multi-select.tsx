@@ -68,11 +68,11 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
         const isPopoverOpen = open === undefined ? localOpen : open;
 
         const selectedValues = values || defaultValue || [];
-        const setSelectedValues = (newValues: string[]) => {
+        function setSelectedValues(newValues: string[]) {
             onValueChange(newValues);
-        };
+        }
 
-        const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
             if (event.key === "Enter") {
                 setLocalOpen(true);
             } else if (event.key === "Backspace" && !event.currentTarget.value) {
@@ -81,26 +81,26 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                 setSelectedValues(newSelectedValues);
                 onValueChange(newSelectedValues);
             }
-        };
+        }
 
-        const toggleOption = (option: string) => {
+        function toggleOption(option: string) {
             const newSelectedValues = selectedValues.includes(option)
                 ? selectedValues.filter((value) => value !== option)
                 : [...selectedValues, option];
             setSelectedValues(newSelectedValues);
             onValueChange(newSelectedValues);
-        };
+        }
 
-        const handleTogglePopover = (value: boolean) => {
+        function handleTogglePopover(value: boolean) {
             if (onOpenChange) onOpenChange(value);
             else setLocalOpen(value);
-        };
+        }
 
-        const clearExtraOptions = () => {
+        function clearExtraOptions() {
             const newSelectedValues = selectedValues.slice(0, maxCount);
             setSelectedValues(newSelectedValues);
             onValueChange(newSelectedValues);
-        };
+        }
 
         return (
             <Popover open={isPopoverOpen} onOpenChange={setLocalOpen} modal={modalPopover}>

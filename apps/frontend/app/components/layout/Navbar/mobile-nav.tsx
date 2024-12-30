@@ -138,9 +138,9 @@ interface HamMenuProps {
 }
 
 export function HamMenu({ isNavMenuOpen, toggleNavMenu }: HamMenuProps) {
-    const handleHamMenuClick = () => {
+    function handleHamMenuClick() {
         toggleNavMenu();
-    };
+    }
 
     return (
         <button

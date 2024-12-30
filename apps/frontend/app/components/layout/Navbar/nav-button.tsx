@@ -164,7 +164,7 @@ export function SignOutBtn({ className, disabled = false }: Props) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
-    const handleClick = async () => {
+    async function handleClick() {
         if (loading || disabled) return;
         setLoading(true);
         disableInteractions();
@@ -174,7 +174,7 @@ export function SignOutBtn({ className, disabled = false }: Props) {
         });
 
         window.location.reload();
-    };
+    }
 
     return (
         <ButtonLink

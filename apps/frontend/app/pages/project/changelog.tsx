@@ -109,9 +109,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
         }
     }
 
-    const resetFilters = () => {
+    function resetFilters() {
         setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
-    };
+    }
 
     const loadersFilterVisible = projectData.loaders.length > 1;
     const gameVersionsFilterVisible = projectData.gameVersions.length > 1;

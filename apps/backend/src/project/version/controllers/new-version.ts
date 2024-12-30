@@ -19,7 +19,6 @@ import {
     isProjectPublic,
 } from "~/src/project/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { generateDbId } from "~/utils/str";
 import { deleteVersionsData } from "../../controllers/settings";
@@ -29,7 +28,7 @@ export async function createNewVersion(
     userSession: ContextUserData,
     projectSlug: string,
     formData: z.infer<typeof newVersionFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     if (!formData?.primaryFile?.name || !(formData.primaryFile instanceof File)) {
         return invalidReqestResponseData("Primary version file is required");
     }
@@ -93,12 +92,7 @@ export async function createNewVersion(
     // Check if duplicate files are not being uploaded
     const duplicateFiles = await isAnyDuplicateFile({
         projectId: project.id,
-        files: [
-            formData.primaryFile,
-            ...(formData.additionalFiles || []).filter((file) => {
-                if (file instanceof File) return file;
-            }),
-        ],
+        files: [formData.primaryFile, ...(formData.additionalFiles || []).filter((file) => file instanceof File)],
     });
 
     if (duplicateFiles === true) {

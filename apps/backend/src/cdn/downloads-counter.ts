@@ -51,9 +51,9 @@ function queueDownloadsHistoryRefresh() {
     global.historyRefreshIntervalId = setTimeout(refreshDownloadsHistory, HISTORY_VALIDITY);
 }
 
-const flushDownloadsCounterQueue = async () => {
+async function flushDownloadsCounterQueue() {
     await redis.del(DOWNLOADS_QUEUE_KEY);
-};
+}
 
 const getDownloadsCounterQueue = async (flushQueue = false) => {
     const list = await redis.lrange(DOWNLOADS_QUEUE_KEY, 0, -1);

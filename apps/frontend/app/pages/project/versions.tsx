@@ -67,9 +67,9 @@ export default function ProjectVersionsPage() {
     const [showDevVersions, setShowDevVersions] = useState(false);
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
 
-    const resetFilters = () => {
+    function resetFilters() {
         setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
-    };
+    }
 
     const filteredItems = useMemo(() => {
         const filteredItems: ProjectVersionData[] = [];

@@ -104,7 +104,7 @@
         history.replaceState = hook(history, "replaceState", handlePush);
     }
 
-    const handleTitleChanges = () => {
+    function handleTitleChanges() {
         const observer = new MutationObserver(([entry]) => {
             title = entry?.target ? entry.target.text : undefined;
         });
@@ -118,9 +118,9 @@
                 childList: true,
             });
         }
-    };
+    }
 
-    const handleClicks = () => {
+    function handleClicks() {
         document.addEventListener(
             "click",
             async (e) => {
@@ -185,15 +185,17 @@
                     return trackElement(el);
                 }
             },
-            true,
+            true
         );
-    };
+    }
 
     /* Tracking functions */
 
-    const trackingDisabled = () => !website || localStorage?.getItem("umami.disabled") || (domain && !domains.includes(hostname));
+    function trackingDisabled() {
+        return !website || localStorage?.getItem("umami.disabled") || (domain && !domains.includes(hostname));
+    }
 
-    const send = async (payload, type = "event") => {
+    async function send(payload, type = "event") {
         if (trackingDisabled()) return;
 
         const headers = {
@@ -217,9 +219,9 @@
         } catch (e) {
             /* empty */
         }
-    };
+    }
 
-    const init = () => {
+    function init() {
         if (!initialized) {
             track();
             handlePathChanges();
@@ -227,7 +229,7 @@
             handleClicks();
             initialized = true;
         }
-    };
+    }
 
     const track = (obj, data) => {
         if (typeof obj === "string") {

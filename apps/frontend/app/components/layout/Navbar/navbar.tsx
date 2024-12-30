@@ -203,9 +203,8 @@ function CreateThingsPopup() {
     return (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
-                <Button variant="ghost-inverted" size="sm">
+                <Button variant="ghost-inverted" size="sm" aria-label="Create new project or organization">
                     <PlusIcon className="w-5 h-5" />
-
                     <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")} />
                 </Button>
             </PopoverTrigger>

@@ -176,9 +176,9 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
             }
         };
 
-        const resetKeyDownEventBlocking = () => {
+        function resetKeyDownEventBlocking() {
             blockKeydownEvent = false;
-        };
+        }
 
         document.addEventListener("keydown", handler);
         document.addEventListener("keyup", resetKeyDownEventBlocking);

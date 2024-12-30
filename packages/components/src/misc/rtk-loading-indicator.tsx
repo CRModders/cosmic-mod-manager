@@ -301,7 +301,9 @@ export function useInterval(callback: () => void, delay: number | null | false, 
     // Set up the interval.
     useEffect(() => {
         if (delay === null || delay === false) return undefined;
-        const tick = () => savedCallback.current();
+        function tick() {
+            return savedCallback.current();
+        }
         const id = setInterval(tick, delay);
         return () => clearInterval(id);
     }, [delay]);

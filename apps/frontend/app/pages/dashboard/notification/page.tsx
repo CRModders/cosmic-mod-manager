@@ -31,7 +31,7 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
     const navigate = useNavigate();
     const location = useLocation();
 
-    const markAllAsRead = async () => {
+    async function markAllAsRead() {
         if (!unreadNotifications?.length || markingAsRead) return;
         setMarkingAsRead(true);
         try {
@@ -48,7 +48,7 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
         } finally {
             setMarkingAsRead(false);
         }
-    };
+    }
 
     return (
         <Card className="w-full">

@@ -1,12 +1,12 @@
 import { MeiliSearch } from "meilisearch";
 import env from "~/utils/env";
 
-const newMeilisearchClient = () => {
+function newMeilisearchClient() {
     return new MeiliSearch({
         host: "http://127.0.0.1:7700",
         apiKey: env.MEILISEARCH_MASTER_KEY,
     });
-};
+}
 
 let meilisearch: MeiliSearch;
 

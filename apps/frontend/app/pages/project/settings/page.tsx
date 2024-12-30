@@ -480,7 +480,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
     const [submittable, setSubmittable] = useState(false);
     const navigate = useNavigate();
 
-    const deleteProject = async () => {
+    async function deleteProject() {
         if (!submittable || isLoading) return;
         setIsLoading(true);
         try {
@@ -498,7 +498,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     return (
         <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-row flex-wrap gap-4 justify-between">

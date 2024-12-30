@@ -2,7 +2,7 @@ import { DownloadIcon } from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import { cn } from "~/utils";
 
-export const DownloadRipple = () => {
+export function DownloadRipple() {
     const { isAnimationPlaying, isVisible } = useContext(DownloadAnimationContext);
 
     return (
@@ -22,13 +22,13 @@ export const DownloadRipple = () => {
             </div>
         </div>
     );
-};
+}
 
-const RippleCircle = ({ children, className }: { children?: React.ReactNode; className?: string }) => {
+function RippleCircle({ children, className }: { children?: React.ReactNode; className?: string }) {
     return (
         <div className={cn(" rounded-full bg-accent-background/25 border-[0.2rem] border-accent-background", className)}>{children}</div>
     );
-};
+}
 
 interface DownloadAnimationContext {
     show: () => void;
@@ -45,11 +45,11 @@ export const DownloadAnimationContext = createContext<DownloadAnimationContext>(
 let animationTimeoutRef: number | null = null;
 let visibilityTimeoutRef: number | null = null;
 
-export const DownloadAnimationProvider = ({ children }: { children: React.ReactNode }) => {
+export function DownloadAnimationProvider({ children }: { children: React.ReactNode }) {
     const [isAnimationPlaying, setIsAnimationPlaying] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
-    const showAnimation = () => {
+    function showAnimation() {
         if (animationTimeoutRef) window.clearTimeout(animationTimeoutRef);
         if (visibilityTimeoutRef) window.clearTimeout(visibilityTimeoutRef);
 
@@ -63,7 +63,7 @@ export const DownloadAnimationProvider = ({ children }: { children: React.ReactN
                 setIsVisible(false);
             }, 600);
         }, 600);
-    };
+    }
 
     return (
         <DownloadAnimationContext.Provider
@@ -76,4 +76,4 @@ export const DownloadAnimationProvider = ({ children }: { children: React.ReactN
             {children}
         </DownloadAnimationContext.Provider>
     );
-};
+}
