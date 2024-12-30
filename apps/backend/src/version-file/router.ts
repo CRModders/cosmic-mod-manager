@@ -64,10 +64,7 @@ async function versionFromHashUpdate_get(ctx: Context) {
 
         let gameVersions = body?.gameVersions;
         if (!gameVersions || !Array.isArray(gameVersions)) {
-            gameVersions = [];
-        }
-        for (const version of gameVersions) {
-            if (typeof version !== "string") return invalidReqestResponse(ctx, "Invalid game version");
+            gameVersions = undefined;
         }
 
         let loader = body?.loader;
