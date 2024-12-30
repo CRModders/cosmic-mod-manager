@@ -29,7 +29,7 @@
     --danger-background-dark: 0, 92%, 65%;
     --danger-foreground-dark: 0, 91%, 71%;
     --warning-background-dark: 35, 74%, 48%;
-    --warning-foreground-dark: 33, 82%, 58%;
+    --warning-foreground-dark: 33, 82%, 64%;
     --success-background-dark: 160, 84%, 39%;
     --success-foreground-dark: 158, 64%, 52%;
     --link-foreground-dark: 213, 94%, 74%;
@@ -50,7 +50,7 @@
     --danger-background-light: 0, 75%, 46%;
     --danger-foreground-light: 0, 65%, 52%;
     --warning-background-light: 36, 86%, 44%;
-    --warning-foreground-light: 38, 92%, 44%;
+    --warning-foreground-light: 36, 90%, 42%;
     --success-background-light: 160, 90%, 30%;
     --success-foreground-light: 158, 94%, 28%;
     --link-foreground-light: 208, 88%, 36%;
@@ -166,14 +166,6 @@ body.no-scrollbar {
 }
 
 @layer components {
-    .neumorphic_shadow:not(.no_neumorphic_shadow) {
-        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.15)), 0 0 0 0.175rem transparent; */
-    }
-
-    .dark .neumorphic_shadow:not(.no_neumorphic_shadow) {
-        /* box-shadow: inset 0px -1px 2px hsla(var(--bg-tint-hue), var(--bg-saturation), 5%, var(--shadow-color-alpha, 0.5)), 0 0 0 0.175rem transparent; */
-    }
-
     .focus_ring:not(.no_focus_ring) {
         --surround-width: 0.17rem;
         box-shadow: inset 0px -1px 2px transparent, 0 0 0 var(--surround-width) hsla(var(--accent-background));
@@ -240,7 +232,7 @@ a,
 button,
 input[type="checkbox"] {
     transition: font-size 150ms ease;
-    @apply focus:outline-none focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
+    @apply focus-visible:outline-none focus-visible:keyboard_focus_ring rounded;
 }
 
 .lucide-arrow-up-right {

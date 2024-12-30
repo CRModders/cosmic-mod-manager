@@ -1,4 +1,4 @@
-import { ProjectSupport, ProjectVisibility } from "@app/utils/types";
+import { EnvironmentSupport, ProjectVisibility } from "@app/utils/types";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
@@ -125,8 +125,8 @@ async function syncProjects(cursor: null | string) {
                 datePublished: project.datePublished,
                 dateUpdated: project.dateUpdated,
                 openSource: !!project.projectSourceUrl,
-                clientSide: project.clientSide === ProjectSupport.OPTIONAL || project.clientSide === ProjectSupport.REQUIRED,
-                serverSide: project.serverSide === ProjectSupport.OPTIONAL || project.serverSide === ProjectSupport.REQUIRED,
+                clientSide: project.clientSide === EnvironmentSupport.OPTIONAL || project.clientSide === EnvironmentSupport.REQUIRED,
+                serverSide: project.serverSide === EnvironmentSupport.OPTIONAL || project.serverSide === EnvironmentSupport.REQUIRED,
                 featured_gallery: featured_gallery,
                 color: project.color,
                 author: author,

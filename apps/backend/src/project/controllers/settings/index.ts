@@ -1,4 +1,5 @@
 import { ICON_WIDTH } from "@app/utils/config/constants";
+import { GetProjectEnvironment } from "@app/utils/config/project";
 import { getFileType } from "@app/utils/convertors";
 import { doesMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
@@ -8,7 +9,6 @@ import prisma from "~/services/prisma";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "~/services/storage";
 import { projectsDir } from "~/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 import { getAverageColor, resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
@@ -18,7 +18,7 @@ export async function updateProject(
     slug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof generalProjectSettingsFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const project = await prisma.project.findUnique({
         where: { slug: slug },
         select: {
@@ -63,6 +63,8 @@ export async function updateProject(
         await updateProjectIcon(userSession, project.slug, formData.icon);
     }
 
+    const EnvSupport = GetProjectEnvironment(formData.type, formData.clientSide, formData.serverSide);
+
     const updatedProject = await prisma.project.update({
         where: {
             id: project.id,
@@ -72,8 +74,8 @@ export async function updateProject(
             slug: formData.slug,
             type: formData.type,
             visibility: formData.visibility,
-            clientSide: formData.clientSide,
-            serverSide: formData.serverSide,
+            clientSide: EnvSupport.clientSide,
+            serverSide: EnvSupport.serverSide,
             summary: formData.summary,
         },
     });
@@ -81,7 +83,7 @@ export async function updateProject(
     return { data: { success: true, message: "Project details updated", slug: updatedProject.slug }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteProject(userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+export async function deleteProject(userSession: ContextUserData, slug: string) {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ id: slug }, { slug: slug }],
@@ -194,7 +196,7 @@ export async function deleteVersionsData(projectId: string, ids: string[], fileI
     await Promise.all(ids.map((versionId) => deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId)));
 }
 
-export async function updateProjectIcon(userSession: ContextUserData, slug: string, icon: File): Promise<RouteHandlerResponse> {
+export async function updateProjectIcon(userSession: ContextUserData, slug: string, icon: File) {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ id: slug }, { slug: slug }],
@@ -261,7 +263,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     return { data: { success: true, message: "Project icon updated" }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteProjectIcon(userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+export async function deleteProjectIcon(userSession: ContextUserData, slug: string) {
     const project = await prisma.project.findFirst({
         where: {
             OR: [{ id: slug }, { slug: slug }],

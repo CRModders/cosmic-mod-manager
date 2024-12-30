@@ -1,10 +1,10 @@
 import { gameVersionsList } from "@app/utils/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
 import type {
+    EnvironmentSupport,
     OrganisationPermission,
     ProjectPermission,
     ProjectPublishingStatus,
-    ProjectSupport,
     ProjectType,
     ProjectVisibility,
 } from "@app/utils/types";
@@ -77,8 +77,8 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 projectSourceUrl: project?.projectSourceUrl,
                 projectWikiUrl: project?.projectWikiUrl,
                 discordInviteUrl: project?.discordInviteUrl,
-                clientSide: project.clientSide as ProjectSupport,
-                serverSide: project.serverSide as ProjectSupport,
+                clientSide: project.clientSide as EnvironmentSupport,
+                serverSide: project.serverSide as EnvironmentSupport,
                 loaders: project.loaders,
                 gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
                 gallery: project.gallery
@@ -191,8 +191,8 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             datePublished: project.datePublished,
             status: project.status as ProjectPublishingStatus,
             visibility: project.visibility as ProjectVisibility,
-            clientSide: project.clientSide as ProjectSupport,
-            serverSide: project.serverSide as ProjectSupport,
+            clientSide: project.clientSide as EnvironmentSupport,
+            serverSide: project.serverSide as EnvironmentSupport,
             featuredCategories: project.featuredCategories,
             categories: project.categories,
             gameVersions: project.gameVersions,

@@ -25,7 +25,7 @@ export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
 }
 
 export function usePathname() {
-    // Can't use hooks outside of components, so we need to check if we're in a browser environments
+    // Can't use hooks outside of components, so we need to check if we're in a browser environment
     if (globalThis.window) {
         return window.location.pathname;
     }

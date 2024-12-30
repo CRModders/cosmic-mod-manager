@@ -41,7 +41,7 @@ export function PageHeader({
         <div
             {...props}
             className={cn(
-                "page-header w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-2 border-0 border-b border-card-background dark:border-shallow-background",
+                "page-header w-full max-w-full mt-4 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-x-8 gap-y-6 pb-5 mb-1 border-0 border-b border-card-background dark:border-shallow-background",
                 className,
             )}
         >
@@ -63,10 +63,7 @@ export function PageHeader({
                         </h1>
                         {titleBadge}
                     </div>
-                    <p
-                        itemProp={MicrodataItemProps.description}
-                        className="text-muted-foreground leading-tight max-w-[70ch] text-pretty"
-                    >
+                    <p itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight max-w-[70ch] text-pretty">
                         {description}
                     </p>
                     <div className="pt-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>

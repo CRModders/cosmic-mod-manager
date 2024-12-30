@@ -346,9 +346,7 @@ function FileDetailsItem({
                     <VariantButtonLink
                         variant={isPrimary ? "secondary-dark" : "ghost"}
                         url={downloadLink}
-                        className={cn(
-                            !isPrimary && "no_neumorphic_shadow hover:bg-transparent dark:hover:bg-transparent hover:text-foreground",
-                        )}
+                        className={cn(!isPrimary && "hover:bg-transparent dark:hover:bg-transparent hover:text-foreground")}
                         onClick={showDownloadAnimation}
                     >
                         <DownloadIcon className="w-btn-icon h-btn-icon" />

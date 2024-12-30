@@ -2,7 +2,7 @@ import { z } from "zod";
 import { MAX_ICON_SIZE, MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/config/constants";
 import { getFileType } from "~/convertors";
 import { isImageFile } from "~/schemas/validation";
-import { ProjectSupport, ProjectVisibility } from "~/types";
+import { EnvironmentSupport, ProjectVisibility } from "~/types";
 import { ProjectSlugField, ProjectTypeField } from "..";
 
 export const iconFieldSchema = z
@@ -36,7 +36,7 @@ export const generalProjectSettingsFormSchema = z.object({
     slug: ProjectSlugField,
     type: ProjectTypeField,
     visibility: z.nativeEnum(ProjectVisibility),
-    clientSide: z.nativeEnum(ProjectSupport),
-    serverSide: z.nativeEnum(ProjectSupport),
+    clientSide: z.nativeEnum(EnvironmentSupport),
+    serverSide: z.nativeEnum(EnvironmentSupport),
     summary: z.string().min(1).max(MAX_PROJECT_SUMMARY_LENGTH),
 });

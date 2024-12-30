@@ -124,21 +124,22 @@ model TeamMember {
 }
 
 model Project {
-    id             String    @id @db.VarChar(32)
-    teamId         String    @unique @db.VarChar(32)
-    organisationId String?   @db.VarChar(32)
-    name           String    @db.VarChar(32)
-    slug           String    @unique @db.VarChar(32)
-    type           String[]  @default(["project"])
-    summary        String    @db.VarChar(384)
-    description    String?   @db.VarChar(65256)
-    datePublished  DateTime  @default(now())
-    dateUpdated    DateTime  @default(now())
-    dateQueued     DateTime?
-    dateApproved   DateTime?
-    status         String    @db.VarChar(32)
-    visibility     String    @db.VarChar(32)
-    iconFileId     String?   @db.VarChar(32)
+    id              String    @id @db.VarChar(32)
+    teamId          String    @unique @db.VarChar(32)
+    organisationId  String?   @db.VarChar(32)
+    name            String    @db.VarChar(32)
+    slug            String    @unique @db.VarChar(32)
+    type            String[]  @default(["project"])
+    summary         String    @db.VarChar(384)
+    description     String?   @db.VarChar(65256)
+    datePublished   DateTime  @default(now())
+    dateUpdated     DateTime  @default(now())
+    dateQueued      DateTime?
+    dateApproved    DateTime?
+    status          String    @db.VarChar(32)
+    requestedStatus String?   @db.VarChar(32)
+    visibility      String    @db.VarChar(32)
+    iconFileId      String?   @db.VarChar(32)
 
     // licenseId maybe null for custom licenses
     licenseId   String? @db.VarChar(64)

@@ -249,6 +249,52 @@ export default {
             modpack: "Browse modpacks",
             plugin: "Browse plugins",
         },
+
+        rejected: "Rejected",
+        withheld: "Withheld",
+        archivedMessage: (project: string) =>
+            `${project} has been archived. ${project} will not receive any further updates unless the author decides to unarchive the project.`,
+        publishingChecklist: {
+            required: "Required",
+            suggestion: "Suggestion",
+            review: "Review",
+            progress: "Progress:",
+            title: "Publishing checklist",
+            uploadVersion: "Upload a version",
+            uploadVersionDesc: "At least one version is required for a project to be submitted for review.",
+            addDescription: "Add a description",
+            addDescriptionDesc: "A description that clearly describes the project's purpose and function is required.",
+            addIcon: "Add an icon",
+            addIconDesc: "Your project should have a nice-looking icon to uniquely identify your project at a glance.",
+            featureGalleryImg: "Feature a gallery image",
+            featureGalleryImgDesc: "Featured gallery images may be the first impression of many users.",
+            selectTags: "Select tags",
+            selectTagsDesc: "Select all tags that apply to your project.",
+            addExtLinks: "Add external links",
+            addExtLinksDesc: "Add any relevant links, such as sources, issues, or a Discord invite.",
+            selectLicense: "Select license",
+            selectLicenseDesc: (projectType: string) => `Select the license your ${projectType} is distributed under.`,
+            selectEnv: "Select supported environments",
+            selectEnvDesc: (projectType: string) => `Select if the ${projectType} functions on the client-side and/or server-side.`,
+            submitForReview: "Submit for review",
+            submitForReviewDesc:
+                "Your project is only viewable by members of the project. It must be reviewed by moderators in order to be published.",
+            resubmitForReview: "Resubmit for review",
+            resubmit_ApprovalRejected:
+                "Your project has been rejected by our moderator. In most cases, you can resubmit for review after addressing the moderator's message.",
+            resubmit_ProjectWithheld:
+                "Your project has been withheld by our moderator. In most cases, you can resubmit for review after addressing the moderator's message.",
+            visit: {
+                versionsPage: "Visit versions page",
+                descriptionSettings: "Visit description settings",
+                generalSettings: "Visit general settings",
+                galleryPage: "Visit gallery page",
+                tagSettings: "Visit tag settings",
+                linksSettings: "Visit links settings",
+                licenseSettings: "Visit license settings",
+                moderationPage: "Visit moderation page",
+            },
+        },
     },
 
     version: {
@@ -466,12 +512,21 @@ export default {
     },
 
     legal: {
+        legal: "Legal",
         rulesTitle: "Content Rules",
         contentRules: Rules,
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",
         securityNoticeTitle: "Security Notice",
         privacyPolicyTitle: "Privacy Policy",
+    },
+
+    moderation: {
+        review: "Review projects",
+        reports: "Reports",
+        moderation: "Moderation",
+        statistics: "Statistics",
+        authors: "Authors",
     },
 
     form: {

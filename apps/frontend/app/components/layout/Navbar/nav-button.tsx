@@ -5,11 +5,22 @@ import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popo
 import { Separator } from "@app/components/ui/separator";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { cn } from "@app/components/utils";
+import { MODERATOR_ROLES } from "@app/utils/config/roles";
 import { disableInteractions } from "@app/utils/dom";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
-import { BellIcon, Building2Icon, LayoutDashboardIcon, LayoutListIcon, LogInIcon, LogOutIcon, Settings2Icon, UserIcon } from "lucide-react";
+import {
+    BellIcon,
+    Building2Icon,
+    LayoutDashboardIcon,
+    LayoutListIcon,
+    LogInIcon,
+    LogOutIcon,
+    ScaleIcon,
+    Settings2Icon,
+    UserIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
@@ -70,12 +81,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
-                <Button
-                    size="lg"
-                    variant="ghost"
-                    aria-label="Profile icon"
-                    className="p-0 m-0 h-fit rounded-full w-fit no_neumorphic_shadow relative"
-                >
+                <Button size="lg" variant="ghost" aria-label="Profile icon" className="p-0 m-0 h-fit rounded-full w-fit relative">
                     <ImgWrapper
                         src={imageUrl(session.avatar)}
                         alt={session?.userName}
@@ -146,7 +152,12 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                         </ButtonLink>
                     );
                 })}
-
+                {MODERATOR_ROLES.includes(session.role) ? (
+                    <ButtonLink url="/moderation" exactTailMatch={false}>
+                        <ScaleIcon className="w-btn-icon h-btn-icon" />
+                        {t.moderation.moderation}
+                    </ButtonLink>
+                ) : null}
                 <Separator className="my-0.5" />
 
                 <SignOutBtn disabled={!isOpen} />

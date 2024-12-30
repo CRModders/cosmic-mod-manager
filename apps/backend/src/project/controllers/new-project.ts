@@ -1,7 +1,8 @@
+import { GetProjectEnvironment } from "@app/utils/config/project";
 import { doesOrgMemberHaveAccess } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import type { newProjectFormSchema } from "@app/utils/schemas/project";
-import { OrganisationPermission, ProjectPublishingStatus, ProjectSupport } from "@app/utils/types";
+import { OrganisationPermission, ProjectPublishingStatus } from "@app/utils/types";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
@@ -77,6 +78,8 @@ export async function createNewProject(
         });
     }
 
+    const EnvSupport = GetProjectEnvironment(formData.type);
+
     const newProject = await prisma.project.create({
         data: {
             id: generateDbId(),
@@ -88,8 +91,8 @@ export async function createNewProject(
             summary: formData.summary,
             visibility: formData.visibility,
             status: ProjectPublishingStatus.DRAFT,
-            clientSide: ProjectSupport.UNKNOWN,
-            serverSide: ProjectSupport.UNKNOWN,
+            clientSide: EnvSupport.clientSide,
+            serverSide: EnvSupport.serverSide,
         },
     });
 

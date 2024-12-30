@@ -26,13 +26,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/c
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
 import { SITE_NAME_SHORT } from "@app/utils/config";
-import { projectTypes } from "@app/utils/config/project";
+import { ShowEnvSupportSettingsForType, projectTypes } from "@app/utils/config/project";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@app/utils/convertors";
 import type { z } from "@app/utils/schemas";
 import { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
 import { handleFormError, validImgFileExtensions } from "@app/utils/schemas/utils";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@app/utils/string";
-import { ProjectPublishingStatus, ProjectSupport, type ProjectType, ProjectVisibility } from "@app/utils/types";
+import { EnvironmentSupport, ProjectPublishingStatus, type ProjectType, ProjectVisibility } from "@app/utils/types";
 import type { ProjectDetailsData } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,6 +66,14 @@ export default function GeneralSettingsPage() {
         defaultValues: initialValues,
     });
     form.watch();
+
+    let showEnvSettings = false;
+    for (const type of projectData.type) {
+        if (ShowEnvSupportSettingsForType.includes(type)) {
+            showEnvSettings = true;
+            break;
+        }
+    }
 
     async function saveSettings(values: z.infer<typeof generalProjectSettingsFormSchema>) {
         if (isLoading) return;
@@ -285,77 +293,79 @@ export default function GeneralSettingsPage() {
                                 </FormItem>
                             )}
                         />
+                        {showEnvSettings && (
+                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="clientSide"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
+                                            <div className="flex flex-col items-start justify-center gap-y-1.5">
+                                                <FormLabel className="text-foreground font-bold">
+                                                    {t.projectSettings.clientSide}
+                                                    <FormMessage />
+                                                </FormLabel>
+                                                <span className="text-muted-foreground">
+                                                    {t.projectSettings.clientSideDesc(t.navbar[projectData.type[0]])}
+                                                </span>
+                                            </div>
 
-                        <FormField
-                            control={form.control}
-                            name="clientSide"
-                            render={({ field }) => (
-                                <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
-                                    <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                        <FormLabel className="text-foreground font-bold">
-                                            {t.projectSettings.clientSide}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <span className="text-muted-foreground">
-                                            {t.projectSettings.clientSideDesc(t.navbar[projectData.type[0]])}
-                                        </span>
-                                    </div>
+                                            <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-[15rem] max-w-full" aria-label="Client-side">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={EnvironmentSupport.REQUIRED}>
+                                                        {t.projectSettings[EnvironmentSupport.REQUIRED]}
+                                                    </SelectItem>
+                                                    <SelectItem value={EnvironmentSupport.OPTIONAL}>
+                                                        {t.projectSettings[EnvironmentSupport.OPTIONAL]}
+                                                    </SelectItem>
+                                                    <SelectItem value={EnvironmentSupport.UNSUPPORTED}>
+                                                        {t.projectSettings[EnvironmentSupport.UNSUPPORTED]}
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
+                                />
 
-                                    <Select name={field.name} value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Client-side">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={ProjectSupport.REQUIRED}>
-                                                {t.projectSettings[ProjectSupport.REQUIRED]}
-                                            </SelectItem>
-                                            <SelectItem value={ProjectSupport.OPTIONAL}>
-                                                {t.projectSettings[ProjectSupport.OPTIONAL]}
-                                            </SelectItem>
-                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>
-                                                {t.projectSettings[ProjectSupport.UNSUPPORTED]}
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
+                                <FormField
+                                    control={form.control}
+                                    name="serverSide"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
+                                            <div className="flex flex-col items-start justify-center gap-y-1.5">
+                                                <FormLabel className="text-foreground font-bold">
+                                                    {t.projectSettings.serverSide}
+                                                    <FormMessage />
+                                                </FormLabel>
+                                                <span className="text-muted-foreground">
+                                                    {t.projectSettings.serverSideDesc(t.navbar[projectData.type[0]])}
+                                                </span>
+                                            </div>
 
-                        <FormField
-                            control={form.control}
-                            name="serverSide"
-                            render={({ field }) => (
-                                <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
-                                    <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                        <FormLabel className="text-foreground font-bold">
-                                            {t.projectSettings.serverSide}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <span className="text-muted-foreground">
-                                            {t.projectSettings.serverSideDesc(t.navbar[projectData.type[0]])}
-                                        </span>
-                                    </div>
-
-                                    <Select name={field.name} value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[15rem] max-w-full" aria-label="Server-side">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={ProjectSupport.REQUIRED}>
-                                                {t.projectSettings[ProjectSupport.REQUIRED]}
-                                            </SelectItem>
-                                            <SelectItem value={ProjectSupport.OPTIONAL}>
-                                                {t.projectSettings[ProjectSupport.OPTIONAL]}
-                                            </SelectItem>
-                                            <SelectItem value={ProjectSupport.UNSUPPORTED}>
-                                                {t.projectSettings[ProjectSupport.UNSUPPORTED]}
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
-
+                                            <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-[15rem] max-w-full" aria-label="Server-side">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={EnvironmentSupport.REQUIRED}>
+                                                        {t.projectSettings[EnvironmentSupport.REQUIRED]}
+                                                    </SelectItem>
+                                                    <SelectItem value={EnvironmentSupport.OPTIONAL}>
+                                                        {t.projectSettings[EnvironmentSupport.OPTIONAL]}
+                                                    </SelectItem>
+                                                    <SelectItem value={EnvironmentSupport.UNSUPPORTED}>
+                                                        {t.projectSettings[EnvironmentSupport.UNSUPPORTED]}
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )}
                         <FormField
                             control={form.control}
                             name="visibility"
@@ -559,8 +569,8 @@ function getInitialValues(projectData: ProjectDetailsData) {
         slug: projectData.slug,
         visibility: getProjectVisibilityFromString(projectData.visibility),
         type: projectData.type as ProjectType[],
-        clientSide: projectData.clientSide as ProjectSupport,
-        serverSide: projectData.serverSide as ProjectSupport,
+        clientSide: projectData.clientSide as EnvironmentSupport,
+        serverSide: projectData.serverSide as EnvironmentSupport,
         summary: projectData.summary,
     };
 }

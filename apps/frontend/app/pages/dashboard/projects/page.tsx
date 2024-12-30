@@ -117,7 +117,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                             text={project.id}
                                             label={project.id}
                                             // maxLabelChars={12}
-                                            className="noClickRedirect px-2 py-1 bg-shallow-background/50 neumorphic_shadow"
+                                            className="noClickRedirect px-2 py-1 bg-shallow-background/50"
                                             iconClassName="w-3 h-3"
                                         />
                                     </div>
@@ -162,7 +162,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 <TableCell className="pr-table-side-pad-sm sm:pr-table-side-pad">
                                     <Link
                                         to={ProjectPagePath(project.type[0], project.slug, "settings")}
-                                        className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background hover:neumorphic_shadow"
+                                        className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background"
                                         aria-label="project settings"
                                     >
                                         <SettingsIcon className="w-btn-icon-md h-btn-icon-md" />

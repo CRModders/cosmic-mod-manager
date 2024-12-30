@@ -1,9 +1,9 @@
 import type {
     DependencyType,
+    EnvironmentSupport,
     OrganisationPermission,
     ProjectPermission,
     ProjectPublishingStatus,
-    ProjectSupport,
     ProjectType,
     ProjectVisibility,
     UserSessionStates,
@@ -77,8 +77,8 @@ export interface ProjectDetailsData {
     projectWikiUrl: string | null;
     discordInviteUrl: string | null;
 
-    clientSide: ProjectSupport;
-    serverSide: ProjectSupport;
+    clientSide: EnvironmentSupport;
+    serverSide: EnvironmentSupport;
     loaders: string[];
     gameVersions: string[];
 
@@ -152,8 +152,8 @@ export interface ProjectListItem {
     datePublished: Date;
     status?: ProjectPublishingStatus;
     visibility: ProjectVisibility;
-    clientSide?: ProjectSupport;
-    serverSide?: ProjectSupport;
+    clientSide?: EnvironmentSupport;
+    serverSide?: EnvironmentSupport;
     featuredCategories: string[];
     categories: string[];
     gameVersions: string[];

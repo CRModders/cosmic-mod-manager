@@ -83,6 +83,7 @@ export enum ProjectPublishingStatus {
     SCHEDULED = "scheduled",
     PUBLISHED = "published",
     WITHHELD = "withheld",
+    REJECTED = "rejected",
     UNKNOWN = "unknown",
 }
 
@@ -155,7 +156,7 @@ export enum FileType {
     TAR = "tar",
 }
 
-export enum ProjectSupport {
+export enum EnvironmentSupport {
     UNKNOWN = "unknown",
     REQUIRED = "required",
     OPTIONAL = "optional",

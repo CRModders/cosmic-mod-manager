@@ -109,60 +109,62 @@ export default function ProjectPageLayout() {
             />
             {/* SIDEBAR */}
             <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
-                <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
-                    <h2 className="text-lg font-extrabold">{t.project.compatibility}</h2>
-                    <section>
-                        <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.gameVersions}</h3>
-                        <div className="w-full flex flex-wrap gap-1">
-                            {getVersionsToDisplay(projectData).map((version) => (
-                                <Chip key={version} className="text-muted-foreground">
-                                    {version}
-                                </Chip>
-                            ))}
-                        </div>
-                    </section>
-
-                    {listedLoaders.length ? (
+                {ctx.allProjectVersions.length > 0 ? (
+                    <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
+                        <h2 className="text-lg font-extrabold">{t.project.compatibility}</h2>
                         <section>
-                            <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.loaders}</h3>
+                            <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.gameVersions}</h3>
                             <div className="w-full flex flex-wrap gap-1">
-                                {listedLoaders.map((loader) => {
-                                    const accentForeground = loader?.metadata?.accent?.foreground;
-                                    // @ts-ignore
-                                    const loaderIcon: React.ReactNode = tagIcons[loader.name];
-
-                                    return (
-                                        <Chip
-                                            key={loader.name}
-                                            style={{
-                                                color: accentForeground
-                                                    ? theme === "dark"
-                                                        ? accentForeground?.dark
-                                                        : accentForeground?.light
-                                                    : "hsla(var(--muted-foreground))",
-                                            }}
-                                        >
-                                            {loaderIcon ? loaderIcon : null}
-                                            {CapitalizeAndFormatString(loader.name)}
-                                        </Chip>
-                                    );
-                                })}
+                                {getVersionsToDisplay(projectData).map((version) => (
+                                    <Chip key={version} className="text-muted-foreground">
+                                        {version}
+                                    </Chip>
+                                ))}
                             </div>
                         </section>
-                    ) : null}
 
-                    {projectEnvironments?.length ? (
-                        <section className="flex flex-wrap items-start justify-start gap-1">
-                            <h3 className="block w-full font-bold text-muted-foreground">{t.project.environments}</h3>
-                            {projectEnvironments.map((item, i) => {
-                                return (
-                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                    <Chip key={i}>{item}</Chip>
-                                );
-                            })}
-                        </section>
-                    ) : null}
-                </Card>
+                        {listedLoaders.length ? (
+                            <section>
+                                <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.loaders}</h3>
+                                <div className="w-full flex flex-wrap gap-1">
+                                    {listedLoaders.map((loader) => {
+                                        const accentForeground = loader?.metadata?.accent?.foreground;
+                                        // @ts-ignore
+                                        const loaderIcon: React.ReactNode = tagIcons[loader.name];
+
+                                        return (
+                                            <Chip
+                                                key={loader.name}
+                                                style={{
+                                                    color: accentForeground
+                                                        ? theme === "dark"
+                                                            ? accentForeground?.dark
+                                                            : accentForeground?.light
+                                                        : "hsla(var(--muted-foreground))",
+                                                }}
+                                            >
+                                                {loaderIcon ? loaderIcon : null}
+                                                {CapitalizeAndFormatString(loader.name)}
+                                            </Chip>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        ) : null}
+
+                        {projectEnvironments?.length ? (
+                            <section className="flex flex-wrap items-start justify-start gap-1">
+                                <h3 className="block w-full font-bold text-muted-foreground">{t.project.environments}</h3>
+                                {projectEnvironments.map((item, i) => {
+                                    return (
+                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                        <Chip key={i}>{item}</Chip>
+                                    );
+                                })}
+                            </section>
+                        ) : null}
+                    </Card>
+                ) : null}
 
                 {projectData?.issueTrackerUrl ||
                 projectData?.projectSourceUrl ||
@@ -345,17 +347,20 @@ export default function ProjectPageLayout() {
                                 <FormattedDate date={projectData.datePublished} />
                             </TooltipContent>
                         </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild className="cursor-text">
-                                <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
-                                    <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
-                                    {t.project.updatedAt(TimePassedSince({ date: projectData.dateUpdated }))}
-                                </p>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <FormattedDate date={projectData.dateUpdated} />
-                            </TooltipContent>
-                        </Tooltip>
+
+                        {ctx.allProjectVersions.length > 0 ? (
+                            <Tooltip>
+                                <TooltipTrigger asChild className="cursor-text">
+                                    <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
+                                        <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
+                                        {t.project.updatedAt(TimePassedSince({ date: projectData.dateUpdated }))}
+                                    </p>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <FormattedDate date={projectData.dateUpdated} />
+                                </TooltipContent>
+                            </Tooltip>
+                        ) : null}
                     </TooltipProvider>
                 </Card>
             </div>
@@ -411,7 +416,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
     }
 
     return (
-        <div className="w-full flex flex-col [grid-area:_header] gap-1">
+        <div className="w-full flex flex-col [grid-area:_header] gap-panel-cards">
             <PageHeader
                 vtId={projectData.id}
                 icon={imageUrl(projectData.icon)}
@@ -419,11 +424,6 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 fallbackIcon={fallbackProjectIcon}
                 title={projectData.name}
                 description={projectData.summary}
-                titleBadge={
-                    projectData.visibility === ProjectVisibility.ARCHIVED ? (
-                        <Chip className="bg-warning-background/15 text-warning-foreground">{t.projectSettings.archived}</Chip>
-                    ) : null
-                }
                 actionBtns={
                     <>
                         <InteractiveDownloadPopup />
@@ -493,11 +493,19 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 ) : null}
             </PageHeader>
 
+            {projectData.visibility === ProjectVisibility.ARCHIVED ? (
+                <div className="text-warning-foreground bg-card-background dark:bg-warning-background/15 px-5 py-3 rounded-lg font-medium border-warning-background border-l-2 rounded-l-none">
+                    {t.project.archivedMessage(projectData.name)}
+                </div>
+            ) : null}
+
             {invitedMember && (
                 <Suspense>
                     <TeamInvitationBanner refreshData={fetchProjectData} role={invitedMember.role} teamId={projectData.teamId} />
                 </Suspense>
             )}
+
+            {/* {<PublishingChecklist />} */}
         </div>
     );
 }

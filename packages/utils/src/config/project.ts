@@ -1,4 +1,12 @@
-import { AuthProvider, OrganisationPermission, ProjectPermission, ProjectType, TagHeaderType } from "~/types";
+import {
+    AuthProvider,
+    EnvironmentSupport,
+    OrganisationPermission,
+    ProjectPermission,
+    ProjectPublishingStatus,
+    ProjectType,
+    TagHeaderType,
+} from "~/types";
 
 export const authProvidersList: AuthProvider[] = [
     AuthProvider.GITHUB,
@@ -40,6 +48,33 @@ export const OrgPermissionsList: OrganisationPermission[] = [
     OrganisationPermission.DELETE_ORGANIZATION,
     OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
 ];
+
+export const RejectedStatuses = [ProjectPublishingStatus.REJECTED, ProjectPublishingStatus.WITHHELD];
+
+export const ShowEnvSupportSettingsForType = [ProjectType.MOD, ProjectType.MODPACK, ProjectType.DATAMOD];
+
+export function GetProjectEnvironment(type: ProjectType[], clientSide?: EnvironmentSupport, serverSide?: EnvironmentSupport) {
+    // Shaders and resource packs can only be used client side
+    if (type.includes(ProjectType.SHADER) || type.includes(ProjectType.RESOURCE_PACK)) {
+        return {
+            clientSide: EnvironmentSupport.REQUIRED,
+            serverSide: EnvironmentSupport.UNSUPPORTED,
+        };
+    }
+
+    // Plugins are server only
+    if (type.includes(ProjectType.PLUGIN)) {
+        return {
+            clientSide: type.includes(ProjectType.MOD) && clientSide ? clientSide : EnvironmentSupport.UNSUPPORTED,
+            serverSide: EnvironmentSupport.REQUIRED,
+        };
+    }
+
+    return {
+        clientSide: clientSide || EnvironmentSupport.UNKNOWN,
+        serverSide: serverSide || EnvironmentSupport.UNKNOWN,
+    };
+}
 
 export type Loader = {
     name: string;

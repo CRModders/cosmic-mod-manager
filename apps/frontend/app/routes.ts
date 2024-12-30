@@ -104,6 +104,12 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                     route("security", path("legal/security.tsx"), { id: `${lang}__security-notice` });
                     route("privacy", path("legal/privacy.tsx"), { id: `${lang}__privacy-policy` });
                 });
+
+                // Moderation pages
+                route("moderation", path("moderation/layout.tsx"), { id: `${lang}__moderation-pages` }, () => {
+                    route("", path("moderation/page.tsx"), { id: `${lang}__moderation__index-page`, index: true });
+                    route("review", path("moderation/review.tsx"), { id: `${lang}__moderation__review-page` });
+                });
             });
         }
 

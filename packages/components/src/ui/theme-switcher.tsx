@@ -60,8 +60,7 @@ export default function ThemeSwitch({
             title={"Change theme"}
             className={cn(
                 "overflow-hidden",
-                noDefaultStyle !== true &&
-                    "no_neumorphic_shadow rounded-full p-0 hover:bg-card-background dark:hover:bg-shallow-background",
+                noDefaultStyle !== true && "rounded-full p-0 hover:bg-card-background dark:hover:bg-shallow-background",
                 className,
             )}
             onClick={transitionTheme}

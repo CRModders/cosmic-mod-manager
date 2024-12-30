@@ -163,8 +163,8 @@ export const compatibleProjectTypes = {
     [ProjectType.MODPACK]: [],
     [ProjectType.SHADER]: [ProjectType.RESOURCE_PACK],
     [ProjectType.RESOURCE_PACK]: [ProjectType.SHADER],
-    [ProjectType.DATAMOD]: [ProjectType.MOD],
-    [ProjectType.MOD]: [ProjectType.DATAMOD, ProjectType.PLUGIN],
+    [ProjectType.DATAMOD]: [],
+    [ProjectType.MOD]: [ProjectType.PLUGIN],
     [ProjectType.PLUGIN]: [ProjectType.MOD],
 };
 

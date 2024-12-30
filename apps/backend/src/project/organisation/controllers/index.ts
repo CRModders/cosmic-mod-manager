@@ -1,10 +1,10 @@
 import { getCurrMember } from "@app/utils/project";
 import type { createOrganisationFormSchema } from "@app/utils/schemas/organisation";
 import {
+    type EnvironmentSupport,
     type OrganisationPermission,
     type ProjectPermission,
     type ProjectPublishingStatus,
-    type ProjectSupport,
     ProjectVisibility,
 } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
@@ -246,8 +246,8 @@ export async function getOrganisationProjects(
             loaders: project.loaders,
             status: project.status as ProjectPublishingStatus,
             visibility: project.visibility as ProjectVisibility,
-            clientSide: project.clientSide as ProjectSupport,
-            serverSide: project.serverSide as ProjectSupport,
+            clientSide: project.clientSide as EnvironmentSupport,
+            serverSide: project.serverSide as EnvironmentSupport,
             featured_gallery: null,
             color: project.color,
         });

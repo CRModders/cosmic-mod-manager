@@ -14,6 +14,7 @@ import { useNavigation } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
+import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import CreateNewOrg_Dialog from "~/pages/dashboard/organization/new-organization";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
@@ -27,6 +28,7 @@ interface NavbarProps {
 }
 
 export default function Navbar(props: NavbarProps) {
+    const session = useSession();
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
     const { t } = useTranslation();
     const nav = t.navbar;

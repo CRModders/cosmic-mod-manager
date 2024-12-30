@@ -116,6 +116,7 @@ export default function ProjectSettingsLayout() {
             </PanelAside>
 
             <PanelContent main>
+                {/* {<PublishingChecklist />} */}
                 <Outlet />
             </PanelContent>
         </Panel>

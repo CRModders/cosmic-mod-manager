@@ -1,46 +1,48 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
-import { CopyrightIcon, HeartHandshakeIcon, LockIcon, ScaleIcon, ShieldIcon } from "lucide-react";
+import { MODERATOR_ROLES } from "@app/utils/config/roles";
+import type { GlobalUserRole } from "@app/utils/types";
+import { FlagIcon, LayoutDashboardIcon, ScaleIcon } from "lucide-react";
 import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
+import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import { PageUrl } from "~/utils/urls";
 
-export default function LegalPageLayout() {
+export default function ModerationPagesLayout() {
+    const session = useSession();
     const { t } = useTranslation();
-    const legal = t.legal;
+    const mod = t.moderation;
+
+    if (!MODERATOR_ROLES.includes(session?.role as GlobalUserRole)) {
+        return (
+            <div className="full_page flex items-center justify-center">
+                <span className="italic text-muted-foreground text-xl">Lacking permissions to access this page.</span>
+            </div>
+        );
+    }
 
     const links = [
         {
-            name: legal.termsTitle,
-            href: "/legal/terms",
-            icon: <HeartHandshakeIcon size="1rem" />,
+            name: t.dashboard.overview,
+            href: "/moderation",
+            icon: <LayoutDashboardIcon className="w-4 h-4" />,
         },
         {
-            name: legal.rulesTitle,
-            href: "/legal/rules",
-            icon: <ScaleIcon size="1rem" />,
+            name: mod.review,
+            href: "/moderation/review",
+            icon: <ScaleIcon className="w-4 h-4" />,
         },
         {
-            name: legal.copyrightPolicyTitle,
-            href: "/legal/copyright",
-            icon: <CopyrightIcon size="1rem" />,
-        },
-        {
-            name: legal.securityNoticeTitle,
-            href: "/legal/security",
-            icon: <ShieldIcon size="1rem" />,
-        },
-        {
-            name: legal.privacyPolicyTitle,
-            href: "/legal/privacy",
-            icon: <LockIcon size="1rem" />,
+            name: mod.reports,
+            href: "/moderation/reports",
+            icon: <FlagIcon className="w-4 h-4" />,
         },
     ];
 
     return (
         <Panel className="pb-12">
             <PanelAside aside>
-                <PanelAsideNavCard label={legal.legal}>
+                <PanelAsideNavCard label={mod.moderation}>
                     {links.map((link) => (
                         <ButtonLink prefetch="render" url={PageUrl(link.href)} key={link.href} className="relative" preventScrollReset>
                             {link.icon}
