@@ -11,7 +11,7 @@ import queueSearchDbSync from "~/src/search/sync-queue";
 import env from "~/utils/env";
 import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
 import authRouter from "./auth/router";
-import cdnRouter, { corsAllowCdn } from "./cdn/router";
+import cdnRouter from "./cdn/router";
 import bulkProjectsRouter from "./project/bulk_router";
 import bulkOrgsRouter from "./project/organisation/bulk_router";
 import orgRouter from "./project/organisation/router";
@@ -25,12 +25,27 @@ import notificationRouter from "./user/notification/router";
 import userRouter from "./user/router";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
+const corsAllowedOrigins = env.CORS_ALLOWED_URLS.split(" ");
 
 app.use(ddosProtectionRateLimiter);
 app.use(logger());
 app.use(
     cors({
-        origin: env.CORS_ALLOWED_URLS.split(" "),
+        origin: (origin, ctx) => {
+            // Allow all requests from allowed origins
+            for (const allowedOrigin of corsAllowedOrigins) {
+                if (origin?.endsWith(allowedOrigin)) {
+                    return origin;
+                }
+            }
+
+            // Allow GET requests from all origins
+            if (ctx.req.method === "GET") {
+                return ctx.req.header("Origin") || "*";
+            }
+
+            return corsAllowedOrigins[0];
+        },
         credentials: true,
     }),
 );
@@ -58,13 +73,13 @@ app.route("/api/user/:userId/organization", orgRouter);
 app.route("/cdn", cdnRouter);
 
 // Some inlined routes
-app.get("/favicon.ico", corsAllowCdn, async (ctx: Context) => {
+app.get("/favicon.ico", async (ctx: Context) => {
     return ctx.redirect("https://crmm.tech/favicon.ico");
 });
 
-app.get("/", corsAllowCdn, apiDetails);
-app.get("/api", corsAllowCdn, apiDetails);
-app.get("/api/statistics", corsAllowCdn, applyCacheHeaders({ maxAge: 600, sMaxAge: 7200 }), async (ctx: Context) => {
+app.get("/", apiDetails);
+app.get("/api", apiDetails);
+app.get("/api/statistics", applyCacheHeaders({ maxAge: 600, sMaxAge: 7200 }), async (ctx: Context) => {
     try {
         const stats = await getStatistics();
 

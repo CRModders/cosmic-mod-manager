@@ -2,6 +2,7 @@ import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { AuthenticationMiddleware } from "~/middleware/auth";
 import { cdnAssetRateLimiter, cdnLargeFileRateLimiter } from "~/middleware/rate-limit/cdn";
+import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getSitemap } from "~/services/sitemap-gen";
 import env from "~/utils/env";
 import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
@@ -9,24 +10,35 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveUserAvatar, serveVersionFile } from "./controller";
 
 const cdnUrlQueryKey = "cdnReq";
-const cacheCdnUrls = [env.CACHE_CDN_URL, "https://crmm-cdn.global.ssl.fastly.net"];
 
 const cdnRouter = new Hono();
-export const corsAllowCdn = cors({
-    origin: [env.CDN_SERVER_URL, ...cacheCdnUrls],
-    credentials: true,
-});
-
-cdnRouter.use(corsAllowCdn);
+cdnRouter.use(
+    cors({
+        origin: "*",
+        credentials: true,
+    }),
+);
 
 // TODO: Remove these three later and just ust the /project prefix
 cdnRouter.get("/data/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
 cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
-cdnRouter.get("/data/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
+cdnRouter.get(
+    "/data/:projectId/version/:versionId/:fileName",
+    invalidAuthAttemptLimiter,
+    cdnLargeFileRateLimiter,
+    AuthenticationMiddleware,
+    versionFile_get,
+);
 
 cdnRouter.get("/data/project/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
 cdnRouter.get("/data/project/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
-cdnRouter.get("/data/project/:projectId/version/:versionId/:fileName", cdnLargeFileRateLimiter, AuthenticationMiddleware, versionFile_get);
+cdnRouter.get(
+    "/data/project/:projectId/version/:versionId/:fileName",
+    invalidAuthAttemptLimiter,
+    cdnLargeFileRateLimiter,
+    AuthenticationMiddleware,
+    versionFile_get,
+);
 
 cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
 cdnRouter.get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get);
