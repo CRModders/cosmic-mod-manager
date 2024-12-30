@@ -143,7 +143,13 @@ export async function GetLatestProjectVersionFromHash(hash: string, algorithm: H
     // @ts-ignore
     if (res.success === false) return res;
 
-    return res;
+    // @ts-ignore
+    const versionData = res.data[hash];
+
+    return {
+        data: versionData,
+        status: res.status,
+    };
 }
 
 export async function GetLatestProjectVersionsFromHashes(hashes: string[], algorithm: HashAlgorithms, filter: VersionFilter) {
