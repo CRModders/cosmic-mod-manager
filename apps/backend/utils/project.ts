@@ -3,7 +3,7 @@ import { VersionReleaseChannel } from "@app/utils/types";
 export function GetReleaseChannelFilter(channel?: string) {
     // eg: beta-only
     // idk why someone would want that specifically but whatever
-    if (channel?.endsWith("-only")) return [channel.slice(0, -5)];
+    if (typeof channel === "string" && channel.endsWith("-only")) return [channel.slice(0, -5)];
 
     if (!channel || channel === VersionReleaseChannel.ALPHA) {
         return [VersionReleaseChannel.ALPHA, VersionReleaseChannel.BETA, VersionReleaseChannel.RELEASE];
