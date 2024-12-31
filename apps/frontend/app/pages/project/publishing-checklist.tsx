@@ -269,14 +269,22 @@ export function PublishingChecklist() {
                                     link={link}
                                 >
                                     {step.action ? (
-                                        <Button
-                                            disabled={!readyToSubmit}
-                                            onClick={step.action.onClick}
-                                            className="w-fit bg-[#e08325] hover:bg-[#e08325] dark:bg-[#ffa347] hover:brightness-95 transition-all"
-                                            size="sm"
-                                        >
-                                            <SendIcon className="w-iconh-btn-icon h-btn-icon" /> {step.action.title}
-                                        </Button>
+                                        <>
+                                            {!readyToSubmit && (
+                                                <span className="text-muted-foreground leading-tight">
+                                                    All marked with an asterisk({RequiredIcon}) are required.
+                                                </span>
+                                            )}
+
+                                            <Button
+                                                disabled={!readyToSubmit}
+                                                onClick={step.action.onClick}
+                                                className="w-fit bg-[#e08325] hover:bg-[#e08325] dark:bg-[#ffa347] hover:brightness-95 transition-all"
+                                                size="sm"
+                                            >
+                                                <SendIcon className="w-iconh-btn-icon h-btn-icon" /> {step.action.title}
+                                            </Button>
+                                        </>
                                     ) : null}
                                 </ChecklistCard>
                             );
