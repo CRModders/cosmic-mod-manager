@@ -1,10 +1,11 @@
 import { fallbackUserIcon } from "@app/components/icons";
 import { NotificationBadge } from "@app/components/ui/badge";
 import { cn } from "@app/components/utils";
+import { MODERATOR_ROLES } from "@app/utils/config/roles";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
-import { BellIcon, Building2Icon, LayoutListIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { BellIcon, Building2Icon, LayoutListIcon, ScaleIcon, Settings2Icon, UserIcon } from "lucide-react";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { useTranslation } from "~/locales/provider";
 import { UserProfilePath } from "~/utils/urls";
@@ -112,6 +113,22 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
                                         </li>
                                     );
                                 })}
+
+                                {MODERATOR_ROLES.includes(session.role) ? (
+                                    <li className="w-full group flex items-center justify-center relative">
+                                        <NavMenuLink
+                                            href="/moderation"
+                                            label={t.moderation.moderation}
+                                            isDisabled={!isNavMenuOpen}
+                                            toggleNavMenu={toggleNavMenu}
+                                            className="h-nav-item items-center justify-center hover:bg-shallower-background dark:hover:bg-shallow-background"
+                                        >
+                                            <ScaleIcon className="w-btn-icon h-btn-icon" />
+                                            {t.moderation.moderation}
+                                        </NavMenuLink>
+                                    </li>
+                                ) : null}
+
                                 <li className="w-full">
                                     <SignOutBtn
                                         disabled={!isNavMenuOpen}
