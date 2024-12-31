@@ -3,8 +3,8 @@ import { GlobalUserRole, OrganisationPermission, ProjectPermission } from "~/typ
 export const MODERATOR_ROLES = [GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR];
 
 export const MODERATOR_PERMISSIONS = {
-    PROJECT: [ProjectPermission.DELETE_VERSION, ProjectPermission.EDIT_DETAILS],
-    ORGANIZATION: [OrganisationPermission.EDIT_DETAILS, OrganisationPermission.DELETE_ORGANIZATION],
+    PROJECT: [],
+    ORGANIZATION: [],
 };
 
 export const ADMIN_PERMISSIONS = {
