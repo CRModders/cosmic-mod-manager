@@ -273,6 +273,21 @@ export const PROJECT_STATUS_ICONS = {
     [ProjectPublishingStatus.UNKNOWN]: <FileQuestionIcon className="h-full w-full" />,
 };
 
+export function ProjectStatusDesc(status?: string) {
+    switch (status) {
+        case ProjectPublishingStatus.DRAFT:
+            return "This project is currently in draft status and not visible to others.";
+        case ProjectPublishingStatus.PROCESSING:
+            return "Your project is currently under review and awaiting approval.";
+        case ProjectPublishingStatus.APPROVED:
+            return "Congratulations! Your project has been approved and can be accessed by others.";
+        case ProjectPublishingStatus.WITHHELD:
+            return "Your project has been withheld and is not publicly visible. Please check for required updates.";
+    }
+
+    return undefined;
+}
+
 export const ProjectStatusIcon = ({ status, className }: { status: ProjectPublishingStatus; className?: string }) => {
     // @ts-ignore
     const icon = PROJECT_STATUS_ICONS[status] || PROJECT_STATUS_ICONS.unknown;

@@ -1,3 +1,4 @@
+import { fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import { cn } from "@app/components/utils";
 import { CapitalizeAndFormatString } from "@app/utils/string";
@@ -81,13 +82,19 @@ function ModerationItem({ project }: { project: ModerationProjectItem }) {
 
     return (
         <div className="p-card-surround bg-background rounded-lg flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-            <div className="flex flex-col items-between justify-center flex-wrap gap-x-6 gap-y-2">
+            <div className="flex flex-col items-between justify-center flex-wrap gap-y-4">
                 <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                     <Link
                         to={ProjectPagePath(project.type[0], project.slug)}
                         className="flex items-center justify-start gap-x-2 hover:brightness-110"
                     >
-                        <ImgWrapper src={imageUrl(project.icon)} alt={project.name} vtId={project.id} className="w-10 h-10" />
+                        <ImgWrapper
+                            src={imageUrl(project.icon)}
+                            alt={project.name}
+                            vtId={project.id}
+                            className="w-10 h-10"
+                            fallback={fallbackProjectIcon}
+                        />
                         <span className="grid grid-cols-1 gap-1">
                             <span className="leading-none font-bold">{project.name}</span>
                             <span className="leading-none text-sm">{CapitalizeAndFormatString(t.navbar[type])}</span>
@@ -98,7 +105,12 @@ function ModerationItem({ project }: { project: ModerationProjectItem }) {
                         to={project.author.isOrg ? OrgPagePath(project.author.slug) : UserProfilePath(project.author.slug)}
                         className="hover:brightness-110 flex items-center justify-start gap-x-1.5"
                     >
-                        <ImgWrapper src={imageUrl(project.author.icon)} alt={project.author.name} className="w-5 h-5 rounded-full" />
+                        <ImgWrapper
+                            src={imageUrl(project.author.icon)}
+                            alt={project.author.name}
+                            className="w-5 h-5 rounded-full"
+                            fallback={fallbackUserIcon}
+                        />
                         <span className="underline">{project.author.name}</span>
                     </Link>
                     <span>is requesting to be {project.requestedStatus}</span>

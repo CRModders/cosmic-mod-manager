@@ -1,4 +1,4 @@
-import { ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
+import { ProjectStatusDesc, ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import CopyBtn from "@app/components/ui/copy-btn";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@app/components/ui/table";
@@ -110,7 +110,9 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                         >
                                             {project.name}
                                         </Link>
-                                        <span className="leading-none font-medium">{CapitalizeAndFormatString(project.status)}</span>
+                                        <span className="leading-none font-medium cursor-help" title={ProjectStatusDesc(project.status)}>
+                                            {CapitalizeAndFormatString(project.status)}
+                                        </span>
                                         <span className="leading-none">{FormatProjectTypes(project.type)}</span>
                                         <CopyBtn
                                             id={`${project.slug}-${project.id}`}
@@ -152,7 +154,10 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
 
                                 {/* STATUS */}
                                 <TableCell className="hidden md:table-cell">
-                                    <span className="flex items-center gap-1 leading-none font-medium">
+                                    <span
+                                        className="flex items-center gap-1 leading-none font-medium cursor-help"
+                                        title={ProjectStatusDesc(project.status)}
+                                    >
                                         <ProjectStatusIcon status={project.status || ("" as ProjectPublishingStatus)} />
                                         {CapitalizeAndFormatString(project.status)}
                                     </span>

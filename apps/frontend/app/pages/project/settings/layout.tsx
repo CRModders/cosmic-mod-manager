@@ -1,4 +1,4 @@
-import { ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
+import { ProjectStatusDesc, ProjectStatusIcon, fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate, Panel, PanelAside, PanelContent } from "@app/components/misc/panel";
 import {
     Breadcrumb,
@@ -71,7 +71,10 @@ export default function ProjectSettingsLayout() {
 
                         <div className="flex flex-col items-start justify-start">
                             <span className="text-lg font-semibold">{projectData.name}</span>
-                            <span className="flex items-center justify-center gap-1 font-semibold text-muted-foreground">
+                            <span
+                                className="flex items-center justify-center gap-1 font-semibold text-muted-foreground cursor-help"
+                                title={ProjectStatusDesc(projectData.status)}
+                            >
                                 <ProjectStatusIcon status={projectData.status} />
                                 {CapitalizeAndFormatString(projectData.status)}
                             </span>

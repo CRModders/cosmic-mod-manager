@@ -1,4 +1,4 @@
-import { EnvironmentSupport, ProjectVisibility } from "@app/utils/types";
+import { EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
@@ -92,7 +92,7 @@ async function syncProjects(cursor: null | string) {
                 visibility: {
                     in: [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED],
                 },
-                // TODO: status: ProjectPublishingStatus.APPROVED,
+                status: ProjectPublishingStatus.APPROVED,
             },
             cursor: cursor ? { id: cursor } : undefined,
             take: SYNC_BATCH_SIZE,

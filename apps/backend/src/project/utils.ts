@@ -3,7 +3,7 @@ import { type Loader, loaders } from "@app/utils/config/project";
 import { isModerator } from "@app/utils/config/roles";
 import { getFileType } from "@app/utils/convertors";
 import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
-import { type GlobalUserRole, ProjectVisibility } from "@app/utils/types";
+import { type GlobalUserRole, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { File as DBFile, VersionFile } from "@prisma/client";
 import { rsort } from "semver";
 import prisma from "~/services/prisma";
@@ -15,8 +15,7 @@ import { generateRandomId } from "~/utils/str";
 
 export function isProjectPublic(visibility: string, publishingStatus: string) {
     const isPublic = visibility !== ProjectVisibility.PRIVATE;
-    const isPublished = true;
-    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.APPROVED;
+    const isPublished = publishingStatus === ProjectPublishingStatus.APPROVED;
 
     return isPublic && isPublished;
 }

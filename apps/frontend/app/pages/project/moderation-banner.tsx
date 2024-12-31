@@ -45,7 +45,7 @@ export default function ModerationBanner() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{t.moderation.awaitingApproval}</CardTitle>
+                <CardTitle className="text-lg-plus">{t.moderation.awaitingApproval}</CardTitle>
             </CardHeader>
 
             <CardContent className="flex flex-wrap gap-x-3 flex-row items-center justify-start">

@@ -1,4 +1,11 @@
-import { DiscordIcon, ProjectStatusIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
+import {
+    DiscordIcon,
+    ProjectStatusDesc,
+    ProjectStatusIcon,
+    fallbackOrgIcon,
+    fallbackProjectIcon,
+    fallbackUserIcon,
+} from "@app/components/icons";
 import tagIcons from "@app/components/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
@@ -451,6 +458,19 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 fallbackIcon={fallbackProjectIcon}
                 title={projectData.name}
                 description={projectData.summary}
+                titleBadge={
+                    [ProjectPublishingStatus.REJECTED, ProjectPublishingStatus.PROCESSING, ProjectPublishingStatus.WITHHELD].includes(
+                        projectData.status,
+                    ) ? (
+                        <span
+                            title={ProjectStatusDesc(projectData.status)}
+                            className="flex items-center justify-center gap-x-1.5 text-muted-foreground font-semibold bg-card-background text-sm cursor-help px-2 py-[0.13rem] rounded-full"
+                        >
+                            <ProjectStatusIcon status={projectData.status} />
+                            {CapitalizeAndFormatString(projectData.status)}
+                        </span>
+                    ) : null
+                }
                 actionBtns={
                     <>
                         <InteractiveDownloadPopup />
@@ -494,23 +514,23 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                             </Button>
                         </PopoverClose>
 
-                        {isMod &&
-                        ![...RejectedStatuses, ProjectPublishingStatus.DRAFT].includes(projectData.status) &&
-                        !projectData.requestedStatus ? (
+                        {isMod && !RejectedStatuses.includes(projectData.status) && !projectData.requestedStatus ? (
                             <>
                                 <Separator />
 
-                                <Button
-                                    className="w-full justify-start"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                        updateStatus(ProjectPublishingStatus.DRAFT);
-                                    }}
-                                >
-                                    <ProjectStatusIcon status={ProjectPublishingStatus.DRAFT} />
-                                    {t.moderation.draft}
-                                </Button>
+                                {projectData.status !== ProjectPublishingStatus.DRAFT && (
+                                    <Button
+                                        className="w-full justify-start"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => {
+                                            updateStatus(ProjectPublishingStatus.DRAFT);
+                                        }}
+                                    >
+                                        <ProjectStatusIcon status={ProjectPublishingStatus.DRAFT} />
+                                        {t.moderation.draft}
+                                    </Button>
+                                )}
 
                                 <Button
                                     className="w-full justify-start"
