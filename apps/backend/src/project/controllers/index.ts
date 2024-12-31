@@ -1,11 +1,11 @@
 import { gameVersionsList } from "@app/utils/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
-import type {
-    EnvironmentSupport,
-    OrganisationPermission,
-    ProjectPermission,
+import {
+    type EnvironmentSupport,
+    type OrganisationPermission,
+    type ProjectPermission,
     ProjectPublishingStatus,
-    ProjectType,
+    type ProjectType,
     ProjectVisibility,
 } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectListItem } from "@app/utils/types/api";
@@ -220,8 +220,13 @@ export async function getRandomProjects(userSession: ContextUserData | undefined
         }
     }
 
-    const randomProjects: { id: string }[] =
-        await prisma.$queryRaw`SELECT id FROM "Project" TABLESAMPLE SYSTEM_ROWS(${projectsCount}) WHERE "visibility" = 'listed' AND 'status' = 'approved';`;
+    const randomProjects: { id: string }[] = await prisma.$queryRaw`
+        SELECT id
+        FROM "Project"
+        TABLESAMPLE SYSTEM_ROWS(${20})
+        WHERE "status" = '${ProjectPublishingStatus.APPROVED}'
+            AND "visibility" = '${ProjectVisibility.LISTED}'
+    `;
 
     const idsArray = randomProjects?.map((project) => project.id);
     const res = await getManyProjects(userSession, idsArray);
