@@ -117,7 +117,7 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
                                 {MODERATOR_ROLES.includes(session.role) ? (
                                     <li className="w-full group flex items-center justify-center relative">
                                         <NavMenuLink
-                                            href="/moderation"
+                                            href="/moderation/review"
                                             label={t.moderation.moderation}
                                             isDisabled={!isNavMenuOpen}
                                             toggleNavMenu={toggleNavMenu}

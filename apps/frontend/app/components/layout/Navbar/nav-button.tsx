@@ -153,7 +153,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                     );
                 })}
                 {MODERATOR_ROLES.includes(session.role) ? (
-                    <ButtonLink url="/moderation" exactTailMatch={false}>
+                    <ButtonLink url="/moderation/review" exactTailMatch={false}>
                         <ScaleIcon className="w-btn-icon h-btn-icon" />
                         {t.moderation.moderation}
                     </ButtonLink>
