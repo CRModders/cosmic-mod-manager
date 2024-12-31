@@ -11,6 +11,7 @@ const backendDir = `${sourceDir}/apps/backend`; // Root of the backend
 
 const reloadBackend =
     "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
+const processDownloadsQueue = "bun src/cdn/process-downloads.ts";
 
 const dev_backend = {
     name: "crmm-backend",
@@ -59,8 +60,7 @@ module.exports = {
             ref: "origin/main",
             repo: "https://github.com/CRModders/cosmic-mod-manager.git",
             path: rootDir,
-            "post-deploy": `cd ${backendDir} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadBackend}`,
-            "pre-deploy": `cd ${backendDir}/src/cdn && bun process-downloads.ts`,
+            "post-deploy": `cd ${backendDir} && ${processDownloadsQueue} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadBackend}`,
         },
     },
 };
