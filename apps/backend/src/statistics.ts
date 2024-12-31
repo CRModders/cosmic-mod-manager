@@ -1,3 +1,4 @@
+import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { Statistics } from "@app/utils/types/api/stats";
 import { getStatisticsCache, setStatisticsCache } from "~/services/cache/statistics";
 import prisma from "~/services/prisma";
@@ -18,9 +19,38 @@ export async function getStatistics(): Promise<Statistics | null> {
         },
     });
 
-    const files = prisma.versionFile.count();
-    const projects = prisma.project.count();
-    const versions = prisma.version.count();
+    const projects = prisma.project.count({
+        where: {
+            visibility: {
+                in: [ProjectVisibility.ARCHIVED, ProjectVisibility.LISTED],
+            },
+            status: ProjectPublishingStatus.APPROVED,
+        },
+    });
+
+    const files = prisma.versionFile.count({
+        where: {
+            version: {
+                project: {
+                    visibility: {
+                        in: [ProjectVisibility.ARCHIVED, ProjectVisibility.LISTED],
+                    },
+                    status: ProjectPublishingStatus.APPROVED,
+                },
+            },
+        },
+    });
+
+    const versions = prisma.version.count({
+        where: {
+            project: {
+                visibility: {
+                    in: [ProjectVisibility.ARCHIVED, ProjectVisibility.LISTED],
+                },
+                status: ProjectPublishingStatus.APPROVED,
+            },
+        },
+    });
 
     const [usersCount, authorsCount, filesCount, projectsCount, versionsCount] = await Promise.all([
         users,
