@@ -18,8 +18,6 @@ const DOWNLOADS_HISTORY_KEY = "downloads-history";
 
 const MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW = 3;
 
-let isQueueProcessing = false;
-
 async function getDownloadsHistory() {
     const list: DownloadsQueueItem[] = [];
     const historyItems = await redis.lrange(DOWNLOADS_HISTORY_KEY, 0, -1);
@@ -70,10 +68,10 @@ async function getDownloadsCounterQueue(flushQueue = false) {
     return listItems;
 }
 
-async function processDownloads() {
+export async function processDownloads() {
     try {
-        if (isQueueProcessing) return;
-        isQueueProcessing = true;
+        if (await DownloadsProcessing()) return;
+        await SetDownloadsProcessing(true);
 
         const downloadsQueue = await getDownloadsCounterQueue(true);
         const downloadsHistory = await getDownloadsHistory();
@@ -154,7 +152,7 @@ async function processDownloads() {
 
         await Promise.all(promises);
     } finally {
-        isQueueProcessing = false;
+        await SetDownloadsProcessing(false);
     }
 }
 
@@ -165,6 +163,14 @@ export async function queueDownloadsCounterQueueProcessing() {
 
     // @ts-ignore
     global.downloadsCounterQueueIntervalId = setInterval(processDownloads, QUEUE_PROCESS_INTERVAL);
+}
+
+export async function DownloadsProcessing() {
+    return (await redis.get("downloadsQueueProcessing")) === "true";
+}
+
+export async function SetDownloadsProcessing(val: boolean) {
+    await redis.set("downloadsQueueProcessing", val === true ? "true" : "false");
 }
 
 export async function addToDownloadsQueue(item: Omit<DownloadsQueueItem, "id">) {

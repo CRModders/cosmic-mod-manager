@@ -60,6 +60,7 @@ module.exports = {
             repo: "https://github.com/CRModders/cosmic-mod-manager.git",
             path: rootDir,
             "post-deploy": `cd ${backendDir} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadBackend}`,
+            "pre-deploy": `cd ${backendDir}/src/cdn && bun process-downloads.ts`,
         },
     },
 };
