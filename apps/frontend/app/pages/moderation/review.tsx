@@ -1,7 +1,6 @@
 import { fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import { cn } from "@app/components/utils";
-import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectType } from "@app/utils/types";
 import type { ModerationProjectItem } from "@app/utils/types/api/moderation";
 import { imageUrl } from "@app/utils/url";
@@ -95,10 +94,7 @@ function ModerationItem({ project }: { project: ModerationProjectItem }) {
                             className="w-10 h-10"
                             fallback={fallbackProjectIcon}
                         />
-                        <span className="grid grid-cols-1 gap-1">
-                            <span className="leading-none font-bold">{project.name}</span>
-                            <span className="leading-none text-sm">{CapitalizeAndFormatString(t.navbar[type])}</span>
-                        </span>
+                        <span className="leading-none font-bold">{project.name}</span>
                     </Link>
                     by
                     <Link
