@@ -1,4 +1,3 @@
-import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
@@ -39,7 +38,7 @@ export default function ModerationBanner() {
         }
 
         toast.success(data?.message);
-        RefreshPage(navigate, location);
+        navigate("/moderation/review");
     }
 
     return (
