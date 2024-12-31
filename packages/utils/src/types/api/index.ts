@@ -67,6 +67,7 @@ export interface ProjectDetailsData {
     datePublished: Date;
     dateUpdated: Date;
     status: ProjectPublishingStatus;
+    requestedStatus: ProjectPublishingStatus;
     visibility: ProjectVisibility;
 
     downloads: number;

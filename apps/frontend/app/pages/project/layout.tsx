@@ -1,4 +1,4 @@
-import { DiscordIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
+import { DiscordIcon, ProjectStatusIcon, fallbackOrgIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import tagIcons from "@app/components/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
@@ -9,14 +9,17 @@ import Chip from "@app/components/ui/chip";
 import { PopoverClose } from "@app/components/ui/popover";
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
+import { toast } from "@app/components/ui/sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
 import SPDX_LICENSE_LIST from "@app/utils/config/license-list";
-import { isModerator } from "@app/utils/config/roles";
+import { RejectedStatuses } from "@app/utils/config/project";
+import { MODERATOR_ROLES, isModerator } from "@app/utils/config/roles";
 import { getLoadersFromNames } from "@app/utils/convertors";
+import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import { parseFileSize } from "@app/utils/number";
 import { Capitalize, CapitalizeAndFormatString } from "@app/utils/string";
-import { ProjectVisibility } from "@app/utils/types";
+import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { ProjectDetailsData, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { formatVersionsForDisplay, getVersionsToDisplay } from "@app/utils/version/format";
@@ -48,9 +51,12 @@ import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
+import clientFetch from "~/utils/client-fetch";
 import { OrgPagePath, ProjectPagePath, UserProfilePath, VersionPagePath, isCurrLinkActive } from "~/utils/urls";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
+import ModerationBanner from "./moderation-banner";
+import { PublishingChecklist } from "./publishing-checklist";
 import SecondaryNav from "./secondary-nav";
 import { ProjectSupprotedEnvironments } from "./supported-env";
 
@@ -404,6 +410,9 @@ interface HeaderProps {
 function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetchProjectData }: HeaderProps) {
     const { t } = useTranslation();
     const session = useSession();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isMod = session?.id && MODERATOR_ROLES.includes(session.role);
     let invitedMember = null;
 
     if (currUsersMembership?.accepted !== true) {
@@ -413,6 +422,24 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 break;
             }
         }
+    }
+
+    async function updateStatus(status = ProjectPublishingStatus.REJECTED) {
+        disableInteractions();
+
+        const res = await clientFetch(`/api/moderation/project/${projectData.id}`, {
+            method: "POST",
+            body: JSON.stringify({ status: status }),
+        });
+        const data = await res.json();
+
+        if (!res.ok || data?.success === false) {
+            toast.error(data?.message);
+            enableInteractions();
+        }
+
+        toast.success(data?.message);
+        RefreshPage(navigate, location);
     }
 
     return (
@@ -466,6 +493,38 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                 {t.common.copyId}
                             </Button>
                         </PopoverClose>
+
+                        {isMod &&
+                        ![...RejectedStatuses, ProjectPublishingStatus.DRAFT].includes(projectData.status) &&
+                        !projectData.requestedStatus ? (
+                            <>
+                                <Separator />
+
+                                <Button
+                                    className="w-full justify-start"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        updateStatus(ProjectPublishingStatus.DRAFT);
+                                    }}
+                                >
+                                    <ProjectStatusIcon status={ProjectPublishingStatus.DRAFT} />
+                                    {t.moderation.draft}
+                                </Button>
+
+                                <Button
+                                    className="w-full justify-start"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        updateStatus(ProjectPublishingStatus.WITHHELD);
+                                    }}
+                                >
+                                    <ProjectStatusIcon status={ProjectPublishingStatus.WITHHELD} />
+                                    {t.moderation.withhold}
+                                </Button>
+                            </>
+                        ) : null}
                     </>
                 }
             >
@@ -505,7 +564,8 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 </Suspense>
             )}
 
-            {/* {<PublishingChecklist />} */}
+            <PublishingChecklist />
+            <ModerationBanner />
         </div>
     );
 }

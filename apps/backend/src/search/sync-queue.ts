@@ -92,7 +92,7 @@ async function syncProjects(cursor: null | string) {
                 visibility: {
                     in: [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED],
                 },
-                // TODO: status: ProjectPublishingStatus.PUBLISHED,
+                // TODO: status: ProjectPublishingStatus.APPROVED,
             },
             cursor: cursor ? { id: cursor } : undefined,
             take: SYNC_BATCH_SIZE,

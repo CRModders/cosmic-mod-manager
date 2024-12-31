@@ -1,28 +1,49 @@
+import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
+import { toast } from "@app/components/ui/sonner";
 import { TooltipProvider, TooltipTemplate } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
 import { RejectedStatuses, ShowEnvSupportSettingsForType } from "@app/utils/config/project";
-import { isCurrLinkActive } from "@app/utils/string";
+import { disableInteractions, enableInteractions } from "@app/utils/dom";
+import { Capitalize, isCurrLinkActive } from "@app/utils/string";
 import { EnvironmentSupport, ProjectPublishingStatus } from "@app/utils/types";
 import { AsteriskIcon, CheckIcon, ChevronDownIcon, ChevronRightIcon, LightbulbIcon, ScaleIcon, SendIcon } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
-import Link from "~/components/ui/link";
+import { type ReactNode, useState } from "react";
+import Link, { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
+import clientFetch from "~/utils/client-fetch";
 import { ProjectPagePath, usePathname } from "~/utils/urls";
 
 export function PublishingChecklist() {
     const ctx = useProjectData();
     const project = ctx.projectData;
     const pathname = usePathname();
+    const navigate = useNavigate();
 
     const { t } = useTranslation();
     const pubChecklist = t.project.publishingChecklist;
     const [dropdownOpen, setDropdownOpen] = useState(true);
-    const [readyToSubmit, setReadyToSubmit] = useState(false);
 
-    async function submitForReview() {}
+    if (project.status === ProjectPublishingStatus.PROCESSING || project.status === ProjectPublishingStatus.APPROVED) return null;
+    if (!ctx.currUsersMembership) return null;
+
+    async function submitForReview() {
+        disableInteractions();
+
+        const res = await clientFetch(`/api/project/${project.id}/submit-for-review`, { method: "POST" });
+        const data = await res.json();
+
+        if (!res.ok || data?.success === false) {
+            toast.error(data?.message);
+            enableInteractions();
+            return;
+        }
+
+        toast.success(data?.message);
+        RefreshPage(navigate, pathname);
+    }
 
     let hideEnvSettingsCard = true;
     for (const type of project.type) {
@@ -151,7 +172,7 @@ export function PublishingChecklist() {
             },
         },
         {
-            condition: project.status === ProjectPublishingStatus.DRAFT,
+            condition: project.status === ProjectPublishingStatus.DRAFT || RejectedStatuses.includes(project.status), // TODO: REMOVE REJECTED STATUSES LATER WHEN MODERATOR MESSAGES ARE DONE
             id: "submit-for-review",
             title: pubChecklist.submitForReview,
             description: pubChecklist.submitForReviewDesc,
@@ -160,29 +181,32 @@ export function PublishingChecklist() {
             action: {
                 onClick: submitForReview,
                 title: pubChecklist.submitForReview,
-                disabled: readyToSubmit === false,
             },
         },
-        {
-            hide: project.status === ProjectPublishingStatus.DRAFT,
-            condition: RejectedStatuses.includes(project.status),
-            id: "resubmit-for-review",
-            title: pubChecklist.resubmitForReview,
-            description:
-                project.status === ProjectPublishingStatus.REJECTED
-                    ? pubChecklist.resubmit_ApprovalRejected
-                    : pubChecklist.resubmit_ProjectWithheld,
-            status: "review",
-            link: {
-                path: "moderation",
-                title: pubChecklist.visit.moderationPage,
-            },
-        },
+        // {
+        //     hide: project.status === ProjectPublishingStatus.DRAFT,
+        //     condition: RejectedStatuses.includes(project.status),
+        //     id: "resubmit-for-review",
+        //     title: pubChecklist.resubmitForReview,
+        //     description:
+        //         project.status === ProjectPublishingStatus.REJECTED
+        //             ? pubChecklist.resubmit_ApprovalRejected
+        //             : pubChecklist.resubmit_ProjectWithheld,
+        //     status: "review",
+        //     link: {
+        //         path: "moderation",
+        //         title: pubChecklist.visit.moderationPage,
+        //     },
+        // },
     ];
 
-    useEffect(() => {
-        // setReadyToSubmit()
-    }, [pathname]);
+    let readyToSubmit = true;
+    for (const step of steps) {
+        if (step.condition === true && step.status === "required") {
+            readyToSubmit = false;
+            break;
+        }
+    }
 
     return (
         <Card>
@@ -213,6 +237,7 @@ export function PublishingChecklist() {
                     <ChevronDownIcon className={cn("transition-all", dropdownOpen && "rotate-180")} />
                 </Button>
             </CardHeader>
+
             {dropdownOpen && (
                 <CardContent className="grid gap-panel-cards grid-cols-1 sm:grid-cols-[repeat(auto-fit,_minmax(18rem,_1fr))]">
                     <TooltipProvider delayDuration={200}>
@@ -232,16 +257,22 @@ export function PublishingChecklist() {
                             return (
                                 <ChecklistCard
                                     key={step.id}
-                                    icon={<StatusIcon status={step.status} />}
+                                    icon={
+                                        <TooltipTemplate content={Capitalize(step.status)}>
+                                            <span>
+                                                <StatusIcon status={step.status} />
+                                            </span>
+                                        </TooltipTemplate>
+                                    }
                                     label={step.title}
                                     desc={step.description}
                                     link={link}
                                 >
                                     {step.action ? (
                                         <Button
-                                            disabled={step.action.disabled}
+                                            disabled={!readyToSubmit}
                                             onClick={step.action.onClick}
-                                            className="w-fit bg-[#e08325] dark:bg-[#ffa347]"
+                                            className="w-fit bg-[#e08325] hover:bg-[#e08325] dark:bg-[#ffa347] hover:brightness-95 transition-all"
                                             size="sm"
                                         >
                                             <SendIcon className="w-iconh-btn-icon h-btn-icon" /> {step.action.title}

@@ -19,6 +19,7 @@ import { getAllVisibleProjects } from "../user/controllers/profile";
 import { checkProjectSlugValidity, getProjectData } from "./controllers";
 import { getProjectDependencies } from "./controllers/dependency";
 import { addNewGalleryImage, removeGalleryImage, updateGalleryImage } from "./controllers/gallery";
+import { QueueProjectForApproval } from "./controllers/moderation";
 import { createNewProject } from "./controllers/new-project";
 import { deleteProject, deleteProjectIcon, updateProject, updateProjectIcon } from "./controllers/settings";
 import {
@@ -43,6 +44,7 @@ projectRouter.get("/:slug/check", getReqRateLimiter, projectCheck_get);
 projectRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, project_post);
 projectRouter.patch("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_patch);
 projectRouter.delete("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_delete);
+projectRouter.post("/:id/submit-for-review", critModifyReqRateLimiter, LoginProtectedRoute, project_queueForApproval_post);
 projectRouter.patch("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_patch);
 projectRouter.delete("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_delete);
 projectRouter.patch("/:slug/description", critModifyReqRateLimiter, LoginProtectedRoute, description_patch);
@@ -169,6 +171,20 @@ async function project_delete(ctx: Context) {
         if (!userSession || !slug) return invalidReqestResponse(ctx);
 
         const res = await deleteProject(userSession, slug);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function project_queueForApproval_post(ctx: Context) {
+    try {
+        const id = ctx.req.param("id");
+        const userSession = getUserFromCtx(ctx);
+        if (!userSession || !id) return invalidReqestResponse(ctx);
+
+        const res = await QueueProjectForApproval(id, userSession);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

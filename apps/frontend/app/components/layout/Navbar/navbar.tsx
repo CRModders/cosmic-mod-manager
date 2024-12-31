@@ -86,7 +86,7 @@ export default function Navbar(props: NavbarProps) {
                     <div className="flex items-center justify-center gap-8">
                         <Link
                             to={"/"}
-                            className="flex items-center justify-center h-nav-item gap-1"
+                            className="flex items-center justify-center h-nav-item gap-1 bg-background"
                             aria-label="CRMM Home page"
                             title={SITE_NAME_LONG}
                             onClick={() => {

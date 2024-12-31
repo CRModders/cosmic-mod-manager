@@ -43,6 +43,7 @@ export function projectFields() {
         dateUpdated: true,
         dateQueued: true,
         dateApproved: true,
+        requestedStatus: true,
         status: true,
         visibility: true,
         iconFileId: true,

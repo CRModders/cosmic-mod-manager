@@ -16,7 +16,7 @@ import { generateRandomId } from "~/utils/str";
 export function isProjectPublic(visibility: string, publishingStatus: string) {
     const isPublic = visibility !== ProjectVisibility.PRIVATE;
     const isPublished = true;
-    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.PUBLISHED;
+    // TODO: const isPublished = publishingStatus === ProjectPublishingStatus.APPROVED;
 
     return isPublic && isPublished;
 }

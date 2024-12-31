@@ -253,7 +253,7 @@ export default {
         rejected: "Rejected",
         withheld: "Withheld",
         archivedMessage: (project: string) =>
-            `${project} has been archived. ${project} will not receive any further updates unless the author decides to unarchive the project.`,
+            `${project} has been archived. It will not receive any further updates unless the author decides to unarchive the project.`,
         publishingChecklist: {
             required: "Required",
             suggestion: "Suggestion",
@@ -527,6 +527,22 @@ export default {
         moderation: "Moderation",
         statistics: "Statistics",
         authors: "Authors",
+        projectsInQueue: (count: number) => {
+            if (count === 1) return "There is 1 project in the queue.";
+            return `There are ${count} projects in the queue.`;
+        },
+        // hours will eith be 24 or 48
+        projectsQueuedFor: (count: number, hours: number) => {
+            if (count === 1) return `1 project has been in the queue for over ${hours} hours.`;
+            return `${count} projects have been in the queue for over ${hours} hours.`;
+        },
+        submitted: (when: string) => `Submitted ${when}`, // eg: Created 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
+        viewProject: "View project",
+        awaitingApproval: "Project is queued for approval",
+        draft: "Draft",
+        approve: "Approve",
+        reject: "Reject",
+        withhold: "Withhold",
     },
 
     form: {

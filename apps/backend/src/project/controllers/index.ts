@@ -59,6 +59,7 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
                 name: project.name,
                 icon: projectIconUrl(project.id, project.iconFileId),
                 status: project.status as ProjectPublishingStatus,
+                requestedStatus: project.requestedStatus as ProjectPublishingStatus,
                 summary: project.summary,
                 description: project.description,
                 type: project.type as ProjectType[],

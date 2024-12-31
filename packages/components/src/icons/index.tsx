@@ -1,5 +1,5 @@
 import { ProjectPublishingStatus } from "@app/utils/types";
-import { Building2Icon, FileCheckIcon, FileClockIcon, FileQuestionIcon, FileText, UserIcon, XIcon } from "lucide-react";
+import { Building2Icon, EyeOffIcon, FileCheckIcon, FileQuestionIcon, FileText, LoaderIcon, UserIcon, XIcon } from "lucide-react";
 import type React from "react";
 import { cn } from "~/utils";
 import type { IconSvgProps } from "../types";
@@ -267,8 +267,9 @@ export const fallbackUserIcon = <UserIcon className="w-[65%] h-[65%] text-extra-
 
 export const PROJECT_STATUS_ICONS = {
     [ProjectPublishingStatus.DRAFT]: <FileText className="h-full w-full" />,
-    [ProjectPublishingStatus.SCHEDULED]: <FileClockIcon className="h-full w-full" />,
-    [ProjectPublishingStatus.PUBLISHED]: <FileCheckIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.PROCESSING]: <LoaderIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.APPROVED]: <FileCheckIcon className="h-full w-full" />,
+    [ProjectPublishingStatus.WITHHELD]: <EyeOffIcon className="h-full w-full" />,
     [ProjectPublishingStatus.UNKNOWN]: <FileQuestionIcon className="h-full w-full" />,
 };
 
@@ -277,5 +278,5 @@ export const ProjectStatusIcon = ({ status, className }: { status: ProjectPublis
     const icon = PROJECT_STATUS_ICONS[status] || PROJECT_STATUS_ICONS.unknown;
 
     if (!icon) return null;
-    return <span className={cn("flex items-center justify-center w-btn-icon h-btn-icon text-muted-foreground", className)}>{icon}</span>;
+    return <span className={cn("flex items-center justify-center w-btn-icon h-btn-icon text-current", className)}>{icon}</span>;
 };

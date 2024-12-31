@@ -80,8 +80,8 @@ export enum ProjectVisibility {
 
 export enum ProjectPublishingStatus {
     DRAFT = "draft",
-    SCHEDULED = "scheduled",
-    PUBLISHED = "published",
+    PROCESSING = "processing",
+    APPROVED = "approved",
     WITHHELD = "withheld",
     REJECTED = "rejected",
     UNKNOWN = "unknown",

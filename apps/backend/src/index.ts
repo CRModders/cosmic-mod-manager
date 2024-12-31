@@ -13,6 +13,7 @@ import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
 import authRouter from "./auth/router";
 import cdnRouter from "./cdn/router";
 import bulkProjectsRouter from "./project/bulk_router";
+import moderationRouter from "./project/moderation/router";
 import bulkOrgsRouter from "./project/organisation/bulk_router";
 import orgRouter from "./project/organisation/router";
 import projectRouter from "./project/router";
@@ -67,11 +68,12 @@ app.route("/api/project", projectRouter);
 app.route("/api/version-file", versionFileRouter);
 app.route("/api/version-files", versionFiles_Router);
 app.route("/api/projects", bulkProjectsRouter);
+app.route("/api/moderation", moderationRouter);
 
 app.route("/api/team", teamRouter);
-app.route("/api/organization", orgRouter);
-app.route("/api/organizations", bulkOrgsRouter); // Uses the userSession's userId instead of getting it from the URL
+app.route("/api/organization", orgRouter); // Uses the userSession's userId instead of getting it from the URL
 app.route("/api/user/:userId/organization", orgRouter);
+app.route("/api/organizations", bulkOrgsRouter);
 
 app.route("/cdn", cdnRouter);
 

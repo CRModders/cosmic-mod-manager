@@ -40,7 +40,7 @@ export async function addNewGalleryImage(
     });
     if (!project?.id) return notFoundResponseData();
     if (project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
-        return invalidReqestResponseData(`Maximum of ${MAX_PROJECT_GALLERY_IMAGES_COUNT} gallery images allowed`);
+        return invalidReqestResponseData(`Maximum of ${MAX_PROJECT_GALLERY_IMAGES_COUNT} gallery images allowed!`);
 
     // Check if the order index is not already occupied
     for (const item of project.gallery) {

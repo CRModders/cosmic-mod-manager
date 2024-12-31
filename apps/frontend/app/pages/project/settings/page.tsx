@@ -379,7 +379,7 @@ export default function GeneralSettingsPage() {
                                         <div className="max-w-[68ch] flex flex-col items-start justify-start text-muted-foreground gap-1.5">
                                             <p className="leading-tight">{t.projectSettings.visibilityDesc}</p>
 
-                                            {projectData.status !== ProjectPublishingStatus.PUBLISHED ? (
+                                            {projectData.status !== ProjectPublishingStatus.APPROVED ? (
                                                 <span>{t.projectSettings.ifApproved}</span>
                                             ) : null}
 
