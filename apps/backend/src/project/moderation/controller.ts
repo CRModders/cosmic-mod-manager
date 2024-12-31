@@ -88,6 +88,26 @@ export async function getModerationProjects() {
 }
 
 export async function updateModerationProject(id: string, status: string) {
+    const project = await prisma.project.findUnique({
+        where: {
+            id: id,
+        },
+        select: {
+            status: true,
+            requestedStatus: true,
+        },
+    });
+
+    if (status === project?.status) {
+        return {
+            data: {
+                success: false,
+                message: `The project status is already '${status}'`,
+            },
+            status: HTTP_STATUS.OK,
+        };
+    }
+
     let updatedStatus = ProjectPublishingStatus.DRAFT;
     if (status === ProjectPublishingStatus.APPROVED) updatedStatus = ProjectPublishingStatus.APPROVED;
     if (status === ProjectPublishingStatus.REJECTED) updatedStatus = ProjectPublishingStatus.REJECTED;
