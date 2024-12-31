@@ -63,7 +63,7 @@ export function PageHeader({
                         </h1>
                         {titleBadge}
                     </div>
-                    <p itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight max-w-[70ch] text-pretty">
+                    <p itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight max-w-[80ch] text-pretty">
                         {description}
                     </p>
                     <div className="pt-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>

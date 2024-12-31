@@ -25,6 +25,12 @@ interface ComboBoxProps {
 function ComboBox({ options, value, setValue, inputLabel, children, footerItem, inputBox }: ComboBoxProps) {
     const [open, setOpen] = useState(false);
 
+    const idToValueMap = new Map<string, string>();
+    for (const option of options) {
+        const id = `${option.value} ${option.label}`;
+        idToValueMap.set(id, option.value);
+    }
+
     return (
         <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -38,9 +44,9 @@ function ComboBox({ options, value, setValue, inputLabel, children, footerItem, 
                                 {options.map((option) => (
                                     <CommandItem
                                         key={option.value}
-                                        value={option.value}
+                                        value={`${option.value} ${option.label}`}
                                         onSelect={(currentValue) => {
-                                            setValue(currentValue === value ? "" : currentValue);
+                                            setValue(idToValueMap.get(currentValue) || "");
                                             setOpen(false);
                                         }}
                                         className={

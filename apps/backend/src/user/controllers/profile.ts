@@ -153,7 +153,7 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
     });
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
-    const teamProjects = prisma.project.findMany({
+    const projects = await prisma.project.findMany({
         where: {
             team: {
                 members: {
@@ -170,8 +170,7 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
         },
     });
 
-    const queryResults = await Promise.all([teamProjects]);
-    const allProjects = [...queryResults[0]].toSorted((a, b) => b.downloads - a.downloads);
+    const allProjects = projects.toSorted((a, b) => b.downloads - a.downloads);
 
     if (!allProjects?.length) return { data: [], status: HTTP_STATUS.OK };
 
