@@ -1,6 +1,9 @@
 {
     "compilerOptions": {
-        "lib": ["ESNext", "DOM"],
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
         "composite": true,
         "target": "ESNext",
         "module": "ESNext",
@@ -16,12 +19,23 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
         "paths": {
-            "~/*": ["./*"],
-            "@app/utils/*": ["./../../packages/utils/src/*"]
+            "~/*": [
+                "./src/*"
+            ],
+            "@app/utils/*": [
+                "./../../packages/utils/src/*"
+            ]
         }
     },
-    "include": [".", "./../../packages/utils/src"],
-    "exclude": ["node_modules", "dist", "pm2.config.cjs"],
+    "include": [
+        ".",
+        "./../../packages/utils/src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "pm2.config.cjs"
+    ],
     "references": [
         {
             "path": "./../../packages/utils"
