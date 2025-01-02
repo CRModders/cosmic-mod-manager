@@ -6,6 +6,7 @@ import type { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/
 import type { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
+import { UpdateProject } from "~/db/project_item";
 import { projectMemberPermissionsSelect } from "~/routes/project/queries/project";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
@@ -36,7 +37,7 @@ export async function updateProjectDescription(
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project description");
 
-    await prisma.project.update({
+    await UpdateProject({
         where: { id: project.id },
         data: {
             description: form.description || "",
@@ -79,7 +80,7 @@ export async function updateProjectTags(
     const validatedTags = formData.categories.filter((tag) => availableCategories.includes(tag));
     const validatedFeaturedTags = formData.featuredCategories.filter((tag) => validatedTags.includes(tag));
 
-    await prisma.project.update({
+    await UpdateProject({
         where: { id: project.id },
         data: {
             categories: validatedTags,
@@ -115,7 +116,7 @@ export async function updateProjectExternalLinks(
         return { data: { success: false, message: "You don't the permission to update links" }, status: HTTP_STATUS.UNAUTHORIZED };
     }
 
-    await prisma.project.update({
+    await UpdateProject({
         where: { id: project.id },
         data: {
             issueTrackerUrl: formData.issueTracker || "",
@@ -168,7 +169,7 @@ export async function updateProjectLicense(
         }
     }
 
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },

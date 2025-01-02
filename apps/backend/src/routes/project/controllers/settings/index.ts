@@ -5,6 +5,9 @@ import { doesMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
+import { CreateFile, DeleteFile_ByID, DeleteManyFiles_ByID } from "~/db/file_item";
+import { DeleteProject, UpdateProject } from "~/db/project_item";
+import { DeleteManyVersions_ByIds } from "~/db/version_item";
 import prisma from "~/services/prisma";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "~/services/storage";
 import { projectsDir } from "~/services/storage/utils";
@@ -65,7 +68,7 @@ export async function updateProject(
 
     const EnvSupport = GetProjectEnvironment(formData.type, formData.clientSide, formData.serverSide);
 
-    const updatedProject = await prisma.project.update({
+    const updatedProject = await UpdateProject({
         where: {
             id: project.id,
         },
@@ -124,26 +127,14 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
 
     // Delete all the image files
     if (galleryFileIds.length > 0) {
-        await prisma.file.deleteMany({
-            where: {
-                id: {
-                    in: galleryFileIds,
-                },
-            },
-        });
+        await DeleteManyFiles_ByID(galleryFileIds);
     }
 
     // Delete project icon file
-    if (project.iconFileId) {
-        await prisma.file.delete({
-            where: {
-                id: project.iconFileId,
-            },
-        });
-    }
+    if (project.iconFileId) await DeleteFile_ByID(project.iconFileId);
 
     // Delete the project
-    await prisma.project.delete({
+    await DeleteProject({
         where: {
             id: project.id,
         },
@@ -169,30 +160,16 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
     };
 }
 
-export async function deleteVersionsData(projectId: string, ids: string[], fileIds: string[], deleteLocalFiles = true) {
+export async function deleteVersionsData(projectId: string, ids: string[], fileIds: string[], deleteUploadedFiles = true) {
     // Delete all the dbFiles
-    await prisma.file.deleteMany({
-        where: {
-            id: {
-                in: fileIds,
-            },
-        },
-    });
+    await DeleteManyFiles_ByID(fileIds);
 
     // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
     // ? Same for version dependencies
 
-    // Delete all the project versions
-    await prisma.version.deleteMany({
-        where: {
-            id: {
-                in: ids,
-            },
-        },
-    });
+    await DeleteManyVersions_ByIds(ids, projectId);
 
-    if (!deleteLocalFiles) return;
-
+    if (!deleteUploadedFiles) return;
     await Promise.all(ids.map((versionId) => deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId)));
 }
 
@@ -220,8 +197,8 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
     // Delete the previous icon if it exists
     if (project.iconFileId) {
-        const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
-        await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+        const deletedDbFile = await DeleteFile_ByID(project.iconFileId);
+        await deleteProjectFile(deletedDbFile?.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile?.name);
     }
 
     const fileType = await getFileType(icon);
@@ -239,7 +216,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
     const projectColor = await getAverageColor(saveIcon);
 
-    await prisma.file.create({
+    await CreateFile({
         data: {
             id: fileId,
             name: fileId,
@@ -250,7 +227,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         },
     });
 
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },
@@ -286,10 +263,10 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");
 
-    const deletedDbFile = await prisma.file.delete({ where: { id: project.iconFileId } });
+    const deletedDbFile = await DeleteFile_ByID(project.iconFileId);
     await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
 
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },

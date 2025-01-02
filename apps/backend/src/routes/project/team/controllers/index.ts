@@ -4,6 +4,7 @@ import type { overrideOrgMemberFormSchema, updateTeamMemberFormSchema } from "@a
 import { OrganisationPermission, ProjectPermission } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { createOrgTeamInviteNotification, createProjectTeamInviteNotification } from "~/routes/user/notification/controllers/helpers";
 import prisma from "~/services/prisma";
@@ -73,18 +74,9 @@ export async function inviteMember(ctx: Context, userSession: ContextUserData, u
         return unauthorizedReqResponseData("You don't have access to manage member invites");
     }
 
-    const targetUser = await prisma.user.findFirst({
-        where: {
-            OR: [
-                {
-                    userName: { equals: userSlug, mode: "insensitive" },
-                },
-                { id: userSlug },
-            ],
-        },
-    });
-
+    const targetUser = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!targetUser?.id) return notFoundResponseData("User not found");
+
     const existingMember = team.members.find((member) => member.userId === targetUser.id);
     if (existingMember) {
         if (existingMember.accepted === false)
@@ -401,11 +393,7 @@ export async function overrideOrgMember(
     const existingMember = team.members.find((member) => member.userId === formData.userId);
     if (existingMember) return invalidReqestResponseData("User is already a member of this project's team");
 
-    const targetUser = await prisma.user.findUnique({
-        where: {
-            id: formData.userId,
-        },
-    });
+    const targetUser = await GetUser_ByIdOrUsername(undefined, formData.userId);
     if (!targetUser) return notFoundResponseData("User not found");
 
     await prisma.teamMember.create({

@@ -9,6 +9,7 @@ import {
 } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { z } from "zod";
+import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { ListItemProjectFields, projectMemberPermissionsSelect, teamMembersSelect } from "~/routes/project/queries/project";
 import { isProjectAccessible } from "~/routes/project/utils";
 import prisma from "~/services/prisma";
@@ -68,19 +69,7 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
 export async function getUserOrganisations(userSession: ContextUserData | undefined, userSlug: string): Promise<RouteHandlerResponse> {
     let userId = userSlug.toLowerCase() === userSession?.userName.toLowerCase() ? userSession.id : null;
     if (!userId) {
-        const user = await prisma.user.findFirst({
-            where: {
-                OR: [
-                    { id: userSlug },
-                    {
-                        userName: {
-                            equals: userSlug,
-                            mode: "insensitive",
-                        },
-                    },
-                ],
-            },
-        });
+        const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
 
         if (!user) {
             return notFoundResponseData("User not found");

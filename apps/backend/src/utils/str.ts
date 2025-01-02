@@ -9,7 +9,7 @@ export function generateDbId() {
     return nanoid(STRING_ID_LENGTH);
 }
 
-export function parseJson<T extends object>(str: string | null): Promise<T | null> {
+export function parseJson<T extends object | null>(str: string | null): Promise<T | null> {
     return new Promise((resolve) => {
         try {
             if (str == null) resolve(str);

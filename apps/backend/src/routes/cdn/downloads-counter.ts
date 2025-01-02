@@ -1,4 +1,5 @@
-import prisma from "~/services/prisma";
+import { UpdateProject } from "~/db/project_item";
+import { UpdateVersion } from "~/db/version_item";
 import redis from "~/services/redis";
 import { generateRandomId } from "~/utils/str";
 
@@ -128,7 +129,7 @@ export async function processDownloads() {
             const downloadsCount = versionDownloadsMap.get(versionId);
             try {
                 promises.push(
-                    prisma.version.update({
+                    UpdateVersion({
                         where: { id: versionId },
                         data: { downloads: { increment: downloadsCount } },
                     }),
@@ -142,7 +143,7 @@ export async function processDownloads() {
             const downloadsCount = projectDownloadsMap.get(projectId);
             try {
                 promises.push(
-                    prisma.project.update({
+                    UpdateProject({
                         where: { id: projectId },
                         data: { downloads: { increment: downloadsCount } },
                     }),

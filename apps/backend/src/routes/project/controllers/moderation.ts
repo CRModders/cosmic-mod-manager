@@ -1,30 +1,12 @@
 import { RejectedStatuses } from "@app/utils/config/project";
 import { getCurrMember } from "@app/utils/project";
 import { ProjectPublishingStatus } from "@app/utils/types";
-import prisma from "~/services/prisma";
+import { GetProject_Details, UpdateProject } from "~/db/project_item";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
-import { projectMemberPermissionsSelect } from "../queries/project";
 
 export async function QueueProjectForApproval(projectId: string, userSession: ContextUserData) {
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-        select: {
-            id: true,
-            status: true,
-            description: true,
-            licenseId: true,
-            licenseName: true,
-            requestedStatus: true,
-            dateQueued: true,
-            versions: {
-                take: 1,
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_Details(projectId);
     if (!project?.id) return invalidReqestResponseData("Project not found");
 
     const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team?.members || []);
@@ -47,11 +29,12 @@ export async function QueueProjectForApproval(projectId: string, userSession: Co
     }
 
     // Check if the project is eligible to be queued for approval
-    if (project.versions.length <= 0) return invalidReqestResponseData("Project submitted for approval without any initial versions!");
+    // If project doesn't have any supported game versions, that means it hasn't uploaded any versions yet
+    if (project.gameVersions.length <= 0) return invalidReqestResponseData("Project submitted for approval without any initial versions!");
     if (!project.description?.length) return invalidReqestResponseData("Project submitted for approval without a description!");
     if (!project.licenseId && !project.licenseName) return invalidReqestResponseData("Project submitted for approval without a license!");
 
-    await prisma.project.update({
+    await UpdateProject({
         where: { id: project.id },
         data: {
             status: ProjectPublishingStatus.PROCESSING,

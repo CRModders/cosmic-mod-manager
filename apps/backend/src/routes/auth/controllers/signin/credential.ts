@@ -3,17 +3,17 @@ import type { LoginFormSchema } from "@app/utils/schemas/auth";
 import { AuthProvider } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { GetUser_Unique } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { matchPassword } from "~/routes/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/routes/auth/helpers/session";
-import prisma from "~/services/prisma";
 import { AUTH_COOKIE_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS } from "~/utils/http";
 
 async function credentialSignIn(ctx: Context, formData: z.infer<typeof LoginFormSchema>) {
     const wrongCredsMsg = "Incorrect email or password";
 
-    const user = await prisma.user.findUnique({
+    const user = await GetUser_Unique({
         where: {
             email: formData.email,
         },

@@ -4,8 +4,16 @@ import { type GlobalUserRole, UserSessionStates } from "@app/utils/types";
 import type { Session, User } from "@prisma/client";
 import type { Context } from "hono";
 import type { CookieOptions } from "hono/utils/cookie";
+import {
+    CreateSession,
+    DeleteManySessions,
+    DeleteSession,
+    GetManySessions,
+    GetSession_First,
+    GetSession_Unique,
+    UpdateSession,
+} from "~/db/session_item";
 import { deleteSessionTokenAndIdCache, getSessionCacheFromToken, setSessionTokenCache } from "~/services/cache/session";
-import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import { CTX_USER_NAMESPACE } from "~/types/namespaces";
 import { sendNewSigninAlertEmail } from "~/utils/email";
@@ -36,7 +44,7 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
 
     if (isFirstSignIn !== true) {
         const significantIp = (sessionMetadata.ipAddr || "")?.slice(0, 9);
-        const similarSession = await prisma.session.findFirst({
+        const similarSession = await GetSession_First({
             where: {
                 userId: userId,
                 ip: {
@@ -61,7 +69,7 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
         }
     }
 
-    await prisma.session.create({
+    await CreateSession({
         data: {
             id: generateDbId(),
             tokenHash: tokenHash,
@@ -92,7 +100,7 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
     const cachedSession = await getSessionCacheFromToken(tokenHash, true); // SESSION_CACHE : GET
     if (cachedSession) return cachedSession;
 
-    const session = await prisma.session.findUnique({
+    const session = await GetSession_Unique({
         where: {
             tokenHash: tokenHash,
         },
@@ -106,7 +114,7 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
     }
 
     if (Date.now() >= session.dateExpires.getTime()) {
-        await prisma.session.delete({
+        await DeleteSession({
             where: {
                 id: session.id,
             },
@@ -115,7 +123,7 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
         return null;
     }
 
-    await prisma.session.update({
+    await UpdateSession({
         where: {
             id: session.id,
         },
@@ -157,7 +165,7 @@ export async function validateContextSession(ctx: Context): Promise<ContextUserD
 }
 
 export async function invalidateSessionFromId(sessionId: string, userId?: string): Promise<Session> {
-    const deletedSession = await prisma.session.delete({
+    const deletedSession = await DeleteSession({
         where: userId ? { id: sessionId, userId: userId } : { id: sessionId },
     });
 
@@ -167,7 +175,7 @@ export async function invalidateSessionFromId(sessionId: string, userId?: string
 
 export async function invalidateSessionFromToken(token: string): Promise<Session> {
     const tokenHash = await hashString(token);
-    const deletedSession = await prisma.session.delete({
+    const deletedSession = await DeleteSession({
         where: { tokenHash: tokenHash },
     });
 
@@ -176,13 +184,13 @@ export async function invalidateSessionFromToken(token: string): Promise<Session
 }
 
 export async function invalidateAllUserSessions(userId: string) {
-    const sessionsList = await prisma.session.findMany({
+    const sessionsList = await GetManySessions({
         where: { userId: userId },
     });
 
     const tokenHashes = sessionsList.map((session) => session.tokenHash);
     const sessionIds = sessionsList.map((session) => session.id);
-    await prisma.session.deleteMany({
+    await DeleteManySessions({
         where: {
             id: { in: sessionIds },
         },
@@ -192,7 +200,7 @@ export async function invalidateAllUserSessions(userId: string) {
 }
 
 export async function invalidateAllOtherUserSessions(userId: string, currSessionId: string) {
-    const sessionsList = await prisma.session.findMany({
+    const sessionsList = await GetManySessions({
         where: {
             userId: userId,
             NOT: {
@@ -203,7 +211,7 @@ export async function invalidateAllOtherUserSessions(userId: string, currSession
 
     const tokenHashes = sessionsList.map((session) => session.tokenHash);
     const sessionIds = sessionsList.map((session) => session.id);
-    await prisma.session.deleteMany({
+    await DeleteManySessions({
         where: {
             id: { in: sessionIds },
         },

@@ -1,6 +1,7 @@
 import { ProjectPublishingStatus, type ProjectVisibility } from "@app/utils/types";
 import type { ModerationProjectItem } from "@app/utils/types/api/moderation";
 import type { Prisma } from "@prisma/client";
+import { UpdateProject } from "~/db/project_item";
 import prisma from "~/services/prisma";
 import { HTTP_STATUS } from "~/utils/http";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
@@ -124,7 +125,7 @@ export async function updateModerationProject(id: string, status: string) {
         updateData.requestedStatus = null;
     }
 
-    await prisma.project.update({
+    await UpdateProject({
         where: { id: id },
         data: updateData,
     });

@@ -6,6 +6,7 @@ import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReferenc
 import { type GlobalUserRole, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { File as DBFile, VersionFile } from "@prisma/client";
 import { rsort } from "semver";
+import { CreateManyFiles, DeleteManyFiles_ByID, GetManyFiles } from "~/db/file_item";
 import prisma from "~/services/prisma";
 import { deleteProjectVersionFile, saveProjectVersionFile } from "~/services/storage";
 import { createFilePathSafeString } from "~/services/storage/utils";
@@ -129,7 +130,7 @@ export async function createVersionFiles({ versionId, projectId, files }: create
         prisma.versionFile.createMany({
             data: versionFilesToCreate,
         }),
-        prisma.file.createMany({
+        CreateManyFiles({
             data: filesToCreate,
         }),
     ]);
@@ -137,32 +138,33 @@ export async function createVersionFiles({ versionId, projectId, files }: create
     return versionFilesToCreate;
 }
 
-export async function deleteVersionFiles(projectId: string, versionId: string, filesData: DBFile[]) {
+export async function deleteVersionFiles(projectId: string, versionId: string, filesData: (DBFile | null)[]) {
     // Delete files from storage
     const promises = [];
+    const fileIds = [];
     for (const file of filesData) {
+        if (!file) continue;
+
+        fileIds.push(file.id);
         promises.push(deleteProjectVersionFile(file.storageService as FILE_STORAGE_SERVICE, projectId, versionId, `/${file.name}`));
     }
-    await Promise.all(promises);
 
     // Delete files from database
-    await prisma.file.deleteMany({
-        where: {
-            id: {
-                in: filesData.map((file) => file.id),
-            },
-        },
-    });
+    promises.push(DeleteManyFiles_ByID(fileIds));
 
     // Delete the deleted versionFiles from database
-    await prisma.versionFile.deleteMany({
-        where: {
-            versionId: versionId,
-            fileId: {
-                in: filesData.map((file) => file.id),
+    promises.push(
+        prisma.versionFile.deleteMany({
+            where: {
+                versionId: versionId,
+                fileId: {
+                    in: fileIds,
+                },
             },
-        },
-    });
+        }),
+    );
+
+    await Promise.all(promises);
 }
 
 interface isAnyDuplicateFileProps {
@@ -177,7 +179,7 @@ export async function isAnyDuplicateFile({ projectId, files }: isAnyDuplicateFil
         sha1_hashes.push(hash);
     }
 
-    const dbFilesData = await prisma.file.findMany({
+    const dbFilesData = await GetManyFiles({
         where: {
             sha1_hash: {
                 in: sha1_hashes,

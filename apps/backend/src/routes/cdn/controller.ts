@@ -1,6 +1,10 @@
 import { getMimeFromType } from "@app/utils/file-signature";
-import { ProjectVisibility } from "@app/utils/types";
+import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { Context } from "hono";
+import { GetFile, type GetFile_ReturnType, GetManyFiles_ByID } from "~/db/file_item";
+import { GetProject_ListItem } from "~/db/project_item";
+import { GetUser_ByIdOrUsername } from "~/db/user_item";
+import { GetVersions } from "~/db/version_item";
 import { getUserIpAddress } from "~/routes/auth/helpers";
 import { isProjectAccessible } from "~/routes/project/utils";
 import prisma from "~/services/prisma";
@@ -8,7 +12,6 @@ import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFil
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponse } from "~/utils/http";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl, versionFileUrl } from "~/utils/urls";
-import { projectMembersSelect } from "../project/queries/project";
 import { addToDownloadsQueue } from "./downloads-counter";
 
 export async function serveVersionFile(
@@ -19,34 +22,14 @@ export async function serveVersionFile(
     userSession: ContextUserData | undefined,
     isCdnRequest = true,
 ) {
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-        select: {
-            id: true,
-            visibility: true,
-            status: true,
-            versions: {
-                where: {
-                    id: versionId,
-                },
-                select: {
-                    id: true,
-                    files: true,
-                },
-            },
-            ...projectMembersSelect(),
-        },
-    });
+    const [project, _projectVersions] = await Promise.all([GetProject_ListItem(undefined, projectId), GetVersions(undefined, projectId)]);
 
-    const targetVersion = project?.versions?.[0];
+    const targetVersion = (_projectVersions?.versions || []).find((version) => version.id === versionId);
     if (!project?.id || !targetVersion?.files?.[0]?.fileId) {
         return notFoundResponse(ctx);
     }
 
-    const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
-    const projectAccessible = isProjectAccessible({
+    const accessibleToCurrentSession = isProjectAccessible({
         visibility: project.visibility,
         publishingStatus: project.status,
         userId: userSession?.id,
@@ -54,24 +37,28 @@ export async function serveVersionFile(
         orgMembers: project.organisation?.team.members || [],
         sessionUserRole: userSession?.role,
     });
-    if (!projectAccessible) {
+    if (!accessibleToCurrentSession) {
         return notFoundResponse(ctx);
     }
 
-    const versionFile = await prisma.file.findFirst({
-        where: {
-            id: {
-                in: targetVersion.files.map((file) => file.fileId),
-            },
-            name: fileName,
-        },
-    });
-    if (!versionFile?.id) {
+    const isPublicallyAccessible = project.visibility !== ProjectVisibility.PRIVATE && project.status === ProjectPublishingStatus.APPROVED;
+    const fileIds = targetVersion.files.map((file) => file.fileId);
+    const VersionFileDataList = await GetManyFiles_ByID(fileIds);
+
+    let requiredFile: GetFile_ReturnType | undefined;
+    for (const file of VersionFileDataList) {
+        if (!file) continue;
+        if (file.name === fileName) {
+            requiredFile = file;
+            break;
+        }
+    }
+    if (!requiredFile?.id) {
         return ctx.json({ message: "File not found" }, HTTP_STATUS.NOT_FOUND);
     }
 
     // Get corresponding file from version
-    const targetVersionFile = targetVersion.files.find((file) => file.fileId === versionFile.id);
+    const targetVersionFile = targetVersion.files.find((file) => file.fileId === requiredFile.id);
 
     // If the request was not made from the CDN, add the download count
     if (!isCdnRequest && targetVersionFile?.isPrimary === true) {
@@ -85,15 +72,15 @@ export async function serveVersionFile(
     }
 
     // Redirect to the cdn url if the project is public
-    if (!isCdnRequest && !isProjectPrivate) {
+    if (!isCdnRequest && isPublicallyAccessible) {
         return ctx.redirect(`${versionFileUrl(project.id, targetVersion.id, fileName, true)}`);
     }
 
     const file = await getProjectVersionFile(
-        versionFile.storageService as FILE_STORAGE_SERVICE,
+        requiredFile.storageService as FILE_STORAGE_SERVICE,
         project.id,
         targetVersion.id,
-        versionFile.name,
+        requiredFile.name,
     );
     if (!file) return ctx.json({ message: "File not found" }, HTTP_STATUS.NOT_FOUND);
 
@@ -101,8 +88,8 @@ export async function serveVersionFile(
 
     const response = new Response(file, { status: HTTP_STATUS.OK });
     response.headers.set("Cache-Control", "public, max-age=31536000");
-    response.headers.set("Content-Type", getMimeFromType(versionFile.type));
-    response.headers.set("Content-Disposition", `attachment; filename="${versionFile.name}"`);
+    response.headers.set("Content-Type", getMimeFromType(requiredFile.type));
+    response.headers.set("Content-Disposition", `attachment; filename="${requiredFile.name}"`);
 
     return response;
 }
@@ -115,11 +102,7 @@ export async function serveProjectIconFile(ctx: Context, projectId: string, isCd
     });
     if (!project?.iconFileId) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
-    const iconFileData = await prisma.file.findFirst({
-        where: {
-            id: project.iconFileId,
-        },
-    });
+    const iconFileData = await GetFile(project.iconFileId);
     if (!iconFileData?.id) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
     if (!isCdnRequest) {
@@ -156,11 +139,7 @@ export async function serveProjectGalleryImage(ctx: Context, projectId: string, 
     const targetGalleryItem = project.gallery.find((item) => item.imageFileId === imgFileId || item.thumbnailFileId === imgFileId);
     if (!targetGalleryItem) return notFoundResponse(ctx);
 
-    const dbFile = await prisma.file.findFirst({
-        where: {
-            id: imgFileId,
-        },
-    });
+    const dbFile = await GetFile(imgFileId);
     if (!dbFile?.id) return notFoundResponse(ctx);
 
     // If it's not a CDN request redirect to the cache_cdn url
@@ -190,11 +169,7 @@ export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest
     });
     if (!org?.iconFileId) return notFoundResponse(ctx);
 
-    const iconFileData = await prisma.file.findUnique({
-        where: {
-            id: org.iconFileId,
-        },
-    });
+    const iconFileData = await GetFile(org.iconFileId);
     if (!iconFileData?.id) return notFoundResponse(ctx);
 
     if (!isCdnRequest) {
@@ -214,18 +189,11 @@ export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest
 }
 
 export async function serveUserAvatar(ctx: Context, userId: string, isCdnRequest: boolean) {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: userId,
-        },
-    });
+    GetUser_ByIdOrUsername(undefined, userId);
+    const user = await GetUser_ByIdOrUsername(undefined, userId);
     if (!user?.avatar) return notFoundResponse(ctx);
 
-    const iconFileData = await prisma.file.findUnique({
-        where: {
-            id: user.avatar,
-        },
-    });
+    const iconFileData = await GetFile(user.avatar);
     if (!iconFileData?.id) return notFoundResponse(ctx);
 
     if (!isCdnRequest) {

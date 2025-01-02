@@ -2,6 +2,7 @@ import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@app/utils/co
 import { createURLSafeSlug } from "@app/utils/string";
 import { GlobalUserRole } from "@app/utils/types";
 import type { Context } from "hono";
+import { CreateUser, GetUser_ByIdOrUsername, GetUser_Unique } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { createNewAuthAccount, getAuthProviderProfileData } from "~/routes/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/routes/auth/helpers/session";
@@ -48,7 +49,7 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     }
 
     // Return if a user already exists with the same email
-    const possiblyAlreadyExistingUser = await prisma.user.findUnique({
+    const possiblyAlreadyExistingUser = await GetUser_Unique({
         where: {
             email: profileData.email,
         },
@@ -65,17 +66,8 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     let userName = createURLSafeSlug(profileData.name || "").value;
 
     // Check if the username is available
-    const existingUserWithSameUserName = await prisma.user.findFirst({
-        where: {
-            userName: {
-                equals: userName,
-                mode: "insensitive",
-            },
-        },
-    });
-    if (existingUserWithSameUserName) {
-        userName = `${userName}-${userId}`;
-    }
+    const existingUserWithSameUserName = await GetUser_ByIdOrUsername(userName);
+    if (existingUserWithSameUserName) userName = `${userName}-${userId}`;
 
     // Create the avatar image
     let avatarImgId: string | null = null;
@@ -88,7 +80,7 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     }
 
     // Finally create a user
-    const newUser = await prisma.user.create({
+    const newUser = await CreateUser({
         data: {
             id: userId,
             name: profileData?.name || "",

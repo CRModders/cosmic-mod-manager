@@ -1,6 +1,7 @@
 import type { DependencyType, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
 import type { Prisma } from "@prisma/client";
+import { GetManyFiles } from "~/db/file_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
 import prisma from "~/services/prisma";
 import { HashAlgorithms } from "~/types";
@@ -41,7 +42,7 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
         };
     }
 
-    const files = await prisma.file.findMany({
+    const files = await GetManyFiles({
         where: FilesWhere,
     });
     if (!files.length) return notFoundResponseData("No versions found from the provided hashes!");
@@ -112,7 +113,6 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
             author: {
                 id: version.author.id,
                 userName: version.author.userName,
-                name: version.author.name,
                 avatar: userIconUrl(version.author.id, version.author.avatar),
                 role: "",
             },
@@ -170,7 +170,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
         };
     }
 
-    const files = await prisma.file.findMany({
+    const files = await GetManyFiles({
         where: FilesWhereInput,
     });
     if (!files.length) return notFoundResponseData("No versions found from the provided hashes!");

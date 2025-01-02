@@ -10,6 +10,7 @@ import type {
 } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectListItem } from "@app/utils/types/api";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
+import { GetManyProjects_ListItem, GetProject_Details, GetProject_ListItem } from "~/db/project_item";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import type { ContextUserData } from "~/types";
@@ -18,16 +19,10 @@ import { isNumber } from "~/utils";
 import { HTTP_STATUS } from "~/utils/http";
 import { parseJson } from "~/utils/str";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
-import { projectDetailsFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
 export async function getProjectData(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ slug: slug }, { id: slug }],
-        },
-        select: projectDetailsFields(),
-    });
+    const project = await GetProject_Details(slug, slug);
 
     if (!project?.id) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
@@ -141,11 +136,7 @@ function formatProjectMember<T extends FormatMemberProps>(member: T, currMember?
 }
 
 export async function checkProjectSlugValidity(slug: string): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: {
-            slug: slug,
-        },
-    });
+    const project = await GetProject_ListItem(slug);
 
     if (!project) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
@@ -155,20 +146,13 @@ export async function checkProjectSlugValidity(slug: string): Promise<RouteHandl
 }
 
 export async function getManyProjects(userSession: ContextUserData | undefined, projectIds: string[]) {
-    const list = await prisma.project.findMany({
-        where: {
-            id: {
-                in: projectIds,
-            },
-        },
-        include: {
-            ...projectMemberPermissionsSelect(),
-        },
-    });
+    const list = await GetManyProjects_ListItem(projectIds);
 
     const projectsList: ProjectListItem[] = [];
 
     for (const project of list) {
+        if (!project) continue;
+
         const projectAccessible = isProjectAccessible({
             visibility: project.visibility,
             publishingStatus: project.status,

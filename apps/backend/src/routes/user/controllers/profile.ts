@@ -6,6 +6,8 @@ import { type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } 
 import type { ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { z } from "zod";
+import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
+import { GetUser_ByIdOrUsername, GetUser_Unique, UpdateUser } from "~/db/user_item";
 import { ListItemProjectFields, projectMembersSelect } from "~/routes/project/queries/project";
 import { isProjectAccessible } from "~/routes/project/utils";
 import { deleteUserDataCache } from "~/services/cache/session";
@@ -19,20 +21,7 @@ import { generateDbId } from "~/utils/str";
 import { projectIconUrl, userIconUrl } from "~/utils/urls";
 
 export async function getUserProfileData(slug: string): Promise<RouteHandlerResponse> {
-    const user = await prisma.user.findFirst({
-        where: {
-            OR: [
-                { id: slug },
-                {
-                    userName: {
-                        equals: slug,
-                        mode: "insensitive",
-                    },
-                },
-            ],
-        },
-    });
-
+    const user = await GetUser_ByIdOrUsername(slug, slug);
     if (!user) return { data: { success: false, message: "User not found" }, status: HTTP_STATUS.NOT_FOUND };
 
     const dataObj = {
@@ -52,7 +41,7 @@ export async function updateUserProfile(
     userSession: ContextUserData,
     profileData: z.infer<typeof profileUpdateFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    const user = await prisma.user.findUnique({
+    const user = await GetUser_Unique({
         where: {
             id: userSession.id,
         },
@@ -63,15 +52,7 @@ export async function updateUserProfile(
 
     // If the user is trying to change their username, check if the new username is available
     if (profileData.userName.toLowerCase() !== user.userName.toLowerCase()) {
-        const existingUserWithSameUserName = await prisma.user.findFirst({
-            where: {
-                userName: {
-                    equals: profileData.userName,
-                    mode: "insensitive",
-                },
-                NOT: [{ id: user.id }],
-            },
-        });
+        const existingUserWithSameUserName = await GetUser_ByIdOrUsername(profileData.userName);
         if (existingUserWithSameUserName) {
             return { data: { success: false, message: "Username already taken" }, status: HTTP_STATUS.BAD_REQUEST };
         }
@@ -79,7 +60,7 @@ export async function updateUserProfile(
 
     const avatarFileId = await getUserAvatar(user.id, user.avatar, profileData.avatar);
 
-    await prisma.user.update({
+    await UpdateUser({
         where: {
             id: user.id,
         },
@@ -105,7 +86,7 @@ export async function getUserAvatar(
 
     try {
         if (prevAvatarId) {
-            const deletedDbFile = await prisma.file.delete({ where: { id: prevAvatarId } });
+            const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
             await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
         }
     } catch {}
@@ -123,7 +104,7 @@ export async function getUserAvatar(
     const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);
     if (!iconSaveUrl) return null;
 
-    await prisma.file.create({
+    await CreateFile({
         data: {
             id: fileId,
             name: fileId,
@@ -138,19 +119,7 @@ export async function getUserAvatar(
 }
 
 export async function getAllVisibleProjects(userSession: ContextUserData | undefined, userSlug: string, listedProjectsOnly: boolean) {
-    const user = await prisma.user.findFirst({
-        where: {
-            OR: [
-                { id: userSlug },
-                {
-                    userName: {
-                        equals: userSlug,
-                        mode: "insensitive",
-                    },
-                },
-            ],
-        },
-    });
+    const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
     const projects = await prisma.project.findMany({

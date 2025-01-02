@@ -1,63 +1,29 @@
-import { type DependencyType, ProjectVisibility, type VersionReleaseChannel } from "@app/utils/types";
-import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
-import prisma from "~/services/prisma";
-import { userIconUrl, versionFileUrl } from "~/utils/urls";
-
 import { gameVersionsList } from "@app/utils/config/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
+import { type DependencyType, ProjectVisibility, type VersionReleaseChannel } from "@app/utils/types";
+import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
 import type { Prisma } from "@prisma/client";
+import { GetProject_Details } from "~/db/project_item";
+import { GetVersions } from "~/db/version_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
-import { formatTeamMemberData, projectMembersSelect } from "~/routes/project/queries/project";
+import { formatTeamMemberData } from "~/routes/project/queries/project";
 import { isProjectAccessible } from "~/routes/project/utils";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { GetReleaseChannelFilter } from "~/utils/project";
+import { userIconUrl, versionFileUrl } from "~/utils/urls";
 
-export const versionFields = {
-    id: true,
-    title: true,
-    versionNumber: true,
-    slug: true,
-    datePublished: true,
-    featured: true,
-    downloads: true,
-    changelog: true,
-    releaseChannel: true,
-    gameVersions: true,
-    loaders: true,
-    files: true,
-    author: true,
-    dependencies: true,
-};
+export async function getAllProjectVersions(slug: string, userSession: ContextUserData | undefined, featuredOnly = false) {
+    const [project, _projectVersions] = await Promise.all([GetProject_Details(slug, slug), GetVersions(slug, slug)]);
+    if (!project) return notFoundResponseData("Project not found");
 
-export async function getAllProjectVersions(
-    slug: string,
-    userSession: ContextUserData | undefined,
-    featuredOnly = false,
-    where?: Prisma.VersionWhereInput,
-) {
-    const whereSelect: Prisma.VersionWhereInput = where || {};
-    if (featuredOnly) whereSelect.featured = true;
+    const projectVersions = [];
+    for (const version of _projectVersions?.versions || []) {
+        if (!version?.id) continue;
+        if (featuredOnly === true && version.featured !== true) continue;
 
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ slug: slug }, { id: slug }],
-        },
-        select: {
-            id: true,
-            slug: true,
-            status: true,
-            visibility: true,
-            ...projectMembersSelect(),
-            versions: {
-                where: whereSelect,
-                select: versionFields,
-                orderBy: { datePublished: "desc" },
-            },
-        },
-    });
-
-    if (!project?.id) return notFoundResponseData("Project not found");
+        projectVersions.push(version);
+    }
 
     const projectAccessible = isProjectAccessible({
         visibility: project.visibility,
@@ -73,7 +39,7 @@ export async function getAllProjectVersions(
 
     // Get all the filesData for each version
     const idsList = [];
-    for (const version of project.versions) {
+    for (const version of projectVersions) {
         for (const file of version.files) {
             idsList.push(file.fileId);
         }
@@ -83,9 +49,9 @@ export async function getAllProjectVersions(
     const versionsList: ProjectVersionData[] = [];
     const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
 
-    for (let i = 0; i < project.versions.length; i++) {
-        const version = project.versions[i];
-        const nextVersion = project.versions[i + 1];
+    for (let i = 0; i < projectVersions.length; i++) {
+        const version = projectVersions[i];
+        const nextVersion = projectVersions[i + 1];
 
         let primaryFile: VersionFile | null = null;
         const files: VersionFile[] = [];
@@ -136,12 +102,10 @@ export async function getAllProjectVersions(
             author: {
                 id: version.author.id,
                 userName: version.author.userName,
-                name: version.author.name,
                 avatar: userIconUrl(version.author.id, version.author.avatar),
                 role: formattedAuthor?.role || "",
             },
             dependencies: version.dependencies.map((dependency) => ({
-                id: dependency.id,
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
@@ -154,15 +118,16 @@ export async function getAllProjectVersions(
 }
 
 export async function getProjectVersionData(projectSlug: string, versionId: string, userSession: ContextUserData | undefined) {
-    const res = await getAllProjectVersions(projectSlug, userSession, false, {
-        OR: [{ id: versionId }, { slug: versionId }],
-    });
+    const res = await getAllProjectVersions(projectSlug, userSession, false);
     // @ts-ignore
     const list = res.data?.data as ProjectVersionData[];
     if (Array.isArray(list)) {
         if (!list.length) return notFoundResponseData(`Version "${versionId}" not found`);
 
-        return { data: { success: true, data: list[0] }, status: res.status };
+        const targetVersion = list.find((version) => version.id === versionId || version.slug === versionId);
+        if (!targetVersion?.id) return notFoundResponseData(`Version "${versionId}" not found`);
+
+        return { data: { success: true, data: targetVersion }, status: res.status };
     }
 
     return res;
@@ -180,14 +145,31 @@ export async function getLatestVersion(projectSlug: string, userSession: Context
     if (filters.gameVersion?.length) whereInput.gameVersions = { has: filters.gameVersion };
     if (filters.loader?.length) whereInput.loaders = { has: filters.loader };
 
+    function filter(version: ProjectVersionData) {
+        if (filters.releaseChannel?.length) {
+            const channels = GetReleaseChannelFilter(filters.releaseChannel);
+            if (!channels.includes(version.releaseChannel)) return false;
+        }
+        if (filters.gameVersion?.length) {
+            if (!version.gameVersions.includes(filters.gameVersion)) return false;
+        }
+        if (filters.loader?.length) {
+            if (!version.loaders.includes(filters.loader)) return false;
+        }
+        return true;
+    }
+
     // @ts-ignore
-    const res = await getAllProjectVersions(projectSlug, userSession, false, whereInput);
+    const res = await getAllProjectVersions(projectSlug, userSession, false);
     // @ts-ignore
     const list = res.data?.data as ProjectVersionData[];
     if (Array.isArray(list)) {
         if (!list.length) return notFoundResponseData("No version found for your query!");
 
-        return { data: { success: true, data: list[0] }, status: res.status };
+        const latestVersion = list.find(filter);
+        if (!latestVersion) return notFoundResponseData("No version found for your query!");
+
+        return { data: { success: true, data: latestVersion }, status: res.status };
     }
 
     return res;

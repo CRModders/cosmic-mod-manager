@@ -2,16 +2,16 @@ import { AUTHTOKEN_COOKIE_NAMESPACE } from "@app/utils/config";
 import type { UserSessionStates } from "@app/utils/types";
 import type { SessionListData } from "@app/utils/types/api";
 import type { Context } from "hono";
+import { GetManySessions, GetSession_Unique } from "~/db/session_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { deleteSessionCookie, invalidateSessionFromId } from "~/routes/auth/helpers/session";
-import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 import { hashString } from "../helpers";
 
 export async function getUserSessions(userSession: ContextUserData): Promise<RouteHandlerResponse> {
-    const sessions = await prisma.session.findMany({
+    const sessions = await GetManySessions({
         where: {
             userId: userSession.id,
         },
@@ -63,7 +63,7 @@ export async function deleteUserSession(ctx: Context, userSession: ContextUserDa
 
 export async function revokeSessionFromAccessCode(ctx: Context, code: string): Promise<RouteHandlerResponse> {
     const revokeAccessCodeHash = await hashString(code);
-    const targetSession = await prisma.session.findUnique({
+    const targetSession = await GetSession_Unique({
         where: {
             revokeAccessCode: revokeAccessCodeHash,
         },

@@ -12,6 +12,7 @@ import type {
 import { ConfirmationType } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { GetUser_Unique, UpdateUser } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { generateRandomToken, hashPassword, hashString, matchPassword } from "~/routes/auth/helpers";
 import { invalidateAllOtherUserSessions } from "~/routes/auth/helpers/session";
@@ -120,7 +121,7 @@ export async function confirmAddingNewPassword(code: string) {
         return invalidReqestResponseData("Invalid or expired code");
     if (confirmationEmail.user.password) return invalidReqestResponseData("A password already exists for your account");
 
-    const user = await prisma.user.update({
+    const user = await UpdateUser({
         where: {
             id: confirmationEmail.userId,
         },
@@ -158,7 +159,7 @@ export async function removeAccountPassword(
         return invalidReqestResponseData("Incorrect password");
     }
 
-    await prisma.user.update({
+    await UpdateUser({
         where: {
             id: userSession.id,
         },
@@ -172,7 +173,7 @@ export async function removeAccountPassword(
 }
 
 export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>) {
-    const targetUser = await prisma.user.findUnique({
+    const targetUser = await GetUser_Unique({
         where: {
             email: formData.email,
         },
@@ -242,7 +243,7 @@ export async function changeUserPassword(
     }
     const hashedPassword = await hashPassword(formData.newPassword);
 
-    await prisma.user.update({
+    await UpdateUser({
         where: {
             id: confirmationEmail.userId,
         },

@@ -1,22 +1,16 @@
 import type { GlobalUserRole } from "@app/utils/types";
 import type { UserProfileData } from "@app/utils/types/api/user";
-import prisma from "~/services/prisma";
+import { GetManyUsers_ByIds } from "~/db/user_item";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { userIconUrl } from "~/utils/urls";
 
 export async function getManyUsers(ids: string[]): Promise<RouteHandlerResponse> {
-    const users = await prisma.user.findMany({
-        where: {
-            id: {
-                in: ids,
-            },
-        },
-    });
+    const users = await GetManyUsers_ByIds(ids);
 
-    const usersList: UserProfileData[] = [];
+    const list: UserProfileData[] = [];
     for (const user of users) {
-        usersList.push({
+        list.push({
             id: user.id,
             name: user.name,
             userName: user.userName,
@@ -27,5 +21,5 @@ export async function getManyUsers(ids: string[]): Promise<RouteHandlerResponse>
         });
     }
 
-    return { data: usersList, status: HTTP_STATUS.OK };
+    return { data: list, status: HTTP_STATUS.OK };
 }

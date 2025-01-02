@@ -1,32 +1,17 @@
-import type { Dependency } from "@prisma/client";
+import type { DependencyType, EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
+import type { DependencyListData, ProjectListItem } from "@app/utils/types/api";
+import { GetManyProjects_ListItem, GetProject_ListItem } from "~/db/project_item";
+import { GetVersions } from "~/db/version_item";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { projectIconUrl } from "~/utils/urls";
-import { ListItemProjectFields, projectMemberPermissionsSelect } from "../queries/project";
 import { isProjectAccessible } from "../utils";
 
 export async function getProjectDependencies(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug }],
-        },
-        select: {
-            id: true,
-            visibility: true,
-            status: true,
-            versions: {
-                select: {
-                    id: true,
-                    dependencies: true,
-                },
-            },
-            ...projectMemberPermissionsSelect(),
-        },
-    });
-
-    if (!project) {
+    const [project, _projectVersions] = await Promise.all([GetProject_ListItem(slug, slug), GetVersions(slug, slug)]);
+    if (!project?.id) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
     }
 
@@ -44,11 +29,15 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
     }
 
     // Aggregate all dependencies
-    const dependencies: Dependency[] = [];
-    for (const version of project.versions) {
+    const dependencies: DependencyListData[] = [];
+    for (const version of _projectVersions?.versions || []) {
         if (version.dependencies) {
             for (const dependency of version.dependencies) {
-                dependencies.push(dependency);
+                dependencies.push({
+                    projectId: dependency.projectId,
+                    versionId: dependency.versionId,
+                    dependencyType: dependency.dependencyType as DependencyType,
+                });
             }
         }
     }
@@ -65,16 +54,36 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
         }
     }
 
-    const dependencyProjects = await prisma.project.findMany({
-        where: {
-            id: {
-                in: dependencyProjectIds,
-            },
-        },
-        select: {
-            ...ListItemProjectFields(),
-        },
-    });
+    const dependencyProjects = await GetManyProjects_ListItem(dependencyProjectIds);
+    const dependencyProjectsList: ProjectListItem[] = [];
+    for (const project of dependencyProjects) {
+        if (!project) continue;
+
+        dependencyProjectsList.push({
+            id: project.id,
+            slug: project.slug,
+            name: project.name,
+            summary: project.summary,
+            type: project.type,
+            icon: projectIconUrl(project.id, project.iconFileId),
+            downloads: project.downloads,
+            followers: project.followers,
+            dateUpdated: project.dateUpdated,
+            datePublished: project.datePublished,
+            status: project.status as ProjectPublishingStatus,
+            visibility: project.visibility as ProjectVisibility,
+            clientSide: project.clientSide as EnvironmentSupport,
+            serverSide: project.serverSide as EnvironmentSupport,
+            featuredCategories: project.featuredCategories,
+            categories: project.categories,
+            gameVersions: project.gameVersions,
+            loaders: project.loaders,
+            featured_gallery: null,
+            color: project.color,
+            author: "",
+            isOrgOwned: !!project.organisationId,
+        });
+    }
 
     const dependencyVersions = await prisma.version.findMany({
         where: {
@@ -86,12 +95,7 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
 
     return {
         data: {
-            projects: dependencyProjects.map((project) => {
-                return {
-                    ...project,
-                    icon: projectIconUrl(project.id, project.iconFileId),
-                };
-            }),
+            projects: dependencyProjectsList,
             versions: dependencyVersions,
         },
         status: HTTP_STATUS.OK,

@@ -7,14 +7,14 @@ import { ProjectPermission, type ProjectType, ProjectVisibility, VersionReleaseC
 import type { Dependency, VersionFile } from "@prisma/client";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { CreateVersion, GetVersions } from "~/db/version_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
-import { projectMemberPermissionsSelect } from "~/routes/project/queries/project";
 import {
     aggregateGameVersions,
     aggregateProjectLoaderNames,
     createVersionFiles,
     isAnyDuplicateFile,
-    isProjectAccessible,
     isProjectPublic,
 } from "~/routes/project/utils";
 import prisma from "~/services/prisma";
@@ -33,30 +33,10 @@ export async function createNewVersion(
         return invalidReqestResponseData("Primary version file is required");
     }
 
-    const project = await prisma.project.findUnique({
-        where: {
-            slug: projectSlug,
-        },
-        select: {
-            id: true,
-            loaders: true,
-            type: true,
-            visibility: true,
-            gameVersions: true,
-            versions: {
-                select: {
-                    id: true,
-                    slug: true,
-                    releaseChannel: true,
-                    files: true,
-                    datePublished: true,
-                    loaders: true,
-                    gameVersions: true,
-                },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const [project, _projectVersions] = await Promise.all([
+        GetProject_ListItem(projectSlug, projectSlug),
+        GetVersions(projectSlug, projectSlug),
+    ]);
     if (!project?.id) return notFoundResponseData("Project not found");
 
     if (project.visibility === ProjectVisibility.ARCHIVED)
@@ -99,15 +79,16 @@ export async function createNewVersion(
         return invalidReqestResponseData("Duplicate files are not allowed");
     }
 
+    const projectVersions = _projectVersions?.versions || [];
     // Just to make sure that no version already exists with the same urlSlug or the urlSlug is a reserved slug
-    const versionWithSameSlug = project.versions.find((version) => version.slug === formData.versionNumber.toLowerCase());
+    const versionWithSameSlug = projectVersions.find((version) => version.slug === formData.versionNumber.toLowerCase());
     const versionId = generateDbId();
     let newUrlSlug = formData.versionNumber.toLowerCase();
     if (RESERVED_VERSION_SLUGS.includes(newUrlSlug) || versionWithSameSlug || formData.releaseChannel === VersionReleaseChannel.DEV) {
         newUrlSlug = versionId;
     }
 
-    const newVersion = await prisma.version.create({
+    const newVersion = await CreateVersion({
         data: {
             id: versionId,
             projectId: project.id,
@@ -131,7 +112,7 @@ export async function createNewVersion(
     if (formData.releaseChannel === VersionReleaseChannel.DEV) {
         deletedDevVersions = await deleteExcessDevReleases({
             projectId: project.id,
-            versions: project.versions,
+            versions: projectVersions,
         });
     }
 
@@ -139,7 +120,7 @@ export async function createNewVersion(
     const _loaders: string[] = [];
     const _gameVersions: string[] = [];
 
-    for (const version of project.versions) {
+    for (const version of projectVersions) {
         if (deletedDevVersions.includes(version.id)) continue;
 
         _loaders.push(...version.loaders);
@@ -170,7 +151,7 @@ export async function createNewVersion(
     });
 
     // Update project loaders list and supported game versions
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },
@@ -220,8 +201,6 @@ export async function createVersionDependencies(dependentVersionId: string, list
             },
         }),
     ]);
-
-    isProjectAccessible;
 
     const projectMap = new Map<string, string>();
     const versionMap = new Map<string, string>();

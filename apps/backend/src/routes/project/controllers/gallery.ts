@@ -4,6 +4,7 @@ import { doesMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@app/utils/schemas/project/settings/gallery";
 import { FileType, ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
+import { CreateManyFiles, DeleteFile_ByID } from "~/db/file_item";
 import prisma from "~/services/prisma";
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
@@ -112,7 +113,7 @@ export async function addNewGalleryImage(
         },
     ];
 
-    await prisma.file.createMany({
+    await CreateManyFiles({
         data: imageFiles,
     });
 
@@ -174,11 +175,7 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
 
     for (const fileId of filesToDelete) {
         // Delete the file from database
-        const deletedDbFile = await prisma.file.delete({
-            where: {
-                id: fileId,
-            },
-        });
+        const deletedDbFile = await DeleteFile_ByID(fileId);
 
         // Delete the file from storage
         await deleteProjectGalleryFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);

@@ -6,6 +6,8 @@ import type { orgSettingsFormSchema } from "@app/utils/schemas/organisation/sett
 import { OrganisationPermission } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
+import { Delete_ProjectCache_All, UpdateProject } from "~/db/project_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "~/services/prisma";
 import { deleteOrgDirectory, deleteOrgFile, saveOrgFile } from "~/services/storage";
@@ -67,7 +69,7 @@ export async function updateOrg(
 
     let icon = org.iconFileId;
     if (!formData.icon && org.iconFileId) {
-        const deletedDbFile = await prisma.file.delete({ where: { id: org.iconFileId } });
+        const deletedDbFile = await DeleteFile_ByID(org.iconFileId);
         await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
         icon = null;
     }
@@ -127,7 +129,7 @@ export async function updateOrgIcon(
 
     // Delete the previous icon if it exists
     if (org.iconFileId) {
-        const deletedDbFile = await prisma.file.delete({ where: { id: org.iconFileId } });
+        const deletedDbFile = await DeleteFile_ByID(org.iconFileId);
         await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
     }
 
@@ -144,7 +146,7 @@ export async function updateOrgIcon(
     const iconSaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, saveIcon, fileId);
     if (!iconSaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
-    await prisma.file.create({
+    await CreateFile({
         data: {
             id: fileId,
             name: fileId,
@@ -196,7 +198,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
         return unauthorizedReqResponseData("You don't have the permission to delete organization icon");
     }
 
-    const deletedDbFile = await prisma.file.delete({ where: { id: org.iconFileId } });
+    const deletedDbFile = await DeleteFile_ByID(org.iconFileId);
     await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
 
     await prisma.organisation.update({
@@ -214,7 +216,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
 export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {
     const org = await prisma.organisation.findFirst({
         where: {
-            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
+            OR: [{ id: orgId }, { slug: orgId.toLowerCase() }],
         },
         select: {
             id: true,
@@ -222,6 +224,7 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
             projects: {
                 select: {
                     id: true,
+                    slug: true,
                     teamId: true,
                 },
             },
@@ -251,7 +254,7 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
 
     // Delete icon
     if (org.iconFileId) {
-        await prisma.file.delete({ where: { id: org.iconFileId } });
+        await DeleteFile_ByID(org.iconFileId);
     }
 
     // Delete storate directory
@@ -259,6 +262,13 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
 
     const orgProjectIds = org.projects.map((project) => project.id);
     const projectTeamIds = org.projects.map((project) => project.teamId);
+
+    // Remove project cache
+    // TODO: Move this to DeleteManyProjects function when rewriting the prisma transaction
+    for (const project of org.projects) {
+        // not awaiting on purpose
+        Delete_ProjectCache_All(project.id, project.slug);
+    }
 
     await prisma.$transaction([
         // Remove the organisation from all projects
@@ -370,7 +380,7 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
         }),
 
         // Update the project
-        prisma.project.update({
+        UpdateProject({
             where: {
                 id: project.id,
             },
@@ -447,7 +457,7 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
             },
         }),
 
-        prisma.project.update({
+        UpdateProject({
             where: {
                 id: project.id,
             },

@@ -4,6 +4,9 @@ import { ProjectPermission, type ProjectType, VersionReleaseChannel } from "@app
 import type { File as DBFile } from "@prisma/client";
 import type { Context } from "hono";
 import type { z } from "zod";
+import { GetManyFiles_ByID } from "~/db/file_item";
+import { UpdateProject } from "~/db/project_item";
+import { UpdateVersion } from "~/db/version_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getFilesFromId } from "~/routes/project/queries/file";
 import { projectMemberPermissionsSelect } from "~/routes/project/queries/project";
@@ -226,7 +229,7 @@ export async function updateVersionData(
     const aggregatedGameVersions = aggregateVersions(_gameVersions);
 
     // Finally update the version data
-    await prisma.version.update({
+    await UpdateVersion({
         where: {
             id: targetVersion.id,
         },
@@ -242,7 +245,7 @@ export async function updateVersionData(
     });
 
     // Update project loaders list and supported game versions
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },
@@ -307,13 +310,7 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
         return notFoundResponseData("Project not found");
     }
 
-    const filesData = await prisma.file.findMany({
-        where: {
-            id: {
-                in: targetVersion.files.map((file) => file.fileId),
-            },
-        },
-    });
+    const filesData = await GetManyFiles_ByID(targetVersion.files.map((file) => file.fileId));
 
     // Delete all the files
     await deleteVersionFiles(project.id, targetVersion.id, filesData);
@@ -341,7 +338,7 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
     const aggregatedLoaderNames = aggregateProjectLoaderNames(projectLoaders);
     const aggregatedGameVersions = aggregateGameVersions(projectGameVersions);
 
-    await prisma.project.update({
+    await UpdateProject({
         where: {
             id: project.id,
         },

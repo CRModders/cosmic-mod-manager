@@ -109,13 +109,11 @@ export interface VersionFile {
 export interface VersionAuthor {
     id: string;
     userName: string;
-    name: string;
     avatar: string | null;
     role: string;
 }
 
 export interface DependencyListData {
-    id: string;
     projectId: string;
     versionId: string | null;
     dependencyType: DependencyType;
