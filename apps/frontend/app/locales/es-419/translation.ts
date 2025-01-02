@@ -63,7 +63,8 @@ export default {
         confirmPass: "Confirmar contraseña",
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
-        deleteAccountDesc: "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
+        deleteAccountDesc:
+            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
@@ -75,7 +76,7 @@ export default {
         toggleFeatures: "Activar o desactivar funciones",
         enableOrDisableFeatures: "Activa o desactiva ciertas funciones en este dispositivo.",
         viewTransitions: "Ver transiciones",
-        viewTransitionsDesc: "Habilita transiciones (morph y crossfade) al navegar entre páginas.",
+        viewTransitionsDesc: "Activa transiciones (morph y crossfade) al navegar entre páginas.",
         accountSecurity: "Seguridad de la cuenta",
         changePassTitle: "Cambiar la contraseña de tu cuenta",
         addPassDesc: "Añadir una contraseña para utilizar el inicio de sesión con credenciales",
@@ -114,7 +115,7 @@ export default {
         overview: "Vista general",
         notifications: "Notificaciones",
         activeReports: "Reportes activos",
-        analytics: "Analíticas",
+        analytics: "Análisis",
         projects: "Proyectos",
         organizations: "Organizaciones",
         collections: "Colecciones",
@@ -236,8 +237,9 @@ export default {
         onlyAvailableFor: (project: string, platform: string) => `${project} solo está disponible para ${platform}`,
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `No hay versiones disponibles para la ${gameVersion} en ${loader}`,
         declinedInvitation: "Invitación rechazada",
-        teamInvitationTitle: (teamType: string) => `Invitación para unirse a ${teamType}`, // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) => `Has sido invitado a ser miembro de este ${teamType} con el rol de '${role}'.`,
+        teamInvitationTitle: (teamType: string) => `Invitación para unirse a un equipo (${teamType})`, // teamType = organization | project
+        teamInviteDesc: (teamType: string, role: string) =>
+            `Has sido invitado a ser miembro de este equipo (${teamType}) con el rol de '${role}'.`,
 
         browse: {
             mod: "Explorar mods",
@@ -246,6 +248,52 @@ export default {
             shader: "Explorar shaders",
             modpack: "Explorar paquetes de mods",
             plugin: "Explorar plugins",
+        },
+
+        rejected: "Rechazado",
+        withheld: "Suspendido",
+        archivedMessage: (project: string) =>
+            `${project} ha sido archivado. No recibirá más actualizaciones a menos que el autor decida desarchivarlo.`,
+        publishingChecklist: {
+            required: "Requerido",
+            suggestion: "Sugerencia",
+            review: "Revisión",
+            progress: "Progreso:",
+            title: "Guía de publicación",
+            uploadVersion: "Subir una versión",
+            uploadVersionDesc: "Se requiere al menos una versión para enviar un proyecto a revisión.",
+            addDescription: "Añadir una descripción",
+            addDescriptionDesc: "Es necesaria una descripción que explique claramente el propósito y la función del proyecto.",
+            addIcon: "Añadir un ícono",
+            addIconDesc: "Tu proyecto merece un ícono llamativo que lo distinga al instante.",
+            featureGalleryImg: "Destacar una imagen en la galería",
+            featureGalleryImgDesc: "Las imágenes destacadas en la galería pueden ser la primera impresión para muchos usuarios.",
+            selectTags: "Seleccionar etiquetas",
+            selectTagsDesc: "Selecciona todas las etiquetas que correspondan a tu proyecto.",
+            addExtLinks: "Añadir enlaces externos",
+            addExtLinksDesc: "Añade enlaces relevantes, como fuentes, un sitio web para rastrear errores o una invitación de Discord.",
+            selectLicense: "Seleccionar licencia",
+            selectLicenseDesc: (projectType: string) => `Selecciona la licencia bajo la cual se distribuye tu ${projectType}.`,
+            selectEnv: "Seleccionar entornos compatibles",
+            selectEnvDesc: (projectType: string) => `Selecciona si el ${projectType} funciona en el lado del cliente o del servidor.`,
+            submitForReview: "Enviar para revisión",
+            submitForReviewDesc:
+                "Tu proyecto solo es visible para los miembros del proyecto. Debe ser revisado por moderadores para ser publicado.",
+            resubmitForReview: "Volver a enviar para revisión",
+            resubmit_ApprovalRejected:
+                "Tu proyecto ha sido rechazado por nuestro moderador. En la mayoría de los casos, puedes volver a enviarlo para revisión después de atender el mensaje del moderador.",
+            resubmit_ProjectWithheld:
+                "Tu proyecto ha sido suspendido por nuestro moderador. En la mayoría de los casos, puedes volver a enviarlo para revisión después de atender el mensaje del moderador.",
+            visit: {
+                versionsPage: "Visitar la página de versiones",
+                descriptionSettings: "Visitar los ajustes de descripción",
+                generalSettings: "Visitar los ajustes generales",
+                galleryPage: "Visitar la página de galería",
+                tagSettings: "Visitar los ajustes de etiquetas",
+                linksSettings: "Visitar los ajustes de enlaces",
+                licenseSettings: "Visitar los ajustes de licencia",
+                moderationPage: "Visitar la página de moderación",
+            },
         },
     },
 
@@ -261,8 +309,8 @@ export default {
         versionNumber: "Número de versión",
         selectLoaders: "Seleccionar cargadores",
         selectVersions: "Seleccionar versiones",
-        cantAddCurrProject: "No puedes agregar el proyecto actual como dependencia",
-        cantAddDuplicateDep: "No puedes agregar la misma dependencia dos veces",
+        cantAddCurrProject: "No puedes añadir el proyecto actual como dependencia",
+        cantAddDuplicateDep: "No puedes añadir la misma dependencia dos veces",
         addDep: "Añadir dependencia",
         enterProjectId: "Ingresa el ID/Slug del proyecto",
         enterVersionId: "Ingresa el ID/Slug de la versión",
@@ -280,7 +328,7 @@ export default {
             embedded_desc: (version: string) => `La versión ${version} está incorporada`,
         },
 
-        primary: "Primario",
+        primary: "Principal",
         noPrimaryFile: "No se ha elegido un archivo principal",
         chooseFile: "Elegir archivo",
         replaceFile: "Reemplazar archivo",
@@ -309,7 +357,7 @@ export default {
         upload: "Subir",
         externalLinks: "Enlaces externos",
         issueTracker: "Rastreador de problemas",
-        issueTrackerDesc: "Un lugar para que los usuarios reporten errores, problemas y preocupaciones sobre tu proyecto.",
+        issueTrackerDesc: "Un sitio donde los usuarios puedan informar sobre errores o discutir temas relacionados con tu proyecto.",
         sourceCode: "Código fuente",
         sourceCodeDesc: "Una página o repositorio que contiene el código fuente de tu proyecto.",
         wikiPage: "Página wiki",
@@ -369,8 +417,8 @@ export default {
         sureToLeaveTeam: "¿Estás seguro de que quieres salir de este equipo?",
         cantManageInvites: "No tienes acceso para gestionar las invitaciones de miembros",
         inviteMember: "Invitar a un miembro",
-        inviteProjectMemberDesc: "Introduce el nombre de usuario de la persona que deseas invitar a ser miembro de este proyecto.",
-        inviteOrgMemberDesc: "Introduce el nombre de usuario de la persona que deseas invitar a ser miembro de esta organización.",
+        inviteProjectMemberDesc: "Ingresa el nombre de usuario de la persona que deseas invitar a ser miembro de este proyecto.",
+        inviteOrgMemberDesc: "Ingresa el nombre de usuario de la persona que deseas invitar a ser miembro de esta organización.",
         invite: "Invitar",
         memberUpdated: "Miembro actualizado con éxito",
         pending: "Pendiente",
@@ -419,7 +467,7 @@ export default {
         deleteOrgDesc:
             "Eliminar tu organización transferirá todos sus proyectos al propietario de la organización. Esta acción no se puede deshacer.",
         sureToDeleteOrg: "¿Estás seguro de que quieres eliminar esta organización?",
-        deleteOrgNamed: (orgName: string) => `Eleminar organización ${orgName}`,
+        deleteOrgNamed: (orgName: string) => `Eliminar organización ${orgName}`,
         deletionWarning: "Esto eliminará esta organización para siempre (de verdad, para siempre).",
 
         membersCount: (count: number) => {
@@ -467,12 +515,37 @@ export default {
     },
 
     legal: {
+        legal: "Legal",
         rulesTitle: "Reglas de contenido",
         contentRules: Rules,
         termsTitle: "Términos de uso",
         copyrightPolicyTitle: "Política de derechos de autor",
         securityNoticeTitle: "Aviso de seguridad",
         privacyPolicyTitle: "Política de privacidad",
+    },
+
+    moderation: {
+        review: "Revisar proyectos",
+        reports: "Reportes",
+        moderation: "Moderación",
+        statistics: "Estadísticas",
+        authors: "Autores",
+        projectsInQueue: (count: number) => {
+            if (count === 1) return "Hay 1 proyecto en la cola.";
+            return `Hay ${count} proyectos en la cola.`;
+        },
+        // hours will eith be 24 or 48
+        projectsQueuedFor: (count: number, hours: number) => {
+            if (count === 1) return `1 proyecto ha estado en la cola por más de ${hours} horas.`;
+            return `${count} proyectos han estado en la cola por más de ${hours} horas.`;
+        },
+        submitted: (when: string) => `Enviado ${when}`, // eg: Created 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
+        viewProject: "Ver proyecto",
+        awaitingApproval: "El proyecto está en cola para aprobación",
+        draft: "Borrador",
+        approve: "Aprobar",
+        reject: "Rechazar",
+        withhold: "Suspender",
     },
 
     form: {
@@ -533,7 +606,7 @@ export default {
         quote: "Cita",
         insertLink: "Insertar enlace",
         label: "Etiqueta",
-        enterLabel: "Insertar etiquetar",
+        enterLabel: "Insertar etiqueta",
         link: "Enlace", // Noun
         enterUrl: "Ingresa la URL del enlace",
         insertImage: "Insertar imagen",
