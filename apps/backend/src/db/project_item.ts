@@ -3,37 +3,11 @@ import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import { PROJECT_DETAILS_CACHE_KEY, PROJECT_LIST_ITEM_CACHE_KEY } from "~/types/namespaces";
-import { GetData_FromCache, PROJECT_CACHE_EXPIRY_seconds } from "./_cache";
+import { GetData_FromCache, PROJECT_CACHE_EXPIRY_seconds, SetCache } from "./_cache";
+import { Delete_OrganizationCache_All, GetManyOrganizations, GetOrganization_BySlugOrId } from "./organization_item";
+import { GetManyTeams, GetTeam } from "./team_item";
 
 // ? Select fields
-const Team_Select = {
-    select: {
-        id: true,
-        members: {
-            select: {
-                id: true,
-                teamId: true,
-                userId: true,
-                role: true,
-                isOwner: true,
-                permissions: true,
-                organisationPermissions: true,
-                accepted: true,
-                dateAccepted: true,
-
-                user: {
-                    select: {
-                        id: true,
-                        userName: true,
-                        avatar: true,
-                    },
-                },
-            },
-            orderBy: { dateAccepted: "asc" },
-        },
-    } satisfies Prisma.TeamSelect,
-};
-
 const PROJECT_DETAILS_SELECT_FIELDS = {
     id: true,
     teamId: true,
@@ -87,21 +61,6 @@ const PROJECT_DETAILS_SELECT_FIELDS = {
         },
         orderBy: { orderIndex: "desc" },
     },
-
-    team: Team_Select,
-
-    organisation: {
-        select: {
-            id: true,
-            teamId: true,
-            iconFileId: true,
-
-            name: true,
-            slug: true,
-            description: true,
-            team: Team_Select,
-        },
-    },
 } satisfies Prisma.ProjectSelect;
 
 const PROJECT_LIST_ITEM_SELECT_FIELDS = {
@@ -131,26 +90,10 @@ const PROJECT_LIST_ITEM_SELECT_FIELDS = {
     status: true,
     requestedStatus: true,
     visibility: true,
-
-    team: Team_Select,
-
-    // TODO: Move this to organization_item.ts when it's created
-    organisation: {
-        select: {
-            id: true,
-            teamId: true,
-            iconFileId: true,
-
-            name: true,
-            slug: true,
-            description: true,
-            team: Team_Select,
-        },
-    },
 } satisfies Prisma.ProjectSelect;
 
 // ? Get project functions
-export type GetProject_Details_ReturnTye = Awaited<ReturnType<typeof GetProject_Details_FromDb>>;
+export type GetProject_Details_ReturnType = Awaited<ReturnType<typeof GetProject_Details_FromDb>>;
 async function GetProject_Details_FromDb(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
@@ -182,22 +125,98 @@ async function GetProject_Details_FromDb(slug?: string, id?: string) {
     return data;
 }
 
-export async function GetProject_Details(slug?: string, id?: string, cachedOnly = false) {
+export async function GetProject_Details(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
-    const cachedData = await GetData_FromCache<GetProject_Details_ReturnTye>(PROJECT_DETAILS_CACHE_KEY, slug || id);
-    if (cachedData) return cachedData;
+    let Project = await GetData_FromCache<GetProject_Details_ReturnType>(PROJECT_DETAILS_CACHE_KEY, slug || id);
+    if (!Project) Project = await GetProject_Details_FromDb(slug, id);
+    if (!Project) return null;
 
-    // If cachedOnly is true, we won't get the data from the db
-    if (cachedOnly === true) return null;
+    await Set_ProjectCache(PROJECT_DETAILS_CACHE_KEY, Project);
 
-    const data = await GetProject_Details_FromDb(slug, id);
-    if (data) await Set_ProjectCache(PROJECT_DETAILS_CACHE_KEY, data);
+    const [Org, ProjectTeam] = await Promise.all([
+        Project.organisationId ? GetOrganization_BySlugOrId(undefined, Project.organisationId) : null,
+        GetTeam(Project.teamId),
+    ]);
+    if (!ProjectTeam) return null;
 
-    return data;
+    return Object.assign(Project, { organisation: Org || null, team: ProjectTeam });
 }
 
-export type GetProject_ListItem_ReturnTye = Awaited<ReturnType<typeof GetProject_ListItem_FromDb>>;
+export type GetManyProjects_Details_ReturnType = Awaited<ReturnType<typeof GetManyProjects_Details>>;
+export async function GetManyProjects_Details(ProjectIds: string[]) {
+    const Projects = [];
+    const _OrgIds = new Set<string>();
+    const _TeamIds = new Set<string>();
+
+    const ProjectIds_RetrievedFromCache: string[] = [];
+
+    // Get all the project from cache
+    {
+        const _cachedDetails_promises = [];
+        for (const id of ProjectIds) {
+            if (!id) continue;
+            _cachedDetails_promises.push(GetData_FromCache<GetProject_Details_ReturnType>(PROJECT_DETAILS_CACHE_KEY, id));
+        }
+
+        const _cachedDetails = await Promise.all(_cachedDetails_promises);
+        for (let i = 0; i < _cachedDetails.length; i++) {
+            const _project = _cachedDetails[i];
+            if (!_project?.id) continue;
+
+            ProjectIds_RetrievedFromCache.push(_project.id);
+            Projects.push(_project);
+            if (_project.organisationId) _OrgIds.add(_project.organisationId);
+            _TeamIds.add(_project.teamId);
+        }
+    }
+
+    // Get all non-cached projects
+    const RemainingProjectIds = ProjectIds.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
+
+    const _Db_ProjectItems =
+        RemainingProjectIds.length > 0
+            ? await prisma.project.findMany({
+                  where: {
+                      id: {
+                          in: RemainingProjectIds,
+                      },
+                  },
+                  select: PROJECT_DETAILS_SELECT_FIELDS,
+              })
+            : [];
+
+    // Set cache for all non-cached projects
+    {
+        const _setCache_promises = [];
+        for (const project of _Db_ProjectItems) {
+            if (!project?.id) continue;
+            _setCache_promises.push(Set_ProjectCache(PROJECT_DETAILS_CACHE_KEY, project));
+
+            Projects.push(project);
+            if (project.organisationId) _OrgIds.add(project.organisationId);
+            _TeamIds.add(project.teamId);
+        }
+
+        await Promise.all(_setCache_promises);
+    }
+
+    const [_OrgItems, _TeamItems] = await Promise.all([GetManyOrganizations(Array.from(_OrgIds)), GetManyTeams(Array.from(_TeamIds))]);
+
+    const FormattedProjects = [];
+    for (let i = 0; i < Projects.length; i++) {
+        const project = Projects[i];
+        const _project_team = _TeamItems.find((team) => team?.id === project.teamId);
+        if (!_project_team) continue;
+
+        const _project_org = _OrgItems.find((org) => org?.id === project.organisationId);
+        FormattedProjects.push(Object.assign(project, { organisation: _project_org || null, team: _project_team }));
+    }
+
+    return FormattedProjects;
+}
+
+export type GetProject_ListItem_ReturnType = Awaited<ReturnType<typeof GetProject_ListItem_FromDb>>;
 async function GetProject_ListItem_FromDb(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
@@ -231,79 +250,107 @@ async function GetProject_ListItem_FromDb(slug?: string, id?: string) {
     return data;
 }
 
-export async function GetProject_ListItem(slug?: string, id?: string, cachedOnly = false) {
+export async function GetProject_ListItem(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
-    const cachedData = await GetData_FromCache<GetProject_ListItem_ReturnTye>(PROJECT_LIST_ITEM_CACHE_KEY, slug || id);
-    if (cachedData?.id) return cachedData;
-    if (cachedOnly === true) return null;
+    let Project = await GetData_FromCache<GetProject_ListItem_ReturnType>(PROJECT_LIST_ITEM_CACHE_KEY, slug || id);
+    if (!Project) Project = await GetProject_ListItem_FromDb(slug, id);
+    if (!Project) return null;
 
-    const data = await GetProject_ListItem_FromDb(slug, id);
-    if (data?.id) {
-        await Set_ProjectCache(PROJECT_LIST_ITEM_CACHE_KEY, data);
-    }
+    await Set_ProjectCache(PROJECT_LIST_ITEM_CACHE_KEY, Project);
 
-    return data;
+    const [Org, ProjectTeam] = await Promise.all([
+        Project.organisationId ? GetOrganization_BySlugOrId(undefined, Project.organisationId) : null,
+        GetTeam(Project.teamId),
+    ]);
+    if (!ProjectTeam) return null;
+
+    return Object.assign(Project, { organisation: Org || null, team: ProjectTeam });
 }
 
-export type GetManyProjects_ListItem_ReturnTye = Awaited<ReturnType<typeof GetManyProjects_ListItem>>;
+export type GetManyProjects_ListItem_ReturnType = Awaited<ReturnType<typeof GetManyProjects_ListItem>>;
 export async function GetManyProjects_ListItem(ids: string[]) {
-    const ProjectIds_RetrievedFromCache: string[] = [];
-    const cachedProjects: GetProject_ListItem_ReturnTye[] = [];
+    const Projects = [];
+    const _OrgIds = new Set<string>();
+    const _TeamIds = new Set<string>();
 
-    // Get all projects from cache, we're not getting non-cached projects because doint that like this will make a db call for each project
-    // Rather we'll first get all cached projects and then get the non-cached projects using a findMany query
+    const ProjectIds_RetrievedFromCache: string[] = [];
+
+    // Get all the project from cache
     {
-        const _cachedListItems_promises: Promise<GetProject_ListItem_ReturnTye>[] = [];
+        const _cachedListItems_promises = [];
         for (const id of ids) {
             if (!id) continue;
-
-            _cachedListItems_promises.push(GetProject_ListItem(undefined, id, true));
+            _cachedListItems_promises.push(GetData_FromCache<GetProject_ListItem_ReturnType>(PROJECT_LIST_ITEM_CACHE_KEY, id));
         }
 
         const _cachedListItems = await Promise.all(_cachedListItems_promises);
         for (let i = 0; i < _cachedListItems.length; i++) {
-            const item = _cachedListItems[i];
-            if (!item?.id) continue;
+            const _project = _cachedListItems[i];
+            if (!_project?.id) continue;
 
-            cachedProjects.push(item);
-            ProjectIds_RetrievedFromCache.push(item.id);
+            ProjectIds_RetrievedFromCache.push(_project.id);
+            Projects.push(_project);
+            if (_project.organisationId) _OrgIds.add(_project.organisationId);
+            _TeamIds.add(_project.teamId);
         }
     }
 
     // Get all non-cached projects
     const RemainingProjectIds = ids.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
-    if (!RemainingProjectIds.length) return cachedProjects;
-
-    const NonCachedProjects = await prisma.project.findMany({
-        where: {
-            id: {
-                in: RemainingProjectIds,
-            },
-        },
-        select: PROJECT_LIST_ITEM_SELECT_FIELDS,
-    });
+    const _Db_ProjectItems =
+        RemainingProjectIds.length > 0
+            ? await prisma.project.findMany({
+                  where: {
+                      id: {
+                          in: RemainingProjectIds,
+                      },
+                  },
+                  select: PROJECT_LIST_ITEM_SELECT_FIELDS,
+              })
+            : [];
 
     // Set cache for all non-cached projects
     {
-        const _setCache_promises: Promise<void>[] = [];
-        for (const project of NonCachedProjects) {
+        const _setCache_promises = [];
+        for (const project of _Db_ProjectItems) {
             if (!project?.id) continue;
             _setCache_promises.push(Set_ProjectCache(PROJECT_LIST_ITEM_CACHE_KEY, project));
+
+            Projects.push(project);
+            if (project.organisationId) _OrgIds.add(project.organisationId);
+            _TeamIds.add(project.teamId);
         }
 
         await Promise.all(_setCache_promises);
     }
 
-    return cachedProjects.concat(NonCachedProjects);
+    const [_OrgItems, _TeamItems] = await Promise.all([GetManyOrganizations(Array.from(_OrgIds)), GetManyTeams(Array.from(_TeamIds))]);
+
+    const FormattedProjects = [];
+    for (let i = 0; i < Projects.length; i++) {
+        const project = Projects[i];
+        const _project_team = _TeamItems.find((team) => team?.id === project.teamId);
+        if (!_project_team) continue;
+
+        const _project_org = _OrgItems.find((org) => org.id === project.organisationId);
+        FormattedProjects.push(Object.assign(project, { organisation: _project_org || null, team: _project_team }));
+    }
+
+    return FormattedProjects;
+}
+
+export async function CreateProject<T extends Prisma.ProjectCreateArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectCreateArgs>) {
+    const project = await prisma.project.create(args);
+    if (project.organisationId) await Delete_OrganizationCache_All(project.organisationId);
+
+    return project;
 }
 
 // ? Update and delete project functions
 export async function UpdateProject<T extends Prisma.ProjectUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectUpdateArgs>) {
     const result = await prisma.project.update(args);
-    if (result?.id) {
-        await Delete_ProjectCache_All(result.id, result.slug);
-    }
+    if (result?.id) await Delete_ProjectCache_All(result.id, result.slug);
 
     return result;
 }
@@ -325,9 +372,8 @@ export async function UpdateManyProjects<T extends Prisma.ProjectUpdateManyArgs>
 
 export async function DeleteProject<T extends Prisma.ProjectDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectDeleteArgs>) {
     const result = await prisma.project.delete(args);
-    if (result?.id) {
-        await Delete_ProjectCache_All(result.id, result.slug);
-    }
+    if (result?.id) await Delete_ProjectCache_All(result.id, result.slug);
+    if (result?.organisationId) await Delete_OrganizationCache_All(result.organisationId);
 
     return result;
 }
@@ -365,7 +411,7 @@ async function Set_ProjectCache<T extends SetCache_Data | null>(NAMESPACE: strin
     if (!project?.id) return;
     const json_string = JSON.stringify(project);
 
-    const p1 = redis.set(cacheKey(project.id, NAMESPACE), project.slug, "EX", PROJECT_CACHE_EXPIRY_seconds);
-    const p2 = redis.set(cacheKey(project.slug, NAMESPACE), json_string, "EX", PROJECT_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(NAMESPACE, project.id, project.slug, PROJECT_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(NAMESPACE, project.slug, json_string, PROJECT_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
 }

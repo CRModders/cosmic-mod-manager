@@ -14,6 +14,13 @@ export const USER_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
 export const PROJECT_CACHE_EXPIRY_seconds = TIME_12HR;
 export const VERSION_CACHE_EXPIRY_seconds = TIME_12HR;
 
+// Organization
+export const ORGANIZATION_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
+
+// Team
+export const TEAM_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
+
+// File
 export const FILE_ITEM_EXPIRY_seconds = TIME_12HR;
 
 // Statistics
@@ -32,7 +39,7 @@ export async function GetRawData_FromCache(NAMESPACE: string, key?: string): Pro
     const primaryKeyData = await redis.get(cacheKey(key, NAMESPACE));
     if (!primaryKeyData) return null;
 
-    if (primaryKeyData.startsWith("{")) return primaryKeyData;
+    if (primaryKeyData.startsWith("{") || primaryKeyData.startsWith("[")) return primaryKeyData;
 
     // If the primaryKeyData is not a JSON object, it is most likely a secondary key
     // Use the primaryKeyData to get the main data
@@ -40,4 +47,8 @@ export async function GetRawData_FromCache(NAMESPACE: string, key?: string): Pro
     if (!secondaryKeyData) return null;
 
     return secondaryKeyData;
+}
+
+export async function SetCache(NAMESPACE: string, key: string, data: string, expiry_seconds: number) {
+    await redis.set(cacheKey(key, NAMESPACE), data, "EX", expiry_seconds);
 }

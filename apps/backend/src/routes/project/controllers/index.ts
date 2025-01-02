@@ -23,7 +23,6 @@ import { isProjectAccessible } from "../utils";
 
 export async function getProjectData(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
     const project = await GetProject_Details(slug, slug);
-
     if (!project?.id) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
     }

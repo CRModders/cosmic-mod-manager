@@ -9,6 +9,7 @@ import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import InviteMemberForm from "~/pages/project/settings/members/invite-member";
 import { LeaveTeam } from "~/pages/project/settings/members/page";
+import { OrgPagePath } from "~/utils/urls";
 import { OrgTeamMember } from "./edit-member";
 
 export default function OrgMemberSettings() {
@@ -23,6 +24,9 @@ export default function OrgMemberSettings() {
 
     async function refreshOrgData() {
         RefreshPage(navigate, location);
+    }
+    async function RedirectToOrgPage() {
+        RefreshPage(navigate, OrgPagePath(orgData.slug));
     }
 
     const canInviteMembers = doesOrgMemberHaveAccess(
@@ -39,7 +43,7 @@ export default function OrgMemberSettings() {
             <SectionCard className="w-full flex flex-col p-card-surround gap-4">
                 <CardTitle>{t.projectSettings.manageMembers}</CardTitle>
                 <InviteMemberForm teamId={orgData.teamId} canInviteMembers={canInviteMembers} dataRefetch={refreshOrgData} isOrg />
-                <LeaveTeam teamId={orgData.teamId} currUsersMembership={currUsersMembership} refreshData={refreshOrgData} isOrgTeam />
+                <LeaveTeam teamId={orgData.teamId} currUsersMembership={currUsersMembership} refreshData={RedirectToOrgPage} isOrgTeam />
             </SectionCard>
 
             {orgData.members.map((member) => {

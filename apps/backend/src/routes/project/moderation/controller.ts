@@ -1,50 +1,32 @@
 import { ProjectPublishingStatus, type ProjectVisibility } from "@app/utils/types";
 import type { ModerationProjectItem } from "@app/utils/types/api/moderation";
 import type { Prisma } from "@prisma/client";
-import { UpdateProject } from "~/db/project_item";
+import { GetManyProjects_ListItem, GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { AddProject_ToSearchDb } from "~/routes/search/sync-queue";
 import prisma from "~/services/prisma";
-import { HTTP_STATUS } from "~/utils/http";
+import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 
 export async function getModerationProjects() {
-    const projects = await prisma.project.findMany({
+    const _ProjectIds = await prisma.project.findMany({
         where: {
             status: ProjectPublishingStatus.PROCESSING,
         },
-        include: {
-            organisation: {
-                select: {
-                    id: true,
-                    slug: true,
-                    name: true,
-                    iconFileId: true,
-                },
-            },
-            team: {
-                select: {
-                    members: {
-                        where: { isOwner: true },
-                        select: {
-                            user: {
-                                select: {
-                                    id: true,
-                                    userName: true,
-                                    avatar: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+        select: {
+            id: true,
         },
-        orderBy: {
-            dateQueued: "asc",
-        },
+        // A hard limit of 100 projects
+        // TODO: Implement pagination
+        take: 100,
     });
+    if (!_ProjectIds) return { data: [], status: HTTP_STATUS.OK };
 
+    const _ModerationProjects = await GetManyProjects_ListItem(_ProjectIds.map((p) => p.id));
     const projectsList: ModerationProjectItem[] = [];
 
-    for (const project of projects) {
+    for (const project of _ModerationProjects) {
+        if (!project) continue;
+
         let author: ModerationProjectItem["author"] | undefined = undefined;
         if (project.organisation?.slug) {
             const org = project.organisation;
@@ -89,17 +71,10 @@ export async function getModerationProjects() {
 }
 
 export async function updateModerationProject(id: string, status: string) {
-    const project = await prisma.project.findUnique({
-        where: {
-            id: id,
-        },
-        select: {
-            status: true,
-            requestedStatus: true,
-        },
-    });
+    const Project = await GetProject_ListItem(undefined, id);
+    if (!Project) return notFoundResponseData("Project not found");
 
-    if (status === project?.status) {
+    if (status === Project?.status) {
         return {
             data: {
                 success: false,
@@ -125,10 +100,15 @@ export async function updateModerationProject(id: string, status: string) {
         updateData.requestedStatus = null;
     }
 
-    await UpdateProject({
-        where: { id: id },
-        data: updateData,
-    });
+    await Promise.all([
+        UpdateProject({
+            where: { id: id },
+            data: updateData,
+        }),
+
+        // Update the project search index
+        AddProject_ToSearchDb(Project.id),
+    ]);
 
     return {
         data: {

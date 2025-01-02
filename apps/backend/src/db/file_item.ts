@@ -3,7 +3,7 @@ import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import { FILE_ITEM_CACHE_KEY } from "~/types/namespaces";
-import { FILE_ITEM_EXPIRY_seconds, GetData_FromCache } from "./_cache";
+import { FILE_ITEM_EXPIRY_seconds, GetData_FromCache, SetCache } from "./_cache";
 
 export type GetFile_ReturnType = Awaited<ReturnType<typeof GetFile_FromDb>>;
 function GetFile_FromDb(id: string) {
@@ -27,10 +27,10 @@ export function GetManyFiles<T extends Prisma.FileFindManyArgs>(args: Prisma.Sel
 }
 
 export async function GetManyFiles_ByID(fileIds: string[]) {
-    const _FileIds_RetrievedFromCache: string[] = [];
-    const cachedFiles: GetFile_ReturnType[] = [];
+    const Files = [];
 
     // Get cached files from redis
+    const FileIds_RetrievedFromCache: string[] = [];
     {
         const _cachedFiles_promises: Promise<GetFile_ReturnType | null>[] = [];
         for (const id of fileIds) {
@@ -41,32 +41,33 @@ export async function GetManyFiles_ByID(fileIds: string[]) {
         const _cachedFiles = await Promise.all(_cachedFiles_promises);
         for (const file of _cachedFiles) {
             if (!file) continue;
-            _FileIds_RetrievedFromCache.push(file.id);
-            cachedFiles.push(file);
+            FileIds_RetrievedFromCache.push(file.id);
+            Files.push(file);
         }
     }
 
-    const _FileIds_ToRetrieveFromDb = fileIds.filter((id) => !_FileIds_RetrievedFromCache.includes(id));
-    if (!_FileIds_ToRetrieveFromDb.length) return cachedFiles;
-
-    const RemainingFiles = await prisma.file.findMany({
-        where: {
-            id: { in: _FileIds_ToRetrieveFromDb },
-        },
-    });
+    // Get remaining files from db
+    const FileIds_ToRetrieveFromDb = fileIds.filter((id) => !FileIds_RetrievedFromCache.includes(id));
+    const _DB_Files =
+        FileIds_ToRetrieveFromDb.length > 0
+            ? await prisma.file.findMany({
+                  where: { id: { in: FileIds_ToRetrieveFromDb } },
+              })
+            : [];
 
     // Set cache for remaining files
     {
         const _setCache_promises = [];
-        for (const file of RemainingFiles) {
+        for (const file of _DB_Files) {
             const setCache = Set_FileCache(file.id, file);
             _setCache_promises.push(setCache);
+            Files.push(file);
         }
 
         await Promise.all(_setCache_promises);
     }
 
-    return cachedFiles.concat(RemainingFiles);
+    return Files;
 }
 
 export async function CreateFile<T extends Prisma.FileCreateArgs>(args: Prisma.SelectSubset<T, Prisma.FileCreateArgs>) {
@@ -125,7 +126,7 @@ export async function DeleteManyFiles_ByID(ids: string[]) {
 
 // Cache functions
 async function Set_FileCache(id: string, data: GetFile_ReturnType) {
-    await redis.set(cacheKey(id, FILE_ITEM_CACHE_KEY), JSON.stringify(data), "EX", FILE_ITEM_EXPIRY_seconds);
+    await SetCache(FILE_ITEM_CACHE_KEY, id, JSON.stringify(data), FILE_ITEM_EXPIRY_seconds);
 }
 
 async function Delete_FileCache(id: string) {

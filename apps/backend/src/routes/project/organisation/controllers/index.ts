@@ -9,10 +9,10 @@ import {
 } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { z } from "zod";
-import { GetUser_ByIdOrUsername } from "~/db/user_item";
-import { ListItemProjectFields, projectMemberPermissionsSelect, teamMembersSelect } from "~/routes/project/queries/project";
+import { CreateOrganization, GetManyOrganizations, GetOrganization_BySlugOrId } from "~/db/organization_item";
+import { GetManyProjects_ListItem } from "~/db/project_item";
+import { GetUser_ByIdOrUsername, Get_UserOrganizations } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
-import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
@@ -20,20 +20,7 @@ import { generateDbId } from "~/utils/str";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 
 export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string): Promise<RouteHandlerResponse> {
-    const organisation = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug.toLowerCase() }],
-        },
-        include: {
-            team: {
-                select: {
-                    members: {
-                        ...teamMembersSelect(),
-                    },
-                },
-            },
-        },
-    });
+    const organisation = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!organisation) {
         return notFoundResponseData("Organisation not found");
     }
@@ -71,40 +58,17 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
     if (!userId) {
         const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
 
-        if (!user) {
-            return notFoundResponseData("User not found");
-        }
+        if (!user) return notFoundResponseData("User not found");
         userId = user.id;
     }
 
-    const organisations = await prisma.organisation.findMany({
-        where: {
-            team: {
-                members: {
-                    some: {
-                        userId: userId,
-                    },
-                },
-            },
-        },
-        include: {
-            team: {
-                include: {
-                    members: {
-                        include: {
-                            user: true,
-                        },
-                    },
-                },
-            },
-        },
-    });
-    if (!organisations) {
-        return { data: [], status: HTTP_STATUS.OK };
-    }
+    const UserOrgs_Id = await Get_UserOrganizations(userId);
+    if (!UserOrgs_Id) return { data: [], status: HTTP_STATUS.OK };
+
+    const UserOrganizations = await GetManyOrganizations(UserOrgs_Id);
 
     const organisationsList: Organisation[] = [];
-    for (const org of organisations) {
+    for (const org of UserOrganizations) {
         const currMember = getCurrMember(userSession?.id, [], org.team.members);
 
         organisationsList.push({
@@ -136,16 +100,12 @@ export async function createOrganisation(
     userSession: ContextUserData,
     formData: z.infer<typeof createOrganisationFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    const possiblyExistingOrgWithSameSlug = await prisma.organisation.findUnique({
-        where: {
-            slug: formData.slug.toLowerCase(),
-        },
-    });
+    const possiblyExistingOrgWithSameSlug = await GetOrganization_BySlugOrId(formData.slug.toLowerCase());
     if (possiblyExistingOrgWithSameSlug) {
         return invalidReqestResponseData("Organisation with the same slug already exists");
     }
 
-    const newOrganisation = await prisma.organisation.create({
+    const newOrganisation = await CreateOrganization({
         data: {
             id: generateDbId(),
             name: formData.name,
@@ -177,31 +137,15 @@ export async function createOrganisation(
 }
 
 export async function getOrganisationProjects(userSession: ContextUserData | undefined, slug: string, listedOnly = false) {
-    const org = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug.toLowerCase() }],
-        },
-        include: {
-            projects: {
-                select: {
-                    ...ListItemProjectFields(),
-                    ...projectMemberPermissionsSelect(),
-                },
-                orderBy: {
-                    downloads: "desc",
-                },
-            },
-        },
-    });
-    if (!org) {
-        return notFoundResponseData("Organisation not found");
-    }
-    if (!org.projects) {
-        return { data: [], status: HTTP_STATUS.OK };
-    }
+    const Org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
+    if (!Org) return notFoundResponseData("Organisation not found");
+    if (!Org.projects) return { data: [], status: HTTP_STATUS.OK };
 
+    const OrgProjects = await GetManyProjects_ListItem(Org.projects.map((project) => project.id));
     const formattedProjects: ProjectListItem[] = [];
-    for (const project of org.projects) {
+
+    for (const project of OrgProjects) {
+        if (!project) continue;
         if (listedOnly && project.visibility !== ProjectVisibility.LISTED) continue;
 
         const projectAccessible = isProjectAccessible({
@@ -237,6 +181,8 @@ export async function getOrganisationProjects(userSession: ContextUserData | und
             color: project.color,
         });
     }
+    // Sort the projects by downloads count in descending order
+    formattedProjects.sort((_projectA, _projectB) => _projectB.downloads - _projectA.downloads);
 
     return { data: formattedProjects, status: HTTP_STATUS.OK };
 }

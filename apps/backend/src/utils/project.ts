@@ -13,3 +13,7 @@ export function GetReleaseChannelFilter(channel?: string) {
     if (channel === VersionReleaseChannel.DEV) return [VersionReleaseChannel.DEV]; // TODO: decide later whtether to return all release channels or just dev
     return [VersionReleaseChannel.RELEASE];
 }
+
+export function AddFieldToObject<T extends object, K extends string, V>(obj: T, field: K, value: V): T & Record<K, V> {
+    return { ...obj, [field]: value } as T & Record<K, V>;
+}

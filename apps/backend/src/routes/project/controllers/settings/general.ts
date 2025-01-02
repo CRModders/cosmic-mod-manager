@@ -6,9 +6,7 @@ import type { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/
 import type { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
-import { UpdateProject } from "~/db/project_item";
-import { projectMemberPermissionsSelect } from "~/routes/project/queries/project";
-import prisma from "~/services/prisma";
+import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
 import type { ContextUserData } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
@@ -18,14 +16,7 @@ export async function updateProjectDescription(
     userSession: ContextUserData,
     form: z.infer<typeof updateDescriptionFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
-
+    const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
     const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
@@ -52,14 +43,7 @@ export async function updateProjectTags(
     userSession: ContextUserData,
     formData: z.infer<typeof updateProjectTagsFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            type: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
     const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
@@ -96,13 +80,7 @@ export async function updateProjectExternalLinks(
     slug: string,
     formData: z.infer<typeof updateExternalLinksFormSchema>,
 ): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
     const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
@@ -133,14 +111,8 @@ export async function updateProjectLicense(
     userSession: ContextUserData,
     slug: string,
     formData: z.infer<typeof updateProjectLicenseFormSchema>,
-): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+) {
+    const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
     const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);

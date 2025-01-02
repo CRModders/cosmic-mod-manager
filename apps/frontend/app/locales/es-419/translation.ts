@@ -63,8 +63,7 @@ export default {
         confirmPass: "Confirmar contraseña",
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
-        deleteAccountDesc:
-            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
+        deleteAccountDesc: "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
@@ -534,7 +533,7 @@ export default {
             if (count === 1) return "Hay 1 proyecto en la cola.";
             return `Hay ${count} proyectos en la cola.`;
         },
-        // hours will eith be 24 or 48
+        // hours will either be 24 or 48
         projectsQueuedFor: (count: number, hours: number) => {
             if (count === 1) return `1 proyecto ha estado en la cola por más de ${hours} horas.`;
             return `${count} proyectos han estado en la cola por más de ${hours} horas.`;

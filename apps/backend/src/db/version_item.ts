@@ -3,7 +3,7 @@ import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import { PROJECT_VERSIONS_CACHE_KEY } from "~/types/namespaces";
-import { GetData_FromCache, VERSION_CACHE_EXPIRY_seconds } from "./_cache";
+import { GetData_FromCache, SetCache, VERSION_CACHE_EXPIRY_seconds } from "./_cache";
 import { Delete_ProjectCache_All } from "./project_item";
 
 const VERSION_SELECT = {
@@ -36,6 +36,7 @@ const VERSION_SELECT = {
     },
     dependencies: {
         select: {
+            id: true,
             projectId: true,
             versionId: true,
             dependencyType: true,
@@ -109,6 +110,58 @@ export async function GetVersions(projectSlug?: string, projectId?: string) {
     return data;
 }
 
+export async function GetMany_ProjectsVersions(projectIds: string[]) {
+    const Projects = [];
+
+    // Get cached projects from redis
+    const ProjectIds_RetrievedFromCache: string[] = [];
+    {
+        const _CachedVersionsPromises = [];
+        for (const projectId of projectIds) {
+            const cachedData = GetData_FromCache<GetVersions_ReturnType>(PROJECT_VERSIONS_CACHE_KEY, projectId);
+            _CachedVersionsPromises.push(cachedData);
+        }
+
+        const _CachedVersions = await Promise.all(_CachedVersionsPromises);
+        for (const project of _CachedVersions) {
+            if (!project) continue;
+            ProjectIds_RetrievedFromCache.push(project.id);
+            Projects.push(project);
+        }
+    }
+
+    // Get the remaining projects from the database
+    const ProjectIds_ToRetrieve = projectIds.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
+    if (ProjectIds_ToRetrieve.length === 0) return Projects;
+
+    const Remaining_ProjectVersions = await prisma.project.findMany({
+        where: {
+            id: { in: ProjectIds_ToRetrieve },
+        },
+        select: {
+            id: true,
+            slug: true,
+            versions: {
+                select: VERSION_SELECT,
+                orderBy: { datePublished: "desc" },
+            },
+        },
+    });
+
+    // Set cache for the remaining projects
+    {
+        const _SetCachePromises = [];
+        for (const project of Remaining_ProjectVersions) {
+            _SetCachePromises.push(Set_VersionsCache(PROJECT_VERSIONS_CACHE_KEY, project));
+            Projects.push(project);
+        }
+
+        await Promise.all(_SetCachePromises);
+    }
+
+    return Projects;
+}
+
 export async function CreateVersion<T extends Prisma.VersionCreateArgs>(args: Prisma.SelectSubset<T, Prisma.VersionCreateArgs>) {
     const version = await prisma.version.create(args);
     if (version?.projectId) await Delete_VersionCache(version.projectId);
@@ -166,8 +219,8 @@ async function Set_VersionsCache<T extends SetCache_Data | null>(NAMESPACE: stri
     if (!project_withVersions) return;
     const json_string = JSON.stringify(project_withVersions);
 
-    const p1 = redis.set(cacheKey(project_withVersions.id, NAMESPACE), project_withVersions.slug, "EX", VERSION_CACHE_EXPIRY_seconds);
-    const p2 = redis.set(cacheKey(project_withVersions.slug, NAMESPACE), json_string, "EX", VERSION_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(NAMESPACE, project_withVersions.id, project_withVersions.slug, VERSION_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(NAMESPACE, project_withVersions.slug, json_string, VERSION_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
 }
 

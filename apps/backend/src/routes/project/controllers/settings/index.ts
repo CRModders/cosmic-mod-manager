@@ -6,32 +6,24 @@ import type { generalProjectSettingsFormSchema } from "@app/utils/schemas/projec
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID, DeleteManyFiles_ByID } from "~/db/file_item";
-import { DeleteProject, UpdateProject } from "~/db/project_item";
-import { DeleteManyVersions_ByIds } from "~/db/version_item";
-import prisma from "~/services/prisma";
+import { DeleteProject, GetProject_Details, GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { DeleteTeam } from "~/db/team_item";
+import { Delete_UserProjectsCache } from "~/db/user_item";
+import { DeleteManyVersions_ByIds, GetVersions } from "~/db/version_item";
+import { RemoveProject_FromSearchDb } from "~/routes/search/sync-queue";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "~/services/storage";
 import { projectsDir } from "~/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 import { getAverageColor, resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
-import { projectMemberPermissionsSelect } from "../../queries/project";
 
 export async function updateProject(
     slug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof generalProjectSettingsFormSchema>,
 ) {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            name: true,
-            slug: true,
-            iconFileId: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
 
     const currMember = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
@@ -46,12 +38,7 @@ export async function updateProject(
     // If the project slug has been updated
     if (formData.slug !== project.slug) {
         // Check if the slug is available
-        const existingProjectWithSameSlug = await prisma.project.findUnique({
-            where: {
-                slug: formData.slug,
-            },
-        });
-
+        const existingProjectWithSameSlug = await GetProject_ListItem(formData.slug, formData.slug);
         if (existingProjectWithSameSlug?.id) return invalidReqestResponseData(`The slug "${formData.slug}" is already taken`);
     }
 
@@ -87,17 +74,7 @@ export async function updateProject(
 }
 
 export async function deleteProject(userSession: ContextUserData, slug: string) {
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug }],
-        },
-        select: {
-            id: true,
-            iconFileId: true,
-            gallery: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_Details(slug, slug);
     if (!project?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has the permission to delete the project
@@ -111,45 +88,46 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
     if (!hasDeleteAccess) return unauthorizedReqResponseData("You don't have the permission to delete the project");
 
     // Get all the project versions
-    const versions = await prisma.version.findMany({
-        where: { projectId: project.id },
-        include: {
-            files: true,
-        },
-    });
-    const versionIds = versions.map((version) => version.id);
-    const dbFileIds = versions.flatMap((version) => version.files.map((file) => file.fileId));
-
-    await deleteVersionsData(project.id, versionIds, dbFileIds, false);
-
-    // Delete the project gallery
+    const Versions = (await GetVersions(project.slug, project.id))?.versions || [];
+    const versionIds = Versions.map((version) => version.id);
+    const dbFileIds = Versions.flatMap((version) => version.files.map((file) => file.fileId));
     const galleryFileIds = project.gallery.map((file) => file.imageFileId);
 
-    // Delete all the image files
-    if (galleryFileIds.length > 0) {
-        await DeleteManyFiles_ByID(galleryFileIds);
-    }
+    await Promise.all([
+        deleteVersionsData(project.id, versionIds, dbFileIds, false),
 
-    // Delete project icon file
-    if (project.iconFileId) await DeleteFile_ByID(project.iconFileId);
+        // Delete all the image files
+        galleryFileIds.length > 0 ? DeleteManyFiles_ByID(galleryFileIds) : null,
 
-    // Delete the project
-    await DeleteProject({
-        where: {
-            id: project.id,
-        },
-    });
+        // Delete project icon file
+        project.iconFileId ? DeleteFile_ByID(project.iconFileId) : null,
 
-    // Delete the project associated team
-    await prisma.team.delete({
-        where: {
-            id: project.team.id,
-        },
-    });
-    // ? All the teamMember tables will be automatically deleted
+        // Delete the project
+        DeleteProject({
+            where: {
+                id: project.id,
+            },
+        }),
 
-    // Delete the project's storage folder
-    await deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectsDir(project.id));
+        // Delete the project associated team
+        DeleteTeam({
+            where: {
+                id: project.team.id,
+            },
+        }),
+        // ? All the teamMember tables will be automatically deleted
+
+        // Delete the project's storage folder
+        deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectsDir(project.id)),
+
+        // Remove from search index
+        RemoveProject_FromSearchDb(project.id),
+
+        // Delete the projects list cache from all team members
+        ...project.team.members.map((member) => {
+            return Delete_UserProjectsCache(member.userId);
+        }),
+    ]);
 
     return {
         data: {
@@ -161,29 +139,22 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
 }
 
 export async function deleteVersionsData(projectId: string, ids: string[], fileIds: string[], deleteUploadedFiles = true) {
-    // Delete all the dbFiles
-    await DeleteManyFiles_ByID(fileIds);
+    await Promise.all([
+        // Delete all the dbFiles
+        DeleteManyFiles_ByID(fileIds),
 
-    // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
-    // ? Same for version dependencies
+        // ? No need to manually delete the versionFile tables as the version deletion will automatically delete the versionFile tables
+        // ? Same for version dependencies
 
-    await DeleteManyVersions_ByIds(ids, projectId);
+        DeleteManyVersions_ByIds(ids, projectId),
+    ]);
 
     if (!deleteUploadedFiles) return;
     await Promise.all(ids.map((versionId) => deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, projectId, versionId)));
 }
 
 export async function updateProjectIcon(userSession: ContextUserData, slug: string, icon: File) {
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug }],
-        },
-        select: {
-            id: true,
-            iconFileId: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_ListItem(slug, slug);
     if (!project) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
 
     const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
@@ -216,41 +187,34 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
     const projectColor = await getAverageColor(saveIcon);
 
-    await CreateFile({
-        data: {
-            id: fileId,
-            name: fileId,
-            size: icon.size,
-            type: saveIconFileType,
-            url: newFileUrl,
-            storageService: FILE_STORAGE_SERVICE.LOCAL,
-        },
-    });
+    await Promise.all([
+        CreateFile({
+            data: {
+                id: fileId,
+                name: fileId,
+                size: icon.size,
+                type: saveIconFileType,
+                url: newFileUrl,
+                storageService: FILE_STORAGE_SERVICE.LOCAL,
+            },
+        }),
 
-    await UpdateProject({
-        where: {
-            id: project.id,
-        },
-        data: {
-            iconFileId: fileId,
-            color: projectColor,
-        },
-    });
+        UpdateProject({
+            where: {
+                id: project.id,
+            },
+            data: {
+                iconFileId: fileId,
+                color: projectColor,
+            },
+        }),
+    ]);
 
     return { data: { success: true, message: "Project icon updated" }, status: HTTP_STATUS.OK };
 }
 
 export async function deleteProjectIcon(userSession: ContextUserData, slug: string) {
-    const project = await prisma.project.findFirst({
-        where: {
-            OR: [{ id: slug }, { slug: slug }],
-        },
-        select: {
-            id: true,
-            iconFileId: true,
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const project = await GetProject_ListItem(slug, slug);
     if (!project) return notFoundResponseData("Project not found");
     if (!project.iconFileId) return invalidReqestResponseData("Project does not have any icon");
 
@@ -264,17 +228,19 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");
 
     const deletedDbFile = await DeleteFile_ByID(project.iconFileId);
-    await deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name);
+    await Promise.all([
+        deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name),
 
-    await UpdateProject({
-        where: {
-            id: project.id,
-        },
-        data: {
-            iconFileId: null,
-            color: null,
-        },
-    });
+        UpdateProject({
+            where: {
+                id: project.id,
+            },
+            data: {
+                iconFileId: null,
+                color: null,
+            },
+        }),
+    ]);
 
     return { data: { success: true, message: "Project icon deleted" }, status: HTTP_STATUS.OK };
 }

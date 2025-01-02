@@ -7,9 +7,16 @@ import { OrganisationPermission } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
-import { Delete_ProjectCache_All, UpdateProject } from "~/db/project_item";
+import { DeleteOrganization, Delete_OrganizationCache_All, GetOrganization_BySlugOrId, UpdateOrganization } from "~/db/organization_item";
+import {
+    Delete_ProjectCache_All,
+    GetManyProjects_ListItem,
+    GetProject_ListItem,
+    UpdateManyProjects,
+    UpdateProject,
+} from "~/db/project_item";
+import { CreateTeamMember, Create_ManyTeamMembers, Delete_ManyTeamMembers } from "~/db/team-member_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
-import prisma from "~/services/prisma";
 import { deleteOrgDirectory, deleteOrgFile, saveOrgFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
@@ -22,25 +29,9 @@ import {
 } from "~/utils/http";
 import { resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
-import { orgMemberPermsSelect } from "../queries";
 
-export async function updateOrg(
-    ctx: Context,
-    userSession: ContextUserData,
-    orgId: string,
-    formData: z.infer<typeof orgSettingsFormSchema>,
-): Promise<RouteHandlerResponse> {
-    const org = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: orgId }, { slug: orgId.toLowerCase() }],
-        },
-        select: {
-            id: true,
-            iconFileId: true,
-            slug: true,
-            ...orgMemberPermsSelect({ userId: userSession.id, accepted: true }),
-        },
-    });
+export async function updateOrg(ctx: Context, userSession: ContextUserData, slug: string, formData: z.infer<typeof orgSettingsFormSchema>) {
+    const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org) return notFoundResponseData();
 
     // Permission check
@@ -58,12 +49,7 @@ export async function updateOrg(
 
     // Check slug validity if it's being updated
     if (formData.slug !== org.slug) {
-        const existingOrg = await prisma.organisation.findUnique({
-            where: {
-                slug: formData.slug,
-            },
-        });
-
+        const existingOrg = await GetOrganization_BySlugOrId(formData.slug);
         if (existingOrg?.id) return invalidReqestResponseData(`The slug "${formData.slug}" is already taken`);
     }
 
@@ -77,10 +63,10 @@ export async function updateOrg(
     // Update the org icon
     if (formData.icon instanceof File) {
         // @ts-ignore
-        icon = (await updateOrgIcon(ctx, userSession, orgId, formData.icon, true)).data?.newIcon || null;
+        icon = (await updateOrgIcon(ctx, userSession, slug, formData.icon, true)).data?.newIcon || null;
     }
 
-    const updatedOrg = await prisma.organisation.update({
+    const updatedOrg = await UpdateOrganization({
         where: {
             id: org.id,
         },
@@ -98,21 +84,11 @@ export async function updateOrg(
 export async function updateOrgIcon(
     ctx: Context,
     userSession: ContextUserData,
-    orgId: string,
+    slug: string,
     icon: File,
     dontUpdateOrg = false,
 ): Promise<RouteHandlerResponse> {
-    const org = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
-        },
-        select: {
-            id: true,
-            slug: true,
-            iconFileId: true,
-            ...orgMemberPermsSelect({ userId: userSession.id, accepted: true }),
-        },
-    });
+    const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org) return notFoundResponseData("Organization not found");
 
     const currMember = org.team.members?.[0];
@@ -158,7 +134,7 @@ export async function updateOrgIcon(
     });
 
     if (dontUpdateOrg === false) {
-        await prisma.organisation.update({
+        await UpdateOrganization({
             where: {
                 id: org.id,
             },
@@ -171,18 +147,8 @@ export async function updateOrgIcon(
     return { data: { success: true, message: "Organization icon updated", newIcon: fileId }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {
-    const org = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: orgId }, { slug: orgId.toLocaleLowerCase() }],
-        },
-        select: {
-            id: true,
-            slug: true,
-            iconFileId: true,
-            ...orgMemberPermsSelect({ userId: userSession.id, accepted: true }),
-        },
-    });
+export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+    const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org) return notFoundResponseData("Organization not found");
     if (!org.iconFileId) return invalidReqestResponseData("Org does not have any icon");
 
@@ -201,7 +167,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
     const deletedDbFile = await DeleteFile_ByID(org.iconFileId);
     await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
 
-    await prisma.organisation.update({
+    await UpdateOrganization({
         where: {
             id: org.id,
         },
@@ -213,27 +179,9 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
     return { data: { success: true, message: "Organization icon deleted" }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgId: string): Promise<RouteHandlerResponse> {
-    const org = await prisma.organisation.findFirst({
-        where: {
-            OR: [{ id: orgId }, { slug: orgId.toLowerCase() }],
-        },
-        select: {
-            id: true,
-            iconFileId: true,
-            projects: {
-                select: {
-                    id: true,
-                    slug: true,
-                    teamId: true,
-                },
-            },
-            ...orgMemberPermsSelect({ accepted: true }),
-        },
-    });
-    if (!org) {
-        return notFoundResponseData();
-    }
+export async function deleteOrg(ctx: Context, userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+    const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
+    if (!org?.id) return notFoundResponseData();
 
     // Check if the member has the required permission to delete the org
     const currMember = org.team.members?.find((member) => member.userId === userSession.id);
@@ -248,67 +196,82 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
         return unauthorizedReqResponseData();
     }
     const orgOwner = org.team.members.find((member) => member.isOwner);
-    if (!orgOwner) {
-        return serverErrorResponseData();
-    }
+    if (!orgOwner) return serverErrorResponseData();
 
     // Delete icon
-    if (org.iconFileId) {
-        await DeleteFile_ByID(org.iconFileId);
-    }
+    if (org.iconFileId) await DeleteFile_ByID(org.iconFileId);
 
     // Delete storate directory
     await deleteOrgDirectory(FILE_STORAGE_SERVICE.LOCAL, org.id);
 
-    const orgProjectIds = org.projects.map((project) => project.id);
-    const projectTeamIds = org.projects.map((project) => project.teamId);
+    const OrgProjects = await GetManyProjects_ListItem(org.projects.map((project) => project.id));
+    const orgProjectIds: string[] = [];
+    const projectTeamIds: string[] = [];
+    const memberUserIds: string[] = [];
+
+    for (const _orgProject of OrgProjects) {
+        if (!_orgProject) continue;
+        orgProjectIds.push(_orgProject.id);
+        projectTeamIds.push(_orgProject.teamId);
+
+        for (const member of _orgProject.team.members) {
+            memberUserIds.push(member.userId);
+        }
+    }
 
     // Remove project cache
     // TODO: Move this to DeleteManyProjects function when rewriting the prisma transaction
-    for (const project of org.projects) {
+    for (const _project of OrgProjects) {
         // not awaiting on purpose
-        Delete_ProjectCache_All(project.id, project.slug);
+        if (_project) Delete_ProjectCache_All(_project.id);
     }
 
-    await prisma.$transaction([
+    await Promise.all([
         // Remove the organisation from all projects
-        prisma.project.updateMany({
-            where: {
-                id: {
-                    in: orgProjectIds,
+        UpdateManyProjects(
+            {
+                where: {
+                    id: { in: orgProjectIds },
                 },
+                data: { organisationId: null },
             },
-            data: {
-                organisationId: null,
-            },
-        }),
+            orgProjectIds,
+        ),
 
         // Reset the team members from all projects
-        prisma.teamMember.deleteMany({
-            where: {
-                teamId: {
-                    in: projectTeamIds,
+        Delete_ManyTeamMembers(
+            {
+                where: {
+                    teamId: {
+                        in: projectTeamIds,
+                    },
                 },
             },
-        }),
+            projectTeamIds,
+            memberUserIds,
+        ),
 
         // Make the org owner the owner of all projects
-        prisma.teamMember.createMany({
-            data: projectTeamIds.map((teamId) => ({
-                id: generateDbId(),
-                teamId: teamId,
-                userId: orgOwner.userId,
-                role: "Inherited Owner",
-                isOwner: true,
-                permissions: [],
-                organisationPermissions: [],
-                accepted: true,
-                dateAccepted: new Date(),
-            })),
-        }),
+        Create_ManyTeamMembers(
+            {
+                data: projectTeamIds.map((teamId) => ({
+                    id: generateDbId(),
+                    teamId: teamId,
+                    userId: orgOwner.userId,
+                    role: "Inherited Owner",
+                    isOwner: true,
+                    permissions: [],
+                    organisationPermissions: [],
+                    accepted: true,
+                    dateAccepted: new Date(),
+                })),
+            },
+            projectTeamIds,
+            memberUserIds,
+        ),
 
         // Delete the org
-        prisma.organisation.delete({
+        DeleteOrganization({
             where: {
                 id: org.id,
             },
@@ -319,22 +282,7 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, orgI
 }
 
 export async function addProjectToOrganisation(userSession: ContextUserData, orgId: string, projectId: string) {
-    const org = await prisma.organisation.findUnique({
-        where: {
-            id: orgId,
-        },
-        select: {
-            id: true,
-            team: {
-                select: {
-                    members: {
-                        where: { userId: userSession.id, accepted: true },
-                        select: { id: true, userId: true, isOwner: true, organisationPermissions: true },
-                    },
-                },
-            },
-        },
-    });
+    const org = await GetOrganization_BySlugOrId(undefined, orgId);
     if (!org) return notFoundResponseData("Organization not found");
 
     const currMember = getCurrMember(userSession.id, [], org.team.members);
@@ -346,24 +294,7 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
     );
     if (!canAddProjects) return unauthorizedReqResponseData("You don't have the permission to add projects to the organization");
 
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-        select: {
-            id: true,
-            teamId: true,
-            organisationId: true,
-            team: {
-                select: {
-                    members: {
-                        where: { userId: userSession.id },
-                        select: { id: true, userId: true, isOwner: true },
-                    },
-                },
-            },
-        },
-    });
+    const project = await GetProject_ListItem(undefined, projectId);
     if (!project) return notFoundResponseData("Project not found");
     if (project.organisationId) return invalidReqestResponseData("Project is already part of an organization");
 
@@ -371,13 +302,19 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
     if (!hasRootAccess(projectMembership?.isOwner, userSession.role))
         return unauthorizedReqResponseData("You are not the owner of the project");
 
+    const memberUserIds = project.team.members.map((member) => member.userId);
+
     await Promise.all([
         // Delete the team members from the project's current team
-        prisma.teamMember.deleteMany({
-            where: {
-                teamId: project.teamId,
+        Delete_ManyTeamMembers(
+            {
+                where: {
+                    teamId: project.teamId,
+                },
             },
-        }),
+            [project.teamId],
+            memberUserIds,
+        ),
 
         // Update the project
         UpdateProject({
@@ -388,28 +325,15 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
                 organisationId: org.id,
             },
         }),
+
+        Delete_OrganizationCache_All(org.id, org.slug),
     ]);
 
     return { data: { success: true, message: "Project added to organization" }, status: HTTP_STATUS.OK };
 }
 
 export async function removeProjectFromOrg(ctx: Context, userSession: ContextUserData, orgId: string, projectId: string) {
-    const org = await prisma.organisation.findUnique({
-        where: {
-            id: orgId,
-        },
-        select: {
-            id: true,
-            team: {
-                select: {
-                    members: {
-                        where: { userId: userSession.id, accepted: true },
-                        select: { id: true, userId: true, isOwner: true, organisationPermissions: true },
-                    },
-                },
-            },
-        },
-    });
+    const org = await GetOrganization_BySlugOrId(undefined, orgId);
     if (!org) return notFoundResponseData("Organization not found");
 
     const currMember = getCurrMember(userSession.id, [], org.team.members);
@@ -424,29 +348,29 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
         return unauthorizedReqResponseData("You don't have the permission to remove projects from the organization");
     }
 
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-        select: {
-            id: true,
-            teamId: true,
-            organisationId: true,
-        },
-    });
-    if (!project) return notFoundResponseData("Project not found");
+    const _Org_projectId = org.projects.find((project) => project.id === projectId)?.id;
+    if (!_Org_projectId) return notFoundResponseData("Project not found");
+
+    const OrgProject = await GetProject_ListItem(undefined, _Org_projectId);
+    if (!OrgProject || OrgProject.organisationId !== org.id) return notFoundResponseData("Project not found");
+
+    const memberUserIds = OrgProject.team.members.map((member) => member.userId);
 
     await Promise.all([
-        prisma.teamMember.deleteMany({
-            where: {
-                teamId: project.teamId,
+        Delete_ManyTeamMembers(
+            {
+                where: {
+                    teamId: OrgProject.teamId,
+                },
             },
-        }),
+            [OrgProject.teamId],
+            memberUserIds,
+        ),
 
-        prisma.teamMember.create({
+        CreateTeamMember({
             data: {
                 id: generateDbId(),
-                teamId: project.teamId,
+                teamId: OrgProject.teamId,
                 userId: userSession.id,
                 role: "Inherited Owner",
                 isOwner: true,
@@ -459,12 +383,14 @@ export async function removeProjectFromOrg(ctx: Context, userSession: ContextUse
 
         UpdateProject({
             where: {
-                id: project.id,
+                id: OrgProject.id,
             },
             data: {
                 organisationId: null,
             },
         }),
+
+        Delete_OrganizationCache_All(org.id, org.slug),
     ]);
 
     return { data: { success: true, message: "Project removed from organization" }, status: HTTP_STATUS.OK };

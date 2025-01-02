@@ -7,11 +7,10 @@ import type { ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
-import { GetUser_ByIdOrUsername, GetUser_Unique, UpdateUser } from "~/db/user_item";
-import { ListItemProjectFields, projectMembersSelect } from "~/routes/project/queries/project";
+import { GetManyProjects_ListItem } from "~/db/project_item";
+import { GetUser_ByIdOrUsername, GetUser_Unique, Get_UserProjects, UpdateUser } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
 import { deleteUserDataCache } from "~/services/cache/session";
-import prisma from "~/services/prisma";
 import { deleteUserFile, saveUserFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
@@ -122,29 +121,14 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
     const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
-    const projects = await prisma.project.findMany({
-        where: {
-            team: {
-                members: {
-                    some: {
-                        userId: user.id,
-                        accepted: true,
-                    },
-                },
-            },
-        },
-        select: {
-            ...ListItemProjectFields(),
-            ...projectMembersSelect(),
-        },
-    });
+    const UserProjects_Id = await Get_UserProjects(user.id);
+    if (!UserProjects_Id.length) return { data: [], status: HTTP_STATUS.OK };
 
-    const allProjects = projects.toSorted((a, b) => b.downloads - a.downloads);
-
-    if (!allProjects?.length) return { data: [], status: HTTP_STATUS.OK };
+    const UserProjects = await GetManyProjects_ListItem(UserProjects_Id);
+    UserProjects.sort((a, b) => b.downloads - a.downloads);
 
     const projectListData: ProjectListItem[] = [];
-    for (const project of allProjects) {
+    for (const project of UserProjects) {
         if (!project) continue;
 
         const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility);

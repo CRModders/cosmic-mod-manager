@@ -5,7 +5,8 @@ import type { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from 
 import { FileType, ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { CreateManyFiles, DeleteFile_ByID } from "~/db/file_item";
-import prisma from "~/services/prisma";
+import { CreateGalleryItem, DeleteGalleryItem, UpdateGalleryItem } from "~/db/gallery_item";
+import { GetProject_Details } from "~/db/project_item";
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
@@ -18,40 +19,26 @@ import {
 } from "~/utils/http";
 import { resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
-import { projectMemberPermissionsSelect } from "../queries/project";
 
 export async function addNewGalleryImage(
     slug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof addNewGalleryImageFormSchema>,
 ) {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            gallery: {
-                select: {
-                    id: true,
-                    orderIndex: true,
-                },
-                orderBy: { orderIndex: "desc" },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
-    if (!project?.id) return notFoundResponseData();
-    if (project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
+    const Project = await GetProject_Details(slug, slug);
+    if (!Project?.id) return notFoundResponseData();
+    if (Project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
         return invalidReqestResponseData(`Maximum of ${MAX_PROJECT_GALLERY_IMAGES_COUNT} gallery images allowed!`);
 
     // Check if the order index is not already occupied
-    for (const item of project.gallery) {
+    for (const item of Project.gallery) {
         if (item.orderIndex === formData.orderIndex) {
             return invalidReqestResponseData("An image with same order index already exists");
         }
     }
 
     // Check if the user has the required permissions
-    const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team?.members || []);
+    const memberObj = getCurrMember(userSession.id, Project.team.members, Project.organisation?.team?.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
         memberObj?.permissions as ProjectPermission[],
@@ -64,16 +51,8 @@ export async function addNewGalleryImage(
 
     // Check if there's already a featured image
     if (formData.featured === true) {
-        const existingFeaturedImage = await prisma.galleryItem.findFirst({
-            where: {
-                projectId: project.id,
-                featured: true,
-            },
-        });
-
-        if (existingFeaturedImage?.id) {
-            return invalidReqestResponseData("A featured gallery image already exists");
-        }
+        const ExistingFeaturedImage = Project.gallery.some((item) => item.featured === true);
+        if (ExistingFeaturedImage) return invalidReqestResponseData("A featured gallery image already exists");
     }
 
     const storageService = FILE_STORAGE_SERVICE.LOCAL;
@@ -86,11 +65,11 @@ export async function addNewGalleryImage(
         withoutEnlargement: true,
     });
     const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
-    const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, project.id, thumbnailImg, thumbnailFileId);
+    const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, Project.id, thumbnailImg, thumbnailFileId);
 
     // Save the raw gallery file
     const rawFileId = `${generateDbId()}.${fileType}`;
-    const rawFileUrl = await saveProjectGalleryFile(storageService, project.id, formData.image, rawFileId);
+    const rawFileUrl = await saveProjectGalleryFile(storageService, Project.id, formData.image, rawFileId);
 
     if (!rawFileUrl || !thumbnailSaveUrl) return serverErrorResponseData("Failed to upload the image");
 
@@ -118,16 +97,16 @@ export async function addNewGalleryImage(
     });
 
     // Create the gallery item
-    await prisma.galleryItem.create({
+    await CreateGalleryItem({
         data: {
             id: generateDbId(),
-            projectId: project.id,
+            projectId: Project.id,
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
             imageFileId: rawFileId,
             thumbnailFileId: thumbnailFileId,
-            orderIndex: formData.orderIndex || (project.gallery?.[0]?.orderIndex || 0) + 1,
+            orderIndex: formData.orderIndex || (Project.gallery?.[0]?.orderIndex || 0) + 1,
         },
     });
 
@@ -135,23 +114,11 @@ export async function addNewGalleryImage(
 }
 
 export async function removeGalleryImage(slug: string, userSession: ContextUserData, galleryItemId: string): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            gallery: {
-                where: { id: galleryItemId },
-                select: {
-                    id: true,
-                    imageFileId: true,
-                    thumbnailFileId: true,
-                },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
-    const galleryItem = project?.gallery?.[0];
-    if (!project?.id || !galleryItem?.id) return notFoundResponseData();
+    const project = await GetProject_Details(slug, slug);
+    if (!project?.id) return notFoundResponseData();
+
+    const galleryItem = project.gallery.find((item) => item.id === galleryItemId);
+    if (!galleryItem) return notFoundResponseData();
 
     const currMember = getCurrMember(userSession.id, project.team.members, project.organisation?.team.members || []);
     if (
@@ -166,7 +133,7 @@ export async function removeGalleryImage(slug: string, userSession: ContextUserD
     }
 
     // Delete gallery item from database
-    await prisma.galleryItem.delete({
+    await DeleteGalleryItem({
         where: { id: galleryItemId },
     });
 
@@ -189,22 +156,8 @@ export async function updateGalleryImage(
     userSession: ContextUserData,
     galleryItemId: string,
     formData: z.infer<typeof updateGalleryImageFormSchema>,
-): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: slug },
-        select: {
-            id: true,
-            gallery: {
-                select: {
-                    id: true,
-                    orderIndex: true,
-                },
-                orderBy: { orderIndex: "desc" },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
-
+) {
+    const project = await GetProject_Details(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
     // Check if the order index is not already occupied
@@ -229,20 +182,11 @@ export async function updateGalleryImage(
 
     // Check if there's already a featured image
     if (formData.featured === true) {
-        const existingFeaturedImage = await prisma.galleryItem.findFirst({
-            where: {
-                projectId: project.id,
-                featured: true,
-                id: {
-                    not: galleryItemId,
-                },
-            },
-        });
-
-        if (existingFeaturedImage?.id) return invalidReqestResponseData("A featured gallery image already exists");
+        const ExistingFeaturedImage = project.gallery.some((item) => item.featured === true && item.id !== galleryItemId);
+        if (ExistingFeaturedImage) return invalidReqestResponseData("A featured gallery image already exists");
     }
 
-    await prisma.galleryItem.update({
+    await UpdateGalleryItem({
         where: {
             id: galleryItemId,
             projectId: project.id,

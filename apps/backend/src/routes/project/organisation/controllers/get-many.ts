@@ -1,21 +1,16 @@
 import type { OrganisationListItem } from "@app/utils/types/api";
-import prisma from "~/services/prisma";
+import { GetManyOrganizations } from "~/db/organization_item";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { orgIconUrl } from "~/utils/urls";
 
-export async function getManyOrgs(projectIds: string[]): Promise<RouteHandlerResponse> {
-    const list = await prisma.organisation.findMany({
-        where: {
-            id: {
-                in: projectIds,
-            },
-        },
-    });
-
+export async function getManyOrgs(orgIds: string[]): Promise<RouteHandlerResponse> {
+    const list = await GetManyOrganizations(orgIds);
     const orgsList: OrganisationListItem[] = [];
 
     for (const org of list) {
+        if (!org) continue;
+
         orgsList.push({
             id: org.id,
             teamId: org.teamId,

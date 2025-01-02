@@ -531,7 +531,7 @@ export default {
             if (count === 1) return "There is 1 project in the queue.";
             return `There are ${count} projects in the queue.`;
         },
-        // hours will eith be 24 or 48
+        // hours will either be 24 or 48
         projectsQueuedFor: (count: number, hours: number) => {
             if (count === 1) return `1 project has been in the queue for over ${hours} hours.`;
             return `${count} projects have been in the queue for over ${hours} hours.`;

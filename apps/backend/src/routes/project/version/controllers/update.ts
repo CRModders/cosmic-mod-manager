@@ -5,11 +5,10 @@ import type { File as DBFile } from "@prisma/client";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { GetManyFiles_ByID } from "~/db/file_item";
-import { UpdateProject } from "~/db/project_item";
-import { UpdateVersion } from "~/db/version_item";
+import { GetProject_Details, GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { GetVersions, UpdateVersion } from "~/db/version_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getFilesFromId } from "~/routes/project/queries/file";
-import { projectMemberPermissionsSelect } from "~/routes/project/queries/project";
 import {
     aggregateGameVersions,
     aggregateProjectLoaderNames,
@@ -21,7 +20,6 @@ import {
 import prisma from "~/services/prisma";
 import { deleteProjectVersionDirectory } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { createVersionDependencies, deleteExcessDevReleases } from "./new-version";
 
@@ -31,45 +29,30 @@ export async function updateVersionData(
     versionSlug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof updateVersionFormSchema>,
-): Promise<RouteHandlerResponse> {
-    const project = await prisma.project.findUnique({
-        where: { slug: projectSlug },
-        select: {
-            id: true,
-            loaders: true,
-            type: true,
-            gameVersions: true,
-            versions: {
-                select: {
-                    id: true,
-                    slug: true,
-                    releaseChannel: true,
-                    loaders: true,
-                    gameVersions: true,
-                    datePublished: true,
-                    files: {
-                        where: { isPrimary: false },
-                        select: {
-                            id: true,
-                            fileId: true,
-                        },
-                    },
-                    dependencies: true,
-                },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+) {
+    const Project = await GetProject_Details(projectSlug, projectSlug);
+    if (!Project?.id) return notFoundResponseData("Project not found");
 
-    const versions = project?.versions || [];
-    let targetVersion = versions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
-    if (versionSlug === "latest") targetVersion = versions?.[0];
+    const _AllVersions = (await GetVersions(undefined, Project.id))?.versions || [];
+    if (!_AllVersions.length) return notFoundResponseData("Project not found");
+
+    const ProjectVersions = [];
+    for (const version of _AllVersions) {
+        // Primary files cannot be edited or deleted, so better to just exclude them from the list althogether
+        ProjectVersions.push({
+            ...version,
+            files: version.files.filter((file) => file.isPrimary === false),
+        });
+    }
+
+    let targetVersion = ProjectVersions.find((version) => version.slug === versionSlug || version.id === versionSlug);
+    if (versionSlug === "latest") targetVersion = ProjectVersions[0];
 
     // Return if project or target version not found
-    if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
+    if (!Project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to edit a version
-    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
+    const memberObj = getCurrMember(userSession.id, Project?.team.members || [], Project?.organisation?.team.members || []);
     const canUpdateVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
         memberObj?.permissions as ProjectPermission[],
@@ -82,7 +65,7 @@ export async function updateVersionData(
     }
 
     // Check the validity of loaders
-    const allowedLoaders = getLoadersByProjectType(project.type as ProjectType[]).map((loader) => loader.name);
+    const allowedLoaders = getLoadersByProjectType(Project.type as ProjectType[]).map((loader) => loader.name);
     for (const loader of formData.loaders || []) {
         if (!allowedLoaders.includes(loader)) {
             return invalidReqestResponseData(`Loader ${loader} not supported by current project type.`);
@@ -124,12 +107,12 @@ export async function updateVersionData(
                 if (dbFile) deletedFilesData.push(dbFile);
             }
 
-            await deleteVersionFiles(project.id, targetVersion.id, deletedFilesData);
+            await deleteVersionFiles(Project.id, targetVersion.id, deletedFilesData);
         }
 
         // Check if duplicate files are not being uploaded
         const isDuplicate = await isAnyDuplicateFile({
-            projectId: project.id,
+            projectId: Project.id,
             files: newAdditionalFiles,
         });
 
@@ -141,7 +124,7 @@ export async function updateVersionData(
         if (newAdditionalFiles.length) {
             await createVersionFiles({
                 versionId: targetVersion.id,
-                projectId: project.id,
+                projectId: Project.id,
                 files: newAdditionalFiles.map((file) => ({
                     file: file,
                     isPrimary: false,
@@ -159,7 +142,7 @@ export async function updateVersionData(
         const deletedDependencies: string[] = [];
 
         for (const dependency of dependenciesList) {
-            if (dependency.projectId === project.id) continue;
+            if (dependency.projectId === Project.id) continue;
 
             let isNewDependency = true;
             for (const existingDependency of targetVersion.dependencies) {
@@ -203,8 +186,8 @@ export async function updateVersionData(
     // Only update dev releases if the release channel is changed
     if (formData.releaseChannel === VersionReleaseChannel.DEV && formData.releaseChannel !== targetVersion.releaseChannel) {
         deletedDevVersions = await deleteExcessDevReleases({
-            projectId: project.id,
-            versions: project.versions,
+            projectId: Project.id,
+            versions: ProjectVersions,
         });
     }
 
@@ -212,7 +195,7 @@ export async function updateVersionData(
     const _loaders: string[] = [];
     const _gameVersions: string[] = [];
 
-    for (const version of project.versions) {
+    for (const version of ProjectVersions) {
         if (deletedDevVersions.includes(version.id)) continue;
 
         // Exclude the target version from the list, instead use the new data
@@ -247,7 +230,7 @@ export async function updateVersionData(
     // Update project loaders list and supported game versions
     await UpdateProject({
         where: {
-            id: project.id,
+            id: Project.id,
         },
         data: {
             gameVersions: aggregatedGameVersions,
@@ -268,37 +251,23 @@ export async function updateVersionData(
 }
 
 export async function deleteProjectVersion(ctx: Context, projectSlug: string, versionSlug: string, userSession: ContextUserData) {
-    const project = await prisma.project.findUnique({
-        where: {
-            slug: projectSlug,
-        },
-        select: {
-            id: true,
-            loaders: true,
-            versions: {
-                select: {
-                    id: true,
-                    slug: true,
-                    files: true,
-                    loaders: true,
-                    gameVersions: true,
-                },
-            },
-            ...projectMemberPermissionsSelect({ userId: userSession.id }),
-        },
-    });
+    const Project = await GetProject_ListItem(projectSlug, projectSlug);
+    if (!Project?.id) return notFoundResponseData("Project not found");
+
+    const ProjectVersions = (await GetVersions(undefined, Project.id))?.versions || [];
+
     let targetVersion = null;
-    for (const version of project?.versions || []) {
+    for (const version of ProjectVersions) {
         if (version.slug === versionSlug || version.id === versionSlug) {
             targetVersion = version;
             break;
         }
     }
 
-    if (!project?.id || !targetVersion?.id) return notFoundResponseData("Project not found");
+    if (!targetVersion?.id) return notFoundResponseData("Project not found");
 
     // Check if the user has permission to delete a version
-    const memberObj = getCurrMember(userSession.id, project?.team.members || [], project?.organisation?.team.members || []);
+    const memberObj = getCurrMember(userSession.id, Project?.team.members || [], Project?.organisation?.team.members || []);
     const canDeleteVersion = doesMemberHaveAccess(
         ProjectPermission.DELETE_VERSION,
         memberObj?.permissions as ProjectPermission[],
@@ -313,10 +282,10 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
     const filesData = await GetManyFiles_ByID(targetVersion.files.map((file) => file.fileId));
 
     // Delete all the files
-    await deleteVersionFiles(project.id, targetVersion.id, filesData);
+    await deleteVersionFiles(Project.id, targetVersion.id, filesData);
 
     // Delete the version directory
-    await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, project.id, targetVersion.id);
+    await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, Project.id, targetVersion.id);
 
     const deletedVersion = await prisma.version.delete({
         where: {
@@ -328,7 +297,7 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
     const projectLoaders: string[] = [];
     const projectGameVersions: string[] = [];
 
-    for (const version of project.versions) {
+    for (const version of ProjectVersions) {
         // Exclude the target version from the list, instead use the new data
         if (version.id === deletedVersion.id) continue;
         projectLoaders.push(...version.loaders);
@@ -340,7 +309,7 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
 
     await UpdateProject({
         where: {
-            id: project.id,
+            id: Project.id,
         },
         data: {
             gameVersions: aggregatedGameVersions,

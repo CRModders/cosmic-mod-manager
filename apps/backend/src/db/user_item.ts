@@ -2,8 +2,8 @@ import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
-import { USER_DATA_CACHE_KEY } from "~/types/namespaces";
-import { GetData_FromCache, USER_DATA_CACHE_EXPIRY_seconds } from "./_cache";
+import { USER_DATA_CACHE_KEY, USER_ORGANIZATIONS_CACHE_KEY, USER_PROJECTS_CACHE_KEY } from "~/types/namespaces";
+import { GetData_FromCache, SetCache, USER_DATA_CACHE_EXPIRY_seconds } from "./_cache";
 
 const USER_DATA_SELECT_FIELDS = {
     id: true,
@@ -75,48 +75,95 @@ export async function GetUser_ByIdOrUsername(userName?: string, id?: string) {
 }
 
 export async function GetManyUsers_ByIds(userIds: string[]) {
-    const UserIds_RetrievedFromCache: string[] = [];
-    const cachedUsers = [];
+    const Users = [];
 
+    // Get cached users from redis
+    const UserIds_RetrievedFromCache: string[] = [];
     {
-        const _cachedUsers_promises: Promise<GetUser_ReturnType>[] = [];
+        const _cachedUsers_promises: Promise<GetUser_ReturnType | null>[] = [];
         for (const id of userIds) {
             const cachedUser = GetData_FromCache<GetUser_ReturnType>(USER_DATA_CACHE_KEY, id);
             _cachedUsers_promises.push(cachedUser);
         }
 
         const _cachedUsers = await Promise.all(_cachedUsers_promises);
-        for (let i = 0; i < _cachedUsers.length; i++) {
-            const _user = _cachedUsers[i];
-            if (!_user) continue;
-
-            cachedUsers.push(_user);
-            UserIds_RetrievedFromCache.push(_user.id);
+        for (const user of _cachedUsers) {
+            if (!user) continue;
+            UserIds_RetrievedFromCache.push(user.id);
+            Users.push(user);
         }
     }
 
+    // Get remaining users from db
     const UserIds_ToFetchFromDb = userIds.filter((id) => !UserIds_RetrievedFromCache.includes(id));
-    if (UserIds_ToFetchFromDb.length === 0) return cachedUsers;
+    const _DB_Users =
+        UserIds_ToFetchFromDb.length > 0
+            ? await prisma.user.findMany({
+                  where: { id: { in: UserIds_ToFetchFromDb } },
+              })
+            : [];
 
-    const Users = await prisma.user.findMany({
+    // Set cache for remaining users
+    {
+        const _setCache_promises = [];
+        for (const user of _DB_Users) {
+            const setCache = Set_UserCache(user);
+            _setCache_promises.push(setCache);
+            Users.push(user);
+        }
+
+        await Promise.all(_setCache_promises);
+    }
+
+    return Users;
+}
+
+export async function Get_UserProjects(userId: string) {
+    const CachedData = await GetData_FromCache<string[]>(USER_PROJECTS_CACHE_KEY, userId);
+    if (CachedData) return CachedData;
+
+    const UserProjects = await prisma.project.findMany({
         where: {
-            id: {
-                in: UserIds_ToFetchFromDb,
+            team: {
+                members: {
+                    some: {
+                        userId: userId,
+                    },
+                },
             },
         },
-        select: USER_DATA_SELECT_FIELDS,
+        select: {
+            id: true,
+        },
     });
 
-    {
-        const _Set_UserCache_promises = [];
-        for (const user of Users) {
-            _Set_UserCache_promises.push(Set_UserCache(user));
-        }
+    const ProjectIds = UserProjects.map((project) => project.id);
+    await SetCache(USER_PROJECTS_CACHE_KEY, userId, JSON.stringify(ProjectIds), USER_DATA_CACHE_EXPIRY_seconds);
+    return ProjectIds;
+}
 
-        await Promise.all(_Set_UserCache_promises);
-    }
+export async function Get_UserOrganizations(userId: string) {
+    const CachedData = await GetData_FromCache<string[]>(USER_ORGANIZATIONS_CACHE_KEY, userId);
+    if (CachedData) return CachedData;
 
-    return Users.concat(cachedUsers);
+    const UserOrgs = await prisma.organisation.findMany({
+        where: {
+            team: {
+                members: {
+                    some: {
+                        userId: userId,
+                    },
+                },
+            },
+        },
+        select: {
+            id: true,
+        },
+    });
+    const UserOrgs_Id = UserOrgs.map((org) => org.id);
+    await SetCache(USER_ORGANIZATIONS_CACHE_KEY, userId, JSON.stringify(UserOrgs_Id), USER_DATA_CACHE_EXPIRY_seconds);
+
+    return UserOrgs_Id;
 }
 
 export function GetUser_Unique<T extends Prisma.UserFindUniqueArgs>(args: Prisma.SelectSubset<T, Prisma.UserFindUniqueArgs>) {
@@ -157,7 +204,15 @@ async function Set_UserCache<T extends SetCache_Data | null>(user: T) {
     if (!user?.id) return;
     const json_string = JSON.stringify(user);
 
-    const p1 = redis.set(cacheKey(user.id, USER_DATA_CACHE_KEY), user.userName.toLowerCase(), "EX", USER_DATA_CACHE_EXPIRY_seconds);
-    const p2 = redis.set(cacheKey(user.userName.toLowerCase(), USER_DATA_CACHE_KEY), json_string, "EX", USER_DATA_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(USER_DATA_CACHE_KEY, user.id, user.userName.toLowerCase(), USER_DATA_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(USER_DATA_CACHE_KEY, user.userName.toLowerCase(), json_string, USER_DATA_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
+}
+
+export async function Delete_UserProjectsCache(userId: string) {
+    return await redis.del(cacheKey(userId, USER_PROJECTS_CACHE_KEY));
+}
+
+export async function Delete_UserOrganizationsCache(userId: string) {
+    return await redis.del(cacheKey(userId, USER_ORGANIZATIONS_CACHE_KEY));
 }

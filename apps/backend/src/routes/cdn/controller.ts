@@ -2,12 +2,12 @@ import { getMimeFromType } from "@app/utils/file-signature";
 import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { Context } from "hono";
 import { GetFile, type GetFile_ReturnType, GetManyFiles_ByID } from "~/db/file_item";
-import { GetProject_ListItem } from "~/db/project_item";
+import { GetOrganization_BySlugOrId } from "~/db/organization_item";
+import { GetProject_Details, GetProject_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { GetVersions } from "~/db/version_item";
 import { getUserIpAddress } from "~/routes/auth/helpers";
 import { isProjectAccessible } from "~/routes/project/utils";
-import prisma from "~/services/prisma";
 import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile, getUserFile } from "~/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponse } from "~/utils/http";
@@ -95,11 +95,7 @@ export async function serveVersionFile(
 }
 
 export async function serveProjectIconFile(ctx: Context, projectId: string, isCdnRequest: boolean) {
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-    });
+    const project = await GetProject_ListItem(undefined, projectId);
     if (!project?.iconFileId) return ctx.json({}, HTTP_STATUS.NOT_FOUND);
 
     const iconFileData = await GetFile(project.iconFileId);
@@ -122,18 +118,7 @@ export async function serveProjectIconFile(ctx: Context, projectId: string, isCd
 }
 
 export async function serveProjectGalleryImage(ctx: Context, projectId: string, imgFileId: string, isCdnRequest: boolean) {
-    const project = await prisma.project.findUnique({
-        where: {
-            id: projectId,
-        },
-        select: {
-            id: true,
-            gallery: true,
-            slug: true,
-            visibility: true,
-            status: true,
-        },
-    });
+    const project = await GetProject_Details(undefined, projectId);
     if (!project || !project?.gallery?.[0]?.id) return notFoundResponse(ctx);
 
     const targetGalleryItem = project.gallery.find((item) => item.imageFileId === imgFileId || item.thumbnailFileId === imgFileId);
@@ -162,11 +147,7 @@ export async function serveProjectGalleryImage(ctx: Context, projectId: string, 
 }
 
 export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest: boolean) {
-    const org = await prisma.organisation.findUnique({
-        where: {
-            id: orgId,
-        },
-    });
+    const org = await GetOrganization_BySlugOrId(undefined, orgId);
     if (!org?.iconFileId) return notFoundResponse(ctx);
 
     const iconFileData = await GetFile(org.iconFileId);

@@ -7,7 +7,7 @@ import { ProjectPermission, type ProjectType, ProjectVisibility, VersionReleaseC
 import type { Dependency, VersionFile } from "@prisma/client";
 import type { Context } from "hono";
 import type { z } from "zod";
-import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { GetManyProjects_ListItem, GetProject_ListItem, UpdateProject } from "~/db/project_item";
 import { CreateVersion, GetVersions } from "~/db/version_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import {
@@ -185,13 +185,7 @@ export async function createVersionDependencies(dependentVersionId: string, list
 
     // Get all the projects and versions from database
     const [dependencyProjects, dependencyVersions] = await Promise.all([
-        prisma.project.findMany({
-            where: {
-                id: {
-                    in: Array.from(projectIds),
-                },
-            },
-        }),
+        GetManyProjects_ListItem(Array.from(projectIds)),
 
         prisma.version.findMany({
             where: {

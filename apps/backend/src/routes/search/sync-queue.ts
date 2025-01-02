@@ -1,62 +1,13 @@
 import { EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
+import { GetManyProjects_Details, GetProject_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
-const SYNC_INTERVAL = 1800_000; // 30 minutes
+const SYNC_INTERVAL = 3600_000; // 60 minutes
 let isSyncing = false;
-
-const teamSelect = {
-    team: {
-        select: {
-            members: {
-                where: { isOwner: true },
-                select: {
-                    user: {
-                        select: {
-                            userName: true,
-                        },
-                    },
-                },
-            },
-        },
-    },
-};
-
-const requiredProjectFields = {
-    id: true,
-    name: true,
-    slug: true,
-    type: true,
-    iconFileId: true,
-    loaders: true,
-    gameVersions: true,
-    categories: true,
-    featuredCategories: true,
-    summary: true,
-    downloads: true,
-    followers: true,
-    datePublished: true,
-    dateUpdated: true,
-    clientSide: true,
-    serverSide: true,
-    projectSourceUrl: true,
-    visibility: true,
-    color: true,
-    ...teamSelect,
-    organisation: {
-        select: {
-            slug: true,
-        },
-    },
-    gallery: {
-        where: {
-            featured: true,
-        },
-    },
-};
 
 export interface ProjectSearchDocument {
     id: string;
@@ -87,7 +38,7 @@ async function syncProjects(cursor: null | string) {
     try {
         const index = meilisearch.index(projectSearchNamespace);
 
-        const projects = await prisma.project.findMany({
+        const _Projects_Ids = await prisma.project.findMany({
             where: {
                 visibility: {
                     in: [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED],
@@ -97,42 +48,19 @@ async function syncProjects(cursor: null | string) {
             cursor: cursor ? { id: cursor } : undefined,
             take: SYNC_BATCH_SIZE,
             skip: cursor ? 1 : 0,
-            select: requiredProjectFields,
+            select: {
+                id: true,
+            },
         });
 
-        if (projects.length === 0) return;
+        if (_Projects_Ids.length === 0) return;
 
+        const Projects = await GetManyProjects_Details(_Projects_Ids.map((project) => project.id));
         const formattedProjectsData: ProjectSearchDocument[] = [];
-        for (const project of projects) {
-            if (project.gameVersions.length === 0) continue;
 
-            const author = project.organisation?.slug || project.team.members?.[0]?.user?.userName;
-            const featured_gallery = project.gallery[0] ? projectGalleryFileUrl(project.id, project.gallery[0].thumbnailFileId) : null;
-
-            formattedProjectsData.push({
-                id: project.id,
-                name: project.name,
-                slug: project.slug,
-                iconUrl: projectIconUrl(project.id, project.iconFileId),
-                loaders: project.loaders,
-                type: project.type,
-                gameVersions: project.gameVersions,
-                categories: project.categories,
-                featuredCategories: project.featuredCategories,
-                summary: project.summary,
-                downloads: project.downloads,
-                followers: project.followers,
-                datePublished: project.datePublished,
-                dateUpdated: project.dateUpdated,
-                openSource: !!project.projectSourceUrl,
-                clientSide: project.clientSide === EnvironmentSupport.OPTIONAL || project.clientSide === EnvironmentSupport.REQUIRED,
-                serverSide: project.serverSide === EnvironmentSupport.OPTIONAL || project.serverSide === EnvironmentSupport.REQUIRED,
-                featured_gallery: featured_gallery,
-                color: project.color,
-                author: author,
-                isOrgOwned: !!project.organisation?.slug,
-                visibility: project.visibility as ProjectVisibility,
-            });
+        for (const Project of Projects) {
+            if (!Project) continue;
+            formattedProjectsData.push(FormatSearchDocument(Project));
         }
 
         await index.addDocuments(formattedProjectsData);
@@ -186,3 +114,52 @@ index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]);
 index.updateSearchableAttributes(["name", "slug", "summary", "author"]);
 
 export default queueSearchDbSync;
+
+export async function AddProject_ToSearchDb(projectId: string) {
+    const Project = await GetProject_Details(projectId);
+    if (!Project) return;
+
+    if (Project.status !== ProjectPublishingStatus.APPROVED) return;
+    if (![ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(Project.visibility as ProjectVisibility)) return;
+
+    const index = meilisearch.index(projectSearchNamespace);
+    const formattedProjectData = FormatSearchDocument(Project);
+
+    await index.addDocuments([formattedProjectData]);
+}
+
+export async function RemoveProject_FromSearchDb(ProjectId: string) {
+    const index = meilisearch.index(projectSearchNamespace);
+    await index.deleteDocument(ProjectId);
+}
+
+function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnType>>(Project: T) {
+    const author = Project.organisation?.slug || Project.team.members?.[0]?.user?.userName;
+    const FeaturedGalleryItem = Project.gallery.find((item) => item.featured === true);
+    const featured_gallery = FeaturedGalleryItem ? projectGalleryFileUrl(Project.id, FeaturedGalleryItem.thumbnailFileId) : null;
+
+    return {
+        id: Project.id,
+        name: Project.name,
+        slug: Project.slug,
+        iconUrl: projectIconUrl(Project.id, Project.iconFileId),
+        loaders: Project.loaders,
+        type: Project.type,
+        gameVersions: Project.gameVersions,
+        categories: Project.categories,
+        featuredCategories: Project.featuredCategories,
+        summary: Project.summary,
+        downloads: Project.downloads,
+        followers: Project.followers,
+        datePublished: Project.datePublished,
+        dateUpdated: Project.dateUpdated,
+        openSource: !!Project.projectSourceUrl,
+        clientSide: Project.clientSide === EnvironmentSupport.OPTIONAL || Project.clientSide === EnvironmentSupport.REQUIRED,
+        serverSide: Project.serverSide === EnvironmentSupport.OPTIONAL || Project.serverSide === EnvironmentSupport.REQUIRED,
+        featured_gallery: featured_gallery,
+        color: Project.color,
+        author: author,
+        isOrgOwned: !!Project.organisation?.slug,
+        visibility: Project.visibility as ProjectVisibility,
+    };
+}

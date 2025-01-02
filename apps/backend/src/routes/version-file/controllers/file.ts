@@ -2,6 +2,7 @@ import type { DependencyType, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
 import type { Prisma } from "@prisma/client";
 import { GetManyFiles } from "~/db/file_item";
+import { GetMany_ProjectsVersions } from "~/db/version_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
 import prisma from "~/services/prisma";
 import { HashAlgorithms } from "~/types";
@@ -218,32 +219,37 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
         };
     }
     if (filter.loader) projectVersionWhereInput.loaders = { has: filter.loader };
-    if (filter.releaseChannel)
+    if (filter.releaseChannel) {
         projectVersionWhereInput.releaseChannel = {
             in: GetReleaseChannelFilter(filter.releaseChannel),
         };
+    }
 
-    const projects = await prisma.project.findMany({
-        where: {
-            id: {
-                in: projectIds,
-            },
-        },
-        select: {
-            id: true,
-            versions: {
-                where: projectVersionWhereInput,
-                include: {
-                    dependencies: true,
-                    files: true,
-                },
-                orderBy: { datePublished: "desc" },
-            },
-        },
-    });
+    const _Projects = await GetMany_ProjectsVersions(projectIds);
+    const Projects_Filtered = [];
+    for (const project of _Projects) {
+        const Versions = [];
+
+        for (const version of project.versions) {
+            if (!version) continue;
+
+            if (filter.gameVersions?.length && !version.gameVersions.some((gv) => filter.gameVersions?.includes(gv))) continue;
+            if (filter.loader && !version.loaders.includes(filter.loader)) continue;
+            if (filter.releaseChannel && !GetReleaseChannelFilter(filter.releaseChannel).includes(version.releaseChannel)) continue;
+
+            Versions.push(version);
+        }
+
+        if (Versions.length) {
+            Projects_Filtered.push({
+                id: project.id,
+                versions: Versions,
+            });
+        }
+    }
 
     const versionFileIds = [];
-    for (const project of projects) {
+    for (const project of Projects_Filtered) {
         for (const version of project.versions) {
             for (const file of version.files) {
                 versionFileIds.push(file.fileId);
@@ -254,7 +260,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
     const VersionFilesDataMap = await getFilesFromId(versionFileIds);
     // Input has to latest version data map
     const LatestProjectVersionMap: Record<string, ProjectUpdateVersionData> = {};
-    for (const project of projects) {
+    for (const project of Projects_Filtered) {
         const version = project.versions[0];
         if (!version?.id) continue;
 

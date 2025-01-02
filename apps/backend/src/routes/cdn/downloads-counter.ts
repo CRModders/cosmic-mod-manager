@@ -178,6 +178,5 @@ export async function addToDownloadsQueue(item: Omit<DownloadsQueueItem, "id">) 
     await redis.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: generateRandomId() }));
 }
 
-//
-processDownloads();
+await processDownloads();
 queueDownloadsHistoryRefresh();
