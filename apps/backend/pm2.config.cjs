@@ -11,7 +11,7 @@ const backendDir = `${sourceDir}/apps/backend`; // Root of the backend
 
 const reloadBackend =
     "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
-const processDownloadsQueue = "bun src/cdn/process-downloads.ts";
+const processDownloadsQueue = "bun src/routes/cdn/process-downloads.ts";
 
 const dev_backend = {
     name: "crmm-backend",
