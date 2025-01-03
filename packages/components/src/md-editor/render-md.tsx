@@ -81,6 +81,7 @@ interface Props {
 }
 
 export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = true, urlModifier }: Props) {
+    const markdownBoxId = useMemo(() => `MarkdownBox-${Math.random().toString(36).substring(7)}`, []);
     const navigate = useNavigate();
 
     // Use React router to handle internal links
@@ -107,7 +108,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
     }
 
     useEffect(() => {
-        const mdBox = document.querySelector(".markdown-body") as HTMLDivElement | undefined;
+        const mdBox = document.querySelector("#markdownBoxId") as HTMLDivElement | undefined;
         if (!mdBox) return;
 
         mdBox.addEventListener("click", handleNavigate);
@@ -139,6 +140,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
     if (divElem === true) {
         return (
             <div
+                id={markdownBoxId}
                 className={cn("w-full overflow-auto markdown-body", className)}
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
                 dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}
@@ -148,6 +150,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
 
     return (
         <section
+            id={markdownBoxId}
             className={cn("w-full overflow-auto markdown-body", className)}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}

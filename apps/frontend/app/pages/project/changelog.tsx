@@ -274,7 +274,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                         <div key={version.id} className="w-full pl-7 mb-4 relative dark:text-muted-foreground">
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                                 <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
-                                    <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={version.isDuplicate} />
+                                    <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={version.isDuplicate === true} />
                                     {version.releaseChannel === VersionReleaseChannel.DEV ? (
                                         <TooltipProvider>
                                             <TooltipTemplate content="Dev release!" className="font-normal">
