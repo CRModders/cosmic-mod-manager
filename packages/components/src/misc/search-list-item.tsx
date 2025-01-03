@@ -13,7 +13,7 @@ import Link from "~/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/ui/tooltip";
 import { cn } from "~/utils";
 import { fallbackProjectIcon } from "../icons";
-import { FormattedDate, TimePassedSince } from "../ui/date";
+import { FormattedDate } from "../ui/date";
 
 export enum ViewType {
     GALLERY = "gallery",
@@ -42,11 +42,12 @@ interface SearchListItemProps {
     isOrgOwned?: boolean;
     visibility: ProjectVisibility;
     vtId: string; // View Transition ID
+    viewTransitions?: boolean;
     t?: ReturnType<typeof getDefaultStrings>;
     ProjectPagePath: ProjectPagePath;
     OrgPagePath: OrgPagePath;
     UserProfilePath: UserProfilePath;
-    viewTransitions?: boolean;
+    TimeSince_Fn: (date: string | Date) => string;
 }
 
 export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
@@ -251,7 +252,7 @@ function BaseView(props: SearchListItemProps) {
                                 <CalendarIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
-                                        {t.project.publishedAt(TimePassedSince({ date: props.datePublished }))}
+                                        {t.project.publishedAt(props.TimeSince_Fn(props.datePublished))}
                                     </p>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -263,7 +264,7 @@ function BaseView(props: SearchListItemProps) {
                                 <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1">
-                                        {t.project.updatedAt(TimePassedSince({ date: props.dateUpdated }))}
+                                        {t.project.updatedAt(props.TimeSince_Fn(props.dateUpdated))}
                                     </p>
                                 </TooltipTrigger>
                                 <TooltipContent>

@@ -42,7 +42,7 @@ async function projectsRandom_get(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
         const count = Number.parseInt(ctx.req.query("count") || "");
 
-        const res = await getRandomProjects(userSession, count, true);
+        const res = await getRandomProjects(userSession, count, false);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

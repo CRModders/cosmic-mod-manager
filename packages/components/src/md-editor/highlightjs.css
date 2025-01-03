@@ -144,7 +144,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 }
 
 .markdown-body pre {
-    @apply mt-3 py-4 px-5 w-full inline-block bg-shallow-background dark:bg-shallow-background/60 rounded overflow-x-auto;
+    @apply mt-3 py-4 px-5 w-full inline-block text-foreground bg-shallow-background dark:bg-shallow-background/60 rounded overflow-x-auto;
 }
 
 .markdown-body pre code {
