@@ -4,6 +4,7 @@ import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/d
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
+import { isProjectIndexable } from "../project/utils";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
@@ -92,6 +93,8 @@ async function _SyncBatch(cursor: null | string) {
 
         for (const Project of Projects) {
             if (!Project) continue;
+            if (!isProjectIndexable(Project.visibility, Project.status)) continue;
+
             formattedProjectsData.push(FormatSearchDocument(Project));
         }
 
@@ -135,7 +138,6 @@ export function FormatSearchDocument<T extends NonNullable<GetProject_Details_Re
     };
 }
 
-const COMPLETED_TASK_STATUSES = ["failed", "succeeded", "canceled"];
 const PROCESSING_TASK_STATUSES = ["enqueued", "processing"];
 
 export async function AwaitEnqueuedTask(task: EnqueuedTask) {

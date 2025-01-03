@@ -12,10 +12,7 @@ const SYNC_INTERVAL = 600_000; // 10 minutes
 const FULL_SEARCH_INDEX_SYNC_INTERVAL = 86400_000; // 1 day
 
 let isSyncing = false;
-let Last_FullSearchIndexSync = Date.now();
-
-// Initialise the search index
-await InitialiseSearchDb();
+let Last_FullSearchIndexSync: number | null = null;
 
 // Start the sync interval
 export async function QueueSearchIndexUpdate() {
@@ -30,10 +27,10 @@ export async function QueueSearchIndexUpdate() {
         }
 
         const CurrentTime = Date.now();
-        const TimeSinceLastFullSync = CurrentTime - Last_FullSearchIndexSync;
+        const DoFullSync = !Last_FullSearchIndexSync || Date.now() - Last_FullSearchIndexSync >= FULL_SEARCH_INDEX_SYNC_INTERVAL;
 
         // Sync the full search index once a day
-        if (TimeSinceLastFullSync >= FULL_SEARCH_INDEX_SYNC_INTERVAL) {
+        if (DoFullSync) {
             // Initialise the search index, this will delete all existing documents and re-add them
             await InitialiseSearchDb();
             Last_FullSearchIndexSync = CurrentTime;
