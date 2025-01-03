@@ -108,7 +108,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
     }
 
     useEffect(() => {
-        const mdBox = document.querySelector("#markdownBoxId") as HTMLDivElement | undefined;
+        const mdBox = document.querySelector(`#${markdownBoxId}`) as HTMLDivElement | undefined;
         if (!mdBox) return;
 
         mdBox.addEventListener("click", handleNavigate);
