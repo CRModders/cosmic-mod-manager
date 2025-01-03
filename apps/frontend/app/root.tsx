@@ -38,12 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData() as RootOutletData;
 
     return (
-        <html
-            lang={formatLocaleCode(data.locale)}
-            dir={data.locale.dir}
-            className={data?.theme}
-            style={{ scrollBehavior: data?.viewTransitions ? "auto" : "smooth" }}
-        >
+        <html lang={formatLocaleCode(data.locale)} dir={data.locale.dir} className={data?.theme}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />

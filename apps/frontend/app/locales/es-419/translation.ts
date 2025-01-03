@@ -75,7 +75,7 @@ export default {
         toggleFeatures: "Activar o desactivar funciones",
         enableOrDisableFeatures: "Activa o desactiva ciertas funciones en este dispositivo.",
         viewTransitions: "Ver transiciones",
-        viewTransitionsDesc: "Activa transiciones (morph y crossfade) al navegar entre páginas.",
+        viewTransitionsDesc: "Activa transiciones (morph) al navegar entre páginas.",
         accountSecurity: "Seguridad de la cuenta",
         changePassTitle: "Cambiar la contraseña de tu cuenta",
         addPassDesc: "Añadir una contraseña para utilizar el inicio de sesión con credenciales",

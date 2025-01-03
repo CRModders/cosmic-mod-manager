@@ -76,7 +76,7 @@ export default {
         toggleFeatures: "Toggle features",
         enableOrDisableFeatures: "Enable or disable certain features on this device.",
         viewTransitions: "View Transitions",
-        viewTransitionsDesc: "Enables transitions (morph and crossfade) when navigating between pages.",
+        viewTransitionsDesc: "Enables transitions (morph) when navigating between pages.",
         accountSecurity: "Account security",
         changePassTitle: "Change your account password",
         addPassDesc: "Add a password to use credentials login",

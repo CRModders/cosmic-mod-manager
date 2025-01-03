@@ -5,7 +5,6 @@ import DefaultLink, {
 } from "@app/components/ui/link";
 import React from "react";
 import type { NavigateFunction, NavigateOptions } from "react-router";
-import { useRootData } from "~/hooks/root-data";
 import { PageUrl } from "~/utils/urls";
 
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
@@ -18,7 +17,7 @@ const Link = React.forwardRef<HTMLAnchorElement, Props>(({ escapeUrlWrapper, ...
     let to = props.to;
     if (escapeUrlWrapper !== true) to = PageUrl(to.toString());
 
-    return <DefaultLink {...props} viewTransition={true} ref={ref} to={to} />;
+    return <DefaultLink {...props} ref={ref} to={to} />;
 });
 export default Link;
 
@@ -29,8 +28,7 @@ export function ButtonLink(props: ButtonLinkProps) {
 
 type VariantButtonLinkProps = React.ComponentProps<typeof DefaultVariantButtonLink>;
 export function VariantButtonLink(props: VariantButtonLinkProps) {
-    const viewTransitions = useRootData()?.viewTransitions;
-    return <DefaultVariantButtonLink {...props} url={PageUrl(props.url)} viewTransition={viewTransitions} />;
+    return <DefaultVariantButtonLink {...props} url={PageUrl(props.url)} />;
 }
 
 export function useNavigate(escapeUrlWrapper?: boolean, initOptions?: NavigateOptions) {
