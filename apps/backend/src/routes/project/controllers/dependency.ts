@@ -43,18 +43,31 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
     }
 
     // Separate dependencies into project-level and version-level
-    const dependencyProjectIds: string[] = [];
-    const dependencyVersionIds: string[] = [];
+    const dependencyProjectIds = new Set<string>();
+    const dependencyVersionIds = new Set<string>();
 
     for (const dependency of dependencies) {
-        dependencyProjectIds.push(dependency.projectId);
+        dependencyProjectIds.add(dependency.projectId);
 
         if (dependency.versionId) {
-            dependencyVersionIds.push(dependency.versionId);
+            dependencyVersionIds.add(dependency.versionId);
         }
     }
 
-    const dependencyProjects = await GetManyProjects_ListItem(dependencyProjectIds);
+    const [dependencyProjects, dependencyVersions] = await Promise.all([
+        GetManyProjects_ListItem(Array.from(dependencyProjectIds)),
+
+        dependencyVersionIds.size > 0
+            ? prisma.version.findMany({
+                  where: {
+                      id: {
+                          in: Array.from(dependencyVersionIds),
+                      },
+                  },
+              })
+            : [],
+    ]);
+
     const dependencyProjectsList: ProjectListItem[] = [];
     for (const project of dependencyProjects) {
         if (!project) continue;
@@ -84,14 +97,6 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
             isOrgOwned: !!project.organisationId,
         });
     }
-
-    const dependencyVersions = await prisma.version.findMany({
-        where: {
-            id: {
-                in: dependencyVersionIds,
-            },
-        },
-    });
 
     return {
         data: {
