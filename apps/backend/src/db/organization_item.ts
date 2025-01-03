@@ -71,6 +71,7 @@ export async function GetOrganization_BySlugOrId(slug?: string, id?: string) {
 
 export type GetManyOrganizations_ReturnType = Awaited<ReturnType<typeof GetManyOrganizations>>;
 export async function GetManyOrganizations(ids: string[]) {
+    const OrgIds = Array.from(new Set(ids));
     const Organizations = [];
     const _OrgTeamIds = [];
 
@@ -78,7 +79,7 @@ export async function GetManyOrganizations(ids: string[]) {
     const OrgsIds_RetrievedFromCache: string[] = [];
     {
         const _CachedOrgs_promises = [];
-        for (const id of ids) {
+        for (const id of OrgIds) {
             const cachedOrg = GetData_FromCache<GetOrganization_ReturnType>(ORGANIZATION_DATA_CACHE_KEY, id);
             _CachedOrgs_promises.push(cachedOrg);
         }
@@ -93,7 +94,7 @@ export async function GetManyOrganizations(ids: string[]) {
     }
 
     // Get the items that were not found in the cache
-    const OrgsIds_ToRetrieve = ids.filter((id) => !OrgsIds_RetrievedFromCache.includes(id));
+    const OrgsIds_ToRetrieve = OrgIds.filter((id) => !OrgsIds_RetrievedFromCache.includes(id));
     const _RemainingOrgItems =
         OrgsIds_ToRetrieve.length > 0
             ? await prisma.organisation.findMany({

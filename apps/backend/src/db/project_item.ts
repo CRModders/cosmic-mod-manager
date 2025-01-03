@@ -151,7 +151,9 @@ export async function GetProject_Details(slug?: string, id?: string) {
 }
 
 export type GetManyProjects_Details_ReturnType = Awaited<ReturnType<typeof GetManyProjects_Details>>;
-export async function GetManyProjects_Details(ProjectIds: string[]) {
+export async function GetManyProjects_Details(_ProjectIds: string[]) {
+    const ProjectIds = Array.from(new Set(_ProjectIds));
+
     const Projects = [];
     const _OrgIds = new Set<string>();
     const _TeamIds = new Set<string>();
@@ -277,6 +279,8 @@ export async function GetProject_ListItem(slug?: string, id?: string) {
 
 export type GetManyProjects_ListItem_ReturnType = Awaited<ReturnType<typeof GetManyProjects_ListItem>>;
 export async function GetManyProjects_ListItem(ids: string[]) {
+    const ProjectIds = Array.from(new Set(ids));
+
     const Projects = [];
     const _OrgIds = new Set<string>();
     const _TeamIds = new Set<string>();
@@ -286,7 +290,7 @@ export async function GetManyProjects_ListItem(ids: string[]) {
     // Get all the project from cache
     {
         const _cachedListItems_promises = [];
-        for (const id of ids) {
+        for (const id of ProjectIds) {
             if (!id) continue;
             _cachedListItems_promises.push(GetData_FromCache<GetProject_ListItem_ReturnType>(PROJECT_LIST_ITEM_CACHE_KEY, id));
         }
@@ -304,7 +308,7 @@ export async function GetManyProjects_ListItem(ids: string[]) {
     }
 
     // Get all non-cached projects
-    const RemainingProjectIds = ids.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
+    const RemainingProjectIds = ProjectIds.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
     const _Db_ProjectItems =
         RemainingProjectIds.length > 0
             ? await prisma.project.findMany({

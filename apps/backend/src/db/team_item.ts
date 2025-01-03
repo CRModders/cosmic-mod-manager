@@ -52,7 +52,8 @@ export async function GetTeam(teamId: string) {
     };
 }
 
-export async function GetManyTeams(teamIds: string[]) {
+export async function GetManyTeams(ids: string[]) {
+    const TeamIds = Array.from(new Set(ids));
     const Teams = [];
     const _UserIds = new Set<string>();
 
@@ -60,7 +61,7 @@ export async function GetManyTeams(teamIds: string[]) {
     const TeamIds_RetrievedFromCache: string[] = [];
     {
         const _CachedTeams_promises = [];
-        for (const id of teamIds) {
+        for (const id of TeamIds) {
             const cachedTeam = GetData_FromCache<GetTeam_ReturnType>(TEAM_DATA_CACHE_KEY, id);
             _CachedTeams_promises.push(cachedTeam);
         }
@@ -78,7 +79,7 @@ export async function GetManyTeams(teamIds: string[]) {
     }
 
     // Get the remaining teams from the database
-    const TeamIds_ToRetrieve = teamIds.filter((id) => !TeamIds_RetrievedFromCache.includes(id));
+    const TeamIds_ToRetrieve = TeamIds.filter((id) => !TeamIds_RetrievedFromCache.includes(id));
     const _Db_Teams =
         TeamIds_ToRetrieve.length > 0
             ? await prisma.team.findMany({

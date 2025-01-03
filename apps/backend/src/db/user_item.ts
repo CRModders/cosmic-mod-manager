@@ -74,14 +74,15 @@ export async function GetUser_ByIdOrUsername(userName?: string, id?: string) {
     return user;
 }
 
-export async function GetManyUsers_ByIds(userIds: string[]) {
+export async function GetManyUsers_ByIds(ids: string[]) {
+    const UserIds = Array.from(new Set(ids));
     const Users = [];
 
     // Get cached users from redis
     const UserIds_RetrievedFromCache: string[] = [];
     {
         const _cachedUsers_promises: Promise<GetUser_ReturnType | null>[] = [];
-        for (const id of userIds) {
+        for (const id of UserIds) {
             const cachedUser = GetData_FromCache<GetUser_ReturnType>(USER_DATA_CACHE_KEY, id);
             _cachedUsers_promises.push(cachedUser);
         }
@@ -95,7 +96,7 @@ export async function GetManyUsers_ByIds(userIds: string[]) {
     }
 
     // Get remaining users from db
-    const UserIds_ToFetchFromDb = userIds.filter((id) => !UserIds_RetrievedFromCache.includes(id));
+    const UserIds_ToFetchFromDb = UserIds.filter((id) => !UserIds_RetrievedFromCache.includes(id));
     const _DB_Users =
         UserIds_ToFetchFromDb.length > 0
             ? await prisma.user.findMany({

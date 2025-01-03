@@ -110,14 +110,15 @@ export async function GetVersions(projectSlug?: string, projectId?: string) {
     return data;
 }
 
-export async function GetMany_ProjectsVersions(projectIds: string[]) {
+export async function GetMany_ProjectsVersions(_ProjectIds: string[]) {
+    const ProjectIds = Array.from(new Set(_ProjectIds));
     const Projects = [];
 
     // Get cached projects from redis
     const ProjectIds_RetrievedFromCache: string[] = [];
     {
         const _CachedVersionsPromises = [];
-        for (const projectId of projectIds) {
+        for (const projectId of ProjectIds) {
             const cachedData = GetData_FromCache<GetVersions_ReturnType>(PROJECT_VERSIONS_CACHE_KEY, projectId);
             _CachedVersionsPromises.push(cachedData);
         }
@@ -131,7 +132,7 @@ export async function GetMany_ProjectsVersions(projectIds: string[]) {
     }
 
     // Get the remaining projects from the database
-    const ProjectIds_ToRetrieve = projectIds.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
+    const ProjectIds_ToRetrieve = ProjectIds.filter((id) => !ProjectIds_RetrievedFromCache.includes(id));
     if (ProjectIds_ToRetrieve.length === 0) return Projects;
 
     const Remaining_ProjectVersions = await prisma.project.findMany({

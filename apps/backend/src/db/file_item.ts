@@ -26,14 +26,15 @@ export function GetManyFiles<T extends Prisma.FileFindManyArgs>(args: Prisma.Sel
     return prisma.file.findMany(args);
 }
 
-export async function GetManyFiles_ByID(fileIds: string[]) {
+export async function GetManyFiles_ByID(ids: string[]) {
+    const FileIds = Array.from(new Set(ids));
     const Files = [];
 
     // Get cached files from redis
     const FileIds_RetrievedFromCache: string[] = [];
     {
         const _cachedFiles_promises: Promise<GetFile_ReturnType | null>[] = [];
-        for (const id of fileIds) {
+        for (const id of FileIds) {
             const cachedData = GetData_FromCache<GetFile_ReturnType>(FILE_ITEM_CACHE_KEY, id);
             _cachedFiles_promises.push(cachedData);
         }
@@ -47,7 +48,7 @@ export async function GetManyFiles_ByID(fileIds: string[]) {
     }
 
     // Get remaining files from db
-    const FileIds_ToRetrieveFromDb = fileIds.filter((id) => !FileIds_RetrievedFromCache.includes(id));
+    const FileIds_ToRetrieveFromDb = FileIds.filter((id) => !FileIds_RetrievedFromCache.includes(id));
     const _DB_Files =
         FileIds_ToRetrieveFromDb.length > 0
             ? await prisma.file.findMany({

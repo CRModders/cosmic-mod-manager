@@ -55,7 +55,7 @@ export async function getProjectDependencies(slug: string, userSession: ContextU
     }
 
     const [dependencyProjects, dependencyVersions] = await Promise.all([
-        GetManyProjects_ListItem(Array.from(dependencyProjectIds)),
+        dependencyProjectIds.size > 0 ? GetManyProjects_ListItem(Array.from(dependencyProjectIds)) : [],
 
         dependencyVersionIds.size > 0
             ? prisma.version.findMany({
