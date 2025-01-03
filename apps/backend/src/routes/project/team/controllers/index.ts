@@ -10,6 +10,7 @@ import { CreateTeamMember, DeleteTeamMember, Delete_ManyTeamMembers, UpdateTeamM
 import { GetTeam } from "~/db/team_item";
 import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { createOrgTeamInviteNotification, createProjectTeamInviteNotification } from "~/routes/user/notification/controllers/helpers";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
@@ -414,6 +415,9 @@ export async function changeTeamOwner(ctx: Context, userSession: ContextUserData
                 organisationPermissions: [],
             },
         }),
+
+        // Update the index of team's project
+        team.project?.id ? UpdateProjects_SearchIndex([team.project.id]) : null,
     ]);
 
     return { data: { success: true, message: "Team owner changed" }, status: HTTP_STATUS.OK };

@@ -15,7 +15,6 @@ import orgRouter from "~/routes/project/organisation/router";
 import projectRouter from "~/routes/project/router";
 import teamRouter from "~/routes/project/team/router";
 import searchRouter from "~/routes/search/router";
-import queueSearchDbSync from "~/routes/search/sync-queue";
 import bulkUserActionsRouter from "~/routes/user/bulk_actions/router";
 import notificationRouter from "~/routes/user/notification/router";
 import userRouter from "~/routes/user/router";
@@ -25,6 +24,7 @@ import { getStatistics } from "~/statistics";
 import tagsRouter from "~/tags";
 import env from "~/utils/env";
 import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
+import { QueueSearchIndexUpdate } from "./routes/search/search-db";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 const corsAllowedOrigins = env.CORS_ALLOWED_URLS.split(" ");
@@ -114,7 +114,7 @@ async function apiDetails(ctx: Context) {
     );
 }
 
-// Start the sync queues
+// Initialize the queues
 await queueDownloadsCounterQueueProcessing();
-await queueSearchDbSync();
+await QueueSearchIndexUpdate();
 await startSitemapGenerator();

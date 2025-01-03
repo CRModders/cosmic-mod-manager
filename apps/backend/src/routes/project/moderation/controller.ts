@@ -1,8 +1,7 @@
 import { ProjectPublishingStatus, type ProjectVisibility } from "@app/utils/types";
 import type { ModerationProjectItem } from "@app/utils/types/api/moderation";
 import type { Prisma } from "@prisma/client";
-import { GetManyProjects_ListItem, GetProject_ListItem, UpdateProject } from "~/db/project_item";
-import { AddProject_ToSearchDb } from "~/routes/search/sync-queue";
+import { GetManyProjects_ListItem, GetProject_ListItem, UpdateOrRemoveProject_FromSearchIndex, UpdateProject } from "~/db/project_item";
 import prisma from "~/services/prisma";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
@@ -100,15 +99,23 @@ export async function updateModerationProject(id: string, status: string) {
         updateData.requestedStatus = null;
     }
 
-    await Promise.all([
-        UpdateProject({
-            where: { id: id },
-            data: updateData,
-        }),
+    const UpdatedProject = await UpdateProject({
+        where: { id: id },
+        data: updateData,
+    });
 
-        // Update the project search index
-        AddProject_ToSearchDb(Project.id),
-    ]);
+    // Update the search index
+    await UpdateOrRemoveProject_FromSearchIndex(
+        Project.id,
+        {
+            visibility: Project.visibility,
+            status: Project.status,
+        },
+        {
+            visibility: UpdatedProject.visibility,
+            status: UpdatedProject.status,
+        },
+    );
 
     return {
         data: {

@@ -1,4 +1,6 @@
 import type { Prisma } from "@prisma/client";
+import { isProjectIndexable } from "~/routes/project/utils";
+import { AddProjects_ToSearchIndex, RemoveProjects_FromSearchIndex, UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
@@ -8,92 +10,96 @@ import { Delete_OrganizationCache_All, GetManyOrganizations, GetOrganization_ByS
 import { GetManyTeams, GetTeam } from "./team_item";
 
 // ? Select fields
-const PROJECT_DETAILS_SELECT_FIELDS = {
-    id: true,
-    teamId: true,
-    organisationId: true,
+function PROJECT_DETAILS_SELECT_FIELDS() {
+    return {
+        id: true,
+        teamId: true,
+        organisationId: true,
 
-    name: true,
-    slug: true,
-    type: true,
-    summary: true,
-    description: true,
-    iconFileId: true,
-    licenseId: true,
-    licenseName: true,
-    licenseUrl: true,
-    downloads: true,
-    followers: true,
-    categories: true,
-    featuredCategories: true,
-    loaders: true,
-    gameVersions: true,
+        name: true,
+        slug: true,
+        type: true,
+        summary: true,
+        description: true,
+        iconFileId: true,
+        licenseId: true,
+        licenseName: true,
+        licenseUrl: true,
+        downloads: true,
+        followers: true,
+        categories: true,
+        featuredCategories: true,
+        loaders: true,
+        gameVersions: true,
 
-    datePublished: true,
-    dateUpdated: true,
-    dateApproved: true,
-    dateQueued: true,
-    requestedStatus: true,
-    status: true,
-    visibility: true,
+        datePublished: true,
+        dateUpdated: true,
+        dateApproved: true,
+        dateQueued: true,
+        requestedStatus: true,
+        status: true,
+        visibility: true,
 
-    clientSide: true,
-    serverSide: true,
+        clientSide: true,
+        serverSide: true,
 
-    issueTrackerUrl: true,
-    projectSourceUrl: true,
-    projectWikiUrl: true,
-    discordInviteUrl: true,
+        issueTrackerUrl: true,
+        projectSourceUrl: true,
+        projectWikiUrl: true,
+        discordInviteUrl: true,
 
-    color: true,
+        color: true,
 
-    gallery: {
-        select: {
-            id: true,
-            imageFileId: true,
-            thumbnailFileId: true,
-            projectId: true,
-            name: true,
-            description: true,
-            featured: true,
-            dateCreated: true,
-            orderIndex: true,
+        gallery: {
+            select: {
+                id: true,
+                imageFileId: true,
+                thumbnailFileId: true,
+                projectId: true,
+                name: true,
+                description: true,
+                featured: true,
+                dateCreated: true,
+                orderIndex: true,
+            },
+            orderBy: { orderIndex: "desc" },
         },
-        orderBy: { orderIndex: "desc" },
-    },
-} satisfies Prisma.ProjectSelect;
+    } satisfies Prisma.ProjectSelect;
+}
 
-const PROJECT_LIST_ITEM_SELECT_FIELDS = {
-    id: true,
-    teamId: true,
-    iconFileId: true,
-    organisationId: true,
+function PROJECT_LIST_ITEM_SELECT_FIELDS() {
+    return {
+        id: true,
+        teamId: true,
+        iconFileId: true,
+        organisationId: true,
 
-    slug: true,
-    name: true,
-    summary: true,
-    type: true,
-    downloads: true,
-    followers: true,
-    clientSide: true,
-    serverSide: true,
-    featuredCategories: true,
-    categories: true,
-    gameVersions: true,
-    loaders: true,
-    color: true,
+        slug: true,
+        name: true,
+        summary: true,
+        type: true,
+        downloads: true,
+        followers: true,
+        clientSide: true,
+        serverSide: true,
+        featuredCategories: true,
+        categories: true,
+        gameVersions: true,
+        loaders: true,
+        color: true,
 
-    dateUpdated: true,
-    datePublished: true,
-    dateQueued: true,
-    dateApproved: true,
-    status: true,
-    requestedStatus: true,
-    visibility: true,
-} satisfies Prisma.ProjectSelect;
+        dateUpdated: true,
+        datePublished: true,
+        dateQueued: true,
+        dateApproved: true,
+        status: true,
+        requestedStatus: true,
+        visibility: true,
+    } satisfies Prisma.ProjectSelect;
+}
 
 // ? Get project functions
-export type GetProject_Details_ReturnType = Awaited<ReturnType<typeof GetProject_Details_FromDb>>;
+export type GetProject_Details_FromDb_ReturnType = Awaited<ReturnType<typeof GetProject_Details_FromDb>>;
 async function GetProject_Details_FromDb(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
@@ -104,31 +110,32 @@ async function GetProject_Details_FromDb(slug?: string, id?: string) {
             where: {
                 OR: [{ id: id }, { slug: slug }],
             },
-            select: PROJECT_DETAILS_SELECT_FIELDS,
+            select: PROJECT_DETAILS_SELECT_FIELDS(),
         });
     } else if (id) {
         data = await prisma.project.findUnique({
             where: {
                 id: id,
             },
-            select: PROJECT_DETAILS_SELECT_FIELDS,
+            select: PROJECT_DETAILS_SELECT_FIELDS(),
         });
     } else {
         data = await prisma.project.findUnique({
             where: {
                 slug: slug,
             },
-            select: PROJECT_DETAILS_SELECT_FIELDS,
+            select: PROJECT_DETAILS_SELECT_FIELDS(),
         });
     }
 
     return data;
 }
 
+export type GetProject_Details_ReturnType = Awaited<ReturnType<typeof GetProject_Details>>;
 export async function GetProject_Details(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
 
-    let Project = await GetData_FromCache<GetProject_Details_ReturnType>(PROJECT_DETAILS_CACHE_KEY, slug || id);
+    let Project = await GetData_FromCache<GetProject_Details_FromDb_ReturnType>(PROJECT_DETAILS_CACHE_KEY, slug || id);
     if (!Project) Project = await GetProject_Details_FromDb(slug, id);
     if (!Project) return null;
 
@@ -156,7 +163,7 @@ export async function GetManyProjects_Details(ProjectIds: string[]) {
         const _cachedDetails_promises = [];
         for (const id of ProjectIds) {
             if (!id) continue;
-            _cachedDetails_promises.push(GetData_FromCache<GetProject_Details_ReturnType>(PROJECT_DETAILS_CACHE_KEY, id));
+            _cachedDetails_promises.push(GetData_FromCache<GetProject_Details_FromDb_ReturnType>(PROJECT_DETAILS_CACHE_KEY, id));
         }
 
         const _cachedDetails = await Promise.all(_cachedDetails_promises);
@@ -182,7 +189,7 @@ export async function GetManyProjects_Details(ProjectIds: string[]) {
                           in: RemainingProjectIds,
                       },
                   },
-                  select: PROJECT_DETAILS_SELECT_FIELDS,
+                  select: PROJECT_DETAILS_SELECT_FIELDS(),
               })
             : [];
 
@@ -227,7 +234,7 @@ async function GetProject_ListItem_FromDb(slug?: string, id?: string) {
             where: {
                 OR: [{ id: id }, { slug: slug }],
             },
-            select: PROJECT_LIST_ITEM_SELECT_FIELDS,
+            select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
         });
     }
     // Prioritize using id for query over using slugs
@@ -236,14 +243,14 @@ async function GetProject_ListItem_FromDb(slug?: string, id?: string) {
             where: {
                 id: id,
             },
-            select: PROJECT_LIST_ITEM_SELECT_FIELDS,
+            select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
         });
     } else {
         data = await prisma.project.findUnique({
             where: {
                 slug: slug,
             },
-            select: PROJECT_LIST_ITEM_SELECT_FIELDS,
+            select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
         });
     }
 
@@ -306,7 +313,7 @@ export async function GetManyProjects_ListItem(ids: string[]) {
                           in: RemainingProjectIds,
                       },
                   },
-                  select: PROJECT_LIST_ITEM_SELECT_FIELDS,
+                  select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
               })
             : [];
 
@@ -349,10 +356,26 @@ export async function CreateProject<T extends Prisma.ProjectCreateArgs>(args: Pr
 
 // ? Update and delete project functions
 export async function UpdateProject<T extends Prisma.ProjectUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectUpdateArgs>) {
-    const result = await prisma.project.update(args);
-    if (result?.id) await Delete_ProjectCache_All(result.id, result.slug);
+    const project = await prisma.project.update(args);
+    if (project?.id) await Delete_ProjectCache_All(project.id, project.slug);
+    if (isProjectIndexable(project.visibility, project.status)) {
+        const shouldUpdateIndex =
+            NotUndefined(args.data.gameVersions) ||
+            NotUndefined(args.data.loaders) ||
+            NotUndefined(args.data.featuredCategories) ||
+            NotUndefined(args.data.categories) ||
+            NotUndefined(args.data.visibility) ||
+            NotUndefined(args.data.status) ||
+            NotUndefined(args.data.dateUpdated) ||
+            NotUndefined(args.data.downloads) ||
+            NotUndefined(args.data.type) ||
+            NotUndefined(args.data.iconFileId) ||
+            NotUndefined(args.data.organisationId);
 
-    return result;
+        if (shouldUpdateIndex) UpdateProjects_SearchIndex([project.id]);
+    }
+
+    return project;
 }
 
 export async function UpdateManyProjects<T extends Prisma.ProjectUpdateManyArgs>(
@@ -371,11 +394,12 @@ export async function UpdateManyProjects<T extends Prisma.ProjectUpdateManyArgs>
 }
 
 export async function DeleteProject<T extends Prisma.ProjectDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectDeleteArgs>) {
-    const result = await prisma.project.delete(args);
-    if (result?.id) await Delete_ProjectCache_All(result.id, result.slug);
-    if (result?.organisationId) await Delete_OrganizationCache_All(result.organisationId);
+    const Project = await prisma.project.delete(args);
+    if (Project?.id) await Delete_ProjectCache_All(Project.id, Project.slug);
+    if (Project?.organisationId) await Delete_OrganizationCache_All(Project.organisationId);
+    if (isProjectIndexable(Project.visibility, Project.status)) await RemoveProjects_FromSearchIndex([Project.id]);
 
-    return result;
+    return Project;
 }
 
 // ? Caching functions
@@ -414,4 +438,30 @@ async function Set_ProjectCache<T extends SetCache_Data | null>(NAMESPACE: strin
     const p1 = SetCache(NAMESPACE, project.id, project.slug, PROJECT_CACHE_EXPIRY_seconds);
     const p2 = SetCache(NAMESPACE, project.slug, json_string, PROJECT_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
+}
+
+// Search index functions
+interface IndexCriteriaFields {
+    visibility: string;
+    status: string;
+}
+
+export async function UpdateOrRemoveProject_FromSearchIndex(
+    ProjectId: string,
+    OldStats: IndexCriteriaFields,
+    NewStats: IndexCriteriaFields,
+) {
+    const wasPreviouslyIndexable = isProjectIndexable(OldStats.visibility, OldStats.status);
+    const isNowIndexable = isProjectIndexable(NewStats.visibility, NewStats.status);
+
+    // Remove the project from the search index if it was previously indexable and but is not indexable anymore
+    if (wasPreviouslyIndexable && !isNowIndexable) await RemoveProjects_FromSearchIndex([ProjectId]);
+    // Add the project to the search index if it was not previously indexable
+    else if (!wasPreviouslyIndexable && isNowIndexable) await AddProjects_ToSearchIndex([ProjectId]);
+    // Update the project in the search index if it was previously indexable and still is indexable
+    else if (wasPreviouslyIndexable && isNowIndexable) await UpdateProjects_SearchIndex([ProjectId]);
+}
+
+function NotUndefined<T>(value: T | undefined): boolean {
+    return value !== undefined;
 }

@@ -1,6 +1,6 @@
 import { projectTypes } from "@app/utils/config/project";
 import { ProjectType } from "@app/utils/types";
-import { type ProjectSearchDocument, projectSearchNamespace } from "~/routes/search/sync-queue";
+import { type ProjectSearchDocument, projectSearchNamespace } from "~/routes/search/sync-utils";
 import meilisearch from "~/services/meilisearch";
 import { getFileFromLocalStorage, saveFileToLocalStorage } from "~/services/storage/local";
 import env from "~/utils/env";

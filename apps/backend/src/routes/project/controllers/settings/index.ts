@@ -6,27 +6,34 @@ import type { generalProjectSettingsFormSchema } from "@app/utils/schemas/projec
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID, DeleteManyFiles_ByID } from "~/db/file_item";
-import { DeleteProject, GetProject_Details, GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import {
+    DeleteProject,
+    GetProject_Details,
+    GetProject_ListItem,
+    UpdateOrRemoveProject_FromSearchIndex,
+    UpdateProject,
+} from "~/db/project_item";
 import { DeleteTeam } from "~/db/team_item";
 import { Delete_UserProjectsCache } from "~/db/user_item";
 import { DeleteManyVersions_ByIds, GetVersions } from "~/db/version_item";
-import { RemoveProject_FromSearchDb } from "~/routes/search/sync-queue";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "~/services/storage";
 import { projectsDir } from "~/services/storage/utils";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 import { getAverageColor, resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
+import { isProjectIndexable } from "../../utils";
 
 export async function updateProject(
     slug: string,
     userSession: ContextUserData,
     formData: z.infer<typeof generalProjectSettingsFormSchema>,
 ) {
-    const project = await GetProject_ListItem(slug, slug);
-    if (!project?.id) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
+    const Project = await GetProject_ListItem(slug, slug);
+    if (!Project?.id) return { data: { success: false }, status: HTTP_STATUS.NOT_FOUND };
 
-    const currMember = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
+    const currMember = getCurrMember(userSession.id, Project.team?.members || [], Project.organisation?.team.members || []);
     const canEditProject = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
         currMember?.permissions as ProjectPermission[],
@@ -36,7 +43,7 @@ export async function updateProject(
     if (!canEditProject) return unauthorizedReqResponseData("You don't have the permission to update project details");
 
     // If the project slug has been updated
-    if (formData.slug !== project.slug) {
+    if (formData.slug !== Project.slug) {
         // Check if the slug is available
         const existingProjectWithSameSlug = await GetProject_ListItem(formData.slug, formData.slug);
         if (existingProjectWithSameSlug?.id) return invalidReqestResponseData(`The slug "${formData.slug}" is already taken`);
@@ -44,20 +51,20 @@ export async function updateProject(
 
     // Check if the icon was updated
     // If the formdata icon is empty and the project has an icon, delete the icon
-    if (!formData.icon && project.iconFileId) {
-        await deleteProjectIcon(userSession, project.slug);
+    if (!formData.icon && Project.iconFileId) {
+        await deleteProjectIcon(userSession, Project.slug);
     }
 
     // If the formdata icon is a file, update the project icon
     if (formData.icon instanceof File) {
-        await updateProjectIcon(userSession, project.slug, formData.icon);
+        await updateProjectIcon(userSession, Project.slug, formData.icon);
     }
 
     const EnvSupport = GetProjectEnvironment(formData.type, formData.clientSide, formData.serverSide);
 
-    const updatedProject = await UpdateProject({
+    const UpdatedProject = await UpdateProject({
         where: {
-            id: project.id,
+            id: Project.id,
         },
         data: {
             name: formData.name,
@@ -70,7 +77,20 @@ export async function updateProject(
         },
     });
 
-    return { data: { success: true, message: "Project details updated", slug: updatedProject.slug }, status: HTTP_STATUS.OK };
+    // Update the project in the search index
+    await UpdateOrRemoveProject_FromSearchIndex(
+        Project.id,
+        {
+            visibility: Project.visibility,
+            status: Project.status,
+        },
+        {
+            visibility: UpdatedProject.visibility,
+            status: UpdatedProject.status,
+        },
+    );
+
+    return { data: { success: true, message: "Project details updated", slug: UpdatedProject.slug }, status: HTTP_STATUS.OK };
 }
 
 export async function deleteProject(userSession: ContextUserData, slug: string) {
@@ -120,9 +140,6 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
         // Delete the project's storage folder
         deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectsDir(project.id)),
 
-        // Remove from search index
-        RemoveProject_FromSearchDb(project.id),
-
         // Delete the projects list cache from all team members
         ...project.team.members.map((member) => {
             return Delete_UserProjectsCache(member.userId);
@@ -154,10 +171,10 @@ export async function deleteVersionsData(projectId: string, ids: string[], fileI
 }
 
 export async function updateProjectIcon(userSession: ContextUserData, slug: string, icon: File) {
-    const project = await GetProject_ListItem(slug, slug);
-    if (!project) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
+    const Project = await GetProject_ListItem(slug, slug);
+    if (!Project) return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
 
-    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
+    const memberObj = getCurrMember(userSession.id, Project.team?.members || [], Project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
         memberObj?.permissions as ProjectPermission[],
@@ -167,9 +184,9 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project icon");
 
     // Delete the previous icon if it exists
-    if (project.iconFileId) {
-        const deletedDbFile = await DeleteFile_ByID(project.iconFileId);
-        await deleteProjectFile(deletedDbFile?.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile?.name);
+    if (Project.iconFileId) {
+        const deletedDbFile = await DeleteFile_ByID(Project.iconFileId);
+        await deleteProjectFile(deletedDbFile?.storageService as FILE_STORAGE_SERVICE, Project.id, deletedDbFile?.name);
     }
 
     const fileType = await getFileType(icon);
@@ -182,7 +199,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     });
 
     const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
-    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, project.id, saveIcon, fileId);
+    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, Project.id, saveIcon, fileId);
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
     const projectColor = await getAverageColor(saveIcon);
@@ -201,7 +218,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
 
         UpdateProject({
             where: {
-                id: project.id,
+                id: Project.id,
             },
             data: {
                 iconFileId: fileId,
@@ -210,15 +227,18 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         }),
     ]);
 
+    // Update the project in the search index
+    isProjectIndexable(Project.visibility, Project.status) ? UpdateProjects_SearchIndex([Project.id]) : null;
+
     return { data: { success: true, message: "Project icon updated" }, status: HTTP_STATUS.OK };
 }
 
 export async function deleteProjectIcon(userSession: ContextUserData, slug: string) {
-    const project = await GetProject_ListItem(slug, slug);
-    if (!project) return notFoundResponseData("Project not found");
-    if (!project.iconFileId) return invalidReqestResponseData("Project does not have any icon");
+    const Project = await GetProject_ListItem(slug, slug);
+    if (!Project) return notFoundResponseData("Project not found");
+    if (!Project.iconFileId) return invalidReqestResponseData("Project does not have any icon");
 
-    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
+    const memberObj = getCurrMember(userSession.id, Project.team?.members || [], Project.organisation?.team.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
         memberObj?.permissions as ProjectPermission[],
@@ -227,13 +247,13 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
     );
     if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to delete project icon");
 
-    const deletedDbFile = await DeleteFile_ByID(project.iconFileId);
+    const deletedDbFile = await DeleteFile_ByID(Project.iconFileId);
     await Promise.all([
-        deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, project.id, deletedDbFile.name),
+        deleteProjectFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, Project.id, deletedDbFile.name),
 
         UpdateProject({
             where: {
-                id: project.id,
+                id: Project.id,
             },
             data: {
                 iconFileId: null,
@@ -241,6 +261,9 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
             },
         }),
     ]);
+
+    // Update the project in the search index
+    isProjectIndexable(Project.visibility, Project.status) ? UpdateProjects_SearchIndex([Project.id]) : null;
 
     return { data: { success: true, message: "Project icon deleted" }, status: HTTP_STATUS.OK };
 }

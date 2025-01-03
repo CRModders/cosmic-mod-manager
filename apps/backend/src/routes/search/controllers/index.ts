@@ -3,7 +3,7 @@ import type { ProjectListItem } from "@app/utils/types/api";
 import meilisearch from "~/services/meilisearch";
 import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
-import { type ProjectSearchDocument, projectSearchNamespace } from "../sync-queue";
+import { type ProjectSearchDocument, projectSearchNamespace } from "../sync-utils";
 
 interface Props {
     query: string;

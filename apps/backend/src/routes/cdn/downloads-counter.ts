@@ -2,6 +2,7 @@ import { UpdateProject } from "~/db/project_item";
 import { UpdateVersion } from "~/db/version_item";
 import redis from "~/services/redis";
 import { generateRandomId } from "~/utils/str";
+import { UpdateProjects_SearchIndex } from "../search/search-db";
 
 interface DownloadsQueueItem {
     id: string;
@@ -12,7 +13,7 @@ interface DownloadsQueueItem {
 }
 
 const QUEUE_PROCESS_INTERVAL = 300_000; // 5 minutes
-const HISTORY_VALIDITY = 5400_000; // 1.5 hours
+const HISTORY_VALIDITY = 7200_000; // 2 hours
 
 const DOWNLOADS_QUEUE_KEY = "downloads-counter-queue";
 const DOWNLOADS_HISTORY_KEY = "downloads-history";
@@ -152,6 +153,7 @@ export async function processDownloads() {
         }
 
         await Promise.all(promises);
+        UpdateProjects_SearchIndex(projectIds);
     } finally {
         await SetDownloadsProcessing(false);
     }

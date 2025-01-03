@@ -17,6 +17,7 @@ import {
 } from "~/db/project_item";
 import { CreateTeamMember, Create_ManyTeamMembers, Delete_ManyTeamMembers } from "~/db/team-member_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteOrgDirectory, deleteOrgFile, saveOrgFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import type { RouteHandlerResponse } from "~/types/http";
@@ -78,16 +79,13 @@ export async function updateOrg(ctx: Context, userSession: ContextUserData, slug
         },
     });
 
+    // Update the index of org projects
+    UpdateProjects_SearchIndex(org.projects.map((project) => project.id));
+
     return { data: { success: true, message: "Organization updated", slug: updatedOrg.slug }, status: HTTP_STATUS.OK };
 }
 
-export async function updateOrgIcon(
-    ctx: Context,
-    userSession: ContextUserData,
-    slug: string,
-    icon: File,
-    dontUpdateOrg = false,
-): Promise<RouteHandlerResponse> {
+export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, slug: string, icon: File, dontUpdateOrg = false) {
     const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org) return notFoundResponseData("Organization not found");
 
@@ -276,6 +274,9 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, slug
                 id: org.id,
             },
         }),
+
+        // Update org projects search index
+        UpdateProjects_SearchIndex(orgProjectIds),
     ]);
 
     return { data: { success: true, message: "Organization deleted" }, status: HTTP_STATUS.OK };
@@ -294,32 +295,32 @@ export async function addProjectToOrganisation(userSession: ContextUserData, org
     );
     if (!canAddProjects) return unauthorizedReqResponseData("You don't have the permission to add projects to the organization");
 
-    const project = await GetProject_ListItem(undefined, projectId);
-    if (!project) return notFoundResponseData("Project not found");
-    if (project.organisationId) return invalidReqestResponseData("Project is already part of an organization");
+    const Project = await GetProject_ListItem(undefined, projectId);
+    if (!Project) return notFoundResponseData("Project not found");
+    if (Project.organisationId) return invalidReqestResponseData("Project is already part of an organization");
 
-    const projectMembership = project.team.members?.[0];
+    const projectMembership = Project.team.members?.[0];
     if (!hasRootAccess(projectMembership?.isOwner, userSession.role))
         return unauthorizedReqResponseData("You are not the owner of the project");
 
-    const memberUserIds = project.team.members.map((member) => member.userId);
+    const memberUserIds = Project.team.members.map((member) => member.userId);
 
     await Promise.all([
         // Delete the team members from the project's current team
         Delete_ManyTeamMembers(
             {
                 where: {
-                    teamId: project.teamId,
+                    teamId: Project.teamId,
                 },
             },
-            [project.teamId],
+            [Project.teamId],
             memberUserIds,
         ),
 
         // Update the project
         UpdateProject({
             where: {
-                id: project.id,
+                id: Project.id,
             },
             data: {
                 organisationId: org.id,

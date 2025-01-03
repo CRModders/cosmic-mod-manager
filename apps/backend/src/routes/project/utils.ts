@@ -21,6 +21,10 @@ export function isProjectPublic(visibility: string, publishingStatus: string) {
     return isPublic && isPublished;
 }
 
+export function isProjectIndexable(visibility: string, publishingStatus: string) {
+    return isProjectPublic(visibility, publishingStatus) && visibility !== ProjectVisibility.UNLISTED;
+}
+
 interface IsProjectAccessible<T> {
     visibility: string;
     publishingStatus: string;

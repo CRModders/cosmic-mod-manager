@@ -1,13 +1,45 @@
 import { EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
-import { GetManyProjects_Details, GetProject_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
+import type { EnqueuedTask } from "meilisearch";
+import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;
-const SYNC_INTERVAL = 3600_000; // 60 minutes
-let isSyncing = false;
+
+export async function InitialiseSearchDb() {
+    try {
+        const index = meilisearch.index(projectSearchNamespace);
+
+        // Setup the search index
+        await AwaitEnqueuedTasks([
+            await index.updateFilterableAttributes([
+                "categories",
+                "loaders",
+                "type",
+                "gameVersions",
+                "openSource",
+                "clientSide",
+                "serverSide",
+            ]),
+            await index.updateSortableAttributes(["downloads", "followers", "dateUpdated", "datePublished"]),
+            await index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]),
+            await index.updateSearchableAttributes(["name", "slug", "summary", "author"]),
+
+            // Delete existing documents
+            await index.deleteAllDocuments(),
+        ]);
+
+        let cursor = null;
+        while (true) {
+            cursor = await _SyncBatch(cursor);
+            if (!cursor) break;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export interface ProjectSearchDocument {
     id: string;
@@ -34,7 +66,7 @@ export interface ProjectSearchDocument {
     visibility: ProjectVisibility;
 }
 
-async function syncProjects(cursor: null | string) {
+async function _SyncBatch(cursor: null | string) {
     try {
         const index = meilisearch.index(projectSearchNamespace);
 
@@ -63,77 +95,16 @@ async function syncProjects(cursor: null | string) {
             formattedProjectsData.push(FormatSearchDocument(Project));
         }
 
-        await index.addDocuments(formattedProjectsData);
+        await AwaitEnqueuedTask(await index.addDocuments(formattedProjectsData));
 
         if (formattedProjectsData.length < SYNC_BATCH_SIZE) return null;
-        return formattedProjectsData[formattedProjectsData.length - 1].id;
+        return _Projects_Ids.at(-1)?.id;
     } catch (error) {
         console.error(error);
     }
 }
 
-async function syncSearchDb() {
-    if (isSyncing) return;
-    isSyncing = true;
-
-    try {
-        let cursor = null;
-        const index = meilisearch.index(projectSearchNamespace);
-        await index.deleteAllDocuments();
-
-        await new Promise((resolve) => setTimeout(resolve, 10_000));
-
-        while (true) {
-            cursor = await syncProjects(cursor);
-            if (!cursor) break;
-        }
-    } catch (error) {
-        console.error(error);
-    } finally {
-        isSyncing = false;
-    }
-}
-
-async function queueSearchDbSync() {
-    // @ts-ignore
-    const intervalId = global.intervalId;
-    if (intervalId) clearInterval(intervalId);
-
-    await syncSearchDb();
-
-    // @ts-ignore
-    global.intervalId = setInterval(() => {
-        syncSearchDb();
-    }, SYNC_INTERVAL);
-}
-
-const index = meilisearch.index(projectSearchNamespace);
-index.updateFilterableAttributes(["categories", "loaders", "type", "gameVersions", "openSource", "clientSide", "serverSide"]);
-index.updateSortableAttributes(["downloads", "followers", "dateUpdated", "datePublished"]);
-index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]);
-index.updateSearchableAttributes(["name", "slug", "summary", "author"]);
-
-export default queueSearchDbSync;
-
-export async function AddProject_ToSearchDb(projectId: string) {
-    const Project = await GetProject_Details(projectId);
-    if (!Project) return;
-
-    if (Project.status !== ProjectPublishingStatus.APPROVED) return;
-    if (![ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(Project.visibility as ProjectVisibility)) return;
-
-    const index = meilisearch.index(projectSearchNamespace);
-    const formattedProjectData = FormatSearchDocument(Project);
-
-    await index.addDocuments([formattedProjectData]);
-}
-
-export async function RemoveProject_FromSearchDb(ProjectId: string) {
-    const index = meilisearch.index(projectSearchNamespace);
-    await index.deleteDocument(ProjectId);
-}
-
-function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnType>>(Project: T) {
+export function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnType>>(Project: T) {
     const author = Project.organisation?.slug || Project.team.members?.[0]?.user?.userName;
     const FeaturedGalleryItem = Project.gallery.find((item) => item.featured === true);
     const featured_gallery = FeaturedGalleryItem ? projectGalleryFileUrl(Project.id, FeaturedGalleryItem.thumbnailFileId) : null;
@@ -162,4 +133,49 @@ function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnTyp
         isOrgOwned: !!Project.organisation?.slug,
         visibility: Project.visibility as ProjectVisibility,
     };
+}
+
+const COMPLETED_TASK_STATUSES = ["failed", "succeeded", "canceled"];
+const PROCESSING_TASK_STATUSES = ["enqueued", "processing"];
+
+export async function AwaitEnqueuedTask(task: EnqueuedTask) {
+    const TIMEOUT = 10_000;
+    let timeElapsed = 0;
+
+    while (true) {
+        const UpdatedTask = await meilisearch.getTask(task.taskUid);
+
+        if (PROCESSING_TASK_STATUSES.includes(UpdatedTask.status)) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            timeElapsed += 100;
+        } else break;
+
+        if (timeElapsed >= TIMEOUT) {
+            console.error(`Meilisearch Task :${task.taskUid} took too long to process. Timed out after ${TIMEOUT}ms`);
+            break;
+        }
+    }
+}
+
+export async function AwaitEnqueuedTasks(tasks: EnqueuedTask[], TIMEOUT_ms = 30_000) {
+    let timeElapsed = 0;
+    const TaskdIds: number[] = [];
+    for (const task of tasks) {
+        if (task.taskUid) TaskdIds.push(task.taskUid);
+    }
+
+    while (true) {
+        const UpdatedTasks = await meilisearch.getTasks({ uids: TaskdIds });
+        const anyProcessingTask = UpdatedTasks.results.some((task) => PROCESSING_TASK_STATUSES.includes(task.status));
+
+        if (anyProcessingTask) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            timeElapsed += 100;
+        } else break;
+
+        if (timeElapsed >= TIMEOUT_ms) {
+            console.error(`Meilisearch Tasks took too long to process. Timed out after ${TIMEOUT_ms}ms`);
+            break;
+        }
+    }
 }

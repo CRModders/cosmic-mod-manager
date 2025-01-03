@@ -10,16 +10,16 @@ import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
 import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, GetUser_Unique, Get_UserProjects, UpdateUser } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteUserDataCache } from "~/services/cache/session";
 import { deleteUserFile, saveUserFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
 import { projectIconUrl, userIconUrl } from "~/utils/urls";
 
-export async function getUserProfileData(slug: string): Promise<RouteHandlerResponse> {
+export async function getUserProfileData(slug: string) {
     const user = await GetUser_ByIdOrUsername(slug, slug);
     if (!user) return { data: { success: false, message: "User not found" }, status: HTTP_STATUS.NOT_FOUND };
 
@@ -36,10 +36,7 @@ export async function getUserProfileData(slug: string): Promise<RouteHandlerResp
     return { data: dataObj, status: HTTP_STATUS.OK };
 }
 
-export async function updateUserProfile(
-    userSession: ContextUserData,
-    profileData: z.infer<typeof profileUpdateFormSchema>,
-): Promise<RouteHandlerResponse> {
+export async function updateUserProfile(userSession: ContextUserData, profileData: z.infer<typeof profileUpdateFormSchema>) {
     const user = await GetUser_Unique({
         where: {
             id: userSession.id,
@@ -55,6 +52,10 @@ export async function updateUserProfile(
         if (existingUserWithSameUserName) {
             return { data: { success: false, message: "Username already taken" }, status: HTTP_STATUS.BAD_REQUEST };
         }
+
+        // Update project's search index so that the new username is reflected
+        const UserProjects_Id = await Get_UserProjects(user.id);
+        if (UserProjects_Id.length) UpdateProjects_SearchIndex(UserProjects_Id);
     }
 
     const avatarFileId = await getUserAvatar(user.id, user.avatar, profileData.avatar);
