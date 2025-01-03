@@ -92,6 +92,22 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
         }
     }, [projectData]);
 
+    function handleClipboardPaste(e: ClipboardEvent) {
+        const file = e.clipboardData?.files?.[0];
+        if (!file) return;
+
+        const fileExtension = `.${file.name.split(".").pop()}`;
+        if (!validImgFileExtensions.includes(fileExtension)) {
+            return toast.error(`Invalid image type: ${fileExtension}. Allowed types: ${validImgFileExtensions.join(", ")}`);
+        }
+        form.setValue("image", file);
+    }
+
+    useEffect(() => {
+        document.addEventListener("paste", handleClipboardPaste);
+        return () => document.removeEventListener("paste", handleClipboardPaste);
+    }, []);
+
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
@@ -247,7 +263,6 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                 {t.project.featuredGalleryImgDesc}
                                             </FormDescription>
                                         </FormLabel>
-                                        {/* <Input {...field} placeholder="Enter order index..." type="number" /> */}
                                         <Button
                                             variant="secondary"
                                             type="button"
