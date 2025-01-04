@@ -66,6 +66,9 @@ function BaseView(props: SearchListItemProps) {
     const galleryViewType = props.viewType === ViewType.GALLERY;
     const listViewType = props.viewType === ViewType.LIST;
 
+    const ProjectDownloads = t.count.downloads(props.downloads);
+    const ProjectFollowers = t.count.followers(props.followers);
+
     return (
         <article
             // biome-ignore lint/a11y/useSemanticElements: <explanation>
@@ -226,16 +229,26 @@ function BaseView(props: SearchListItemProps) {
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
-                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.downloads)}</strong>{" "}
-                            {!galleryViewType && <span className="hidden sm:inline lowercase">{t.search.downloads}</span>}
+                            {!galleryViewType && ProjectDownloads[0]?.length > 0 && (
+                                <span className="hidden sm:inline lowercase">{ProjectDownloads[0]} </span>
+                            )}
+                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.downloads)}</strong>
+                            {!galleryViewType && ProjectDownloads[2]?.length > 0 && (
+                                <span className="hidden sm:inline lowercase"> {ProjectDownloads[2]}</span>
+                            )}
                         </p>
                     </div>
 
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <HeartIcon className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
-                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.followers)}</strong>{" "}
-                            {!galleryViewType && <span className="hidden sm:inline">{t.search.followers}</span>}
+                            {!galleryViewType && ProjectFollowers[0]?.length > 0 && (
+                                <span className="hidden sm:inline lowercase">{ProjectFollowers[0]} </span>
+                            )}
+                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.followers)}</strong>
+                            {!galleryViewType && ProjectFollowers[2]?.length > 0 && (
+                                <span className="hidden sm:inline lowercase"> {ProjectFollowers[2]}</span>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -287,6 +300,11 @@ function getDefaultStrings() {
     }
 
     return {
+        count: {
+            downloads: (count: number) => ["", count.toString(), "downloads"],
+            followers: (count: number) => ["", count.toString(), "followers"],
+        },
+
         project: {
             organization: "Organization",
             updatedAt: (when: string) => `Updated ${when}`,
@@ -297,8 +315,6 @@ function getDefaultStrings() {
         },
         search: {
             tags: tags,
-            downloads: "downloads",
-            followers: "followers",
         },
     };
 }

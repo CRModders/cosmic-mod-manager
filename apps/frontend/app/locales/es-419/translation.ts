@@ -18,6 +18,27 @@ export default {
         all: "Todo",
     },
 
+    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
+    // it's here just for readability
+    count: {
+        downloads: (count: number) => {
+            if (count === 1) return ["", count.toString(), "descarga"];
+            return ["", count.toString(), "descargas"];
+        },
+        followers: (count: number) => {
+            if (count === 1) return ["", count.toString(), "seguidor"];
+            return ["", count.toString(), "seguidores"];
+        },
+        projects: (count: number) => {
+            if (count === 1) return ["", count.toString(), "proyecto"];
+            return ["", count.toString(), "proyectos"];
+        },
+        members: (count: number) => {
+            if (count === 1) return ["", count.toString(), "miembro"];
+            return ["", count.toString(), "miembros"];
+        },
+    },
+
     navbar: {
         mod: "mod",
         mods: "mods",
@@ -166,7 +187,6 @@ export default {
         recently_updated: "Actualizado recientemente",
         recently_published: "Publicado recientemente",
 
-        followers: "Seguidores",
         filters: "Filtros",
         searchFilters: "Filtros de búsqueda",
         loaders: "Cargadores",
@@ -468,15 +488,6 @@ export default {
         sureToDeleteOrg: "¿Estás seguro de que quieres eliminar esta organización?",
         deleteOrgNamed: (orgName: string) => `Eliminar organización ${orgName}`,
         deletionWarning: "Esto eliminará esta organización para siempre (de verdad, para siempre).",
-
-        membersCount: (count: number) => {
-            switch (count) {
-                case 1:
-                    return "1 miembro";
-                default:
-                    return `${count} miembros`;
-            }
-        },
         perms: {
             edit_details: "Editar detalles",
             manage_invites: "Gestionar invitaciones",
@@ -493,8 +504,6 @@ export default {
         doesntHaveProjects: (user: string) => `${user} no tiene proyectos aún.`,
         isntPartOfAnyOrgs: (user: string) => `${user} no es miembro de ninguna organización.`,
         moderator: "Moderador",
-        projectsCount: (count: number) => (count === 1 ? "1 proyecto" : `${count} proyectos`),
-        downloads: (count: string) => `${count} descargas`,
         joined: (when: string) => `Se unió ${when}`, // eg: Joined 2 months ago
     },
 

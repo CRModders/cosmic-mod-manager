@@ -138,6 +138,15 @@ interface OrgInfoHeaderProps {
 
 function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUsersMembership, fetchOrgData }: OrgInfoHeaderProps) {
     const { t, locale } = useTranslation();
+
+    const MembersCount = t.count.members(orgData.members.length);
+    const ProjectsCount = t.count.projects(totalProjects);
+    const DownloadsCount = t.count.downloads(totalDownloads);
+
+    let DownloadsCount_Str = FormatCount(totalDownloads, formatLocaleCode(locale));
+    if (DownloadsCount[0].length > 0) DownloadsCount_Str = `${DownloadsCount[0]} ${DownloadsCount_Str}`;
+    if (DownloadsCount[2].length > 0) DownloadsCount_Str += ` ${DownloadsCount[2]}`;
+
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
@@ -197,15 +206,15 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
             >
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <UsersIcon className="w-[1.1rem] h-[1.1rem]" />
-                    <span className="font-semibold">{t.organization.membersCount(orgData.members.length)}</span>
+                    <span className="font-semibold">{MembersCount.join(" ")}</span>
                 </div>
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{t.user.projectsCount(totalProjects)}</span>
+                    <span className="font-semibold">{ProjectsCount.join(" ")}</span>
                 </div>
                 <div className="flex items-center gap-2 pr-4">
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{t.user.downloads(FormatCount(totalDownloads, formatLocaleCode(locale)))}</span>
+                    <span className="font-semibold">{DownloadsCount_Str}</span>
                 </div>
             </PageHeader>
 
