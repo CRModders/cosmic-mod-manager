@@ -10,19 +10,39 @@ const localesList = SupportedLocales.map((locale) => formatLocaleCode(locale)).f
     (locale) => locale !== formatLocaleCode(DefaultLocale),
 );
 
-const routes = [
-    "/",
-    "/auth",
-    "/settings",
-    "/dashboard",
-    "/search",
-    "/legal",
-    "/about",
-    "/user",
-    "/project/settings",
-    "/project",
-    "/organization/settings",
-    "/organization",
+const RouteChunks = [
+    ["org-settings", "/organization/settings/projects/"],
+    ["org-settings", "/organization/settings/members/"],
+    ["org-settings", "/organization/settings/"],
+    ["org", "/organization/"],
+
+    ["project-settings", "/project/settings/members/"],
+    ["project-settings", "/project/settings/"],
+    ["project", "/project/version/"],
+    ["project", "/project/gallery/"],
+    ["project", "/project/"],
+
+    ["search", "/search/"],
+
+    ["user", "/user/"],
+
+    ["settings", "/settings/account/password/"],
+    ["settings", "/settings/account/"],
+    ["settings", "/settings/sessions/"],
+    ["settings", "/settings/"],
+
+    ["moderation", "/moderation/"],
+
+    ["dashboard", "/dashboard/notification/"],
+    ["dashboard", "/dashboard/organization/"],
+    ["dashboard", "/dashboard/projects/"],
+
+    ["auth", "/auth/signup/"],
+    ["auth", "/auth/login/"],
+    ["auth", "/auth/confirm-action/"],
+    ["auth", "/auth/callback/"],
+
+    ["home", "/"],
 ];
 
 export default defineConfig({
@@ -50,11 +70,25 @@ export default defineConfig({
                         if (id.includes(`locales/${locale}`)) return `locale-${locale}`;
                     }
                     if (id.includes("locales/en")) return "locale-en";
-                    // if (id.includes("locales")) return "locales";
 
                     // CSS
                     if (id.endsWith(".css") && id.includes("components")) return "component-styles";
                     if (id.endsWith(".css")) return "styles";
+
+                    // Libraries
+                    if (id.includes("radix-ui")) return "radix-ui";
+                    if (id.includes("highlight.js") || id.includes("xss")) return "md-renderer";
+                    if (id.includes("markdown-it")) return "markdown-it";
+
+                    // Icons
+                    if (id.includes("icons") || id.includes("lucide")) return "icons";
+
+                    // UI Components
+                    if (id.includes("packages/components")) {
+                        if (id.includes("/ui/")) return "ui-components";
+                        if (id.includes("/misc/")) return "misc-components";
+                        if (id.includes("/md-editor/")) return "md-editor";
+                    }
 
                     // packages/utils
                     if (id.includes("packages/utils")) {
@@ -66,11 +100,9 @@ export default defineConfig({
                     if (id.includes("app/utils")) return "app-utils";
 
                     // Group by routes
-                    if (id.includes("frontend/app/pages")) {
-                        for (const route of routes) {
-                            if (matchRoute(id, route)) {
-                                return `route-${formatRouteName(route)}`;
-                            }
+                    if (id.includes("frontend/app/pages") || id.includes("frontend/app/routes")) {
+                        for (const [chunkName, route] of RouteChunks) {
+                            if (matchRoute(id, route)) return chunkName;
                         }
                     }
                 },
@@ -91,7 +123,7 @@ export default defineConfig({
 });
 
 function matchRoute(id: string, route: string) {
-    const nextPart = id.split(`pages${route}`)[1];
+    const nextPart = id.split(`pages${route}`)[1] || id.split(`routes${route}`)[1];
     if (!nextPart) return false;
 
     if (route === "/") {
@@ -99,11 +131,7 @@ function matchRoute(id: string, route: string) {
         return true;
     }
 
-    if (nextPart.startsWith("/")) return true;
+    const parts = nextPart.split("/");
+    if (parts.length === 1) return true;
     return false;
-}
-
-function formatRouteName(route: string) {
-    if (route === "/") return "home";
-    return route.replace("/", "").replaceAll("/", "-");
 }
