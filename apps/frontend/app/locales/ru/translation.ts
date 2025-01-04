@@ -22,16 +22,44 @@ export default {
     // it's here just for readability
     count: {
         downloads: (count: number) => {
-            return ["", count.toString(), "downloads"];
+            let lastDigit = count % 10;
+            let word = "";
+
+            if (lastDigit == 1) word = "загрузка";
+            else if ([2, 3, 4].includes(lastDigit)) word = "загрузки";
+            else word = "загрузок";
+
+            return ["", count.toString(), word];
         },
         followers: (count: number) => {
-            return ["", count.toString(), "followers"];
+            let lastDigit = count % 10;
+            let word = "";
+
+            if (lastDigit == 1) word = "фолловер";
+            else if ([2, 3, 4].includes(lastDigit)) word = "фолловера";
+            else word = "фолловеров";
+
+            return ["", count.toString(), word];
         },
         projects: (count: number) => {
-            return ["", count.toString(), "projects"];
+            let lastDigit = count % 10;
+            let word = "";
+
+            if (lastDigit == 1) word = "проект";
+            else if ([2, 3, 4].includes(lastDigit)) word = "проекта";
+            else word = "проектов";
+
+            return ["", count.toString(), word];
         },
         members: (count: number) => {
-            return ["", count.toString(), "members"];
+            let lastDigit = count % 10;
+            let word = "";
+
+            if (lastDigit == 1) word = "участник";
+            else if ([2, 3, 4].includes(lastDigit)) word = "участника";
+            else word = "участников";
+
+            return ["", count.toString(), word];
         },
     },
 
@@ -87,7 +115,7 @@ export default {
     },
 
     settings: {
-        // account: "Account",
+        account: "Аккаунт",
         preferences: "Настройки",
         publicProfile: "Публичный профиль",
         accountAndSecurity: "Аккаунт и Безопасность",
@@ -500,7 +528,6 @@ export default {
         doesntHaveProjects: (user: string) => `У пользователя ${user} ещё нет проектов.`,
         isntPartOfAnyOrgs: (user: string) => `Пользователь ${user} не принадлежит ни одной организации.`,
         moderator: "Модератор",
-<<<<<<< HEAD
         projectsCount: (count: number) => {
             const lastDigit = count % 10;
 
@@ -509,8 +536,6 @@ export default {
             else return `${count} проектов`;
         },
         downloads: (count: string) => `${count} загрузок`,
-=======
->>>>>>> 5cce391f46f1ef315857e16292b332e33df1587a
         joined: (when: string) => `Присоединился ${when}`, // eg: Joined 2 months ago
     },
 
