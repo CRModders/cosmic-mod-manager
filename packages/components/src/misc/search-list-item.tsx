@@ -48,6 +48,7 @@ interface SearchListItemProps {
     OrgPagePath: OrgPagePath;
     UserProfilePath: UserProfilePath;
     TimeSince_Fn: (date: string | Date) => string;
+    NumberFormatter: (num: number) => string;
 }
 
 export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
@@ -225,7 +226,7 @@ function BaseView(props: SearchListItemProps) {
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p>
-                            <strong className="text-lg-plus font-extrabold">{props.downloads}</strong>{" "}
+                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.downloads)}</strong>{" "}
                             {!galleryViewType && <span className="hidden sm:inline lowercase">{t.search.downloads}</span>}
                         </p>
                     </div>
@@ -233,7 +234,7 @@ function BaseView(props: SearchListItemProps) {
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <HeartIcon className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p>
-                            <strong className="text-lg-plus font-extrabold">{props.followers}</strong>{" "}
+                            <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.followers)}</strong>{" "}
                             {!galleryViewType && <span className="hidden sm:inline">{t.search.followers}</span>}
                         </p>
                     </div>

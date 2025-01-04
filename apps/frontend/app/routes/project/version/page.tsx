@@ -1,5 +1,6 @@
 import { SITE_NAME_SHORT } from "@app/utils/config";
 import { formatDate } from "@app/utils/date";
+import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
 import { type MetaArgs, useParams, useSearchParams } from "react-router";
@@ -87,7 +88,7 @@ export function meta(props: MetaArgs) {
 
     return MetaTags({
         title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
-        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${version.downloads} downloads.`,
+        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${FormatCount(version.downloads)} downloads.`,
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, `version/${version.slug}`)}`,
         image: project.icon || "",
         parentMetaTags,

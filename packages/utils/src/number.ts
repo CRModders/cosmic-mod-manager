@@ -27,3 +27,12 @@ export function parseFileSize(size: number): string {
     }
     return `${(size / (1024 * 1024 * 1024)).toFixed(3)} ${fileSizeSuffixes.gib}`;
 }
+
+export function FormatCount(count = 0, locale = "en-US", options?: Intl.NumberFormatOptions) {
+    const formatter = new Intl.NumberFormat(locale, {
+        notation: "compact",
+        ...options,
+    });
+
+    return formatter.format(count);
+}

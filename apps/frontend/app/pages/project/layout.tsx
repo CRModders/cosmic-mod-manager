@@ -52,6 +52,7 @@ import { Suspense, useContext } from "react";
 import { Outlet, useLocation } from "react-router";
 import { PageHeader } from "~/components/page-header";
 import { ImgWrapper } from "~/components/ui/avatar";
+import { FormattedCount } from "~/components/ui/count";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { ButtonLink, VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
@@ -550,11 +551,15 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
             >
                 <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{projectData.downloads}</span>
+                    <span className="font-semibold">
+                        <FormattedCount count={projectData.downloads} />
+                    </span>
                 </div>
                 <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                     <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{projectData.followers}</span>
+                    <span className="font-semibold">
+                        <FormattedCount count={projectData.followers} />
+                    </span>
                 </div>
 
                 {(projectData.featuredCategories?.length || 0) > 0 ? (

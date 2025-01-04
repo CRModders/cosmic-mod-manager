@@ -395,7 +395,7 @@ export default {
         visibleViaUrl: "Visible via URL",
         visibleToMembersOnly: "Only members will be able to view the project",
         listed: "Listed",
-        private: "Pivate",
+        private: "Private",
         unlisted: "Unlisted",
         archived: "Archived",
         deleteProject: "Delete project",
@@ -492,7 +492,7 @@ export default {
         isntPartOfAnyOrgs: (user: string) => `${user} is not a member of any Organization.`,
         moderator: "Moderator",
         projectsCount: (count: number) => (count === 1 ? "1 project" : `${count} projects`),
-        downloads: (count: string) => `${count} downloads`,
+        downloads: (IntlFormattedCount: string) => `${IntlFormattedCount} downloads`,
         joined: (when: string) => `Joined ${when}`, // eg: Joined 2 months ago
     },
 
