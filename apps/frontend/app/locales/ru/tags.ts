@@ -24,7 +24,7 @@ export default {
     "game-mechanics": "Игровые механики",
     gui: "GUI",
     items: "Предметы",
-    "kitchen-sink": "Kitchen sink",
+    "kitchen-sink": "Кухонная мойка",
     library: "Библиотека",
     lightweight: "Легковесное",
     locale: "Локаль",
