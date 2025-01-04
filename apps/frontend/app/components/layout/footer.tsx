@@ -105,6 +105,7 @@ export default function Footer() {
                 {SupportedLocales.map((locale) => {
                     const region = locale.region;
                     const label = region ? `${locale.nativeName} (${region.displayName})` : locale.nativeName;
+                    const title = region ? `${locale.name} - ${region.name}` : locale.name;
 
                     const formattedCode = formatLocaleCode(locale);
 
@@ -113,8 +114,8 @@ export default function Footer() {
                             key={formattedCode}
                             to={formatUrlWithLocalePrefix(locale)}
                             className="link_blue hover:underline"
-                            aria-label={label}
-                            title={label}
+                            aria-label={title}
+                            title={title}
                             preventScrollReset
                             escapeUrlWrapper
                             onClick={() => {

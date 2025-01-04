@@ -15,17 +15,6 @@ const SupportedLocales = [
         nativeName: "Español",
         dir: "ltr",
         region: {
-            code: "ES",
-            name: "Spain",
-            displayName: "España",
-        },
-    }),
-    meta({
-        code: "es",
-        name: "Spanish",
-        nativeName: "Español",
-        dir: "ltr",
-        region: {
             code: "419",
             name: "Latin America",
             displayName: "Latinoamérica",

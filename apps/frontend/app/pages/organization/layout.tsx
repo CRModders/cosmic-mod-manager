@@ -7,6 +7,7 @@ import { PopoverClose } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { isModerator } from "@app/utils/config/roles";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
+import { FormatCount } from "@app/utils/number";
 import type { LoggedInUserData, ProjectType } from "@app/utils/types";
 import type { Organisation, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -16,6 +17,7 @@ import { PageHeader } from "~/components/page-header";
 import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useSession } from "~/hooks/session";
+import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath } from "~/utils/urls";
 import TeamInvitationBanner from "../project/join-project-banner";
@@ -135,7 +137,7 @@ interface OrgInfoHeaderProps {
 }
 
 function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUsersMembership, fetchOrgData }: OrgInfoHeaderProps) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-1">
             <PageHeader
@@ -203,7 +205,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 </div>
                 <div className="flex items-center gap-2 pr-4">
                     <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">{t.user.downloads(`${totalDownloads}`)}</span>
+                    <span className="font-semibold">{t.user.downloads(FormatCount(totalDownloads, formatLocaleCode(locale)))}</span>
                 </div>
             </PageHeader>
 

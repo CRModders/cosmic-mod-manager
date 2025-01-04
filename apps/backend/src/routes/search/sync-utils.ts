@@ -1,10 +1,10 @@
 import { EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { EnqueuedTask } from "meilisearch";
 import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
+import { isProjectIndexable } from "~/routes/project/utils";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
-import { isProjectIndexable } from "../project/utils";
 
 export const projectSearchNamespace = "projects";
 const SYNC_BATCH_SIZE = 1000;

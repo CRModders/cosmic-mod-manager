@@ -6,6 +6,7 @@ import Chip from "@app/components/ui/chip";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
+import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { GlobalUserRole } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
@@ -17,6 +18,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { TimePassedSince } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
+import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath, UserProfilePath } from "~/utils/urls";
 import SecondaryNav from "../project/secondary-nav";
@@ -127,7 +129,7 @@ interface ProfilePageHeaderProps {
 }
 
 function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfilePageHeaderProps) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     const session = useSession();
     let title = null;
 
@@ -189,7 +191,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             </div>
             <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                 <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                <span className="font-semibold">{t.user.downloads(`${totalDownloads}`)}</span>
+                <span className="font-semibold">{t.user.downloads(FormatCount(totalDownloads, formatLocaleCode(locale)))}</span>
             </div>
             <div className="flex items-center gap-2">
                 <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />

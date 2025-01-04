@@ -214,7 +214,7 @@ export function PublishingChecklist() {
                 <div className="grow flex flex-wrap gap-x-4 gap-y-2 items-center justify-between">
                     <CardTitle className="text-muted-foreground/85">{pubChecklist.title}</CardTitle>
 
-                    <div className="flex items-center gap-x-1">
+                    <div className="flex items-center gap-1 flex-wrap">
                         <TooltipProvider delayDuration={200}>
                             <span className="font-bold text-muted-foreground/85 mr-2">{pubChecklist.progress}</span>
 

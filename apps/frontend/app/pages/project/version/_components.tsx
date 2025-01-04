@@ -628,8 +628,8 @@ function AdditionalFiles({
                 <InteractiveLabel
                     htmlFor={inputId}
                     className={cn(
-                        "text-muted-foreground cursor-pointer hover:bg-shallow-background/70",
                         "flex items-center justify-center gap-2 px-4 py-2 rounded cursor-pointer",
+                        "text-muted-foreground cursor-pointer border border-shallow-background hover:bg-shallow-background/70",
                         "focus-visible:outline-none focus-visible:keyboard_focus_ring",
                     )}
                 >
@@ -652,7 +652,7 @@ function AdditionalFiles({
                                 <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
                             </div>
 
-                            <Button variant={"secondary-dark"} onClick={() => deleteFileFromList(index)}>
+                            <Button variant="secondary-dark" onClick={() => deleteFileFromList(index)}>
                                 <Trash2Icon className="w-btn-icon h-btn-icon" />
                                 {t.form.remove}
                             </Button>

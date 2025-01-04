@@ -1,6 +1,12 @@
 import { getSessionIp } from "@app/utils/headers";
 import Config from "./config";
 
+const reset = "\x1b[0m";
+const cyan = "\x1b[36m";
+const green = "\x1b[32m";
+const magenta = "\x1b[35m";
+const gray = "\x1b[90m";
+
 export async function serverFetch(clientReq: Request, pathname: string, init?: RequestInit): Promise<Response> {
     function getHeader(key: string) {
         return clientReq.headers.get(key);
@@ -34,7 +40,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
             headers: { ...init?.headers, ...headers },
         });
 
-        console.log(`${pathname} ${Date.now() - startTime}ms | ${clientIp}`);
+        console.log(`${green}${pathname} ${magenta}${Date.now() - startTime}ms ${gray}| ${cyan}${clientIp}${reset}`);
         return res;
     } catch (error) {
         return new Response(null, { status: 500 });

@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { useContext, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
+import { FormattedCount } from "~/components/ui/count";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
@@ -633,7 +634,7 @@ function DownloadsCount({ downloads, iconVisible = true }: { downloads: number; 
     return (
         <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium">
             {iconVisible === true ? <DownloadIcon className="w-3.5 h-3.5" /> : null}
-            {downloads}
+            <FormattedCount count={downloads} />
         </span>
     );
 }

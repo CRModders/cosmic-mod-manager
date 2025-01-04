@@ -7,10 +7,10 @@
 import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
+import { getLocale } from "~/locales";
+import { GetLocaleMetadata } from "~/locales/meta";
+import { LocaleProvider } from "~/locales/provider";
 import { useUrlLocale } from "~/utils/urls";
-import { getLocale } from "./locales";
-import { GetLocaleMetadata } from "./locales/meta";
-import { LocaleProvider } from "./locales/provider";
 
 startTransition(async () => {
     const initLocaleModule = await getLocale(useUrlLocale(true));

@@ -27,6 +27,7 @@ import { ChevronRightIcon, CopyIcon, DownloadIcon, Edit3Icon, FileIcon, FlagIcon
 import { Suspense, lazy, useContext } from "react";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { ImgWrapper } from "~/components/ui/avatar";
+import { FormattedCount } from "~/components/ui/count";
 import { FormattedDate } from "~/components/ui/date";
 import Link, { VariantButtonLink } from "~/components/ui/link";
 import type { ProjectContextData } from "~/hooks/project";
@@ -256,7 +257,11 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                             },
                             {
                                 label: t.project.downloads,
-                                content: <span className="leading-none"> {versionData.downloads} </span>,
+                                content: (
+                                    <span className="leading-none">
+                                        <FormattedCount count={versionData.downloads} notation="standard" />
+                                    </span>
+                                ),
                             },
                             {
                                 label: t.version.publicationDate,
