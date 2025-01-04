@@ -1,5 +1,5 @@
 import type { Locale } from "~/locales/types";
-import { Rules } from "./legal";
+// import { Rules } from "./legal";
 import tags from "./tags";
 
 export default {
@@ -87,6 +87,7 @@ export default {
     },
 
     settings: {
+        // account: "Account",
         preferences: "Настройки",
         publicProfile: "Публичный профиль",
         accountAndSecurity: "Аккаунт и Безопасность",
@@ -520,7 +521,7 @@ export default {
     legal: {
         legal: "Документы",
         rulesTitle: "Контент",
-        contentRules: Rules,
+        // contentRules: Rules, // Not translated yet
         termsTitle: "Условия использования",
         copyrightPolicyTitle: "Политика авторских прав",
         securityNoticeTitle: "Безопасноть",

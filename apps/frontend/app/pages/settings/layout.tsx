@@ -13,14 +13,14 @@ export default function SettingsPageLayout() {
         <main className="w-full">
             <Panel>
                 <PanelAside className="gap-2" aside>
-                    <PanelAsideNavCard label="Settings">
+                    <PanelAsideNavCard label={t.common.settings}>
                         <ButtonLink url="/settings" prefetch="render" preventScrollReset>
                             <PaintbrushIcon className="size-4" />
                             {t.settings.preferences}
                         </ButtonLink>
                         {session?.id ? (
                             <>
-                                <span className="text-lg font-semibold mt-3">Account</span>
+                                <span className="text-lg font-semibold mt-3">{t.settings.account}</span>
                                 <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
                                     <UserIcon className="size-4" />
                                     {t.settings.publicProfile}

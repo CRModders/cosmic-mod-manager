@@ -1,4 +1,4 @@
-import type { Translation } from "../types";
+import type tags from "~/locales/en/tags";
 
 export default {
     adventure: "Путешествие",
@@ -58,4 +58,7 @@ export default {
     utility: "Утилита",
     "vanilla-like": "Стандартное",
     worldgen: "Генератор мира",
-} satisfies Translation;
+
+    // client: "Client",
+    // server: "Server",
+} satisfies typeof tags;
