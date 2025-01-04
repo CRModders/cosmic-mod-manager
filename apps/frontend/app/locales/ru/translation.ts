@@ -501,7 +501,7 @@ export default {
             const lastDigit = count % 10;
 
             if (lastDigit === 1) return "1 проект";
-            if (lastDigit in [2, 3, 4]) return `${count} проекта`;
+            if ([2, 3, 4].includes(lastDigit)) return `${count} проекта`;
             else return `${count} проектов`;
         },
         downloads: (count: string) => `${count} загрузок`,
@@ -543,7 +543,7 @@ export default {
             const lastDigit = count % 10;
 
             if (lastDigit === 1) return "1 проект ожидает одобрения.";
-            if (lastDigit in [2, 3, 4]) return `${count} проекта ожидают одобрения.`;
+            if ([2, 3, 4].includes(lastDigit)) return `${count} проекта ожидают одобрения.`;
             return `${count} проектов ожидают одобрения.`;
         },
         // hours will either be 24 or 48
@@ -551,7 +551,7 @@ export default {
             const lastDigit = count % 10;
 
             if (lastDigit === 1) return `1 ожидает одобрения уже более ${hours} часов.`;
-            if (lastDigit in [2, 3, 4]) return `${count} проекта ожидают одобрения уже более ${hours} часов.`;
+            if ([2, 3, 4].includes(lastDigit)) return `${count} проекта ожидают одобрения уже более ${hours} часов.`;
             return `${count} проектов ожидают одобрения уже более ${hours} часов.`;
         },
         submitted: (when: string) => `Отправлен на одобрение ${when}`, // eg: Created 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
