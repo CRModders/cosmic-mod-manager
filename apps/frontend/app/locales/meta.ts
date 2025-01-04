@@ -31,6 +31,13 @@ const SupportedLocales = [
             displayName: "Latinoamérica",
         },
     }),
+
+    meta({
+        code: "ru",
+        name: "Russian",
+        nativeName: "Русский",
+        dir: "ltr",
+    }),
 ];
 
 export default SupportedLocales;
