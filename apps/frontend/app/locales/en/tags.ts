@@ -58,4 +58,8 @@ export default {
     utility: "Utility",
     "vanilla-like": "Vanilla like",
     worldgen: "Worldgen",
+
+    // Env options
+    client: "Client",
+    server: "Server",
 } satisfies Translation;

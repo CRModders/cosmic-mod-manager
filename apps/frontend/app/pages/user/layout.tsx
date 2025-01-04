@@ -136,6 +136,13 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
     if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {
         title = t.user.moderator;
     }
+
+    const ProjectsCount = t.count.projects(totalProjects);
+    const DownloadsCount = t.count.downloads(totalDownloads);
+
+    let DownloadsCount_Str = FormatCount(totalDownloads, formatLocaleCode(locale));
+    if (DownloadsCount[0].length > 0) DownloadsCount_Str = `${DownloadsCount[0]} ${DownloadsCount_Str}`;
+    if (DownloadsCount[2].length > 0) DownloadsCount_Str += ` ${DownloadsCount[2]}`;
     return (
         <PageHeader
             vtId={userData.id}
@@ -187,11 +194,11 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
         >
             <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                 <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
-                <span className="font-semibold">{t.user.projectsCount(totalProjects)}</span>
+                <span className="font-semibold">{ProjectsCount.join(" ")}</span>
             </div>
             <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
                 <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
-                <span className="font-semibold">{t.user.downloads(FormatCount(totalDownloads, formatLocaleCode(locale)))}</span>
+                <span className="font-semibold">{DownloadsCount_Str}</span>
             </div>
             <div className="flex items-center gap-2">
                 <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />

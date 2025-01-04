@@ -1,5 +1,5 @@
-import type { Translation } from "~/locales/types";
-import { Rules } from "./legal";
+import type { Locale } from "~/locales/types";
+// import { Rules } from "./legal";
 import tags from "./tags";
 
 export default {
@@ -16,6 +16,23 @@ export default {
         report: "Пожаловаться",
         copyId: "Скопировать ID",
         all: "Все",
+    },
+
+    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
+    // it's here just for readability
+    count: {
+        downloads: (count: number) => {
+            return ["", count.toString(), "downloads"];
+        },
+        followers: (count: number) => {
+            return ["", count.toString(), "followers"];
+        },
+        projects: (count: number) => {
+            return ["", count.toString(), "projects"];
+        },
+        members: (count: number) => {
+            return ["", count.toString(), "members"];
+        },
     },
 
     navbar: {
@@ -51,7 +68,8 @@ export default {
         alreadyHaveAccount: "Уже зарегистрированы?",
         forgotPassword: "Забыли пароль?",
         signupWithProviders: "Зарегистрируйтесь одним из способов:",
-        aggrement: "Создавая аккаунт, вы соглашаетесь с нашими [Условиями использования](/legal/terms) и [Политикой Конфиденциальности](/legal/privacy).",
+        aggrement:
+            "Создавая аккаунт, вы соглашаетесь с нашими [Условиями использования](/legal/terms) и [Политикой Конфиденциальности](/legal/privacy).",
         invalidCode: "Неверный или уже истекший код",
         didntRequest: "Не запрашивали это?",
         checkSessions: "Посмотреть авторизованные сессии",
@@ -69,6 +87,7 @@ export default {
     },
 
     settings: {
+        // account: "Account",
         preferences: "Настройки",
         publicProfile: "Публичный профиль",
         accountAndSecurity: "Аккаунт и Безопасность",
@@ -168,7 +187,6 @@ export default {
         recently_updated: "Недавно обновлённые",
         recently_published: "Недавно опубликованные",
 
-        followers: "Фолловеры",
         filters: "Фильтры",
         searchFilters: "Найти фильтры",
         loaders: "Загрузчики",
@@ -461,26 +479,11 @@ export default {
         noProjects_CreateOne: "Эта организация пока что не имеет никаких проектов. Нажмите на кнопку выше, чтобы создать новый.",
         orgInfo: "Информация об организации",
         deleteOrg: "Удалить организацию",
-        deleteOrgDesc:
-            "Удаление организации приведет к переносу всех проектов к её владельцу. Это действие нельзя отменить.",
+        deleteOrgDesc: "Удаление организации приведет к переносу всех проектов к её владельцу. Это действие нельзя отменить.",
         sureToDeleteOrg: "Вы уверены, что хотите удалить эту организацию?",
         deleteOrgNamed: (orgName: string) => `Удалить организацию ${orgName}`,
         deletionWarning: "Это действие удалит организацию навсегда (типо реально навсегда).",
 
-        membersCount: (count: number) => {
-            const lastDigit = count % 10;
-
-            switch (lastDigit) {
-                case 1:
-                    return "1 участник";
-                case 2:
-                case 3:
-                case 4:
-                    return `${count} участника`;
-                default:
-                    return `${count} участников`;
-            }
-        },
         perms: {
             edit_details: "Редактировать подробности",
             manage_invites: "Управлять приглашениями",
@@ -497,6 +500,7 @@ export default {
         doesntHaveProjects: (user: string) => `У пользователя ${user} ещё нет проектов.`,
         isntPartOfAnyOrgs: (user: string) => `Пользователь ${user} не принадлежит ни одной организации.`,
         moderator: "Модератор",
+<<<<<<< HEAD
         projectsCount: (count: number) => {
             const lastDigit = count % 10;
 
@@ -505,6 +509,8 @@ export default {
             else return `${count} проектов`;
         },
         downloads: (count: string) => `${count} загрузок`,
+=======
+>>>>>>> 5cce391f46f1ef315857e16292b332e33df1587a
         joined: (when: string) => `Присоединился ${when}`, // eg: Joined 2 months ago
     },
 
@@ -526,7 +532,7 @@ export default {
     legal: {
         legal: "Документы",
         rulesTitle: "Контент",
-        contentRules: Rules,
+        // contentRules: Rules, // Not translated yet
         termsTitle: "Условия использования",
         copyrightPolicyTitle: "Политика авторских прав",
         securityNoticeTitle: "Безопасноть",
@@ -724,4 +730,4 @@ export default {
             }
         },
     },
-} satisfies Translation;
+} satisfies Locale;

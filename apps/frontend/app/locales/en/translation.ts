@@ -18,6 +18,27 @@ export default {
         all: "All",
     },
 
+    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
+    // it's here just for readability
+    count: {
+        downloads: (count: number) => {
+            if (count === 1) return ["", count.toString(), "download"];
+            return ["", count.toString(), "downloads"];
+        },
+        followers: (count: number) => {
+            if (count === 1) return ["", count.toString(), "follower"];
+            return ["", count.toString(), "followers"];
+        },
+        projects: (count: number) => {
+            if (count === 1) return ["", count.toString(), "project"];
+            return ["", count.toString(), "projects"];
+        },
+        members: (count: number) => {
+            if (count === 1) return ["", count.toString(), "member"];
+            return ["", count.toString(), "members"];
+        },
+    },
+
     navbar: {
         mod: "mod",
         mods: "mods",
@@ -69,6 +90,7 @@ export default {
     },
 
     settings: {
+        account: "Account",
         preferences: "Preferences",
         publicProfile: "Public Profile",
         accountAndSecurity: "Account and Security",
@@ -167,7 +189,6 @@ export default {
         recently_updated: "Recently updated",
         recently_published: "Recently published",
 
-        followers: "Followers",
         filters: "Filters",
         searchFilters: "Search filters",
         loaders: "Loaders",
@@ -467,14 +488,6 @@ export default {
         deleteOrgNamed: (orgName: string) => `Delete organization ${orgName}`,
         deletionWarning: "This will delete this organization forever (like forever ever).",
 
-        membersCount: (count: number) => {
-            switch (count) {
-                case 1:
-                    return "1 member";
-                default:
-                    return `${count} members`;
-            }
-        },
         perms: {
             edit_details: "Edit details",
             manage_invites: "Manage invites",
@@ -488,11 +501,9 @@ export default {
     },
 
     user: {
+        moderator: "Moderator",
         doesntHaveProjects: (user: string) => `${user} doesn't have any projects yet.`,
         isntPartOfAnyOrgs: (user: string) => `${user} is not a member of any Organization.`,
-        moderator: "Moderator",
-        projectsCount: (count: number) => (count === 1 ? "1 project" : `${count} projects`),
-        downloads: (IntlFormattedCount: string) => `${IntlFormattedCount} downloads`,
         joined: (when: string) => `Joined ${when}`, // eg: Joined 2 months ago
     },
 

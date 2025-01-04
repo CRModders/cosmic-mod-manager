@@ -57,20 +57,20 @@ export function ListItemCard({
 interface OrgListItemCard extends Omit<ListItemCardProps, "children"> {
     members: number;
     t?: {
-        organization: {
-            membersCount: typeof membersCount;
+        count: {
+            members: typeof membersCount;
         };
     };
 }
 
 export function OrgListItemCard({ members, ...props }: OrgListItemCard) {
-    const t = props.t || { organization: { membersCount } };
+    const t = props.t || { count: { members: membersCount } };
 
     return (
         <ListItemCard {...props} fallbackIcon={fallbackOrgIcon}>
             <div className="flex gap-1 items-center justify-center whitespace-nowrap">
                 <UsersIcon className="text-extra-muted-foreground font-medium w-btn-icon h-btn-icon" />
-                {t.organization.membersCount(members)}
+                {t.count.members(members).join(" ")}
             </div>
         </ListItemCard>
     );
@@ -79,8 +79,8 @@ export function OrgListItemCard({ members, ...props }: OrgListItemCard) {
 function membersCount(count: number) {
     switch (count) {
         case 1:
-            return "1 member";
+            return ["", "1", "member"];
         default:
-            return `${count} members`;
+            return ["", `${count}`, "members"];
     }
 }

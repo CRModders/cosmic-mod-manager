@@ -58,4 +58,7 @@ export default {
     utility: "Utilidad",
     "vanilla-like": "Similar a vanilla",
     worldgen: "Generación de mundo",
+
+    // client: "Client",
+    // server: "Server",
 } satisfies typeof tags;
