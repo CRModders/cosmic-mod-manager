@@ -225,7 +225,7 @@ function BaseView(props: SearchListItemProps) {
                 <div className={cn("flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
-                        <p>
+                        <p className="text-nowrap">
                             <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.downloads)}</strong>{" "}
                             {!galleryViewType && <span className="hidden sm:inline lowercase">{t.search.downloads}</span>}
                         </p>
@@ -233,7 +233,7 @@ function BaseView(props: SearchListItemProps) {
 
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <HeartIcon className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
-                        <p>
+                        <p className="text-nowrap">
                             <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.followers)}</strong>{" "}
                             {!galleryViewType && <span className="hidden sm:inline">{t.search.followers}</span>}
                         </p>
@@ -252,7 +252,7 @@ function BaseView(props: SearchListItemProps) {
                             <Tooltip>
                                 <CalendarIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
-                                    <p className="flex items-baseline justify-center gap-1">
+                                    <p className="flex items-baseline justify-center gap-1 text-nowrap">
                                         {t.project.publishedAt(props.TimeSince_Fn(props.datePublished))}
                                     </p>
                                 </TooltipTrigger>
@@ -264,7 +264,7 @@ function BaseView(props: SearchListItemProps) {
                             <Tooltip>
                                 <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
-                                    <p className="flex items-baseline justify-center gap-1">
+                                    <p className="flex items-baseline justify-center gap-1 text-nowrap">
                                         {t.project.updatedAt(props.TimeSince_Fn(props.dateUpdated))}
                                     </p>
                                 </TooltipTrigger>
