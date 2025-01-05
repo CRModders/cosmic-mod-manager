@@ -24,7 +24,7 @@ export default {
     "game-mechanics": "Игровые механики",
     gui: "GUI",
     items: "Предметы",
-    "kitchen-sink": "Kitchen sink",
+    "kitchen-sink": "Кухонная мойка",
     library: "Библиотека",
     lightweight: "Легковесное",
     locale: "Локаль",
@@ -58,7 +58,6 @@ export default {
     utility: "Утилита",
     "vanilla-like": "Стандартное",
     worldgen: "Генератор мира",
-
-    // client: "Client",
-    // server: "Server",
+    client: "Клиент",
+    server: "Сервер",
 } satisfies typeof tags;
