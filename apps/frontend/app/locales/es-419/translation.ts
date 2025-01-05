@@ -89,7 +89,7 @@ export default {
     },
 
     settings: {
-        // account: "Account",
+        account: "Cuenta",
         preferences: "Preferencias",
         publicProfile: "Perfil público",
         accountAndSecurity: "Cuenta y seguridad",

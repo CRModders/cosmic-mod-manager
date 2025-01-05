@@ -11,7 +11,7 @@ export default {
     "colored-lighting": "Iluminación coloreada",
     combat: "Combate",
     "core-shaders": "Shaders integrados",
-    cursed: "Extravagante",
+    cursed: "Excéntrico",
     decoration: "Decoración",
     economy: "Economía",
     entities: "Entidades",
@@ -59,6 +59,6 @@ export default {
     "vanilla-like": "Similar a vanilla",
     worldgen: "Generación de mundo",
 
-    // client: "Client",
-    // server: "Server",
+    client: "Cliente",
+    server: "Servidor",
 } satisfies typeof tags;
