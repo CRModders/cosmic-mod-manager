@@ -11,7 +11,7 @@ export default {
     "colored-lighting": "Iluminación coloreada",
     combat: "Combate",
     "core-shaders": "Shaders integrados",
-    cursed: "Extravagante",
+    cursed: "Excéntrico",
     decoration: "Decoración",
     economy: "Economía",
     entities: "Entidades",
