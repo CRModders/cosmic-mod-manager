@@ -1,14 +1,20 @@
-import { formatDate, timeSince } from "@app/utils/date";
+import { FormatDate_ToLocaleString, timeSince } from "@app/utils/date";
 
 interface FormatDateProps {
     date: Date | string;
-    timestamp_template?: string;
-    useShortMonthNames?: boolean;
+    shortMonthNames?: boolean;
+    showTime?: boolean;
+    utc?: boolean;
+    locale?: string;
 }
 
 export function FormattedDate(props: FormatDateProps) {
-    const date = new Date(props.date);
-    return formatDate(date, props.timestamp_template, props.useShortMonthNames);
+    return FormatDate_ToLocaleString(props.date, {
+        includeTime: props.showTime,
+        shortMonthNames: props.shortMonthNames,
+        utc: props.utc,
+        locale: props.locale,
+    });
 }
 
 export function TimePassedSince({ date }: { date: Date | string }) {

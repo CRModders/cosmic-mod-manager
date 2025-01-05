@@ -1,21 +1,35 @@
-import { formatDate, timeSince } from "@app/utils/date";
+import { FormattedDate as DefaultFormattedDate } from "@app/components/ui/date";
+import { FormatDate_ToLocaleString, timeSince } from "@app/utils/date";
 import { Capitalize } from "@app/utils/string";
+import type React from "react";
 import ClientOnly from "~/components/client-only";
+import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 
-interface FormatDateProps {
-    date: Date | string;
-    timestamp_template?: string;
-    useShortMonthNames?: boolean;
-}
+type FormatDateProps = Omit<React.ComponentProps<typeof DefaultFormattedDate>, "locale">;
 
 export function FormattedDate(props: FormatDateProps) {
-    const date = new Date(props.date);
+    const { locale } = useTranslation();
 
     return (
         <ClientOnly
-            fallback={formatDate(date, props.timestamp_template, props.useShortMonthNames, true)}
-            Element={() => <>{formatDate(date, props.timestamp_template, props.useShortMonthNames)}</>}
+            fallback={
+                <DefaultFormattedDate
+                    date={props.date}
+                    locale={formatLocaleCode(locale)}
+                    utc
+                    showTime={props.showTime}
+                    shortMonthNames={props.shortMonthNames}
+                />
+            }
+            Element={() => {
+                return FormatDate_ToLocaleString(props.date, {
+                    includeTime: props.showTime,
+                    shortMonthNames: props.shortMonthNames,
+                    utc: false,
+                    locale: formatLocaleCode(locale),
+                });
+            }}
         />
     );
 }

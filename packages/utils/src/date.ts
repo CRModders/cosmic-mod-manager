@@ -1,20 +1,3 @@
-export const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
-export const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 const defaultPhrases = {
     justNow: "just now",
     minuteAgo: (mins: number) => {
@@ -105,38 +88,6 @@ export function timeSince(pastTime: Date, t = defaultPhrases): string {
     }
 }
 
-export function formatDate(
-    date: Date,
-    timestamp_template = "${month} ${day}, ${year} at ${hours}:${minutes} ${amPm}",
-    useShortMonthNames = false,
-    utc = false,
-): string {
-    try {
-        const year = utc ? date.getUTCFullYear() : date.getFullYear();
-        const monthIndex = utc ? date.getUTCMonth() : date.getMonth();
-        const month = (useShortMonthNames ? shortMonthNames : monthNames)[monthIndex];
-        const day = utc ? date.getUTCDate() : date.getDate();
-
-        const hours = utc ? date.getUTCHours() : date.getHours();
-        const minutes = utc ? date.getUTCMinutes() : date.getMinutes();
-        const amPm = hours >= 12 ? "PM" : "AM";
-        const adjustedHours = hours % 12 || 12; // Convert to 12-hour format
-
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes.toString();
-
-        return timestamp_template
-            .replace("${month}", `${month}`)
-            .replace("${day}", `${day}`)
-            .replace("${year}", `${year}`)
-            .replace("${hours}", `${adjustedHours}`)
-            .replace("${minutes}", `${formattedMinutes}`)
-            .replace("${amPm}", `${amPm}`);
-    } catch (error) {
-        console.error(error);
-        return "";
-    }
-}
-
 export function DateFromStr(date: string | Date) {
     try {
         return new Date(date);
@@ -151,4 +102,37 @@ export function DateToISOStr(date: string | Date): string | null {
     } catch (error) {
         return null;
     }
+}
+
+interface FormatDateOptions {
+    locale?: string;
+    includeTime?: boolean;
+    shortMonthNames?: boolean;
+    utc?: boolean;
+}
+
+export function FormatDate_ToLocaleString(_date: string | Date, _options: FormatDateOptions = {}) {
+    const date = DateFromStr(_date);
+    if (!date) return "";
+
+    const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
+
+    if (_options.includeTime !== false) {
+        options.hour = "numeric";
+        options.minute = "numeric";
+    }
+
+    if (_options.shortMonthNames === true) {
+        options.month = "short";
+    }
+
+    if (_options.utc === true) {
+        options.timeZone = "UTC";
+    }
+
+    return date.toLocaleString(_options.locale, options);
 }

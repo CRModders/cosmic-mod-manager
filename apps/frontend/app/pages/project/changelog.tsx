@@ -298,12 +298,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         </Link>
                                     </span>
                                     <span>
-                                        on{" "}
-                                        <FormattedDate
-                                            date={version.datePublished}
-                                            timestamp_template="${month} ${day}, ${year}"
-                                            useShortMonthNames
-                                        />
+                                        on <FormattedDate date={version.datePublished} showTime={false} shortMonthNames={true} />
                                     </span>
                                 </div>
 

@@ -1,5 +1,5 @@
 import { SITE_NAME_SHORT } from "@app/utils/config";
-import { formatDate } from "@app/utils/date";
+import { FormatDate_ToLocaleString } from "@app/utils/date";
 import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
@@ -82,7 +82,7 @@ export function meta(props: MetaArgs) {
     }
 
     const loaders = version.loaders.length ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ") : null;
-    const publishedAt = formatDate(new Date(version.datePublished), "${month} ${day}, ${year}", true);
+    const publishedAt = FormatDate_ToLocaleString(version.datePublished, { includeTime: false, shortMonthNames: false, utc: true });
 
     const titleIncludesProjectName = version.title.toLowerCase().includes(project.name.toLowerCase());
 

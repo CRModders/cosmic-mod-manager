@@ -161,7 +161,7 @@ function GalleryItemCard({
                 <div className="w-full flex flex-col items-start justify-start gap-1.5 mt-1">
                     <p className="flex gap-1.5 items-center justify-center text-muted-foreground">
                         <CalendarIcon className="w-btn-icon h-btn-icon" />
-                        <FormattedDate date={galleryItem.dateCreated} timestamp_template="${month} ${day}, ${year}" />
+                        <FormattedDate date={galleryItem.dateCreated} showTime={false} />
                     </p>
                     {doesMemberHaveAccess(
                         ProjectPermission.EDIT_DETAILS,
