@@ -28,6 +28,7 @@ import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
+import Config from "~/utils/config";
 import { OrgPagePath } from "~/utils/urls";
 
 export default function CreateNewOrg_Dialog({ children }: { children: React.ReactNode }) {
@@ -126,7 +127,7 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                         </FormLabel>
                                         <Input
                                             id="org-url-slug-input"
-                                            placeholder="https://crmm.tech/organization/YOUR_URL"
+                                            placeholder={`${Config.FRONTEND_URL}/organization/YOUR_URL`}
                                             type="text"
                                             {...field}
                                             onChange={(e) => {

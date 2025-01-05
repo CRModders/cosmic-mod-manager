@@ -61,54 +61,54 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
-    build: {
-        rollupOptions: {
-            output: {
-                manualChunks: (id) => {
-                    // Locales
-                    for (const locale of localesList) {
-                        if (id.includes(`locales/${locale}`)) return `locale-${locale}`;
-                    }
-                    if (id.includes("locales/en")) return "locale-en";
+    // build: {
+    //     rollupOptions: {
+    //         output: {
+    //             manualChunks: (id) => {
+    //                 // Locales
+    //                 for (const locale of localesList) {
+    //                     if (id.includes(`locales/${locale}`)) return `locale-${locale}`;
+    //                 }
+    //                 if (id.includes("locales/en")) return "locale-en";
 
-                    // CSS
-                    if (id.endsWith(".css") && id.includes("components")) return "component-styles";
-                    if (id.endsWith(".css")) return "styles";
+    //                 // CSS
+    //                 if (id.endsWith(".css") && id.includes("components")) return "component-styles";
+    //                 if (id.endsWith(".css")) return "styles";
 
-                    // Libraries
-                    if (id.includes("radix-ui")) return "radix-ui";
-                    if (id.includes("highlight.js") || id.includes("xss")) return "md-renderer";
-                    if (id.includes("markdown-it")) return "markdown-it";
+    //                 // Libraries
+    //                 if (id.includes("radix-ui")) return "radix-ui";
+    //                 if (id.includes("highlight.js") || id.includes("xss")) return "md-renderer";
+    //                 if (id.includes("markdown-it")) return "markdown-it";
 
-                    // Icons
-                    if (id.includes("icons") || id.includes("lucide")) return "icons";
+    //                 // Icons
+    //                 if (id.includes("icons") || id.includes("lucide")) return "icons";
 
-                    // UI Components
-                    if (id.includes("packages/components")) {
-                        if (id.includes("/ui/")) return "ui-components";
-                        if (id.includes("/misc/")) return "misc-components";
-                        if (id.includes("/md-editor/")) return "md-editor";
-                    }
+    //                 // UI Components
+    //                 if (id.includes("packages/components")) {
+    //                     if (id.includes("/ui/")) return "ui-components";
+    //                     if (id.includes("/misc/")) return "misc-components";
+    //                     if (id.includes("/md-editor/")) return "md-editor";
+    //                 }
 
-                    // packages/utils
-                    if (id.includes("packages/utils")) {
-                        if (id.includes("schemas")) return "zod-schemas";
-                        return "utils-lib";
-                    }
+    //                 // packages/utils
+    //                 if (id.includes("packages/utils")) {
+    //                     if (id.includes("schemas")) return "zod-schemas";
+    //                     return "utils-lib";
+    //                 }
 
-                    // app/utils
-                    if (id.includes("app/utils")) return "app-utils";
+    //                 // app/utils
+    //                 if (id.includes("app/utils")) return "app-utils";
 
-                    // Group by routes
-                    if (id.includes("frontend/app/pages") || id.includes("frontend/app/routes")) {
-                        for (const [chunkName, route] of RouteChunks) {
-                            if (matchRoute(id, route)) return chunkName;
-                        }
-                    }
-                },
-            },
-        },
-    },
+    //                 // Group by routes
+    //                 if (id.includes("frontend/app/pages") || id.includes("frontend/app/routes")) {
+    //                     for (const [chunkName, route] of RouteChunks) {
+    //                         if (matchRoute(id, route)) return chunkName;
+    //                     }
+    //                 }
+    //             },
+    //         },
+    //     },
+    // },
     plugins: [
         // Currently causes bugs with the loading bar
         // babel({
