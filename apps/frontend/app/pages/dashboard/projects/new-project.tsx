@@ -25,7 +25,7 @@ import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import type { z } from "@app/utils/schemas";
 import { newProjectFormSchema } from "@app/utils/schemas/project";
 import { handleFormError } from "@app/utils/schemas/utils";
-import { Capitalize, CapitalizeAndFormatString, createURLSafeSlug } from "@app/utils/string";
+import { Capitalize, createURLSafeSlug } from "@app/utils/string";
 import { ProjectVisibility } from "@app/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
@@ -202,7 +202,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             onOpenChange={setTypeSelectorOpen}
                                             selectedValues={field.value || []}
                                             options={projectTypes.map((type) => ({
-                                                label: CapitalizeAndFormatString(type) || "",
+                                                label: Capitalize(t.navbar[type]),
                                                 value: type,
                                             }))}
                                             onValueChange={(values) => {
@@ -240,13 +240,13 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value={ProjectVisibility.LISTED}>
-                                                    {Capitalize(ProjectVisibility.LISTED)}
+                                                    {t.projectSettings[ProjectVisibility.LISTED]}
                                                 </SelectItem>
                                                 <SelectItem value={ProjectVisibility.PRIVATE}>
-                                                    {Capitalize(ProjectVisibility.PRIVATE)}
+                                                    {t.projectSettings[ProjectVisibility.PRIVATE]}
                                                 </SelectItem>
                                                 <SelectItem value={ProjectVisibility.UNLISTED}>
-                                                    {Capitalize(ProjectVisibility.UNLISTED)}
+                                                    {t.projectSettings[ProjectVisibility.UNLISTED]}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>

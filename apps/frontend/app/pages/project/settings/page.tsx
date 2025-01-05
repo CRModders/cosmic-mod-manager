@@ -31,7 +31,7 @@ import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@app/u
 import type { z } from "@app/utils/schemas";
 import { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
 import { handleFormError, validImgFileExtensions } from "@app/utils/schemas/utils";
-import { CapitalizeAndFormatString, createURLSafeSlug } from "@app/utils/string";
+import { Capitalize, createURLSafeSlug } from "@app/utils/string";
 import { EnvironmentSupport, ProjectPublishingStatus, type ProjectType, ProjectVisibility } from "@app/utils/types";
 import type { ProjectDetailsData } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -279,7 +279,7 @@ export default function GeneralSettingsPage() {
                                         defaultMinWidth={false}
                                         searchBox={false}
                                         options={projectTypes.map((type) => ({
-                                            label: CapitalizeAndFormatString(type) || "",
+                                            label: Capitalize(t.navbar[type]),
                                             value: type,
                                         }))}
                                         selectedValues={field.value || []}
