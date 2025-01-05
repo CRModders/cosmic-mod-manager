@@ -5,13 +5,13 @@ import { useRootData } from "~/hooks/root-data";
 import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath, ProjectPagePath, UserProfilePath } from "~/utils/urls";
-import { TimePassedSince } from "./ui/date";
+import { FormattedDate, TimePassedSince } from "./ui/date";
 
 export { ViewType } from "@app/components/misc/search-list-item";
 
 type Props = Omit<
     React.ComponentProps<typeof DefaultSearchListItem>,
-    "t" | "ProjectPagePath" | "OrgPagePath" | "UserProfilePath" | "viewTransitions" | "TimeSince_Fn" | "NumberFormatter"
+    "t" | "ProjectPagePath" | "OrgPagePath" | "UserProfilePath" | "viewTransitions" | "TimeSince_Fn" | "NumberFormatter" | "DateFormatter"
 >;
 
 export default function SearchListItem(props: Props) {
@@ -31,6 +31,9 @@ export default function SearchListItem(props: Props) {
             }}
             NumberFormatter={(num: number) => {
                 return FormatCount(num, formatLocaleCode(locale));
+            }}
+            DateFormatter={(date: string | Date) => {
+                return FormattedDate({ date: date });
             }}
         />
     );

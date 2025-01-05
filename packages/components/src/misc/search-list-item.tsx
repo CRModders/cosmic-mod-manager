@@ -5,6 +5,7 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import { type EnvironmentSupport, ProjectVisibility } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { TagIcon } from "~/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
@@ -13,7 +14,6 @@ import Link from "~/ui/link";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/ui/tooltip";
 import { cn } from "~/utils";
 import { fallbackProjectIcon } from "../icons";
-import { FormattedDate } from "../ui/date";
 
 export enum ViewType {
     GALLERY = "gallery",
@@ -49,10 +49,11 @@ interface SearchListItemProps {
     UserProfilePath: UserProfilePath;
     TimeSince_Fn: (date: string | Date) => string;
     NumberFormatter: (num: number) => string;
+    DateFormatter: (date: string | Date) => ReactNode;
 }
 
-export default function SearchListItem({ viewType = ViewType.LIST, ...props }: SearchListItemProps) {
-    return <BaseView viewType={viewType} {...props} />;
+export default function SearchListItem(props: SearchListItemProps) {
+    return <BaseView {...props} viewType={props.viewType || ViewType.LIST} />;
 }
 
 function BaseView(props: SearchListItemProps) {
@@ -269,9 +270,7 @@ function BaseView(props: SearchListItemProps) {
                                         {t.project.publishedAt(props.TimeSince_Fn(props.datePublished))}
                                     </p>
                                 </TooltipTrigger>
-                                <TooltipContent>
-                                    <FormattedDate date={props.datePublished} />
-                                </TooltipContent>
+                                <TooltipContent>{props.DateFormatter(props.datePublished)}</TooltipContent>
                             </Tooltip>
                         ) : (
                             <Tooltip>
@@ -281,9 +280,7 @@ function BaseView(props: SearchListItemProps) {
                                         {t.project.updatedAt(props.TimeSince_Fn(props.dateUpdated))}
                                     </p>
                                 </TooltipTrigger>
-                                <TooltipContent>
-                                    <FormattedDate date={props.dateUpdated} />
-                                </TooltipContent>
+                                <TooltipContent>{props.DateFormatter(props.dateUpdated)}</TooltipContent>
                             </Tooltip>
                         )}
                     </TooltipProvider>

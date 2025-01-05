@@ -3,7 +3,7 @@ import {
     CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms,
     DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
 } from "@app/utils/config";
-import { monthNames } from "@app/utils/date";
+import { FormatDate_ToLocaleString } from "@app/utils/date";
 import { sendEmail } from "~/services/email";
 import env from "../env";
 import {
@@ -48,7 +48,7 @@ export async function sendNewSigninAlertEmail({
             ipAddress: ip,
             authProviderName: authProviderName,
             signInLocation: `${region} - ${country}`,
-            formattedUtcTimeStamp: `${monthNames[currTime.getUTCMonth()]} ${currTime.getUTCDate()}, ${currTime.getUTCFullYear()} at ${currTime.getUTCHours()}:${currTime.getUTCMinutes()}  (UTC Time)`,
+            formattedUtcTimeStamp: `${FormatDate_ToLocaleString(currTime, { utc: true })}  (UTC Time)`,
             revokeSessionLink: `${frontendUrl}/auth/revoke-session?code=${revokeAccessCode}`,
         });
 
