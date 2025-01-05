@@ -1,4 +1,4 @@
-import type {Locale} from "~/locales/types";
+import type { Locale } from "~/locales/types";
 // import { Rules } from "./legal";
 import tags from "./tags";
 
