@@ -59,6 +59,6 @@ export default {
     "vanilla-like": "Similar a vanilla",
     worldgen: "Generación de mundo",
 
-    // client: "Client",
-    // server: "Server",
+    client: "Cliente",
+    server: "Servidor",
 } satisfies typeof tags;
