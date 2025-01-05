@@ -2,6 +2,13 @@ import type { Locale } from "~/locales/types";
 // import { Rules } from "./legal";
 import tags from "./tags";
 
+function Pluralize(num: number, str_1: string, str_234: string, str_other: string) {
+    const lastDigit = num % 10;
+    if (lastDigit === 1) return str_1;
+    if ([2, 3, 4].includes(lastDigit)) return str_234;
+    return str_other;
+}
+
 export default {
     common: {
         settings: "Настройки",
@@ -22,43 +29,19 @@ export default {
     // it's here just for readability
     count: {
         downloads: (count: number) => {
-            let lastDigit = count % 10;
-            let word = "";
-
-            if (lastDigit == 1) word = "загрузка";
-            else if ([2, 3, 4].includes(lastDigit)) word = "загрузки";
-            else word = "загрузок";
-
+            const word = Pluralize(count, "загрузка", "загрузки", "загрузок");
             return ["", count.toString(), word];
         },
         followers: (count: number) => {
-            let lastDigit = count % 10;
-            let word = "";
-
-            if (lastDigit == 1) word = "фолловер";
-            else if ([2, 3, 4].includes(lastDigit)) word = "фолловера";
-            else word = "фолловеров";
-
+            const word = Pluralize(count, "фолловер", "фолловера", "фолловеров");
             return ["", count.toString(), word];
         },
         projects: (count: number) => {
-            let lastDigit = count % 10;
-            let word = "";
-
-            if (lastDigit == 1) word = "проект";
-            else if ([2, 3, 4].includes(lastDigit)) word = "проекта";
-            else word = "проектов";
-
+            const word = Pluralize(count, "проект", "проекта", "проектов");
             return ["", count.toString(), word];
         },
         members: (count: number) => {
-            let lastDigit = count % 10;
-            let word = "";
-
-            if (lastDigit == 1) word = "участник";
-            else if ([2, 3, 4].includes(lastDigit)) word = "участника";
-            else word = "участников";
-
+            const word = Pluralize(count, "участник", "участника", "участников");
             return ["", count.toString(), word];
         },
     },
@@ -528,14 +511,6 @@ export default {
         doesntHaveProjects: (user: string) => `У пользователя ${user} ещё нет проектов.`,
         isntPartOfAnyOrgs: (user: string) => `Пользователь ${user} не принадлежит ни одной организации.`,
         moderator: "Модератор",
-        projectsCount: (count: number) => {
-            const lastDigit = count % 10;
-
-            if (lastDigit === 1) return "1 проект";
-            if ([2, 3, 4].includes(lastDigit)) return `${count} проекта`;
-            else return `${count} проектов`;
-        },
-        downloads: (count: string) => `${count} загрузок`,
         joined: (when: string) => `Присоединился ${when}`, // eg: Joined 2 months ago
     },
 
