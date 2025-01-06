@@ -42,7 +42,7 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
                         <span className="text-xl font-semibold">{session.userName}</span>
                         <Link to={UserProfilePath(session.userName)} className="flex gap-1 items-center justify-center link_blue">
                             {t.settings.visitYourProfile}
-                            <ChevronRightIcon className="w-btn-icon h-btn-icon" />
+                            <ChevronRightIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         </Link>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
                         {(unreadNotifications?.length || 0) > 0 ? (
                             <Link to="/dashboard/notifications" className="link_blue flex items-center justify-center">
                                 {t.dashboard.seeAll}
-                                <ChevronRightIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <ChevronRightIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                             </Link>
                         ) : null}
                     </CardHeader>
@@ -79,7 +79,7 @@ export default function OverviewPage({ userProjects, notifications, relatedProje
                                 <span className="text-muted-foreground">{t.dashboard.noUnreadNotifs}</span>
 
                                 <ButtonLink url="/dashboard/notifications/history" className="w-fit bg-shallow-background">
-                                    <HistoryIcon className="w-btn-icon h-btn-icon" />
+                                    <HistoryIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.dashboard.viewNotifHistory}
                                 </ButtonLink>
                             </div>

@@ -111,7 +111,7 @@ export default function UploadVersionPage() {
                     <UploadVersionPageTopCard
                         isLoading={isLoading}
                         submitBtnLabel="Create"
-                        submitBtnIcon={<PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        submitBtnIcon={<PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />}
                         versionPageUrl={versionsPageUrl}
                         versionTitle={form.getValues().title}
                         backUrl={versionsPageUrl}

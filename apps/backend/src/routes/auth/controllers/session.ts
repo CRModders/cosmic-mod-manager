@@ -6,11 +6,10 @@ import { GetManySessions, GetSession_Unique } from "~/db/session_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { deleteSessionCookie, invalidateSessionFromId } from "~/routes/auth/helpers/session";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 import { hashString } from "../helpers";
 
-export async function getUserSessions(userSession: ContextUserData): Promise<RouteHandlerResponse> {
+export async function getUserSessions(userSession: ContextUserData) {
     const sessions = await GetManySessions({
         where: {
             userId: userSession.id,
@@ -46,7 +45,7 @@ export async function getUserSessions(userSession: ContextUserData): Promise<Rou
     };
 }
 
-export async function deleteUserSession(ctx: Context, userSession: ContextUserData, sessionId: string): Promise<RouteHandlerResponse> {
+export async function deleteUserSession(ctx: Context, userSession: ContextUserData, sessionId: string) {
     const deletedSession = await invalidateSessionFromId(sessionId, userSession.id);
 
     if (!deletedSession?.id) {
@@ -61,7 +60,7 @@ export async function deleteUserSession(ctx: Context, userSession: ContextUserDa
     };
 }
 
-export async function revokeSessionFromAccessCode(ctx: Context, code: string): Promise<RouteHandlerResponse> {
+export async function revokeSessionFromAccessCode(ctx: Context, code: string) {
     const revokeAccessCodeHash = await hashString(code);
     const targetSession = await GetSession_Unique({
         where: {

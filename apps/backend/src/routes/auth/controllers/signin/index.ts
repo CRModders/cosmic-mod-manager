@@ -5,11 +5,10 @@ import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-atte
 import { getAuthProviderProfileData } from "~/routes/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/routes/auth/helpers/session";
 import prisma from "~/services/prisma";
-import type { RouteHandlerResponse } from "~/types/http";
 import { AUTH_COOKIE_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS } from "~/utils/http";
 
-export async function oAuthSignInHandler(ctx: Context, authProvider: string, tokenExchangeCode: string): Promise<RouteHandlerResponse> {
+export async function oAuthSignInHandler(ctx: Context, authProvider: string, tokenExchangeCode: string) {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
 
     if (

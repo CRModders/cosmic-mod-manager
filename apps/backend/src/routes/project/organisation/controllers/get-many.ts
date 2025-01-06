@@ -1,10 +1,9 @@
 import type { OrganisationListItem } from "@app/utils/types/api";
 import { GetManyOrganizations } from "~/db/organization_item";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { orgIconUrl } from "~/utils/urls";
 
-export async function getManyOrgs(orgIds: string[]): Promise<RouteHandlerResponse> {
+export async function getManyOrgs(orgIds: string[]) {
     const list = await GetManyOrganizations(orgIds);
     const orgsList: OrganisationListItem[] = [];
 

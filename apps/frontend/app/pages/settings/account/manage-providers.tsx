@@ -69,7 +69,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"secondary"}>
-                    <SettingsIcon className="w-btn-icon h-btn-icon" />
+                    <SettingsIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.settings.manageProviders}
                 </Button>
             </DialogTrigger>
@@ -119,7 +119,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
                                                     <LoadingSpinner size="xs" />
                                                 ) : (
-                                                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 )}
                                                 {t.form.remove}
                                             </Button>
@@ -132,7 +132,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
                                                     <LoadingSpinner size="xs" />
                                                 ) : (
-                                                    <Link2Icon className="w-btn-icon h-btn-icon" />
+                                                    <Link2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 )}
                                                 {t.settings.link}
                                             </Button>

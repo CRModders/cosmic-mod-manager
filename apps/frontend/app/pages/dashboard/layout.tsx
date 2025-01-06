@@ -20,17 +20,17 @@ export default function DashboardLayout() {
         {
             name: t.dashboard.overview,
             href: "/dashboard",
-            icon: <LayoutDashboardIcon size="1rem" />,
+            icon: <LayoutDashboardIcon aria-hidden size="1rem" />,
         },
         {
             name: t.dashboard.notifications,
             href: "/dashboard/notifications",
-            icon: <BellIcon size="1rem" />,
+            icon: <BellIcon aria-hidden size="1rem" />,
         },
         {
             name: t.dashboard.activeReports,
             href: "/dashboard/reports",
-            icon: <FlagIcon size="1rem" />,
+            icon: <FlagIcon aria-hidden size="1rem" />,
         },
         {
             name: t.dashboard.analytics,
@@ -43,7 +43,7 @@ export default function DashboardLayout() {
         {
             name: t.dashboard.projects,
             href: "/dashboard/projects",
-            icon: <LayoutListIcon size="1rem" />,
+            icon: <LayoutListIcon aria-hidden size="1rem" />,
         },
         {
             name: t.dashboard.organizations,
@@ -53,12 +53,12 @@ export default function DashboardLayout() {
         {
             name: t.dashboard.collections,
             href: "/dashboard/collections",
-            icon: <LibraryIcon size="1rem" />,
+            icon: <LibraryIcon aria-hidden size="1rem" />,
         },
         {
             name: t.dashboard.revenue,
             href: "/dashboard/revenue",
-            icon: <DollarSignIcon size="1rem" />,
+            icon: <DollarSignIcon aria-hidden size="1rem" />,
         },
     ];
 

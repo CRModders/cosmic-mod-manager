@@ -67,7 +67,7 @@ export const PuzzleIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
             height={size || height || DefaultSvgSize}
             {...props}
         >
-            <title>Puzzle</title>
+            <title>Puzzle Loader</title>
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
             <path d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1" />
         </svg>
@@ -89,7 +89,7 @@ export const QuiltIcon: React.FC<IconSvgProps> = ({ size, width, height, ...prop
             height={size || height || DefaultSvgSize}
             {...props}
         >
-            <title>Quilt</title>
+            <title>Quilt Loader</title>
             <defs>
                 <path
                     id="quilt"
@@ -116,8 +116,8 @@ export const QuiltIcon: React.FC<IconSvgProps> = ({ size, width, height, ...prop
 
 export const MobIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
-        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
+            aria-hidden="true"
             xmlSpace="preserve"
             fillRule="evenodd"
             strokeLinejoin="round"
@@ -137,8 +137,8 @@ export const MobIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props 
 
 export const KitchenSinkIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
-        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
+            aria-hidden="true"
             viewBox="0 0 24 24"
             xmlSpace="preserve"
             width={size || width || DefaultSvgSize}
@@ -155,8 +155,8 @@ export const KitchenSinkIcon: React.FC<IconSvgProps> = ({ size, width, height, .
 
 export const RayReflectingIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
-        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
+            aria-hidden="true"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -174,8 +174,8 @@ export const RayReflectingIcon: React.FC<IconSvgProps> = ({ size, width, height,
 
 export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
-        // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
         <svg
+            aria-hidden="true"
             viewBox="0 0 512 512"
             fill="currentColor"
             stroke="currentColor"
@@ -222,7 +222,7 @@ export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
     );
 };
 
-const defaultProps = { className: "inline w-4 leading-none aspect-square" };
+const defaultProps = { className: "inline w-4 leading-none aspect-square", "aria-hidden": true };
 
 const tagIcons = {
     quilt: <QuiltIcon {...defaultProps} />,

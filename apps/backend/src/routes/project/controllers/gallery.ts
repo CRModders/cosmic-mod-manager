@@ -9,7 +9,6 @@ import { CreateGalleryItem, DeleteGalleryItem, UpdateGalleryItem } from "~/db/ga
 import { GetProject_Details } from "~/db/project_item";
 import { deleteProjectGalleryFile, saveProjectGalleryFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import {
     HTTP_STATUS,
     invalidReqestResponseData,
@@ -113,7 +112,7 @@ export async function addNewGalleryImage(
     return { data: { success: true, message: "Added the new gallery image" }, status: HTTP_STATUS.OK };
 }
 
-export async function removeGalleryImage(slug: string, userSession: ContextUserData, galleryItemId: string): Promise<RouteHandlerResponse> {
+export async function removeGalleryImage(slug: string, userSession: ContextUserData, galleryItemId: string) {
     const project = await GetProject_Details(slug, slug);
     if (!project?.id) return notFoundResponseData();
 

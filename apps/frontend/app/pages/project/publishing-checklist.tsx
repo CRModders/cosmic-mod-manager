@@ -53,10 +53,10 @@ export function PublishingChecklist() {
         }
     }
 
-    const RequiredIcon = <AsteriskIcon className="inline w-4 h-4 text-[#cb2245] dark:text-[#ff496e]" />;
-    const SuggestionIcon = <LightbulbIcon className="inline w-4 h-4 text-purple-600 dark:text-purple-400" />;
-    const SubmitIcon = <ScaleIcon className="inline w-[1.1rem] h-[1.1rem] text-[#e08325] dark:text-[#ffa347]" />;
-    const TickIcon = <CheckIcon className="inline w-4 h-4 text-muted-foreground" />;
+    const RequiredIcon = <AsteriskIcon aria-hidden className="inline w-4 h-4 text-[#cb2245] dark:text-[#ff496e]" />;
+    const SuggestionIcon = <LightbulbIcon aria-hidden className="inline w-4 h-4 text-purple-600 dark:text-purple-400" />;
+    const SubmitIcon = <ScaleIcon aria-hidden className="inline w-[1.1rem] h-[1.1rem] text-[#e08325] dark:text-[#ffa347]" />;
+    const TickIcon = <CheckIcon aria-hidden className="inline w-4 h-4 text-muted-foreground" />;
 
     function StatusIcon({ status }: { status: string }) {
         let icon = null;
@@ -234,7 +234,7 @@ export function PublishingChecklist() {
                 </div>
 
                 <Button variant="secondary" size="icon" onClick={() => setDropdownOpen((prev) => !prev)}>
-                    <ChevronDownIcon className={cn("transition-all", dropdownOpen && "rotate-180")} />
+                    <ChevronDownIcon aria-hidden className={cn("transition-all", dropdownOpen && "rotate-180")} />
                 </Button>
             </CardHeader>
 
@@ -282,7 +282,7 @@ export function PublishingChecklist() {
                                                 className="w-fit bg-[#e08325] hover:bg-[#e08325] dark:bg-[#ffa347] hover:brightness-95 transition-all"
                                                 size="sm"
                                             >
-                                                <SendIcon className="w-iconh-btn-icon h-btn-icon" /> {step.action.title}
+                                                <SendIcon aria-hidden className="w-iconh-btn-icon h-btn-icon" /> {step.action.title}
                                             </Button>
                                         </>
                                     ) : null}
@@ -323,7 +323,7 @@ function ChecklistCard(props: ChecklistCardProps) {
                     className={cn("mt-auto w-fit link_blue hover:underline brightness-100", props.link.hidden && "invisible")}
                     to={props.link.href}
                 >
-                    {props.link.label} <ChevronRightIcon className="inline w-4 h-4" />
+                    {props.link.label} <ChevronRightIcon aria-hidden className="inline w-4 h-4" />
                 </Link>
             )}
         </div>

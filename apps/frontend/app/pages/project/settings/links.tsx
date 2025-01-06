@@ -167,7 +167,11 @@ export default function ExternalLinksSettingsPage() {
 
                     <div className="w-full flex items-center justify-end">
                         <Button type="submit" disabled={!hasFormChanged || form.formState.isSubmitting}>
-                            {form.formState.isSubmitting ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                            {form.formState.isSubmitting ? (
+                                <LoadingSpinner size="xs" />
+                            ) : (
+                                <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
+                            )}
                             {t.form.saveChanges}
                         </Button>
                     </div>

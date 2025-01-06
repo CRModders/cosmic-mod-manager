@@ -108,6 +108,12 @@ export default function ProjectPageLayout() {
     }
 
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
+    const OrgMembers = projectData.organisation?.members || [];
+    const ExclusiveProjectMembers = [];
+    for (const member of projectData.members) {
+        if (OrgMembers.some((m) => m.userId === member.userId)) continue;
+        ExclusiveProjectMembers.push(member);
+    }
 
     return (
         <main
@@ -190,7 +196,7 @@ export default function ProjectPageLayout() {
                             <ExternalLink
                                 url={projectData?.issueTrackerUrl}
                                 label={t.project.reportIssues}
-                                icon={<BugIcon className="w-btn-icon h-btn-icon" />}
+                                icon={<BugIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
 
@@ -198,7 +204,7 @@ export default function ProjectPageLayout() {
                             <ExternalLink
                                 url={projectData?.projectSourceUrl}
                                 label={t.project.viewSource}
-                                icon={<CodeIcon className="w-btn-icon h-btn-icon" />}
+                                icon={<CodeIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
 
@@ -206,7 +212,7 @@ export default function ProjectPageLayout() {
                             <ExternalLink
                                 url={projectData?.projectWikiUrl}
                                 label={t.project.visitWiki}
-                                icon={<BookOpenIcon className="w-btn-icon h-btn-icon" />}
+                                icon={<BookOpenIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                             />
                         ) : null}
 
@@ -214,7 +220,7 @@ export default function ProjectPageLayout() {
                             <ExternalLink
                                 url={projectData?.discordInviteUrl}
                                 label={t.project.joinDiscord}
-                                icon={<DiscordIcon className="w-btn-icon h-btn-icon fill-current dark:fill-current" />}
+                                icon={<DiscordIcon aria-hidden className="w-btn-icon h-btn-icon fill-current dark:fill-current" />}
                             />
                         ) : null}
                     </Card>
@@ -261,7 +267,7 @@ export default function ProjectPageLayout() {
                                                     download={version.primaryFile?.name}
                                                     onClick={showDownloadAnimation}
                                                 >
-                                                    <DownloadIcon className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
+                                                    <DownloadIcon aria-hidden className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
                                                 </a>
                                             </TooltipTrigger>
                                             <TooltipContent className="hidden group-hover/card:flex group-focus-within/card:flex">
@@ -303,12 +309,13 @@ export default function ProjectPageLayout() {
                                 fallbackIcon={fallbackOrgIcon}
                             />
 
-                            {projectData.members.length ? <Separator className="my-1" /> : null}
+                            {ExclusiveProjectMembers.length > 0 ? <Separator className="my-1" /> : null}
                         </>
                     ) : null}
 
-                    {projectData.members?.map((member) => {
+                    {ExclusiveProjectMembers.map((member) => {
                         if (member.accepted !== true) return null;
+
                         return (
                             <ProjectMember
                                 vtId={member.userId}
@@ -327,7 +334,7 @@ export default function ProjectPageLayout() {
 
                     {projectLicenseData?.id || projectLicenseData?.name ? (
                         <div className="flex items-center justify-start gap-2 text-muted-foreground">
-                            <BookTextIcon className="w-btn-icon h-btn-icon shrink-0" />
+                            <BookTextIcon aria-hidden className="w-btn-icon h-btn-icon shrink-0" />
                             <p>
                                 LICENSED{" "}
                                 {projectLicenseData.url ? (
@@ -353,7 +360,7 @@ export default function ProjectPageLayout() {
                         <Tooltip>
                             <TooltipTrigger asChild className="cursor-text">
                                 <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
-                                    <CalendarIcon className="w-btn-icon h-btn-icon" />
+                                    <CalendarIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.settings.created(TimePassedSince({ date: projectData.datePublished }))}
                                 </p>
                             </TooltipTrigger>
@@ -366,7 +373,7 @@ export default function ProjectPageLayout() {
                             <Tooltip>
                                 <TooltipTrigger asChild className="cursor-text">
                                     <p className="w-fit max-w-full flex gap-2 items-center justify-start text-muted-foreground">
-                                        <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />
+                                        <GitCommitHorizontalIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.project.updatedAt(TimePassedSince({ date: projectData.dateUpdated }))}
                                     </p>
                                 </TooltipTrigger>
@@ -476,10 +483,10 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                     <>
                         <InteractiveDownloadPopup />
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow">
-                            <HeartIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                            <HeartIcon aria-hidden className="w-btn-icon-lg h-btn-icon-lg" />
                         </Button>
                         <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
-                            <BookmarkIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                            <BookmarkIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" />
                         </Button>
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <VariantButtonLink
@@ -489,7 +496,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                 label="project settings"
                                 prefetch="render"
                             >
-                                <SettingsIcon className="h-btn-icon-lg w-btn-icon-lg" />
+                                <SettingsIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" />
                             </VariantButtonLink>
                         ) : null}
                     </>
@@ -497,7 +504,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 threeDotMenu={
                     <>
                         <Button variant="ghost-destructive" className="w-full" size="sm">
-                            <FlagIcon className="w-btn-icon h-btn-icon" />
+                            <FlagIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.common.report}
                         </Button>
 
@@ -510,7 +517,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                     navigator.clipboard.writeText(projectData.id);
                                 }}
                             >
-                                <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                                <ClipboardCopyIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.common.copyId}
                             </Button>
                         </PopoverClose>
@@ -550,13 +557,13 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 }
             >
                 <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.downloads} />
                     </span>
                 </div>
                 <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                    <HeartIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <HeartIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.followers} />
                     </span>
@@ -564,7 +571,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
 
                 {(projectData.featuredCategories?.length || 0) > 0 ? (
                     <div className="hidden md:flex items-center gap-3 pr-4">
-                        <TagsIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                        <TagsIcon aria-hidden className="w-btn-icon-lg h-btn-icon-lg" />
                         <div className="flex items-center gap-2">
                             {projectData.featuredCategories.map((category) => (
                                 <Chip key={category} className="bg-card-background dark:bg-shallow-background/75">
@@ -635,7 +642,7 @@ export function ProjectMember({
                 itemProp={MicrodataItemProps.image}
                 vtId={vtId}
                 src={imageUrl(avatarImageUrl)}
-                alt={userName}
+                alt={`Profile picture of ${userName}`}
                 className={cn("h-10 w-10 rounded-full", avatarClassName)}
                 fallback={fallbackIcon || fallbackUserIcon}
                 loading="eager"
@@ -646,7 +653,7 @@ export function ProjectMember({
                         {userName}
                     </span>
                     {isOwner === true && (
-                        <CrownIcon className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
+                        <CrownIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
                     )}
                 </div>
                 <span className="text-sm font-medium leading-tight text-muted-foreground/75">{roleName}</span>
@@ -666,7 +673,7 @@ function ExternalLink({ url, label, icon }: { url: string; icon: React.ReactNode
             {icon}
             <span>
                 {label}
-                <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline ml-1" />
+                <ArrowUpRightIcon aria-hidden className="w-4 h-4 text-extra-muted-foreground inline ml-1" />
             </span>
         </Link>
     );

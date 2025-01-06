@@ -11,29 +11,31 @@ interface ResizeProps {
 
 export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
     let defaultKernel: ResizeProps["kernel"] = sharp.kernel.nearest;
-
-    // Don't use nearest neighbor for large images
-    if (file.size >= 1024) defaultKernel = sharp.kernel.lanczos3;
-
-    const kernel: ResizeProps["kernel"] = props.kernel || defaultKernel;
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();
-    const sharpInstance = sharp(imgBuffer, { animated: isAnimated }).resize({
-        width: props.width,
-        height: props.height,
-        fit: props.fit,
-        kernel: kernel,
-        withoutEnlargement: props.withoutEnlargement === true,
-        background: {
-            r: 0,
-            g: 0,
-            b: 0,
-            alpha: 0,
-        },
-    });
+    const sharpInstance = sharp(imgBuffer, { animated: isAnimated });
 
-    const resizedImgBuffer = await sharpInstance.webp().toArray();
+    const metadata = await sharpInstance.metadata();
+    // Don't use nearest neighbor for large images
+    if ((metadata.width || 0) > 64 && (metadata.height || 0) > 64) defaultKernel = sharp.kernel.lanczos3;
+
+    const resizedImgBuffer = await sharpInstance
+        .resize({
+            width: props.width,
+            height: props.height,
+            fit: props.fit,
+            kernel: props.kernel || defaultKernel,
+            withoutEnlargement: props.withoutEnlargement === true,
+            background: {
+                r: 0,
+                g: 0,
+                b: 0,
+                alpha: 0,
+            },
+        })
+        .webp()
+        .toArray();
     return [new File(resizedImgBuffer, "__resized-webp-img__"), FileType.WEBP];
 }
 

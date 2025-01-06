@@ -60,7 +60,7 @@ function ComboBox({ options, value, setValue, inputLabel, children, footerItem, 
                                         {option?.disabled === true ? (
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
-                                                    <InfoIcon className="w-btn-icon h-btn-icon ml-auto mr-2" />
+                                                    <InfoIcon aria-hidden className="w-btn-icon h-btn-icon ml-auto mr-2" />
                                                 </TooltipTrigger>
 
                                                 <TooltipContent>{option?.disabledReason || "Disabled"}</TooltipContent>

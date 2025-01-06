@@ -57,7 +57,7 @@ export default function DeleteVersionDialog({ projectData, projectSlug, versionS
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"secondary-destructive"}>
-                    <Trash2Icon className="h-btn-icon w-btn-icon" />
+                    <Trash2Icon aria-hidden className="h-btn-icon w-btn-icon" />
                     {t.form.delete}
                 </Button>
             </DialogTrigger>
@@ -78,7 +78,7 @@ export default function DeleteVersionDialog({ projectData, projectSlug, versionS
                         </DialogClose>
 
                         <Button variant={"destructive"} onClick={deleteVersion} disabled={isLoading}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon" />}
+                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon" />}
                             {t.form.delete}
                         </Button>
                     </DialogFooter>

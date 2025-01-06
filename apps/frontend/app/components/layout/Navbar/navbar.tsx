@@ -3,7 +3,7 @@ import { Button } from "@app/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/config";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
@@ -88,7 +88,6 @@ export default function Navbar(props: NavbarProps) {
                             to={"/"}
                             className="flex items-center justify-center h-nav-item gap-1 bg-background"
                             aria-label="CRMM Home page"
-                            title={SITE_NAME_LONG}
                             onClick={() => {
                                 toggleNavMenu(false);
                             }}
@@ -206,15 +205,18 @@ function CreateThingsPopup() {
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
                 <Button variant="ghost-inverted" size="sm" aria-label="Create new project or organization" className="bg-background">
-                    <PlusIcon className="w-5 h-5" />
-                    <ChevronDownIcon className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")} />
+                    <PlusIcon aria-hidden className="w-5 h-5" />
+                    <ChevronDownIcon
+                        aria-hidden
+                        className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")}
+                    />
                 </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="min-w-fit p-1">
                 <CreateNewProjectDialog
                     trigger={
                         <Button className="space-y-0 justify-start" variant="ghost" size="sm">
-                            <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                            <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                             {t.dashboard.createProject}
                         </Button>
                     }
@@ -224,7 +226,7 @@ function CreateThingsPopup() {
 
                 <CreateNewOrg_Dialog>
                     <Button className="space-y-0 justify-start" variant="ghost" size="sm">
-                        <Building2Icon className="w-btn-icon-md h-btn-icon-md" />
+                        <Building2Icon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         {t.dashboard.createOrg}
                     </Button>
                 </CreateNewOrg_Dialog>

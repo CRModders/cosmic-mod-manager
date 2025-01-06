@@ -180,7 +180,7 @@ export default function GeneralSettingsPage() {
                                                 htmlFor="project-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
-                                                <UploadIcon className="w-btn-icon h-btn-icon" />
+                                                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 {t.form.uploadIcon}
                                             </InteractiveLabel>
                                             {form.getValues().icon ? (
@@ -191,7 +191,7 @@ export default function GeneralSettingsPage() {
                                                         form.setValue("icon", undefined);
                                                     }}
                                                 >
-                                                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                     {t.form.removeIcon}
                                                 </Button>
                                             ) : null}
@@ -387,18 +387,18 @@ export default function GeneralSettingsPage() {
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
                                                     field.value === ProjectVisibility.ARCHIVED ? (
-                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
-                                                        <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
+                                                        <XIcon aria-hidden className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleInSearch}
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
                                                     field.value === ProjectVisibility.ARCHIVED ? (
-                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
-                                                        <XIcon className="w-btn-icon h-btn-icon text-danger-foreground" />
+                                                        <XIcon aria-hidden className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleOnProfile}
                                                 </span>
@@ -408,14 +408,17 @@ export default function GeneralSettingsPage() {
                                                             <Tooltip>
                                                                 <TooltipTrigger asChild>
                                                                     <span>
-                                                                        <TriangleAlertIcon className="w-btn-icon h-btn-icon text-orange-600 dark:text-orange-400" />
+                                                                        <TriangleAlertIcon
+                                                                            aria-hidden
+                                                                            className="w-btn-icon h-btn-icon text-orange-600 dark:text-orange-400"
+                                                                        />
                                                                     </span>
                                                                 </TooltipTrigger>
                                                                 <TooltipContent>{t.projectSettings.visibleToMembersOnly}</TooltipContent>
                                                             </Tooltip>
                                                         </TooltipProvider>
                                                     ) : (
-                                                        <CheckIcon className="w-btn-icon h-btn-icon text-success-foreground" />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleViaUrl}
                                                 </span>
@@ -457,7 +460,7 @@ export default function GeneralSettingsPage() {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
                         </div>
@@ -517,7 +520,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="destructive">
-                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.projectSettings.deleteProject}
                     </Button>
                 </DialogTrigger>
@@ -551,7 +554,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
                                 <CancelButton />
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteProject}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.projectSettings.deleteProject}
                             </Button>
                         </DialogFooter>

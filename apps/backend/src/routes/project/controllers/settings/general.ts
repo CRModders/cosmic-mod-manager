@@ -8,14 +8,13 @@ import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 
 export async function updateProjectDescription(
     slug: string,
     userSession: ContextUserData,
     form: z.infer<typeof updateDescriptionFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
@@ -38,11 +37,7 @@ export async function updateProjectDescription(
     return { data: { success: true, message: "Project description updated" }, status: HTTP_STATUS.OK };
 }
 
-export async function updateProjectTags(
-    slug: string,
-    userSession: ContextUserData,
-    formData: z.infer<typeof updateProjectTagsFormSchema>,
-): Promise<RouteHandlerResponse> {
+export async function updateProjectTags(slug: string, userSession: ContextUserData, formData: z.infer<typeof updateProjectTagsFormSchema>) {
     const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 
@@ -79,7 +74,7 @@ export async function updateProjectExternalLinks(
     userSession: ContextUserData,
     slug: string,
     formData: z.infer<typeof updateExternalLinksFormSchema>,
-): Promise<RouteHandlerResponse> {
+) {
     const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData();
 

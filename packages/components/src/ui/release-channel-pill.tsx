@@ -54,7 +54,7 @@ function ReleaseChannelIcon({ releaseChannel, className }: Props) {
             return <span className="font-bold text-[1.25rem]">α</span>;
 
         case VersionReleaseChannel.DEV:
-            return <FlaskConicalIcon className="w-5 h-5" />;
+            return <FlaskConicalIcon aria-hidden className="w-5 h-5" />;
 
         default:
             return null;

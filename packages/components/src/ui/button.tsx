@@ -66,7 +66,7 @@ export { Button, buttonVariants };
 export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ variant = "secondary", children, icon, ...props }, ref) => {
     return (
         <Button variant={variant} ref={ref} {...props}>
-            {icon ? icon : <CancelButtonIcon className="w-btn-icon h-btn-icon" />}
+            {icon ? icon : <CancelButtonIcon aria-hidden className="w-btn-icon h-btn-icon" />}
             {children || "Cancel"}
         </Button>
     );

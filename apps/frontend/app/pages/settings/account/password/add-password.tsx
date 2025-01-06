@@ -73,7 +73,7 @@ function AddPasswordForm({ email }: { email: string }) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
                 <Button variant={"secondary"}>
-                    <KeyRoundIcon className="w-btn-icon h-btn-icon" />
+                    <KeyRoundIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.settings.addPass}
                 </Button>
             </DialogTrigger>
@@ -127,7 +127,11 @@ function AddPasswordForm({ email }: { email: string }) {
                                     <CancelButton />
                                 </DialogClose>
                                 <Button disabled={!isFormSubmittable || isLoading}>
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                    {isLoading ? (
+                                        <LoadingSpinner size="xs" />
+                                    ) : (
+                                        <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                    )}
                                     {t.settings.addPass}
                                 </Button>
                             </DialogFooter>

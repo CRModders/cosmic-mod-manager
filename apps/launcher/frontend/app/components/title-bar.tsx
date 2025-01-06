@@ -36,7 +36,7 @@ export default function TitleBar() {
                 <ActionButton title="Maximize" onClick={WindowToggleMaximise} className="bg-green-500/75 group-hover/btn:bg-green-500" />
 
                 <ActionButton title="Close" onClick={Quit} className="bg-red-500/75 group-hover/btn:bg-red-500">
-                    <XIcon className="w-[0.87rem] h-[0.87rem]" />
+                    <XIcon aria-hidden className="w-[0.87rem] h-[0.87rem]" />
                 </ActionButton>
             </div>
         </div>
@@ -103,7 +103,7 @@ function BreadCrumbs() {
                     )}
                     onClick={back}
                 >
-                    <ChevronLeftIcon className="w-5 h-5" />
+                    <ChevronLeftIcon aria-hidden className="w-5 h-5" />
                 </Button>
 
                 <Button
@@ -116,7 +116,7 @@ function BreadCrumbs() {
                     )}
                     onClick={forward}
                 >
-                    <ChevronRightIcon className="w-5 h-5" />
+                    <ChevronRightIcon aria-hidden className="w-5 h-5" />
                 </Button>
             </div>
 
@@ -143,7 +143,7 @@ function Segments(props: SegmentsProps) {
             <Link className="text-muted-foreground/85 hover:text-foreground transition-colors" to={props.segments[0].href || "/"}>
                 {props.segments[0].label}
             </Link>
-            <ChevronRightIcon className="w-4 h-4 text-extra-muted-foreground" />
+            <ChevronRightIcon aria-hidden className="w-4 h-4 text-extra-muted-foreground" />
             <span>{props.segments[1].label}</span>
         </div>
     );

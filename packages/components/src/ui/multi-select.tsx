@@ -152,7 +152,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                             ) : (
                                 <span className="text-muted-foreground mr-auto ml-1">{placeholder}</span>
                             )}
-                            <ChevronDownIcon className="h-4 cursor-pointer text-muted-foreground" />
+                            <ChevronDownIcon aria-hidden className="h-4 cursor-pointer text-muted-foreground" />
                         </Button>
                     )}
                 </PopoverTrigger>
@@ -189,7 +189,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                                                         : "opacity-50 [&_svg]:invisible",
                                                 )}
                                             >
-                                                <CheckIcon className="h-3.5 w-3.5" strokeWidth={2.3} />
+                                                <CheckIcon aria-hidden className="h-3.5 w-3.5" strokeWidth={2.3} />
                                             </div>
 
                                             {option.icon && (

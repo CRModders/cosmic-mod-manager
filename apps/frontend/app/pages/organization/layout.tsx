@@ -158,7 +158,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 description={orgData.description || ""}
                 titleBadge={
                     <div className="ml-2 flex items-center justify-center gap-1.5 font-bold text-extra-muted-foreground">
-                        <Building2Icon className="w-btn-icon h-btn-icon" />
+                        <Building2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.project.organization}
                     </div>
                 }
@@ -172,7 +172,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                                     prefetch="render"
                                     size="sm"
                                 >
-                                    <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                     {t.organization.manageProjects}
                                 </VariantButtonLink>
 
@@ -189,7 +189,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                                     navigator.clipboard.writeText(orgData.id);
                                 }}
                             >
-                                <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                                <ClipboardCopyIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.common.copyId}
                             </Button>
                         </PopoverClose>
@@ -198,22 +198,22 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 actionBtns={
                     currUsersMembership?.id || isModerator(session?.role) ? (
                         <VariantButtonLink variant="secondary-inverted" url={OrgPagePath(orgData.slug, "settings")}>
-                            <SettingsIcon className="w-btn-icon h-btn-icon" />
+                            <SettingsIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.dashboard.manage}
                         </VariantButtonLink>
                     ) : null
                 }
             >
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                    <UsersIcon className="w-[1.1rem] h-[1.1rem]" />
+                    <UsersIcon aria-hidden className="w-[1.1rem] h-[1.1rem]" />
                     <span className="font-semibold">{MembersCount.join(" ")}</span>
                 </div>
                 <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                    <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{ProjectsCount.join(" ")}</span>
                 </div>
                 <div className="flex items-center gap-2 pr-4">
-                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{DownloadsCount_Str}</span>
                 </div>
             </PageHeader>

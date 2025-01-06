@@ -202,7 +202,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                     toggleTextAtCursorsLine("# ", true);
                                 }}
                             >
-                                <Heading1Icon className="h-5 w-5" />
+                                <Heading1Icon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton
                                 tooltipContent={t.heading2}
@@ -211,7 +211,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                     toggleTextAtCursorsLine("## ", true);
                                 }}
                             >
-                                <Heading2Icon className="h-5 w-5" />
+                                <Heading2Icon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton
                                 tooltipContent={t.heading3}
@@ -220,19 +220,19 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                     toggleTextAtCursorsLine("### ", true);
                                 }}
                             >
-                                <Heading3Icon className="h-5 w-5" />
+                                <Heading3Icon aria-hidden className="h-5 w-5" />
                             </IconButton>
                         </BtnGroup>
                         <Separator />
                         <BtnGroup>
                             <IconButton tooltipContent={t.bold} disabled={previewOpen} onClick={Bold}>
-                                <BoldIcon className="h-5 w-5" />
+                                <BoldIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton tooltipContent={t.italic} disabled={previewOpen} onClick={Italic}>
-                                <ItalicIcon className="h-5 w-5" />
+                                <ItalicIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton tooltipContent={t.underline} disabled={previewOpen} onClick={Underline}>
-                                <UnderlineIcon className="h-5 w-5" />
+                                <UnderlineIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton
                                 tooltipContent={t.strikethrough}
@@ -241,19 +241,19 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                     toggleTextAtCursorsLine(`~~${textSeparatorChar}~~`);
                                 }}
                             >
-                                <StrikethroughIcon className="h-5 w-5" />
+                                <StrikethroughIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton tooltipContent={t.code} disabled={previewOpen} onClick={CodeBlock}>
-                                <CodeIcon className="h-5 w-5" />
+                                <CodeIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton tooltipContent={t.spoiler} disabled={previewOpen} onClick={Spoiler}>
-                                <ScanEyeIcon className="h-btn-icon w-btn-icon" />
+                                <ScanEyeIcon aria-hidden className="h-btn-icon w-btn-icon" />
                             </IconButton>
                         </BtnGroup>
                         <Separator />
                         <BtnGroup>
                             <IconButton tooltipContent={t.bulletedList} disabled={previewOpen} onClick={UnorderedList}>
-                                <ListIcon className="h-5 w-5" />
+                                <ListIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton
                                 tooltipContent={t.numberedList}
@@ -262,10 +262,10 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                     toggleTextAtCursorsLine("1. ", true);
                                 }}
                             >
-                                <ListOrderedIcon className="h-5 w-5" />
+                                <ListOrderedIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                             <IconButton tooltipContent={t.quote} disabled={previewOpen} onClick={Quote}>
-                                <TextQuoteIcon className="h-5 w-5" />
+                                <TextQuoteIcon aria-hidden className="h-5 w-5" />
                             </IconButton>
                         </BtnGroup>
                         <Separator />
@@ -294,7 +294,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                 t={t}
                             >
                                 <IconButton tooltipContent={t.link} disabled={previewOpen}>
-                                    <LinkIcon className="h-4 w-4" />
+                                    <LinkIcon aria-hidden className="h-4 w-4" />
                                 </IconButton>
                             </LinkInsertionModal>
 
@@ -322,7 +322,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                 t={t}
                             >
                                 <IconButton tooltipContent={t.image} disabled={previewOpen}>
-                                    <ImageIcon className="h-4 w-4" />
+                                    <ImageIcon aria-hidden className="h-4 w-4" />
                                 </IconButton>
                             </LinkInsertionModal>
 
@@ -342,7 +342,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                 t={t}
                             >
                                 <IconButton tooltipContent={"Video"} disabled={previewOpen}>
-                                    <VideoIcon className="h-5 w-5" />
+                                    <VideoIcon aria-hidden className="h-5 w-5" />
                                 </IconButton>
                             </LinkInsertionModal>
                         </BtnGroup>
@@ -405,7 +405,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
 
                         <div className="w-full flex items-center justify-between flex-wrap gap-x-6 gap-y-2 text-muted-foreground text-sm">
                             <div className="flex items-center justify-start gap-2">
-                                <InfoIcon className="w-btn-icon h-btn-icon" />
+                                <InfoIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 <p>
                                     You can use{" "}
                                     <a
@@ -563,7 +563,7 @@ function EditorModal({ disabled, title, trigger, children, modalOpen, t, setModa
                                 setModalOpen(false);
                             }}
                         >
-                            <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                            <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                             {t.insert}
                         </Button>
                     </DialogFooter>

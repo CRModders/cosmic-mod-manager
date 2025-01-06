@@ -114,23 +114,22 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
         });
     }
 
-    return { data: { success: true, data: versionsList }, status: HTTP_STATUS.OK };
+    return { data: { success: true, data: versionsList }, status: HTTP_STATUS.OK } as const;
 }
 
 export async function getProjectVersionData(projectSlug: string, versionId: string, userSession: ContextUserData | undefined) {
     const res = await getAllProjectVersions(projectSlug, userSession, false);
-    // @ts-ignore
-    const list = res.data?.data as ProjectVersionData[];
-    if (Array.isArray(list)) {
-        if (!list.length) return notFoundResponseData(`Version "${versionId}" not found`);
 
-        const targetVersion = list.find((version) => version.id === versionId || version.slug === versionId);
-        if (!targetVersion?.id) return notFoundResponseData(`Version "${versionId}" not found`);
+    if (("success" in res.data && res.data.success === false) || !("data" in res.data))
+        return { data: { success: res.data.success, message: res.data.message }, status: res.status } as const;
 
-        return { data: { success: true, data: targetVersion }, status: res.status };
-    }
+    const list = res.data.data;
+    if (!list.length) return notFoundResponseData(`Version "${versionId}" not found`);
 
-    return res;
+    const targetVersion = list.find((version) => version.id === versionId || version.slug === versionId);
+    if (!targetVersion?.id) return notFoundResponseData(`Version "${versionId}" not found`);
+
+    return { data: { success: true, data: targetVersion }, status: res.status } as const;
 }
 
 interface GetLatestVersionFilters {
@@ -159,18 +158,16 @@ export async function getLatestVersion(projectSlug: string, userSession: Context
         return true;
     }
 
-    // @ts-ignore
     const res = await getAllProjectVersions(projectSlug, userSession, false);
-    // @ts-ignore
-    const list = res.data?.data as ProjectVersionData[];
-    if (Array.isArray(list)) {
-        if (!list.length) return notFoundResponseData("No version found for your query!");
 
-        const latestVersion = list.find(filter);
-        if (!latestVersion) return notFoundResponseData("No version found for your query!");
+    if (("success" in res.data && res.data.success === false) || !("data" in res.data))
+        return { data: { success: false, message: res.data.message }, status: res.status } as const;
 
-        return { data: { success: true, data: latestVersion }, status: res.status };
-    }
+    const list = res.data.data;
+    if (!list.length) return notFoundResponseData("No version found for your query!");
 
-    return res;
+    const latestVersion = list.find(filter);
+    if (!latestVersion) return notFoundResponseData("No version found for your query!");
+
+    return { data: { success: true, data: latestVersion }, status: res.status } as const;
 }

@@ -75,7 +75,7 @@ export default function RemoveGalleryImage({ children, id, projectData }: Props)
                         </DialogClose>
 
                         <Button variant={"destructive"} disabled={isLoading} onClick={deleteImage}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                             {t.form.delete}
                         </Button>
                     </DialogFooter>

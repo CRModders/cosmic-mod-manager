@@ -1,7 +1,6 @@
 import type { Context } from "hono";
 import { deleteCookie as honoDeleteCookie, setCookie as honoSetCookie } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
-import type { RouteHandlerResponse } from "~/types/http";
 import env from "./env";
 
 export const HTTP_STATUS = {
@@ -48,43 +47,43 @@ export function serverErrorResponseData(msg?: string) {
             message: msg || "Server Error",
         },
         status: HTTP_STATUS.SERVER_ERROR,
-    };
+    } as const;
 }
-export function invalidReqestResponseData(message?: string): RouteHandlerResponse {
+export function invalidReqestResponseData(message?: string) {
     return {
         data: {
             success: false,
             message: message || "Invalid request",
         },
         status: HTTP_STATUS.BAD_REQUEST,
-    };
+    } as const;
 }
-export function tooManyRequestsResponseData(message?: string): RouteHandlerResponse {
+export function tooManyRequestsResponseData(message?: string) {
     return {
         data: {
             success: false,
             message: message || "Too many requests, try again after a few minutes!",
         },
         status: HTTP_STATUS.TOO_MANY_REQUESTS,
-    };
+    } as const;
 }
-export function notFoundResponseData(message?: string): RouteHandlerResponse {
+export function notFoundResponseData(message?: string) {
     return {
         data: {
             success: false,
             message: message || "Resource not found",
         },
         status: HTTP_STATUS.NOT_FOUND,
-    };
+    } as const;
 }
-export function unauthorizedReqResponseData(message?: string): RouteHandlerResponse {
+export function unauthorizedReqResponseData(message?: string) {
     return {
         data: {
             success: false,
             message: message || "Unauthorized",
         },
         status: HTTP_STATUS.UNAUTHORIZED,
-    };
+    } as const;
 }
 
 // Cookie helpers

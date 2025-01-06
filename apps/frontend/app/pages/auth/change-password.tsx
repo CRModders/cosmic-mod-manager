@@ -72,7 +72,11 @@ export default function ChangePasswordPage() {
                             />
 
                             <Button className="h-form-submit-btn w-full" disabled={isLoading}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                {isLoading ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <ArrowRightIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                )}
                                 {t.form.continue}
                             </Button>
                         </CardContent>

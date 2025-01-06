@@ -34,12 +34,12 @@ export default function Navbar() {
                         className="!w-12 !h-12 px-0 py-0 flex items-center justify-center"
                         title="Create instance"
                     >
-                        <PlusIcon className="w-6 h-6" />
+                        <PlusIcon aria-hidden className="w-6 h-6" />
                     </Button>
                 </CreateInstance>
 
                 <Navlink href={"/settings"} title="Settings">
-                    <SettingsIcon className="w-6 h-6" />
+                    <SettingsIcon aria-hidden className="w-6 h-6" />
                 </Navlink>
             </div>
         </header>
@@ -57,17 +57,17 @@ function Navlink(props: { href: string; children: React.ReactNode; title: string
 const links = [
     {
         href: "/",
-        icon: <HomeIcon className="w-6 h-6" />,
+        icon: <HomeIcon aria-hidden className="w-6 h-6" />,
         label: "Home",
     },
     {
         href: "/search",
-        icon: <SearchIcon className="w-6 h-6" />,
+        icon: <SearchIcon aria-hidden className="w-6 h-6" />,
         label: "Browse",
     },
     {
         href: "/library",
-        icon: <LibraryIcon className="w-6 h-6" />,
+        icon: <LibraryIcon aria-hidden className="w-6 h-6" />,
         label: "Library",
     },
 ];

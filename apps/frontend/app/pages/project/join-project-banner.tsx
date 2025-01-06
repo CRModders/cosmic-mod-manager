@@ -66,7 +66,7 @@ export default function TeamInvitationBanner({ teamId, role, className, refreshD
                     {isLoading.value === true && isLoading.action === "accept" ? (
                         <LoadingSpinner size="xs" />
                     ) : (
-                        <CheckIcon className="w-btn-icon h-btn-icon" />
+                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     )}
                     {t.common.accept}
                 </Button>
@@ -75,7 +75,7 @@ export default function TeamInvitationBanner({ teamId, role, className, refreshD
                     {isLoading.value === true && isLoading.action === "decline" ? (
                         <LoadingSpinner size="xs" />
                     ) : (
-                        <XIcon className="w-btn-icon h-btn-icon" />
+                        <XIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     )}
                     {t.common.decline}
                 </Button>

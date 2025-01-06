@@ -1,7 +1,6 @@
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import meilisearch from "~/services/meilisearch";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { type ProjectSearchDocument, projectSearchNamespace } from "../sync-utils";
 
@@ -18,7 +17,7 @@ interface Props {
     type?: ProjectType;
 }
 
-export async function searchProjects(props: Props): Promise<RouteHandlerResponse> {
+export async function searchProjects(props: Props) {
     const index = meilisearch.index(projectSearchNamespace);
     let sortBy = null;
 

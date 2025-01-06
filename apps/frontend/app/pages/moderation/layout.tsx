@@ -25,17 +25,17 @@ export default function ModerationPagesLayout() {
         {
             name: t.dashboard.overview,
             href: "/moderation",
-            icon: <LayoutDashboardIcon className="w-4 h-4" />,
+            icon: <LayoutDashboardIcon aria-hidden className="w-4 h-4" />,
         },
         {
             name: mod.review,
             href: "/moderation/review",
-            icon: <ScaleIcon className="w-4 h-4" />,
+            icon: <ScaleIcon aria-hidden className="w-4 h-4" />,
         },
         {
             name: mod.reports,
             href: "/moderation/reports",
-            icon: <FlagIcon className="w-4 h-4" />,
+            icon: <FlagIcon aria-hidden className="w-4 h-4" />,
         },
     ];
 

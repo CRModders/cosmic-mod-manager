@@ -45,7 +45,7 @@ const DialogContent = React.forwardRef<
                 id="dialog_close_btn"
                 className="absolute right-4 top-4 rounded p-1.5 transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background disabled:pointer-events-none"
             >
-                <XIcon className="w-btn-icon-md h-btn-icon-md" />
+                <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="sr-only">Close</span>
             </DialogPrimitive.Close>
         </DialogPrimitive.Content>
