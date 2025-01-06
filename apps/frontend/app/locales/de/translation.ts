@@ -6,37 +6,50 @@ import tags from "./tags";
 type Gender = "f" | "m" | "n" | "a";
 
 // make first letter capital
+// this is used if a string starts with a string that is "templated-in",
 function capitalStart(str: string) {
     return String(str).charAt(0).toUpperCase() + String(str).slice(1);
-}
+};
 
-// Prepositions for gender, case and determination
-const prepositions = {
-    nominative: {
-        m: ["der", "ein", "dieser"],
-        f: ["die", "eine", "diese"],
-        n: ["das", "ein", "dieses"],
-        a: ["der/die/das", "ein/e", "diese/r/s"]
-    },
-    genitive: {
-        m: ["des", "eines", "diesen"],
-        f: ["der", "einer", "dieser"],
-        n: ["des", "eines", "dieses"],
-        a: ["der/des", "einer/s", "diesen/r/s"]
-    },
-    accusative: {
-        m: ["den", "einen", "diesen"],
-        f: ["die", "eine", "diese"],
-        n: ["das", "ein", "dieses"],
-        a: ["die/den/das", "ein/eine/einen", "diese/diesen/diesess"]
-    },
-    dative: {
-        m: ["dem", "einem", "diesem"],
-        f: ["der", "einer", "dieser"],
-        n: ["dem", "einem", "diesem"],
-        a: ["der/dem", "deiner/m", "dieser/m"]
-    }
-}
+const definiteArticleDative: { [Property in Gender]-?: string } = {
+    m: "dem",
+    f: "der",
+    n: "dem",
+    a: "der/dem"
+};
+
+const indefiniteArticleNominative: { [Property in Gender]-?: string } = {
+    m: "ein",
+    f: "eine",
+    n: "ein",
+    a: "ein/e"
+};
+
+const demonstrativePronounDative: { [Property in Gender]-?: string } = {
+    m: "diesem",
+    f: "dieser",
+    n: "diesem",
+    a: "dieser/m"
+};
+
+const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
+    m: "dein",
+    f: "deine",
+    n: "dein",
+    a: "dein/e"
+};
+
+
+const genderOf: { [noun: string]: Gender } = {
+    Organisation: "f",
+    Projekt: "n",
+    Mod: "f",
+    Datamod: "f",
+    Shader: "m",
+    Modpack: "n",
+    Plugin: "n",
+    Resourcenpaket: "n"
+};
 
 export default {
     common: {
@@ -54,8 +67,6 @@ export default {
         all: "Alle",
     },
 
-    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
-    // it's here just for readability
     count: {
         downloads: (count: number) => {
             if (count === 1) return ["", count.toString(), "Download"];
@@ -107,11 +118,11 @@ export default {
         dontHaveAccount: "Du hast kein Konto?",
         alreadyHaveAccount: "Du hast bereits ein Konto?",
         forgotPassword: "Password vergessen?",
-        signupWithProviders: "Registriere dich mit einem dieser Authentifizierungsbereitisteller:",
+        signupWithProviders: "Registriere dich mit einem dieser Anmeldemethode:",
         aggrement: "Mit dem erstellen eines Kontos akzeptierst du unsere [Bedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
         invalidCode: "Ungültiger oder abgelaufener Code",
         didntRequest: "Nicht angefragt?",
-        checkSessions: "Überprüfe angemeldete Sitzungen",
+        checkSessions: "Angemeldete Sitzungen überprüfen",
         confirmNewPass: "Neues Passwort bestätigen",
         confirmNewPassDesc:
             "Ein neues Passwort wurde letztens zu deinem Konto hinzufefügt und wartet auf Bestätigung. Bestätige unten, dass du das warst.",
@@ -133,21 +144,21 @@ export default {
         sessions: "Sitzungen",
         toggleFeatures: "Funktionen ein- und ausschalten",
         enableOrDisableFeatures: "Schalte bestimmte Funktionen für dieses Gerät ein oder aus.",
-        viewTransitions: "Zeige Übergänge",
+        viewTransitions: "Übergänge zeigen",
         viewTransitionsDesc: "Aktiviert Übergänge (morph), während dem Navigieren zwischen Seiten.",
         accountSecurity: "Konto-Sicherheit",
         changePassTitle: "Passwort vom Konto ändern",
         addPassDesc: "Füge ein Passwort hinzu, um den Passwortlogin zu ermöglichen.",
-        manageAuthProviders: "Verwalte Authentifizierungsbereitsteller",
+        manageAuthProviders: "Anmeldemethoden verwalten",
         manageProvidersDesc: "Füge Anmeldemethoden zum Konto hinzu oder entferne sie.",
         removePass: "Passwort entfernen",
         removePassTitle: "Passwort vom Konto entfernen",
         removePassDesc: "Nach dem entfernen des Passwort kannst du dich nicht mehr mit ihm anmelden.",
-        enterCurrentPass: "Gebe das aktuelle Passwort ein",
+        enterCurrentPass: "Gib das aktuelle Passwort ein",
         addPass: "Passwort hinzufügen",
         addPassDialogDesc: "Du wirst diese Passwort benutzen können,. um dich mit deinem Konto anzumelden.",
         manageProviders: "Verwalten",
-        linkedProviders: "Verknüpfte Authentifizierungsbereitsteller",
+        linkedProviders: "Verknüpfte Anmeldemethode",
         linkProvider: (provider: string) => `Verknüpfe ${provider} mit deinem Konto`,
         link: "verknüpfen", // Verb
         sureToDeleteAccount: "Bist du sicher, dass du dein Konto löschen willst?",
@@ -159,7 +170,7 @@ export default {
         visitYourProfile: "Profil besuchen",
         showIpAddr: "IP Adressen anzeigen",
         sessionsDesc:
-            "These devices are currently logged into your account, you can revoke any session at any time. If you see something you don't recognize, immediately revoke the session and change the password of the associated auth provider.",
+            "Diese Geräte sind aktuell in deinen Account eingeloggt; du kannst jede Sitzung jederzeit beenden. Solltest du etwas sehen, das du nicht kennst, beende die entsprechende Sitzung sofort und ändere das Passwort deiner Anmeldemethode.",
         ipHidden: "IP versteckt",
         lastAccessed: (when: string) => `Zuletzt ${when} zugegriffen`,
         created: (when: string) => `${capitalStart(when)} erstellt`, // eg: Created a month ago
@@ -195,7 +206,7 @@ export default {
         createProjectInfo: "Du hast keine Projekte. Klicke auf den obigen Knopf, um eines zu erstellen.",
         type: "Typ",
         status: "Status",
-        createProject: "Erstelle ein Projekt",
+        createProject: "Ein Projekt erstellen",
         creatingProject: "Erstellen eines Projektes",
         chooseProjectType: "Projekttyp wählen",
         projectTypeDesc: "Wähle den passenden Typ für dein Projekt",
@@ -227,14 +238,14 @@ export default {
 
         filters: "Filter",
         searchFilters: "Durchsuche Filter",
-        loaders: "Loaders",
+        loaders: "Loader",
         gameVersions: "Spielversionen",
         channels: "Kanäle",
         environment: "Umgebung",
         categories: "Kategorien",
         features: "Funktionen",
         resolutions: "Auflösung",
-        performanceImpact: "Performance impact",
+        performanceImpact: "Performance-Einfluss",
         license: "Lizens",
         openSourceOnly: "Nur Open Source",
         clearFilters: "Alle Filter entfernen",
@@ -260,24 +271,24 @@ export default {
         changelog: "Änderungsverlauf",
         versions: "Versionen",
         noProjectDesc: "Keine Projektbeschriebung vorhanden",
-        uploadNewImg: "Neues Gallerie-Bild hochladen",
-        uploadImg: "Gallerie-Bild hochladen",
-        galleryOrderingDesc: "Image with higher ordering will be listed first.",
+        uploadNewImg: "Neues Bild hochladen",
+        uploadImg: "Bild hochladen",
+        galleryOrderingDesc: "Bilder mit höherer Sortierung werden zuerst aufgelistet.",
         featuredGalleryImgDesc:
-            "A featured gallery image shows up in search and your project card. Only one gallery image can be featured.",
-        addGalleryImg: "Gallerie-Bild hinzufügen",
-        featureImg: "Bild vorstellen",
-        unfeatureImg: "Bild nicht mehr vorstellen",
-        sureToDeleteImg: "Willst du dieses Gallerie-Bild wirklich löschen?",
-        deleteImgDesc: "This will remove this gallery image forever (like really forever).",
-        editGalleryImg: "Gallerie-Bild bearbeiten",
+            "Ein hervorgehobenes Galleriebild taucht in der Suche und auf der Projektkarte auf. Nur ein Galleriebild kann hervorgehoben werden",
+        addGalleryImg: "Galleriebild hinzufügen",
+        featureImg: "Bild hervorheben",
+        unfeatureImg: "Bild nicht mehr hervorheben",
+        sureToDeleteImg: "Willst du dieses Bild wirklich löschen?",
+        deleteImgDesc: "Das wird das Bild für immer entfernen (also wirklich für immer immer).",
+        editGalleryImg: "Bild bearbeiten",
         currImage: "Aktuelles Bild",
 
         // Version
         uploadVersion: "Version hochladen",
-        uploadNewVersion: "Upload a new project version",
-        showDevVersions: "Show dev versions",
-        noProjectVersions: "No project versions found",
+        uploadNewVersion: "Neue Version hochladen",
+        showDevVersions: "Development-Versionen anzeigen",
+        noProjectVersions: "Keine Versionen gefunden",
         stats: "Statistiken",
         published: "Veröffentlicht", // Used for table headers
         downloads: "Downloads", // Used for table headers
@@ -294,28 +305,24 @@ export default {
         onlyAvailableFor: (project: string, platform: string) => `${project} ist nur für ${platform} verfügbar`,
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `Keine Versionen für ${gameVersion} auf ${loader} verfügbar`,
         declinedInvitation: "Abgelehnte Einladung",
-        teamInvitationTitle: (teamType: string) => {
-            const gender: Gender = ({ Organisation: "f", Projekt: "n" }[teamType] || "a") as Gender;
-            return `Einladung, ${prepositions.dative[gender][0]} ${teamType} beizutreten`
-        }, // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) => {
-            const gender: Gender = ({ Organisation: "f", Projekt: "n" }[teamType] || "a") as Gender;
-            return `Du wurdest eingeladen, Mitglied ${prepositions.dative[gender][2]} ${teamType} mit der Rolle '${role}' zu sein.`
-        },
+        teamInvitationTitle: (teamType: string) => `Einladung, ${definiteArticleDative.dative[genderOf[teamType] || "a" as Gender]} ${teamType} beizutreten`
+        , // teamType = organization | project
+        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, Mitglied ${demonstrativePronounDative.dative[genderOf[teamType] || "a" as Gender]} ${teamType} mit der Rolle '${role}' zu sein.`
+        ,
 
         browse: {
-            mod: "Durchsuche mods",
-            datamod: "Durchsuche datamods",
-            "resource-pack": "Durchsuche resource packs",
-            shader: "Durchsuche shaders",
-            modpack: "Durchsuche modpacks",
-            plugin: "Durchsuche plugins",
+            mod: "Durchsuche Mods",
+            datamod: "Durchsuche Datamods",
+            "resource-pack": "Durchsuche Resourcenpakete",
+            shader: "Durchsuche Shaders",
+            modpack: "Durchsuche Modpacks",
+            plugin: "Durchsuche Plugins",
         },
 
         rejected: "Abgelehnt",
-        withheld: "Withheld",
+        withheld: "Zurückgehalten",
         archivedMessage: (project: string) =>
-            `${project} wurde archiviert. It will not receive any further updates unless the author decides to unarchive the project.`,
+            `${project} wurde archiviert. Es wird keine weitere Updates mehr geben, außer der Author entscheidet sich, das Projekt zu ent-archivieren.`,
         publishingChecklist: {
             required: "Benötigt",
             suggestion: "Vorschlag",
@@ -323,38 +330,38 @@ export default {
             progress: "Fortschritt:",
             title: "Veröffentlichungs-Checkliste",
             uploadVersion: "Eine Version hochladen",
-            uploadVersionDesc: "Wenigstens eine Version ist benötigt, um das Projekt zur Zulassung abzusenden.",
+            uploadVersionDesc: "Wenigstens eine Version ist benötigt, um das Projekt zur Prüfung vorzulegen.",
             addDescription: "Beschribung hinzufügen",
-            addDescriptionDesc: "A description that clearly describes the project's purpose and function is required.",
-            addIcon: "Add an icon",
-            addIconDesc: "Your project should have a nice-looking icon to uniquely identify your project at a glance.",
-            featureGalleryImg: "Feature a gallery image",
-            featureGalleryImgDesc: "Featured gallery images may be the first impression of many users.",
-            selectTags: "Select tags",
-            selectTagsDesc: "Select all tags that apply to your project.",
-            addExtLinks: "Add external links",
-            addExtLinksDesc: "Add any relevant links, such as sources, issues, or a Discord invite.",
-            selectLicense: "Select license",
-            selectLicenseDesc: (projectType: string) => `Select the license your ${projectType} is distributed under.`,
-            selectEnv: "Select supported environments",
-            selectEnvDesc: (projectType: string) => `Select if the ${projectType} functions on the client-side and/or server-side.`,
-            submitForReview: "Submit for review",
+            addDescriptionDesc: "Eine Beschreibung, die den Sinn und die Funktion des Projektes klar darlegt, wird benötigt.",
+            addIcon: "Ein Icon hinzufügen",
+            addIconDesc: "Dein Projekt sollte ein schön-aussehendes Icon haben, um es eindeutig und auf einen Blick identifizieren zu können.",
+            featureGalleryImg: "Ein Galleriebild hervorheben",
+            featureGalleryImgDesc: "Hervorgehobene Galleriebilder können für viele Nutzer der erste Eindruck sein.",
+            selectTags: "Tags wählen",
+            selectTagsDesc: "Wähle alle Tags, die auf dein Projekt zutreffen.",
+            addExtLinks: "Externe Links hinzufügen",
+            addExtLinksDesc: "Füge jegliche relevante Links hinzu, wie zum Quellcode, zum Bugtracker, oder einer Discord-Einladung.",
+            selectLicense: "Lizens wählen",
+            selectLicenseDesc: (projectType: string) => `Wähle die Lizens, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} verbreitet wird.`,
+            selectEnv: "Wähle unterstützte Umgebungen",
+            selectEnvDesc: (projectType: string) => `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
+            submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
-                "Your project is only viewable by members of the project. It must be reviewed by moderators in order to be published.",
-            resubmitForReview: "Resubmit for review",
+                "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
+            resubmitForReview: "Erneut zur Prüfung vorlegen",
             resubmit_ApprovalRejected:
-                "Your project has been rejected by our moderator. In most cases, you can resubmit for review after addressing the moderator's message.",
+                "Dein Projekt wurde von einem unserer Moderatoren abgelehnt. In den meisten Fällen kannst du, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut abgeben.",
             resubmit_ProjectWithheld:
-                "Your project has been withheld by our moderator. In most cases, you can resubmit for review after addressing the moderator's message.",
+                "Dein Projekt wurde von einem unserer Moderatoren zurückgehalten. In den meisten Fällen kannst du, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut abgeben.",
             visit: {
-                versionsPage: "Visit versions page",
-                descriptionSettings: "Visit description settings",
-                generalSettings: "Visit general settings",
-                galleryPage: "Visit gallery page",
-                tagSettings: "Visit tag settings",
-                linksSettings: "Visit links settings",
-                licenseSettings: "Visit license settings",
-                moderationPage: "Visit moderation page",
+                versionsPage: "Versionsseite öffnen",
+                descriptionSettings: "Beschreibungseinstellungen öffnen",
+                generalSettings: "Allgemeine Einstellungen öffnen",
+                galleryPage: "Gallerie öffnen",
+                tagSettings: "Tag-Einstellungen öffnen",
+                linksSettings: "Link-Einstellungen öffnen",
+                licenseSettings: "Lizens-Einstellungen öffnen",
+                moderationPage: "Moderationsseite öffnen",
             },
         },
     },
@@ -362,22 +369,22 @@ export default {
     version: {
         deleteVersion: "Version löschen",
         sureToDelete: "Bist du sicher, dass du diese Version löschen willst?",
-        deleteDesc: "This will remove this version forever (like really forever).",
-        enterVersionTitle: "Enter the version title...",
-        feature: "Feature version",
-        unfeature: "Unfeature version",
-        featured: "Featured",
-        releaseChannel: "Release channel",
-        versionNumber: "Version number",
-        selectLoaders: "Select loaders",
-        selectVersions: "Select versions",
-        cantAddCurrProject: "You cannot add the current project as a dependency",
-        cantAddDuplicateDep: "You cannot add the same dependency twice",
-        addDep: "Add dependency",
-        enterProjectId: "Enter the project ID/Slug",
-        enterVersionId: "Enter the version ID/Slug",
-        dependencies: "Dependencies",
-        files: "Files",
+        deleteDesc: "Dadurch wird diese Version für immer entfernt (also wirklich für immer immer).",
+        enterVersionTitle: "Gib den Versionstitel ein...",
+        feature: "Version hervorheben",
+        unfeature: "Version nicht mehr hervorheben",
+        featured: "Hervorgehoben",
+        releaseChannel: "Veröffentlichungskanal",
+        versionNumber: "Versionsnummer",
+        selectLoaders: "Loader wählen",
+        selectVersions: "Versionen wählen",
+        cantAddCurrProject: "Du kannst nicht dieses Projekt nicht abhängig von sich selbst machen.",
+        cantAddDuplicateDep: "Du kannst nicht die gleiche Abhängigkeit zweimal hinzufügen.",
+        addDep: "Abhängigkeit hinzufügen",
+        enterProjectId: "Projekt-ID eingeben",
+        enterVersionId: "Versions-ID eingeben",
+        dependencies: "Abhängigkeiten",
+        files: "Dateien",
 
         depencency: {
             required: "Benötigt",
@@ -395,11 +402,11 @@ export default {
         chooseFile: "Datei wählen",
         replaceFile: "Datei ersetzen",
         uploadExtraFiles: "Zusätzliche Dateien hochladen",
-        uploadExtraFilesDesc: "Used for additional files like sources, documentation, etc.",
+        uploadExtraFilesDesc: "Nutzbar für zusätzliche Dateien, wie Quellen, Dokumentation, etc.",
         selectFiles: "Dateien wählen",
-        primaryFileRequired: "Eine primäre Datei ist benötigt",
+        primaryFileRequired: "Eine primäre Datei wird benötigt",
         metadata: "Metadaten",
-        devReleasesNote: "NOTE:- Older dev releases will be automatically deleted after a new dev release is published.",
+        devReleasesNote: "Notiz:- Ältere Development-Versionen werden automatisch gelöscht, sobaeit eine neue Veröffentlicht wird.",
         publicationDate: "Veröffentlichungsdatum",
         publisher: "Veröffentlichender",
         versionID: "Versions ID",
@@ -417,55 +424,55 @@ export default {
         view: "Zeige",
         upload: "Hochladen",
         externalLinks: "Externe Links",
-        issueTracker: "Issue tracker",
-        issueTrackerDesc: "A place for users to report bugs, issues, and concerns about your project.",
+        issueTracker: "Bugtracker",
+        issueTrackerDesc: "Ein Ort für Nutzer, Fehler und Bedenken über dein Projekt zu äußern.",
         sourceCode: "Quellcode",
-        sourceCodeDesc: "A page/repository containing the source code for your project.",
+        sourceCodeDesc: "Eine Seite oder ein Repository, welches den Quellcode deines Projektes enthält.",
         wikiPage: "Wiki page",
-        wikiPageDesc: "A page containing information, documentation, and help for the project.",
-        discordInvite: "Discord invite",
-        discordInviteDesc: "An invitation link to your Discord server.",
+        wikiPageDesc: "Eine Seite die Informationen, Dokumentation und Hilfe zu deinem Projekt enthält.",
+        discordInvite: "Discord-Einladung",
+        discordInviteDesc: "Ein Einladungslink zu deinem Discord-Server.",
         licenseDesc1: (projectType: string) =>
-            `It is very important to choose a proper license for your ${projectType}. You may choose one from our list or provide a custom license. You may also provide a custom URL to your chosen license; otherwise, the license text will be displayed.`,
+            `Es ist sehr wichtig, die richtige Lizens für ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizens festlegen. Du kannst auch eine URL zu deiner gewählten Lizens festlegen; andernfallst wird der Text der Lizens angezeigt.`,
         licenseDesc2:
-            "Enter a valid [SPDX license identifier](https://spdx.org/licenses) in the marked area. If your license does not have a SPDX identifier (for example, if you created the license yourself or if the license is Cosmic Reach specific), simply check the box and enter the name of the license instead.",
-        selectLicense: "Select license",
-        custom: "Custom",
-        licenseName: "License name",
-        licenseUrl: "License URL (optional)",
-        spdxId: "SPDX identifier",
-        doesntHaveSpdxId: "License does not have a SPDX identifier",
-        tagsDesc: "Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.",
-        tagsDesc2: (projectType: string) => `Select all categories that reflect the themes or function of your ${projectType}.`,
-        featuredCategories: "Featured categories",
-        featuredCategoriesDesc: (count: number) => `You can feature up to ${count} of your most relevant tags.`,
-        selectAtLeastOneCategory: "Select at least one category in order to feature a category.",
-        projectInfo: "Project information",
-        clientSide: "Client-side",
-        clientSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the client side.`,
-        serverSide: "Server-side",
-        serverSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the logical server.`,
-        unknown: "Unknown",
-        required: "Required",
+            "Gib einen gültigen [SPDX Lizens-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizens keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizens selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizens ein.",
+        selectLicense: "Lizens wählen",
+        custom: "Eigene",
+        licenseName: "Lizensname",
+        licenseUrl: "Licenz-URL (optional)",
+        spdxId: "SPDX-Identifikator",
+        doesntHaveSpdxId: "Die Lizens hat keinen SPDX-Identifikator",
+        tagsDesc: "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
+        tagsDesc2: (projectType: string) => `Wähle alle Kategorien aut, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} wiederspiegeln.`,
+        featuredCategories: "Hervorgehobene Kategorien",
+        featuredCategoriesDesc: (count: number) => `Du kannst bis zu ${count} deiner relevantesten Tags hervorheben.`,
+        selectAtLeastOneCategory: "Wähle mindestens eine Kategorie, um eine Kategorie hervorzuheben.",
+        projectInfo: "Projekt",
+        clientSide: "Clientseitig",
+        clientSideDesc: (projectType: string) => `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client-seitige Funktionalität hat.`,
+        serverSide: "Serverseitg",
+        serverSideDesc: (projectType: string) => `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Server-seitige Funktionalität hat.`,
+        unknown: "Unbekannt",
+        required: "Benötigt",
         optional: "Optional",
-        unsupported: "Unsupported",
+        unsupported: "Nicht unterstützt",
         visibilityDesc:
-            "Listed and archived projects are visible in search. Unlisted projects are published, but not visible in search or on user profiles. Private projects are only accessible by members of the project.",
-        ifApproved: "If approved by the moderators:",
-        visibleInSearch: "Visible in search",
-        visibleOnProfile: "Visible on profile",
-        visibleViaUrl: "Visible via URL",
-        visibleToMembersOnly: "Only members will be able to view the project",
-        listed: "Listed",
-        private: "Private",
-        unlisted: "Unlisted",
-        archived: "Archived",
-        deleteProject: "Delete project",
+            "Gelistete und archivierte Projekte sind in der Suche sichtbar. Ungelistete Projekte sind veröffentlicht, aber nicht in der Suche oder auf Benutzerseiten sichtbar. Private Projekte können nur von Mitgliedern des Projektes eingesehen werden.",
+        ifApproved: "Wenn von den Moderatoren zugelassen:",
+        visibleInSearch: "Sichtbar in der Suche",
+        visibleOnProfile: "Sichtbar auf deinem Profil",
+        visibleViaUrl: "Auffindbar per URL",
+        visibleToMembersOnly: "Nur Mitglieder werden das Projekt sehen können",
+        listed: "Gelistet",
+        private: "Privat",
+        unlisted: "Ungelistet",
+        archived: "Archiviert",
+        deleteProject: "Projekt löschen",
         deleteProjectDesc: (site: string) =>
-            `Removes your project from ${site}'s servers and search. Clicking on this will delete your project, so be extra careful!`,
-        sureToDeleteProject: "Are you sure you want to delete this project?",
+            `Entfernt sein Projekt von ${site}s Servern und aus der Suche. Du löschst dein Projekt damit entgültig, sein also extra-vosichtig!`,
+        sureToDeleteProject: "Bist du sicher, dass du dieses Projekt löschen willst?",
         deleteProjectDesc2:
-            "If you proceed, all versions and any attached data will be removed from our servers. This may break other projects, so be careful.",
+            "Wenn du fortfährst, werden alle Versionen und jegliche zusammenhängende Information von unseren Server entfernt. Das kann die Funktion anderer Projekte stören oder sie kaputt machen, sein also vorsichtig.",
         typeToVerify: (projectName: string) => `Zum Verifizieren, gib unten **${projectName}** ein:`,
         typeHere: "Hier eingeben...",
         manageMembers: "Mitglieder verwalten",
@@ -590,7 +597,7 @@ export default {
         },
         submitted: (when: string) => `${capitalStart(when)} abgeschickt`, // eg: Submitted 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
         viewProject: "Projekt anzeigen",
-        awaitingApproval: "Project ist in der Warteschlange zur Zulassung",
+        awaitingApproval: "Project ist in der Warteschlange zur Prüfung",
         draft: "Entwurf",
         approve: "Zulassen",
         reject: "Ablehnen",
@@ -637,7 +644,7 @@ export default {
         pageNotFound: "404 | Seite nicht gefunden.",
         pageNotFoundDesc: "Sorry, wir konnten die Seite, nach der du gesucht hast, nicht finden.",
         projectNotFound: "Projekt nicht gefunden",
-        projectNotFoundDesc: (type: string, slug: string) => `Ein/-e ${type} mit der ID "${slug}" existiert nicht.`,
+        projectNotFoundDesc: (type: string, slug: string) => `${capitalStart(indefiniteArticleNominative[genderOf[type] || "a" as Gender])} ${type} mit der ID "${slug}" existiert nicht.`,
     },
 
     editor: {
@@ -693,6 +700,8 @@ export default {
             switch (days) {
                 case 1:
                     return "gestern";
+                case 2:
+                    return "vorgestern";
                 default:
                     return `vor ${days} Tagen`;
             }
