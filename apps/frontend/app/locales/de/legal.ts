@@ -1,74 +1,71 @@
-export interface RulesProps {
-    title: string;
-    supportEmail: string;
-    privacyPageUrl: string;
-    termsPageUrl: string;
-}
+import type { RulesProps } from "~/locales/en/legal";
 
 export function Rules(props: RulesProps) {
     return `
 # ${props.title}
 
-If you come across any form of violation of these Rules on our website, we ask you to make us aware. You may use the Report button on any project, version, or user page, or you may email us at [${props.supportEmail}](mailto:${props.supportEmail}).
+Diese Übersetzung nicht rechtlich bindend! Es gild die englische Originalversion, dieses Dokument soll lediglich das Verständnis für deutschsprachige Nutzer vereinfachen.
 
-## 1. Prohibited Content
+Wenn du auf irgendeine Art von Verstoß gegen diese Regeln auf unserer Webseite triffst, bitten wir dich, uns darauf aufmerksam su machen. Du kannst den "Melden"-Knof nutzen, um jedes Projekt, jede Version oder jede Nutzerseite zu melden, oder du kannst und eine E-Mail an [${props.supportEmail}](mailto:${props.supportEmail}) schicken.
 
-Content must in their entirety comply with all applicable federal, state, local, and international laws and regulations. Without limiting the foregoing, Content must not:
+## 1. Verbotene Inhalte
 
-1. Contain any material which is defamatory, obscene, indecent, abusive, offensive, harassing, violent, hateful, inflammatory, harmful, damaging, disruptive, contradictory, or otherwise objectionable.
-2. Promote sexually explicit or pornographic material, violence, or discrimination based on race, sex, gender, religion, nationality, disability, sexual orientation, or age.
-3. Infringe any patent, trademark, trade secret, copyright, or other intellectual property or other rights of any other person.
-4. Violate the legal rights (including the rights of publicity and privacy) of others or contain any material that could give rise to any civil or criminal liability under applicable laws or regulations or that otherwise may be in conflict with our [Terms of Use](${props.termsPageUrl}) or [Privacy Policy](${props.privacyPageUrl}).
-5. Promote any illegal activity, or advocate, promote or assist any unlawful act, including real-life drugs or illicit substances.
-6. Cause needless anxiety or be likely to upset, embarrass, alarm, harm, or deceive any other person.
-7. Impersonate any person, or misrepresent your identity or affiliation with any person or organization.
-8. Give the impression that they emanate from or are endorsed by us or any other person or entity, if this is not the case.
-9. Upload any data to a remote server without clear disclosure ingame.
+Inhalte müssen in ihrer Gesamtheit allen geltenden Bundes-, Landes- und kommunalen sowie internatonalen Gesetze und Vorschriften einhalten. Ohne das Vorhergehende einzuschränken, dürfen Inhalte nicht:
 
-## 2. Clear and Honest Function
+1. Material beinhalten, welches diffamierend, obszön, unanständig, beleidigend, belestigend, gewalttätig, hasserfüllt, hetzend, schädlich, störend, wiedersprüchlich oder auf anderem Wege anstößig ist.
+2. Sexuell explizites oder pornografisches Material, Gewalt, oder Diskriminierung auf Grund von Hautfarbe, Geschlecht, Religion, Nationalität, Behinderung, sexueller Orientierung oder Alter enthalten.
+3. Patenete, Marken, Geschäftsgeheimnisse, Urheberechte oder anderes geistiges Eigentum oder die Reche einer anderen Person verletzen.
+4. Die gesetzlichen Rechte (einschließlich der Persönlichkeits- und Datenschutzrechte) anderer verletzen oder Material enthalten, das gemäß den geltenden Gesetzen und Vorschrifen zu zifil- oder strafrechtlicher Haftung führen könnte oder anderweitig im Wiederspruch zu unseren [Nutzungsbedingungen](${props.termsPageUrl}) oder unserer [Datenschutzrichtlinie](${props.privacyPageUrl}) stehen könnte.
+5. Illegale Aktivitäten fördern oder befürworten oder rechtswiedrige Handlungen unterstützen, einschließlich echter Drogen oder illegaler Substanzen.
+6. Grundlose Ängste auslösen oder unter Umständen dazu führen können, dass andere Personen aufgebracht, beschämt, alarmiert oder verletzt werden.
+7. Sich als andere Personen ausgeben oder die Identität oder den Zusammenhang mit einer anderen Person oder Organisaion falsch darstellen.
+8. Den Eindruck erwecken, dass sie von uns oder einer anderen Person oder Stelle stammen oder gebilligt werden, obwohl dies nicht der Fall ist.
+9. Daten auf einen unabhängigen Server hochladen, ohne dies im Spiel vorher klar offenzulegen.
 
-Projects, a form of Content, must make a clear and honest attempt to describe their purpose in designated areas on the project page. Necessary information must not be obscured in any way. Using confusing language or technical jargon when it is not necessary constitutes a violation.
+## 2. Klare Funktion und ehrliche Beschreibung
 
-### 2.1. General Expectations
+Projekte, eine Art von Inhalt, müssen versuchen, ihren Sinn und Zweck in den passenden Bereichen der Projektseite klar und ehrlich zu beschreiben. Notwendige Informationen dürfen auf keinem Weg versteckt oder anderweitig unerkennbar gemacht werden. Verwirrende Sprache oder technische Fachsprache zu benuzuen, wenn es nicht nötig ist, stellt einen Verstoß dar.
 
-From a project description, users should be able to understand what the project does and how to use it. Projects must attempt to describe the following three things within their description:
+### 2.1. Allgemeine Erwartungen
 
-a. What the project specifically does or adds  
-b. Why someone should want to download the project  
-c. Any other critical information the user must know before downloading  
+Durch die Projektbeschreibung sollten Nutzer die Möglichkeit haben, zu verstehen, was das Projekt macht, und wie es zu verwenden ist. Projekte müssen versuchen, die folgenden drei Sachen in ihrer Beschreibung darzulegen:
 
-### 2.2. Accessibility
+a. Was genau durch das Projekt getan oder hinzugefügt wird
+b. Warum jemand das Projekt herunterladen wollen würde
+c. Jede andere Kritische Information, die der Nutzer vor den herunterladen wissen muss oder sollte
 
-Project descriptions must be accessible so that they can be read through a variety of mediums. All descriptions must have a plain-text version, though images, videos, and other content can take priority if desired. Headers must not be used for body text.
+### 2.2. Barrierefreiheit
 
-Project descriptions must have an English-language translation unless they are exclusively meant for use in a specific language, such as translation packs. Descriptions may provide translations into other languages if desired.
+Projektbeschreibungen müssen Barriererfrei sein, so dass sie über eine Reihe von Medien erfasst werden können. Alle Beschreibungen müssen eine reine Textversion haben, obwohl Bilder, Videos und andere Inhalte priorisiert werden können, falls gewünscht. Überschriften dürfen nicht für Inhaltstext, sondern nur für wirkliche Überschriften verwendet werden.
 
-## 3. Cheats and Hacks
+Projektbeschreibungen müssen eine englischsprachige Übersetzung haben, außer, sie sind exclusiv für die Nutzung in einer bestimmten Sprache gedacht, wie zum Beispiel Sprachpakete. Beschreibungen können Übersetzungen in andere Sprachen anbieten, falls erwünscht.
 
-Projects cannot contain or download "cheats," which we define as a client-side modification that:
+## 3. Cheats und Hacks
 
-1. Is advertised as a "cheat," "hack," or "hacked client."  
-2. Contains any of the following functions without requiring a server-side opt-in:  
-    a. Active client-side hiding of third-party modifications that have server-side opt-outs  
-    b. Unnecessary sending of packets to a server  
-    c. Harming to other users devices  
+Projekte dürfen keine "Cheats" beinhalten oder heruterladen, wellche wir als eine Client-seitige Modifikation bezeichnen, die:
 
-## 4. Copyright and Reuploads
+1. Als "Cheat", "Hach" oder "Hackclient" beworben wird.
+2. Eine der folgenden Funkionen enthält, ohne dass ein Server-seitiges Opt-in erforderlich ist:
+    a. Aktives Client-seitiges verstecken von anderen Modifikationen die Server-seitige Opt-Outs haben
+    b. Unnötige Pakete an einen Server schicken
+    c. Geräte anderer Nutzer schädigen
 
-You must own or have the necessary licenses, rights, consents, and permissions to store, share, and distribute the Content that is uploaded under your CRMM account.
+## 4. Urheberecht und Wiederuploads
 
-Content may not be directly reuploaded from another source without explicit permission from the original author. If explicit permission has been granted, or it is a license-abiding "fork," this restriction does not apply.
+Du musst die nötigen Lizensen, Rechte, Einwilligungen und Berechtigungn haben oder besitzen, Inhalte die unter deinem CRMM account hochgeladen werden zu speichern, teilen und verbreiten.
 
-## 5. Miscellaneous
+Inhalten dürfen nicht von einer anderen Quelle direkt wieder hochgeladen werden, ohne Erlaubnis von urspünglichen Author zu besitzen. Wenn ausdrückliche Berechtigung gegeben wurde, oder es sich um eine lizensgerechte "fork" handelt, trifft diese Beschränkung nicht zu.
 
-There are certain other small aspects to creating projects that all authors should attempt to abide by. These will not necessarily always be enforced, but abiding by all will result in a faster review with fewer potential issues.
+## 5. Verschiedenes
 
-1. All metadata, including license, client/server-side information, tags, etc., are filled out correctly and are consistent with information found elsewhere.
-2. Project titles are only the name of the project, without any other unnecessary filler data.
-3. Project summaries contain a small summary of the project without any formatting and without repeating the project title.
-4. All external links lead to public resources that are relevant.
-5. Gallery images are relevant to the project and each contains a title.
-6. All dependencies must be specified in the Dependencies section of each version.
-7. "Additional files" are only used for special designated purposes, such as source JAR files. In other words, separate versions and/or projects are used where appropriate instead of additional files.
+Es gibt weitere kleine Aspekte die das Erstellen von Projekten betreffen und die von allen Authoren eingehalten werden sollten. Diese werden nicht notwendigerweise durchgesetzt, aber sich an sie zu halten wird in einer schnelleren Zulassung mit weniger potentiellen Problemen führen.
+
+1. Alle Metadaten, wie Lizens, Information ob Client- und/oder Server-seitig, Tags, etc., sind korrekt ausgefüllt und mit der Information, die anderswo auffindbar ist übereinstimmend.
+2. Projekttitel beinhalten nur den Namen des Projektes, ohne unnötige Füllinformationen.
+3. Projektzusammenfassungen enthalten eine kleine Zusammenfassung des Projektes, ohne weitere Formatierung und ohne den Projekttitel zu wiederholen.
+4. Alle externen Links führen zu öffentlichen Resourcen, die relevant sind.
+5. Galleriebilder sind relevant für das Projekt und enthalten jeweils einen Titel.
+6. Alle Abhängigkeiten müssen in dem für diese vorgesehenen Bereich für jede Version festgelegt werden.
+7. "Zusätzliche Dateien" werden nur für ihren speziell angedachten Zweck, wie zum Beispiel Quell-JAR-Dateien benutzt. In anderen Worten, seperate Versionen und/oder Projekte werden wen angebracht statt zusätzlichen Dateien genutzt.
 `;
 }
