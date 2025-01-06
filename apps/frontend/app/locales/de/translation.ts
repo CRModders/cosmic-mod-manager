@@ -305,9 +305,9 @@ export default {
         onlyAvailableFor: (project: string, platform: string) => `${project} ist nur für ${platform} verfügbar`,
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `Keine Versionen für ${gameVersion} auf ${loader} verfügbar`,
         declinedInvitation: "Abgelehnte Einladung",
-        teamInvitationTitle: (teamType: string) => `Einladung, ${definiteArticleDative.dative[genderOf[teamType] || "a" as Gender]} ${teamType} beizutreten`
+        teamInvitationTitle: (teamType: string) => `Einladung, ${definiteArticleDative[genderOf[teamType] || "a" as Gender]} ${teamType} beizutreten`
         , // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, Mitglied ${demonstrativePronounDative.dative[genderOf[teamType] || "a" as Gender]} ${teamType} mit der Rolle '${role}' zu sein.`
+        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, Mitglied ${demonstrativePronounDative[genderOf[teamType] || "a" as Gender]} ${teamType} mit der Rolle '${role}' zu sein.`
         ,
 
         browse: {
