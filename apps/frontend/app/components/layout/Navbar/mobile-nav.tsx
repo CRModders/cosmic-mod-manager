@@ -28,7 +28,10 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
     const unreadNotifications = (notifications || [])?.filter((n) => !n.read).length;
 
     return (
-        <div className={cn("mobile_navmenu w-full absolute top-[100%] left-0 duration-300", isNavMenuOpen && "menu_open")}>
+        <div
+            className={cn("mobile_navmenu w-full absolute top-[100%] left-0 duration-300", isNavMenuOpen && "menu_open")}
+            aria-hidden={isNavMenuOpen !== true}
+        >
             <div className="w-full flex flex-col items-center justify-center row-span-2 relative">
                 <div className="absolute top-0 left-0 w-full h-full bg-background opacity-[0.975] dark:opacity-[0.985] z-[3]" />
 
@@ -57,7 +60,7 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
                                     <div className="w-full flex items-center justify-center gap-2">
                                         <ImgWrapper
                                             src={imageUrl(session?.avatar)}
-                                            alt={session.userName}
+                                            alt={`Profile picture of ${session?.userName}`}
                                             className="w-10 h-10 rounded-full"
                                             fallback={fallbackUserIcon}
                                         />
@@ -68,28 +71,28 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
 
                                 {[
                                     {
-                                        icon: <UserIcon className="w-btn-icon h-btn-icon" />,
+                                        icon: <UserIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                         label: t.navbar.profile,
                                         url: UserProfilePath(session.userName),
                                     },
                                     {
-                                        icon: <BellIcon className="w-btn-icon h-btn-icon" />,
+                                        icon: <BellIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                         label: t.dashboard.notifications,
                                         url: "/dashboard/notifications",
                                         notificationBadge: unreadNotifications,
                                     },
                                     {
-                                        icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
+                                        icon: <Settings2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
                                         label: t.common.settings,
                                         url: "/settings/profile",
                                     },
                                     {
-                                        icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
+                                        icon: <LayoutListIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                         label: t.dashboard.projects,
                                         url: "/dashboard/projects",
                                     },
                                     {
-                                        icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
+                                        icon: <Building2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
                                         label: t.dashboard.organizations,
                                         url: "/dashboard/organizations",
                                     },
@@ -123,7 +126,7 @@ export function MobileNav({ session, notifications, isNavMenuOpen, toggleNavMenu
                                             toggleNavMenu={toggleNavMenu}
                                             className="h-nav-item items-center justify-center hover:bg-shallower-background dark:hover:bg-shallow-background"
                                         >
-                                            <ScaleIcon className="w-btn-icon h-btn-icon" />
+                                            <ScaleIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                             {t.moderation.moderation}
                                         </NavMenuLink>
                                     </li>

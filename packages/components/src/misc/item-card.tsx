@@ -69,7 +69,7 @@ export function OrgListItemCard({ members, ...props }: OrgListItemCard) {
     return (
         <ListItemCard {...props} fallbackIcon={fallbackOrgIcon}>
             <div className="flex gap-1 items-center justify-center whitespace-nowrap">
-                <UsersIcon className="text-extra-muted-foreground font-medium w-btn-icon h-btn-icon" />
+                <UsersIcon aria-hidden className="text-extra-muted-foreground font-medium w-btn-icon h-btn-icon" />
                 {t.count.members(members).join(" ")}
             </div>
         </ListItemCard>

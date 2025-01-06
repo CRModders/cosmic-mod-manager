@@ -112,7 +112,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
                 <Button variant={"default"}>
-                    <UploadIcon className="w-btn-icon h-btn-icon" />
+                    <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.project.uploadImg}
                 </Button>
             </DialogTrigger>
@@ -163,7 +163,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                             }
                                                         }}
                                                     />
-                                                    <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
+                                                    <FileIcon
+                                                        aria-hidden
+                                                        className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground"
+                                                    />
                                                     {field.value ? (
                                                         <div className="flex items-center flex-wrap justify-start gap-x-2">
                                                             <span className="font-semibold break-words break-all">{field.value.name}</span>
@@ -270,9 +273,9 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                             id="gallery-item-featured"
                                         >
                                             {field.value === true ? (
-                                                <StarIcon fill="currentColor" className="w-btn-icon-md h-btn-icon-md" />
+                                                <StarIcon aria-hidden fill="currentColor" className="w-btn-icon-md h-btn-icon-md" />
                                             ) : (
-                                                <StarIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                <StarIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                             )}
                                             {field.value === true ? t.project.unfeatureImg : t.project.featureImg}
                                         </Button>
@@ -286,7 +289,11 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                 </DialogClose>
 
                                 <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                    {isLoading ? (
+                                        <LoadingSpinner size="xs" />
+                                    ) : (
+                                        <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                    )}
                                     {t.project.addGalleryImg}
                                 </Button>
                             </DialogFooter>

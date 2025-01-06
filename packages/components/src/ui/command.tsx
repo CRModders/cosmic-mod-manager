@@ -35,7 +35,7 @@ const CommandInput = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & { wrapperClassName?: string }
 >(({ className, wrapperClassName, ...props }, ref) => (
     <div className={cn("flex items-center border-b border-shallow-background px-3", wrapperClassName)} cmdk-input-wrapper="">
-        <SearchIcon className="mr-2 w-btn-icon h-btn-icon shrink-0 text-extra-muted-foreground" />
+        <SearchIcon aria-hidden className="mr-2 w-btn-icon h-btn-icon shrink-0 text-extra-muted-foreground" />
         <CommandPrimitive.Input
             ref={ref}
             className={cn(

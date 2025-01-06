@@ -135,7 +135,7 @@ export default function CreateInstance(props: Props) {
                                                             "cursor-pointer",
                                                         )}
                                                     >
-                                                        <UploadIcon className="w-btn-icon h-btn-icon" />
+                                                        <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                                         Upload icon
                                                     </InteractiveLabel>
                                                     {form.getValues().icon ? (
@@ -146,7 +146,7 @@ export default function CreateInstance(props: Props) {
                                                                 form.setValue("icon", undefined);
                                                             }}
                                                         >
-                                                            <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                            <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                             Remove icon
                                                         </Button>
                                                     ) : null}
@@ -217,7 +217,7 @@ export default function CreateInstance(props: Props) {
                                         >
                                             <Button variant="secondary" className="w-full justify-between">
                                                 {field.value || "Select game version"}
-                                                <ChevronDownIcon className="w-4 h-4" />
+                                                <ChevronDownIcon aria-hidden className="w-4 h-4" />
                                             </Button>
                                         </ComboBox>
                                     </FormItem>
@@ -229,7 +229,7 @@ export default function CreateInstance(props: Props) {
                                     <CancelButton type="button" />
                                 </DialogClose>
                                 <Button disabled={!isFormSubmittable()}>
-                                    <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                     Create
                                 </Button>
                             </DialogFooter>

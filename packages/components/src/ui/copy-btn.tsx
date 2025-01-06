@@ -49,9 +49,9 @@ function CopyBtn({ id, text, label, className, labelClassName, iconClassName, ma
             ) : null}
             <div className="w-btn-icon h-btn-icon flex items-center justify-center">
                 {showTickIcon ? (
-                    <CheckIcon className={cn("w-btn-icon h-btn-icon text-success-foreground", iconClassName)} />
+                    <CheckIcon aria-hidden className={cn("w-btn-icon h-btn-icon text-success-foreground", iconClassName)} />
                 ) : (
-                    <CopyIcon className={cn("w-3 h-3 text-extra-muted-foreground", iconClassName)} />
+                    <CopyIcon aria-hidden className={cn("w-3 h-3 text-extra-muted-foreground", iconClassName)} />
                 )}
             </div>
         </Button>

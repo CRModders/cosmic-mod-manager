@@ -126,7 +126,7 @@ ${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
                                                     {isCustomLicense
                                                         ? t.projectSettings.custom
                                                         : selectedFeaturedLicense?.name || t.projectSettings.selectLicense}
-                                                    <ChevronDownIcon className="w-btn-icon h-btn-icon shrink-0" />
+                                                    <ChevronDownIcon aria-hidden className="w-btn-icon h-btn-icon shrink-0" />
                                                 </Button>
                                             </ComboBox>
                                         </FormItem>
@@ -197,7 +197,11 @@ ${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
                         </div>
                     </div>
                     <Button type="submit" className="w-fit" disabled={!hasFormChanged || form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                        {form.formState.isSubmitting ? (
+                            <LoadingSpinner size="xs" />
+                        ) : (
+                            <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
+                        )}
                         {t.form.saveChanges}
                     </Button>
                 </Card>

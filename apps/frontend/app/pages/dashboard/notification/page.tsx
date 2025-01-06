@@ -58,13 +58,17 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
                 {(notifications?.length || 0) > 0 && (
                     <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-1">
                         <VariantButtonLink url="/dashboard/notifications/history" className="w-fit">
-                            <HistoryIcon className="w-btn-icon-md h-btn-icon-md" />
+                            <HistoryIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                             {t.dashboard.viewHistory}
                         </VariantButtonLink>
 
                         {(unreadNotifications?.length || 0) > 1 && (
                             <Button variant={"secondary-destructive"} disabled={markingAsRead} onClick={markAllAsRead}>
-                                {markingAsRead ? <LoadingSpinner size="xs" /> : <CheckCheckIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                {markingAsRead ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <CheckCheckIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                )}
                                 {t.dashboard.markAllRead}
                             </Button>
                         )}

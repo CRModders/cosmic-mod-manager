@@ -125,7 +125,7 @@ export default function LoginPage() {
                             {formError && <FormErrorMessage text={formError} />}
 
                             <Button type="submit" aria-label="Login" className="w-full h-form-submit-btn" disabled={isLoading}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <LogInIcon className="w-[1.1rem] h-[1.1rem]" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <LogInIcon aria-hidden className="w-[1.1rem] h-[1.1rem]" />}
                                 {t.form.login}
                             </Button>
                         </form>

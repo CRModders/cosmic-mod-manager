@@ -49,24 +49,24 @@ export default function ModerationBanner() {
 
             <CardContent className="flex flex-wrap gap-x-3 flex-row items-center justify-start">
                 <Button size="sm" onClick={() => updateStatus(ProjectPublishingStatus.APPROVED)}>
-                    <CheckIcon className="w-btn-icon h-btn-icon" />
+                    <CheckIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.moderation.approve}
                 </Button>
 
                 <Button size="sm" variant="secondary-destructive" onClick={() => updateStatus(ProjectPublishingStatus.REJECTED)}>
-                    <XIcon className="w-btn-icon h-btn-icon" />
+                    <XIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.moderation.reject}
                 </Button>
 
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button size="icon" className="rounded-full" variant="outline">
-                            <MoreVerticalIcon className="w-btn-icon h-btn-icon" />
+                            <MoreVerticalIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="min-w-0 w-fit p-1">
                         <Button size="sm" variant="ghost-destructive" onClick={() => updateStatus(ProjectPublishingStatus.WITHHELD)}>
-                            <EyeOffIcon className="w-btn-icon h-btn-icon" />
+                            <EyeOffIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.moderation.withhold}
                         </Button>
                     </PopoverContent>

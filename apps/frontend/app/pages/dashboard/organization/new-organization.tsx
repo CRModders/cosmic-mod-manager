@@ -163,7 +163,11 @@ export default function CreateNewOrg_Dialog({ children }: { children: React.Reac
                                     <CancelButton type="button" />
                                 </DialogClose>
                                 <Button disabled={isLoading || !isFormSubmittable()}>
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                    {isLoading ? (
+                                        <LoadingSpinner size="xs" />
+                                    ) : (
+                                        <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                    )}
                                     {t.dashboard.createOrg}
                                 </Button>
                             </DialogFooter>

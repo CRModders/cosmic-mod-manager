@@ -115,7 +115,7 @@ export default function InteractiveDownloadPopup() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={isVersionDetailsPage ? "secondary-inverted" : "default"}>
-                    <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     {t.common.download}
                 </Button>
             </DialogTrigger>
@@ -162,7 +162,7 @@ export default function InteractiveDownloadPopup() {
                             disabled={projectData.gameVersions.length < 2}
                         >
                             <span className="flex items-center justify-start gap-2 font-medium">
-                                <Gamepad2Icon className="w-btn-icon-md h-btn-icon-md" />
+                                <Gamepad2Icon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                 <span className="text-muted-foreground">
                                     {selectedGameVersion ? (
                                         <>
@@ -176,7 +176,7 @@ export default function InteractiveDownloadPopup() {
                                     )}
                                 </span>
                             </span>
-                            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
+                            <ChevronsUpDownIcon aria-hidden className="ml-2 h-4 w-4 shrink-0" />
                         </Button>
                     </ComboBox>
 
@@ -189,7 +189,7 @@ export default function InteractiveDownloadPopup() {
                                 className="w-full justify-between text-extra-muted-foreground"
                             >
                                 <span className="flex items-center justify-start gap-2 font-medium">
-                                    <WrenchIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    <WrenchIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                     <span className="text-muted-foreground">
                                         {selectedLoader ? (
                                             <>
@@ -203,7 +203,7 @@ export default function InteractiveDownloadPopup() {
                                         )}
                                     </span>
                                 </span>
-                                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" />
+                                <ChevronsUpDownIcon aria-hidden className="ml-2 h-4 w-4 shrink-0" />
                             </Button>
                         </ComboBox>
                     )}
@@ -305,7 +305,7 @@ function AvailableVersionsList({ selectedGameVersion, selectedLoader }: Availabl
                             label={`download ${version.title}`}
                             onClick={showDownloadAnimation}
                         >
-                            <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                            <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         </VariantButtonLink>
                     </div>
                 );

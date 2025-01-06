@@ -55,7 +55,7 @@ export default function Footer() {
 
                     <FooterLink to="https://docs.crmm.tech" aria-label={footer.docs} target="_blank">
                         {footer.docs}
-                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
+                        <OpenInNewTab_Icon />
                     </FooterLink>
 
                     <FooterLink to="/status" aria-label={footer.status}>
@@ -64,7 +64,7 @@ export default function Footer() {
 
                     <FooterLink to="mailto:support@crmm.tech" aria-label={footer.support} target="_blank">
                         {footer.support}
-                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
+                        <OpenInNewTab_Icon />
                     </FooterLink>
                 </LinksColumn>
 
@@ -76,12 +76,12 @@ export default function Footer() {
 
                     <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
                         Github
-                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
+                        <OpenInNewTab_Icon />
                     </FooterLink>
 
                     <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite" target="_blank">
                         Discord
-                        <ArrowUpRightIcon className="w-4 h-4 text-extra-muted-foreground inline" />
+                        <OpenInNewTab_Icon />
                     </FooterLink>
                 </LinksColumn>
 
@@ -89,7 +89,7 @@ export default function Footer() {
                     <ThemeSwitch label={t.footer.changeTheme} noDefaultStyle variant="outline" className="rounded-full px-1 gap-0" />
 
                     <VariantButtonLink prefetch="render" url="/settings" variant="outline" className="rounded-full">
-                        <Settings2Icon className="w-btn-icon-md h-btn-icon-md" />
+                        <Settings2Icon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.common.settings} />
                         {t.common.settings}
                     </VariantButtonLink>
 
@@ -148,6 +148,10 @@ function FooterLink({ children, ...props }: LinkProps) {
     );
 }
 
+function OpenInNewTab_Icon() {
+    return <ArrowUpRightIcon aria-hidden aria-label="Open in new tab" className="w-4 h-4 text-extra-muted-foreground inline" />;
+}
+
 function LinksColumn({ children, area }: { area: string; children: React.ReactNode }) {
     return (
         <div style={{ gridArea: area }} className="grid gap-4 h-fit lg:mr-16 place-items-center lg:place-items-start">
@@ -178,13 +182,13 @@ export function LangSwitcher() {
         >
             <SelectTrigger
                 noDefaultStyles
-                aria-label={currLang}
+                aria-label={currLocaleLabel}
                 className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}
                 style={{
                     minWidth: `calc(${currLocaleLabel.length}ch + 1.3rem)`,
                 }}
             >
-                <GlobeIcon size="1.15rem" className="text-muted-foreground" />
+                <GlobeIcon aria-hidden size="1.15rem" className="text-muted-foreground" aria-label="Language switcher" />
                 <SelectValue className="flex items-center justify-start" placeholder={<p>{currLang}</p>} />
             </SelectTrigger>
 

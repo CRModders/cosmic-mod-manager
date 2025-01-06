@@ -46,7 +46,7 @@ export default function DeleteAccountDialog() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant={"destructive"}>
-                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.auth.deleteAccount}
                 </Button>
             </DialogTrigger>
@@ -69,7 +69,7 @@ export default function DeleteAccountDialog() {
                         </DialogClose>
 
                         <Button variant={"destructive"} onClick={deleteAccount} disabled={isLoading}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                             {t.form.delete}
                         </Button>
                     </DialogFooter>

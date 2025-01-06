@@ -53,13 +53,14 @@ export default function ReviewProjects({ projects }: { projects: ModerationProje
                 <span>{t.moderation.projectsInQueue(projects.length)}</span>
                 {projectsOver24Hours.length > 0 ? (
                     <span className="text-warning-foreground font-medium">
-                        <TriangleAlertIcon className="inline w-3.5 h-3.5" />{" "}
+                        <TriangleAlertIcon aria-hidden className="inline w-3.5 h-3.5" />{" "}
                         {t.moderation.projectsQueuedFor(projectsOver24Hours.length, 24)}
                     </span>
                 ) : null}
                 {projectsOver48Hours.length > 0 ? (
                     <span className="font-bold text-danger-foreground">
-                        <TriangleAlertIcon className="inline w-4 h-4" /> {t.moderation.projectsQueuedFor(projectsOver48Hours.length, 48)}
+                        <TriangleAlertIcon aria-hidden className="inline w-4 h-4" />{" "}
+                        {t.moderation.projectsQueuedFor(projectsOver48Hours.length, 48)}
                     </span>
                 ) : null}
 
@@ -119,13 +120,13 @@ function ModerationItem({ project }: { project: ModerationProjectItem }) {
                         isOver48Hrs && "text-danger-foreground",
                     )}
                 >
-                    {isOver24Hrs || (isOver48Hrs && <AlertTriangleIcon className="h-4 w-4 inline" />)}
+                    {isOver24Hrs || (isOver48Hrs && <AlertTriangleIcon aria-hidden className="h-4 w-4 inline" />)}
                     {t.moderation.submitted(TimePassedSince({ date: project.dateQueued }))}
                 </span>
             </div>
 
             <VariantButtonLink url={ProjectPagePath(project.type[0], project.slug)} size="sm">
-                <EyeIcon className="w-btn-icon h-btn-icon" /> {t.moderation.viewProject}
+                <EyeIcon aria-hidden className="w-btn-icon h-btn-icon" /> {t.moderation.viewProject}
             </VariantButtonLink>
         </div>
     );

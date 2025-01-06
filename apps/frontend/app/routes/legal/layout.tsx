@@ -13,27 +13,27 @@ export default function LegalPageLayout() {
         {
             name: legal.termsTitle,
             href: "/legal/terms",
-            icon: <HeartHandshakeIcon size="1rem" />,
+            icon: <HeartHandshakeIcon aria-hidden size="1rem" />,
         },
         {
             name: legal.rulesTitle,
             href: "/legal/rules",
-            icon: <ScaleIcon size="1rem" />,
+            icon: <ScaleIcon aria-hidden size="1rem" />,
         },
         {
             name: legal.copyrightPolicyTitle,
             href: "/legal/copyright",
-            icon: <CopyrightIcon size="1rem" />,
+            icon: <CopyrightIcon aria-hidden size="1rem" />,
         },
         {
             name: legal.securityNoticeTitle,
             href: "/legal/security",
-            icon: <ShieldIcon size="1rem" />,
+            icon: <ShieldIcon aria-hidden size="1rem" />,
         },
         {
             name: legal.privacyPolicyTitle,
             href: "/legal/privacy",
-            icon: <LockIcon size="1rem" />,
+            icon: <LockIcon aria-hidden size="1rem" />,
         },
     ];
 

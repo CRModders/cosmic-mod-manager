@@ -51,7 +51,7 @@ export function PageHeader({
                     vtId={vtId}
                     viewTransitions={viewTransitions}
                     src={icon || ""}
-                    alt={title}
+                    alt={`Icon image of ${title}`}
                     className={cn("bg-card-background dark:bg-shallow-background/50 shadow shadow-white dark:shadow-black ", iconClassName)}
                     fallback={fallbackIcon}
                     loading="eager"

@@ -74,7 +74,7 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
                     </Select>
 
                     <Button disabled={!selectedOrg} onClick={transferProject}>
-                        {isLoading ? <LoadingSpinner size="xs" /> : <CheckIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        {isLoading ? <LoadingSpinner size="xs" /> : <CheckIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />}
                         {t.projectSettings.transferManagementToOrg}
                     </Button>
                 </div>
@@ -138,7 +138,7 @@ export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgPro
                     </div>
 
                     <Button onClick={removeProjectFromOrg} variant="secondary">
-                        {isLoading ? <LoadingSpinner size="xs" /> : <Building2Icon className="w-btn-icon-md h-btn-icon-md" />}
+                        {isLoading ? <LoadingSpinner size="xs" /> : <Building2Icon aria-hidden className="w-btn-icon-md h-btn-icon-md" />}
                         {t.projectSettings.removeFromOrg}
                     </Button>
                 </div>

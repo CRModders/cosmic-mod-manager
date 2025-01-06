@@ -90,7 +90,7 @@ export default function DeleteAccountConfirmationCard({ code }: { code: string }
                                     {isLoading.action === "confirming" ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
-                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                     )}
                                     {t.form.delete}
                                 </Button>

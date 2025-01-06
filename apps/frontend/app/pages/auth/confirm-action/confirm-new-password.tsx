@@ -91,7 +91,7 @@ export default function ConfirmNewPasswordCard({ code }: { code: string }) {
                                     {isLoading.action === "confirming" ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
-                                        <CheckIcon className="w-btn-icon h-btn-icon" />
+                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     )}
                                     {t.form.confirm}
                                 </Button>

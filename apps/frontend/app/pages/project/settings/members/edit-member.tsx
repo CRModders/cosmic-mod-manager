@@ -122,7 +122,7 @@ export function ProjectTeamMember({
                             {member.userName}
                             {member.isOwner && (
                                 <span className="flex items-baseline justify-center shrink-0" title={t.projectSettings.owner}>
-                                    <CrownIcon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                                    <CrownIcon aria-hidden className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                                 </span>
                             )}
                         </Link>
@@ -134,13 +134,16 @@ export function ProjectTeamMember({
                 <div className="flex items-center justify-center gap-x-4">
                     {member.accepted === false && (
                         <span className="flex items-center justify-center gap-1.5 font-bold text-orange-500 dark:text-orange-400">
-                            <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
+                            <RefreshCcwIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.projectSettings.pending}
                         </span>
                     )}
 
                     <Button size="icon" variant="ghost" onClick={() => setDetailsOpen((prev) => !prev)}>
-                        <ChevronDownIcon className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")} />
+                        <ChevronDownIcon
+                            aria-hidden
+                            className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")}
+                        />
                     </Button>
                 </div>
             </div>
@@ -230,14 +233,14 @@ export function ProjectTeamMember({
                                     }, toast.error);
                                 }}
                             >
-                                <SaveIcon className="w-btn-icon h-btn-icon" />
+                                <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.form.saveChanges}
                             </Button>
 
                             {!member.isOwner && canRemoveMembers && (
                                 <RemoveMemberDialog member={member} refreshData={fetchProjectData}>
                                     <Button type="button" variant="secondary-destructive" size="sm" disabled={isLoading}>
-                                        <UserXIcon className="w-btn-icon h-btn-icon" />
+                                        <UserXIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.projectSettings.removeMember}
                                     </Button>
                                 </RemoveMemberDialog>
@@ -246,7 +249,7 @@ export function ProjectTeamMember({
                             {canTransferOwnership ? (
                                 <TransferOwnershipDialog member={member} teamId={projectTeamId} refreshData={fetchProjectData}>
                                     <Button variant="secondary" size="sm" disabled={isLoading}>
-                                        <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
+                                        <ArrowRightLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.projectSettings.transferOwnership}
                                     </Button>
                                 </TransferOwnershipDialog>
@@ -407,7 +410,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                             {effectiveMembership.userName}
                             {orgMember.isOwner && (
                                 <span className="flex items-baseline justify-center shrink-0" title={t.projectSettings.owner}>
-                                    <CrownIcon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                                    <CrownIcon aria-hidden className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                                 </span>
                             )}
                         </Link>
@@ -419,13 +422,16 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                 <div className="flex items-center justify-center gap-x-4">
                     {effectiveMembership.accepted === false && (
                         <span className="flex items-center justify-center gap-1.5 font-bold text-orange-500 dark:text-orange-400">
-                            <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
+                            <RefreshCcwIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.projectSettings.pending}
                         </span>
                     )}
 
                     <Button size="icon" variant="ghost" onClick={() => setDetailsOpen((prev) => !prev)}>
-                        <ChevronDownIcon className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")} />
+                        <ChevronDownIcon
+                            aria-hidden
+                            className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")}
+                        />
                     </Button>
                 </div>
             </div>
@@ -534,7 +540,7 @@ export function OrgTeamMember({ session, project, orgMember, fetchProjectData, c
                                     }, toast.error);
                                 }}
                             >
-                                <SaveIcon className="w-btn-icon h-btn-icon" />
+                                <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.form.saveChanges}
                             </Button>
                         </div>

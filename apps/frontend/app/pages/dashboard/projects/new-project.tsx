@@ -108,7 +108,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                     trigger
                 ) : (
                     <Button className="space-y-0">
-                        <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                        <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         {t.dashboard.createProject}
                     </Button>
                 )}
@@ -286,7 +286,11 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                         }, toast.error);
                                     }}
                                 >
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightIcon className="w-btn-icon-md h-btn-icon-md" />}
+                                    {isLoading ? (
+                                        <LoadingSpinner size="xs" />
+                                    ) : (
+                                        <ArrowRightIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                                    )}
                                     {t.form.continue}
                                 </Button>
                             </DialogFooter>

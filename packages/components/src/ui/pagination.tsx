@@ -56,7 +56,7 @@ function PaginationLink({ className, isActive, size = "icon", ...props }: Pagina
 PaginationLink.displayName = "PaginationLink";
 
 function PaginationPrevious({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) {
-    const icon = <ChevronLeftIcon className="w-btn-icon h-btn-icon" />;
+    const icon = <ChevronLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
             <Button variant={"secondary"} disabled size={"icon"} aria-label="Previous page">
@@ -80,7 +80,7 @@ function PaginationPrevious({ className, to, ...props }: React.ComponentProps<ty
 PaginationPrevious.displayName = "PaginationPrevious";
 
 function PaginationNext({ className, to, ...props }: React.ComponentProps<typeof PaginationLink>) {
-    const icon = <ChevronRightIcon className="w-btn-icon h-btn-icon" />;
+    const icon = <ChevronRightIcon aria-hidden className="w-btn-icon h-btn-icon" />;
     if (!to) {
         return (
             <Button variant={"secondary"} disabled size={"icon"} aria-label="Next page">
@@ -106,7 +106,7 @@ PaginationNext.displayName = "PaginationNext";
 function PaginationEllipsis({ className, ...props }: React.ComponentProps<"span">) {
     return (
         <span aria-hidden className={cn("flex h-iconified-btn w-iconified-btn items-center justify-center", className)} {...props}>
-            <MoreHorizontalIcon className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
+            <MoreHorizontalIcon aria-hidden className="w-btn-icon h-btn-icon text-extra-muted-foreground" />
             <span className="sr-only">More pages</span>
         </span>
     );

@@ -79,7 +79,7 @@ export function FeaturedBtn({ isLoading, featured, setFeatured }: FeaturedBtnPro
             onClick={() => setFeatured(!featured)}
             title="Featured versions show up in your project sidebar."
         >
-            <StarIcon className={cn("w-btn-icon h-btn-icon", featured === true && "fill-current")} />
+            <StarIcon aria-hidden className={cn("w-btn-icon h-btn-icon", featured === true && "fill-current")} />
             {featured === true ? t.version.unfeature : t.version.feature}
         </Button>
     );
@@ -135,7 +135,7 @@ export function UploadVersionPageTopCard({
                 {featuredBtn}
 
                 <VariantButtonLink variant="secondary" url={backUrl} prefetch="render">
-                    <CancelButtonIcon className="w-btn-icon h-btn-icon" />
+                    <CancelButtonIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.form.cancel}
                 </VariantButtonLink>
             </div>
@@ -170,7 +170,10 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                             className="max-w-sm bg-shallow-background text-start text-foreground-bright"
                                             content={t.version.devReleasesNote}
                                         >
-                                            <CircleAlertIcon className="w-btn-icon h-btn-icon text-warning-foreground ml-auto cursor-help" />
+                                            <CircleAlertIcon
+                                                aria-hidden
+                                                className="w-btn-icon h-btn-icon text-warning-foreground ml-auto cursor-help"
+                                            />
                                         </TooltipTemplate>
                                     </TooltipProvider>
                                 ) : null}
@@ -477,7 +480,7 @@ export function AddDependencies({ dependencies, setDependencies, currProjectId, 
                     </Select>
 
                     <Button onClick={addDependencyHandler} type="button" disabled={isfetchingData}>
-                        {isfetchingData ? <LoadingSpinner size="xs" /> : <PlusIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        {isfetchingData ? <LoadingSpinner size="xs" /> : <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />}
                         {t.version.addDep}
                     </Button>
                 </div>
@@ -516,7 +519,7 @@ function DependencyItem({ dependencyData, versionId, projectId, dependencyType, 
             </div>
 
             <Button variant="secondary" type="button" onClick={() => removeDependency(projectId, versionId)}>
-                <Trash2Icon className="w-btn-icon h-btn-icon" />
+                <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                 {t.form.remove}
             </Button>
         </div>
@@ -537,7 +540,7 @@ export function SelectPrimaryFileInput({ children, selectedFile, inputId }: Prim
             {children}
 
             <div>
-                <FileIcon className="inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
+                <FileIcon aria-hidden className="inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
                 {selectedFile ? (
                     <span className="inline-flex items-center flex-wrap justify-start gap-x-2">
                         <strong className="font-semibold">{selectedFile.name}</strong>{" "}
@@ -633,7 +636,7 @@ function AdditionalFiles({
                         "focus-visible:outline-none focus-visible:keyboard_focus_ring",
                     )}
                 >
-                    <UploadIcon className="w-btn-icon h-btn-icon" />
+                    <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.version.selectFiles}
                 </InteractiveLabel>
             </div>
@@ -647,13 +650,13 @@ function AdditionalFiles({
                         >
                             <div className="text-muted-foreground">
                                 {children}
-                                <FileIcon className="mr-1.5 inline w-btn-icon h-btn-icon text-muted-foreground" />
+                                <FileIcon aria-hidden className="mr-1.5 inline w-btn-icon h-btn-icon text-muted-foreground" />
                                 <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
                                 <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
                             </div>
 
                             <Button variant="secondary-dark" onClick={() => deleteFileFromList(index)}>
-                                <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.form.remove}
                             </Button>
                         </div>
