@@ -19,7 +19,6 @@ import { invalidateAllOtherUserSessions } from "~/routes/auth/helpers/session";
 import { deleteUserDataCache } from "~/services/cache/session";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { isConfirmationCodeValid } from "~/utils";
 import { sendChangePasswordEmail, sendConfirmNewPasswordEmail, sendDeleteUserAccountEmail } from "~/utils/email";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
@@ -31,10 +30,7 @@ const confirmationEmailValidityDict = {
     [ConfirmationType.DELETE_USER_ACCOUNT]: DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
 };
 
-export async function addNewPassword_ConfirmationEmail(
-    userSession: ContextUserData,
-    formData: z.infer<typeof setNewPasswordFormSchema>,
-): Promise<RouteHandlerResponse> {
+export async function addNewPassword_ConfirmationEmail(userSession: ContextUserData, formData: z.infer<typeof setNewPasswordFormSchema>) {
     if (formData.newPassword !== formData.confirmNewPassword)
         return { data: { success: false, message: "Passwords do not match" }, status: HTTP_STATUS.BAD_REQUEST };
 

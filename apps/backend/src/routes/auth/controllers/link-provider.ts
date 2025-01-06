@@ -7,15 +7,9 @@ import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-atte
 import { createNewAuthAccount, getAuthProviderProfileData } from "~/routes/auth/helpers";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 
-export async function linkAuthProviderHandler(
-    ctx: Context,
-    userSession: ContextUserData,
-    authProvider: string,
-    tokenExchangeCode: string,
-): Promise<RouteHandlerResponse> {
+export async function linkAuthProviderHandler(ctx: Context, userSession: ContextUserData, authProvider: string, tokenExchangeCode: string) {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
 
     if (!profileData || !profileData?.email || !profileData?.providerName || !profileData?.providerAccountId) {
@@ -84,7 +78,7 @@ export async function linkAuthProviderHandler(
     };
 }
 
-export async function unlinkAuthProvider(ctx: Context, userSession: ContextUserData, authProvider: string): Promise<RouteHandlerResponse> {
+export async function unlinkAuthProvider(ctx: Context, userSession: ContextUserData, authProvider: string) {
     const allLinkedProviders = await prisma.authAccount.findMany({
         where: {
             userId: userSession.id,
@@ -120,7 +114,7 @@ export async function unlinkAuthProvider(ctx: Context, userSession: ContextUserD
     };
 }
 
-export async function getLinkedAuthProviders(userSession: ContextUserData): Promise<RouteHandlerResponse> {
+export async function getLinkedAuthProviders(userSession: ContextUserData) {
     const linkedProviders = await prisma.authAccount.findMany({
         where: {
             userId: userSession.id,

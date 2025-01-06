@@ -1,6 +1,5 @@
 import { newVersionFormSchema, updateVersionFormSchema } from "@app/utils/schemas/project/version";
 import { parseValueToSchema } from "@app/utils/schemas/utils";
-import type { ProjectVersionData } from "@app/utils/types/api";
 import { type Context, Hono } from "hono";
 import { LoginProtectedRoute } from "~/middleware/auth";
 import { getReqRateLimiter } from "~/middleware/rate-limit/get-req";
@@ -65,10 +64,10 @@ async function version_get(ctx: Context, download = false) {
                 : await getProjectVersionData(projectSlug, versionId, userSession);
 
         if (download !== true) return ctx.json(res.data, res.status);
+        if ("success" in res.data && res.data.success === false) return ctx.json(res.data, res.status);
 
         const fileName = ctx.req.param("fileName");
-        // @ts-ignore
-        const version = res.data.data as ProjectVersionData;
+        const version = res.data.data;
 
         // If the fileName was specified redirect to that file
         if (fileName?.length) {
@@ -117,13 +116,7 @@ async function version_post(ctx: Context) {
         };
 
         const { data, error } = await parseValueToSchema(newVersionFormSchema, schemaObj);
-        if (error || !data) {
-            // @ts-ignore
-            const name = error?.issues?.[0]?.path?.[0];
-            // @ts-ignore
-            const errMsg = error?.issues?.[0]?.message;
-            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
 
         const res = await createNewVersion(ctx, userSession, projectSlug, data);
         return ctx.json(res.data, res.status);
@@ -161,13 +154,7 @@ async function version_patch(ctx: Context) {
         };
 
         const { data, error } = await parseValueToSchema(updateVersionFormSchema, schemaObj);
-        if (error || !data) {
-            // @ts-ignore
-            const name = error?.issues?.[0]?.path?.[0];
-            // @ts-ignore
-            const errMsg = error?.issues?.[0]?.message;
-            return ctx.json({ success: false, message: name && errMsg ? `${name}: ${errMsg}` : error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
 
         const res = await updateVersionData(ctx, projectSlug, versionId, userSession, data);
         return ctx.json(res.data, res.status);

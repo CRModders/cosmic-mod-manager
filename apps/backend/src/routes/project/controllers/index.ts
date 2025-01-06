@@ -14,14 +14,13 @@ import { GetManyProjects_ListItem, GetProject_Details, GetProject_ListItem } fro
 import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { isNumber } from "~/utils";
 import { HTTP_STATUS } from "~/utils/http";
 import { parseJson } from "~/utils/str";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 import { isProjectAccessible } from "../utils";
 
-export async function getProjectData(slug: string, userSession: ContextUserData | undefined): Promise<RouteHandlerResponse> {
+export async function getProjectData(slug: string, userSession: ContextUserData | undefined) {
     const project = await GetProject_Details(slug, slug);
     if (!project?.id) {
         return { data: { success: false, message: "Project not found" }, status: HTTP_STATUS.NOT_FOUND };
@@ -134,7 +133,7 @@ function formatProjectMember<T extends FormatMemberProps>(member: T, currMember?
     };
 }
 
-export async function checkProjectSlugValidity(slug: string): Promise<RouteHandlerResponse> {
+export async function checkProjectSlugValidity(slug: string) {
     const project = await GetProject_ListItem(slug);
 
     if (!project) {

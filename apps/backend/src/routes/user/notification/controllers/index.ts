@@ -2,10 +2,9 @@ import type { Context } from "hono";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
 
-export async function getUserNotifications(ctx: Context, userSession: ContextUserData, notifUserId: string): Promise<RouteHandlerResponse> {
+export async function getUserNotifications(ctx: Context, userSession: ContextUserData, notifUserId: string) {
     const notifications = await prisma.notification.findMany({
         where: {
             user: {
@@ -34,7 +33,7 @@ export async function getUserNotifications(ctx: Context, userSession: ContextUse
     return { data: notifications, status: HTTP_STATUS.OK };
 }
 
-export async function getNotificationById(ctx: Context, userSession: ContextUserData, notifId: string): Promise<RouteHandlerResponse> {
+export async function getNotificationById(ctx: Context, userSession: ContextUserData, notifId: string) {
     const notification = await prisma.notification.findFirst({
         where: {
             id: notifId,
@@ -54,12 +53,7 @@ export async function getNotificationById(ctx: Context, userSession: ContextUser
     return { data: notification, status: HTTP_STATUS.OK };
 }
 
-export async function markNotificationAsRead(
-    ctx: Context,
-    userSession: ContextUserData,
-    notificationIds: string[],
-    notifUserId: string,
-): Promise<RouteHandlerResponse> {
+export async function markNotificationAsRead(ctx: Context, userSession: ContextUserData, notificationIds: string[], notifUserId: string) {
     const notifications = await prisma.notification.findMany({
         where: {
             id: {
@@ -103,12 +97,7 @@ export async function markNotificationAsRead(
     return { data: { success: true, message: "Notifications marked as read." }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteNotifications(
-    ctx: Context,
-    userSession: ContextUserData,
-    userSlug: string,
-    notificationIds: string[],
-): Promise<RouteHandlerResponse> {
+export async function deleteNotifications(ctx: Context, userSession: ContextUserData, userSlug: string, notificationIds: string[]) {
     if (!hasNotificationAccess(userSession, userSlug)) {
         await addInvalidAuthAttempt(ctx);
         return unauthorizedReqResponseData();
