@@ -108,6 +108,12 @@ export default function ProjectPageLayout() {
     }
 
     const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
+    const OrgMembers = projectData.organisation?.members || [];
+    const ExclusiveProjectMembers = [];
+    for (const member of projectData.members) {
+        if (OrgMembers.some((m) => m.userId === member.userId)) continue;
+        ExclusiveProjectMembers.push(member);
+    }
 
     return (
         <main
@@ -303,12 +309,13 @@ export default function ProjectPageLayout() {
                                 fallbackIcon={fallbackOrgIcon}
                             />
 
-                            {projectData.members.length ? <Separator className="my-1" /> : null}
+                            {ExclusiveProjectMembers.length > 0 ? <Separator className="my-1" /> : null}
                         </>
                     ) : null}
 
-                    {projectData.members?.map((member) => {
+                    {ExclusiveProjectMembers.map((member) => {
                         if (member.accepted !== true) return null;
+
                         return (
                             <ProjectMember
                                 vtId={member.userId}

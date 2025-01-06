@@ -1,4 +1,4 @@
-import { MoreVertical } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import type { CSSProperties } from "react";
 import { MicrodataItemProps } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
@@ -77,8 +77,8 @@ export function PageHeader({
                     {threeDotMenu ? (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="more options">
-                                    <MoreVertical className="h-btn-icon-lg w-btn-icon-lg" />
+                                <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="More options">
+                                    <MoreVerticalIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent align="end" className="w-fit flex flex-col gap-1 items-center justify-center min-w-0 px-1 py-1">
