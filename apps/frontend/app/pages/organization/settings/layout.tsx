@@ -8,6 +8,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
+import { Prefetch } from "@app/components/ui/link";
 import { SITE_NAME_SHORT } from "@app/utils/config";
 import { imageUrl } from "@app/utils/url";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
@@ -92,7 +93,7 @@ export default function OrgSettingsLayout() {
                                     icon: <BarChart2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                             ].map((link) => (
-                                <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                                <ButtonLink prefetch={Prefetch.Render} key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
                                     {link.icon}
                                     {link.name}
                                 </ButtonLink>

@@ -82,3 +82,10 @@ export const VariantButtonLink = React.forwardRef<HTMLAnchorElement, VariantLink
 export function useNavigate() {
     return __useNavigate();
 }
+
+export enum Prefetch {
+    Intent = "intent",
+    Render = "render",
+    None = "none",
+    Viewport = "viewport",
+}

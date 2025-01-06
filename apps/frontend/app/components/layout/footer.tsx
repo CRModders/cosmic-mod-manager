@@ -1,5 +1,6 @@
 import { BrandIcon } from "@app/components/icons";
 import { buttonVariants } from "@app/components/ui/button";
+import { Prefetch } from "@app/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { DotSeparator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
@@ -88,7 +89,7 @@ export default function Footer() {
                 <div style={{ gridArea: "buttons" }} className="grid grid-cols-1 h-fit gap-2 place-items-center lg:place-items-start">
                     <ThemeSwitch label={t.footer.changeTheme} noDefaultStyle variant="outline" className="rounded-full px-1 gap-0" />
 
-                    <VariantButtonLink prefetch="render" url="/settings" variant="outline" className="rounded-full">
+                    <VariantButtonLink prefetch={Prefetch.Render} url="/settings" variant="outline" className="rounded-full">
                         <Settings2Icon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.common.settings} />
                         {t.common.settings}
                     </VariantButtonLink>
@@ -140,7 +141,7 @@ function FooterLink({ children, ...props }: LinkProps) {
     return (
         <Link
             {...props}
-            prefetch="viewport"
+            prefetch={Prefetch.Viewport}
             className="w-fit flex items-center justify-center lg:justify-start gap-1 leading-none text-muted-foreground hover:text-foreground hover:underline"
         >
             {children}

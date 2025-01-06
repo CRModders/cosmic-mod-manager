@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
+import { Prefetch } from "@app/components/ui/link";
 import { Separator } from "@app/components/ui/separator";
 import { AuthActionIntent } from "@app/utils/types";
 import MarkdownRenderBox from "~/components/md-renderer";
@@ -30,7 +31,7 @@ export default function SignUpPage() {
                     <div className="w-full flex flex-col items-center justify-center gap-1">
                         <p className="text-center">
                             <span className="text-muted-foreground">{t.auth.alreadyHaveAccount}</span>{" "}
-                            <Link prefetch="render" to="/login" aria-label={t.form.login} className="text_link">
+                            <Link prefetch={Prefetch.Render} to="/login" aria-label={t.form.login} className="text_link">
                                 {t.form.login}
                             </Link>
                         </p>

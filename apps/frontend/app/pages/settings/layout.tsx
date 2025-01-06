@@ -1,4 +1,5 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
+import { Prefetch } from "@app/components/ui/link";
 import { MonitorSmartphoneIcon, PaintbrushIcon, ShieldIcon, UserIcon } from "lucide-react";
 import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
@@ -14,14 +15,14 @@ export default function SettingsPageLayout() {
             <Panel>
                 <PanelAside className="gap-2" aside>
                     <PanelAsideNavCard label={t.common.settings}>
-                        <ButtonLink url="/settings" prefetch="render" preventScrollReset>
+                        <ButtonLink url="/settings" prefetch={Prefetch.Render} preventScrollReset>
                             <PaintbrushIcon aria-hidden className="size-4" />
                             {t.settings.preferences}
                         </ButtonLink>
                         {session?.id ? (
                             <>
                                 <span className="text-lg font-semibold mt-3">{t.settings.account}</span>
-                                <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
+                                <ButtonLink url="/settings/profile" prefetch={Prefetch.Render} preventScrollReset>
                                     <UserIcon aria-hidden className="size-4" />
                                     {t.settings.publicProfile}
                                 </ButtonLink>

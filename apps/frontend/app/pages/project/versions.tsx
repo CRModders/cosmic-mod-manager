@@ -7,6 +7,7 @@ import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import Chip, { ChipButton } from "@app/components/ui/chip";
 import { CommandSeparator } from "@app/components/ui/command";
 import { copyTextToClipboard } from "@app/components/ui/copy-btn";
+import { Prefetch } from "@app/components/ui/link";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { ReleaseChannelBadge, releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
@@ -363,7 +364,7 @@ function UploadVersionLinkCard({ uploadPageUrl }: { uploadPageUrl: string }) {
 
     return (
         <Card className="p-card-surround flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
-            <VariantButtonLink url={uploadPageUrl} variant="default" prefetch="render">
+            <VariantButtonLink url={uploadPageUrl} variant="default" prefetch={Prefetch.Render}>
                 <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                 {t.project.uploadVersion}
             </VariantButtonLink>
@@ -563,7 +564,11 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
 function VersionName({ title, number, url }: { title: string; number: string; url: string }) {
     return (
         <div className="flex flex-col items-start justify-center overflow-hidden max-w-[24ch] lg:max-w-[32ch]">
-            <Link prefetch="render" to={url} className="noClickRedirect leading-tight font-bold text-foreground md:whitespace-nowrap">
+            <Link
+                prefetch={Prefetch.Render}
+                to={url}
+                className="noClickRedirect leading-tight font-bold text-foreground md:whitespace-nowrap"
+            >
                 {number}
             </Link>
             <span className="leading-snug font-medium text-muted-foreground/85 text-[0.77rem] md:whitespace-nowrap">{title}</span>

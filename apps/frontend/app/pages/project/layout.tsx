@@ -13,6 +13,7 @@ import RefreshPage from "@app/components/misc/refresh-page";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import Chip from "@app/components/ui/chip";
+import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
@@ -277,7 +278,7 @@ export default function ProjectPageLayout() {
                                     </div>
                                     <div className="flex w-fit h-full grow flex-col select-text">
                                         <Link
-                                            prefetch="render"
+                                            prefetch={Prefetch.Render}
                                             to={VersionPagePath(ctx.projectType, projectData.slug, version.slug)}
                                             className="noClickRedirect w-fit"
                                         >
@@ -494,7 +495,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                 variant={"secondary-inverted"}
                                 className="rounded-full w-11 h-11 p-0"
                                 label="project settings"
-                                prefetch="render"
+                                prefetch={Prefetch.Render}
                             >
                                 <SettingsIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" />
                             </VariantButtonLink>

@@ -1,5 +1,6 @@
 import { BrandIcon, CubeIcon } from "@app/components/icons";
 import { Button } from "@app/components/ui/button";
+import { Prefetch } from "@app/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
@@ -156,7 +157,7 @@ export function Navlink({ href, label, children, className }: NavlinkProps) {
     return (
         <ButtonLink
             url={href}
-            prefetch="render"
+            prefetch={Prefetch.Render}
             className={cn("bg-background hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold", className)}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >

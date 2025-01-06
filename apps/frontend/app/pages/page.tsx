@@ -1,5 +1,6 @@
 import { BrandIcon, fallbackProjectIcon } from "@app/components/icons";
 import { MicrodataItemProps } from "@app/components/microdata";
+import { Prefetch } from "@app/components/ui/link";
 import { cn } from "@app/components/utils";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -117,7 +118,7 @@ export default function HomePage({ projects }: Props) {
                                 url="/signup"
                                 size="lg"
                                 className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
-                                prefetch="render"
+                                prefetch={Prefetch.Render}
                             >
                                 <LogInIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.form.signup} />
                                 {t.form.signup}

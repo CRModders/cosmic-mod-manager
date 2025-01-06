@@ -1,4 +1,5 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
+import { Prefetch } from "@app/components/ui/link";
 import { MODERATOR_ROLES } from "@app/utils/config/roles";
 import type { GlobalUserRole } from "@app/utils/types";
 import { FlagIcon, LayoutDashboardIcon, ScaleIcon } from "lucide-react";
@@ -44,7 +45,13 @@ export default function ModerationPagesLayout() {
             <PanelAside aside>
                 <PanelAsideNavCard label={mod.moderation}>
                     {links.map((link) => (
-                        <ButtonLink prefetch="render" url={PageUrl(link.href)} key={link.href} className="relative" preventScrollReset>
+                        <ButtonLink
+                            prefetch={Prefetch.Intent}
+                            url={PageUrl(link.href)}
+                            key={link.href}
+                            className="relative"
+                            preventScrollReset
+                        >
                             {link.icon}
                             <span className="text-wrap leading-tight">{link.name}</span>
                         </ButtonLink>

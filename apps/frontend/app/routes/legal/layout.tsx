@@ -1,4 +1,5 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
+import { Prefetch } from "@app/components/ui/link";
 import { CopyrightIcon, HeartHandshakeIcon, LockIcon, ScaleIcon, ShieldIcon } from "lucide-react";
 import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
@@ -42,7 +43,13 @@ export default function LegalPageLayout() {
             <PanelAside aside>
                 <PanelAsideNavCard label={legal.legal}>
                     {links.map((link) => (
-                        <ButtonLink prefetch="render" url={PageUrl(link.href)} key={link.href} className="relative" preventScrollReset>
+                        <ButtonLink
+                            prefetch={Prefetch.Render}
+                            url={PageUrl(link.href)}
+                            key={link.href}
+                            className="relative"
+                            preventScrollReset
+                        >
                             {link.icon}
                             <span className="text-wrap leading-tight">{link.name}</span>
                         </ButtonLink>

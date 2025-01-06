@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@app/compo
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import HorizontalSeparator from "@app/components/ui/hr-separator";
 import { Input } from "@app/components/ui/input";
+import { Prefetch } from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { z } from "@app/utils/schemas";
@@ -84,7 +85,7 @@ export default function ChangePasswordPage() {
                         <CardFooter className="w-full flex flex-col gap-1 items-center justify-center">
                             <HorizontalSeparator />
 
-                            <Link prefetch="render" className="text_link" to="/login">
+                            <Link prefetch={Prefetch.Render} className="text_link" to="/login">
                                 {t.form.login}
                             </Link>
                         </CardFooter>

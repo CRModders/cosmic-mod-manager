@@ -3,6 +3,7 @@ import { MicrodataItemType, itemType } from "@app/components/microdata";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
+import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { isModerator } from "@app/utils/config/roles";
@@ -169,7 +170,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                                 <VariantButtonLink
                                     variant="ghost"
                                     url={OrgPagePath(orgData.slug, "settings/projects")}
-                                    prefetch="render"
+                                    prefetch={Prefetch.Render}
                                     size="sm"
                                 >
                                     <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />

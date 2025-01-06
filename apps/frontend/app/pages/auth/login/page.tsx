@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { FormErrorMessage } from "@app/components/ui/form-message";
 import HorizontalSeparator from "@app/components/ui/hr-separator";
 import { Input } from "@app/components/ui/input";
+import { Prefetch } from "@app/components/ui/link";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
@@ -143,13 +144,13 @@ export default function LoginPage() {
                     <div className="w-full flex flex-col items-center justify-center mt-4">
                         <div className="text-center">
                             <span className="text-muted-foreground">{t.auth.dontHaveAccount}</span>{" "}
-                            <Link prefetch="render" to="/signup" aria-label="Sign up" className="text_link">
+                            <Link prefetch={Prefetch.Render} to="/signup" aria-label="Sign up" className="text_link">
                                 {t.form.signup}
                             </Link>
                         </div>
                         <div className="text-center">
                             <span className="text-muted-foreground">{t.auth.forgotPassword}</span>{" "}
-                            <Link prefetch="render" to="/change-password" aria-label="Change password" className="text_link">
+                            <Link prefetch={Prefetch.Render} to="/change-password" aria-label="Change password" className="text_link">
                                 {t.auth.changePassword}
                             </Link>
                         </div>

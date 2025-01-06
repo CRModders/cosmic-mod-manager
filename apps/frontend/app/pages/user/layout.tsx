@@ -3,6 +3,7 @@ import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import { Button } from "@app/components/ui/button";
 import Chip from "@app/components/ui/chip";
+import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
@@ -185,7 +186,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             }
             actionBtns={
                 userData.id === session?.id ? (
-                    <VariantButtonLink variant="secondary-inverted" url="/settings/profile" prefetch="render">
+                    <VariantButtonLink variant="secondary-inverted" url="/settings/profile" prefetch={Prefetch.Render}>
                         <EditIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.form.edit}
                     </VariantButtonLink>

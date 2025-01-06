@@ -1,3 +1,4 @@
+import { Prefetch } from "@app/components/ui/link";
 import { cn } from "@app/components/utils";
 import { Capitalize } from "@app/utils/string";
 import { ButtonLink } from "~/components/ui/link";
@@ -22,7 +23,7 @@ export default function SecondaryNav({ urlBase, className, links, onClick }: Pro
                     return (
                         <li key={`${urlBase}-${link.href}`} className="flex items-center justify-center">
                             <ButtonLink
-                                prefetch="render"
+                                prefetch={Prefetch.Render}
                                 url={`${urlBase}${link.href}`}
                                 className="h-10 px-4 py-0 rounded font-semibold"
                                 onClick={(e) => onClick?.(e, link)}

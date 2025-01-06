@@ -10,11 +10,10 @@ function Pluralize(num: number, str_1: string, str_234: string, str_other: strin
     const lastDigit = num % 10;
 
     if (lastDigit === 1) {
-        if (Math.floor(num % 100 / 10) === 1) {
+        if (Math.floor((num % 100) / 10) === 1) {
             return str_other;
-        } else {
-            return str_1;
         }
+        return str_1;
     }
 
     if ([2, 3, 4].includes(lastDigit)) return str_234;

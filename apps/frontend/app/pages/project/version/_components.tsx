@@ -15,6 +15,7 @@ import { CommandSeparator } from "@app/components/ui/command";
 import { FormField, FormItem, FormLabel } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { InteractiveLabel } from "@app/components/ui/label";
+import { Prefetch } from "@app/components/ui/link";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { toast } from "@app/components/ui/sonner";
@@ -134,7 +135,7 @@ export function UploadVersionPageTopCard({
 
                 {featuredBtn}
 
-                <VariantButtonLink variant="secondary" url={backUrl} prefetch="render">
+                <VariantButtonLink variant="secondary" url={backUrl} prefetch={Prefetch.Render}>
                     <CancelButtonIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.form.cancel}
                 </VariantButtonLink>

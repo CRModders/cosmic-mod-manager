@@ -13,6 +13,7 @@ import { Button } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@app/components/ui/context-menu";
 import CopyBtn, { copyTextToClipboard } from "@app/components/ui/copy-btn";
+import { Prefetch } from "@app/components/ui/link";
 import ReleaseChannelChip from "@app/components/ui/release-channel-pill";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
@@ -117,7 +118,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                     ) ? (
                         <VariantButtonLink
                             url={VersionPagePath(ctx.projectType, ctx.projectData.slug, versionData.slug, "edit")}
-                            prefetch="render"
+                            prefetch={Prefetch.Render}
                         >
                             <Edit3Icon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.form.edit}

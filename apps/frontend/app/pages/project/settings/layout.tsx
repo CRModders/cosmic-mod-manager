@@ -8,6 +8,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
+import { Prefetch } from "@app/components/ui/link";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { imageUrl } from "@app/utils/url";
 import {
@@ -97,7 +98,12 @@ export default function ProjectSettingsLayout() {
 
                         <span className="text-lg font-semibold mt-2">{t.projectSettings.view}</span>
                         {links().viewPages.map((link) => (
-                            <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                            <ButtonLink
+                                prefetch={Prefetch.Render}
+                                key={link.href}
+                                url={`${baseUrl}/${link.href}`}
+                                className="justify-between"
+                            >
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
                                     {link.name}
@@ -108,7 +114,12 @@ export default function ProjectSettingsLayout() {
 
                         <span className="text-lg font-semibold mt-2">{t.projectSettings.upload}</span>
                         {links().uploadPages.map((link) => (
-                            <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} className="justify-between">
+                            <ButtonLink
+                                prefetch={Prefetch.Render}
+                                key={link.href}
+                                url={`${baseUrl}/${link.href}`}
+                                className="justify-between"
+                            >
                                 <div className="flex items-center justify-center gap-2">
                                     {link.icon}
                                     {link.name}

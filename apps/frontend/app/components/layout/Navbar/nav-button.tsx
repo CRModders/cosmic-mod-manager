@@ -1,6 +1,7 @@
 import { fallbackUserIcon } from "@app/components/icons";
 import { NotificationBadge } from "@app/components/ui/badge";
 import { Button } from "@app/components/ui/button";
+import { Prefetch } from "@app/components/ui/link";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { LoadingSpinner } from "@app/components/ui/spinner";
@@ -39,7 +40,7 @@ export function LoginButton({
 
     return (
         <VariantButtonLink
-            prefetch="render"
+            prefetch={Prefetch.Render}
             url="/login"
             className={className}
             variant="secondary-inverted"
