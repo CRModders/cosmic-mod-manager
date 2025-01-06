@@ -32,6 +32,7 @@ const demonstrativePronounDative: { [Property in Gender]-?: string } = {
     a: "dieser/m"
 };
 
+
 const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
     m: "dein",
     f: "deine",
@@ -39,6 +40,11 @@ const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
     a: "dein/e"
 };
 
+
+const teamTypeGenitive: { [noun: string]: string } = {
+    Organisation: "Organisation",
+    Projekt: "Projektes",
+};
 
 const genderOf: { [noun: string]: Gender } = {
     Organisation: "f",
@@ -48,7 +54,7 @@ const genderOf: { [noun: string]: Gender } = {
     Shader: "m",
     Modpack: "n",
     Plugin: "n",
-    Resourcenpaket: "n"
+    Ressourcenpaket: "n"
 };
 
 export default {
@@ -91,8 +97,8 @@ export default {
         mods: "Mods",
         datamod: "Datamod",
         datamods: "Datamods",
-        "resource-pack": "Resourcenpaket",
-        "resource-packs": "Resourcenpakete",
+        "resource-pack": "Ressourcenpaket",
+        "resource-packs": "Ressourcenpakete",
         shader: "Shader",
         shaders: "Shader",
         modpack: "Modpack",
@@ -117,7 +123,7 @@ export default {
         changePassword: "Passwort ändern",
         dontHaveAccount: "Du hast kein Konto?",
         alreadyHaveAccount: "Du hast bereits ein Konto?",
-        forgotPassword: "Password vergessen?",
+        forgotPassword: "Passwort vergessen?",
         signupWithProviders: "Registriere dich mit einem dieser Anmeldemethode:",
         aggrement: "Mit dem erstellen eines Kontos akzeptierst du unsere [Bedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
         invalidCode: "Ungültiger oder abgelaufener Code",
@@ -125,7 +131,7 @@ export default {
         checkSessions: "Angemeldete Sitzungen überprüfen",
         confirmNewPass: "Neues Passwort bestätigen",
         confirmNewPassDesc:
-            "Ein neues Passwort wurde letztens zu deinem Konto hinzufefügt und wartet auf Bestätigung. Bestätige unten, dass du das warst.",
+            "Ein neues Passwort wurde letztens zu deinem Konto hinzugefügt und wartet auf Bestätigung. Bestätige unten, dass du das warst.",
         newPass: "Neues Passwort",
         newPass_label: "Neues Passwort eingeben",
         confirmPass: "Passwort bestätigen",
@@ -133,7 +139,7 @@ export default {
         deleteAccount: "Konto löschen",
         deleteAccountDesc:
             "Durch das Löschen des Kontos werden alle deine Daten von unserer Datenbank entfernt. Es gibt kein Zurück, nachdem du dein Konto gelöscht hast.",
-        enterEmail: "Email-Adresse eingeben",
+        enterEmail: "E-Mail-Adresse eingeben",
     },
 
     settings: {
@@ -221,7 +227,7 @@ export default {
         // Search labels
         project: "Entdecke Projekte",
         mod: "Entdecke Mods",
-        "resource-pack": "Entdecke Resourcenpakete",
+        "resource-pack": "Entdecke Ressourcenpakete",
         shader: "Entdecke Shader",
         plugin: "Entdecke Plugins",
         modpack: "Entdecke Modpacks",
@@ -246,7 +252,7 @@ export default {
         features: "Funktionen",
         resolutions: "Auflösung",
         performanceImpact: "Performance-Einfluss",
-        license: "Lizens",
+        license: "Lizenz",
         openSourceOnly: "Nur Open Source",
         clearFilters: "Alle Filter entfernen",
 
@@ -275,7 +281,7 @@ export default {
         uploadImg: "Bild hochladen",
         galleryOrderingDesc: "Bilder mit höherer Sortierung werden zuerst aufgelistet.",
         featuredGalleryImgDesc:
-            "Ein hervorgehobenes Galleriebild taucht in der Suche und auf der Projektkarte auf. Nur ein Galleriebild kann hervorgehoben werden",
+            "Ein hervorgehobenes Galleriebild taucht in der Suche und auf der Projektkarte auf. Nur ein Galleriebild kann hervorgehoben werden.",
         addGalleryImg: "Galleriebild hinzufügen",
         featureImg: "Bild hervorheben",
         unfeatureImg: "Bild nicht mehr hervorheben",
@@ -307,13 +313,13 @@ export default {
         declinedInvitation: "Abgelehnte Einladung",
         teamInvitationTitle: (teamType: string) => `Einladung, ${definiteArticleDative[genderOf[teamType] || "a" as Gender]} ${teamType} beizutreten`
         , // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, Mitglied ${demonstrativePronounDative[genderOf[teamType] || "a" as Gender]} ${teamType} mit der Rolle '${role}' zu sein.`
+        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, in ${demonstrativePronounDative[genderOf[teamType] || "a" as Gender]} ${teamType} Mitglied mit der Rolle '${role}' zu sein.`
         ,
 
         browse: {
             mod: "Durchsuche Mods",
             datamod: "Durchsuche Datamods",
-            "resource-pack": "Durchsuche Resourcenpakete",
+            "resource-pack": "Durchsuche Ressourcenpakete",
             shader: "Durchsuche Shaders",
             modpack: "Durchsuche Modpacks",
             plugin: "Durchsuche Plugins",
@@ -322,11 +328,11 @@ export default {
         rejected: "Abgelehnt",
         withheld: "Zurückgehalten",
         archivedMessage: (project: string) =>
-            `${project} wurde archiviert. Es wird keine weitere Updates mehr geben, außer der Author entscheidet sich, das Projekt zu ent-archivieren.`,
+            `${project} wurde archiviert. Es wird keine weiteren Updates mehr geben, außer der Author entscheidet sich, das Projekt zu ent-archivieren.`,
         publishingChecklist: {
             required: "Benötigt",
             suggestion: "Vorschlag",
-            review: "Review",
+            review: "Prüfung",
             progress: "Fortschritt:",
             title: "Veröffentlichungs-Checkliste",
             uploadVersion: "Eine Version hochladen",
@@ -336,23 +342,23 @@ export default {
             addIcon: "Ein Icon hinzufügen",
             addIconDesc: "Dein Projekt sollte ein schön-aussehendes Icon haben, um es eindeutig und auf einen Blick identifizieren zu können.",
             featureGalleryImg: "Ein Galleriebild hervorheben",
-            featureGalleryImgDesc: "Hervorgehobene Galleriebilder können für viele Nutzer der erste Eindruck sein.",
+            featureGalleryImgDesc: "Hervorgehobene Galleriebilder sind für viele Nutzer der erste Eindruck von deinem Projekt.",
             selectTags: "Tags wählen",
             selectTagsDesc: "Wähle alle Tags, die auf dein Projekt zutreffen.",
             addExtLinks: "Externe Links hinzufügen",
             addExtLinksDesc: "Füge jegliche relevante Links hinzu, wie zum Quellcode, zum Bugtracker, oder einer Discord-Einladung.",
-            selectLicense: "Lizens wählen",
-            selectLicenseDesc: (projectType: string) => `Wähle die Lizens, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} verbreitet wird.`,
+            selectLicense: "Lizenz wählen",
+            selectLicenseDesc: (projectType: string) => `Wähle die Lizenz, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} verbreitet wird.`,
             selectEnv: "Wähle unterstützte Umgebungen",
-            selectEnvDesc: (projectType: string) => `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
+            selectEnvDesc: (projectType: string) => `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client- und/oder Server-seitige Funktionen hat.`,
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
             resubmitForReview: "Erneut zur Prüfung vorlegen",
             resubmit_ApprovalRejected:
-                "Dein Projekt wurde von einem unserer Moderatoren abgelehnt. In den meisten Fällen kannst du, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut abgeben.",
+                "Dein Projekt wurde von einem unserer Moderatoren abgelehnt. In den meisten Fällen kannst du das Prokekt, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut vorlegen.",
             resubmit_ProjectWithheld:
-                "Dein Projekt wurde von einem unserer Moderatoren zurückgehalten. In den meisten Fällen kannst du, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut abgeben.",
+                "Dein Projekt wurde von einem unserer Moderatoren zurückgehalten. In den meisten Fällen kannst du das Prokekt, nachdem du dich mit der Nachricht des Moderators befasst hast, erneut vorlegen.",
             visit: {
                 versionsPage: "Versionsseite öffnen",
                 descriptionSettings: "Beschreibungseinstellungen öffnen",
@@ -360,7 +366,7 @@ export default {
                 galleryPage: "Gallerie öffnen",
                 tagSettings: "Tag-Einstellungen öffnen",
                 linksSettings: "Link-Einstellungen öffnen",
-                licenseSettings: "Lizens-Einstellungen öffnen",
+                licenseSettings: "Lizenz-Einstellungen öffnen",
                 moderationPage: "Moderationsseite öffnen",
             },
         },
@@ -428,20 +434,20 @@ export default {
         issueTrackerDesc: "Ein Ort für Nutzer, Fehler und Bedenken über dein Projekt zu äußern.",
         sourceCode: "Quellcode",
         sourceCodeDesc: "Eine Seite oder ein Repository, welches den Quellcode deines Projektes enthält.",
-        wikiPage: "Wiki page",
+        wikiPage: "Wiki-Seite",
         wikiPageDesc: "Eine Seite die Informationen, Dokumentation und Hilfe zu deinem Projekt enthält.",
         discordInvite: "Discord-Einladung",
         discordInviteDesc: "Ein Einladungslink zu deinem Discord-Server.",
         licenseDesc1: (projectType: string) =>
-            `Es ist sehr wichtig, die richtige Lizens für ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizens festlegen. Du kannst auch eine URL zu deiner gewählten Lizens festlegen; andernfallst wird der Text der Lizens angezeigt.`,
+            `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfallst wird der Text der Lizenz angezeigt.`,
         licenseDesc2:
-            "Gib einen gültigen [SPDX Lizens-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizens keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizens selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizens ein.",
-        selectLicense: "Lizens wählen",
+            "Gib einen gültigen [SPDX Lizenz-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizenz keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizenz selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizenz ein.",
+        selectLicense: "Lizenz wählen",
         custom: "Eigene",
-        licenseName: "Lizensname",
-        licenseUrl: "Licenz-URL (optional)",
+        licenseName: "Lizenzname",
+        licenseUrl: "Lizenz-URL (optional)",
         spdxId: "SPDX-Identifikator",
-        doesntHaveSpdxId: "Die Lizens hat keinen SPDX-Identifikator",
+        doesntHaveSpdxId: "Die Lizenz hat keinen SPDX-Identifikator",
         tagsDesc: "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
         tagsDesc2: (projectType: string) => `Wähle alle Kategorien aut, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} wiederspiegeln.`,
         featuredCategories: "Hervorgehobene Kategorien",
@@ -469,11 +475,11 @@ export default {
         archived: "Archiviert",
         deleteProject: "Projekt löschen",
         deleteProjectDesc: (site: string) =>
-            `Entfernt sein Projekt von ${site}s Servern und aus der Suche. Du löschst dein Projekt damit entgültig, sein also extra-vosichtig!`,
+            `Entfernt sein Projekt von ${site}s Servern und aus der Suche. Du löschst dein Projekt damit entgültig, sei also extra-vosichtig!`,
         sureToDeleteProject: "Bist du sicher, dass du dieses Projekt löschen willst?",
         deleteProjectDesc2:
-            "Wenn du fortfährst, werden alle Versionen und jegliche zusammenhängende Information von unseren Server entfernt. Das kann die Funktion anderer Projekte stören oder sie kaputt machen, sein also vorsichtig.",
-        typeToVerify: (projectName: string) => `Zum Verifizieren, gib unten **${projectName}** ein:`,
+            "Wenn du fortfährst, werden alle Versionen und jegliche zusammenhängende Information von unseren Server entfernt. Das kann die Funktion anderer Projekte stören oder sie kaputt machen, sei also vorsichtig.",
+        typeToVerify: (projectName: string) => `Zum Verifizieren gib unten **${projectName}** ein:`,
         typeHere: "Hier eingeben...",
         manageMembers: "Mitglieder verwalten",
         leftProjectTeam: "Du hast das Team verlassen",
@@ -560,7 +566,7 @@ export default {
         terms: "Nutzungsbedingunen",
         privacy: "Privatsphäre",
         rules: "Regeln",
-        resources: "Resourcen",
+        resources: "Ressourcen",
         docs: "Dokumentation",
         status: "Status",
         support: "Support",
