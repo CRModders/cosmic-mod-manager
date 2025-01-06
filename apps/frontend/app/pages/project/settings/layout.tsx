@@ -102,7 +102,7 @@ export default function ProjectSettingsLayout() {
                                     {link.icon}
                                     {link.name}
                                 </div>
-                                <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                                <ChevronRightIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                             </ButtonLink>
                         ))}
 
@@ -113,7 +113,7 @@ export default function ProjectSettingsLayout() {
                                     {link.icon}
                                     {link.name}
                                 </div>
-                                <ChevronRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                                <ChevronRightIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                             </ButtonLink>
                         ))}
                     </div>
@@ -137,32 +137,32 @@ function links() {
             {
                 name: t.projectSettings.general,
                 href: "settings",
-                icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
+                icon: <SettingsIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.projectSettings.tags,
                 href: "settings/tags",
-                icon: <TagsIcon className="w-btn-icon h-btn-icon" />,
+                icon: <TagsIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.form.description,
                 href: "settings/description",
-                icon: <TextIcon className="w-btn-icon h-btn-icon" />,
+                icon: <TextIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.search.license,
                 href: "settings/license",
-                icon: <CopyrightIcon className="w-btn-icon h-btn-icon" />,
+                icon: <CopyrightIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.projectSettings.links,
                 href: "settings/links",
-                icon: <LinkIcon className="w-btn-icon h-btn-icon" />,
+                icon: <LinkIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.projectSettings.members,
                 href: "settings/members",
-                icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
+                icon: <UsersIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                 prefetch: false,
             },
         ],
@@ -171,7 +171,7 @@ function links() {
             {
                 name: t.dashboard.analytics,
                 href: "settings/analytics",
-                icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
+                icon: <BarChart2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
         ],
 
@@ -179,12 +179,12 @@ function links() {
             {
                 name: t.project.gallery,
                 href: "gallery",
-                icon: <ImageIcon className="w-btn-icon h-btn-icon" />,
+                icon: <ImageIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
             {
                 name: t.project.versions,
                 href: "versions",
-                icon: <GitCommitHorizontalIcon className="w-btn-icon h-btn-icon" />,
+                icon: <GitCommitHorizontalIcon aria-hidden className="w-btn-icon h-btn-icon" />,
             },
         ],
     };

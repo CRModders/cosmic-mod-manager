@@ -55,7 +55,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
             className={cn("[&>svg]:w-btn-icon [&>svg]:h-btn-icon text-muted-foreground", className)}
             {...props}
         >
-            {children ?? <ChevronRightIcon />}
+            {children ?? <ChevronRightIcon aria-hidden />}
         </li>
     );
 }
@@ -64,7 +64,7 @@ BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<"span">) {
     return (
         <span role="presentation" aria-hidden="true" className={cn("flex h-9 w-9 items-center justify-center", className)} {...props}>
-            <MoreHorizontalIcon className="w-btn-icon h-btn-icon" />
+            <MoreHorizontalIcon aria-hidden className="w-btn-icon h-btn-icon" />
             <span className="sr-only">More</span>
         </span>
     );

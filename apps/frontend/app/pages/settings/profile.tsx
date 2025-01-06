@@ -152,7 +152,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                                 htmlFor="user-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
-                                                <UploadIcon className="w-btn-icon h-btn-icon" />
+                                                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 {t.form.uploadIcon}
                                             </InteractiveLabel>
                                         </div>
@@ -209,12 +209,12 @@ export function ProfileSettingsPage({ session }: Props) {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
 
                             <VariantButtonLink url={UserProfilePath(session.userName)}>
-                                <UserIcon className="w-btn-icon h-btn-icon" />
+                                <UserIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.settings.visitYourProfile}
                             </VariantButtonLink>
                         </div>

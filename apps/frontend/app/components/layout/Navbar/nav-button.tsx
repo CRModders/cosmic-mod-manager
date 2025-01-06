@@ -46,7 +46,7 @@ export function LoginButton({
             aria-label={t.form.login_withSpace}
             onClick={onClick}
         >
-            <LogInIcon className="w-btn-icon h-btn-icon" />
+            <LogInIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.form.login_withSpace} />
             {t.form.login_withSpace}
         </VariantButtonLink>
     );
@@ -84,7 +84,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                 <Button size="lg" variant="ghost" aria-label="Profile icon" className="p-0 m-0 h-fit rounded-full w-fit relative">
                     <ImgWrapper
                         src={imageUrl(session.avatar)}
-                        alt={session?.userName}
+                        alt={`Profile picture of ${session?.userName}`}
                         fallback={fallbackUserIcon}
                         className="p-0.5 h-nav-item w-nav-item rounded-full border-none bg-shallower-background dark:bg-shallow-background"
                     />
@@ -94,20 +94,20 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
             <PopoverContent align="end" className="min-w-52 p-1.5 flex flex-col gap-1">
                 {[
                     {
-                        icon: <UserIcon className="w-btn-icon h-btn-icon" />,
+                        icon: <UserIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.navbar.profile} />,
                         label: t.navbar.profile,
                         url: UserProfilePath(session.userName),
                         matchExactUrl: false,
                     },
                     {
-                        icon: <BellIcon className="w-btn-icon h-btn-icon" />,
+                        icon: <BellIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.dashboard.notifications} />,
                         label: t.dashboard.notifications,
                         url: "/dashboard/notifications",
                         matchExactUrl: false,
                         notificationBadge: undreadNotifications,
                     },
                     {
-                        icon: <Settings2Icon className="w-btn-icon h-btn-icon" />,
+                        icon: <Settings2Icon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.common.settings} />,
                         label: t.common.settings,
                         url: "/settings/profile",
                         matchExactUrl: false,
@@ -127,19 +127,19 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
 
                 {[
                     {
-                        icon: <LayoutListIcon className="w-btn-icon h-btn-icon" />,
+                        icon: <LayoutListIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.dashboard.projects} />,
                         label: t.dashboard.projects,
                         url: "/dashboard/projects",
                         matchExactUrl: false,
                     },
                     {
-                        icon: <Building2Icon className="w-btn-icon h-btn-icon" />,
+                        icon: <Building2Icon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.dashboard.organizations} />,
                         label: t.dashboard.organizations,
                         url: "/dashboard/organizations",
                         matchExactUrl: false,
                     },
                     {
-                        icon: <LayoutDashboardIcon className="w-btn-icon h-btn-icon" />,
+                        icon: <LayoutDashboardIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.dashboard.dashboard} />,
                         label: t.dashboard.dashboard,
                         url: "/dashboard",
                         matchExactUrl: true,
@@ -154,7 +154,7 @@ export default function NavButton({ session, notifications, toggleNavMenu }: Nav
                 })}
                 {MODERATOR_ROLES.includes(session.role) ? (
                     <ButtonLink url="/moderation/review" exactTailMatch={false}>
-                        <ScaleIcon className="w-btn-icon h-btn-icon" />
+                        <ScaleIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.moderation.moderation} />
                         {t.moderation.moderation}
                     </ButtonLink>
                 ) : null}
@@ -195,7 +195,11 @@ export function SignOutBtn({ className, disabled = false }: Props) {
             tabIndex={disabled ? -1 : 0}
             className={cn("h-nav-item text-danger-foreground items-center justify-start", className)}
         >
-            {loading ? <LoadingSpinner size="xs" /> : <LogOutIcon className="w-btn-icon h-btn-icon" />}
+            {loading ? (
+                <LoadingSpinner size="xs" />
+            ) : (
+                <LogOutIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.navbar.signout} />
+            )}
             {t.navbar.signout}
         </ButtonLink>
     );

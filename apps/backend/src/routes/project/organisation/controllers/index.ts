@@ -14,12 +14,11 @@ import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, Get_UserOrganizations } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
 import type { ContextUserData } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { generateDbId } from "~/utils/str";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 
-export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string): Promise<RouteHandlerResponse> {
+export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string) {
     const organisation = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!organisation) {
         return notFoundResponseData("Organisation not found");
@@ -53,7 +52,7 @@ export async function getOrganisationById(userSession: ContextUserData | undefin
     return { data: formattedData, status: HTTP_STATUS.OK };
 }
 
-export async function getUserOrganisations(userSession: ContextUserData | undefined, userSlug: string): Promise<RouteHandlerResponse> {
+export async function getUserOrganisations(userSession: ContextUserData | undefined, userSlug: string) {
     let userId = userSlug.toLowerCase() === userSession?.userName.toLowerCase() ? userSession.id : null;
     if (!userId) {
         const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
@@ -96,10 +95,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
     return { data: organisationsList, status: HTTP_STATUS.OK };
 }
 
-export async function createOrganisation(
-    userSession: ContextUserData,
-    formData: z.infer<typeof createOrganisationFormSchema>,
-): Promise<RouteHandlerResponse> {
+export async function createOrganisation(userSession: ContextUserData, formData: z.infer<typeof createOrganisationFormSchema>) {
     const possiblyExistingOrgWithSameSlug = await GetOrganization_BySlugOrId(formData.slug.toLowerCase());
     if (possiblyExistingOrgWithSameSlug) {
         return invalidReqestResponseData("Organisation with the same slug already exists");

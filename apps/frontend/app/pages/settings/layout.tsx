@@ -15,22 +15,22 @@ export default function SettingsPageLayout() {
                 <PanelAside className="gap-2" aside>
                     <PanelAsideNavCard label={t.common.settings}>
                         <ButtonLink url="/settings" prefetch="render" preventScrollReset>
-                            <PaintbrushIcon className="size-4" />
+                            <PaintbrushIcon aria-hidden className="size-4" />
                             {t.settings.preferences}
                         </ButtonLink>
                         {session?.id ? (
                             <>
                                 <span className="text-lg font-semibold mt-3">{t.settings.account}</span>
                                 <ButtonLink url="/settings/profile" prefetch="render" preventScrollReset>
-                                    <UserIcon className="size-4" />
+                                    <UserIcon aria-hidden className="size-4" />
                                     {t.settings.publicProfile}
                                 </ButtonLink>
                                 <ButtonLink url="/settings/account" preventScrollReset>
-                                    <ShieldIcon className="size-4" />
+                                    <ShieldIcon aria-hidden className="size-4" />
                                     {t.settings.accountAndSecurity}
                                 </ButtonLink>
                                 <ButtonLink url="/settings/sessions" preventScrollReset>
-                                    <MonitorSmartphoneIcon className="size-4" />
+                                    <MonitorSmartphoneIcon aria-hidden className="size-4" />
                                     {t.settings.sessions}
                                 </ButtonLink>
                             </>

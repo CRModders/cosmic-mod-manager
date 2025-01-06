@@ -11,18 +11,17 @@ import { GetReleaseChannelFilter } from "~/utils/project";
 import { userIconUrl } from "~/utils/urls";
 
 export async function GetVersionFromFileHash(hash: string, algorithm: HashAlgorithms) {
-    const data = await GetVersionsFromFileHashes([hash], algorithm);
+    const res = await GetVersionsFromFileHashes([hash], algorithm);
 
-    // @ts-ignore
-    if (data?.success === false) return data;
+    if ("success" in res.data && res.data.success === false) return res;
+    if (Array.isArray(res.data)) {
+        return {
+            data: res.data[0],
+            status: res.status,
+        };
+    }
 
-    // @ts-ignore
-    const version = data.data[0] as ProjectVersionData;
-
-    return {
-        data: version,
-        status: data.status,
-    };
+    return res;
 }
 
 export async function GetVersionsFromFileHashes(hashes: string[], algorithm: HashAlgorithms) {
@@ -141,16 +140,16 @@ interface VersionFilter {
 export async function GetLatestProjectVersionFromHash(hash: string, algorithm: HashAlgorithms, filter: VersionFilter) {
     const res = await GetLatestProjectVersionsFromHashes([hash], algorithm, filter);
 
-    // @ts-ignore
-    if (res.success === false) return res;
+    if (res.data.success === false) return res;
 
-    // @ts-ignore
-    const versionData = res.data[hash];
+    if (typeof res.data === "object") {
+        return {
+            data: res.data[hash as keyof typeof res.data],
+            status: res.status,
+        };
+    }
 
-    return {
-        data: versionData,
-        status: res.status,
-    };
+    return res;
 }
 
 export async function GetLatestProjectVersionsFromHashes(hashes: string[], algorithm: HashAlgorithms, filter: VersionFilter) {

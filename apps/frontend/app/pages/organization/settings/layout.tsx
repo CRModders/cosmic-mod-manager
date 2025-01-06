@@ -74,22 +74,22 @@ export default function OrgSettingsLayout() {
                                 {
                                     name: t.dashboard.overview,
                                     href: "settings",
-                                    icon: <SettingsIcon className="w-btn-icon h-btn-icon" />,
+                                    icon: <SettingsIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                                 {
                                     name: t.projectSettings.members,
                                     href: "settings/members",
-                                    icon: <UsersIcon className="w-btn-icon h-btn-icon" />,
+                                    icon: <UsersIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                                 {
                                     name: t.dashboard.projects,
                                     href: "settings/projects",
-                                    icon: <CubeIcon className="w-btn-icon h-btn-icon" />,
+                                    icon: <CubeIcon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                                 {
                                     name: t.dashboard.analytics,
                                     href: "settings/analytics",
-                                    icon: <BarChart2Icon className="w-btn-icon h-btn-icon" />,
+                                    icon: <BarChart2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                             ].map((link) => (
                                 <ButtonLink prefetch="render" key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>

@@ -170,7 +170,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                         className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background"
                                         aria-label="project settings"
                                     >
-                                        <SettingsIcon className="w-btn-icon-md h-btn-icon-md" />
+                                        <SettingsIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                     </Link>
                                 </TableCell>
                             </TableRow>

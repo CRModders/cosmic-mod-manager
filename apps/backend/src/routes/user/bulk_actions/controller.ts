@@ -1,11 +1,10 @@
 import type { GlobalUserRole } from "@app/utils/types";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { GetManyUsers_ByIds } from "~/db/user_item";
-import type { RouteHandlerResponse } from "~/types/http";
 import { HTTP_STATUS } from "~/utils/http";
 import { userIconUrl } from "~/utils/urls";
 
-export async function getManyUsers(ids: string[]): Promise<RouteHandlerResponse> {
+export async function getManyUsers(ids: string[]) {
     const users = await GetManyUsers_ByIds(ids);
 
     const list: UserProfileData[] = [];

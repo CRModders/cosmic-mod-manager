@@ -151,7 +151,7 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="secondary-destructive" disabled={disabled}>
-                        <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
+                        <UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
                         {leaveTeamMsg}
                     </Button>
                 </DialogTrigger>
@@ -170,7 +170,7 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
                                 {isLoading ? (
                                     <LoadingSpinner size="xs" />
                                 ) : (
-                                    <UserXIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
+                                    <UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
                                 )}
                                 {leaveTeamMsg}
                             </Button>

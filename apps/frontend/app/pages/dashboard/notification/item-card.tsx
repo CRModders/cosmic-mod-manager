@@ -137,7 +137,7 @@ export function TeamInviteNotification({
                                             {isLoading === "accept" ? (
                                                 <LoadingSpinner size="xs" />
                                             ) : (
-                                                <CheckIcon strokeWidth={2.2} className="w-btn-icon-md h-btn-icon-md" />
+                                                <CheckIcon aria-hidden strokeWidth={2.2} className="w-btn-icon-md h-btn-icon-md" />
                                             )}
                                         </Button>
                                     </TooltipTrigger>
@@ -156,7 +156,7 @@ export function TeamInviteNotification({
                                             {isLoading === "decline" ? (
                                                 <LoadingSpinner size="xs" />
                                             ) : (
-                                                <XIcon className="w-btn-icon-md h-btn-icon-md" />
+                                                <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                             )}
                                         </Button>
                                     </TooltipTrigger>
@@ -174,7 +174,7 @@ export function TeamInviteNotification({
                                         disabled={deletingNotification || markingAsRead}
                                         onClick={() => markNotificationAsRead()}
                                     >
-                                        <CheckCheckIcon className="w-btn-icon h-btn-icon" />
+                                        <CheckCheckIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>{t.dashboard.markRead}</TooltipContent>
@@ -190,7 +190,7 @@ export function TeamInviteNotification({
                                         disabled={deletingNotification}
                                         onClick={deleteNotification}
                                     >
-                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>{t.dashboard.deleteNotif}</TooltipContent>
@@ -205,20 +205,20 @@ export function TeamInviteNotification({
                         {isLoading === "accept" ? (
                             <LoadingSpinner size="xs" />
                         ) : (
-                            <CheckIcon strokeWidth={2.2} className="w-btn-icon h-btn-icon" />
+                            <CheckIcon aria-hidden strokeWidth={2.2} className="w-btn-icon h-btn-icon" />
                         )}
                         {t.common.accept}
                     </Button>
 
                     <Button variant={"secondary-destructive-inverted"} size="sm" disabled={!!isLoading} onClick={declineInvite}>
-                        {isLoading === "decline" ? <LoadingSpinner size="xs" /> : <XIcon className="w-btn-icon h-btn-icon" />}
+                        {isLoading === "decline" ? <LoadingSpinner size="xs" /> : <XIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                         {t.common.decline}
                     </Button>
                 </div>
             )}
 
             <div className="w-fit flex items-baseline-with-fallback justify-center gap-1.5 text-extra-muted-foreground">
-                <CalendarIcon className="h-btn-icon-sm w-btn-icon-sm" />
+                <CalendarIcon aria-hidden className="h-btn-icon-sm w-btn-icon-sm" />
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>

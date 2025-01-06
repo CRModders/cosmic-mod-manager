@@ -54,7 +54,7 @@ export default function ProjectGallery() {
                         <UploadGalleryImageForm projectData={projectData} />
                     </Suspense>
                     <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                        <InfoIcon className="h-btn-icon w-btn-icon" />
+                        <InfoIcon aria-hidden className="h-btn-icon w-btn-icon" />
                         {t.project.uploadNewImg}
                     </div>
                 </Card>
@@ -151,7 +151,7 @@ function GalleryItemCard({
                     <span itemProp={MicrodataItemProps.name} className="flex items-center justify-start gap-2 text-lg font-bold">
                         {galleryItem.name}
                         {galleryItem.featured === true ? (
-                            <StarIcon className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" />
+                            <StarIcon aria-hidden className="w-btn-icon h-btn-icon fill-current text-extra-muted-foreground" />
                         ) : null}
                     </span>
                     <figcaption itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight">
@@ -160,7 +160,7 @@ function GalleryItemCard({
                 </div>
                 <div className="w-full flex flex-col items-start justify-start gap-1.5 mt-1">
                     <p className="flex gap-1.5 items-center justify-center text-muted-foreground">
-                        <CalendarIcon className="w-btn-icon h-btn-icon" />
+                        <CalendarIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         <FormattedDate date={galleryItem.dateCreated} showTime={false} />
                     </p>
                     {doesMemberHaveAccess(
@@ -175,7 +175,7 @@ function GalleryItemCard({
 
                                 <RemoveGalleryImage id={galleryItem.id} projectData={projectData}>
                                     <Button variant={"secondary"} size={"sm"}>
-                                        <Trash2Icon className="w-btn-icon-sm h-btn-icon-sm" />
+                                        <Trash2Icon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                                         {t.form.remove}
                                     </Button>
                                 </RemoveGalleryImage>
@@ -282,7 +282,7 @@ function ImageDialog({
                         <div className="flex items-center justify-start gap-2 p-2.5 px-3 rounded-xl bg-card-background opacity-45 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300 origin-bottom">
                             <DialogClose asChild>
                                 <Button className="rounded-full" size={"icon"} variant={"secondary"}>
-                                    <XIcon className="w-btn-icon-md h-btn-icon-md" />
+                                    <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                 </Button>
                             </DialogClose>
 
@@ -294,25 +294,25 @@ function ImageDialog({
                                 rel="noopener noreferrer"
                             >
                                 <VisuallyHidden>{galleryItem.name}</VisuallyHidden>
-                                <ExternalLinkIcon className="w-btn-icon h-btn-icon" />
+                                <ExternalLinkIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             </a>
 
                             <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={toggleFullWidth}>
                                 {isFullWidth ? (
-                                    <ShrinkIcon className="w-btn-icon h-btn-icon" />
+                                    <ShrinkIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 ) : (
-                                    <ExpandIcon className="w-btn-icon h-btn-icon" />
+                                    <ExpandIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 )}
                             </Button>
 
                             {totalItems > 1 ? (
                                 <>
                                     <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={previous}>
-                                        <ArrowLeftIcon className="w-btn-icon h-btn-icon" />
+                                        <ArrowLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
 
                                     <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={next}>
-                                        <ArrowRightIcon className="w-btn-icon h-btn-icon" />
+                                        <ArrowRightIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </>
                             ) : null}

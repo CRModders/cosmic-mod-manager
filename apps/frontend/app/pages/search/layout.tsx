@@ -197,7 +197,7 @@ export default function SearchPageLayout() {
                         variant="secondary"
                         onClick={() => setShowFilters((prev) => !prev)}
                     >
-                        <FilterIcon className="w-btn-icon h-btn-icon" />
+                        <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.search.filters}
                     </Button>
 
@@ -226,7 +226,7 @@ function SearchBarIcon() {
         <span className="absolute left-2.5 top-[50%] translate-y-[-50%] grid grid-cols-1 grid-rows-1">
             <Spinner className={cn("col-span-full row-span-full opacity-0", showSpinner && "opacity-100")} />
             <SearchIcon
-                aria-label="Search Icon"
+                aria-hidden
                 className={cn(
                     "w-btn-icon-md h-btn-icon-md text-extra-muted-foreground col-span-full row-span-full opacity-100 transition-opacity duration-500",
                     showSpinner && "opacity-0",
@@ -282,9 +282,9 @@ function ViewTypeToggle({
                     className="h-nav-item w-nav-item"
                 >
                     {viewType === ViewType.GALLERY ? (
-                        <ImageIcon className="w-btn-icon-md h-btn-icon-md" />
+                        <ImageIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     ) : (
-                        <LayoutListIcon className="w-btn-icon-md h-btn-icon-md" />
+                        <LayoutListIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     )}
                 </Button>
             </TooltipTemplate>

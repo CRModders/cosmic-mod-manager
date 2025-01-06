@@ -5,7 +5,7 @@ import { GlobeIcon, HardDriveIcon, MonitorIcon } from "lucide-react";
 function ClientSide({ className }: { className?: string }) {
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
-            <MonitorIcon className="w-btn-icon h-btn-icon" />
+            <MonitorIcon aria-hidden className="w-btn-icon h-btn-icon" />
             Client side
         </span>
     );
@@ -14,7 +14,7 @@ function ClientSide({ className }: { className?: string }) {
 function ServerSide({ className }: { className?: string }) {
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
-            <HardDriveIcon className="w-btn-icon h-btn-icon" />
+            <HardDriveIcon aria-hidden className="w-btn-icon h-btn-icon" />
             Server side
         </span>
     );
@@ -23,7 +23,7 @@ function ServerSide({ className }: { className?: string }) {
 function ClientOrServerSide({ className }: { className?: string }) {
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
             Client or server
         </span>
     );
@@ -32,7 +32,7 @@ function ClientOrServerSide({ className }: { className?: string }) {
 function ClientAndServerSide({ className }: { className?: string }) {
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
             Client and server
         </span>
     );
@@ -41,7 +41,7 @@ function ClientAndServerSide({ className }: { className?: string }) {
 function Unsupported({ className }: { className?: string }) {
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
-            <GlobeIcon className="w-btn-icon h-btn-icon" />
+            <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
             Unsupported
         </span>
     );

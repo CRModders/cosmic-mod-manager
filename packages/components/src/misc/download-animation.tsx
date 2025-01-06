@@ -7,6 +7,7 @@ export function DownloadRipple() {
 
     return (
         <div
+            aria-hidden
             className={cn(
                 "download-animation z-[9999] inset-0 fixed top-0 left-0 w-full h-full grid place-items-center",
                 !isAnimationPlaying && "animation-hidden",
@@ -17,7 +18,7 @@ export function DownloadRipple() {
                 <RippleCircle className="absolute circle-3 h-[55rem] w-[55rem] opacity-40" />
                 <RippleCircle className="absolute circle-2 h-[30rem] w-[30rem] opacity-40" />
                 <RippleCircle className="circle-1 h-[15rem] w-[15rem] grid place-items-center">
-                    <DownloadIcon className="w-10 h-10 text-foreground" />
+                    <DownloadIcon aria-hidden className="w-10 h-10 text-foreground" />
                 </RippleCircle>
             </div>
         </div>

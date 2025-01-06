@@ -142,9 +142,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             defaultMinWidth={false}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     Loaders
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                         />
@@ -161,9 +161,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             }}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.search.gameVersions}
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                             fixedFooter={
@@ -197,9 +197,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             }}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.search.channels}
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                         />
@@ -212,7 +212,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
                         <ChipButton onClick={resetFilters}>
                             {t.search.clearFilters}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ) : null}
 
@@ -225,7 +225,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             }}
                         >
                             {CapitalizeAndFormatString(channel)}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -237,7 +237,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             }}
                         >
                             {version.label}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -261,7 +261,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                 }}
                             >
                                 {CapitalizeAndFormatString(loader)}
-                                <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                             </ChipButton>
                         );
                     })}
@@ -278,7 +278,10 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     {version.releaseChannel === VersionReleaseChannel.DEV ? (
                                         <TooltipProvider>
                                             <TooltipTemplate content="Dev release!" className="font-normal">
-                                                <FlaskConicalIcon className="w-btn-icon-md h-btn-icon-md text-danger-foreground cursor-help" />
+                                                <FlaskConicalIcon
+                                                    aria-hidden
+                                                    className="w-btn-icon-md h-btn-icon-md text-danger-foreground cursor-help"
+                                                />
                                             </TooltipTemplate>
                                         </TooltipProvider>
                                     ) : null}
@@ -308,7 +311,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
                                         onClick={showDownloadAnimation}
                                     >
-                                        <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                        <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.common.download}
                                     </a>
                                 ) : null}

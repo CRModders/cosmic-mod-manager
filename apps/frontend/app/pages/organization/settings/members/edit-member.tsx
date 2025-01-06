@@ -118,7 +118,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
                             {member.userName}
                             {member.isOwner && (
                                 <span className="flex items-baseline justify-center shrink-0" title={t.projectSettings.owner}>
-                                    <CrownIcon className="w-4 h-4 text-orange-500 dark:text-orange-400" />
+                                    <CrownIcon aria-hidden className="w-4 h-4 text-orange-500 dark:text-orange-400" />
                                 </span>
                             )}
                         </Link>
@@ -130,13 +130,16 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
                 <div className="flex items-center justify-center gap-x-4">
                     {member.accepted === false && (
                         <span className="flex items-center justify-center gap-1.5 font-bold text-orange-500 dark:text-orange-400">
-                            <RefreshCcwIcon className="w-btn-icon h-btn-icon" />
+                            <RefreshCcwIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.projectSettings.pending}
                         </span>
                     )}
 
                     <Button size="icon" variant="ghost" onClick={() => setDetailsOpen((prev) => !prev)}>
-                        <ChevronDownIcon className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")} />
+                        <ChevronDownIcon
+                            aria-hidden
+                            className={cn("w-btn-icon-lg h-btn-icon-lg transition-all", detailsOpen && "rotate-180")}
+                        />
                     </Button>
                 </div>
             </div>
@@ -267,14 +270,14 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
                                     }, toast.error);
                                 }}
                             >
-                                <SaveIcon className="w-btn-icon h-btn-icon" />
+                                <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.form.saveChanges}
                             </Button>
 
                             {!member.isOwner && canRemoveMembers && (
                                 <RemoveMemberDialog member={member} refreshData={fetchOrgData}>
                                     <Button type="button" variant="secondary-destructive" size="sm" disabled={isLoading}>
-                                        <UserXIcon className="w-btn-icon h-btn-icon" />
+                                        <UserXIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.projectSettings.removeMember}
                                     </Button>
                                 </RemoveMemberDialog>
@@ -283,7 +286,7 @@ export function OrgTeamMember({ org, member, currMember, fetchOrgData, session }
                             {canTransferOwnership ? (
                                 <TransferOwnershipDialog member={member} teamId={org.teamId} refreshData={fetchOrgData}>
                                     <Button variant="secondary" size="sm" disabled={isLoading}>
-                                        <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />
+                                        <ArrowRightLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.projectSettings.transferOwnership}
                                     </Button>
                                 </TransferOwnershipDialog>

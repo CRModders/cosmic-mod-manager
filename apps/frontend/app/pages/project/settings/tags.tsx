@@ -137,7 +137,7 @@ export default function TagsSettingsPage() {
 
                             <div className="w-full flex flex-col items-start justify-start">
                                 <span className="flex items-center justify-center gap-2 text-lg font-bold">
-                                    <StarIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                                    <StarIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                                     {t.projectSettings.featuredCategories}
                                 </span>
                                 <span className="text-muted-foreground">
@@ -197,7 +197,7 @@ export default function TagsSettingsPage() {
                                         }, toast.error);
                                     }}
                                 >
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                                    {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                     {t.form.saveChanges}
                                 </Button>
                             </div>

@@ -20,7 +20,6 @@ import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-atte
 import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteOrgDirectory, deleteOrgFile, saveOrgFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
-import type { RouteHandlerResponse } from "~/types/http";
 import {
     HTTP_STATUS,
     invalidReqestResponseData,
@@ -63,8 +62,10 @@ export async function updateOrg(ctx: Context, userSession: ContextUserData, slug
 
     // Update the org icon
     if (formData.icon instanceof File) {
-        // @ts-ignore
-        icon = (await updateOrgIcon(ctx, userSession, slug, formData.icon, true)).data?.newIcon || null;
+        const UpdateIconRes = await updateOrgIcon(ctx, userSession, slug, formData.icon);
+        if ("newIcon" in UpdateIconRes.data) {
+            icon = UpdateIconRes.data.newIcon || null;
+        }
     }
 
     const updatedOrg = await UpdateOrganization({
@@ -145,7 +146,7 @@ export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, 
     return { data: { success: true, message: "Organization icon updated", newIcon: fileId }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, slug: string) {
     const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org) return notFoundResponseData("Organization not found");
     if (!org.iconFileId) return invalidReqestResponseData("Org does not have any icon");
@@ -177,7 +178,7 @@ export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, 
     return { data: { success: true, message: "Organization icon deleted" }, status: HTTP_STATUS.OK };
 }
 
-export async function deleteOrg(ctx: Context, userSession: ContextUserData, slug: string): Promise<RouteHandlerResponse> {
+export async function deleteOrg(ctx: Context, userSession: ContextUserData, slug: string) {
     const org = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
     if (!org?.id) return notFoundResponseData();
 

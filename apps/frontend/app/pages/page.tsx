@@ -65,7 +65,7 @@ export default function HomePage({ projects }: Props) {
             <main className="w-full hero_section">
                 <section className="w-full flex flex-col items-center justify-center py-28">
                     <div className="p-6">
-                        <BrandIcon className="text-accent-foreground" size="15rem" />
+                        <BrandIcon aria-hidden className="text-accent-foreground" size="15rem" />
                     </div>
 
                     <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-4">
@@ -108,7 +108,7 @@ export default function HomePage({ projects }: Props) {
 
                     <div className="flex gap-4 md:gap-8 flex-wrap items-center justify-center mt-6">
                         <VariantButtonLink size="lg" variant="default" url="/mods" className="px-6">
-                            <CompassIcon className="w-btn-icon-lg h-btn-icon-lg" />
+                            <CompassIcon aria-hidden className="w-btn-icon-lg h-btn-icon-lg" aria-label={t.homePage.exploreMods} />
                             {t.homePage.exploreMods}
                         </VariantButtonLink>
 
@@ -119,12 +119,12 @@ export default function HomePage({ projects }: Props) {
                                 className="px-6 bg-card-background hover:bg-card-background/90 dark:bg-shallow-background dark:hover:bg-shallow-background/90"
                                 prefetch="render"
                             >
-                                <LogInIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <LogInIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.form.signup} />
                                 {t.form.signup}
                             </VariantButtonLink>
                         ) : (
                             <VariantButtonLink url="/dashboard/projects" size={"lg"} className="px-6" variant="secondary-inverted">
-                                <LayoutDashboardIcon className="w-btn-icon-md h-btn-icon-md" />
+                                <LayoutDashboardIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.navbar.dashboard} />
                                 {t.navbar.dashboard}
                             </VariantButtonLink>
                         )}

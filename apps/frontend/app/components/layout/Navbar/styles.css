@@ -4,9 +4,11 @@
     transition-property: grid-template-rows;
     transition-timing-function: ease;
     overflow: hidden;
+    visibility: hidden;
 }
 
 .menu_open {
+    visibility: visible;
     grid-template-rows: 1fr;
 }
 

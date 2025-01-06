@@ -80,7 +80,7 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (
-                                        <UserPlusIcon className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.25} />
+                                        <UserPlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.25} />
                                     )}
                                     {t.projectSettings.invite}
                                 </Button>

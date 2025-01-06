@@ -142,7 +142,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                                         return <React.Fragment key={authProvider.name}>{null}</React.Fragment>;
                                                     })
                                                 ) : (
-                                                    <KeyRoundIcon className="w-4 h-4" />
+                                                    <KeyRoundIcon aria-hidden className="w-4 h-4" />
                                                 )}
                                                 <span className="capitalize">{session?.providerName}</span>
                                             </TooltipTrigger>
@@ -166,7 +166,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                             {isLoading.value && isLoading.sessionId === session.id ? (
                                                 <LoadingSpinner size="xs" />
                                             ) : (
-                                                <XIcon className="w-btn-icon h-btn-icon" />
+                                                <XIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                             )}
                                             {t.settings.revokeSession}
                                         </Button>

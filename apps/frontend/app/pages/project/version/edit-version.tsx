@@ -136,7 +136,7 @@ export default function EditVersionPage() {
                     <UploadVersionPageTopCard
                         isLoading={isLoading}
                         submitBtnLabel={t.form.saveChanges}
-                        submitBtnIcon={<SaveIcon className="w-btn-icon-md h-btn-icon-md" />}
+                        submitBtnIcon={<SaveIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />}
                         versionPageUrl={versionsPageUrl}
                         versionTitle={form.getValues().title}
                         backUrl={currVersionPageUrl}
@@ -208,7 +208,7 @@ export default function EditVersionPage() {
                                 {/* PRIMARY FILE */}
                                 <div className="w-full flex flex-wrap sm:flex-nowrap items-center justify-between bg-shallow-background rounded px-4 py-2 gap-x-4 gap-y-2">
                                     <div className="flex items-center justify-start gap-1.5">
-                                        <FileIcon className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
+                                        <FileIcon aria-hidden className="flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
 
                                         <div className="flex items-center flex-wrap justify-start gap-x-2">
                                             <span>
@@ -222,7 +222,7 @@ export default function EditVersionPage() {
                                     </div>
 
                                     <Button disabled type="button" variant="secondary-dark">
-                                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.form.remove}
                                     </Button>
                                 </div>

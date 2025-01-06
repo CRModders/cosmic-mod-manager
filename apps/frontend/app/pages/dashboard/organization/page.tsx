@@ -25,7 +25,7 @@ export default function OrganisationDashboardPage({ organisations }: Props) {
 
                 <CreateNewOrg_Dialog>
                     <Button>
-                        <PlusIcon className="w-btn-icon-md h-btn-icon-md" />
+                        <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         {t.dashboard.createAnOrg}
                     </Button>
                 </CreateNewOrg_Dialog>

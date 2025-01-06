@@ -19,7 +19,7 @@ const LocaleContext = createContext<LocaleContext>({
 });
 
 export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
-    const [locale, setLocale] = useState(initLocale);
+    const [translation, setTranslation] = useState(initLocale);
     const [localeMetadata, setLocaleMetadata] = useState(initMetadata || DefaultLocale);
 
     async function changeLocale(locale: string, navigate?: NavigateFunction) {
@@ -31,7 +31,7 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
             navigate(newUrl, { preventScrollReset: true });
         }
 
-        setLocale(await getLocale(locale));
+        setTranslation(await getLocale(locale));
         setLocaleMetadata(GetLocaleMetadata(parseLocale(locale)) || DefaultLocale);
 
         enableInteractions();
@@ -41,7 +41,7 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
         <LocaleContext
             value={{
                 locale: localeMetadata,
-                t: locale,
+                t: translation,
                 changeLocale,
             }}
         >

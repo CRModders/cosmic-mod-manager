@@ -65,7 +65,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="flex items-center justify-center">
-                            <ChevronRightIcon size="1rem" className=" text-foreground" />
+                            <ChevronRightIcon aria-hidden size="1rem" className=" text-foreground" />
                         </BreadcrumbSeparator>
                         <BreadcrumbItem>
                             <BreadcrumbPage className="text-base">{versionData?.title}</BreadcrumbPage>
@@ -77,7 +77,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                     <h1 className="text-2xl font-[700] text-foreground leading-tight">{versionData.title}</h1>
                     {versionData.featured ? (
                         <span className="flex items-center justify-center gap-1 text-extra-muted-foreground italic">
-                            <StarIcon className="w-btn-icon h-btn-icon" />
+                            <StarIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.version.featured}
                         </span>
                     ) : null}
@@ -92,7 +92,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                                     url={versionData.primaryFile?.url ? versionData.primaryFile?.url : ""}
                                     onClick={showDownloadAnimation}
                                 >
-                                    <DownloadIcon className="w-btn-icon h-btn-icon" />
+                                    <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.common.download}
                                 </VariantButtonLink>
                             </TooltipTrigger>
@@ -104,7 +104,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
 
                     {!currUsersMembership?.userId ? (
                         <Button variant={"secondary"}>
-                            <FlagIcon className="w-btn-icon h-btn-icon" />
+                            <FlagIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.common.report}
                         </Button>
                     ) : null}
@@ -119,7 +119,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                             url={VersionPagePath(ctx.projectType, ctx.projectData.slug, versionData.slug, "edit")}
                             prefetch="render"
                         >
-                            <Edit3Icon className="w-btn-icon h-btn-icon" />
+                            <Edit3Icon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.form.edit}
                         </VariantButtonLink>
                     ) : null}
@@ -335,6 +335,7 @@ function FileDetailsItem({
                 >
                     <div>
                         <FileIcon
+                            aria-hidden
                             className={cn(
                                 "inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
                                 !isPrimary && "text-extra-muted-foreground",
@@ -354,24 +355,24 @@ function FileDetailsItem({
                         className={cn(!isPrimary && "hover:bg-transparent dark:hover:bg-transparent hover:text-foreground")}
                         onClick={showDownloadAnimation}
                     >
-                        <DownloadIcon className="w-btn-icon h-btn-icon" />
+                        <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.common.download}
                     </VariantButtonLink>
                 </div>
             </ContextMenuTrigger>
             <ContextMenuContent>
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha1_hash)}>
-                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
+                    <CopyIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
                     {t.version.copySha1}
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(sha512_hash)}>
-                    <CopyIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
+                    <CopyIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
                     {t.version.copySha512}
                 </ContextMenuItem>
 
                 <ContextMenuItem className="flex gap-2" onClick={() => copyTextToClipboard(downloadLink)}>
-                    <LinkIcon className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
+                    <LinkIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm text-extra-muted-foreground" />
                     {t.version.copyFileUrl}
                 </ContextMenuItem>
             </ContextMenuContent>

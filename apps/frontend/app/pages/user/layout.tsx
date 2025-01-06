@@ -161,7 +161,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             threeDotMenu={
                 <>
                     <Button variant="ghost-destructive" className="w-full" size="sm">
-                        <FlagIcon className="w-btn-icon h-btn-icon" />
+                        <FlagIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.common.report}
                     </Button>
 
@@ -174,7 +174,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
                                 navigator.clipboard.writeText(userData.id);
                             }}
                         >
-                            <ClipboardCopyIcon className="w-btn-icon h-btn-icon" />
+                            <ClipboardCopyIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.common.copyId}
                             <span itemProp={MicrodataItemProps.itemid} className="sr-only">
                                 {userData.id}
@@ -186,22 +186,22 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             actionBtns={
                 userData.id === session?.id ? (
                     <VariantButtonLink variant="secondary-inverted" url="/settings/profile" prefetch="render">
-                        <EditIcon className="w-btn-icon h-btn-icon" />
+                        <EditIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.form.edit}
                     </VariantButtonLink>
                 ) : null
             }
         >
             <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                <CubeIcon className="w-btn-icon-md h-btn-icon-md" />
+                <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="font-semibold">{ProjectsCount.join(" ")}</span>
             </div>
             <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
-                <DownloadIcon className="w-btn-icon-md h-btn-icon-md" />
+                <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="font-semibold">{DownloadsCount_Str}</span>
             </div>
             <div className="flex items-center gap-2">
-                <CalendarIcon className="w-btn-icon-md h-btn-icon-md" />
+                <CalendarIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="font-semibold">{t.user.joined(TimePassedSince({ date: userData.dateJoined }))}</span>
             </div>
         </PageHeader>

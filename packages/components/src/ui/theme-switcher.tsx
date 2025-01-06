@@ -6,7 +6,7 @@ import { cn } from "~/utils";
 
 type variant = VariantProps<typeof buttonVariants>["variant"];
 
-type Props = {
+interface ThemeSwitchProps {
     theme: string | undefined;
     setTheme: (value: string | ((theme: string | undefined) => string)) => void;
     className?: string;
@@ -16,7 +16,7 @@ type Props = {
     label?: string;
     noDefaultStyle?: boolean;
     variant?: variant;
-};
+}
 export default function ThemeSwitch({
     theme,
     setTheme,
@@ -27,7 +27,7 @@ export default function ThemeSwitch({
     label,
     noDefaultStyle,
     variant = "ghost",
-}: Props) {
+}: ThemeSwitchProps) {
     async function switchTheme() {
         document.documentElement.setAttribute("data-view-transition", "theme-switch");
 
@@ -57,7 +57,7 @@ export default function ThemeSwitch({
         <Button
             type="button"
             variant={variant}
-            title={"Change theme"}
+            title={label || "Change theme"}
             className={cn(
                 "overflow-hidden",
                 noDefaultStyle !== true && "rounded-full p-0 hover:bg-card-background dark:hover:bg-shallow-background",

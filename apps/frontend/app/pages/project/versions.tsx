@@ -203,9 +203,9 @@ export default function ProjectVersionsPage() {
                             defaultMinWidth={false}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     Loaders
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                         />
@@ -222,9 +222,9 @@ export default function ProjectVersionsPage() {
                             defaultMinWidth={false}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.search.gameVersions}
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                             fixedFooter={
@@ -258,9 +258,9 @@ export default function ProjectVersionsPage() {
                             }}
                             customTrigger={
                                 <Button variant="secondary-inverted">
-                                    <FilterIcon className="w-btn-icon h-btn-icon" />
+                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.search.channels}
-                                    <ChevronDownIcon className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
+                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
                         />
@@ -273,7 +273,7 @@ export default function ProjectVersionsPage() {
                             onCheckedChange={(checked) => setShowDevVersions(checked === true)}
                         >
                             <span className="flex items-center justify-center gap-1">
-                                <FlaskConicalIcon className="w-btn-icon h-btn-icon" />
+                                <FlaskConicalIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 {t.project.showDevVersions}
                             </span>
                         </LabelledCheckbox>
@@ -286,7 +286,7 @@ export default function ProjectVersionsPage() {
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
                         <ChipButton onClick={resetFilters}>
                             {t.search.clearFilters}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ) : null}
 
@@ -299,7 +299,7 @@ export default function ProjectVersionsPage() {
                             }}
                         >
                             {CapitalizeAndFormatString(channel)}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -311,7 +311,7 @@ export default function ProjectVersionsPage() {
                             }}
                         >
                             {version.label}
-                            <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
                     ))}
 
@@ -335,7 +335,7 @@ export default function ProjectVersionsPage() {
                                 }}
                             >
                                 {CapitalizeAndFormatString(loader)}
-                                <XCircleIcon className="w-btn-icon-sm h-btn-icon-sm" />
+                                <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                             </ChipButton>
                         );
                     })}
@@ -364,12 +364,12 @@ function UploadVersionLinkCard({ uploadPageUrl }: { uploadPageUrl: string }) {
     return (
         <Card className="p-card-surround flex flex-row flex-wrap items-center justify-start gap-x-4 gap-y-2">
             <VariantButtonLink url={uploadPageUrl} variant="default" prefetch="render">
-                <UploadIcon className="w-btn-icon h-btn-icon" />
+                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                 {t.project.uploadVersion}
             </VariantButtonLink>
 
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <InfoIcon className="h-btn-icon w-btn-icon" />
+                <InfoIcon aria-hidden className="h-btn-icon w-btn-icon" />
                 {t.project.uploadNewVersion}
             </div>
         </Card>
@@ -533,7 +533,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                                             aria-label={`download ${version.title}`}
                                                             onClick={() => showDownloadAnimation()}
                                                         >
-                                                            <DownloadIcon className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
+                                                            <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
                                                         </VariantButtonLink>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
@@ -623,7 +623,7 @@ function DatePublished({ dateStr, iconVisible = true }: { dateStr: string | Date
     return (
         <TooltipTemplate content={<FormattedDate date={dateStr} />}>
             <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium whitespace-nowrap cursor-help">
-                {iconVisible === true ? <CalendarIcon className="w-3.5 h-3.5" /> : null}
+                {iconVisible === true ? <CalendarIcon aria-hidden className="w-3.5 h-3.5" /> : null}
                 <TimePassedSince date={dateStr} capitalize />
             </span>
         </TooltipTemplate>
@@ -633,7 +633,7 @@ function DatePublished({ dateStr, iconVisible = true }: { dateStr: string | Date
 function DownloadsCount({ downloads, iconVisible = true }: { downloads: number; iconVisible?: boolean }) {
     return (
         <span className="flex gap-1.5 items-center justify-start text-muted-foreground font-medium">
-            {iconVisible === true ? <DownloadIcon className="w-3.5 h-3.5" /> : null}
+            {iconVisible === true ? <DownloadIcon aria-hidden className="w-3.5 h-3.5" /> : null}
             <FormattedCount count={downloads} />
         </span>
     );
@@ -652,7 +652,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                     className="noClickRedirect rounded-full shrink-0 !w-10 !h-10"
                     aria-label="more options"
                 >
-                    <MoreVerticalIcon className="w-btn-icon-md h-btn-icon-md" />
+                    <MoreVerticalIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="noClickRedirect p-1 gap-1 min-w-fit">
@@ -666,7 +666,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                         setPopoverOpen(false);
                     }}
                 >
-                    <SquareArrowOutUpRightIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                    <SquareArrowOutUpRightIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                     {t.project.openInNewTab}
                 </VariantButtonLink>
 
@@ -679,7 +679,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                         setPopoverOpen(false);
                     }}
                 >
-                    <LinkIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                    <LinkIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                     {t.project.copyLink}
                 </Button>
 
@@ -695,7 +695,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                                 setPopoverOpen(false);
                             }}
                         >
-                            <EditIcon className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            <EditIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
                             {t.form.edit}
                         </VariantButtonLink>
                     </>

@@ -97,7 +97,12 @@ function BaseView(props: SearchListItemProps) {
                     }}
                 >
                     {props.featuredGallery && (
-                        <img src={props.featuredGallery} alt={props.projectName} className="object-cover w-full h-full" loading="lazy" />
+                        <img
+                            src={props.featuredGallery}
+                            alt={`Featured gallery of ${props.projectName}`}
+                            className="object-cover w-full h-full"
+                            loading="lazy"
+                        />
                     )}
                 </Link>
             )}
@@ -119,7 +124,7 @@ function BaseView(props: SearchListItemProps) {
                     vtId={props.vtId}
                     loading="lazy"
                     src={imageUrl(props.icon)}
-                    alt={props.projectName}
+                    alt={`Icon of ${props.projectName}`}
                     fallback={fallbackProjectIcon}
                     className="h-24 w-24 rounded-xl"
                     viewTransitions={props.viewTransitions}
@@ -156,7 +161,7 @@ function BaseView(props: SearchListItemProps) {
                             {props.isOrgOwned ? (
                                 <>
                                     {" "}
-                                    <Building2Icon className="inline w-4 h-4" />
+                                    <Building2Icon aria-hidden className="inline w-4 h-4" />
                                 </>
                             ) : null}
                         </Link>
@@ -228,7 +233,7 @@ function BaseView(props: SearchListItemProps) {
             >
                 <div className={cn("flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
-                        <DownloadIcon className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
+                        <DownloadIcon aria-hidden className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectDownloads[0]?.length > 0 && (
                                 <span className="hidden sm:inline lowercase">{ProjectDownloads[0]} </span>
@@ -241,7 +246,7 @@ function BaseView(props: SearchListItemProps) {
                     </div>
 
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
-                        <HeartIcon className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
+                        <HeartIcon aria-hidden className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectFollowers[0]?.length > 0 && (
                                 <span className="hidden sm:inline lowercase">{ProjectFollowers[0]} </span>
@@ -264,7 +269,7 @@ function BaseView(props: SearchListItemProps) {
                     <TooltipProvider>
                         {props.showDatePublished === true ? (
                             <Tooltip>
-                                <CalendarIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
+                                <CalendarIcon aria-hidden className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1 text-nowrap">
                                         {t.project.publishedAt(props.TimeSince_Fn(props.datePublished))}
@@ -274,7 +279,7 @@ function BaseView(props: SearchListItemProps) {
                             </Tooltip>
                         ) : (
                             <Tooltip>
-                                <RefreshCcwIcon className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
+                                <RefreshCcwIcon aria-hidden className="w-[1.1rem] h-[1.1rem] text-extra-muted-foreground" />
                                 <TooltipTrigger asChild>
                                     <p className="flex items-baseline justify-center gap-1 text-nowrap">
                                         {t.project.updatedAt(props.TimeSince_Fn(props.dateUpdated))}

@@ -62,7 +62,7 @@ export function RemoveMemberDialog({ member, refreshData, children }: RemoveMemb
                             <CancelButton />
                         </DialogClose>
                         <Button type="button" variant="destructive" disabled={isLoading} onClick={removeTeamMember}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <UserXIcon className="w-btn-icon h-btn-icon" />}
+                            {isLoading ? <LoadingSpinner size="xs" /> : <UserXIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                             {t.projectSettings.removeMember}
                         </Button>
                     </DialogFooter>
@@ -118,7 +118,11 @@ export function TransferOwnershipDialog({ member, teamId, refreshData, children 
                             <CancelButton />
                         </DialogClose>
                         <Button variant="destructive" size="sm" disabled={isLoading} onClick={transferOwnership}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <ArrowRightLeftIcon className="w-btn-icon h-btn-icon" />}
+                            {isLoading ? (
+                                <LoadingSpinner size="xs" />
+                            ) : (
+                                <ArrowRightLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />
+                            )}
                             {t.projectSettings.transferOwnership}
                         </Button>
                     </DialogFooter>

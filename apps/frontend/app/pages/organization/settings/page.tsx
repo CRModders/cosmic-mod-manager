@@ -166,7 +166,7 @@ export default function GeneralOrgSettings() {
                                                 htmlFor="org-icon-input"
                                                 className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
                                             >
-                                                <UploadIcon className="w-btn-icon h-btn-icon" />
+                                                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 {t.form.uploadIcon}
                                             </InteractiveLabel>
                                             {form.getValues().icon ? (
@@ -177,7 +177,7 @@ export default function GeneralOrgSettings() {
                                                         form.setValue("icon", undefined);
                                                     }}
                                                 >
-                                                    <Trash2Icon className="w-btn-icon h-btn-icon" />
+                                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                     {t.form.removeIcon}
                                                 </Button>
                                             ) : null}
@@ -259,7 +259,7 @@ export default function GeneralOrgSettings() {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
                         </div>
@@ -318,7 +318,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
             <Dialog>
                 <DialogTrigger asChild>
                     <Button variant="destructive">
-                        <Trash2Icon className="w-btn-icon h-btn-icon" />
+                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.organization.deleteOrg}
                     </Button>
                 </DialogTrigger>
@@ -352,7 +352,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
                                 <CancelButton />
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteOrg}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.organization.deleteOrg}
                             </Button>
                         </DialogFooter>
