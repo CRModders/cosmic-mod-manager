@@ -406,9 +406,8 @@ export default {
         serverSide: "Del lado del servidor",
         serverSideDesc: (projectType: string) => `Selecciona si tu ${projectType} tiene funcionalidad en el servidor lógico.`,
         unknown: "Desconocido",
-        // ? New strings
-        // clientOrServer: "Client or server",
-        // clientAndServer: "Client and server",
+        clientOrServer: "Cliente o servidor",
+        clientAndServer: "Cliente y servidor",
         required: "Requerido",
         optional: "Opcional",
         unsupported: "No compatible",
