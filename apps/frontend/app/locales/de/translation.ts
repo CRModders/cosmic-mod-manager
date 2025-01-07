@@ -1,45 +1,37 @@
+import { Capitalize } from "@app/utils/string";
 import type { Locale } from "~/locales/types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
-
 type Gender = "f" | "m" | "n" | "a";
-
-// make first letter capital
-// this is used if a string starts with a string that is "templated-in",
-function capitalStart(str: string) {
-    return String(str).charAt(0).toUpperCase() + String(str).slice(1);
-};
 
 const definiteArticleDative: { [Property in Gender]-?: string } = {
     m: "dem",
     f: "der",
     n: "dem",
-    a: "der/dem"
+    a: "der/dem",
 };
 
 const indefiniteArticleNominative: { [Property in Gender]-?: string } = {
     m: "ein",
     f: "eine",
     n: "ein",
-    a: "ein/e"
+    a: "ein/e",
 };
 
 const demonstrativePronounDative: { [Property in Gender]-?: string } = {
     m: "diesem",
     f: "dieser",
     n: "diesem",
-    a: "dieser/m"
+    a: "dieser/m",
 };
-
 
 const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
     m: "dein",
     f: "deine",
     n: "dein",
-    a: "dein/e"
+    a: "dein/e",
 };
-
 
 const teamTypeGenitive: { [noun: string]: string } = {
     Organisation: "Organisation",
@@ -54,7 +46,7 @@ const genderOf: { [noun: string]: Gender } = {
     Shader: "m",
     Modpack: "n",
     Plugin: "n",
-    Ressourcenpaket: "n"
+    Ressourcenpaket: "n",
 };
 
 export default {
@@ -125,7 +117,8 @@ export default {
         alreadyHaveAccount: "Du hast bereits ein Konto?",
         forgotPassword: "Passwort vergessen?",
         signupWithProviders: "Registriere dich mit einem dieser Anmeldemethode:",
-        aggrement: "Mit dem erstellen eines Kontos akzeptierst du unsere [Bedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
+        aggrement:
+            "Mit dem erstellen eines Kontos akzeptierst du unsere [Bedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
         invalidCode: "Ungültiger oder abgelaufener Code",
         didntRequest: "Nicht angefragt?",
         checkSessions: "Angemeldete Sitzungen überprüfen",
@@ -179,7 +172,7 @@ export default {
             "Diese Geräte sind aktuell in deinen Account eingeloggt; du kannst jede Sitzung jederzeit beenden. Solltest du etwas sehen, das du nicht kennst, beende die entsprechende Sitzung sofort und ändere das Passwort deiner Anmeldemethode.",
         ipHidden: "IP versteckt",
         lastAccessed: (when: string) => `Zuletzt ${when} zugegriffen`,
-        created: (when: string) => `${capitalStart(when)} erstellt`, // eg: Created a month ago
+        created: (when: string) => `${Capitalize(when)} erstellt`, // eg: Created a month ago
         sessionCreatedUsing: (providerName: string) => `Sitzung erstellt über ${providerName}`,
         currSession: "Aktuelle Sitzung",
         revokeSession: "Sitzung beenden",
@@ -271,8 +264,8 @@ export default {
         organization: "Organisation",
         project: "Projekt",
         details: "Details",
-        updatedAt: (when: string) => `${capitalStart(when)} aktualisiert`, // eg: Updated 3 days ago
-        publishedAt: (when: string) => `${capitalStart(when)} veröffentlicht`, // eg: Published 3 days ago
+        updatedAt: (when: string) => `${Capitalize(when)} aktualisiert`, // eg: Updated 3 days ago
+        publishedAt: (when: string) => `${Capitalize(when)} veröffentlicht`, // eg: Published 3 days ago
         gallery: "Gallerie",
         changelog: "Änderungsverlauf",
         versions: "Versionen",
@@ -311,10 +304,10 @@ export default {
         onlyAvailableFor: (project: string, platform: string) => `${project} ist nur für ${platform} verfügbar`,
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `Keine Versionen für ${gameVersion} auf ${loader} verfügbar`,
         declinedInvitation: "Abgelehnte Einladung",
-        teamInvitationTitle: (teamType: string) => `Einladung, ${definiteArticleDative[genderOf[teamType] || "a" as Gender]} ${teamType} beizutreten`
-        , // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) => `Du wurdest eingeladen, in ${demonstrativePronounDative[genderOf[teamType] || "a" as Gender]} ${teamType} Mitglied mit der Rolle '${role}' zu sein.`
-        ,
+        teamInvitationTitle: (teamType: string) =>
+            `Einladung, ${definiteArticleDative[genderOf[teamType] || ("a" as Gender)]} ${teamType} beizutreten`, // teamType = organization | project
+        teamInviteDesc: (teamType: string, role: string) =>
+            `Du wurdest eingeladen, in ${demonstrativePronounDative[genderOf[teamType] || ("a" as Gender)]} ${teamType} Mitglied mit der Rolle '${role}' zu sein.`,
 
         browse: {
             mod: "Durchsuche Mods",
@@ -340,7 +333,8 @@ export default {
             addDescription: "Beschribung hinzufügen",
             addDescriptionDesc: "Eine Beschreibung, die den Sinn und die Funktion des Projektes klar darlegt, wird benötigt.",
             addIcon: "Ein Icon hinzufügen",
-            addIconDesc: "Dein Projekt sollte ein schön-aussehendes Icon haben, um es eindeutig und auf einen Blick identifizieren zu können.",
+            addIconDesc:
+                "Dein Projekt sollte ein schön-aussehendes Icon haben, um es eindeutig und auf einen Blick identifizieren zu können.",
             featureGalleryImg: "Ein Galleriebild hervorheben",
             featureGalleryImgDesc: "Hervorgehobene Galleriebilder sind für viele Nutzer der erste Eindruck von deinem Projekt.",
             selectTags: "Tags wählen",
@@ -348,9 +342,11 @@ export default {
             addExtLinks: "Externe Links hinzufügen",
             addExtLinksDesc: "Füge jegliche relevante Links hinzu, wie zum Quellcode, zum Bugtracker, oder einer Discord-Einladung.",
             selectLicense: "Lizenz wählen",
-            selectLicenseDesc: (projectType: string) => `Wähle die Lizenz, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} verbreitet wird.`,
+            selectLicenseDesc: (projectType: string) =>
+                `Wähle die Lizenz, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} verbreitet wird.`,
             selectEnv: "Wähle unterstützte Umgebungen",
-            selectEnvDesc: (projectType: string) => `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client- und/oder Server-seitige Funktionen hat.`,
+            selectEnvDesc: (projectType: string) =>
+                `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Server-seitige Funktionen hat.`,
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
@@ -439,7 +435,7 @@ export default {
         discordInvite: "Discord-Einladung",
         discordInviteDesc: "Ein Einladungslink zu deinem Discord-Server.",
         licenseDesc1: (projectType: string) =>
-            `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfallst wird der Text der Lizenz angezeigt.`,
+            `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfallst wird der Text der Lizenz angezeigt.`,
         licenseDesc2:
             "Gib einen gültigen [SPDX Lizenz-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizenz keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizenz selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizenz ein.",
         selectLicense: "Lizenz wählen",
@@ -448,16 +444,20 @@ export default {
         licenseUrl: "Lizenz-URL (optional)",
         spdxId: "SPDX-Identifikator",
         doesntHaveSpdxId: "Die Lizenz hat keinen SPDX-Identifikator",
-        tagsDesc: "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
-        tagsDesc2: (projectType: string) => `Wähle alle Kategorien aut, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} wiederspiegeln.`,
+        tagsDesc:
+            "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
+        tagsDesc2: (projectType: string) =>
+            `Wähle alle Kategorien aut, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,
         featuredCategories: "Hervorgehobene Kategorien",
         featuredCategoriesDesc: (count: number) => `Du kannst bis zu ${count} deiner relevantesten Tags hervorheben.`,
         selectAtLeastOneCategory: "Wähle mindestens eine Kategorie, um eine Kategorie hervorzuheben.",
         projectInfo: "Projekt",
         clientSide: "Clientseitig",
-        clientSideDesc: (projectType: string) => `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Client-seitige Funktionalität hat.`,
+        clientSideDesc: (projectType: string) =>
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client-seitige Funktionalität hat.`,
         serverSide: "Serverseitg",
-        serverSideDesc: (projectType: string) => `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || "a" as Gender]} ${projectType} Server-seitige Funktionalität hat.`,
+        serverSideDesc: (projectType: string) =>
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Server-seitige Funktionalität hat.`,
         unknown: "Unbekannt",
         required: "Benötigt",
         optional: "Optional",
@@ -514,7 +514,8 @@ export default {
         removeMember: "Mitglied entfernen",
         transferOwnership: "Besitz übertragen",
         overrideValues: "Werte überschreiben",
-        overrideValuesDesc: "Standardwerte der Organisation überschreiben und Berechtigungen und Rollen für den Nutzer für dieses Projekt festlegen.",
+        overrideValuesDesc:
+            "Standardwerte der Organisation überschreiben und Berechtigungen und Rollen für den Nutzer für dieses Projekt festlegen.",
         projectNotManagedByOrg:
             "Dieses Projekt wird nicht von einer Organisation verwaltet. Wenn du einer Organisation angehörst, kannst du die Verwaltungsrechte an diese übertragen.",
         transferManagementToOrg: "Verwaltungsrechte übertragen",
@@ -558,7 +559,7 @@ export default {
         moderator: "Moderator",
         doesntHaveProjects: (user: string) => `${user} hat noch keine Projekte.`,
         isntPartOfAnyOrgs: (user: string) => `${user} ist nicht Mitglied einer Organization.`,
-        joined: (when: string) => `${capitalStart(when)} beigetreten`, // eg: Joined 2 months ago
+        joined: (when: string) => `${Capitalize(when)} beigetreten`, // eg: Joined 2 months ago
     },
 
     footer: {
@@ -601,7 +602,7 @@ export default {
             if (count === 1) return `Ein Projekt war über ${hours} Stunden in der Warteschlange.`;
             return `${count} Projekte waren über ${hours} Stunden in der Warteschlange.`;
         },
-        submitted: (when: string) => `${capitalStart(when)} abgeschickt`, // eg: Submitted 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
+        submitted: (when: string) => `${Capitalize(when)} abgeschickt`, // eg: Submitted 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
         viewProject: "Projekt anzeigen",
         awaitingApproval: "Project ist in der Warteschlange zur Prüfung",
         draft: "Entwurf",
@@ -645,12 +646,14 @@ export default {
 
     error: {
         sthWentWrong: "Ups! Etwas ist schiefgelaufen",
-        errorDesc: "Sieht aus als wäre etwas kaputt. Während wir versuchen, das Problem zu lösen, kannst du versuchen, die Seite neu zu laden.",
+        errorDesc:
+            "Sieht aus als wäre etwas kaputt. Während wir versuchen, das Problem zu lösen, kannst du versuchen, die Seite neu zu laden.",
         refresh: "Neu laden",
         pageNotFound: "404 | Seite nicht gefunden.",
         pageNotFoundDesc: "Sorry, wir konnten die Seite, nach der du gesucht hast, nicht finden.",
         projectNotFound: "Projekt nicht gefunden",
-        projectNotFoundDesc: (type: string, slug: string) => `${capitalStart(indefiniteArticleNominative[genderOf[type] || "a" as Gender])} ${type} mit der ID "${slug}" existiert nicht.`,
+        projectNotFoundDesc: (type: string, slug: string) =>
+            `${Capitalize(indefiniteArticleNominative[genderOf[type] || ("a" as Gender)])} ${type} mit der ID "${slug}" existiert nicht.`,
     },
 
     editor: {
