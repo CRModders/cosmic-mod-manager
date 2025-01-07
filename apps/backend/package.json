@@ -36,5 +36,6 @@
     },
     "peerDependencies": {
         "typescript": "^5.0.0"
-    }
+    },
+    "trustedDependencies": ["@biomejs/biome", "sharp"]
 }

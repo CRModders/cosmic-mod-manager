@@ -12,6 +12,5 @@
     "peerDependencies": {
         "typescript": "^5.0.0"
     },
-    "workspaces": ["packages/*", "apps/backend", "apps/frontend", "apps/launcher/frontend"],
-    "trustedDependencies": ["@biomejs/biome", "@prisma/client", "@prisma/engines", "prisma", "sharp"]
+    "workspaces": ["packages/*", "apps/backend", "apps/frontend", "apps/launcher/frontend"]
 }
