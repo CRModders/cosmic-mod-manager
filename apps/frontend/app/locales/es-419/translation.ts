@@ -16,6 +16,7 @@ export default {
         report: "Reportar",
         copyId: "Copiar ID",
         all: "Todo",
+        noResults: "Sin resultados",
     },
 
     // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
