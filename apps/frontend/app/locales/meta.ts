@@ -27,6 +27,13 @@ const SupportedLocales = [
         nativeName: "Русский",
         dir: "ltr",
     }),
+
+    meta({
+        code: "de",
+        name: "German",
+        nativeName: "Deutsch",
+        dir: "ltr",
+    }),
 ];
 
 export default SupportedLocales;
