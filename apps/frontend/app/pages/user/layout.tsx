@@ -161,7 +161,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             }
             threeDotMenu={
                 <>
-                    <Button variant="ghost-destructive" className="w-full" size="sm">
+                    <Button variant="ghost-destructive" className="w-full justify-start" size="sm">
                         <FlagIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.common.report}
                     </Button>
