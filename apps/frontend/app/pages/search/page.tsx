@@ -9,10 +9,12 @@ import { useEffect } from "react";
 import { useLocation, useNavigation, useOutletContext } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import SearchListItem, { ViewType } from "~/components/search-list-item";
+import { useTranslation } from "~/locales/provider";
 import type { SearchOutlet } from "./layout";
 import { getSearchResultsQuery } from "./loader";
 
 export function SearchResultsPage() {
+    const { t } = useTranslation();
     const { type, typeStr, viewType, searchParams } = useOutletContext<SearchOutlet>();
 
     const { setShowSpinner } = useSpinnerCtx();
@@ -85,7 +87,7 @@ export function SearchResultsPage() {
 
             {!searchResult.data?.hits?.length && !searchResult.isLoading && !searchResult.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">
-                    <span className="text-extra-muted-foreground italic text-xl">No results</span>
+                    <span className="text-extra-muted-foreground italic text-xl">{t.common.noResults}</span>
                 </div>
             )}
 

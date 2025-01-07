@@ -289,6 +289,7 @@ export default function GeneralSettingsPage() {
                                         placeholder={t.dashboard.chooseProjectType}
                                         className="w-fit sm:min-w-[15rem] sm:w-fit sm:max-w-[20rem]"
                                         popoverClassname="min-w-[15rem]"
+                                        noResultsElement={t.common.noResults}
                                     />
                                 </FormItem>
                             )}

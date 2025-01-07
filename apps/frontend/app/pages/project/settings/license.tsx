@@ -106,6 +106,7 @@ ${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
                                             </FormLabel>
 
                                             <ComboBox
+                                                noResultsElem={t.common.noResults}
                                                 options={FEATURED_LICENSE_OPTIONS.map((license) => ({
                                                     label: license.name,
                                                     value: license.licenseId,

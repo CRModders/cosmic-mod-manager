@@ -63,6 +63,8 @@ export default {
         report: "Melden",
         copyId: "ID kopieren",
         all: "Alle",
+        // ? New string
+        // noResults: "No results",
     },
 
     count: {

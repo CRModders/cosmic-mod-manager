@@ -230,6 +230,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 selectedValues={field.value || []}
                                 placeholder={t.version.selectLoaders}
                                 searchBox={false}
+                                noResultsElement={t.common.noResults}
                             />
                         </FormItem>
                     )}
@@ -264,6 +265,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                     </LabelledCheckbox>
                                 </>
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     </FormItem>
                 )}

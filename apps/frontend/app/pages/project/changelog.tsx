@@ -147,6 +147,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
 
@@ -180,6 +181,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     </>
                                 ) : null
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
 
@@ -202,6 +204,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
                 </div>

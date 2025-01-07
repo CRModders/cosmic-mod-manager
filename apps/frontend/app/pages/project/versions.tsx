@@ -209,6 +209,7 @@ export default function ProjectVersionsPage() {
                                     <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
 
@@ -242,6 +243,7 @@ export default function ProjectVersionsPage() {
                                     </>
                                 ) : null
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
 
@@ -264,6 +266,7 @@ export default function ProjectVersionsPage() {
                                     <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
+                            noResultsElement={t.common.noResults}
                         />
                     ) : null}
 

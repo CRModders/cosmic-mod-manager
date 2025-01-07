@@ -135,6 +135,7 @@ export default function InteractiveDownloadPopup() {
                 </DialogHeader>
                 <DialogBody className="flex flex-col items-center justify-center gap-3">
                     <ComboBox
+                        noResultsElem={t.common.noResults}
                         inputBox={supportedGameVersionsList.length > 5}
                         options={gameVersionsList}
                         value={selectedGameVersion}
@@ -181,7 +182,13 @@ export default function InteractiveDownloadPopup() {
                     </ComboBox>
 
                     {loadersList.length > 0 && (
-                        <ComboBox options={loadersList} value={selectedLoader} setValue={setSelectedLoader} inputBox={false}>
+                        <ComboBox
+                            noResultsElem={t.common.noResults}
+                            options={loadersList}
+                            value={selectedLoader}
+                            setValue={setSelectedLoader}
+                            inputBox={false}
+                        >
                             <Button
                                 variant="outline"
                                 // biome-ignore lint/a11y/useSemanticElements: <explanation>

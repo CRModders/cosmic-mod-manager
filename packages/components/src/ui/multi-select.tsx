@@ -36,6 +36,7 @@ interface MultiSelectProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
     open?: boolean;
     onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
     popoverClassname?: string;
+    noResultsElement?: React.ReactNode;
 }
 
 export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -60,6 +61,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             open,
             onOpenChange,
             popoverClassname,
+            noResultsElement,
             ...props
         },
         ref,
@@ -171,7 +173,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                             {...(searchBox === false ? { readOnly: true } : {})}
                         />
                         <CommandList>
-                            <CommandEmpty>No results found.</CommandEmpty>
+                            <CommandEmpty>{noResultsElement || "No results"}</CommandEmpty>
                             <CommandGroup>
                                 {options.map((option) => {
                                     const isSelected = selectedValues.includes(option.value);
