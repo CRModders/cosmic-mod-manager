@@ -8,14 +8,13 @@
             "./**/public/*",
             "./**/pm2.config.cjs",
             "./**/.react-router/*",
-            "./**/wailsjs/*",
-            "./**/entry.server.tsx"
+            "./**/wailsjs/*"
         ],
         "include": ["./*"]
     },
     "linter": {
         "enabled": true,
-        "ignore": ["./**/*.css"],
+        "ignore": ["./**/*.css", "./**/entry.server.tsx"],
         "rules": {
             "correctness": {
                 "useExhaustiveDependencies": "off"
