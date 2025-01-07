@@ -49,7 +49,7 @@ export default function HomePage({ projects }: Props) {
         };
     }, [gridBgPortal]);
 
-    const titleParts = t.homePage.title.split("{{projectType}}");
+    const titleParts = t.homePage.title(t.navbar.mods);
 
     return (
         <>
@@ -71,10 +71,12 @@ export default function HomePage({ projects }: Props) {
 
                     <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-4">
                         <h1 className="text-4xl lg:text-6xl font-medium text-foreground inline-flex text-center items-center justify-center gap-x-2.5 lg:gap-x-4 flex-wrap">
-                            {titleParts[0]}{" "}
+                            {titleParts[0]?.length > 0 && <>{titleParts[0]} </>}
                             <div className="inline-block h-12 lg:h-[4.5rem] mb-1 max-w-full overflow-hidden">
                                 <span className="hero_section_showcase inline-flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
                                     {showcaseItems?.map((item, index) => {
+                                        const TypeSpecificTitle = t.homePage.title(item);
+
                                         return (
                                             <strong
                                                 key={`${item}${
@@ -88,13 +90,13 @@ export default function HomePage({ projects }: Props) {
                                                 // @ts-ignore
                                                 style={{ "--index": index + 1 }}
                                             >
-                                                {item}
+                                                {TypeSpecificTitle[1]}
                                             </strong>
                                         );
                                     })}
                                 </span>
-                            </div>{" "}
-                            {titleParts[1]}
+                            </div>
+                            {titleParts[2]?.length > 0 && <> {titleParts[2]}</>}
                         </h1>
 
                         <div className="w-full max-w-2xl flex flex-col items-center justify-center">

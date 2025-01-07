@@ -1,48 +1,69 @@
 import { cn } from "@app/components/utils";
 import { EnvironmentSupport } from "@app/utils/types";
 import { GlobeIcon, HardDriveIcon, MonitorIcon } from "lucide-react";
+import { useTranslation } from "~/locales/provider";
 
-function ClientSide({ className }: { className?: string }) {
+interface Props {
+    className?: string;
+}
+function ClientSide({ className }: Props) {
+    const { t } = useTranslation();
     return (
-        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
+        <span
+            className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
+            title="Needs to be installed on the game client"
+        >
             <MonitorIcon aria-hidden className="w-btn-icon h-btn-icon" />
-            Client side
+            {t.projectSettings.clientSide}
         </span>
     );
 }
 
-function ServerSide({ className }: { className?: string }) {
+function ServerSide({ className }: Props) {
+    const { t } = useTranslation();
     return (
-        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
+        <span
+            className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
+            title="Needs to be installed on the server"
+        >
             <HardDriveIcon aria-hidden className="w-btn-icon h-btn-icon" />
-            Server side
+            {t.projectSettings.serverSide}
         </span>
     );
 }
 
-function ClientOrServerSide({ className }: { className?: string }) {
+function ClientOrServerSide({ className }: Props) {
+    const { t } = useTranslation();
     return (
-        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
+        <span
+            className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
+            title="Can be installed on either the game client or the server"
+        >
             <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
-            Client or server
+            {t.projectSettings.clientOrServer}
         </span>
     );
 }
 
-function ClientAndServerSide({ className }: { className?: string }) {
+function ClientAndServerSide({ className }: Props) {
+    const { t } = useTranslation();
     return (
-        <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
+        <span
+            className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
+            title="Needs to be installed on both the game client and the server"
+        >
             <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
-            Client and server
+            {t.projectSettings.clientAndServer}
         </span>
     );
 }
 
-function Unsupported({ className }: { className?: string }) {
+function Unsupported({ className }: Props) {
+    const { t } = useTranslation();
     return (
         <span className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground", className)}>
             <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
-            Unsupported
+            {t.projectSettings.unsupported}
         </span>
     );
 }

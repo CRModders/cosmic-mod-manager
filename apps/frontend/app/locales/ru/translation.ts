@@ -78,7 +78,7 @@ export default {
     },
 
     homePage: {
-        title: "Место, где вы найдете {{projectType}} для Cosmic Reach",
+        title: (projectType: string) => ["Место, где вы найдете ", projectType, " для Cosmic Reach"],
         desc: "Лучшее место для ваших модов Cosmic Reach. Открывайте, играйте и создавайте контент, здесь и сразу.",
         exploreMods: "Найти моды",
     },
@@ -425,6 +425,9 @@ export default {
         serverSide: "Сервер",
         serverSideDesc: (projectType: string) => `Выберите, если ваш ${projectType} имеет функционал на сервере.`,
         unknown: "Неизвестно",
+        // ? New strings
+        // clientOrServer: "Client or server",
+        // clientAndServer: "Client and server",
         required: "Обязательно",
         optional: "Необязательно",
         unsupported: "Не поддерживается",
