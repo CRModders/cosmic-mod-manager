@@ -1,6 +1,9 @@
 {
     "compilerOptions": {
-        "lib": ["ESNext", "DOM"],
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
         "composite": true,
         "target": "ESNext",
         "module": "ESNext",
@@ -33,5 +36,14 @@
             "path": "./packages/utils"
         }
     ],
-    "exclude": ["node_modules/", "launcher/backend/", "build/", "dist/", "wailsjs/", "*.mod", "*.sum", "launcher/**/*.go"]
+    "exclude": [
+        "node_modules/",
+        "launcher/backend/",
+        "build/",
+        "dist/",
+        "wailsjs/",
+        "*.mod",
+        "*.sum",
+        "launcher/**/*.go"
+    ]
 }

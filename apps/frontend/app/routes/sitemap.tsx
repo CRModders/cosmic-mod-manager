@@ -4,7 +4,7 @@ import type { Route } from "./+types/sitemap";
 
 export async function loader(props: Route.LoaderArgs) {
     const sitemapName = props.params.sitemap;
-    const res = await serverFetch(props.request, `${Config.BACKEND_URL}/cdn/sitemap/${sitemapName}.xml`);
+    const res = await serverFetch(props.request, `${Config.BACKEND_URL_LOCAL}/cdn/sitemap/${sitemapName}.xml`);
 
     if (!res.ok) return new Response("File not found", { status: res.status });
 

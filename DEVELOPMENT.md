@@ -165,4 +165,4 @@ Keep in mind that you'll need to start the database again after a reboot.
 - The frontend server will start on [localhost:3000](http://localhost:3000)
 
 If you wish to only work on the frontend, you can totally skip the backend setup and just proxy the requests to the hosted backend. \
-Set `proxy: true` in [`app/utils/config.ts`](/apps/frontend/app/utils/config.ts#L15) and change `BACKEND_URL` and `BACKEND_URL_LOCAL` to `https://api.crmm.tech`; and now all the api requests will be made to the prod backend.
+Set `proxy: true` in [`app/utils/config.ts`](/apps/frontend/app/utils/config.ts#L15) and change `BACKEND_URL_PUBLIC` and `BACKEND_URL_LOCAL` to `https://api.crmm.tech`; and now all the api requests will be made to the prod backend.

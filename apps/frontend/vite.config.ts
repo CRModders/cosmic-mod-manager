@@ -1,5 +1,8 @@
+import adapter from "@hono/vite-dev-server/cloudflare";
 import { reactRouter } from "@react-router/dev/vite";
+import { cloudflareDevProxy } from "@react-router/dev/vite/cloudflare";
 import autoprefixer from "autoprefixer";
+import serverAdapter from "hono-react-router-adapter/vite";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -20,5 +23,13 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
-    plugins: [reactRouter(), tsconfigPaths()],
+    plugins: [
+        cloudflareDevProxy(),
+        serverAdapter({
+            adapter,
+            entry: "server/index.ts",
+        }),
+        reactRouter(),
+        tsconfigPaths(),
+    ],
 });

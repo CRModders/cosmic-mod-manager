@@ -36,7 +36,7 @@ export default function OAuthProvidersWidget({ actionIntent = AuthActionIntent.S
                 return (
                     <React.Fragment key={provider.name}>
                         <VariantButtonLink
-                            url={`${Config.BACKEND_URL}/api/auth/${actionIntent}/${provider.name}?redirect=true`}
+                            url={`${Config.BACKEND_URL_PUBLIC}/api/auth/${actionIntent}/${provider.name}?redirect=true`}
                             aria-label={`Continue using ${provider.name}`}
                             className="w-full font-medium capitalize"
                             variant="secondary"

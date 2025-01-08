@@ -1,10 +1,6 @@
 {
     "name": "cosmic-mod-manager",
     "module": "index.ts",
-    "type": "module",
-    "scripts": {
-        "lint": "biome lint"
-    },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@types/bun": "latest"
@@ -12,5 +8,9 @@
     "peerDependencies": {
         "typescript": "^5.0.0"
     },
+    "scripts": {
+        "lint": "biome lint"
+    },
+    "type": "module",
     "workspaces": ["packages/*", "apps/backend", "apps/frontend", "apps/launcher/frontend"]
 }

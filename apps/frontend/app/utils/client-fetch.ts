@@ -35,5 +35,5 @@ function fetchUrl(path: string) {
         return path;
     }
 
-    return `${Config.BACKEND_URL}${path}`;
+    return `${Config.BACKEND_URL_PUBLIC}${path}`;
 }
