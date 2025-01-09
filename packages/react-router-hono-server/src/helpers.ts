@@ -6,13 +6,10 @@ import type { UpgradeWebSocket } from "hono/ws";
 import type { IncomingMessage, Server } from "node:http";
 import type { Http2SecureServer, Http2Server } from "node:http2";
 import type { ServerBuild } from "react-router";
-import type { HonoServerOptionsBase } from "./types/hono-server-options-base";
-import type { Runtime } from "./types/runtime";
+import type { HonoServerOptionsBase } from "~/types/hono-server-options-base";
 
 type NodeServer = Server | Http2Server | Http2SecureServer;
-
 type BunServer = Serve;
-
 type AnyServer = NodeServer | BunServer;
 
 interface WebSocket {
@@ -21,10 +18,11 @@ interface WebSocket {
 }
 
 const defaultWebSocket = {
-    upgradeWebSocket: () => async () => {},
+    upgradeWebSocket: () => async () => { },
     injectWebSocket: (server) => server,
 } satisfies WebSocket;
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type Config = { app: Hono<any>; enabled: boolean };
 
 /**
@@ -44,22 +42,8 @@ export async function createWebSocket({ app, enabled }: Config): Promise<WebSock
     }
     const mode = import.meta.env.MODE;
     const DEV = mode === "development";
-    const runtime = import.meta.env.REACT_ROUTER_HONO_SERVER_RUNTIME as Runtime;
 
-    if (DEV || runtime === "node") {
-        const { createNodeWebSocket } = await import("@hono/node-ws");
-        const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
-
-        return {
-            upgradeWebSocket,
-            injectWebSocket(server) {
-                injectWebSocket(server as NodeServer);
-                return server;
-            },
-        };
-    }
-
-    if (runtime === "bun") {
+    if (DEV) {
         const { createBunWebSocket } = await import("hono/bun");
         const { upgradeWebSocket, websocket } = createBunWebSocket();
 
@@ -72,9 +56,20 @@ export async function createWebSocket({ app, enabled }: Config): Promise<WebSock
                 };
             },
         };
-    }
 
-    return defaultWebSocket;
+        // biome-ignore lint/style/noUselessElse: <explanation>
+    } else {
+        const { createNodeWebSocket } = await import("@hono/node-ws");
+        const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
+
+        return {
+            upgradeWebSocket,
+            injectWebSocket(server) {
+                injectWebSocket(server as NodeServer);
+                return server;
+            },
+        };
+    }
 }
 
 /**

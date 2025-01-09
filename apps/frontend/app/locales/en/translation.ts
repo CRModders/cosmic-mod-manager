@@ -2,6 +2,8 @@ import type { Translation } from "~/locales/types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
+type CountTranslation = [string, string, string];
+
 export default {
     common: {
         settings: "Settings",
@@ -19,22 +21,22 @@ export default {
         noResults: "No results",
     },
 
-    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
+    // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html
     // it's here just for readability
     count: {
-        downloads: (count: number) => {
+        downloads: (count: number): CountTranslation => {
             if (count === 1) return ["", count.toString(), "download"];
             return ["", count.toString(), "downloads"];
         },
-        followers: (count: number) => {
+        followers: (count: number): CountTranslation => {
             if (count === 1) return ["", count.toString(), "follower"];
             return ["", count.toString(), "followers"];
         },
-        projects: (count: number) => {
+        projects: (count: number): CountTranslation => {
             if (count === 1) return ["", count.toString(), "project"];
             return ["", count.toString(), "projects"];
         },
-        members: (count: number) => {
+        members: (count: number): CountTranslation => {
             if (count === 1) return ["", count.toString(), "member"];
             return ["", count.toString(), "members"];
         },

@@ -7,11 +7,24 @@
         "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
         "strict": true /* Enable all strict type-checking options. */,
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-        "types": ["vite/client", "@types/bun"],
+        "types": [
+            "vite/client",
+            "@types/bun"
+        ],
         "rootDir": ".",
         "outDir": "./dist",
-        "composite": true
+        "composite": true,
+        "paths": {
+            "~/*": [
+                "./src/*"
+            ]
+        }
     },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "virtual:react-router/server-build"]
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "virtual:react-router/server-build"
+    ]
 }
