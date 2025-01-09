@@ -2,7 +2,8 @@
     "include": [
         ".",
         "./.react-router/types",
-        "./../../packages/components"
+        "./../../packages/components",
+        "./../../packages/react-router-hono-server",
     ],
     "exclude": [
         "node_modules",
@@ -37,7 +38,6 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
-        "noEmit": true,
         "rootDirs": [
             ".",
             "./.react-router/types"
@@ -54,12 +54,18 @@
             ],
             "@app/components/*": [
                 "./../../packages/components/src/*"
+            ],
+            "react-router-hono-server/*": [
+                "./../../packages/react-router-hono-server/src/*"
             ]
         }
     },
     "references": [
         {
             "path": "./../../packages/components"
+        },
+        {
+            "path": "./../../packages/react-router-hono-server"
         }
     ]
 }

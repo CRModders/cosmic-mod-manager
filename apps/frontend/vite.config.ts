@@ -1,9 +1,9 @@
 import { reactRouter } from "@react-router/dev/vite";
 import autoprefixer from "autoprefixer";
-import { reactRouterHonoServer } from "react-router-hono-server/dev";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { reactRouterHonoServer } from "./../../packages/react-router-hono-server/src/dev";
 
 export default defineConfig({
     server: {
@@ -21,11 +21,5 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
-    plugins: [
-        reactRouterHonoServer({
-            runtime: "bun",
-        }),
-        reactRouter(),
-        tsconfigPaths(),
-    ],
+    plugins: [reactRouterHonoServer(), reactRouter(), tsconfigPaths()],
 });

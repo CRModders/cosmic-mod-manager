@@ -12,22 +12,11 @@ import { useUrlLocale } from "./utils/urls";
 
 const ABORT_DELAY = 5000;
 
-export default async function handleRequest(
-    request: Request,
-    responseStatusCode: number,
-    responseHeaders: Headers,
-    routerContext: EntryContext,
-) {
-    try {
-        console.time("handleRequest");
-
-        if (import.meta.env.DEV) {
-            return await HandleReq_Dev(request, responseStatusCode, responseHeaders, routerContext);
-        } else if (import.meta.env.PROD) {
-            return await HandleReq_Prod(request, responseStatusCode, responseHeaders, routerContext);
-        }
-    } finally {
-        console.timeEnd("handleRequest");
+export default function handleRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, routerContext: EntryContext) {
+    if (import.meta.env.DEV) {
+        return HandleReq_Dev(request, responseStatusCode, responseHeaders, routerContext);
+    } else if (import.meta.env.PROD) {
+        return HandleReq_Prod(request, responseStatusCode, responseHeaders, routerContext);
     }
 }
 
