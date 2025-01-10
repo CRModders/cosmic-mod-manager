@@ -160,6 +160,11 @@ export const links: LinksFunction = () => {
     return [
         {
             rel: "preconnect",
+            href: "https://fonts.gstatic.com",
+            crossOrigin: "anonymous",
+        },
+        {
+            rel: "preconnect",
             href: "https://api.crmm.tech",
         },
         {
