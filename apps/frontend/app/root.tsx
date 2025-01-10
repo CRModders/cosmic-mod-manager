@@ -1,3 +1,5 @@
+import "./index.css";
+
 import { DownloadRipple } from "@app/components/misc/download-animation";
 import LoaderBar from "@app/components/misc/loader-bar";
 import type { ThemeOptions } from "@app/components/types";
@@ -22,7 +24,6 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { PageUrl, removeLeading, useUrlLocale } from "~/utils/urls";
 import type { Route } from "./+types/root";
 import { PageBreadCrumbs } from "./hooks/breadcrumb";
-import indexCss from "./index.css?url";
 import { formatLocaleCode, parseLocale } from "./locales";
 
 export interface RootOutletData {
@@ -159,11 +160,6 @@ export const links: LinksFunction = () => {
     return [
         {
             rel: "preconnect",
-            href: "https://fonts.gstatic.com",
-            crossOrigin: "anonymous",
-        },
-        {
-            rel: "preconnect",
             href: "https://api.crmm.tech",
         },
         {
@@ -180,10 +176,6 @@ export const links: LinksFunction = () => {
             type: "image/png",
             sizes: "180*180",
             href: "/icon.png",
-        },
-        {
-            rel: "stylesheet",
-            href: indexCss,
         },
     ];
 };

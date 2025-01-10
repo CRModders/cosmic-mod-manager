@@ -51,7 +51,6 @@ export default defineConfig({
                     if (id.includes("locales/en")) return "locale-en";
 
                     // Styles
-                    if (id.endsWith(".css") && id.includes("components")) return "component-styles";
                     if (id.endsWith(".css")) return "styles";
 
                     // Icons
