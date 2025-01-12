@@ -40,10 +40,10 @@ interface TimePassedSinceProps {
 }
 
 export function TimePassedSince(props: TimePassedSinceProps) {
-    const { t } = useTranslation();
+    const { locale } = useTranslation();
     const date = new Date(props.date);
 
-    const timeStr = timeSince(date, t.date);
+    const timeStr = timeSince(date, formatLocaleCode(locale));
     if (props.capitalize) return Capitalize(timeStr);
     return timeStr;
 }

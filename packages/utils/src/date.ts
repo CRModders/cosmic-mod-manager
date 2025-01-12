@@ -1,87 +1,29 @@
-const defaultPhrases = {
-    justNow: "just now",
-    minuteAgo: (mins: number) => {
-        switch (mins) {
-            case 1:
-                return "a minute ago";
-            default:
-                return `${mins} minutes ago`;
-        }
-    },
-    hourAgo: (hours: number) => {
-        switch (hours) {
-            case 1:
-                return "an hour ago";
-            default:
-                return `${hours} hours ago`;
-        }
-    },
-    dayAgo: (days: number) => {
-        switch (days) {
-            case 1:
-                return "yesterday";
-            default:
-                return `${days} days ago`;
-        }
-    },
-    weekAgo: (weeks: number) => {
-        switch (weeks) {
-            case 1:
-                return "last week";
-            default:
-                return `${weeks} weeks ago`;
-        }
-    },
-    monthAgo: (months: number) => {
-        switch (months) {
-            case 1:
-                return "last month";
-            default:
-                return `${months} months ago`;
-        }
-    },
-    yearAgo: (years: number) => {
-        switch (years) {
-            case 1:
-                return "last year";
-            default:
-                return `${years} years ago`;
-        }
-    },
-};
-
-export function timeSince(pastTime: Date, t = defaultPhrases): string {
+export function timeSince(pastTime: Date, locale = "en-US"): string {
     try {
+        const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
         const now = new Date();
         const diff = now.getTime() - pastTime.getTime();
 
         const seconds = Math.abs(diff / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.round(hours / 24);
-        const weeks = Math.round(days / 7);
-        const months = Math.round(days / 30.4375);
-        const years = Math.round(days / 365.25);
+        if (seconds < 60) return formatter.format(-seconds, "second");
 
-        if (seconds < 60) {
-            return t.justNow;
-        }
-        if (minutes < 60) {
-            return t.minuteAgo(minutes);
-        }
-        if (hours < 24) {
-            return t.hourAgo(hours);
-        }
-        if (days < 7) {
-            return t.dayAgo(days);
-        }
-        if (weeks < 4) {
-            return t.weekAgo(weeks);
-        }
-        if (months < 12) {
-            return t.monthAgo(months);
-        }
-        return t.yearAgo(years);
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return formatter.format(-minutes, "minute");
+
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return formatter.format(-hours, "hour");
+
+        const days = Math.round(hours / 24);
+        if (days < 7) return formatter.format(-days, "day");
+
+        const weeks = Math.round(days / 7);
+        if (weeks < 4) return formatter.format(-weeks, "week");
+
+        const months = Math.round(days / 30.4375);
+        if (months < 12) return formatter.format(-months, "month");
+
+        const years = Math.round(days / 365.25);
+        return formatter.format(-years, "year");
     } catch (error) {
         console.error(error);
         return "";
