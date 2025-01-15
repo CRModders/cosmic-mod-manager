@@ -15,12 +15,8 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
-User-agent: AhrefsBot
-Allow: /
-
 User-agent: Discordbot
 Allow: /
 
 User-agent: *
 Disallow: /
-

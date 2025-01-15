@@ -175,7 +175,9 @@ export default function ProjectPageLayout() {
 
                         {projectEnvironments?.length ? (
                             <section className="flex flex-wrap items-start justify-start gap-1">
-                                <h3 className="block w-full font-bold text-muted-foreground">{t.project.environments}</h3>
+                                <h3 className="block w-full font-bold text-muted-foreground" title="Environment(s) the mod is made for">
+                                    {t.project.environments}
+                                </h3>
                                 {projectEnvironments.map((item, i) => {
                                     return (
                                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

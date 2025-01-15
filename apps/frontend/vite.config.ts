@@ -18,14 +18,7 @@ const CustomSrcChunks = [
 
 export default defineConfig({
     server: {
-        port: 3000,
-        proxy: {
-            "/api": {
-                target: "https://api.crmm.tech",
-                changeOrigin: true,
-                secure: true,
-            },
-        },
+        port: 3000
     },
     build: {
         rollupOptions: {

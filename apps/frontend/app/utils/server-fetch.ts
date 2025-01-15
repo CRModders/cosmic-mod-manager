@@ -31,6 +31,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
 
         if (fetchUrl.startsWith("/")) {
             fetchUrl = `${backendHost}${fetchUrl}`;
+
             headers.Cookie = getHeader("Cookie") || "";
             headers["x-identity-token"] = process.env.FRONTEND_SECRET || "";
         }
