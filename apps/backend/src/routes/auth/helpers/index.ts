@@ -97,11 +97,13 @@ export function getUserIpAddress(ctx: Context, strip = true): string | null {
 
     let ipStr = null;
 
-    const identityToken = ctx.req.header("x-identity-token");
-    if (identityToken === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
-    else {
-        ipStr = getSessionIp(getHeader, ctx.env.ip?.address || "");
-    }
+    const frontendSecret_header = ctx.req.header("x-identity-token");
+    if (frontendSecret_header === env.FRONTEND_SECRET) ipStr = ctx.req.header("x-client-ip");
+
+    const cdnSecret_header = ctx.req.header("CDN-Secret");
+    if (cdnSecret_header === env.CDN_SECRET) ipStr = ctx.req.header("Fastly-Client-IP");
+
+    if (!ipStr) ipStr = getSessionIp(getHeader, ctx.env.ip?.address || "");
     if (!ipStr) return null;
 
     const IPv6 = convertToIPv6(ipStr);
@@ -133,7 +135,7 @@ export function getUserSessionCookie(ctx: Context) {
             return null;
         }
         return cookie;
-    } catch (error) {}
+    } catch (error) { }
     return null;
 }
 

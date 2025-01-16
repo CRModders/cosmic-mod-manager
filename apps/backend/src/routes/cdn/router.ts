@@ -9,8 +9,6 @@ import { invalidReqestResponse, notFoundResponse, serverErrorResponse } from "~/
 import { getUserFromCtx } from "../auth/helpers/session";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveUserAvatar, serveVersionFile } from "./controller";
 
-const cdnUrlQueryKey = "cdnReq";
-
 const cdnRouter = new Hono();
 cdnRouter.use(
     cors({
@@ -135,7 +133,7 @@ async function sitemap_get(ctx: Context) {
 
 function IsCdnRequest(ctx: Context) {
     if (env.NODE_ENV === "development") return true;
-    return ctx.req.query(cdnUrlQueryKey) === env.CDN_SECRET;
+    return ctx.req.header("CDN-Secret") === env.CDN_SECRET;
 }
 
 export default cdnRouter;
