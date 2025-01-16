@@ -5,7 +5,7 @@ import { cdnAssetRateLimiter, cdnLargeFileRateLimiter } from "~/middleware/rate-
 import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getSitemap } from "~/services/sitemap-gen";
 import env from "~/utils/env";
-import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
+import { invalidReqestResponse, notFoundResponse, serverErrorResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
 import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveUserAvatar, serveVersionFile } from "./controller";
 
@@ -120,9 +120,8 @@ async function sitemap_get(ctx: Context) {
         }
 
         const sitemap = await getSitemap(name);
-        if (!sitemap) {
-            return invalidReqestResponse(ctx);
-        }
+        if (!sitemap) return invalidReqestResponse(ctx);
+        if (!(await sitemap.exists())) return notFoundResponse(ctx, "Sitemap not found");
 
         return new Response(sitemap, {
             headers: {
