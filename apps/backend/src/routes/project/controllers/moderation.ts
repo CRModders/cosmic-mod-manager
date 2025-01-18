@@ -1,4 +1,5 @@
 import { RejectedStatuses } from "@app/utils/config/project";
+import { DateFromStr } from "@app/utils/date";
 import { getCurrMember } from "@app/utils/project";
 import { ProjectPublishingStatus } from "@app/utils/types";
 import { GetProject_Details, UpdateProject } from "~/db/project_item";
@@ -16,7 +17,8 @@ export async function QueueProjectForApproval(projectId: string, userSession: Co
 
     // Don't allow resubmission before an interval of 3 hours from rejection
     if (RejectedStatuses.includes(project.status as ProjectPublishingStatus) && project.dateQueued) {
-        const timeRemaining = 10800000 - (currDate.getTime() - project.dateQueued.getTime());
+        const queuedOn = DateFromStr(project.dateQueued)?.getTime() || 0;
+        const timeRemaining = 10800000 - (currDate.getTime() - queuedOn);
         if (timeRemaining > 0) {
             return invalidReqestResponseData(
                 `Please wait for ${Math.round(timeRemaining / 60_000)} minutes before trying to resubmit again!`,
