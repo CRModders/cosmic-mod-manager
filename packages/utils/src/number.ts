@@ -1,3 +1,4 @@
+
 export function isNumber(num: number | string) {
     if (typeof num === "number") {
         return num - num === 0;
@@ -29,8 +30,16 @@ export function parseFileSize(size: number): string {
 }
 
 export function FormatCount(count = 0, locale = "en-US", options?: Intl.NumberFormatOptions) {
+    let minimumFractionDigits: number | undefined = undefined;
+    if (count > 1_000_000) {
+        minimumFractionDigits = 2;
+    } else if (count > 1_000) {
+        minimumFractionDigits = 1;
+    }
+
     const formatter = new Intl.NumberFormat(locale, {
         notation: "compact",
+        minimumFractionDigits: minimumFractionDigits,
         ...options,
     });
 
