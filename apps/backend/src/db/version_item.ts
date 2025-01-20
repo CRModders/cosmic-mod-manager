@@ -54,7 +54,7 @@ async function GetVersions_FromDb(projectSlug?: string, projectId?: string) {
     if (projectId && projectSlug) {
         data = await prisma.project.findFirst({
             where: {
-                OR: [{ id: projectId }, { slug: projectSlug }],
+                OR: [{ id: projectId }, { slug: projectSlug?.toLowerCase() }],
             },
             select: {
                 id: true,
@@ -82,7 +82,7 @@ async function GetVersions_FromDb(projectSlug?: string, projectId?: string) {
     } else {
         data = await prisma.project.findUnique({
             where: {
-                slug: projectSlug,
+                slug: projectSlug?.toLowerCase(),
             },
             select: {
                 id: true,
@@ -101,7 +101,7 @@ async function GetVersions_FromDb(projectSlug?: string, projectId?: string) {
 export async function GetVersions(projectSlug?: string, projectId?: string) {
     if (!projectSlug && !projectId) throw new Error("Either the project id or slug is required!");
 
-    const cachedData = await GetData_FromCache<GetVersions_ReturnType>(PROJECT_VERSIONS_CACHE_KEY, projectSlug || projectId);
+    const cachedData = await GetData_FromCache<GetVersions_ReturnType>(PROJECT_VERSIONS_CACHE_KEY, projectSlug?.toLowerCase() || projectId);
     if (cachedData) return cachedData;
 
     const data = await GetVersions_FromDb(projectSlug, projectId);
@@ -219,14 +219,15 @@ interface SetCache_Data {
 async function Set_VersionsCache<T extends SetCache_Data | null>(NAMESPACE: string, project_withVersions: T) {
     if (!project_withVersions) return;
     const json_string = JSON.stringify(project_withVersions);
+    const slug = project_withVersions.slug.toLowerCase();
 
-    const p1 = SetCache(NAMESPACE, project_withVersions.id, project_withVersions.slug, VERSION_CACHE_EXPIRY_seconds);
-    const p2 = SetCache(NAMESPACE, project_withVersions.slug, json_string, VERSION_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(NAMESPACE, project_withVersions.id, slug, VERSION_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(NAMESPACE, slug, json_string, VERSION_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
 }
 
 export async function Delete_VersionCache(projectId: string, _projectSlug?: string) {
-    let projectSlug: string | undefined = _projectSlug;
+    let projectSlug: string | undefined = _projectSlug?.toLowerCase();
 
     // If slug is not provided, get it from the cache
     if (!projectSlug) {

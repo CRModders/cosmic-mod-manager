@@ -100,8 +100,8 @@ export async function GetManyUsers_ByIds(ids: string[]) {
     const _DB_Users =
         UserIds_ToFetchFromDb.length > 0
             ? await prisma.user.findMany({
-                  where: { id: { in: UserIds_ToFetchFromDb } },
-              })
+                where: { id: { in: UserIds_ToFetchFromDb } },
+            })
             : [];
 
     // Set cache for remaining users
@@ -187,7 +187,7 @@ export async function UpdateUser<T extends Prisma.UserUpdateArgs>(args: Prisma.S
 
 // Cache functions
 export async function Delete_UserCache(id: string, _userName?: string) {
-    let UserName: string | undefined = _userName;
+    let UserName: string | undefined = _userName?.toLowerCase();
 
     // If userName is not provided, get it from the cache
     if (!UserName) {
@@ -204,9 +204,10 @@ interface SetCache_Data {
 async function Set_UserCache<T extends SetCache_Data | null>(user: T) {
     if (!user?.id) return;
     const json_string = JSON.stringify(user);
+    const userName = user.userName.toLowerCase();
 
-    const p1 = SetCache(USER_DATA_CACHE_KEY, user.id, user.userName.toLowerCase(), USER_DATA_CACHE_EXPIRY_seconds);
-    const p2 = SetCache(USER_DATA_CACHE_KEY, user.userName.toLowerCase(), json_string, USER_DATA_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(USER_DATA_CACHE_KEY, user.id, userName, USER_DATA_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(USER_DATA_CACHE_KEY, userName, json_string, USER_DATA_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
 }
 

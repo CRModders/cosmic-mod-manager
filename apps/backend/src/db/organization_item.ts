@@ -54,8 +54,9 @@ async function GetOrganization_FromDb(slug?: string, id?: string) {
     return org;
 }
 
-export async function GetOrganization_BySlugOrId(slug?: string, id?: string) {
-    if (!slug && !id) throw new Error("Either slug or id is required!");
+export async function GetOrganization_BySlugOrId(_slug?: string, id?: string) {
+    if (!_slug && !id) throw new Error("Either slug or id is required!");
+    const slug = _slug?.toLowerCase();
 
     let OrgData = await GetData_FromCache<GetOrganization_ReturnType>(ORGANIZATION_DATA_CACHE_KEY, slug || id);
     if (!OrgData) OrgData = await GetOrganization_FromDb(slug, id);
@@ -98,13 +99,13 @@ export async function GetManyOrganizations(ids: string[]) {
     const _RemainingOrgItems =
         OrgsIds_ToRetrieve.length > 0
             ? await prisma.organisation.findMany({
-                  where: {
-                      id: {
-                          in: OrgsIds_ToRetrieve,
-                      },
-                  },
-                  select: ORGANIZATION_SELECT_FIELDS,
-              })
+                where: {
+                    id: {
+                        in: OrgsIds_ToRetrieve,
+                    },
+                },
+                select: ORGANIZATION_SELECT_FIELDS,
+            })
             : [];
 
     // Cache the items that were not found in the cache
@@ -169,14 +170,15 @@ interface SetCache_Data {
 async function Set_OrganizationCache<T extends SetCache_Data | null>(NAMESPACE: string, org: T) {
     if (!org?.id) return;
     const json_string = JSON.stringify(org);
+    const slug = org.slug.toLowerCase();
 
-    const p1 = SetCache(NAMESPACE, org.id, org.slug, ORGANIZATION_DATA_CACHE_EXPIRY_seconds);
-    const p2 = SetCache(NAMESPACE, org.slug, json_string, ORGANIZATION_DATA_CACHE_EXPIRY_seconds);
+    const p1 = SetCache(NAMESPACE, org.id, slug, ORGANIZATION_DATA_CACHE_EXPIRY_seconds);
+    const p2 = SetCache(NAMESPACE, slug, json_string, ORGANIZATION_DATA_CACHE_EXPIRY_seconds);
     await Promise.all([p1, p2]);
 }
 
 export async function Delete_OrganizationCache_All(id: string, slug?: string) {
-    let OrgSlug: string | undefined = slug;
+    let OrgSlug: string | undefined = slug?.toLowerCase();
     // If slug is not provided, get it from the cache
     if (!OrgSlug) {
         OrgSlug = (await redis.get(cacheKey(id, ORGANIZATION_DATA_CACHE_KEY))) || "";
