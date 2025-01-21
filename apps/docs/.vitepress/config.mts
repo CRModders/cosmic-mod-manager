@@ -7,6 +7,10 @@ export default defineConfig({
     sitemap: {
         hostname: "https://docs.crmm.tech",
     },
+
+    cleanUrls: true,
+    lastUpdated: true,
+
     themeConfig: {
         logo: { src: 'https://assets.crmm.tech/icon.svg', width: 24, height: 24 },
 
