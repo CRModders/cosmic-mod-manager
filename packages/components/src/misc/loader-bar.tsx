@@ -57,7 +57,7 @@ export default function LoaderBar(props?: Props) {
         if (navigation.state === "loading" || navigation.state === "submitting") {
             if (props.instantStart === true) loadingStart();
             else {
-                timeoutRef = window.setTimeout(loadingStart, 100);
+                timeoutRef = window.setTimeout(loadingStart, 32);
             }
         }
 

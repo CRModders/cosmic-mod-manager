@@ -1,5 +1,5 @@
 [data-view-transition="theme-switch"]::view-transition-group(root) {
-    animation-duration: .5s;
+    animation-duration: .6s;
 }
 
 [data-view-transition="theme-switch"]::view-transition-new(root),
