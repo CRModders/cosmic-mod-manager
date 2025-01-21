@@ -6,6 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { reactRouterHonoServer } from "./../../packages/react-router-hono-server/src/dev";
 import { formatLocaleCode } from "./app/locales";
 import SupportedLocales, { DefaultLocale } from "./app/locales/meta";
+import { ASSETS_URL } from "./app/utils/server-config";
 
 const localesList = SupportedLocales.map((locale) => formatLocaleCode(locale)).filter(
     (locale) => locale !== formatLocaleCode(DefaultLocale),
@@ -20,6 +21,7 @@ export default defineConfig({
     server: {
         port: 3000
     },
+    base: ASSETS_URL,
     build: {
         rollupOptions: {
             output: {
@@ -57,7 +59,7 @@ export default defineConfig({
                             if (id.includes(path)) return chunkName;
                         }
                     }
-                }
+                },
             },
         },
     },

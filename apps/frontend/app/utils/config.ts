@@ -1,4 +1,4 @@
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env?.DEV;
 
 let Config = {
     FRONTEND_URL: "https://crmm.tech",

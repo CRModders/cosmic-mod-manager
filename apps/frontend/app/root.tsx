@@ -3,7 +3,7 @@ import "./index.css";
 import { DownloadRipple } from "@app/components/misc/download-animation";
 import LoaderBar from "@app/components/misc/loader-bar";
 import type { ThemeOptions } from "@app/components/types";
-import { SITE_NAME_LONG } from "@app/utils/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
 import { getCookie, getThemeFromCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
@@ -18,13 +18,13 @@ import type { LocaleMetaData } from "~/locales/types";
 import ContextProviders from "~/providers";
 import ErrorView from "~/routes/error-view";
 import clientFetch from "~/utils/client-fetch";
-import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import { PageUrl, removeLeading, useUrlLocale } from "~/utils/urls";
 import type { Route } from "./+types/root";
 import { PageBreadCrumbs } from "./hooks/breadcrumb";
 import { formatLocaleCode, parseLocale } from "./locales";
+import Config from "./utils/config";
 
 export interface RootOutletData {
     theme: ThemeOptions;
@@ -43,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <meta name="publisher" content="CRMM" />
+                <meta name="publisher" content={SITE_NAME_SHORT} />
                 <meta name="theme-color" content="#F04570" />
                 <meta name="color-scheme" content="dark light" />
                 <meta property="og:logo" content={`${Config.FRONTEND_URL}/icon.png`} />
@@ -52,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
                 <script
                     defer
-                    src="/telemetry.js"
+                    src="https://assets.crmm.tech/telemetry.js"
                     data-website-id="1bbb8989-cc84-4b4c-bfca-51e53779f587"
                     data-exclude-search="true"
                     data-exclude-hash="true"
