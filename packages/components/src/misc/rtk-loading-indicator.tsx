@@ -240,7 +240,6 @@ function LoadingBar({
                     width: `${_progress}%`,
                     opacity: 1,
                     transition: _progress > 0 ? `all ${loaderSpeed}ms ease` : "",
-                    backgroundSize: `${(100 / (_progress + 1)) * 100}% auto`,
                 };
             });
 

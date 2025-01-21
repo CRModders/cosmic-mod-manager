@@ -24,7 +24,7 @@ export default function LoaderBar(props?: Props) {
         LoadingStartedAt = Date.now();
         NavigatingFrom = window.location.pathname;
 
-        ref.current?.continuousStart(60);
+        ref.current?.staticStart(99);
         loaderStarted = true;
     }
 
@@ -69,10 +69,10 @@ export default function LoaderBar(props?: Props) {
     return (
         <LoadingBar
             ref={ref}
-            className="!bg-gradient-to-r from-accent-background/85 to-accent-background"
-            loaderSpeed={1200}
-            shadow={true}
-            height={props.height || 2.25}
+            className="!bg-gradient-to-r !from-accent-foreground !via-accent-background/85 !to-accent-background/85"
+            loaderSpeed={1500}
+            shadow={false}
+            height={props.height || 2.5}
             transitionTime={350}
             waitingTime={250}
             {...props}
