@@ -165,7 +165,7 @@ export const links: LinksFunction = () => {
         },
         {
             rel: "preconnect",
-            href: "https://api.crmm.tech",
+            href: "https://assets.crmm.tech",
         },
         {
             rel: "preconnect",
