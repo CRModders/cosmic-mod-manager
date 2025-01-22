@@ -16,9 +16,8 @@ import scala from "highlight.js/lib/languages/scala";
 import typescript from "highlight.js/lib/languages/typescript";
 import xml from "highlight.js/lib/languages/xml";
 import yaml from "highlight.js/lib/languages/yaml";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 // Scripting
-import { useNavigate } from "~/ui/link";
 import { cn } from "~/utils";
 import { configureXss, md } from "./parse-md";
 
@@ -81,42 +80,6 @@ interface Props {
 }
 
 export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = true, urlModifier }: Props) {
-    const markdownBoxId = useMemo(() => `MarkdownBox-${Math.random().toString(36).substring(7)}`, []);
-    const navigate = useNavigate();
-
-    // Use React router to handle internal links
-    function handleNavigate(e: MouseEvent) {
-        try {
-            if (!(e.target instanceof HTMLAnchorElement)) return;
-            const target = e.target as HTMLAnchorElement;
-            const targetUrl = new URL(target.href);
-
-            if (target.getAttribute("href")?.startsWith("#")) {
-                e.preventDefault();
-                navigate(`${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`, { viewTransition: true, preventScrollReset: true });
-                return;
-            }
-
-            const targetHost = targetUrl.hostname;
-            const currHost = window.location.hostname;
-
-            if (![currHost, `www.${currHost}`].includes(targetHost)) return;
-
-            e.preventDefault();
-            navigate(`${targetUrl.pathname}${targetUrl.search}`, { viewTransition: true });
-        } catch {}
-    }
-
-    useEffect(() => {
-        const mdBox = document.querySelector(`#${markdownBoxId}`) as HTMLDivElement | undefined;
-        if (!mdBox) return;
-
-        mdBox.addEventListener("click", handleNavigate);
-        return () => {
-            mdBox.removeEventListener("click", handleNavigate);
-        };
-    }, []);
-
     const formattedText = useMemo(() => {
         if (addIdToHeadings !== true) return text;
 
@@ -140,7 +103,6 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
     if (divElem === true) {
         return (
             <div
-                id={markdownBoxId}
                 className={cn("w-full overflow-auto markdown-body", className)}
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
                 dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}
@@ -150,7 +112,6 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
 
     return (
         <section
-            id={markdownBoxId}
             className={cn("w-full overflow-auto markdown-body", className)}
             // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: renderHighlightedString(formattedText, urlModifier) }}

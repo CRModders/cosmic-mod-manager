@@ -13,6 +13,7 @@ import ClientOnly from "~/components/client-only";
 import Navbar from "~/components/layout/Navbar/navbar";
 import Footer from "~/components/layout/footer";
 import ToastAnnouncer from "~/components/toast-announcer";
+import { useNavigate } from "~/components/ui/link";
 import SupportedLocales, { DefaultLocale, GetLocaleMetadata } from "~/locales/meta";
 import type { LocaleMetaData } from "~/locales/types";
 import ContextProviders from "~/providers";
@@ -70,6 +71,46 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     const data = useLoaderData() as RootOutletData;
+
+    // HANDLE SAME SITE NAVIGATIONS FROM MARKDOWN RENDERED LINKS
+    const navigate = useNavigate();
+
+    // Use React router to handle internal links
+    function handleNavigate(e: MouseEvent) {
+        try {
+            if (!(e.target instanceof HTMLAnchorElement)) return;
+
+            const target = e.target as HTMLAnchorElement;
+            const targetUrl = new URL(target.href);
+
+            if (target.getAttribute("href")?.startsWith("#")) {
+                e.preventDefault();
+                navigate(`${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`, { preventScrollReset: true });
+                return;
+            }
+
+            const targetHost = targetUrl.hostname;
+            const currHost = window.location.hostname;
+
+            if (currHost.replace("www.", "") !== targetHost.replace("www.", "")) return;
+
+            e.preventDefault();
+            navigate(`${targetUrl.pathname}${targetUrl.search}`, { viewTransition: true });
+        } catch {}
+    }
+
+    useEffect(() => {
+        function delegateMdLinkClick(e: MouseEvent) {
+            if (!e.target) return;
+            // @ts-ignore
+            if (e.target?.closest(".markdown-body")) {
+                handleNavigate(e);
+            }
+        }
+
+        document.body.addEventListener("click", delegateMdLinkClick);
+        return () => document.body.removeEventListener("click", delegateMdLinkClick);
+    }, []);
 
     return (
         <ContextProviders theme={data.theme}>
