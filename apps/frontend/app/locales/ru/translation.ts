@@ -525,9 +525,11 @@ export default {
     },
 
     user: {
+        // ? New string
+        // admin: "Admin",
+        moderator: "Модератор",
         doesntHaveProjects: (user: string) => `У пользователя ${user} ещё нет проектов.`,
         isntPartOfAnyOrgs: (user: string) => `Пользователь ${user} не принадлежит ни одной организации.`,
-        moderator: "Модератор",
         joined: (when: string) => `Присоединился ${when}`, // eg: Joined 2 months ago
     },
 

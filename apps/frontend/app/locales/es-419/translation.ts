@@ -505,9 +505,11 @@ export default {
     },
 
     user: {
+        // ? New string
+        // admin: "Admin",
+        moderator: "Moderador",
         doesntHaveProjects: (user: string) => `${user} no tiene proyectos aún.`,
         isntPartOfAnyOrgs: (user: string) => `${user} no es miembro de ninguna organización.`,
-        moderator: "Moderador",
         joined: (when: string) => `Se unió ${when}`, // eg: Joined 2 months ago
     },
 

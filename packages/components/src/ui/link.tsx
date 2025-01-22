@@ -36,9 +36,7 @@ export function ButtonLink({
     activityIndicator = true,
     activeClassName,
     ...props
-}: ButtonLinkProps & {
-    ref: React.RefObject<HTMLAnchorElement>;
-}) {
+}: ButtonLinkProps & RefProp<HTMLAnchorElement>) {
     const location = useLocation();
 
     return (
@@ -80,9 +78,7 @@ export function VariantButtonLink({
     variant = "secondary",
     size = "default",
     ...props
-}: VariantLinkProps & {
-    ref: React.RefObject<HTMLAnchorElement>;
-}) {
+}: VariantLinkProps & RefProp<HTMLAnchorElement>) {
     return (
         <Link
             to={url}

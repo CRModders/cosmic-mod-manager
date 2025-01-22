@@ -134,8 +134,10 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
     const session = useSession();
     let title = null;
 
-    if ([GlobalUserRole.ADMIN, GlobalUserRole.MODERATOR].includes(userData.role)) {
-        title = t.user.moderator;
+    if (GlobalUserRole.ADMIN === userData.role) {
+        title = t.user[GlobalUserRole.ADMIN];
+    } else if (GlobalUserRole.MODERATOR === userData.role) {
+        title = t.user[GlobalUserRole.MODERATOR];
     }
 
     const ProjectsCount = t.count.projects(totalProjects);

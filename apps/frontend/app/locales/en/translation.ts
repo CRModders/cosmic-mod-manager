@@ -506,6 +506,7 @@ export default {
     },
 
     user: {
+        admin: "Admin",
         moderator: "Moderator",
         doesntHaveProjects: (user: string) => `${user} doesn't have any projects yet.`,
         isntPartOfAnyOrgs: (user: string) => `${user} is not a member of any Organization.`,
