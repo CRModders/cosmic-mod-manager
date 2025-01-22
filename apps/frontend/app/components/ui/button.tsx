@@ -1,9 +1,9 @@
 import { CancelButtonIcon } from "@app/components/icons";
+import type { RefProp } from "@app/components/types";
 import { Button, type ButtonProps } from "@app/components/ui/button";
-import * as React from "react";
 import { useTranslation } from "~/locales/provider";
 
-export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ variant = "secondary", children, icon, ...props }, ref) => {
+export function CancelButton({ ref, variant = "secondary", children, icon, ...props }: ButtonProps & RefProp<HTMLButtonElement>) {
     const { t } = useTranslation();
 
     return (
@@ -12,4 +12,4 @@ export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ 
             {children || t.form.cancel}
         </Button>
     );
-});
+}

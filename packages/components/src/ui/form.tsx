@@ -2,6 +2,7 @@ import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { Controller, type ControllerProps, type FieldPath, type FieldValues, FormProvider, useFormContext } from "react-hook-form";
+import type { RefProp } from "~/types";
 import { Label } from "~/ui/label";
 import { cn } from "~/utils";
 
@@ -55,7 +56,7 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
-const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
+function FormItem({ ref, className, ...props }: React.HTMLAttributes<HTMLDivElement> & RefProp<HTMLDivElement>) {
     const id = React.useId();
 
     return (
@@ -67,13 +68,10 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
             />
         </FormItemContext.Provider>
     );
-});
+}
 FormItem.displayName = "FormItem";
 
-const FormLabel = React.forwardRef<
-    React.ElementRef<typeof LabelPrimitive.Root>,
-    React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+function FormLabel({ ref, className, ...props }: React.ComponentPropsWithRef<typeof LabelPrimitive.Root>) {
     const { error, formItemId } = useFormField();
 
     return (
@@ -87,10 +85,10 @@ const FormLabel = React.forwardRef<
             {...props}
         />
     );
-});
+}
 FormLabel.displayName = "FormLabel";
 
-const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.ComponentPropsWithoutRef<typeof Slot>>(({ ...props }, ref) => {
+function FormControl({ ref, ...props }: React.ComponentPropsWithRef<typeof Slot>) {
     const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
     return (
@@ -102,39 +100,30 @@ const FormControl = React.forwardRef<React.ElementRef<typeof Slot>, React.Compon
             {...props}
         />
     );
-});
+}
 FormControl.displayName = "FormControl";
 
-const FormDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-    ({ className, ...props }, ref) => {
-        const { formDescriptionId } = useFormField();
+function FormDescription({ ref, className, ...props }: React.HTMLAttributes<HTMLParagraphElement> & RefProp<HTMLParagraphElement>) {
+    const { formDescriptionId } = useFormField();
 
-        return <p ref={ref} id={formDescriptionId} className={cn("text-[0.87rem] text-muted-foreground", className)} {...props} />;
-    },
-);
+    return <p ref={ref} id={formDescriptionId} className={cn("text-[0.87rem] text-muted-foreground", className)} {...props} />;
+}
 FormDescription.displayName = "FormDescription";
 
-const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-    ({ className, children, ...props }, ref) => {
-        const { error, formMessageId } = useFormField();
-        const body = error ? String(error?.message) : children;
+function FormMessage({ ref, className, children, ...props }: React.HTMLAttributes<HTMLParagraphElement> & RefProp<HTMLParagraphElement>) {
+    const { error, formMessageId } = useFormField();
+    const body = error ? String(error?.message) : children;
 
-        if (!body) {
-            return null;
-        }
+    if (!body) {
+        return null;
+    }
 
-        return (
-            <p
-                ref={ref}
-                id={formMessageId}
-                className={cn("text-sm leading-tight font-medium text-danger-foreground", className)}
-                {...props}
-            >
-                {body}
-            </p>
-        );
-    },
-);
+    return (
+        <p ref={ref} id={formMessageId} className={cn("text-sm leading-tight font-medium text-danger-foreground", className)} {...props}>
+            {body}
+        </p>
+    );
+}
 FormMessage.displayName = "FormMessage";
 
 export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };

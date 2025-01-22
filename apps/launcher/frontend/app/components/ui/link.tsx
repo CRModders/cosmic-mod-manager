@@ -3,22 +3,21 @@ import DefaultLink, {
     VariantButtonLink as DefaultVariantButtonLink,
     useNavigate as __useNavigate,
 } from "@app/components/ui/link";
-import React from "react";
+import type React from "react";
 import type { NavigateFunction, NavigateOptions } from "react-router";
 
 export type PrefetchBehavior = "intent" | "render" | "none" | "viewport";
 
 interface Props extends Omit<React.ComponentProps<typeof DefaultLink>, "viewTransitions"> {}
 
-const Link = React.forwardRef<HTMLAnchorElement, Props>((props, ref) => {
-    return <DefaultLink {...props} viewTransition={false} ref={ref} />;
-});
-export default Link;
+export default function Link(props: Props) {
+    return <DefaultLink {...props} viewTransition={false} />;
+}
 
 type ButtonLinkProps = React.ComponentProps<typeof DefaultButtonLink>;
-export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>((props, ref) => {
-    return <DefaultButtonLink {...props} viewTransition={false} ref={ref} />;
-});
+export function ButtonLink(props: ButtonLinkProps) {
+    return <DefaultButtonLink {...props} viewTransition={false} />;
+}
 
 type VariantButtonLinkProps = React.ComponentProps<typeof DefaultVariantButtonLink>;
 export function VariantButtonLink(props: VariantButtonLinkProps) {

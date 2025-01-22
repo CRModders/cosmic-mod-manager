@@ -1,7 +1,8 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import * as React from "react";
+import type * as React from "react";
 import { CancelButtonIcon } from "~/icons";
+import type { RefProp } from "~/types";
 import { cn } from "~/utils";
 
 const buttonVariants = cva(
@@ -55,19 +56,19 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     icon?: React.ReactNode | null;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
+function Button({ ref, className, variant, size, asChild = false, ...props }: ButtonProps & RefProp<HTMLButtonElement>) {
     const Comp = asChild ? Slot : "button";
     return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-});
+}
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
 
-export const CancelButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ variant = "secondary", children, icon, ...props }, ref) => {
+export function CancelButton({ ref, variant = "secondary", children, icon, ...props }: ButtonProps & RefProp<HTMLButtonElement>) {
     return (
         <Button variant={variant} ref={ref} {...props}>
             {icon ? icon : <CancelButtonIcon aria-hidden className="w-btn-icon h-btn-icon" />}
             {children || "Cancel"}
         </Button>
     );
-});
+}
