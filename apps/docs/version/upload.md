@@ -40,7 +40,7 @@ REQUEST BODY: `multipart/form-data`
 
 - **VameVersions** \
     key: `gameVersions` \
-    type: `string[]` (Check [/tags/game-versions](https://api.crmm.tech/api/tags/game-versions) for a list of available game v)
+    type: `string[]` (Check [/tags/game-versions](https://api.crmm.tech/api/tags/game-versions) for a list of available game versions)
 
 - **Dependencies** \
     key: `dependencies` \
