@@ -1,5 +1,5 @@
-import { SearchItemHeader_Keys } from "~/locales/shared-enums";
 import type { Translation } from "~/locales/types";
+import { SearchItemHeader_Keys } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 

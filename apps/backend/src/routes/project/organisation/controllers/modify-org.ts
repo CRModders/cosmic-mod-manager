@@ -111,13 +111,13 @@ export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, 
     const fileType = await getFileType(icon);
     if (!fileType) return invalidReqestResponseData("Invalid file type");
 
-    const [saveIcon, saveIconFileType] = await resizeImageToWebp(icon, fileType, {
+    const saveIcon = await resizeImageToWebp(icon, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
 
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
     const iconSaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, saveIcon, fileId);
     if (!iconSaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 

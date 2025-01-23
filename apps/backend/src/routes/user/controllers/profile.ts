@@ -89,18 +89,18 @@ export async function getUserAvatar(
             const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
             await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
         }
-    } catch {}
+    } catch { }
 
     const fileType = await getFileType(avatarFile);
     if (!fileType) return null;
 
-    const [saveIcon, saveIconFileType] = await resizeImageToWebp(avatarFile, fileType, {
+    const saveIcon = await resizeImageToWebp(avatarFile, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
 
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
     const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);
     if (!iconSaveUrl) return null;
 

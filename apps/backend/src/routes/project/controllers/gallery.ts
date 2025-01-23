@@ -16,7 +16,7 @@ import {
     serverErrorResponseData,
     unauthorizedReqResponseData,
 } from "~/utils/http";
-import { resizeImageToWebp } from "~/utils/images";
+import { ConvertToWebp, resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
 
 export async function addNewGalleryImage(
@@ -55,30 +55,34 @@ export async function addNewGalleryImage(
     }
 
     const storageService = FILE_STORAGE_SERVICE.LOCAL;
-    const fileType = (await getFileType(formData.image)) || FileType.PNG;
+    const rawFile_Type = (await getFileType(formData.image)) || FileType.PNG;
 
     // Save the thumbnail image
-    const [thumbnailImg, thumbnailFileType] = await resizeImageToWebp(formData.image, fileType, {
+    const thumbnailFileType = FileType.WEBP;
+    const thumbnailImg = await resizeImageToWebp(formData.image, rawFile_Type, {
         width: GALLERY_IMG_THUMBNAIL_WIDTH,
         fit: "contain",
         withoutEnlargement: true,
     });
     const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
-    const thumbnailSaveUrl = await saveProjectGalleryFile(storageService, Project.id, thumbnailImg, thumbnailFileId);
+    const thumbnailFile_Url = await saveProjectGalleryFile(storageService, Project.id, thumbnailImg, thumbnailFileId);
 
     // Save the raw gallery file
-    const rawFileId = `${generateDbId()}.${fileType}`;
-    const rawFileUrl = await saveProjectGalleryFile(storageService, Project.id, formData.image, rawFileId);
+    const savedRawFile_Type = FileType.WEBP;
+    const rawFile_webp = await ConvertToWebp(formData.image, rawFile_Type);
 
-    if (!rawFileUrl || !thumbnailSaveUrl) return serverErrorResponseData("Failed to upload the image");
+    const rawFile_Id = `${generateDbId()}.${savedRawFile_Type}`;
+    const rawFile_Url = await saveProjectGalleryFile(storageService, Project.id, rawFile_webp, rawFile_Id);
+
+    if (!rawFile_Url || !thumbnailFile_Url) return serverErrorResponseData("Failed to upload the image");
 
     const imageFiles = [
         {
-            id: rawFileId,
-            name: rawFileId,
-            size: formData.image.size,
-            type: fileType || "",
-            url: rawFileUrl,
+            id: rawFile_Id,
+            name: rawFile_Id,
+            size: rawFile_webp.size,
+            type: savedRawFile_Type,
+            url: rawFile_Url,
             storageService: storageService,
         },
         {
@@ -86,7 +90,7 @@ export async function addNewGalleryImage(
             name: thumbnailFileId,
             size: thumbnailImg.size,
             type: thumbnailFileType,
-            url: thumbnailSaveUrl,
+            url: thumbnailFile_Url,
             storageService: storageService,
         },
     ];
@@ -103,7 +107,7 @@ export async function addNewGalleryImage(
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
-            imageFileId: rawFileId,
+            imageFileId: rawFile_Id,
             thumbnailFileId: thumbnailFileId,
             orderIndex: formData.orderIndex || (Project.gallery?.[0]?.orderIndex || 0) + 1,
         },

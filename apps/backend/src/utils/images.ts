@@ -9,12 +9,12 @@ interface ResizeProps {
     withoutEnlargement?: sharp.ResizeOptions["withoutEnlargement"];
 }
 
-export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<[File, FileType]> {
+export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<File> {
     let defaultKernel: ResizeProps["kernel"] = sharp.kernel.nearest;
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();
-    const sharpInstance = sharp(imgBuffer, { animated: isAnimated });
+    const sharpInstance = sharp(imgBuffer, { animated: isAnimated, });
 
     const metadata = await sharpInstance.metadata();
     // Don't use nearest neighbor for large images
@@ -36,7 +36,17 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, pro
         })
         .webp()
         .toArray();
-    return [new File(resizedImgBuffer, "__resized-webp-img__"), FileType.WEBP];
+    return new File(resizedImgBuffer, "__resized-webp-img__");
+}
+
+export async function ConvertToWebp(file: File, inputFileType: FileType, quality = 85) {
+    const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
+
+    const imgBuffer = await file.arrayBuffer();
+    const sharpInstance = sharp(imgBuffer, { animated: isAnimated });
+
+    const resizedImgBuffer = await sharpInstance.webp({ quality: quality }).toArray();
+    return new File(resizedImgBuffer, "__webp-img__");
 }
 
 export async function getAverageColor(file: File) {

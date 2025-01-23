@@ -192,13 +192,13 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
     const fileType = await getFileType(icon);
     if (!fileType) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
 
-    const [saveIcon, saveIconFileType] = await resizeImageToWebp(icon, fileType, {
+    const saveIcon = await resizeImageToWebp(icon, fileType, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
 
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${saveIconFileType}`;
+    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
     const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, Project.id, saveIcon, fileId);
     if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
@@ -210,7 +210,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
                 id: fileId,
                 name: fileId,
                 size: icon.size,
-                type: saveIconFileType,
+                type: fileType,
                 url: newFileUrl,
                 storageService: FILE_STORAGE_SERVICE.LOCAL,
             },
