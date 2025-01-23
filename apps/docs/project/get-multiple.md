@@ -28,6 +28,7 @@ GET [`/api/projects?ids=[...]`](https://api.crmm.tech/api/projects?ids=["4xvLkWr
     }
 ]
 ```
+[Type reference](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/api/index.ts#L142)
 
 ### Query parameters
 - **IDs** \
