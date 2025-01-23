@@ -8,7 +8,6 @@ import { PopoverClose } from "@app/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { FormatCount } from "@app/utils/number";
-import { CapitalizeAndFormatString } from "@app/utils/string";
 import { GlobalUserRole } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
@@ -60,7 +59,7 @@ export default function UserPageLayout({ userData, projectsList, orgsList, child
                         links={[
                             { label: t.common.all, href: "" },
                             ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-                                label: `${CapitalizeAndFormatString(type)}s`,
+                                label: t.navbar[`${type}s`],
                                 href: `/${type}s`,
                             })),
                         ]}

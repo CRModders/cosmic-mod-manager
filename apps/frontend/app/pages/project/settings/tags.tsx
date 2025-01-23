@@ -89,7 +89,7 @@ export default function TagsSettingsPage() {
                     {allAvailableCategories?.length ? (
                         <>
                             <div className="w-full flex flex-col items-start justify-start">
-                                <span className="text-lg font-bold">{t.search.categories}</span>
+                                <span className="text-lg font-bold">{t.search.category}</span>
                                 <span className="text-muted-foreground">{t.projectSettings.tagsDesc2(projectType.toLowerCase())}</span>
                                 <FormField
                                     control={form.control}
@@ -102,7 +102,7 @@ export default function TagsSettingsPage() {
 
                                                 return (
                                                     <LabelledCheckbox
-                                                        title={`${CapitalizeAndFormatString(categoryName)} (${CapitalizeAndFormatString(category.header)})`}
+                                                        title={`${CapitalizeAndFormatString(categoryName)} (${t.search[category.header]})`}
                                                         key={categoryName}
                                                         name={categoryName}
                                                         checked={field.value.includes(category.name)}

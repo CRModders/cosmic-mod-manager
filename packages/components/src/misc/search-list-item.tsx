@@ -2,10 +2,10 @@ import { categories } from "@app/utils/config/project";
 import { getLoadersFromNames } from "@app/utils/convertors";
 import { getProjectCategoriesDataFromNames } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
-import { type EnvironmentSupport, ProjectVisibility } from "@app/utils/types";
+import { type EnvironmentSupport, ProjectVisibility, TagHeaderType } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
 import { TagIcon } from "~/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
@@ -69,6 +69,49 @@ function BaseView(props: SearchListItemProps) {
 
     const ProjectDownloads = t.count.downloads(props.downloads);
     const ProjectFollowers = t.count.followers(props.followers);
+
+    const SearchItemHeader = useMemo(() => {
+        if (!props.author) {
+            return ProjectLink({
+                projectName: props.projectName,
+                projectPageUrl,
+                galleryViewType,
+            });
+        }
+
+        const items = [];
+        const header = t.search.itemHeader(props.projectName, props.author);
+
+        for (const item of header) {
+            if (item[0] === SearchItemHeader_Keys.PROJECT_NAME) {
+                items.push(
+                    ProjectLink({
+                        projectName: item[1],
+                        projectPageUrl: projectPageUrl,
+                        galleryViewType: galleryViewType,
+                    }),
+                );
+            } else if (item[0] === SearchItemHeader_Keys.BY) {
+                items.push(item[1]);
+            } else if (item[0] === SearchItemHeader_Keys.AUTHOR_NAME) {
+                items.push(
+                    AuthorLink({
+                        author: props.author,
+                        authorDisplayName: item[1],
+                        OrgPagePath: props.OrgPagePath,
+                        UserProfilePath: props.UserProfilePath,
+                        isOrgOwned: props.isOrgOwned === true,
+                        galleryViewType: galleryViewType,
+                        Organization_translation: t.project.organization,
+                    }),
+                );
+            }
+
+            items.push(" ");
+        }
+
+        return items;
+    }, [galleryViewType]);
 
     return (
         <article
@@ -135,38 +178,8 @@ function BaseView(props: SearchListItemProps) {
                 className={cn("h-fit whitespace-break-spaces text-wrap leading-none", galleryViewType && "mr-card-surround leading-tight")}
                 style={{ gridArea: "title" }}
             >
-                <Link
-                    itemProp={MicrodataItemProps.url}
-                    to={projectPageUrl}
-                    className={cn("w-fit text-xl font-bold leading-none mobile-break-words", galleryViewType && "block leading-tight")}
-                    aria-label={props.projectName}
-                >
-                    <span itemProp={MicrodataItemProps.name} className={cn("leading-none", galleryViewType && "leading-tight")}>
-                        {props.projectName}
-                    </span>
-                </Link>
-                {props.author && (
-                    <>
-                        {" "}
-                        by{" "}
-                        <Link
-                            to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
-                            className={cn(
-                                "underline hover:brightness-110 mobile-break-words leading-none",
-                                galleryViewType && "leading-tight",
-                            )}
-                            title={props.isOrgOwned ? `${props.author} (${t.project.organization})` : props.author}
-                        >
-                            {props.author}
-                            {props.isOrgOwned ? (
-                                <>
-                                    {" "}
-                                    <Building2Icon aria-hidden className="inline w-4 h-4" />
-                                </>
-                            ) : null}
-                        </Link>
-                    </>
-                )}
+                {SearchItemHeader}
+
                 {props.visibility === ProjectVisibility.ARCHIVED && (
                     <>
                         {" "}
@@ -204,7 +217,7 @@ function BaseView(props: SearchListItemProps) {
                             className="flex gap-1 items-center justify-center"
                             key={category.name}
                             aria-label={category.name}
-                            title={`${tagName} (${CapitalizeAndFormatString(category.header)})`}
+                            title={`${tagName} (${t.search[category.header]})`}
                         >
                             <TagIcon name={category.name} />
                             <span itemProp={MicrodataItemProps.name}>{tagName}</span>
@@ -295,11 +308,73 @@ function BaseView(props: SearchListItemProps) {
     );
 }
 
+interface ProjectLinkProps {
+    projectName: string;
+    projectPageUrl: string;
+    galleryViewType: boolean;
+}
+
+function ProjectLink(props: ProjectLinkProps) {
+    return (
+        <Link
+            itemProp={MicrodataItemProps.url}
+            to={props.projectPageUrl}
+            className={cn("w-fit text-xl font-bold leading-none mobile-break-words", props.galleryViewType && "block leading-tight")}
+            aria-label={props.projectName}
+        >
+            <span itemProp={MicrodataItemProps.name} className={cn("leading-none", props.galleryViewType && "leading-tight")}>
+                {props.projectName}
+            </span>
+        </Link>
+    );
+}
+
+interface AuthorLinkProps {
+    author: string;
+    authorDisplayName: string;
+    OrgPagePath: OrgPagePath;
+    UserProfilePath: UserProfilePath;
+    isOrgOwned: boolean;
+    galleryViewType: boolean;
+    Organization_translation: string;
+}
+
+function AuthorLink(props: AuthorLinkProps) {
+    return (
+        <Link
+            to={props.isOrgOwned ? props.OrgPagePath(props.author) : props.UserProfilePath(props.author)}
+            className={cn("underline hover:brightness-110 mobile-break-words leading-none", props.galleryViewType && "leading-tight")}
+            title={props.isOrgOwned ? `${props.author} (${props.Organization_translation})` : props.author}
+        >
+            {props.authorDisplayName}
+            {props.isOrgOwned ? (
+                <>
+                    {" "}
+                    <Building2Icon aria-hidden className="inline w-4 h-4" />
+                </>
+            ) : null}
+        </Link>
+    );
+}
+
+enum SearchItemHeader_Keys {
+    PROJECT_NAME = "0",
+    BY = "1",
+    AUTHOR_NAME = "2",
+}
+
 function getDefaultStrings() {
     const tags: Record<string, string> = {};
     for (const c of categories) {
         tags[c.name] = c.name;
     }
+
+    const headerStrings: Record<TagHeaderType, string> = {
+        [TagHeaderType.CATEGORY]: CapitalizeAndFormatString(TagHeaderType.CATEGORY),
+        [TagHeaderType.FEATURE]: CapitalizeAndFormatString(TagHeaderType.FEATURE),
+        [TagHeaderType.RESOLUTION]: CapitalizeAndFormatString(TagHeaderType.RESOLUTION),
+        [TagHeaderType.PERFORMANCE_IMPACT]: CapitalizeAndFormatString(TagHeaderType.PERFORMANCE_IMPACT),
+    };
 
     return {
         count: {
@@ -315,9 +390,22 @@ function getDefaultStrings() {
         projectSettings: {
             archived: "Archived",
         },
-        search: {
-            tags: tags,
-        },
+        search: Object.assign(
+            {
+                tags: tags,
+                /**
+                 * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
+                 */
+                itemHeader: (project: string, author: string) => {
+                    return [
+                        [SearchItemHeader_Keys.PROJECT_NAME, project],
+                        [SearchItemHeader_Keys.BY, "by"],
+                        [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                    ];
+                },
+            },
+            headerStrings,
+        ),
     };
 }
 

@@ -1,6 +1,7 @@
 import type { Locale } from "~/locales/types";
-// import { Rules } from "./legal";
+import { SearchItemHeader_Keys } from "../shared-enums";
 import tags from "./tags";
+// import { Rules } from "./legal";
 
 function Pluralize(num: number, str_1: string, str_234: string, str_other: string) {
     if (num === 1) {
@@ -218,15 +219,26 @@ export default {
         gameVersions: "Версии игры",
         channels: "Каналы",
         environment: "Среда",
-        categories: "Категории",
-        features: "Возможности",
-        resolutions: "Разрешения",
-        performanceImpact: "Влияние на производительность",
+        category: "Категории",
+        feature: "Возможности",
+        resolution: "Разрешения",
+        performance_impact: "Влияние на производительность",
         license: "Лицензия",
         openSourceOnly: "Только с открытым исходным кодом",
         clearFilters: "Очистить фильтры",
 
         tags: tags,
+
+        /**
+         * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
+        */
+        itemHeader: (project: string, author: string) => {
+            return [
+                [SearchItemHeader_Keys.PROJECT_NAME, project],
+                [SearchItemHeader_Keys.BY, "by"],
+                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+            ];
+        },
     },
 
     project: {

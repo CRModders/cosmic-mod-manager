@@ -71,10 +71,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
     const loadersFilterLabel = t.search.loaders;
     const gameVersionsFilterLabel = t.search.gameVersions;
     const environmentFilterLabel = t.search.environment;
-    const categoryFilterLabel = t.search.categories;
-    const featureFilterLabel = t.search.features;
-    const resolutionFilterLabel = t.search.resolutions;
-    const performanceFilterLabel = t.search.performanceImpact;
+    const categoryFilterLabel = t.search.category;
+    const featureFilterLabel = t.search.feature;
+    const resolutionFilterLabel = t.search.resolution;
+    const performanceFilterLabel = t.search.performance_impact;
     const licenseFilterLabel = t.search.license;
 
     // Filters list

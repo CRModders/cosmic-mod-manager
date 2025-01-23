@@ -16,7 +16,7 @@ export interface LocaleMetaData {
 
 export interface Translation {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    [key: string]: string | ((...args: any[]) => string | string[]) | Translation;
+    [key: string]: string | ((...args: any[]) => string | string[] | Translation | string[][]) | Translation;
 }
 
 export type Locale = typeof en;

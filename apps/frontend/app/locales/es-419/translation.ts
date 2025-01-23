@@ -1,4 +1,5 @@
 import type { Locale } from "~/locales/types";
+import { SearchItemHeader_Keys } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -195,15 +196,26 @@ export default {
         gameVersions: "Versiones del juego",
         channels: "Canales",
         environment: "Entorno",
-        categories: "Categorías",
-        features: "Características",
-        resolutions: "Resoluciones",
-        performanceImpact: "Impacto en el rendimiento",
+        category: "Categorías",
+        feature: "Características",
+        resolution: "Resoluciones",
+        performance_impact: "Impacto en el rendimiento",
         license: "Licencia",
         openSourceOnly: "Solo código abierto",
         clearFilters: "Limpiar todos los filtros",
 
         tags: tags,
+
+        /**
+         * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
+        */
+        itemHeader: (project: string, author: string) => {
+            return [
+                [SearchItemHeader_Keys.PROJECT_NAME, project],
+                [SearchItemHeader_Keys.BY, "by"],
+                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+            ];
+        },
     },
 
     project: {

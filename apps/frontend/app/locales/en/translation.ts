@@ -1,8 +1,9 @@
+import { SearchItemHeader_Keys } from "~/locales/shared-enums";
 import type { Translation } from "~/locales/types";
 import { Rules } from "./legal";
 import tags from "./tags";
 
-type CountTranslation = [string, string, string];
+export type CountTranslation = [string, string, string];
 
 export default {
     common: {
@@ -198,15 +199,39 @@ export default {
         gameVersions: "Game versions",
         channels: "Channels",
         environment: "Environment",
-        categories: "Categories",
-        features: "Features",
-        resolutions: "Resolutions",
-        performanceImpact: "Performance impact",
+        category: "Categories", // The key is kept singular just for ease of acess, the string is plural
+        feature: "Features", // __
+        resolution: "Resolutions", // __
+        performance_impact: "Performance impact",
         license: "License",
         openSourceOnly: "Open source only",
         clearFilters: "Clear all filters",
 
         tags: tags,
+
+        /**
+         * Project item header format \
+         * The array items will be arranged in the order they are returned \
+         * so in the current case, the string format will be `{Project_Name} by {Author}` \
+         * \
+         * **Custom format example** \
+         * For the returned value to be formatted like `{Author}'s {Project_Name}`
+         * The returned array will look something like this
+         * ```ts
+         * return [
+         *     [SearchItemHeader_Keys.AUTHOR_NAME, `${author}'s`],
+         *     [SearchItemHeader_Keys.BY, ""],
+         *     [SearchItemHeader_Keys.PROJECT_NAME, project],
+         * ]
+         * ```
+        */
+        itemHeader: (project: string, author: string) => {
+            return [
+                [SearchItemHeader_Keys.PROJECT_NAME, project],
+                [SearchItemHeader_Keys.BY, ""],
+                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+            ]
+        }
     },
 
     project: {
