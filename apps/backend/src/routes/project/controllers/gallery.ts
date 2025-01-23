@@ -24,20 +24,20 @@ export async function addNewGalleryImage(
     userSession: ContextUserData,
     formData: z.infer<typeof addNewGalleryImageFormSchema>,
 ) {
-    const Project = await GetProject_Details(slug, slug);
-    if (!Project?.id) return notFoundResponseData();
-    if (Project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
+    const project = await GetProject_Details(slug, slug);
+    if (!project?.id) return notFoundResponseData();
+    if (project.gallery.length >= MAX_PROJECT_GALLERY_IMAGES_COUNT)
         return invalidReqestResponseData(`Maximum of ${MAX_PROJECT_GALLERY_IMAGES_COUNT} gallery images allowed!`);
 
     // Check if the order index is not already occupied
-    for (const item of Project.gallery) {
+    for (const item of project.gallery) {
         if (item.orderIndex === formData.orderIndex) {
             return invalidReqestResponseData("An image with same order index already exists");
         }
     }
 
     // Check if the user has the required permissions
-    const memberObj = getCurrMember(userSession.id, Project.team.members, Project.organisation?.team?.members || []);
+    const memberObj = getCurrMember(userSession.id, project.team.members, project.organisation?.team?.members || []);
     const hasEditAccess = doesMemberHaveAccess(
         ProjectPermission.EDIT_DETAILS,
         memberObj?.permissions as ProjectPermission[],
@@ -50,66 +50,63 @@ export async function addNewGalleryImage(
 
     // Check if there's already a featured image
     if (formData.featured === true) {
-        const ExistingFeaturedImage = Project.gallery.some((item) => item.featured === true);
-        if (ExistingFeaturedImage) return invalidReqestResponseData("A featured gallery image already exists");
+        const existingFeaturedImage = project.gallery.some((item) => item.featured === true);
+        if (existingFeaturedImage) return invalidReqestResponseData("A featured gallery image already exists");
     }
 
     const storageService = FILE_STORAGE_SERVICE.LOCAL;
-    const rawFile_Type = (await getFileType(formData.image)) || FileType.PNG;
+    const uploadedImage_Type = (await getFileType(formData.image)) || FileType.PNG;
 
-    // Save the thumbnail image
-    const thumbnailFileType = FileType.WEBP;
-    const thumbnailImg = await resizeImageToWebp(formData.image, rawFile_Type, {
+    // Save the raw file
+    const rawImg_Type = FileType.WEBP;
+    const rawImg_Webp = await ConvertToWebp(formData.image, uploadedImage_Type);
+    const rawImg_DBId = `${generateDbId()}.${rawImg_Type}`;
+    const rawImg_Url = await saveProjectGalleryFile(storageService, project.id, rawImg_Webp, rawImg_DBId);
+
+    // Generate thumbnail for the image
+    const thumbnailImgType = FileType.WEBP;
+    const thumbnailImg = await resizeImageToWebp(rawImg_Webp, uploadedImage_Type, {
         width: GALLERY_IMG_THUMBNAIL_WIDTH,
         fit: "contain",
         withoutEnlargement: true,
     });
-    const thumbnailFileId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailFileType}`;
-    const thumbnailFile_Url = await saveProjectGalleryFile(storageService, Project.id, thumbnailImg, thumbnailFileId);
+    const thumbnailImg_DBId = `${generateDbId()}_${GALLERY_IMG_THUMBNAIL_WIDTH}.${thumbnailImgType}`;
+    const thumbnailImg_Url = await saveProjectGalleryFile(storageService, project.id, thumbnailImg, thumbnailImg_DBId);
 
-    // Save the raw gallery file
-    const savedRawFile_Type = FileType.WEBP;
-    const rawFile_webp = await ConvertToWebp(formData.image, rawFile_Type);
-
-    const rawFile_Id = `${generateDbId()}.${savedRawFile_Type}`;
-    const rawFile_Url = await saveProjectGalleryFile(storageService, Project.id, rawFile_webp, rawFile_Id);
-
-    if (!rawFile_Url || !thumbnailFile_Url) return serverErrorResponseData("Failed to upload the image");
-
-    const imageFiles = [
-        {
-            id: rawFile_Id,
-            name: rawFile_Id,
-            size: rawFile_webp.size,
-            type: savedRawFile_Type,
-            url: rawFile_Url,
-            storageService: storageService,
-        },
-        {
-            id: thumbnailFileId,
-            name: thumbnailFileId,
-            size: thumbnailImg.size,
-            type: thumbnailFileType,
-            url: thumbnailFile_Url,
-            storageService: storageService,
-        },
-    ];
+    if (!rawImg_Url || !thumbnailImg_Url) return serverErrorResponseData("Failed to upload the image");
 
     await CreateManyFiles({
-        data: imageFiles,
+        data: [
+            {
+                id: rawImg_DBId,
+                name: rawImg_DBId,
+                size: rawImg_Webp.size,
+                type: rawImg_Type,
+                url: rawImg_Url,
+                storageService: storageService,
+            },
+            {
+                id: thumbnailImg_DBId,
+                name: thumbnailImg_DBId,
+                size: thumbnailImg.size,
+                type: thumbnailImgType,
+                url: thumbnailImg_Url,
+                storageService: storageService,
+            },
+        ],
     });
 
     // Create the gallery item
     await CreateGalleryItem({
         data: {
             id: generateDbId(),
-            projectId: Project.id,
+            projectId: project.id,
             name: formData.title,
             description: formData.description || "",
             featured: formData.featured,
-            imageFileId: rawFile_Id,
-            thumbnailFileId: thumbnailFileId,
-            orderIndex: formData.orderIndex || (Project.gallery?.[0]?.orderIndex || 0) + 1,
+            imageFileId: rawImg_DBId,
+            thumbnailFileId: thumbnailImg_DBId,
+            orderIndex: formData.orderIndex || (project.gallery?.[0]?.orderIndex || 0) + 1,
         },
     });
 
