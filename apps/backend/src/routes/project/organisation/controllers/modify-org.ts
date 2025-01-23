@@ -3,7 +3,7 @@ import { hasRootAccess } from "@app/utils/config/roles";
 import { getFileType } from "@app/utils/convertors";
 import { doesOrgMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";
-import { OrganisationPermission } from "@app/utils/types";
+import { FileType, OrganisationPermission } from "@app/utils/types";
 import type { Context } from "hono";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
@@ -108,26 +108,26 @@ export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, 
         await deleteOrgFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, org.id, deletedDbFile.name);
     }
 
-    const fileType = await getFileType(icon);
-    if (!fileType) return invalidReqestResponseData("Invalid file type");
+    const UploadedImg_Type = await getFileType(icon);
+    if (!UploadedImg_Type) return invalidReqestResponseData("Invalid file type");
 
-    const saveIcon = await resizeImageToWebp(icon, fileType, {
+    const savedImg_Type = FileType.WEBP;
+    const orgIcon_Webp = await resizeImageToWebp(icon, UploadedImg_Type, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
-
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
-    const iconSaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, saveIcon, fileId);
-    if (!iconSaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
+    const iconImg_Id = `${generateDbId()}_${ICON_WIDTH}.${savedImg_Type}`;
+    const icon_SaveUrl = await saveOrgFile(FILE_STORAGE_SERVICE.LOCAL, org.id, orgIcon_Webp, iconImg_Id);
+    if (!icon_SaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
     await CreateFile({
         data: {
-            id: fileId,
-            name: fileId,
-            size: icon.size,
-            type: fileType,
-            url: iconSaveUrl,
+            id: iconImg_Id,
+            name: iconImg_Id,
+            size: orgIcon_Webp.size,
+            type: savedImg_Type,
+            url: icon_SaveUrl,
             storageService: FILE_STORAGE_SERVICE.LOCAL,
         },
     });
@@ -138,12 +138,12 @@ export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, 
                 id: org.id,
             },
             data: {
-                iconFileId: fileId,
+                iconFileId: iconImg_Id,
             },
         });
     }
 
-    return { data: { success: true, message: "Organization icon updated", newIcon: fileId }, status: HTTP_STATUS.OK };
+    return { data: { success: true, message: "Organization icon updated", newIcon: iconImg_Id }, status: HTTP_STATUS.OK };
 }
 
 export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, slug: string) {

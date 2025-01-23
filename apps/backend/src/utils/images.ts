@@ -1,4 +1,5 @@
 import { FileType } from "@app/utils/types";
+import type { BunFile } from "bun";
 import sharp from "sharp";
 
 interface ResizeProps {
@@ -9,7 +10,7 @@ interface ResizeProps {
     withoutEnlargement?: sharp.ResizeOptions["withoutEnlargement"];
 }
 
-export async function resizeImageToWebp(file: File, inputFileType: FileType, props: ResizeProps): Promise<File> {
+export async function resizeImageToWebp(file: File | BunFile, inputFileType: FileType, props: ResizeProps): Promise<File> {
     let defaultKernel: ResizeProps["kernel"] = sharp.kernel.nearest;
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
@@ -39,7 +40,7 @@ export async function resizeImageToWebp(file: File, inputFileType: FileType, pro
     return new File(resizedImgBuffer, "__resized-webp-img__");
 }
 
-export async function ConvertToWebp(file: File, inputFileType: FileType, quality = 85) {
+export async function ConvertToWebp(file: File | BunFile, inputFileType: FileType, quality = 85) {
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();

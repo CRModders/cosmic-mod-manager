@@ -3,7 +3,7 @@ import { GetProjectEnvironment } from "@app/utils/config/project";
 import { getFileType } from "@app/utils/convertors";
 import { doesMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
-import { ProjectPermission } from "@app/utils/types";
+import { FileType, ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID, DeleteManyFiles_ByID } from "~/db/file_item";
 import {
@@ -189,29 +189,29 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
         await deleteProjectFile(deletedDbFile?.storageService as FILE_STORAGE_SERVICE, Project.id, deletedDbFile?.name);
     }
 
-    const fileType = await getFileType(icon);
-    if (!fileType) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
+    const uploadedImg_Type = await getFileType(icon);
+    if (!uploadedImg_Type) return { data: { success: false, message: "Invalid file type" }, status: HTTP_STATUS.BAD_REQUEST };
 
-    const saveIcon = await resizeImageToWebp(icon, fileType, {
+    const iconImg_Type = FileType.WEBP;
+    const iconImg_Webp = await resizeImageToWebp(icon, uploadedImg_Type, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
+    const iconImg_Id = `${generateDbId()}_${ICON_WIDTH}.${iconImg_Type}`;
+    const icon_SaveUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, Project.id, iconImg_Webp, iconImg_Id);
+    if (!icon_SaveUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
 
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
-    const newFileUrl = await saveProjectFile(FILE_STORAGE_SERVICE.LOCAL, Project.id, saveIcon, fileId);
-    if (!newFileUrl) return { data: { success: false, message: "Failed to save the icon" }, status: HTTP_STATUS.SERVER_ERROR };
-
-    const projectColor = await getAverageColor(saveIcon);
+    const projectColor = await getAverageColor(iconImg_Webp);
 
     await Promise.all([
         CreateFile({
             data: {
-                id: fileId,
-                name: fileId,
-                size: icon.size,
-                type: fileType,
-                url: newFileUrl,
+                id: iconImg_Id,
+                name: iconImg_Id,
+                size: iconImg_Webp.size,
+                type: iconImg_Type,
+                url: icon_SaveUrl,
                 storageService: FILE_STORAGE_SERVICE.LOCAL,
             },
         }),
@@ -221,7 +221,7 @@ export async function updateProjectIcon(userSession: ContextUserData, slug: stri
                 id: Project.id,
             },
             data: {
-                iconFileId: fileId,
+                iconFileId: iconImg_Id,
                 color: projectColor,
             },
         }),

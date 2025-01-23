@@ -1,3 +1,4 @@
+import type { BunFile } from "bun";
 import { loaders, projectTypes } from "~/config/project";
 import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "~/types";
 import { getFileSignatures } from "./file-signature";
@@ -105,7 +106,7 @@ export function getFileTypeFromFileExtension(fileName: string) {
     }
 }
 
-export async function getFileType(file: File) {
+export async function getFileType(file: File | BunFile) {
     const fileExtensionType = getFileTypeFromFileExtension(file.name);
     if (!fileExtensionType) return null;
 

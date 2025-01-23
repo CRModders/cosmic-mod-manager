@@ -2,7 +2,7 @@ import { ICON_WIDTH } from "@app/utils/config/constants";
 import { getFileType } from "@app/utils/convertors";
 import type { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { formatUserName } from "@app/utils/string";
-import { type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
+import { FileType, type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { z } from "zod";
@@ -91,31 +91,32 @@ export async function getUserAvatar(
         }
     } catch { }
 
-    const fileType = await getFileType(avatarFile);
-    if (!fileType) return null;
+    const uploadedImg_Type = await getFileType(avatarFile);
+    if (!uploadedImg_Type) return null;
 
-    const saveIcon = await resizeImageToWebp(avatarFile, fileType, {
+    const savedImg_Type = FileType.WEBP;
+    const profileImg_Webp = await resizeImageToWebp(avatarFile, uploadedImg_Type, {
         width: ICON_WIDTH,
         height: ICON_WIDTH,
         fit: "cover",
     });
 
-    const fileId = `${generateDbId()}_${ICON_WIDTH}.${fileType}`;
-    const iconSaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, saveIcon, fileId);
-    if (!iconSaveUrl) return null;
+    const imgFile_Id = `${generateDbId()}_${ICON_WIDTH}.${savedImg_Type}`;
+    const img_SaveUrl = await saveUserFile(FILE_STORAGE_SERVICE.LOCAL, userId, profileImg_Webp, imgFile_Id);
+    if (!img_SaveUrl) return null;
 
     await CreateFile({
         data: {
-            id: fileId,
-            name: fileId,
-            size: avatarFile.size,
-            type: fileType,
-            url: iconSaveUrl,
+            id: imgFile_Id,
+            name: imgFile_Id,
+            size: profileImg_Webp.size,
+            type: savedImg_Type,
+            url: img_SaveUrl,
             storageService: FILE_STORAGE_SERVICE.LOCAL,
         },
     });
 
-    return fileId;
+    return imgFile_Id;
 }
 
 export async function getAllVisibleProjects(userSession: ContextUserData | undefined, userSlug: string, listedProjectsOnly: boolean) {

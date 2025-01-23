@@ -1,3 +1,4 @@
+import type { BunFile } from "bun";
 import { FileType } from "~/types";
 import { trimWhitespaces } from "./string";
 
@@ -124,7 +125,7 @@ function intArrayToHexArray(array: Uint8Array) {
     return hexArray;
 }
 
-export async function getFileSignatures(file: File) {
+export async function getFileSignatures(file: File | BunFile) {
     const fileBuffer = await file.arrayBuffer();
     const array = new Uint8Array(fileBuffer.slice(0, magicNumberLen));
 
