@@ -50,6 +50,7 @@ GET [`/api/projects/random`](https://api.crmm.tech/api/projects/random)
     ...
 ]
 ```
+[Type reference](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/api/index.ts#L142)
 
 ### Query parameters
 - **Count** \
