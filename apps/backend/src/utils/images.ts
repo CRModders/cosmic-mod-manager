@@ -40,7 +40,7 @@ export async function resizeImageToWebp(file: File | BunFile, inputFileType: Fil
     return new File(resizedImgBuffer, "__resized-webp-img__");
 }
 
-export async function ConvertToWebp(file: File | BunFile, inputFileType: FileType, quality = 85) {
+export async function ConvertToWebp(file: File | BunFile, inputFileType: FileType, quality = 90) {
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();
