@@ -155,12 +155,10 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
 
     const urlLocalePrefix = useUrlLocale(true, reqUrl.pathname);
     const urlLocale = GetLocaleMetadata(parseLocale(urlLocalePrefix)) || DefaultLocale;
-    const cookieLocale = GetLocaleMetadata(parseLocale(getCookie("locale", cookie) || "")) || DefaultLocale;
+    const cookieLocale = GetLocaleMetadata(parseLocale(userConfig.locale)) || DefaultLocale;
 
     let currLocale = urlLocale;
-    if (!urlLocalePrefix) {
-        currLocale = cookieLocale;
-    }
+    if (!urlLocalePrefix) currLocale = cookieLocale;
 
     // If there's no lang prefix and user has a non default localse set, redirect to the url with user's locale prefix
     if (!urlLocalePrefix.length && formatLocaleCode(cookieLocale) !== formatLocaleCode(urlLocale)) {

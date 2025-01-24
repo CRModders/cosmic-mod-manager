@@ -1,6 +1,8 @@
 import { getCookie, setCookie } from "@app/utils/cookie";
 import { ProjectType, ThemeOptions } from "@app/utils/types";
 import { ViewType } from "~/components/search-list-item";
+import { formatLocaleCode } from "~/locales";
+import { DefaultLocale } from "~/locales/meta";
 import { useRootData } from "./root-data";
 
 export const USER_CONFIG_NAMESPACE = "user-config";
@@ -18,6 +20,7 @@ export interface UserConfig {
     theme: ThemeOptions;
     viewPrefs: typeof DefaultViewPrefs;
     viewTransitions: boolean;
+    locale: string;
 }
 
 export function useUserConfig() {
@@ -55,6 +58,7 @@ function validateConfig(config?: Partial<UserConfig>) {
             theme: ThemeOptions.DARK,
             viewPrefs: DefaultViewPrefs,
             viewTransitions: false,
+            locale: formatLocaleCode(DefaultLocale),
         };
 
         if (!config) return defaultConf;
@@ -74,6 +78,9 @@ function validateConfig(config?: Partial<UserConfig>) {
                 if (isValidViewType(config.viewPrefs[projectType])) defaultConf.viewPrefs[projectType] = config.viewPrefs[projectType];
             }
         }
+
+        // Validate locale
+        if (config.locale) defaultConf.locale = config.locale;
 
         return defaultConf;
     } catch {

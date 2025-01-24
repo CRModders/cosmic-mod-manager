@@ -5,13 +5,13 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { DotSeparator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
-import { setCookie } from "@app/utils/cookie";
 import { ArrowUpRightIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type LinkProps, useLocation } from "react-router";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
 import { useRootData } from "~/hooks/root-data";
+import { setUserConfig } from "~/hooks/user-config";
 import { formatLocaleCode, parseLocale } from "~/locales";
 import SupportedLocales from "~/locales/meta";
 import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
@@ -120,7 +120,7 @@ export default function Footer() {
                             preventScrollReset
                             escapeUrlWrapper
                             onClick={() => {
-                                setLocaleCookie(formattedCode);
+                                setLocaleConfig(formattedCode);
                                 changeLocale(formattedCode);
                             }}
                         >
@@ -176,7 +176,7 @@ export function LangSwitcher() {
     return (
         <Select
             onValueChange={(value: string) => {
-                setLocaleCookie(parseLocale(value));
+                setLocaleConfig(parseLocale(value));
                 changeLocale(value, navigate);
             }}
             value={currLang}
@@ -224,6 +224,6 @@ export function LangSwitcher() {
     );
 }
 
-function setLocaleCookie(locale: string) {
-    setCookie("locale", locale);
+function setLocaleConfig(locale: string) {
+    setUserConfig({ locale: locale });
 }
