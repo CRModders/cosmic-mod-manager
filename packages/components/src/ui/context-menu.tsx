@@ -29,13 +29,13 @@ function ContextMenuSubTrigger({
             ref={ref}
             className={cn(
                 "flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none focus:bg-zinc-100 focus:text-zinc-900 data-[state=open]:bg-zinc-100 data-[state=open]:text-zinc-900 dark:focus:bg-zinc-800 dark:focus:text-zinc-50 dark:data-[state=open]:bg-zinc-800 dark:data-[state=open]:text-zinc-50",
-                inset && "pl-8",
+                inset && "ps-8",
                 className,
             )}
             {...props}
         >
             {children}
-            <ChevronRightIcon aria-hidden className="ml-auto h-4 w-4" />
+            <ChevronRightIcon aria-hidden className="ms-auto h-4 w-4" />
         </ContextMenuPrimitive.SubTrigger>
     );
 }
@@ -84,7 +84,7 @@ function ContextMenuItem({
             ref={ref}
             className={cn(
                 "relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none text-muted-foreground focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-                inset && "pl-8",
+                inset && "ps-8",
                 className,
             )}
             {...props}
@@ -104,7 +104,7 @@ function ContextMenuCheckboxItem({
         <ContextMenuPrimitive.CheckboxItem
             ref={ref}
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-md py-1.5 ps-8 pe-2 text-sm outline-none focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
                 className,
             )}
             checked={checked}
@@ -126,7 +126,7 @@ function ContextMenuRadioItem({ ref, className, children, ...props }: React.Comp
         <ContextMenuPrimitive.RadioItem
             ref={ref}
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-md py-1.5 ps-8 pe-2 text-sm outline-none focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
                 className,
             )}
             {...props}
@@ -153,7 +153,7 @@ function ContextMenuLabel({
     return (
         <ContextMenuPrimitive.Label
             ref={ref}
-            className={cn("px-2 py-1.5 text-sm font-semibold text-foreground-bright", inset && "pl-8", className)}
+            className={cn("px-2 py-1.5 text-sm font-semibold text-foreground-bright", inset && "ps-8", className)}
             {...props}
         />
     );
@@ -166,7 +166,7 @@ function ContextMenuSeparator({ ref, className, ...props }: React.ComponentProps
 ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName;
 
 function ContextMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-    return <span className={cn("ml-auto text-xs tracking-widest text-extra-muted-foreground", className)} {...props} />;
+    return <span className={cn("ms-auto text-xs tracking-widest text-extra-muted-foreground", className)} {...props} />;
 }
 ContextMenuShortcut.displayName = "ContextMenuShortcut";
 

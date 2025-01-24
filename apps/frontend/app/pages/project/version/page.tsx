@@ -330,7 +330,7 @@ function FileDetailsItem({
             <ContextMenuTrigger asChild>
                 <div
                     className={cn(
-                        "w-full flex flex-wrap sm:flex-nowrap items-center justify-between rounded px-4 py-2.5 pr-3 gap-x-4 gap-y-2 cursor-context-menu",
+                        "w-full flex flex-wrap sm:flex-nowrap items-center justify-between rounded px-4 py-2.5 pe-3 gap-x-4 gap-y-2 cursor-context-menu",
                         isPrimary ? "bg-shallow-background" : "bg-shallow-background/70",
                     )}
                 >
@@ -338,15 +338,15 @@ function FileDetailsItem({
                         <FileIcon
                             aria-hidden
                             className={cn(
-                                "inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
+                                "inline me-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground",
                                 !isPrimary && "text-extra-muted-foreground",
                             )}
                         />
 
                         <span className={!isPrimary ? "text-muted-foreground" : ""}>
                             <strong className="font-semibold">{fileName}</strong>{" "}
-                            <span className="whitespace-nowrap ml-0.5">({parseFileSize(fileSize)})</span>{" "}
-                            {isPrimary ? <span className="text-muted-foreground italic ml-1">Primary</span> : null}
+                            <span className="whitespace-nowrap ms-0.5">({parseFileSize(fileSize)})</span>{" "}
+                            {isPrimary ? <span className="text-muted-foreground italic ms-1">Primary</span> : null}
                         </span>
                     </div>
 

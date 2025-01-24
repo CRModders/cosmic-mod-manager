@@ -56,12 +56,12 @@ function ComboBox(props: ComboBoxProps) {
                                                 : ""
                                         }
                                     >
-                                        <Check className={cn("mr-2 h-4 w-4", props.value === option.value ? "opacity-100" : "opacity-0")} />
+                                        <Check className={cn("me-2 h-4 w-4", props.value === option.value ? "opacity-100" : "opacity-0")} />
                                         {option.label}
                                         {option?.disabled === true ? (
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
-                                                    <InfoIcon aria-hidden className="w-btn-icon h-btn-icon ml-auto mr-2" />
+                                                    <InfoIcon aria-hidden className="w-btn-icon h-btn-icon ms-auto me-2" />
                                                 </TooltipTrigger>
 
                                                 <TooltipContent>{option?.disabledReason || "Disabled"}</TooltipContent>

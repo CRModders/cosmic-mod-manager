@@ -50,7 +50,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                 <TableHeader>
                     <TableRow className="hover:bg-transparent dark:hover:bg-transparent">
                         {/* ICON: VISIBLE ON sm+ width */}
-                        <TableHead className="invisible md:visible w-[5.5rem] sm:w-[6.5rem] pl-table-side-pad-sm sm:pl-table-side-pad">
+                        <TableHead className="invisible md:visible w-[5.5rem] sm:w-[6.5rem] ps-table-side-pad-sm sm:ps-table-side-pad">
                             {t.form.icon}
                         </TableHead>
 
@@ -67,7 +67,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                         <TableHead className="hidden md:table-cell">{t.dashboard.status}</TableHead>
 
                         {/* SETTINGS LINK: VISIBLE ON sm+ width */}
-                        <TableHead className="invisible md:visible w-10 pr-table-side-pad-sm sm:pr-table-side-pad"> </TableHead>
+                        <TableHead className="invisible md:visible w-10 pe-table-side-pad-sm sm:pe-table-side-pad"> </TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -84,7 +84,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 }}
                             >
                                 {/* ICON */}
-                                <TableCell className="pl-table-side-pad-sm sm:pl-table-side-pad">
+                                <TableCell className="ps-table-side-pad-sm sm:ps-table-side-pad">
                                     <Link
                                         tabIndex={-1}
                                         to={ProjectPagePath(project.type[0], project.slug)}
@@ -102,7 +102,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 </TableCell>
 
                                 {/* AGGREGATED PROJECT DETAILS: VISIBLE ON MOBILE WIDTH ONLY */}
-                                <TableCell className="md:hidden !pl-0 sm:pl-2">
+                                <TableCell className="md:hidden !ps-0 sm:ps-2">
                                     <div className="flex flex-col items-start justify-center gap-1">
                                         <Link
                                             to={ProjectPagePath(project.type[0], project.slug)}
@@ -164,7 +164,7 @@ export function ProjectsListTable({ projects }: { projects: ProjectListItem[] })
                                 </TableCell>
 
                                 {/* SETTINGS PAGE LINK */}
-                                <TableCell className="pr-table-side-pad-sm sm:pr-table-side-pad">
+                                <TableCell className="pe-table-side-pad-sm sm:pe-table-side-pad">
                                     <Link
                                         to={ProjectPagePath(project.type[0], project.slug, "settings")}
                                         className="noClickRedirect rounded flex items-center justify-center h-full w-fit p-2 hover:bg-shallow-background"

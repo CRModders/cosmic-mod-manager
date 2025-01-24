@@ -194,11 +194,11 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
                 ) : null
             }
         >
-            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                 <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="font-semibold">{ProjectsCount.join(" ")}</span>
             </div>
-            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+            <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                 <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                 <span className="font-semibold">{DownloadsCount_Str}</span>
             </div>

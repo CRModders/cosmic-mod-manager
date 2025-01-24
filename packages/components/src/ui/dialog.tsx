@@ -77,7 +77,7 @@ function DialogTitle({ ref, className, ...props }: React.ComponentPropsWithRef<t
     return (
         <DialogPrimitive.Title
             ref={ref}
-            className={cn("text-lg text-foreground font-bold leading-none tracking-tight pr-7", className)}
+            className={cn("text-lg text-foreground font-bold leading-none tracking-tight pe-7", className)}
             {...props}
         />
     );
@@ -85,7 +85,7 @@ function DialogTitle({ ref, className, ...props }: React.ComponentPropsWithRef<t
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 function DialogDescription({ ref, className, ...props }: React.ComponentPropsWithRef<typeof DialogPrimitive.Description>) {
-    return <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground pr-8", className)} {...props} />;
+    return <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground pe-8", className)} {...props} />;
 }
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 

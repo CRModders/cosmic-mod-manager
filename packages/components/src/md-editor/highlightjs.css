@@ -223,7 +223,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
     display: inline-block;
     opacity: 0;
     font-size: clamp(0.87rem, 0.95em, 1.7rem);
-    margin-left: 0.5ch;
+    margin-inline-start: 0.5ch;
     user-select: none;
     @apply text-accent-background;
 }

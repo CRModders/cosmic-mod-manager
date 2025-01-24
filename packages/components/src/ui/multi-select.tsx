@@ -124,7 +124,7 @@ export const MultiSelect = ({
                                         const IconComponent = option?.icon;
                                         return (
                                             <ChipButton variant={"outline"} key={value} className={cn("m-[0.17rem]")}>
-                                                {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+                                                {IconComponent && <IconComponent className="h-4 w-4 me-2" />}
                                                 {option?.label}
                                                 <XCircle
                                                     className="h-4 w-4 cursor-pointer"
@@ -151,7 +151,7 @@ export const MultiSelect = ({
                                 </div>
                             </div>
                         ) : (
-                            <span className="text-muted-foreground mr-auto ml-1">{placeholder}</span>
+                            <span className="text-muted-foreground me-auto ms-1">{placeholder}</span>
                         )}
                         <ChevronDownIcon aria-hidden className="h-4 cursor-pointer text-muted-foreground" />
                     </Button>
@@ -180,11 +180,11 @@ export const MultiSelect = ({
                                     <CommandItem
                                         key={option.value}
                                         onSelect={() => toggleOption(option.value)}
-                                        className="cursor-pointer pr-6"
+                                        className="cursor-pointer pe-6"
                                     >
                                         <div
                                             className={cn(
-                                                "mr-3 flex h-4 w-4 items-center justify-center rounded-sm border border-extra-muted-foreground/75",
+                                                "me-3 flex h-4 w-4 items-center justify-center rounded-sm border border-extra-muted-foreground/75",
                                                 isSelected
                                                     ? "bg-muted-foreground text-background border-transparent"
                                                     : "opacity-50 [&_svg]:invisible",
@@ -195,7 +195,7 @@ export const MultiSelect = ({
 
                                         {option.icon && (
                                             <option.icon
-                                                className={cn("mr-2 h-4 w-4 text-muted-foreground", isSelected && "text-foreground")}
+                                                className={cn("me-2 h-4 w-4 text-muted-foreground", isSelected && "text-foreground")}
                                             />
                                         )}
                                         <span className={cn(isSelected && "text-foreground-bright")}>{option.label}</span>

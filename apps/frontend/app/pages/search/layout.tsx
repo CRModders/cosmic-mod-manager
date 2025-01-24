@@ -123,7 +123,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
                             value={searchTerm_state}
                             onChange={(e) => setSearchTerm_state(e.target.value || "")}
                             placeholder={`${searchLabel}...`}
-                            className="text-md font-medium !pl-9 focus:[&>kbd]:invisible"
+                            className="text-md font-medium !ps-9 focus:[&>kbd]:invisible"
                             id="search-input"
                             aria-label={searchLabel}
                         />

@@ -33,13 +33,13 @@ export default function PaginatedNavigation({ pagesCount, activePage, searchPara
     return (
         <Pagination>
             <PaginationContent>
-                <PaginationItem className="mr-1 sm:mr-2">
+                <PaginationItem className="me-1 sm:me-2">
                     <PaginationPrevious to={activePage === 1 ? "" : paginationUrl(activePage - 1)} />
                 </PaginationItem>
 
                 <PaginationLinks activePage={activePage} pagesCount={pagesCount} paginationUrl={paginationUrl} />
 
-                <PaginationItem className="ml-1 sm:ml-2">
+                <PaginationItem className="ms-1 sm:ms-2">
                     <PaginationNext to={activePage > pagesCount - 1 ? "" : paginationUrl(activePage + 1)} />
                 </PaginationItem>
             </PaginationContent>

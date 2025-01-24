@@ -33,7 +33,7 @@ export const ChipButton = forwardRef<HTMLDivElement, ButtonProps>(
                     buttonVariants({ variant }),
                     "cursor-pointer font-semibold border-shallower-background h-fit w-fit text-[0.85rem] text-foreground",
                     "px-2 gap-x-1.5 py-0.5",
-                    variant === "outline" && "py-[calc(0.125rem_-_1px)] pr-1",
+                    variant === "outline" && "py-[calc(0.125rem_-_1px)] pe-1",
                     className,
                 )}
                 id={id}

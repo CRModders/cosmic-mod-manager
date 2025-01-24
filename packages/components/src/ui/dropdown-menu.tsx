@@ -29,13 +29,13 @@ function DropdownMenuSubTrigger({
             ref={ref}
             className={cn(
                 "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none bg-shallow-background data-[state=open]:bg-shallow-background",
-                inset && "pl-8",
+                inset && "ps-8",
                 className,
             )}
             {...props}
         >
             {children}
-            <ChevronRightIcon aria-hidden className="ml-auto h-4 w-4" />
+            <ChevronRightIcon aria-hidden className="ms-auto h-4 w-4" />
         </DropdownMenuPrimitive.SubTrigger>
     );
 }
@@ -91,7 +91,7 @@ function DropdownMenuItem({
             ref={ref}
             className={cn(
                 "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-                inset && "pl-8",
+                inset && "ps-8",
                 className,
             )}
             {...props}
@@ -111,7 +111,7 @@ function DropdownMenuCheckboxItem({
         <DropdownMenuPrimitive.CheckboxItem
             ref={ref}
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
                 className,
             )}
             checked={checked}
@@ -138,7 +138,7 @@ function DropdownMenuRadioItem({
         <DropdownMenuPrimitive.RadioItem
             ref={ref}
             className={cn(
-                "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                "relative flex cursor-default select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none transition-colors focus:bg-shallow-background focus:text-foreground-bright data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
                 className,
             )}
             {...props}
@@ -163,7 +163,7 @@ function DropdownMenuLabel({
     inset?: boolean;
 }) {
     return (
-        <DropdownMenuPrimitive.Label ref={ref} className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)} {...props} />
+        <DropdownMenuPrimitive.Label ref={ref} className={cn("px-2 py-1.5 text-sm font-semibold", inset && "ps-8", className)} {...props} />
     );
 }
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
@@ -174,7 +174,7 @@ function DropdownMenuSeparator({ ref, className, ...props }: React.ComponentProp
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-    return <span className={cn("ml-auto text-xs tracking-widest opacity-60", className)} {...props} />;
+    return <span className={cn("ms-auto text-xs tracking-widest opacity-60", className)} {...props} />;
 }
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 

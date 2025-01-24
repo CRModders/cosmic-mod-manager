@@ -236,7 +236,7 @@ export default function ProjectVersionsPage() {
                                         <LabelledCheckbox
                                             checked={showExperimentalGameVersions}
                                             onCheckedChange={(checked) => setShowExperimentalGameVersions(checked === true)}
-                                            className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
+                                            className="text-extra-muted-foreground pe-2 ps-3.5 my-1"
                                         >
                                             {t.form.showAllVersions}
                                         </LabelledCheckbox>
@@ -272,7 +272,7 @@ export default function ProjectVersionsPage() {
 
                     {hasDevVersions ? (
                         <LabelledCheckbox
-                            className="mx-2 sm:ml-auto"
+                            className="mx-2 sm:ms-auto"
                             checked={showDevVersions}
                             onCheckedChange={(checked) => setShowDevVersions(checked === true)}
                         >
@@ -427,12 +427,12 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                             <TableHeader className="hidden md:table-header-group">
                                 <TableRow className="hover:bg-transparent dark:hover:bg-transparent h-16">
                                     {/* MOBILE ONLY */}
-                                    <TableHead className="w-full grow md:hidden pl-table-side-pad-sm"> </TableHead>
+                                    <TableHead className="w-full grow md:hidden ps-table-side-pad-sm"> </TableHead>
                                     {/* MOBILE ONLY */}
-                                    <TableHead className="md:hidden pr-table-side-pad-sm"> </TableHead>
+                                    <TableHead className="md:hidden pe-table-side-pad-sm"> </TableHead>
 
                                     {/* MID WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:table-cell w-10 pl-table-side-pad"> </TableHead>
+                                    <TableHead className="hidden md:table-cell w-10 ps-table-side-pad"> </TableHead>
                                     {/* MID WIDTH AND ABOVE */}
                                     <TableHead className="hidden md:table-cell">{t.form.name}</TableHead>
                                     {/* MID WIDTH AND ABOVE */}
@@ -447,7 +447,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                     <TableHead className="hidden md:hidden xl:table-cell">{t.project.downloads}</TableHead>
 
                                     {/* MID WIDTH AND ABOVE */}
-                                    <TableHead className="hidden md:table-cell pr-table-side-pad"> </TableHead>
+                                    <TableHead className="hidden md:table-cell pe-table-side-pad"> </TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -462,7 +462,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                             }
                                         }}
                                     >
-                                        <TableCell className="md:hidden pl-table-side-pad-sm">
+                                        <TableCell className="md:hidden ps-table-side-pad-sm">
                                             {/* MOBILE ONLY */}
                                             <div className="w-full flex flex-col items-start justify-start gap-1.5">
                                                 <div className="w-full flex items-center justify-start gap-2.5" title={version.title}>
@@ -485,7 +485,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                         </TableCell>
 
                                         {/* MID WIDTH AND ABOVE */}
-                                        <TableCell className="hidden md:table-cell pl-table-side-pad pr-2">
+                                        <TableCell className="hidden md:table-cell ps-table-side-pad pe-2">
                                             <ReleaseChannelBadge releaseChannel={version.releaseChannel} />
                                         </TableCell>
 
@@ -525,7 +525,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                         </TableCell>
 
                                         {/* ALWAYS THE SAME */}
-                                        <TableCell className="pr-table-side-pad-sm md:pr-table-side-pad">
+                                        <TableCell className="pe-table-side-pad-sm md:pe-table-side-pad">
                                             <div className="w-full flex gap-1 items-center justify-end">
                                                 <Tooltip>
                                                     <TooltipTrigger asChild>

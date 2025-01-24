@@ -559,13 +559,13 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                     </>
                 }
             >
-                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                     <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.downloads} />
                     </span>
                 </div>
-                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                     <HeartIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.followers} />
@@ -573,7 +573,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 </div>
 
                 {(projectData.featuredCategories?.length || 0) > 0 ? (
-                    <div className="hidden md:flex items-center gap-3 pr-4">
+                    <div className="hidden md:flex items-center gap-3 pe-4">
                         <TagsIcon aria-hidden className="w-btn-icon-lg h-btn-icon-lg" />
                         <div className="flex items-center gap-2">
                             {projectData.featuredCategories.map((category) => (
@@ -676,7 +676,7 @@ function ExternalLink({ url, label, icon }: { url: string; icon: React.ReactNode
             {icon}
             <span>
                 {label}
-                <ArrowUpRightIcon aria-hidden className="w-4 h-4 text-extra-muted-foreground inline ml-1" />
+                <ArrowUpRightIcon aria-hidden className="w-4 h-4 text-extra-muted-foreground inline ms-1" />
             </span>
         </Link>
     );

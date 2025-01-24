@@ -147,7 +147,7 @@ export default function InteractiveDownloadPopup() {
                                     <LabelledCheckbox
                                         checked={showAllVersions}
                                         onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                        className="text-extra-muted-foreground px-2 pb-2 ml-2 mt-1"
+                                        className="text-extra-muted-foreground px-2 pb-2 ms-2 mt-1"
                                     >
                                         {t.form.showAllVersions}
                                     </LabelledCheckbox>
@@ -177,7 +177,7 @@ export default function InteractiveDownloadPopup() {
                                     )}
                                 </span>
                             </span>
-                            <ChevronsUpDownIcon aria-hidden className="ml-2 h-4 w-4 shrink-0" />
+                            <ChevronsUpDownIcon aria-hidden className="ms-2 h-4 w-4 shrink-0" />
                         </Button>
                     </ComboBox>
 
@@ -210,7 +210,7 @@ export default function InteractiveDownloadPopup() {
                                         )}
                                     </span>
                                 </span>
-                                <ChevronsUpDownIcon aria-hidden className="ml-2 h-4 w-4 shrink-0" />
+                                <ChevronsUpDownIcon aria-hidden className="ms-2 h-4 w-4 shrink-0" />
                             </Button>
                         </ComboBox>
                     )}

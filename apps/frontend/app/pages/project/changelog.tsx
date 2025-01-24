@@ -174,7 +174,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         <LabelledCheckbox
                                             checked={showAllVersions}
                                             onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                            className="text-extra-muted-foreground pr-2 pl-3.5 my-1"
+                                            className="text-extra-muted-foreground pe-2 ps-3.5 my-1"
                                         >
                                             {t.form.showAllVersions}
                                         </LabelledCheckbox>
@@ -274,7 +274,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
             <Card className="p-5 w-full flex flex-col items-start justify-start">
                 {visibleItems.map((version) => {
                     return (
-                        <div key={version.id} className="w-full pl-7 mb-4 relative dark:text-muted-foreground">
+                        <div key={version.id} className="w-full ps-7 mb-4 relative dark:text-muted-foreground">
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                                 <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
                                     <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={version.isDuplicate === true} />
@@ -320,7 +320,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                 ) : null}
                             </div>
                             {version.changelog && !version.isDuplicate ? (
-                                <MarkdownRenderBox addIdToHeadings={false} text={version.changelog} className="mr-2" />
+                                <MarkdownRenderBox addIdToHeadings={false} text={version.changelog} className="me-2" />
                             ) : null}
                         </div>
                     );

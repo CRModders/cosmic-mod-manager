@@ -173,7 +173,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                         >
                                             <CircleAlertIcon
                                                 aria-hidden
-                                                className="w-btn-icon h-btn-icon text-warning-foreground ml-auto cursor-help"
+                                                className="w-btn-icon h-btn-icon text-warning-foreground ms-auto cursor-help"
                                             />
                                         </TooltipTemplate>
                                     </TooltipProvider>
@@ -259,7 +259,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                     <LabelledCheckbox
                                         checked={showAllVersions}
                                         onCheckedChange={(checked) => setShowAllVersions(checked === true)}
-                                        className="text-extra-muted-foreground pl-3.5 mt-1"
+                                        className="text-extra-muted-foreground ps-3.5 mt-1"
                                     >
                                         {t.form.showAllVersions}
                                     </LabelledCheckbox>
@@ -543,12 +543,12 @@ export function SelectPrimaryFileInput({ children, selectedFile, inputId }: Prim
             {children}
 
             <div>
-                <FileIcon aria-hidden className="inline mr-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
+                <FileIcon aria-hidden className="inline me-1.5 flex-shrink-0 w-btn-icon h-btn-icon text-muted-foreground" />
                 {selectedFile ? (
                     <span className="inline-flex items-center flex-wrap justify-start gap-x-2">
                         <strong className="font-semibold">{selectedFile.name}</strong>{" "}
-                        <span className="whitespace-nowrap ml-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
-                        <span className="text-muted-foreground italic ml-1">{t.version.primary}</span>
+                        <span className="whitespace-nowrap ms-0.5">({parseFileSize(selectedFile.size)})</span>{" "}
+                        <span className="text-muted-foreground italic ms-1">{t.version.primary}</span>
                     </span>
                 ) : (
                     <span className="text-muted-foreground italic">{t.version.noPrimaryFile}</span>
@@ -653,9 +653,9 @@ function AdditionalFiles({
                         >
                             <div className="text-muted-foreground">
                                 {children}
-                                <FileIcon aria-hidden className="mr-1.5 inline w-btn-icon h-btn-icon text-muted-foreground" />
+                                <FileIcon aria-hidden className="me-1.5 inline w-btn-icon h-btn-icon text-muted-foreground" />
                                 <strong className="font-semibold text-wrap">{file.name}</strong>{" "}
-                                <span className="whitespace-nowrap ml-0.5">({parseFileSize(file.size)})</span>
+                                <span className="whitespace-nowrap ms-0.5">({parseFileSize(file.size)})</span>
                             </div>
 
                             <Button variant="secondary-dark" onClick={() => deleteFileFromList(index)}>

@@ -198,7 +198,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                         onCheckedChange={(checked) => {
                             setShowAllVersions(checked === true);
                         }}
-                        className="mt-3 ml-0.5 text-extra-muted-foreground"
+                        className="mt-3 ms-0.5 text-extra-muted-foreground"
                     >
                         {t.form.showAllVersions}
                     </LabelledCheckbox>

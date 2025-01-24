@@ -38,7 +38,7 @@ function CommandInput({
 }: React.ComponentPropsWithRef<typeof CommandPrimitive.Input> & { wrapperClassName?: string }) {
     return (
         <div className={cn("flex items-center border-b border-shallow-background px-3", wrapperClassName)} cmdk-input-wrapper="">
-            <SearchIcon aria-hidden className="mr-2 w-btn-icon h-btn-icon shrink-0 text-extra-muted-foreground" />
+            <SearchIcon aria-hidden className="me-2 w-btn-icon h-btn-icon shrink-0 text-extra-muted-foreground" />
             <CommandPrimitive.Input
                 ref={ref}
                 className={cn(
@@ -97,7 +97,7 @@ function CommandItem({ ref, className, ...props }: React.ComponentPropsWithRef<t
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 function CommandShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-    return <span className={cn("ml-auto text-tiny tracking-widest text-extra-muted-foreground", className)} {...props} />;
+    return <span className={cn("ms-auto text-tiny tracking-widest text-extra-muted-foreground", className)} {...props} />;
 }
 CommandShortcut.displayName = "CommandShortcut";
 

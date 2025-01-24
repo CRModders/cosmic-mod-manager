@@ -213,10 +213,10 @@ export default function EditVersionPage() {
                                         <div className="flex items-center flex-wrap justify-start gap-x-2">
                                             <span>
                                                 <strong className="font-semibold">{versionData?.primaryFile?.name}</strong>{" "}
-                                                <span className="whitespace-nowrap ml-0.5">
+                                                <span className="whitespace-nowrap ms-0.5">
                                                     ({parseFileSize(versionData?.primaryFile?.size || 0)})
                                                 </span>{" "}
-                                                <span className="text-muted-foreground italic ml-1">{t.version.primary}</span>
+                                                <span className="text-muted-foreground italic ms-1">{t.version.primary}</span>
                                             </span>
                                         </div>
                                     </div>

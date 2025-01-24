@@ -216,7 +216,7 @@ export function PublishingChecklist() {
 
                     <div className="flex items-center gap-1 flex-wrap">
                         <TooltipProvider delayDuration={200}>
-                            <span className="font-bold text-muted-foreground/85 mr-2">{pubChecklist.progress}</span>
+                            <span className="font-bold text-muted-foreground/85 me-2">{pubChecklist.progress}</span>
 
                             {steps.map((step) => {
                                 if (step.hide) return;

@@ -155,7 +155,7 @@ function OpenInNewTab_Icon() {
 
 function LinksColumn({ children, area }: { area: string; children: React.ReactNode }) {
     return (
-        <div style={{ gridArea: area }} className="grid gap-4 h-fit lg:mr-16 place-items-center lg:place-items-start">
+        <div style={{ gridArea: area }} className="grid gap-4 h-fit lg:me-16 place-items-center lg:place-items-start">
             {children}
         </div>
     );

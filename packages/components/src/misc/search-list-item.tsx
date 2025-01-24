@@ -156,7 +156,7 @@ function BaseView(props: SearchListItemProps) {
                 to={projectPageUrl}
                 className={cn(
                     "w-max h-fit flex shrink-0 relative items-start justify-center",
-                    galleryViewType && "ml-card-surround -mt-12",
+                    galleryViewType && "ms-card-surround -mt-12",
                 )}
                 aria-label={props.projectName}
                 tabIndex={-1}
@@ -177,7 +177,7 @@ function BaseView(props: SearchListItemProps) {
             </Link>
 
             <div
-                className={cn("h-fit whitespace-break-spaces text-wrap leading-none", galleryViewType && "mr-card-surround leading-tight")}
+                className={cn("h-fit whitespace-break-spaces text-wrap leading-none", galleryViewType && "me-card-surround leading-tight")}
                 style={{ gridArea: "title" }}
             >
                 {SearchItemHeader}
@@ -185,7 +185,7 @@ function BaseView(props: SearchListItemProps) {
                 {props.visibility === ProjectVisibility.ARCHIVED && (
                     <>
                         {" "}
-                        <Chip className="inline leading-none text-sm font-medium bg-warning-background/15 text-warning-foreground ml-1">
+                        <Chip className="inline leading-none text-sm font-medium bg-warning-background/15 text-warning-foreground ms-1">
                             {t.projectSettings.archived}
                         </Chip>
                     </>
@@ -277,7 +277,7 @@ function BaseView(props: SearchListItemProps) {
                 <div
                     className={cn(
                         "h-fit flex items-center gap-1.5 whitespace-nowrap",
-                        listViewType && "justify-end ml-auto mt-auto",
+                        listViewType && "justify-end ms-auto mt-auto",
                         galleryViewType && "justify-start my-auto",
                     )}
                 >

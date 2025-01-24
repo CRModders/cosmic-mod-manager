@@ -158,7 +158,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                 title={orgData.name}
                 description={orgData.description || ""}
                 titleBadge={
-                    <div className="ml-2 flex items-center justify-center gap-1.5 font-bold text-extra-muted-foreground">
+                    <div className="ms-2 flex items-center justify-center gap-1.5 font-bold text-extra-muted-foreground">
                         <Building2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.project.organization}
                     </div>
@@ -205,15 +205,15 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                     ) : null
                 }
             >
-                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                     <UsersIcon aria-hidden className="w-[1.1rem] h-[1.1rem]" />
                     <span className="font-semibold">{MembersCount.join(" ")}</span>
                 </div>
-                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pr-4">
+                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
                     <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{ProjectsCount.join(" ")}</span>
                 </div>
-                <div className="flex items-center gap-2 pr-4">
+                <div className="flex items-center gap-2 pe-4">
                     <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{DownloadsCount_Str}</span>
                 </div>
