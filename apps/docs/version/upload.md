@@ -38,7 +38,7 @@ REQUEST BODY: `multipart/form-data`
     key: `loaders` \
     type: `string[]` (Check [/tags/loaders](https://api.crmm.tech/api/tags/loaders) for a list of available loaders)
 
-- **VameVersions** \
+- **GameVersions** \
     key: `gameVersions` \
     type: `string[]` (Check [/tags/game-versions](https://api.crmm.tech/api/tags/game-versions) for a list of available game versions)
 
