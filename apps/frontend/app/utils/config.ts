@@ -9,10 +9,8 @@ let Config = {
 if (isDev === true) {
     Config = {
         FRONTEND_URL: "http://localhost:3000",
-        BACKEND_URL_LOCAL: "https://api.crmm.tech",
-        BACKEND_URL_PUBLIC: "https://api.crmm.tech",
-        // BACKEND_URL_LOCAL: "http://localhost:5500",
-        // BACKEND_URL_PUBLIC: "http://localhost:5500",
+        BACKEND_URL_LOCAL: "http://localhost:5500",
+        BACKEND_URL_PUBLIC: "http://localhost:5500",
     };
 }
 
