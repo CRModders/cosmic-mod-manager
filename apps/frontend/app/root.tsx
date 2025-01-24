@@ -2,9 +2,8 @@ import "./index.css";
 
 import { DownloadRipple } from "@app/components/misc/download-animation";
 import LoaderBar from "@app/components/misc/loader-bar";
-import type { ThemeOptions } from "@app/components/types";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
-import { getCookie, getThemeFromCookie } from "@app/utils/cookie";
+import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
 import type { LinksFunction } from "react-router";
@@ -14,6 +13,7 @@ import Navbar from "~/components/layout/Navbar/navbar";
 import Footer from "~/components/layout/footer";
 import ToastAnnouncer from "~/components/toast-announcer";
 import { useNavigate } from "~/components/ui/link";
+import { type UserConfig, getUserConfig } from "~/hooks/user-config";
 import SupportedLocales, { DefaultLocale, GetLocaleMetadata } from "~/locales/meta";
 import type { LocaleMetaData } from "~/locales/types";
 import ContextProviders from "~/providers";
@@ -28,8 +28,7 @@ import { formatLocaleCode, parseLocale } from "./locales";
 import Config from "./utils/config";
 
 export interface RootOutletData {
-    theme: ThemeOptions;
-    viewTransitions: boolean;
+    userConfig: UserConfig;
     session: LoggedInUserData | null;
     locale: LocaleMetaData;
     supportedLocales: LocaleMetaData[];
@@ -40,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const data = useLoaderData() as RootOutletData;
 
     return (
-        <html lang={formatLocaleCode(data.locale)} className={data?.theme}>
+        <html lang={formatLocaleCode(data.locale)} className={data?.userConfig.theme} dir={data.locale.dir || "ltr"}>
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -113,7 +112,7 @@ export default function App() {
     }, []);
 
     return (
-        <ContextProviders theme={data.theme}>
+        <ContextProviders theme={data.userConfig.theme}>
             <ValidateClientSession />
             <ClientOnly Element={ToastAnnouncer} />
             <ClientOnly Element={ToastAnnouncer} />
@@ -152,9 +151,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     }
 
     // Preferences
-    const themePref = getCookie("theme", cookie);
-    const theme = getThemeFromCookie(themePref);
-    const viewTransitions = getCookie("viewTransitions", cookie) === "true";
+    const userConfig = await getUserConfig(cookie);
 
     const urlLocalePrefix = useUrlLocale(true, reqUrl.pathname);
     const urlLocale = GetLocaleMetadata(parseLocale(urlLocalePrefix)) || DefaultLocale;
@@ -181,8 +178,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     }
 
     return {
-        theme,
-        viewTransitions,
+        userConfig: userConfig,
         session: session as LoggedInUserData | null,
         locale: currLocale,
         supportedLocales: SupportedLocales,

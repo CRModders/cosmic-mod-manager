@@ -15,7 +15,7 @@ type Props = Omit<
 >;
 
 export default function SearchListItem(props: Props) {
-    const viewTransitions = useRootData()?.viewTransitions !== false;
+    const viewTransitions = useRootData()?.userConfig.viewTransitions !== false;
     const { t, locale } = useTranslation();
 
     return (

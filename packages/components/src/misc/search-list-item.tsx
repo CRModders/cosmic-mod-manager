@@ -5,7 +5,7 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import { type EnvironmentSupport, ProjectVisibility, TagHeaderType } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
-import { Fragment, type ReactNode, useMemo } from "react";
+import { type ReactNode, useMemo } from "react";
 import { TagIcon } from "~/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
@@ -93,7 +93,7 @@ function BaseView(props: SearchListItemProps) {
                     />,
                 );
             } else if (item[0] === SearchItemHeader_Keys.BY) {
-                items.push(<Fragment key={`${props.projectName}__conjunction`}>{item[1]}</Fragment>);
+                items.push(item[1]);
             } else if (item[0] === SearchItemHeader_Keys.AUTHOR_NAME) {
                 items.push(
                     <AuthorLink
@@ -108,8 +108,6 @@ function BaseView(props: SearchListItemProps) {
                     />,
                 );
             }
-
-            items.push(" ");
         }
 
         return items;

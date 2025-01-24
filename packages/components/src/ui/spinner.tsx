@@ -37,7 +37,7 @@ export function LoadingSpinner({ size }: { size?: LoaderSizes }) {
     return (
         <div
             aria-label="Loading..."
-            className="size-[var(--size)] [border-width:_var(--border-width)] border-current border-l-transparent border-r-transparent rounded-[999px] animate-spin"
+            className="size-[var(--size)] [border-width:_var(--border-width)] border-current border-s-transparent border-e-transparent rounded-[999px] animate-spin"
             style={{
                 // @ts-ignore
                 "--size": loaderSize,

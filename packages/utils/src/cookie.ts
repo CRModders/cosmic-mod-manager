@@ -1,6 +1,9 @@
 import { ThemeOptions } from "~/types";
 
-export function getCookie(key: string, src: string) {
+export function getCookie(key: string, _src: string | undefined) {
+    let src = _src;
+    if (typeof src !== "string") src = document.cookie;
+
     for (const cookie of src.split("; ")) {
         if (cookie.split("=")[0] === key) {
             return cookie.split("=")[1];

@@ -559,13 +559,13 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                     </>
                 }
             >
-                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pe-4">
+                <div className="flex items-center gap-3 border-0 border-e border-card-background dark:border-shallow-background pe-4">
                     <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.downloads} />
                     </span>
                 </div>
-                <div className="flex items-center gap-3 border-0 border-r border-card-background dark:border-shallow-background pe-4">
+                <div className="flex items-center gap-3 border-0 border-e border-card-background dark:border-shallow-background pe-4">
                     <HeartIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">
                         <FormattedCount count={projectData.followers} />
@@ -588,7 +588,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
             </PageHeader>
 
             {projectData.visibility === ProjectVisibility.ARCHIVED ? (
-                <div className="text-warning-foreground bg-card-background dark:bg-warning-background/15 px-5 py-3 rounded-lg font-medium border-warning-background border-l-2 rounded-l-none">
+                <div className="text-warning-foreground bg-card-background dark:bg-warning-background/15 px-5 py-3 rounded-lg font-medium border-warning-background border-s-2 rounded-l-none">
                     {t.project.archivedMessage(projectData.name)}
                 </div>
             ) : null}

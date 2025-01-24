@@ -337,7 +337,7 @@ function ChangelogBar({ releaseChannel, isDuplicate }: { releaseChannel: Version
         <>
             <div
                 className={cn(
-                    "changelog-bar absolute w-1 h-full top-2.5 left-2 rounded-full",
+                    "changelog-bar absolute w-1 h-full top-2.5 start-2 rounded-full",
                     releaseChannel === VersionReleaseChannel.RELEASE
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA

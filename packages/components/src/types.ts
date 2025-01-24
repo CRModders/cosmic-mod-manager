@@ -9,5 +9,5 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface RefProp<T> {
-    ref?: React.RefObject<T | null> | null;
+    ref?: React.RefObject<T | null> | React.RefCallback<T> | null;
 };

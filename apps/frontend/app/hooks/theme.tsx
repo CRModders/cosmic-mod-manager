@@ -1,6 +1,6 @@
 import { ThemeOptions, type UseThemeProps } from "@app/components/types";
-import { getCookie, setCookie } from "@app/utils/cookie";
 import React, { useContext, useEffect } from "react";
+import { setUserConfig, useUserConfig } from "./user-config";
 
 const MEDIA = "(prefers-color-scheme: dark)";
 export const ThemeContext = React.createContext<UseThemeProps | undefined>(undefined);
@@ -14,7 +14,7 @@ export function ThemeProvider({ children, initTheme }: { children: React.ReactNo
     return <Theme initTheme={initTheme}>{children}</Theme>;
 }
 
-function Theme({ children, initTheme, storageKey = "theme" }: { children: React.ReactNode; initTheme: ThemeOptions; storageKey?: string }) {
+function Theme({ children, initTheme }: { children: React.ReactNode; initTheme: ThemeOptions; storageKey?: string }) {
     const [theme, setThemeState] = React.useState<string>(initTheme);
 
     const applyTheme = React.useCallback((theme: string) => {
@@ -22,12 +22,9 @@ function Theme({ children, initTheme, storageKey = "theme" }: { children: React.
         if (!resolved) return;
 
         // If theme is system, resolve it before setting theme
-        if (theme === "system") {
-            resolved = getSystemTheme();
-        }
+        if (theme === "system") resolved = getSystemTheme();
 
         const elem = document.documentElement;
-
         for (const theme_name of themes) {
             elem?.classList.remove(theme_name);
         }
@@ -41,7 +38,7 @@ function Theme({ children, initTheme, storageKey = "theme" }: { children: React.
             setThemeState(newTheme);
 
             try {
-                setCookie(storageKey, newTheme);
+                setUserConfig({ theme: newTheme as ThemeOptions });
             } catch {}
         },
         [theme],
@@ -62,13 +59,12 @@ function Theme({ children, initTheme, storageKey = "theme" }: { children: React.
         return () => media.removeEventListener("change", handleMediaQuery);
     }, []);
 
+    const _currTheme = useUserConfig().theme;
     useEffect(() => {
         if (!theme) return;
         applyTheme(theme);
 
-        if (!getTheme(storageKey)) {
-            setTheme(theme);
-        }
+        if (!_currTheme) setTheme(theme);
     }, [theme]);
 
     return (
@@ -81,17 +77,6 @@ function Theme({ children, initTheme, storageKey = "theme" }: { children: React.
             {children}
         </ThemeContext.Provider>
     );
-}
-
-// Helpers
-function getTheme(key: string, fallback?: string) {
-    let theme: string | undefined;
-    try {
-        theme = getCookie(key, document.cookie) || undefined;
-    } catch (e) {
-        // Unsupported
-    }
-    return theme || fallback;
 }
 
 function getSystemTheme(e?: MediaQueryList | MediaQueryListEvent) {

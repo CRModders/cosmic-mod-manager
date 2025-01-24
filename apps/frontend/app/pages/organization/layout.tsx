@@ -205,11 +205,11 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
                     ) : null
                 }
             >
-                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
+                <div className="flex items-center gap-2 border-0 border-e border-card-background dark:border-shallow-background pe-4">
                     <UsersIcon aria-hidden className="w-[1.1rem] h-[1.1rem]" />
                     <span className="font-semibold">{MembersCount.join(" ")}</span>
                 </div>
-                <div className="flex items-center gap-2 border-0 border-r border-card-background dark:border-shallow-background pe-4">
+                <div className="flex items-center gap-2 border-0 border-e border-card-background dark:border-shallow-background pe-4">
                     <CubeIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="font-semibold">{ProjectsCount.join(" ")}</span>
                 </div>

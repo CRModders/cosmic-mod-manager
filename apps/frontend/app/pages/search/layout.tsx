@@ -17,7 +17,7 @@ import {
 } from "@app/utils/config/search";
 import { getProjectTypeFromName } from "@app/utils/convertors";
 import { Capitalize } from "@app/utils/string";
-import { ProjectType, SearchResultSortMethod } from "@app/utils/types";
+import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { SearchResult } from "@app/utils/types/api";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -25,6 +25,7 @@ import { Outlet, useNavigation, useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectType } from "~/hooks/project";
+import { type UserConfig, setUserConfig, useUserConfig } from "~/hooks/user-config";
 import { useTranslation } from "~/locales/provider";
 import FilterSidebar from "./sidebar";
 
@@ -271,6 +272,8 @@ function ViewTypeToggle({
     viewType,
     reRender,
 }: { projectType: ProjectType; viewType: ViewType; reRender: (str: string) => void }) {
+    const userConfig = useUserConfig();
+
     function toggleViewType() {
         let newDisplayType = viewType;
         if (viewType === ViewType.LIST) {
@@ -280,7 +283,7 @@ function ViewTypeToggle({
         }
 
         reRender(Math.random().toString());
-        saveSearchDisplayPreference(projectType, newDisplayType);
+        saveSearchDisplayPreference(projectType, newDisplayType, userConfig);
     }
 
     return (
@@ -304,42 +307,13 @@ function ViewTypeToggle({
     );
 }
 
-const defaultSearchDisplays = {
-    [ProjectType.MOD]: ViewType.LIST,
-    [ProjectType.DATAMOD]: ViewType.LIST,
-    [ProjectType.RESOURCE_PACK]: ViewType.GALLERY,
-    [ProjectType.SHADER]: ViewType.GALLERY,
-    [ProjectType.MODPACK]: ViewType.LIST,
-    [ProjectType.PLUGIN]: ViewType.LIST,
-};
-const searchDisplayPrefsNamespace = "searchDisplayPrefs";
-
-function saveSearchDisplayPreference(projectType: ProjectType, viewType: ViewType) {
-    let prefs = defaultSearchDisplays;
-
-    try {
-        const savedPrefs = localStorage.getItem(searchDisplayPrefsNamespace);
-        if (savedPrefs) prefs = { ...prefs, ...JSON.parse(savedPrefs) };
-    } catch (error) {
-        prefs = defaultSearchDisplays;
-    }
-
-    prefs[projectType] = viewType;
-
-    localStorage.setItem(searchDisplayPrefsNamespace, JSON.stringify(prefs));
+function saveSearchDisplayPreference(projectType: ProjectType, viewType: ViewType, userConfig: UserConfig) {
+    userConfig.viewPrefs[projectType] = viewType;
+    setUserConfig(userConfig);
 }
 
 function getSearchDisplayPreference(projectType: ProjectType) {
-    let prefs = defaultSearchDisplays;
-
-    try {
-        const savedPrefs = localStorage.getItem(searchDisplayPrefsNamespace);
-        if (savedPrefs) prefs = { ...prefs, ...JSON.parse(savedPrefs) };
-    } catch (error) {
-        prefs = defaultSearchDisplays;
-    }
-
-    return prefs[projectType];
+    return useUserConfig().viewPrefs[projectType];
 }
 
 export function updateSearchParam({

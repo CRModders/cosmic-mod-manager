@@ -1,11 +1,11 @@
 import RefreshPage from "@app/components/misc/refresh-page";
 import { CardContent, CardDescription, CardHeader, CardTitle, SectionCard } from "@app/components/ui/card";
 import { Switch } from "@app/components/ui/switch";
-import { setCookie } from "@app/utils/cookie";
 import { disableInteractions } from "@app/utils/dom";
 import { useLocation } from "react-router";
 import { useNavigate } from "~/components/ui/link";
 import { useRootData } from "~/hooks/root-data";
+import { setUserConfig } from "~/hooks/user-config";
 import { useTranslation } from "~/locales/provider";
 
 export default function PreferencesPage() {
@@ -17,7 +17,7 @@ export default function PreferencesPage() {
 
     function toggleViewTransitions(checked: boolean) {
         disableInteractions();
-        setCookie("viewTransitions", `${checked}`);
+        setUserConfig({ viewTransitions: checked });
 
         setTimeout(() => {
             RefreshPage(navigate, location);
@@ -37,7 +37,7 @@ export default function PreferencesPage() {
                             <span className="block text-lg font-bold text-foreground my-0">{t.settings.viewTransitions}</span>
                             <span className="block text-muted-foreground my-0">{t.settings.viewTransitionsDesc}</span>
                         </label>
-                        <Switch id="view-transitions" checked={data?.viewTransitions} onCheckedChange={toggleViewTransitions} />
+                        <Switch id="view-transitions" checked={data?.userConfig.viewTransitions} onCheckedChange={toggleViewTransitions} />
                     </div>
                 </CardContent>
             </SectionCard>

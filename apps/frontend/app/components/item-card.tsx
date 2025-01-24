@@ -6,7 +6,7 @@ import { useTranslation } from "~/locales/provider";
 type OrgListItemCardProps = Omit<React.ComponentProps<typeof DefaultOrgListItemCard>, "t" | "viewTransitions">;
 
 export function OrgListItemCard(props: OrgListItemCardProps) {
-    const viewTransitions = useRootData()?.viewTransitions !== false;
+    const viewTransitions = useRootData()?.userConfig.viewTransitions !== false;
     const { t } = useTranslation();
 
     return <DefaultOrgListItemCard {...props} t={t} viewTransitions={viewTransitions} />;
