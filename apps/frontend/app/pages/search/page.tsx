@@ -15,30 +15,34 @@ import { getSearchResultsQuery } from "./loader";
 
 export function SearchResultsPage() {
     const { t } = useTranslation();
-    const { type, typeStr, viewType, searchParams } = useOutletContext<SearchOutlet>();
+    const { projectType_Coerced, projectType, viewType, searchParams, initialSearchData } = useOutletContext<SearchOutlet>();
 
     const { setShowSpinner } = useSpinnerCtx();
     const currLocation = useLocation();
     const nextLocation = useNavigation().location;
 
     const location = nextLocation || currLocation;
-    const searchResult = useQuery(getSearchResultsQuery(location.search?.replace("?", ""), type === typeStr ? type : undefined));
+    const searchQuery = useQuery(
+        getSearchResultsQuery(location.search?.replace("?", ""), projectType_Coerced === projectType ? projectType_Coerced : undefined),
+    );
+    const validInitData = searchQuery.isLoading && projectType === initialSearchData?.projectType && initialSearchData;
+    const searchResults = validInitData ? initialSearchData : searchQuery.data;
 
     let showPerPage = Number.parseInt(searchParams.get(searchLimitParamNamespace) || defaultSearchLimit.toString());
     if (!isNumber(showPerPage)) showPerPage = defaultSearchLimit;
 
-    const pagesCount = Math.ceil((searchResult.data?.estimatedTotalHits || 0) / showPerPage);
+    const pagesCount = Math.ceil((searchResults?.estimatedTotalHits || 0) / showPerPage);
     const pageOffsetParamValue = searchParams.get(pageOffsetParamNamespace);
     let activePage = pageOffsetParamValue ? Number.parseInt(pageOffsetParamValue || "1") : 1;
     if (!isNumber(activePage)) activePage = 1;
 
     const pagination =
-        (searchResult.data?.estimatedTotalHits || 0) > showPerPage ? (
+        (searchResults?.estimatedTotalHits || 0) > showPerPage ? (
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageOffsetParamNamespace} />
         ) : null;
 
     async function refetchSearchResults() {
-        await searchResult.refetch();
+        await searchQuery.refetch();
     }
 
     useEffect(() => {
@@ -46,8 +50,10 @@ export function SearchResultsPage() {
     }, [searchParams]);
 
     useEffect(() => {
-        setShowSpinner(searchResult.isFetching);
-    }, [searchResult.isFetching]);
+        if (validInitData) return setShowSpinner(false);
+
+        setShowSpinner(searchQuery.isFetching);
+    }, [searchQuery.isFetching]);
 
     return (
         <>
@@ -59,7 +65,7 @@ export function SearchResultsPage() {
                 role="list"
                 aria-label="Search Results"
             >
-                {searchResult.data?.hits?.map((project: ProjectListItem) => (
+                {searchResults?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
                         key={project.id}
                         vtId={project.id}
@@ -85,13 +91,13 @@ export function SearchResultsPage() {
                 ))}
             </section>
 
-            {!searchResult.data?.hits?.length && !searchResult.isLoading && !searchResult.isFetching && (
+            {!searchResults?.hits?.length && !searchQuery.isLoading && !searchQuery.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">
                     <span className="text-extra-muted-foreground italic text-xl">{t.common.noResults}</span>
                 </div>
             )}
 
-            {!searchResult.data?.hits?.length && searchResult.isFetching && (
+            {!searchResults?.hits?.length && searchQuery.isFetching && (
                 <div className="w-full flex items-center justify-center py-8">...</div>
             )}
 

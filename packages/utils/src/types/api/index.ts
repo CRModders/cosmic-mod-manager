@@ -194,3 +194,13 @@ export interface OrganisationListItem {
     icon: string | null;
     description: string | null;
 }
+
+export interface SearchResult {
+    estimatedTotalHits: number;
+    hits: ProjectListItem[];
+    limit: number;
+    offset: number;
+    processingTimeMs: number;
+    query: string;
+    projectType?: string;
+}

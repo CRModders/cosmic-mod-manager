@@ -1,3 +1,4 @@
+import { useLocation } from "react-router";
 import {
     Pagination,
     PaginationContent,
@@ -16,15 +17,17 @@ interface Props {
 }
 
 export default function PaginatedNavigation({ pagesCount, activePage, searchParamKey = "page", includeHashInURL }: Props) {
+    const loc = useLocation();
+
     function paginationUrl(page: number) {
-        const currUrl = new URL(window.location.href);
+        const currUrl = new URL(`https://example.com${loc.pathname}${loc.search}${loc.hash}`);
         if (page === 1) currUrl.searchParams.delete(searchParamKey);
         else currUrl.searchParams.set(searchParamKey, page.toString());
 
         return currUrl
             .toString()
-            .replace(window.location.origin, "")
-            .replace(window.location.hash, includeHashInURL === true ? window.location.hash : "");
+            .replace(currUrl.origin, "")
+            .replace(loc.hash, includeHashInURL === true ? loc.hash : "");
     }
 
     return (

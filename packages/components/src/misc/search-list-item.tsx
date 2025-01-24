@@ -5,7 +5,7 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import { type EnvironmentSupport, ProjectVisibility, TagHeaderType } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
-import { type ReactNode, useMemo } from "react";
+import { Fragment, type ReactNode, useMemo } from "react";
 import { TagIcon } from "~/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "~/microdata";
 import { ImgWrapper } from "~/ui/avatar";
@@ -85,25 +85,27 @@ function BaseView(props: SearchListItemProps) {
         for (const item of header) {
             if (item[0] === SearchItemHeader_Keys.PROJECT_NAME) {
                 items.push(
-                    ProjectLink({
-                        projectName: item[1],
-                        projectPageUrl: projectPageUrl,
-                        galleryViewType: galleryViewType,
-                    }),
+                    <ProjectLink
+                        key={`${props.projectSlug}`}
+                        projectName={item[1]}
+                        projectPageUrl={projectPageUrl}
+                        galleryViewType={galleryViewType}
+                    />,
                 );
             } else if (item[0] === SearchItemHeader_Keys.BY) {
-                items.push(item[1]);
+                items.push(<Fragment key={`${props.projectName}__conjunction`}>{item[1]}</Fragment>);
             } else if (item[0] === SearchItemHeader_Keys.AUTHOR_NAME) {
                 items.push(
-                    AuthorLink({
-                        author: props.author,
-                        authorDisplayName: item[1],
-                        OrgPagePath: props.OrgPagePath,
-                        UserProfilePath: props.UserProfilePath,
-                        isOrgOwned: props.isOrgOwned === true,
-                        galleryViewType: galleryViewType,
-                        Organization_translation: t.project.organization,
-                    }),
+                    <AuthorLink
+                        key={`${props.projectSlug}-${props.author}`}
+                        author={props.author}
+                        authorDisplayName={item[1]}
+                        OrgPagePath={props.OrgPagePath}
+                        UserProfilePath={props.UserProfilePath}
+                        isOrgOwned={props.isOrgOwned === true}
+                        galleryViewType={galleryViewType}
+                        Organization_translation={t.project.organization}
+                    />,
                 );
             }
 

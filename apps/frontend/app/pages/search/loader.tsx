@@ -1,17 +1,8 @@
 import type { ProjectType } from "@app/utils/types";
-import type { ProjectListItem } from "@app/utils/types/api";
+import type { SearchResult } from "@app/utils/types/api";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import clientFetch from "~/utils/client-fetch";
 import { resJson } from "~/utils/server-fetch";
-
-interface SearchResult {
-    estimatedTotalHits: number;
-    hits: ProjectListItem[];
-    limit: number;
-    offset: number;
-    processingTimeMs: number;
-    query: string;
-}
 
 let searchResultsFetchReqAbortController: AbortController;
 

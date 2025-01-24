@@ -18,8 +18,9 @@ import {
 import { getProjectTypeFromName } from "@app/utils/convertors";
 import { Capitalize } from "@app/utils/string";
 import { ProjectType, SearchResultSortMethod } from "@app/utils/types";
+import type { SearchResult } from "@app/utils/types/api";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useNavigation, useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import { useNavigate } from "~/components/ui/link";
@@ -40,7 +41,7 @@ interface UpdateSearchParamProps {
 
 let updateSearchParam_timeoutRef: number | undefined;
 
-export default function SearchPageLayout() {
+export default function SearchPageLayout(props: { initialSearchData: SearchResult | null }) {
     const { t } = useTranslation();
     const searchInput = useRef<HTMLInputElement>(null);
     const [showFilters, setShowFilters] = useState(false);
@@ -57,10 +58,10 @@ export default function SearchPageLayout() {
     const [searchTerm_state, setSearchTerm_state] = useState(searchQueryParam);
 
     const navigate = useNavigate(undefined, { viewTransition: false });
-    const typeStr = useProjectType();
-    const type = getProjectTypeFromName(typeStr);
+    const projectType = useProjectType();
+    const projectType_Coerced = getProjectTypeFromName(projectType);
 
-    const viewType = getSearchDisplayPreference(type);
+    const viewType = getSearchDisplayPreference(projectType_Coerced);
     const [_, reRender] = useState("0");
 
     // Search box focus
@@ -99,11 +100,20 @@ export default function SearchPageLayout() {
         return () => document.removeEventListener("keyup", handleSearchInputFocus);
     }, []);
 
-    const searchLabel = t.search[typeStr];
+    const searchLabel = t.search[projectType];
 
     return (
         <div className="search-page-grid-layout w-full grid gap-panel-cards pb-16">
-            <FilterSidebar type={type === typeStr ? [type] : projectTypes} showFilters={showFilters} searchParams={searchParams} />
+            {useMemo(() => {
+                return (
+                    <FilterSidebar
+                        type={projectType_Coerced === projectType ? [projectType_Coerced] : projectTypes}
+                        showFilters={showFilters}
+                        searchParams={searchParams}
+                    />
+                );
+            }, [projectType_Coerced, showFilters, searchParams.toString()])}
+
             <main id="main" style={{ gridArea: "content" }} className="h-fit grid grid-cols-1 gap-panel-cards">
                 <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2">
                     <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
@@ -201,16 +211,17 @@ export default function SearchPageLayout() {
                         {t.search.filters}
                     </Button>
 
-                    <ViewTypeToggle projectType={type} viewType={viewType} reRender={reRender} />
+                    <ViewTypeToggle projectType={projectType_Coerced} viewType={viewType} reRender={reRender} />
                 </Card>
 
                 <Outlet
                     context={
                         {
-                            type,
-                            typeStr,
+                            projectType_Coerced,
+                            projectType,
                             viewType,
                             searchParams,
+                            initialSearchData: props.initialSearchData,
                         } satisfies SearchOutlet
                     }
                 />
@@ -248,10 +259,11 @@ function Spinner({ className }: { className?: string }) {
 }
 
 export interface SearchOutlet {
-    type: ProjectType;
-    typeStr: string;
+    projectType_Coerced: ProjectType;
+    projectType: string;
     viewType: ViewType;
     searchParams: URLSearchParams;
+    initialSearchData: SearchResult | null;
 }
 
 function ViewTypeToggle({
