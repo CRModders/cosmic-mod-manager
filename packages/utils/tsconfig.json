@@ -4,9 +4,6 @@
             "ESNext",
             "DOM"
         ],
-        "types": [
-            "bun-types"
-        ],
         "composite": true,
         "target": "ESNext",
         "module": "ESNext",

@@ -24,7 +24,6 @@
     "devDependencies": {
         "@react-router/dev": "^7.0.2",
         "@react-router/remix-routes-option-adapter": "^7.0.2",
-        "@types/bun": "latest",
         "@types/react": "^19.0.1",
         "@types/react-dom": "^19.0.1",
         "@types/ua-parser-js": "^0.7.39",

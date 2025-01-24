@@ -9,7 +9,6 @@
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
         "types": [
             "vite/client",
-            "@types/bun"
         ],
         "rootDir": ".",
         "outDir": "./dist",

@@ -17,7 +17,6 @@
             "DOM"
         ],
         "types": [
-            "node",
             "vite/client"
         ],
         "composite": true,

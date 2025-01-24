@@ -7,7 +7,6 @@
         "zod": "^3.24.1"
     },
     "devDependencies": {
-        "@types/bun": "latest",
         "@types/ua-parser-js": "^0.7.39"
     },
     "peerDependencies": {

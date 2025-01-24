@@ -38,7 +38,6 @@
     },
     "devDependencies": {
         "@react-router/dev": "^7.1.1",
-        "@types/bun": "^1.1.14",
         "@types/markdown-it": "^14.1.2",
         "@types/react": "^19.0.2",
         "@types/react-dom": "^19.0.2",
