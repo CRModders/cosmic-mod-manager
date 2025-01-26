@@ -36,8 +36,7 @@ export default {
         report: "Пожаловаться",
         copyId: "Скопировать ID",
         all: "Все",
-        // ? New string
-        // noResults: "No results",
+        noResults: "Ничего не найдено",
     },
 
     // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
@@ -109,7 +108,7 @@ export default {
         deleteAccount: "Удалить аккаунт",
         deleteAccountDesc:
             "Удаление аккаунта приведет к удалению всего, что было создано Вами на нашем сайте. Восстановление аккаунта после удаления невозможно.",
-        enterEmail: "Введите ваш почтновый адрес",
+        enterEmail: "Введите ваш почтовый адрес",
     },
 
     settings: {
@@ -235,7 +234,7 @@ export default {
         itemHeader: (project: string, author: string) => {
             return [
                 [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " by "],
+                [SearchItemHeader_Keys.BY, " от "],
                 [SearchItemHeader_Keys.AUTHOR_NAME, author],
             ];
         },
@@ -311,7 +310,7 @@ export default {
             `Проект ${project} был архивирован. Он не будет получать никаких обновлений до тех пор, пока автор не решит разархивировать его.`,
         publishingChecklist: {
             required: "Обязательно",
-            suggestion: "Преложение",
+            suggestion: "Предложение",
             review: "Рассмотреть",
             progress: "Прогресс:",
             title: "План публикации",
@@ -355,7 +354,7 @@ export default {
     version: {
         deleteVersion: "Удалить версию",
         sureToDelete: "Вы уверены, что хотите удалить эту версию?",
-        deleteDesc: "Это действие удалит эту версию навсегла (типо реально навсегда).",
+        deleteDesc: "Это действие удалит эту версию навсегда (типо реально навсегда).",
         enterVersionTitle: "Введите название версии...",
         feature: "Пометить версию лучшей",
         unfeature: "Снять отметку Лучшая с версии",
@@ -387,11 +386,11 @@ export default {
         noPrimaryFile: "Основной файл не выбран",
         chooseFile: "Выбрать файл",
         replaceFile: "Заменить файл",
-        uploadExtraFiles: "Загрузить дополнительные фвйлы",
+        uploadExtraFiles: "Загрузить дополнительные файлы",
         uploadExtraFilesDesc: "Используется для дополнительных файлов, таких как исходники, документация и так далее.",
         selectFiles: "Выбрать файлы",
         primaryFileRequired: "Основной файл обязателен",
-        metadata: "Металданные",
+        metadata: "Метаданные",
         devReleasesNote: "ВНИМАНИЕ:- Старые dev-релизы будут удалены после публикации нового.",
         publicationDate: "Опубликовано",
         publisher: "Пользователь",
@@ -439,9 +438,8 @@ export default {
         serverSide: "Сервер",
         serverSideDesc: (projectType: string) => `Выберите, если ваш ${projectType} имеет функционал на сервере.`,
         unknown: "Неизвестно",
-        // ? New strings
-        // clientOrServer: "Client or server",
-        // clientAndServer: "Client and server",
+        clientOrServer: "Клиент или сервер",
+        clientAndServer: "Клиент и сервер",
         required: "Обязательно",
         optional: "Необязательно",
         unsupported: "Не поддерживается",
@@ -497,7 +495,7 @@ export default {
         removeMember: "Удалить участника",
         transferOwnership: "Передать роль владельца",
         overrideValues: "Переопределить значения",
-        overrideValuesDesc: "Переопределите стандартные значения и назначте специальные разрешения и роли для этого участника проекта.",
+        overrideValuesDesc: "Переопределите стандартные значения и назначьте специальные разрешения и роли для этого участника проекта.",
         projectNotManagedByOrg:
             "Этот проект не находится под управлением организации. If you are the member of any organizations, you can transfer management to one of them.",
         transferManagementToOrg: "Передать управление",
@@ -515,7 +513,7 @@ export default {
         orgDoesntHaveProjects: "Эта организация пока что не имеет никаких проектов.",
         manageProjects: "Управлять проектами",
         orgSettings: "Настройки организации",
-        transferProjectsTip: "Вы можете перенести свои проекты в организацию через: Настройки проека > Участники",
+        transferProjectsTip: "Вы можете перенести свои проекты в организацию через: Настройки проекта > Участники",
         noProjects_CreateOne: "Эта организация пока что не имеет никаких проектов. Нажмите на кнопку выше, чтобы создать новый.",
         orgInfo: "Информация об организации",
         deleteOrg: "Удалить организацию",
@@ -537,8 +535,7 @@ export default {
     },
 
     user: {
-        // ? New string
-        // admin: "Admin",
+        admin: "Администратор",
         moderator: "Модератор",
         doesntHaveProjects: (user: string) => `У пользователя ${user} ещё нет проектов.`,
         isntPartOfAnyOrgs: (user: string) => `Пользователь ${user} не принадлежит ни одной организации.`,
@@ -566,7 +563,7 @@ export default {
         // contentRules: Rules, // Not translated yet
         termsTitle: "Условия использования",
         copyrightPolicyTitle: "Политика авторских прав",
-        securityNoticeTitle: "Безопасноть",
+        securityNoticeTitle: "Безопасность",
         privacyPolicyTitle: "Политика Конфиденциальности",
     },
 
