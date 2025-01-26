@@ -101,6 +101,8 @@ export default function App() {
     useEffect(() => {
         function delegateMdLinkClick(e: MouseEvent) {
             if (!e.target) return;
+            if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+
             // @ts-ignore
             if (e.target?.closest(".markdown-body")) {
                 handleNavigate(e);
