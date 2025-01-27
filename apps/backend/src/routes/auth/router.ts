@@ -48,8 +48,8 @@ authRouter.delete("/sessions/:revokeCode", critModifyReqRateLimiter, revokeSessi
 async function currSession_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-
         if (!userSession) return ctx.json({ success: false, message: "You're not logged in!" }, HTTP_STATUS.OK);
+
         const formattedObject: LoggedInUserData = {
             id: userSession.id,
             email: userSession.email,
@@ -74,7 +74,7 @@ async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
         if (userSession?.id && intent !== AuthActionIntent.LINK) return invalidReqestResponse(ctx, "You are already logged in!");
 
         const authProvider = ctx.req.param("authProvider");
-        if (!authProvider) return ctx.json({ success: false, message: "Invalid auth provider" }, HTTP_STATUS.BAD_REQUEST);
+        if (!authProvider) return invalidReqestResponse(ctx, "Invalid auth provider")
 
         const redirect = ctx.req.query("redirect") === "true";
         const url = getOAuthUrl(ctx, authProvider, intent);
@@ -92,9 +92,7 @@ async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
 async function credentialSignin_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(LoginFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const result = await credentialSignIn(ctx, data);
         return ctx.json(result.data, result.status);
@@ -198,7 +196,7 @@ async function sessions_get(ctx: Context) {
 async function linkedProviders_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
-        if (!userSession?.id) return ctx.json([], HTTP_STATUS.BAD_REQUEST);
+        if (!userSession?.id) return invalidReqestResponse(ctx);
 
         const result = await getLinkedAuthProviders(userSession);
         return ctx.json(result.data, result.status);
@@ -213,7 +211,7 @@ async function session_delete(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
         const targetSessionId = ctx.get(REQ_BODY_NAMESPACE)?.sessionId || userSession?.sessionId;
         if (!userSession?.id || !targetSessionId) {
-            return ctx.json({ success: false, message: "Session id is required" }, HTTP_STATUS.BAD_REQUEST);
+            return invalidReqestResponse(ctx, "Session id is required");
         }
 
         const result = await deleteUserSession(ctx, userSession, targetSessionId);
@@ -227,7 +225,7 @@ async function session_delete(ctx: Context) {
 async function revokeSession_delete(ctx: Context) {
     try {
         const code = ctx.req.param("revokeCode");
-        if (!code) return ctx.json({ success: false }, HTTP_STATUS.BAD_REQUEST);
+        if (!code) return invalidReqestResponse(ctx);
 
         const result = await revokeSessionFromAccessCode(ctx, code);
         return ctx.json(result.data, result.status);

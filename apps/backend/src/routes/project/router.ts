@@ -22,8 +22,8 @@ import { addNewGalleryImage, removeGalleryImage, updateGalleryImage } from "./co
 import { QueueProjectForApproval } from "./controllers/moderation";
 import { createNewProject } from "./controllers/new-project";
 import { deleteProject, deleteProjectIcon, updateProject, updateProjectIcon } from "./controllers/settings";
+import { updateProjectDescription } from "./controllers/settings/description";
 import {
-    updateProjectDescription,
     updateProjectExternalLinks,
     updateProjectLicense,
     updateProjectTags,
@@ -120,9 +120,7 @@ async function project_post(ctx: Context) {
         if (!userSession) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(newProjectFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await createNewProject(userSession, data);
         return ctx.json(res.data, res.status);
@@ -152,9 +150,7 @@ async function project_patch(ctx: Context) {
         } satisfies z.infer<typeof generalProjectSettingsFormSchema>;
 
         const { data, error } = await parseValueToSchema(generalProjectSettingsFormSchema, obj);
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateProject(slug, userSession, data);
         return ctx.json(res.data, res.status);
@@ -237,9 +233,7 @@ async function description_patch(ctx: Context) {
         if (!userSession) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateDescriptionFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateProjectDescription(slug, userSession, data);
         return ctx.json(res.data, res.status);
@@ -256,9 +250,7 @@ async function tags_patch(ctx: Context) {
         if (!slug || !userSession?.id) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateProjectTagsFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateProjectTags(slug, userSession, data);
         return ctx.json(res.data, res.status);
@@ -275,9 +267,7 @@ async function externalLinks_patch(ctx: Context) {
         if (!slug || !userSession?.id) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateExternalLinksFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateProjectExternalLinks(userSession, slug, data);
         return ctx.json(res.data, res.status);
@@ -294,9 +284,7 @@ async function license_patch(ctx: Context) {
         if (!slug || !userSession?.id) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateProjectLicenseFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateProjectLicense(userSession, slug, data);
         return ctx.json(res.data, res.status);
@@ -324,9 +312,7 @@ async function gallery_post(ctx: Context) {
         };
 
         const { data, error } = await parseValueToSchema(addNewGalleryImageFormSchema, obj);
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await addNewGalleryImage(slug, userSession, data);
         return ctx.json(res.data, res.status);
@@ -343,9 +329,7 @@ async function galleryItem_patch(ctx: Context) {
         if (!slug || !galleryId || !userSession) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateGalleryImageFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateGalleryImage(slug, userSession, galleryId, data);
         return ctx.json(res.data, res.status);

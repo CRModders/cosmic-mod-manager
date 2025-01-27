@@ -6,7 +6,7 @@ import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-
 import { critModifyReqRateLimiter } from "~/middleware/rate-limit/modify-req";
 import { getUserFromCtx } from "~/routes/auth/helpers/session";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
-import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "~/utils/http";
+import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 import {
     acceptProjectTeamInvite,
     changeTeamOwner,
@@ -100,9 +100,7 @@ async function teamMembers_post(ctx: Context) {
         if (!userSession || !teamId) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(overrideOrgMemberFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await overrideOrgMember(ctx, userSession, teamId, data);
         return ctx.json(res.data, res.status);
@@ -119,9 +117,7 @@ async function teamMember_patch(ctx: Context) {
         if (!memberId || !userSession || !teamId) return invalidReqestResponse(ctx);
 
         const { data, error } = await parseValueToSchema(updateTeamMemberFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await editProjectMember(ctx, userSession, memberId, teamId, data);
         return ctx.json(res.data, res.status);

@@ -1,41 +1,14 @@
 import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@app/utils/config/license-list";
 import { doesMemberHaveAccess, getCurrMember, getValidProjectCategories } from "@app/utils/project";
 import type { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
-import type { updateDescriptionFormSchema } from "@app/utils/schemas/project/settings/description";
 import type { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
 import type { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
 import type { ContextUserData } from "~/types";
-import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
+import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 
-export async function updateProjectDescription(
-    slug: string,
-    userSession: ContextUserData,
-    form: z.infer<typeof updateDescriptionFormSchema>,
-) {
-    const project = await GetProject_ListItem(slug, slug);
-    if (!project?.id) return notFoundResponseData();
-
-    const memberObj = getCurrMember(userSession.id, project.team?.members || [], project.organisation?.team.members || []);
-    const hasEditAccess = doesMemberHaveAccess(
-        ProjectPermission.EDIT_DESCRIPTION,
-        memberObj?.permissions as ProjectPermission[],
-        memberObj?.isOwner,
-        userSession.role,
-    );
-    if (!hasEditAccess) return unauthorizedReqResponseData("You don't have the permission to update project description");
-
-    await UpdateProject({
-        where: { id: project.id },
-        data: {
-            description: form.description || "",
-        },
-    });
-
-    return { data: { success: true, message: "Project description updated" }, status: HTTP_STATUS.OK };
-}
 
 export async function updateProjectTags(slug: string, userSession: ContextUserData, formData: z.infer<typeof updateProjectTagsFormSchema>) {
     const project = await GetProject_ListItem(slug, slug);

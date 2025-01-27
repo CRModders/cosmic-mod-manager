@@ -94,9 +94,8 @@ async function user_patch(ctx: Context) {
         } satisfies z.infer<typeof profileUpdateFormSchema>;
 
         const { data, error } = await parseValueToSchema(profileUpdateFormSchema, obj);
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
+
         const res = await updateUserProfile(userSession, data);
         return ctx.json(res.data, res.status);
     } catch (err) {
@@ -159,9 +158,8 @@ async function addPasswordConfirmation_post(ctx: Context) {
         if (!userSession) return unauthorizedReqResponse(ctx);
 
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
+
         const res = await addNewPassword_ConfirmationEmail(userSession, data);
         return ctx.json(res.data, res.status);
     } catch (err) {
@@ -188,9 +186,7 @@ async function addPasswordConfirmation_put(ctx: Context) {
 async function userPassword_delete(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(removeAccountPasswordFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const userSession = getUserFromCtx(ctx);
         if (!userSession || !userSession?.password) return ctx.json({}, HTTP_STATUS.BAD_REQUEST);
@@ -207,9 +203,8 @@ async function userPassword_delete(ctx: Context) {
 async function changePasswordConfirmationEmail_post(ctx: Context) {
     try {
         const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
+
         const res = await sendAccountPasswordChangeLink(ctx, data);
         return ctx.json(res.data, res.status);
     } catch (err) {
@@ -223,13 +218,11 @@ async function userPassword_patch(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
         const { data, error } = await parseValueToSchema(setNewPasswordFormSchema, ctx.get(REQ_BODY_NAMESPACE));
-        if (error || !data) {
-            return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
-        }
+        if (error || !data) return invalidReqestResponse(ctx, error);
+
         const code = ctx.get(REQ_BODY_NAMESPACE)?.code;
-        if (!code) {
-            return invalidReqestResponse(ctx);
-        }
+        if (!code) return invalidReqestResponse(ctx);
+
         const res = await changeUserPassword(ctx, code, data, userSession);
         return ctx.json(res.data, res.status);
     } catch (err) {

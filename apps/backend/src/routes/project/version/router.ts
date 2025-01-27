@@ -57,10 +57,10 @@ async function version_get(ctx: Context, download = false) {
         const res =
             versionId === "latest"
                 ? await getLatestVersion(projectSlug, userSession, {
-                      releaseChannel: releaseChannel,
-                      gameVersion: gameVersion,
-                      loader: loader,
-                  })
+                    releaseChannel: releaseChannel,
+                    gameVersion: gameVersion,
+                    loader: loader,
+                })
                 : await getProjectVersionData(projectSlug, versionId, userSession);
 
         if (download !== true) return ctx.json(res.data, res.status);
@@ -116,7 +116,7 @@ async function version_post(ctx: Context) {
         };
 
         const { data, error } = await parseValueToSchema(newVersionFormSchema, schemaObj);
-        if (error || !data) return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await createNewVersion(ctx, userSession, projectSlug, data);
         return ctx.json(res.data, res.status);
@@ -154,7 +154,7 @@ async function version_patch(ctx: Context) {
         };
 
         const { data, error } = await parseValueToSchema(updateVersionFormSchema, schemaObj);
-        if (error || !data) return ctx.json({ success: false, message: error }, HTTP_STATUS.BAD_REQUEST);
+        if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await updateVersionData(ctx, projectSlug, versionId, userSession, data);
         return ctx.json(res.data, res.status);
