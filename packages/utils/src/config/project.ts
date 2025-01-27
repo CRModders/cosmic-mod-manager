@@ -80,14 +80,9 @@ export type Loader = {
     name: string;
     supportedProjectTypes: ProjectType[];
     metadata: {
-        visibleInTagsList: boolean;
-        visibleInLoadersList: boolean;
-        isAFilter: boolean;
-        accent?: {
-            foreground: {
-                light: string;
-                dark: string;
-            };
+        foreground: {
+            light: string;
+            dark: string;
         };
     };
 };
@@ -97,14 +92,9 @@ export const loaders: Loader[] = [
         name: "quilt",
         supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK],
         metadata: {
-            visibleInTagsList: true,
-            visibleInLoadersList: true,
-            isAFilter: true,
-            accent: {
-                foreground: {
-                    light: "#8B61B4",
-                    dark: "#C796F9",
-                },
+            foreground: {
+                light: "#8B61B4",
+                dark: "#C796F9",
             },
         },
     },
@@ -112,14 +102,9 @@ export const loaders: Loader[] = [
         name: "puzzle_loader",
         supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK],
         metadata: {
-            visibleInTagsList: true,
-            visibleInLoadersList: true,
-            isAFilter: true,
-            accent: {
-                foreground: {
-                    light: "#4A953F",
-                    dark: "#A5E388",
-                },
+            foreground: {
+                light: "#4A953F",
+                dark: "#A5E388",
             },
         },
     },
@@ -127,14 +112,19 @@ export const loaders: Loader[] = [
         name: "paradox",
         supportedProjectTypes: [ProjectType.PLUGIN],
         metadata: {
-            visibleInTagsList: true,
-            visibleInLoadersList: true,
-            isAFilter: true,
-            accent: {
-                foreground: {
-                    light: "#4A953F",
-                    dark: "#A5E388",
-                },
+            foreground: {
+                light: "#4A953F",
+                dark: "#A5E388",
+            },
+        },
+    },
+    {
+        name: "simply_shaders",
+        supportedProjectTypes: [ProjectType.SHADER],
+        metadata: {
+            foreground: {
+                light: "#4A953F",
+                dark: "#A5E388",
             },
         },
     },

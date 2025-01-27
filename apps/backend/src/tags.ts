@@ -63,7 +63,7 @@ async function gameVersions_get(ctx: Context) {
 async function loaders_get(ctx: Context) {
     try {
         const projectType = (ctx.req.query("type")?.toLowerCase() as ProjectType) || undefined;
-        const loaders = getAllLoaderCategories(projectType, false);
+        const loaders = getAllLoaderCategories(projectType);
         return ctx.json(loaders, HTTP_STATUS.OK);
     } catch (error) {
         console.error(error);

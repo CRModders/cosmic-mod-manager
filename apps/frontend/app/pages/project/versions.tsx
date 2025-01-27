@@ -322,7 +322,7 @@ export default function ProjectVersionsPage() {
                     {filters.loaders.map((loader) => {
                         const loaderData = getLoaderFromString(loader);
                         if (!loaderData) return null;
-                        const accentForeground = loaderData.metadata?.accent?.foreground;
+                        const accentForeground = loaderData.metadata?.foreground;
                         let color = "hsla(var(--muted-foreground))";
                         if (accentForeground) {
                             color = theme === "dark" ? accentForeground.dark : accentForeground.light;
@@ -603,7 +603,7 @@ function ProjectLoaders({ versionLoaders }: { versionLoaders: string[] }) {
             {versionLoaders.map((loader) => {
                 const loaderData = getLoaderFromString(loader);
                 if (!loaderData) return null;
-                const accentForeground = loaderData?.metadata?.accent?.foreground;
+                const accentForeground = loaderData?.metadata?.foreground;
                 // @ts-ignore
                 const loaderIcon: ReactNode = loaderIcons[loaderData.name];
 

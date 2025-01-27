@@ -247,7 +247,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                     {filters.loaders.map((loader) => {
                         const loaderData = getLoaderFromString(loader);
                         if (!loaderData) return null;
-                        const accentForeground = loaderData.metadata?.accent?.foreground;
+                        const accentForeground = loaderData.metadata?.foreground;
 
                         return (
                             <ChipButton

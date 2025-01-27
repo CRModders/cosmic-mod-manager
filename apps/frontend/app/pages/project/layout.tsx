@@ -108,7 +108,7 @@ export default function ProjectPageLayout() {
         }
     }
 
-    const listedLoaders = getLoadersFromNames(projectData.loaders).filter((loader) => loader.metadata.visibleInLoadersList);
+    const listedLoaders = getLoadersFromNames(projectData.loaders);
     const OrgMembers = projectData.organisation?.members || [];
     const ExclusiveProjectMembers = [];
     for (const member of projectData.members) {
@@ -149,7 +149,7 @@ export default function ProjectPageLayout() {
                                 <h3 className="flex font-bold text-muted-foreground pb-1">{t.search.loaders}</h3>
                                 <div className="w-full flex flex-wrap gap-1">
                                     {listedLoaders.map((loader) => {
-                                        const accentForeground = loader?.metadata?.accent?.foreground;
+                                        const accentForeground = loader?.metadata?.foreground;
                                         // @ts-ignore
                                         const loaderIcon: React.ReactNode = tagIcons[loader.name];
 

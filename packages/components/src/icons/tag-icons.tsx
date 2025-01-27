@@ -74,6 +74,22 @@ export const PuzzleIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
     );
 };
 
+export const SimplyShadersIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} {...props}>
+        <title>Simply shaders</title>
+        <path
+            d="m22.59 12.013-3.01 3.126v4.405l.005.019-4.251-.005-2.994 3.115h-.003l-3.003-3.132H5.1l-.018.005.005-4.424-2.994-3.116-.003-.023L5.1 8.858V4.452l-.005-.019 4.252.005 2.993-3.115h.003l3.003 3.132h4.234l.018-.005-.005 4.425 2.994 3.115"
+            style={{}}
+            transform="translate(-.344)"
+        />
+        <path
+            d="m17.229 12.005-1.436 1.491v2.101l.003.009-2.028-.002-1.428 1.486h-.001l-1.433-1.494H8.887l-.008.002.002-2.11-1.428-1.486-.001-.011L8.887 10.5V8.399l-.002-.009 2.027.002 1.428-1.485h.002l1.432 1.494h2.019l.009-.003-.003 2.11 1.428 1.486"
+            style={{}}
+            transform="translate(-.344)"
+        />
+    </svg>
+);
+
 export const QuiltIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
     return (
         <svg
@@ -222,71 +238,75 @@ export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
     );
 };
 
-const defaultProps = { className: "inline w-4 leading-none aspect-square", "aria-hidden": true };
+const defaultIconClass = "inline w-4 leading-none aspect-square";
 
 const tagIcons = {
-    quilt: <QuiltIcon {...defaultProps} />,
-    puzzle_loader: <PuzzleIcon {...defaultProps} />,
-    paradox: <PuzzleIcon {...defaultProps} />,
-    adventure: <CompassIcon {...defaultProps} />,
-    atmosphere: <CloudSunRainIcon {...defaultProps} />,
-    audio: <HeadphonesIcon {...defaultProps} />,
-    blocks: <CubeIcon {...defaultProps} />,
-    bloom: <LampIcon {...defaultProps} />,
-    cartoon: <BrushIcon {...defaultProps} />,
-    challenging: <BarChartIcon {...defaultProps} />,
-    "colored-lighting": <PaletteIcon {...defaultProps} />,
-    combat: <SwordsIcon {...defaultProps} />,
-    "core-shaders": <CpuIcon {...defaultProps} />,
-    cursed: <BugIcon {...defaultProps} />,
-    decoration: <HomeIcon {...defaultProps} />,
-    economy: <DollarSignIcon {...defaultProps} />,
-    entities: <MobIcon {...defaultProps} />,
-    environment: <SunIcon {...defaultProps} />,
-    equipment: <PickaxeIcon {...defaultProps} />,
-    fantasy: <WandSparklesIcon {...defaultProps} />,
-    foliage: <TreeDeciduousIcon {...defaultProps} />,
-    fonts: <TypeIcon {...defaultProps} />,
-    food: <CarrotIcon {...defaultProps} />,
-    "game-mechanics": <SlidersIcon {...defaultProps} />,
-    gui: <PanelsTopLeftIcon {...defaultProps} />,
-    high: <SignalHighIcon {...defaultProps} />,
-    items: <BookIcon {...defaultProps} />,
-    "kitchen-sink": <KitchenSinkIcon {...defaultProps} />,
-    library: <BookIcon {...defaultProps} />,
-    lightweight: <FeatherIcon {...defaultProps} />,
-    locale: <GlobeIcon {...defaultProps} />,
-    low: <SignalLowIcon {...defaultProps} />,
-    magic: <WandSparklesIcon {...defaultProps} />,
-    management: <ServerIcon {...defaultProps} />,
-    medium: <SignalMediumIcon {...defaultProps} />,
-    minigame: <AwardIcon {...defaultProps} />,
-    mobs: <MobIcon {...defaultProps} />,
-    modded: <SquarePlusIcon {...defaultProps} />,
-    models: <LayersIcon {...defaultProps} />,
-    multiplayer: <UsersIcon {...defaultProps} />,
-    optimization: <ZapIcon {...defaultProps} />,
-    "path-tracing": <RayReflectingIcon {...defaultProps} />,
-    pbr: <LightbulbIcon {...defaultProps} />,
-    potato: <PotatoIcon {...defaultProps} />,
-    quests: <NetworkIcon {...defaultProps} />,
-    realistic: <CameraIcon {...defaultProps} />,
-    reflections: <FlipHorizontal2Icon {...defaultProps} />,
-    screenshot: <ImageIcon {...defaultProps} />,
-    "semi-realistic": <FilmIcon {...defaultProps} />,
-    shadows: <MountainIcon {...defaultProps} />,
-    simplistic: <HexagonIcon {...defaultProps} />,
-    social: <MessageCircleIcon {...defaultProps} />,
-    storage: <ArchiveIcon {...defaultProps} />,
-    technology: <CpuIcon {...defaultProps} />,
-    themed: <PenToolIcon {...defaultProps} />,
-    transportation: <TruckIcon {...defaultProps} />,
-    tweaks: <SquarePenIcon {...defaultProps} />,
-    utility: <BriefcaseIcon {...defaultProps} />,
-    "vanilla-like": <IceCreamConeIcon {...defaultProps} />,
-    worldgen: <EarthIcon {...defaultProps} />,
-    client: <MonitorIcon {...defaultProps} />,
-    server: <HardDriveIcon {...defaultProps} />,
+    // Loaders
+    quilt: <QuiltIcon className={defaultIconClass} aria-hidden />,
+    puzzle_loader: <PuzzleIcon className={defaultIconClass} aria-hidden />,
+    simply_shaders: <SimplyShadersIcon className={defaultIconClass} aria-hidden />,
+    paradox: <PuzzleIcon className={defaultIconClass} aria-hidden />,
+
+    // Tags
+    adventure: <CompassIcon className={defaultIconClass} aria-hidden />,
+    atmosphere: <CloudSunRainIcon className={defaultIconClass} aria-hidden />,
+    audio: <HeadphonesIcon className={defaultIconClass} aria-hidden />,
+    blocks: <CubeIcon className={defaultIconClass} aria-hidden />,
+    bloom: <LampIcon className={defaultIconClass} aria-hidden />,
+    cartoon: <BrushIcon className={defaultIconClass} aria-hidden />,
+    challenging: <BarChartIcon className={defaultIconClass} aria-hidden />,
+    "colored-lighting": <PaletteIcon className={defaultIconClass} aria-hidden />,
+    combat: <SwordsIcon className={defaultIconClass} aria-hidden />,
+    "core-shaders": <CpuIcon className={defaultIconClass} aria-hidden />,
+    cursed: <BugIcon className={defaultIconClass} aria-hidden />,
+    decoration: <HomeIcon className={defaultIconClass} aria-hidden />,
+    economy: <DollarSignIcon className={defaultIconClass} aria-hidden />,
+    entities: <MobIcon className={defaultIconClass} aria-hidden />,
+    environment: <SunIcon className={defaultIconClass} aria-hidden />,
+    equipment: <PickaxeIcon className={defaultIconClass} aria-hidden />,
+    fantasy: <WandSparklesIcon className={defaultIconClass} aria-hidden />,
+    foliage: <TreeDeciduousIcon className={defaultIconClass} aria-hidden />,
+    fonts: <TypeIcon className={defaultIconClass} aria-hidden />,
+    food: <CarrotIcon className={defaultIconClass} aria-hidden />,
+    "game-mechanics": <SlidersIcon className={defaultIconClass} aria-hidden />,
+    gui: <PanelsTopLeftIcon className={defaultIconClass} aria-hidden />,
+    high: <SignalHighIcon className={defaultIconClass} aria-hidden />,
+    items: <BookIcon className={defaultIconClass} aria-hidden />,
+    "kitchen-sink": <KitchenSinkIcon className={defaultIconClass} aria-hidden />,
+    library: <BookIcon className={defaultIconClass} aria-hidden />,
+    lightweight: <FeatherIcon className={defaultIconClass} aria-hidden />,
+    locale: <GlobeIcon className={defaultIconClass} aria-hidden />,
+    low: <SignalLowIcon className={defaultIconClass} aria-hidden />,
+    magic: <WandSparklesIcon className={defaultIconClass} aria-hidden />,
+    management: <ServerIcon className={defaultIconClass} aria-hidden />,
+    medium: <SignalMediumIcon className={defaultIconClass} aria-hidden />,
+    minigame: <AwardIcon className={defaultIconClass} aria-hidden />,
+    mobs: <MobIcon className={defaultIconClass} aria-hidden />,
+    modded: <SquarePlusIcon className={defaultIconClass} aria-hidden />,
+    models: <LayersIcon className={defaultIconClass} aria-hidden />,
+    multiplayer: <UsersIcon className={defaultIconClass} aria-hidden />,
+    optimization: <ZapIcon className={defaultIconClass} aria-hidden />,
+    "path-tracing": <RayReflectingIcon className={defaultIconClass} aria-hidden />,
+    pbr: <LightbulbIcon className={defaultIconClass} aria-hidden />,
+    potato: <PotatoIcon className={defaultIconClass} aria-hidden />,
+    quests: <NetworkIcon className={defaultIconClass} aria-hidden />,
+    realistic: <CameraIcon className={defaultIconClass} aria-hidden />,
+    reflections: <FlipHorizontal2Icon className={defaultIconClass} aria-hidden />,
+    screenshot: <ImageIcon className={defaultIconClass} aria-hidden />,
+    "semi-realistic": <FilmIcon className={defaultIconClass} aria-hidden />,
+    shadows: <MountainIcon className={defaultIconClass} aria-hidden />,
+    simplistic: <HexagonIcon className={defaultIconClass} aria-hidden />,
+    social: <MessageCircleIcon className={defaultIconClass} aria-hidden />,
+    storage: <ArchiveIcon className={defaultIconClass} aria-hidden />,
+    technology: <CpuIcon className={defaultIconClass} aria-hidden />,
+    themed: <PenToolIcon className={defaultIconClass} aria-hidden />,
+    transportation: <TruckIcon className={defaultIconClass} aria-hidden />,
+    tweaks: <SquarePenIcon className={defaultIconClass} aria-hidden />,
+    utility: <BriefcaseIcon className={defaultIconClass} aria-hidden />,
+    "vanilla-like": <IceCreamConeIcon className={defaultIconClass} aria-hidden />,
+    worldgen: <EarthIcon className={defaultIconClass} aria-hidden />,
+    client: <MonitorIcon className={defaultIconClass} aria-hidden />,
+    server: <HardDriveIcon className={defaultIconClass} aria-hidden />,
 };
 
 export default tagIcons;

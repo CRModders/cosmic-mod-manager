@@ -128,8 +128,8 @@ export function getLoaderFromString(loaderName: string) {
 export function getLoadersFromNames(loaderNames: string[]) {
     const loadersList = [];
 
-    for (const loaderName of loaderNames) {
-        const loader = getLoaderFromString(loaderName);
+    for (let i = 0; i < loaderNames.length; i++) {
+        const loader = getLoaderFromString(loaderNames[i]);
         if (loader) {
             loadersList.push(loader);
         }

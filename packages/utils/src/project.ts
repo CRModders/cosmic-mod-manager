@@ -111,14 +111,13 @@ export function getProjectCategoriesDataFromNames(categoryNames: string[]) {
     return categoriesData;
 }
 
-export function getAllLoaderCategories(projectType?: ProjectType, checkTagVisibility = true) {
+export function getAllLoaderCategories(projectType?: ProjectType) {
     const allLoadersList = new Set<Loader>();
 
-    for (const loader of loaders) {
-        if (
-            (!projectType || loader.supportedProjectTypes.includes(projectType)) &&
-            (!checkTagVisibility || loader.metadata.visibleInTagsList !== false)
-        ) {
+    for (let i = 0; i < loaders.length; i++) {
+        const loader = loaders[i];
+
+        if (!projectType || loader.supportedProjectTypes.includes(projectType)) {
             allLoadersList.add(loader);
         }
     }
@@ -130,8 +129,8 @@ export function getALlLoaderFilters(projectType: ProjectType[]) {
     if (!projectType?.length) return [];
 
     const list = new Set<Loader>();
-    for (const loader of loaders) {
-        if (loader.metadata.isAFilter !== true) continue;
+    for (let i = 0; i < loaders.length; i++) {
+        const loader = loaders[i];
 
         for (const supportedType of loader.supportedProjectTypes) {
             if (projectType.includes(supportedType)) {

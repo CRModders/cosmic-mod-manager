@@ -226,7 +226,6 @@ function BaseView(props: SearchListItemProps) {
                 })}
 
                 {loadersData.map((loader) => {
-                    if (loader.metadata.visibleInTagsList === false) return null;
                     const loaderName = CapitalizeAndFormatString(loader.name);
 
                     return (
