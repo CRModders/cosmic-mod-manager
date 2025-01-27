@@ -57,10 +57,10 @@ async function version_get(ctx: Context, download = false) {
         const res =
             versionId === "latest"
                 ? await getLatestVersion(projectSlug, userSession, {
-                    releaseChannel: releaseChannel,
-                    gameVersion: gameVersion,
-                    loader: loader,
-                })
+                      releaseChannel: releaseChannel,
+                      gameVersion: gameVersion,
+                      loader: loader,
+                  })
                 : await getProjectVersionData(projectSlug, versionId, userSession);
 
         if (download !== true) return ctx.json(res.data, res.status);

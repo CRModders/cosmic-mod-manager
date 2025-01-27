@@ -135,7 +135,7 @@ export function getUserSessionCookie(ctx: Context) {
             return null;
         }
         return cookie;
-    } catch (error) { }
+    } catch (error) {}
     return null;
 }
 

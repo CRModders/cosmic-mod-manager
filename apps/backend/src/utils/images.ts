@@ -15,7 +15,7 @@ export async function resizeImageToWebp(file: File | BunFile, inputFileType: Fil
     const isAnimated = [FileType.GIF, FileType.WEBP].includes(inputFileType);
 
     const imgBuffer = await file.arrayBuffer();
-    const sharpInstance = sharp(imgBuffer, { animated: isAnimated, });
+    const sharpInstance = sharp(imgBuffer, { animated: isAnimated });
 
     const metadata = await sharpInstance.metadata();
     // Don't use nearest neighbor for large images

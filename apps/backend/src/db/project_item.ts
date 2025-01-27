@@ -186,13 +186,13 @@ export async function GetManyProjects_Details(_ProjectIds: string[]) {
     const _Db_ProjectItems =
         RemainingProjectIds.length > 0
             ? await prisma.project.findMany({
-                where: {
-                    id: {
-                        in: RemainingProjectIds,
-                    },
-                },
-                select: PROJECT_DETAILS_SELECT_FIELDS(),
-            })
+                  where: {
+                      id: {
+                          in: RemainingProjectIds,
+                      },
+                  },
+                  select: PROJECT_DETAILS_SELECT_FIELDS(),
+              })
             : [];
 
     // Set cache for all non-cached projects
@@ -228,7 +228,6 @@ export async function GetManyProjects_Details(_ProjectIds: string[]) {
 export type GetProject_ListItem_ReturnType = Awaited<ReturnType<typeof GetProject_ListItem_FromDb>>;
 async function GetProject_ListItem_FromDb(slug?: string, id?: string) {
     if (!slug && !id) throw new Error("Either the project id or slug is required!");
-
 
     let data = undefined;
     if (id && slug) {
@@ -312,13 +311,13 @@ export async function GetManyProjects_ListItem(ids: string[]) {
     const _Db_ProjectItems =
         RemainingProjectIds.length > 0
             ? await prisma.project.findMany({
-                where: {
-                    id: {
-                        in: RemainingProjectIds,
-                    },
-                },
-                select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
-            })
+                  where: {
+                      id: {
+                          in: RemainingProjectIds,
+                      },
+                  },
+                  select: PROJECT_LIST_ITEM_SELECT_FIELDS(),
+              })
             : [];
 
     // Set cache for all non-cached projects

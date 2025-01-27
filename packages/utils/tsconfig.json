@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [
-            "ESNext",
-            "DOM"
-        ],
+        "lib": ["ESNext", "DOM"],
         "composite": true,
         "target": "ESNext",
         "module": "ESNext",
@@ -13,12 +10,8 @@
         "moduleResolution": "bundler",
         "baseUrl": ".",
         "paths": {
-            "~/*": [
-                "./src/*"
-            ]
+            "~/*": ["./src/*"]
         }
     },
-    "include": [
-        "./src"
-    ]
+    "include": ["./src"]
 }

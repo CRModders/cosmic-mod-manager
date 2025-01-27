@@ -1,4 +1,3 @@
-
 export function isNumber(num: number | string) {
     if (typeof num === "number") {
         return num - num === 0;

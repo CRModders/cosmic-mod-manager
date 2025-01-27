@@ -224,14 +224,14 @@ export default {
          *     [SearchItemHeader_Keys.PROJECT_NAME, project],
          * ]
          * ```
-        */
+         */
         itemHeader: (project: string, author: string) => {
             return [
                 [SearchItemHeader_Keys.PROJECT_NAME, project],
                 [SearchItemHeader_Keys.BY, " by "],
                 [SearchItemHeader_Keys.AUTHOR_NAME, author],
-            ]
-        }
+            ];
+        },
     },
 
     project: {

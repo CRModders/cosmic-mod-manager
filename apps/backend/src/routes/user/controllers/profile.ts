@@ -89,7 +89,7 @@ export async function getUserAvatar(
             const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
             await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
         }
-    } catch { }
+    } catch {}
 
     const uploadedImg_Type = await getFileType(avatarFile);
     if (!uploadedImg_Type) return null;

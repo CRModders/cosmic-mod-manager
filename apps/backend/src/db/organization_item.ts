@@ -99,13 +99,13 @@ export async function GetManyOrganizations(ids: string[]) {
     const _RemainingOrgItems =
         OrgsIds_ToRetrieve.length > 0
             ? await prisma.organisation.findMany({
-                where: {
-                    id: {
-                        in: OrgsIds_ToRetrieve,
-                    },
-                },
-                select: ORGANIZATION_SELECT_FIELDS,
-            })
+                  where: {
+                      id: {
+                          in: OrgsIds_ToRetrieve,
+                      },
+                  },
+                  select: ORGANIZATION_SELECT_FIELDS,
+              })
             : [];
 
     // Cache the items that were not found in the cache

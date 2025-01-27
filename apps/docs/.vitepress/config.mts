@@ -12,20 +12,20 @@ export default defineConfig({
     lastUpdated: true,
 
     themeConfig: {
-        logo: { src: 'https://assets.crmm.tech/icon.svg', width: 24, height: 24 },
+        logo: { src: "https://assets.crmm.tech/icon.svg", width: 24, height: 24 },
 
         editLink: {
             pattern: (data) => {
-                return `https://github.com/CRModders/cosmic-mod-manager/blob/main/apps/docs/${data.filePath}`
+                return `https://github.com/CRModders/cosmic-mod-manager/blob/main/apps/docs/${data.filePath}`;
             },
         },
 
         search: {
-            provider: "local"
+            provider: "local",
         },
 
         sidebar: [
-            { text: "Introduction", link: "/", },
+            { text: "Introduction", link: "/" },
             {
                 text: "Project",
                 items: [
@@ -34,13 +34,11 @@ export default defineConfig({
                     { text: "Get multiple projects", link: "/project/get-multiple" },
                     { text: "Get random projects", link: "/project/random" },
                     { text: "Modify a project", link: "/project/modify" },
-                ]
+                ],
             },
             {
                 text: "Version",
-                items: [
-                    { text: "Upload a version", link: "/version/upload" }
-                ]
+                items: [{ text: "Upload a version", link: "/version/upload" }],
             },
         ],
 

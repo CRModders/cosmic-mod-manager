@@ -18,7 +18,7 @@ interface WebSocket {
 }
 
 const defaultWebSocket = {
-    upgradeWebSocket: () => async () => { },
+    upgradeWebSocket: () => async () => {},
     injectWebSocket: (server) => server,
 } satisfies WebSocket;
 

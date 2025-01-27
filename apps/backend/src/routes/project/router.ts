@@ -23,11 +23,7 @@ import { QueueProjectForApproval } from "./controllers/moderation";
 import { createNewProject } from "./controllers/new-project";
 import { deleteProject, deleteProjectIcon, updateProject, updateProjectIcon } from "./controllers/settings";
 import { updateProjectDescription } from "./controllers/settings/description";
-import {
-    updateProjectExternalLinks,
-    updateProjectLicense,
-    updateProjectTags,
-} from "./controllers/settings/general";
+import { updateProjectExternalLinks, updateProjectLicense, updateProjectTags } from "./controllers/settings/general";
 import versionRouter from "./version/router";
 
 const projectRouter = new Hono();

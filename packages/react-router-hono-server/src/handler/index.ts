@@ -11,11 +11,7 @@ interface CreateRequestHandlerProps {
     mode?: string;
 }
 
-export function createRequestHandler({
-    build,
-    getLoadContext,
-    mode = process.env.NODE_ENV,
-}: CreateRequestHandlerProps): RequestHandler {
+export function createRequestHandler({ build, getLoadContext, mode = process.env.NODE_ENV }: CreateRequestHandlerProps): RequestHandler {
     const handleRequest = createRemixRequestHandler(build, mode);
 
     return async (ctx) => {

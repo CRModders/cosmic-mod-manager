@@ -230,7 +230,7 @@ export default {
 
         /**
          * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
-        */
+         */
         itemHeader: (project: string, author: string) => {
             return [
                 [SearchItemHeader_Keys.PROJECT_NAME, project],
@@ -669,5 +669,5 @@ export default {
         video: "Видео",
         preview: "Предпросмотр",
         insert: "Вставить",
-    }
+    },
 } satisfies Locale;

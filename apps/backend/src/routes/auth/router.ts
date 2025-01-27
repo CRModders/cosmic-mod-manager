@@ -74,7 +74,7 @@ async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
         if (userSession?.id && intent !== AuthActionIntent.LINK) return invalidReqestResponse(ctx, "You are already logged in!");
 
         const authProvider = ctx.req.param("authProvider");
-        if (!authProvider) return invalidReqestResponse(ctx, "Invalid auth provider")
+        if (!authProvider) return invalidReqestResponse(ctx, "Invalid auth provider");
 
         const redirect = ctx.req.query("redirect") === "true";
         const url = getOAuthUrl(ctx, authProvider, intent);
