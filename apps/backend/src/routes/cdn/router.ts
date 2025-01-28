@@ -70,12 +70,29 @@ async function galleryImage_get(ctx: Context) {
     }
 }
 
+const ALLOWED_EXTERNAL_USER_AGENTS = ["CRLauncher/"];
 async function versionFile_get(ctx: Context) {
     try {
         const userSession = getUserFromCtx(ctx);
         const { projectId, versionId, fileName } = ctx.req.param();
-        if (!projectId || !versionId || !fileName) {
-            return invalidReqestResponse(ctx);
+        if (!projectId || !versionId || !fileName) return invalidReqestResponse(ctx);
+
+        const userAgent = ctx.req.header("User-Agent") || "";
+        if (userAgent.includes("bot")) return invalidReqestResponse(ctx, "Bots are not allowed to access this resource");
+
+        const botScore = Number.parseInt(ctx.req.header("CF-Bot-Score") || "0", 10);
+        if (Number.isNaN(botScore) || botScore < 85) {
+            if (!userAgent) return invalidReqestResponse(ctx, "User-Agent header is missing");
+
+            let isAllowed = false;
+            for (let i = 0; i < ALLOWED_EXTERNAL_USER_AGENTS.length; i++) {
+                if (userAgent.startsWith(ALLOWED_EXTERNAL_USER_AGENTS[i])) {
+                    isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!isAllowed) return invalidReqestResponse(ctx, `User-Agent '${userAgent}' is not allowed`);
         }
 
         return await serveVersionFile(ctx, projectId, versionId, fileName, userSession, IsCdnRequest(ctx));

@@ -78,7 +78,7 @@ export function VariantButtonLink({
     variant = "secondary",
     size = "default",
     ...props
-}: VariantLinkProps & RefProp<HTMLAnchorElement>) {
+}: VariantLinkProps & RefProp<HTMLAnchorElement> & Omit<CustomLinkProps, "to">) {
     return (
         <Link
             to={url}

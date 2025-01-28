@@ -535,7 +535,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                                             size={"icon"}
                                                             className="noClickRedirect shrink-0 !w-10 !h-10 rounded-full"
                                                             aria-label={`download ${version.title}`}
-                                                            onClick={() => showDownloadAnimation()}
+                                                            onClick={showDownloadAnimation}
                                                         >
                                                             <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
                                                         </VariantButtonLink>
