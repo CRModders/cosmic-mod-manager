@@ -116,7 +116,7 @@ function AddPasswordForm({ email }: { email: string }) {
                                             <FormMessage />
                                         </FormLabel>
                                         <FormControl>
-                                            <Input {...field} type="password" placeholder={t.auth.confirmNewPassDesc} spellCheck={false} />
+                                            <Input {...field} type="password" placeholder={t.auth.confirmPass_label} spellCheck={false} />
                                         </FormControl>
                                     </FormItem>
                                 )}
