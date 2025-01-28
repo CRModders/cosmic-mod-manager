@@ -7,7 +7,6 @@ export default defineConfig({
         hostname: "https://docs.crmm.tech",
     },
 
-    cleanUrls: true,
     metaChunk: true,
     lastUpdated: true,
 
