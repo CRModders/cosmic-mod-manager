@@ -8,6 +8,7 @@ export default defineConfig({
     },
 
     cleanUrls: true,
+    metaChunk: true,
     lastUpdated: true,
 
     themeConfig: {
