@@ -77,22 +77,22 @@ async function versionFile_get(ctx: Context) {
         const { projectId, versionId, fileName } = ctx.req.param();
         if (!projectId || !versionId || !fileName) return invalidReqestResponse(ctx);
 
-        const userAgent = ctx.req.header("User-Agent") || "";
+        const userAgent = ctx.req.header("User-Agent");
+        if (!userAgent) return invalidReqestResponse(ctx, "User-Agent header is missing");
         if (userAgent.includes("bot")) return invalidReqestResponse(ctx, "Bots are not allowed to access this resource");
 
         const botScore = Number.parseInt(ctx.req.header("CF-Bot-Score") || "0", 10);
-        if (Number.isNaN(botScore) || botScore < 85) {
-            if (!userAgent) return invalidReqestResponse(ctx, "User-Agent header is missing");
+        let isExplicitlyAllowed = false;
 
-            let isAllowed = false;
-            for (let i = 0; i < ALLOWED_EXTERNAL_USER_AGENTS.length; i++) {
-                if (userAgent.startsWith(ALLOWED_EXTERNAL_USER_AGENTS[i])) {
-                    isAllowed = true;
-                    break;
-                }
+        for (let i = 0; i < ALLOWED_EXTERNAL_USER_AGENTS.length; i++) {
+            if (userAgent.startsWith(ALLOWED_EXTERNAL_USER_AGENTS[i])) {
+                isExplicitlyAllowed = true;
+                break;
             }
+        }
 
-            if (!isAllowed) return invalidReqestResponse(ctx, `User-Agent '${userAgent}' is not allowed`);
+        if ((Number.isNaN(botScore) || botScore < 30) && !isExplicitlyAllowed) {
+            return invalidReqestResponse(ctx, `Possibly bot activity; User-Agent: '${userAgent}; CF-Bot-Score: ${botScore}'`);
         }
 
         return await serveVersionFile(ctx, projectId, versionId, fileName, userSession, IsCdnRequest(ctx));
