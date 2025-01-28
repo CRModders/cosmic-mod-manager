@@ -80,7 +80,7 @@ export type Loader = {
     name: string;
     supportedProjectTypes: ProjectType[];
     metadata: {
-        foreground: {
+        foreground?: {
             light: string;
             dark: string;
         };
@@ -123,9 +123,9 @@ export const loaders: Loader[] = [
         supportedProjectTypes: [ProjectType.SHADER],
         metadata: {
             foreground: {
-                light: "#4A953F",
-                dark: "#A5E388",
-            },
+                light: "#4B98B0",
+                dark: "#83D5EF"
+            }
         },
     },
 ];
