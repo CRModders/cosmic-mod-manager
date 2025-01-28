@@ -59,19 +59,19 @@ REQUEST BODY: `multipart/form-data`
 
 - **Visibility** \
     key: `visibility` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L74) `{ listed | private | unlisted | archived }`
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L74) `{ listed | private | unlisted | archived }`
 
 - **Type** \
     key: `type` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L44) `{ mod | modpack | shader | resource-pack | datamod | plugin }`
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L44) `{ mod | modpack | shader | resource-pack | datamod | plugin }`
 
 - **Client side** \
     key: `clientSide` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L159) `{ unknown | required | optional | unsupported }`
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L159) `{ unknown | required | optional | unsupported }`
 
 - **Server side** \
     key: `serverSide` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L159) `{ unknown | required | optional | unsupported }`
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L159) `{ unknown | required | optional | unsupported }`
 
 - **Summary** \
     key: `summary` \

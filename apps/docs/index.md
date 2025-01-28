@@ -12,7 +12,7 @@ Welcome to the documentation of CRMM api!
 - Website URL: [https://crmm.tech](https://crmm.tech)
 - API URL: [https://api.crmm.tech](https://api.crmm.tech)
 
-Also, you can check the API Rate Limits [here](https://github.com/CRModders/cosmic-mod-manager/blob/main/apps/backend/src/middleware/rate-limit/limits.ts).
+Also, you can check the API Rate Limits [here](/apps/backend/src/middleware/rate-limit/limits.ts).
 
 <br />
 

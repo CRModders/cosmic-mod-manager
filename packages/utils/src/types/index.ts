@@ -15,6 +15,7 @@ export enum AuthProvider {
     GITLAB = "gitlab",
     DISCORD = "discord",
     GOOGLE = "google",
+
     CREDENTIAL = "credential",
     UNKNOWN = "unknown",
 }

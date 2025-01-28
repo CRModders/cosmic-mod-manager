@@ -33,7 +33,7 @@ GET [`/api/search?q=shader`](https://api.crmm.tech/api/search?q=shader)
 "offset": 0,
 "estimatedTotalHits": 3
 ```
-[Type reference](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/api/index.ts#L142)
+[Type reference](/packages/utils/src/types/api/index.ts#L142)
 
 ### Query Parameters
 
@@ -44,7 +44,7 @@ GET [`/api/search?q=shader`](https://api.crmm.tech/api/search?q=shader)
 
 - **Sortby** \
     key: `sortby` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L173) `{ relevance | downloads | follow_count | recently_updated | recently_published }` \
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L173) `{ relevance | downloads | follow_count | recently_updated | recently_published }` \
     default: `relevance` \
     Example: `sortby=downloads`
 
@@ -71,7 +71,7 @@ GET [`/api/search?q=shader`](https://api.crmm.tech/api/search?q=shader)
 
 - **Type** \
     key: `type` \
-    type: [`ENUM`](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/index.ts#L44) `{ mod | modpack | shader | resource-pack | datamod | plugin }` \
+    type: [`ENUM`](/packages/utils/src/types/index.ts#L44) `{ mod | modpack | shader | resource-pack | datamod | plugin }` \
     Example: `type=mod`
 
 - **Loader** \

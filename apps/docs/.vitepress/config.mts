@@ -1,6 +1,5 @@
 import { defineConfig } from "vitepress";
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
     title: "CRMM Docs",
     description: "Documentation for CRMM backend API",
@@ -26,6 +25,7 @@ export default defineConfig({
 
         sidebar: [
             { text: "Introduction", link: "/" },
+            { text: "Endpoints", link: "/endpoints" },
             {
                 text: "Project",
                 items: [
@@ -44,4 +44,29 @@ export default defineConfig({
 
         socialLinks: [{ icon: "github", link: "https://github.com/CRModders/cosmic-mod-manager" }],
     },
+
+    markdown: {
+        config: (md) => {
+            // Prefix all relative links with the GitHub URL
+            md.use((md) => {
+                md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+                    const token = tokens[idx];
+                    if (!token.attrs) return self.renderToken(tokens, idx, options);
+
+                    for (let i = 0; i < token.attrs.length; i++) {
+                        const attr = token.attrs[i];
+                        if (attr[0] !== "href") continue;
+
+                        if (attr[1].startsWith("/apps/backend/") || attr[1].startsWith("/packages/")) {
+                            attr[1] = `https://github.com/CRModders/cosmic-mod-manager/blob/main${attr[1]}`
+                            token.attrs.push(["target", "_blank"]);
+                            break;
+                        }
+                    }
+
+                    return self.renderToken(tokens, idx, options);
+                };
+            })
+        }
+    }
 });

@@ -64,4 +64,4 @@ GET [`/api/project/{ID|slug}`](https://api.crmm.tech/api/project/4xvLkWrQx2lt6Vy
 }
 ```
 
-[Type reference](https://github.com/CRModders/cosmic-mod-manager/blob/main/packages/utils/src/types/api/index.ts#L52)
+[Type reference](/packages/utils/src/types/api/index.ts#L52)
