@@ -119,7 +119,7 @@ REQUEST BODY: `application/json`
 - **Categories** \
     key: `categories` \
     type: `string[]` \
-    *Check [/tags/categories](https://api.crmm.tech/api/tags/categories) for a list of available categories. Filter the categories list by project type using the `type` query parameter, like [/tags/categories?type=shader](https://api.crmm.tech/api/tags/categories?type=shader).*
+    *Check [/tags/categories](/api/tags/categories) for a list of available categories. Filter the categories list by project type using the `type` query parameter, like [/tags/categories?type=shader](/api/tags/categories?type=shader).*
 
 - **FeaturedCategories** \
     key: `featuredCategories` \
@@ -164,5 +164,5 @@ REQUEST BODY: `application/json`
 :::info
 If you use a [SPDX](https://spdx.org) license ID, the name and a url to spdx page will be added automatically. \
 If you've a custom license and it doesn't have a SPDX ID, you can just provide the name and the url if possible. \
-Check for the list of licenses here [`/tags/licenses`](https://api.crmm.tech/api/tags/licenses).
+Check for the list of licenses here [`/tags/licenses`](/api/tags/licenses).
 :::

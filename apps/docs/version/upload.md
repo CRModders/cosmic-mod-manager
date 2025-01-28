@@ -36,11 +36,11 @@ REQUEST BODY: `multipart/form-data`
 
 - **Loaders** \
     key: `loaders` \
-    type: `string[]` (Check [/tags/loaders](https://api.crmm.tech/api/tags/loaders) for a list of available loaders)
+    type: `string[]` (Check [/tags/loaders](/api/tags/loaders) for a list of available loaders)
 
 - **GameVersions** \
     key: `gameVersions` \
-    type: `string[]` (Check [/tags/game-versions](https://api.crmm.tech/api/tags/game-versions) for a list of available game versions)
+    type: `string[]` (Check [/tags/game-versions](/api/tags/game-versions) for a list of available game versions)
 
 - **Dependencies** \
     key: `dependencies` \

@@ -1,7 +1,7 @@
 # Get multiple projects
 Get multiple projects by their IDs.
 
-GET [`/api/projects?ids=[...]`](https://api.crmm.tech/api/projects?ids=["4xvLkWrQx2lt6Vyx6Z"])
+GET [`/api/projects?ids=[...]`](/api/projects?ids=["4xvLkWrQx2lt6Vyx6Z"])
 ```json
 [
     {

@@ -1,6 +1,6 @@
 # Search projects
 
-GET [`/api/search?q=shader`](https://api.crmm.tech/api/search?q=shader)
+GET [`/api/search?q=shader`](/api/search?q=shader)
 
 ```json
 "hits": [
@@ -76,20 +76,20 @@ GET [`/api/search?q=shader`](https://api.crmm.tech/api/search?q=shader)
 
 - **Loader** \
     key: `l` \
-    type: [`ENUM`](https://api.crmm.tech/api/tags/loaders) \
+    type: [`ENUM`](/api/tags/loaders) \
     Example: `l=quilt`
 
 - **Game version** \
     key: `v` \
-    type: [`ENUM`](https://api.crmm.tech/api/tags/game-versions) \
+    type: [`ENUM`](/api/tags/game-versions) \
     Example: `v=0.3.1`
 
 - **Category** \
     key: `c` \
-    type: [`ENUM`](https://api.crmm.tech/api/tags/categories) \
+    type: [`ENUM`](/api/tags/categories) \
     Example: `c=realistic&c=64x`
 
 :::info
 *You can use the endpoint `/tags/categories` to get categories based on project types also.
-For example, [`/tags/categories?type=mod`](https://api.crmm.tech/api/tags/categories?type=mod) returns all the categories applicable to mods.*
+For example, [`/tags/categories?type=mod`](/api/tags/categories?type=mod) returns all the categories applicable to mods.*
 :::

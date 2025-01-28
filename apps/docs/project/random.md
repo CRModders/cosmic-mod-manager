@@ -1,6 +1,6 @@
 # Get a list of random projects
 
-GET [`/api/projects/random`](https://api.crmm.tech/api/projects/random)
+GET [`/api/projects/random`](/api/projects/random)
 ```json
 [
     {

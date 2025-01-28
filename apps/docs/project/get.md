@@ -1,6 +1,6 @@
 # Get a project by ID or slug
 
-GET [`/api/project/{ID|slug}`](https://api.crmm.tech/api/project/4xvLkWrQx2lt6Vyx6Z)
+GET [`/api/project/{ID|slug}`](/api/project/4xvLkWrQx2lt6Vyx6Z)
 
 ```json
 "success": true,

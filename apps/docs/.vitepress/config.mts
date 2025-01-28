@@ -47,7 +47,6 @@ export default defineConfig({
 
     markdown: {
         config: (md) => {
-            // Prefix all relative links with the GitHub URL
             md.use((md) => {
                 md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
                     const token = tokens[idx];
@@ -57,9 +56,17 @@ export default defineConfig({
                         const attr = token.attrs[i];
                         if (attr[0] !== "href") continue;
 
+                        token.attrs.push(["target", "_blank"]);
+
+                        // Prefix all relative links with the GitHub URL
                         if (attr[1].startsWith("/apps/backend/") || attr[1].startsWith("/packages/")) {
                             attr[1] = `https://github.com/CRModders/cosmic-mod-manager/blob/main${attr[1]}`
-                            token.attrs.push(["target", "_blank"]);
+                            break;
+                        }
+
+                        // Prefix all /api links with the api url
+                        if (attr[1].startsWith("/api/")) {
+                            attr[1] = `https://api.crmm.tech${attr[1]}`
                             break;
                         }
                     }
