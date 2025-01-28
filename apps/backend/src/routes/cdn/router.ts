@@ -1,5 +1,6 @@
 import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
+import { isbot } from "isbot";
 import { AuthenticationMiddleware } from "~/middleware/auth";
 import { cdnAssetRateLimiter, cdnLargeFileRateLimiter } from "~/middleware/rate-limit/cdn";
 import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
@@ -79,9 +80,7 @@ async function versionFile_get(ctx: Context) {
 
         const userAgent = ctx.req.header("User-Agent");
         if (!userAgent) return invalidReqestResponse(ctx, "User-Agent header is missing");
-        if (userAgent.includes("bot")) return invalidReqestResponse(ctx, "Bots are not allowed to access this resource");
-
-        const botScore = Number.parseInt(ctx.req.header("CF-Bot-Score") || "0", 10);
+        const isABot = isbot(userAgent);
         let isExplicitlyAllowed = false;
 
         for (let i = 0; i < ALLOWED_EXTERNAL_USER_AGENTS.length; i++) {
@@ -91,8 +90,8 @@ async function versionFile_get(ctx: Context) {
             }
         }
 
-        if ((Number.isNaN(botScore) || botScore < 30) && !isExplicitlyAllowed) {
-            return invalidReqestResponse(ctx, `Possibly bot activity; User-Agent: '${userAgent}; CF-Bot-Score: ${botScore}'`);
+        if (isABot && !isExplicitlyAllowed) {
+            return invalidReqestResponse(ctx, `Error: Possibly bot activity;\nUser-Agent: '${userAgent};`);
         }
 
         return await serveVersionFile(ctx, projectId, versionId, fileName, userSession, IsCdnRequest(ctx));

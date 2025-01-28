@@ -16,6 +16,7 @@
         "hono": "^4.6.16",
         "ioredis": "^5.4.1",
         "ip": "^2.0.1",
+        "isbot": "^5.1.21",
         "meilisearch": "0.47.0",
         "nanoid": "^5.0.9",
         "nodemailer": "^6.9.16",
