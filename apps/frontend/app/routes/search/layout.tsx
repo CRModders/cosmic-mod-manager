@@ -17,8 +17,8 @@ export default function _() {
 
 export async function loader(props: Route.LoaderArgs) {
     const reqUrl = new URL(props.request.url);
-    const typeStr = reqUrl.pathname.split("?")[0];
-    const type = typeStr.slice(1, -1);
+    const pathFrags = reqUrl.pathname.split("?")[0].split("/").filter(Boolean);
+    const type = (pathFrags.at(-1) || "")?.slice(0, -1);
 
     let queryParams = reqUrl.search.length > 0 ? reqUrl.search : "";
     if (type !== "project") queryParams += `${reqUrl.search.length > 0 ? "&" : "?"}type=${type}`;
