@@ -1,18 +1,14 @@
 # Setting up dev environment
 
-NOTE: See `Running the app frontend` section below if you only wish to work on the frontend.
+NOTE: See [`Running the app frontend`](#running-the-app-frontend) section below if you wish to work only on the frontend.
 
 ## Installation
-- ### [Bun](https://bun.sh) (JavaScript Runtime)
-- ### [Node.js](https://nodejs.org/en/download/package-manager) (Required for other internal tools)
-
-
-- ### [Redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-linux)
-
-- ### [Meilisearch](https://github.com/meilisearch/meilisearch/releases/latest)
+- [**Bun**](https://bun.sh) (JavaScript Runtime)
+- [**Node.js**](https://nodejs.org/en/download/package-manager) (Required for other internal tools)
+- [**Redis**](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-linux)
+- [**Meilisearch**](https://github.com/meilisearch/meilisearch/releases/latest)
     NOTE: If you download the file from github and just place in `bin` folder, don't forget to give it executable permission.
-
-- ### [Postgresql](https://www.postgresql.org/download)
+- [**Postgresql**](https://www.postgresql.org/download)
     Use your package manager to install it if your package manager has the `postgresql-server` package is available in your distro's repo.
 
 
@@ -79,59 +75,8 @@ Keep in mind that you'll need to start the database again after a reboot.
 - Clone the repo in your folder of choice.
 - `cd` into the project root and run `bun install` to install all deps.
 - Now go into `/apps/backend` and run `bunx prisma generate` and `bunx prisma db push` to synchronise the database with the schema.
-- `env` file
-    ```ini
-    FRONTEND_URL="http://localhost:3000"
-    CORS_ALLOWED_URLS="http://localhost:3000"
-    OAUTH_REDIRECT_URI="http://localhost:3000/auth/callback"
-    CDN_SERVER_URL="http://localhost:5500"
-    CACHE_CDN_URL="http://localhost:5500"
-    COOKIE_DOMAIN="localhost"
-
-    PG_DATABASE_URL="postgresql://prisma:PASSWORD@localhost:5432/crmm_dev?schema=public"
-    CDN_SECRET="ANY_RANDOM_STRING"
-    FRONTEND_SECRET="a-secret-between-frontend-and-backend"
-    NODE_ENV="development"
-
-    # Auth Secrets
-    HASH_SECRET_KEY="HASH_SECRET"
-
-    GITHUB_ID="GITHB_OAUTH_ID"
-    GITHUB_SECRET="GITHUB_OAUTH_SECRET"
-
-    DISCORD_ID="DISCORD_OAUTH_ID"
-    DISCORD_SECRET="DISCORD_OAUTH_SECRET"
-
-    GOOGLE_ID="GOOGLE_OAUTH_APP_ID"
-    GOOGLE_SECRET="GOOGLE_OAUTH_APP_SECRET"
-
-    GITLAB_ID="GITLAB_OAUTH_APP_ID"
-    GITLAB_SECRET="GITLAB_OAUTH_APP_SECRET"
-
-    MEILISEARCH_MASTER_KEY="MEILISEARCH_MASTERY_KEY"
-
-    # Email transport credentials
-    BREVO_USER="82374982@smtp-brevo.com"
-
-    SUPPORT_EMAIL="support@crmm.tech"
-    SUPPORT_EMAIL_PASSWORD=""
-
-    NOREPLY_EMAIL="no-reply@crmm.tech"
-    NOREPLY_EMAIL_PASSWORD=""
-
-    ADMIN_EMAIL="admin@crmm.tech"
-    ADMIN_EMAIL_PASSWORD=""
-
-    # Deployment Config (Not required)
-    SSH_USER=""
-    SSH_HOST=""
-    # Path to ssh key
-    SSH_KEY=""
-    ```
-    Your database url will look something like this
-    `postgresql://DB_USER:PASSWORD@localhost:5432/DB_NAME?schema=public`
-
-    Paste this env in a `.env` file in `/apps/backend`.
+- Copy this [`.env`](/apps/backend/example.env) file to `/apps/backend/.env`.
+- Your database url will look something like this `postgresql://DB_USER:PASSWORD@localhost:5432/DB_NAME?schema=public`
 
 
 ## Running the app backend

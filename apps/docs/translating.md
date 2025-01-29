@@ -1,4 +1,4 @@
-## Adding your language
+# Adding your translations
 
 1. Open [app/locales/meta.ts](/apps/frontend/app/locales/meta.ts) and add the metadata for the language you are adding.
 
@@ -60,6 +60,7 @@ If your lang's metadata doesn't have region field then just `LANG_CODE` (eg: `en
     Reference - [`en/translation.ts`](/apps/frontend/app/locales/en/translation.ts)
     ```ts
     import type { Locale } from "~/locales/types";
+    import { SearchItemHeader_Keys } from "../shared-enums";
     import { Rules } from "./legal";
     import tags from "./tags";
 
@@ -74,6 +75,7 @@ If your lang's metadata doesn't have region field then just `LANG_CODE` (eg: `en
     } satisfies Locale;
     ```
 
-> [!IMPORTANT]
-> If you decide to copy paste an existing lang folder and then edit that with the translation, make sure you don't use the default `en` for that, if you do you'll need to change the `TypeScript` types imported in the files. \
-> I'd recommend you to use a code editor that supports typescript because there are types available for all the translation keys so your editor will let you know when something doesn't match the expected type.
+:::info
+If you decide to copy paste an existing lang folder and then edit that with the translation, make sure you don't use the default `en` for that, if you do you'll need to change the `TypeScript` types imported in the files. \
+I'd recommend you to use a code editor that supports typescript because there are types available for all the translation keys so your editor will let you know when something doesn't match the expected type.
+:::

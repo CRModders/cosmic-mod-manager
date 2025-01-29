@@ -40,6 +40,10 @@ export default defineConfig({
                 text: "Version",
                 items: [{ text: "Upload a version", link: "/version/upload" }],
             },
+
+            { text: "CONTRIBUTING.md", link: "/contributing" },
+            { text: "TRANSLATING.md", link: "/translating" },
+            { text: "CREDITS.md", link: "/credits" },
         ],
 
         socialLinks: [{ icon: "github", link: "https://github.com/CRModders/cosmic-mod-manager" }],
@@ -55,25 +59,26 @@ export default defineConfig({
                     for (let i = 0; i < token.attrs.length; i++) {
                         const attr = token.attrs[i];
                         if (attr[0] !== "href") continue;
+                        if (attr[1].startsWith("http") || attr[1].startsWith("#")) continue;
 
                         token.attrs.push(["target", "_blank"]);
 
                         // Prefix all relative links with the GitHub URL
-                        if (attr[1].startsWith("/apps/backend/") || attr[1].startsWith("/packages/")) {
-                            attr[1] = `https://github.com/CRModders/cosmic-mod-manager/blob/main${attr[1]}`
+                        if (attr[1].startsWith("/apps/") || attr[1].startsWith("/packages/")) {
+                            attr[1] = `https://github.com/CRModders/cosmic-mod-manager/blob/main${attr[1]}`;
                             break;
                         }
 
                         // Prefix all /api links with the api url
                         if (attr[1].startsWith("/api/")) {
-                            attr[1] = `https://api.crmm.tech${attr[1]}`
+                            attr[1] = `https://api.crmm.tech${attr[1]}`;
                             break;
                         }
                     }
 
                     return self.renderToken(tokens, idx, options);
                 };
-            })
-        }
-    }
+            });
+        },
+    },
 });

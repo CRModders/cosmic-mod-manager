@@ -3,13 +3,14 @@ A repository for Cosmic Reach mods, like modrinth for minecraft.
 
 
 ## If you wish to contribute:
-See [DEVELOPMENT.md](/DEVELOPMENT.md) for dev environment setup instructions.
+See [CONTRIBUTING.md](https://docs.crmm.tech/contributing.html) for dev environment setup instructions.
 
-See [ENDPOINTS.md](https://docs.crmm.tech/endpoints) for a list of all the available backend API endpoints.
+See [ENDPOINTS.md](https://docs.crmm.tech/endpoints.html) for a list of all the available backend API endpoints.
 
-See [TRANSLATING.md](/apps/frontend/TRANSLATING.md) if you wish to add or improve translations.
+See [TRANSLATING.md](https://docs.crmm.tech/translating.html) if you wish to add or improve translations.
 
 
+<!-- Make sure to update credits in docs site also -->
 ### Special thanks to:
 
 - [@Weeesly](https://github.com/Weeesly) for the [Spanish](/apps/frontend/app/locales/es-419/translation.ts) translation,
