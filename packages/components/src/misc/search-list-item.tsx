@@ -111,7 +111,7 @@ function BaseView(props: SearchListItemProps) {
         }
 
         return items;
-    }, [galleryViewType]);
+    }, [galleryViewType, t.search.itemHeader]);
 
     return (
         <article
