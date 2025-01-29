@@ -129,14 +129,6 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
             },
         }),
 
-        // Delete the project associated team
-        DeleteTeam({
-            where: {
-                id: project.team.id,
-            },
-        }),
-        // ? All the teamMember tables will be automatically deleted
-
         // Delete the project's storage folder
         deleteDirectory(FILE_STORAGE_SERVICE.LOCAL, projectsDir(project.id)),
 
@@ -145,6 +137,14 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
             return Delete_UserProjectsCache(member.userId);
         }),
     ]);
+
+    // Delete the project associated team
+    await DeleteTeam({
+        where: {
+            id: project.team.id,
+        },
+    });
+    // ? All the teamMember tables will be automatically deleted
 
     return {
         data: {
