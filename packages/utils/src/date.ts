@@ -4,7 +4,7 @@ export function timeSince(pastTime: Date, locale = "en-US"): string {
         const now = new Date();
         const diff = now.getTime() - pastTime.getTime();
 
-        const seconds = Math.abs(diff / 1000);
+        const seconds = Math.round(diff / 1000);
         if (seconds < 60) return formatter.format(-seconds, "second");
 
         const minutes = Math.floor(seconds / 60);
