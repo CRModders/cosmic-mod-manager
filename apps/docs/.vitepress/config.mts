@@ -25,7 +25,6 @@ export default defineConfig({
 
         sidebar: [
             { text: "Introduction", link: "/" },
-            { text: "Endpoints", link: "/endpoints" },
             {
                 text: "Project",
                 items: [
@@ -43,6 +42,7 @@ export default defineConfig({
 
             { text: "CONTRIBUTING.md", link: "/contributing" },
             { text: "TRANSLATING.md", link: "/translating" },
+            { text: "ENDPOINTS.md", link: "/endpoints" },
             { text: "CREDITS.md", link: "/credits" },
         ],
 

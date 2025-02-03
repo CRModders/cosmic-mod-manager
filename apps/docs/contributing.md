@@ -9,7 +9,7 @@ NOTE: See [`Running the app frontend`](#running-the-app-frontend) section below 
 - [**Meilisearch**](https://github.com/meilisearch/meilisearch/releases/latest)
     NOTE: If you download the file from github and just place in `bin` folder, don't forget to give it executable permission.
 - [**Postgresql**](https://www.postgresql.org/download)
-    Use your package manager to install it if your package manager has the `postgresql-server` package is available in your distro's repo.
+    Use your package manager to install it if your package manager has the `postgresql` package is available in your distro's repo.
 
 
 ## Setup
@@ -17,13 +17,18 @@ NOTE: See [`Running the app frontend`](#running-the-app-frontend) section below 
 You don't need any setup for `Redis` and `Meilisearch`.
 
 ### Postgres
-After you've installed the `postgresql-server` you'll need to initialize the database. Run the following command to initialize the postgres db cluster:
+After you've installed `postgresql` you'll need to initialize the database. Run the following command to initialize the postgres db cluster:
 ```bash
-sudo postgresql-setup --initdb
+# postgres --version
+# postgres (PostgreSQL) 17.2
+
+sudo mkdir -p /var/lib/postgres/data
+sudo chown -R postgres:postgres /var/lib/postgres/data
+sudo -u postgres initdb -D /var/lib/postgres/data
 ```
 
-Change the `/var/lib/pgsql/data/pg_hba.conf` file to allow direct local connections:
-
+Change the `/var/lib/postgres/data/pg_hba.conf` file to allow direct local connections: \
+_In later versions this is by default set to `trust`, but you should check is just in case._
 ```diff
 
   # TYPE  DATABASE        USER            ADDRESS                 METHOD

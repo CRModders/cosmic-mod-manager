@@ -162,7 +162,7 @@ REQUEST BODY: `application/json`
     type: `string`
 
 :::info
-If you use a [SPDX](https://spdx.org) license ID, the name and a url to spdx page will be added automatically. \
+If you use a [SPDX](https://spdx.org/licenses) license ID, the name and a url to spdx page will be added automatically. \
 If you've a custom license and it doesn't have a SPDX ID, you can just provide the name and the url if possible. \
 Check for the list of licenses here [`/tags/licenses`](/api/tags/licenses).
 :::
