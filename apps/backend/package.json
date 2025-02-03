@@ -12,7 +12,7 @@
     "dependencies": {
         "@app/utils": "workspace:*",
         "@oslojs/encoding": "^1.1.0",
-        "@prisma/client": "^6.2.1",
+        "@prisma/client": "^6.3.0",
         "hono": "^4.6.16",
         "ioredis": "^5.4.1",
         "ip": "^2.0.1",
@@ -31,7 +31,7 @@
         "@types/xml2js": "^0.4.14",
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
-        "prisma": "^6.2.1",
+        "prisma": "^6.3.0",
         "xml2js": "^0.6.2"
     },
     "peerDependencies": {

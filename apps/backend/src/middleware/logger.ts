@@ -73,7 +73,8 @@ function log(fn: PrintFunc, prefix: string, method: string, path: string, status
 
 export function logger(fn: PrintFunc = console.log) {
     return async function logger(ctx: Context, next: Next) {
-        const method = ctx.req?.method;
+        // @ts-ignore
+        const method = HTTP_VERB[ctx.req?.method] || ctx.req?.method;
         const path = getPath(ctx.req.raw);
         const ipAddress = getUserIpAddress(ctx, false) || "";
 
@@ -119,3 +120,13 @@ export function getPath(request: Request): string {
     }
     return url.slice(start, i);
 }
+
+const HTTP_VERB = {
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+    PATCH: "PAT",
+    DELETE: "DEL",
+    HEAD: "HEAD",
+    OPTIONS: "OPT",
+};
