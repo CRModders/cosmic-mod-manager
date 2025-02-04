@@ -9,7 +9,7 @@ NOTE: See [`Running the app frontend`](#running-the-app-frontend) section below 
 - [**Meilisearch**](https://github.com/meilisearch/meilisearch/releases/latest)
     NOTE: If you download the file from github and just place in `bin` folder, don't forget to give it executable permission.
 - [**Postgresql**](https://www.postgresql.org/download)
-    Use your package manager to install it if your package manager has the `postgresql` package is available in your distro's repo.
+    Use your package manager to install it if the `postgresql` package is available in your distro's packages repo.
 
 
 ## Setup
