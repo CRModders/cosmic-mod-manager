@@ -8,7 +8,7 @@ import prisma from "~/services/prisma";
 import { HashAlgorithms } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { GetReleaseChannelFilter } from "~/utils/project";
-import { userIconUrl } from "~/utils/urls";
+import { userIconUrl, versionFileUrl } from "~/utils/urls";
 
 export async function GetVersionFromFileHash(hash: string, algorithm: HashAlgorithms) {
     const res = await GetVersionsFromFileHashes([hash], algorithm);
@@ -87,7 +87,7 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
                 id: versionFile.id,
                 isPrimary: versionFile.isPrimary,
                 name: fileData.name,
-                url: fileData.url,
+                url: versionFileUrl(version.projectId, version.id, fileData.name),
                 size: fileData.size,
                 type: fileData.type,
                 sha1_hash: fileData.sha1_hash,
@@ -272,7 +272,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
                 id: versionFile.id,
                 isPrimary: versionFile.isPrimary,
                 name: fileData.name,
-                url: fileData.url,
+                url: versionFileUrl(version.projectId, version.id, fileData.name),
                 size: fileData.size,
                 type: fileData.type,
                 sha1_hash: fileData.sha1_hash,
