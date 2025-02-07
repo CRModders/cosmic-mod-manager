@@ -64,8 +64,7 @@ export default {
         report: "Melden",
         copyId: "ID kopieren",
         all: "Alle",
-        // ? New string
-        // noResults: "No results",
+        noResults: "Keine Ergebnisse",
     },
 
     count: {
@@ -360,7 +359,7 @@ export default {
                 `Wähle die Lizenz, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} verbreitet wird.`,
             selectEnv: "Wähle unterstützte Umgebungen",
             selectEnvDesc: (projectType: string) =>
-                `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Server-seitige Funktionen hat.`,
+                `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
@@ -468,14 +467,13 @@ export default {
         projectInfo: "Projekt",
         clientSide: "Clientseitig",
         clientSideDesc: (projectType: string) =>
-            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client-seitige Funktionalität hat.`,
-        serverSide: "Serverseitg",
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Clientseitige Funktionalität hat.`,
+        serverSide: "Serverseitig",
         serverSideDesc: (projectType: string) =>
-            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Server-seitige Funktionalität hat.`,
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Serverseitige Funktionalität hat.`,
         unknown: "Unbekannt",
-        // ? New strings
-        // clientOrServer: "Client or server",
-        // clientAndServer: "Client and server",
+        clientOrServer: "Client oder Server",
+        clientAndServer: "Client und Server",
         required: "Benötigt",
         optional: "Optional",
         unsupported: "Nicht unterstützt",
@@ -573,8 +571,7 @@ export default {
     },
 
     user: {
-        // ? New string
-        // admin: "Admin",
+        admin: "Admin",
         moderator: "Moderator",
         doesntHaveProjects: (user: string) => `${user} hat noch keine Projekte.`,
         isntPartOfAnyOrgs: (user: string) => `${user} ist nicht Mitglied einer Organization.`,
