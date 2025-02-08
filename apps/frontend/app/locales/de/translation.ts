@@ -64,8 +64,7 @@ export default {
         report: "Melden",
         copyId: "ID kopieren",
         all: "Alle",
-        // ? New string
-        // noResults: "No results",
+        noResults: "Keine Ergebnisse",
     },
 
     count: {
@@ -107,8 +106,8 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string) => ["Der Platz für Cosmic Reach ", projectType, ""],
-        desc: "Der beste Platz für deine Cosmic Reach Mods. Entdecke, spiele und erstelle Inhalte, alles an einem Ort.",
+        title: (projectType: string) => ["Der Ort für Cosmic Reach ", projectType, ""],
+        desc: "Der beste Ort für deine Cosmic Reach Mods. Entdecke, spiele und erstelle Inhalte, alles an einer Stelle.",
         exploreMods: "Entdecke Mods",
     },
 
@@ -119,9 +118,9 @@ export default {
         dontHaveAccount: "Du hast kein Konto?",
         alreadyHaveAccount: "Du hast bereits ein Konto?",
         forgotPassword: "Passwort vergessen?",
-        signupWithProviders: "Registriere dich mit einem dieser Anmeldemethode:",
+        signupWithProviders: "Registriere dich mit einer dieser Anmeldemethoden:",
         aggrement:
-            "Mit dem erstellen eines Kontos akzeptierst du unsere [Bedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
+            "Mit dem Erstellen eines Kontos akzeptierst du unsere [Nutzungsbedingungen](/legal/terms) und [Privatsphärebestimmungen](/legal/privacy).",
         invalidCode: "Ungültiger oder abgelaufener Code",
         didntRequest: "Nicht angefragt?",
         checkSessions: "Angemeldete Sitzungen überprüfen",
@@ -150,25 +149,25 @@ export default {
         viewTransitionsDesc: "Aktiviert Übergänge (morph), während dem Navigieren zwischen Seiten.",
         accountSecurity: "Konto-Sicherheit",
         changePassTitle: "Passwort vom Konto ändern",
-        addPassDesc: "Füge ein Passwort hinzu, um den Passwortlogin zu ermöglichen.",
+        addPassDesc: "Füge ein Passwort hinzu, um den Passwort-Login zu ermöglichen.",
         manageAuthProviders: "Anmeldemethoden verwalten",
-        manageProvidersDesc: "Füge Anmeldemethoden zum Konto hinzu oder entferne sie.",
+        manageProvidersDesc: "Füge dem Konto Anmeldemethoden hinzu oder entferne sie.",
         removePass: "Passwort entfernen",
         removePassTitle: "Passwort vom Konto entfernen",
-        removePassDesc: "Nach dem entfernen des Passwort kannst du dich nicht mehr mit ihm anmelden.",
+        removePassDesc: "Nach dem Entfernen des Passwort kannst du dich nicht mehr mit ihm anmelden.",
         enterCurrentPass: "Gib das aktuelle Passwort ein",
         addPass: "Passwort hinzufügen",
-        addPassDialogDesc: "Du wirst diese Passwort benutzen können,. um dich mit deinem Konto anzumelden.",
+        addPassDialogDesc: "Du wirst diese Passwort benutzen können, um dich mit deinem Konto anzumelden.",
         manageProviders: "Verwalten",
         linkedProviders: "Verknüpfte Anmeldemethode",
         linkProvider: (provider: string) => `Verknüpfe ${provider} mit deinem Konto`,
-        link: "verknüpfen", // Verb
+        link: "Verknüpfen", // Verb
         sureToDeleteAccount: "Bist du sicher, dass du dein Konto löschen willst?",
         profileInfo: "Profil",
         profileInfoDesc: (site: string) => `Dein Profil ist öffentlich sichtbar auf ${site}.`,
         profilePic: "Profilbild",
         bio: "Bio",
-        bioDesc: "Eine kurze Beschreibung, um jedem ein wenig über dich zu erzählen.",
+        bioDesc: "Eine kurze Beschreibung, um anderen ein wenig über dich zu erzählen.",
         visitYourProfile: "Profil besuchen",
         showIpAddr: "IP Adressen anzeigen",
         sessionsDesc:
@@ -205,7 +204,7 @@ export default {
         received: "Erhalten",
         history: "Verlauf",
         notifHistory: "Benachrichtigungsverlauf",
-        createProjectInfo: "Du hast keine Projekte. Klicke auf den obigen Knopf, um eines zu erstellen.",
+        createProjectInfo: "Du hast noch keine Projekte. Klicke auf den obigen Knopf, um eines zu erstellen.",
         type: "Typ",
         status: "Status",
         createProject: "Ein Projekt erstellen",
@@ -260,7 +259,7 @@ export default {
         itemHeader: (project: string, author: string) => {
             return [
                 [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " by "],
+                [SearchItemHeader_Keys.BY, " von "],
                 [SearchItemHeader_Keys.AUTHOR_NAME, author],
             ];
         },
@@ -288,7 +287,7 @@ export default {
         uploadImg: "Bild hochladen",
         galleryOrderingDesc: "Bilder mit höherer Sortierung werden zuerst aufgelistet.",
         featuredGalleryImgDesc:
-            "Ein hervorgehobenes Galleriebild taucht in der Suche und auf der Projektkarte auf. Nur ein Galleriebild kann hervorgehoben werden.",
+            "Ein hervorgehobenes Galleriebild taucht in der Suche und auf der Projektkarte auf. Es kann nur ein Galleriebild hervorgehoben werden.",
         addGalleryImg: "Galleriebild hinzufügen",
         featureImg: "Bild hervorheben",
         unfeatureImg: "Bild nicht mehr hervorheben",
@@ -335,7 +334,7 @@ export default {
         rejected: "Abgelehnt",
         withheld: "Zurückgehalten",
         archivedMessage: (project: string) =>
-            `${project} wurde archiviert. Es wird keine weiteren Updates mehr geben, außer der Author entscheidet sich, das Projekt zu ent-archivieren.`,
+            `${project} wurde archiviert. Es wird keine weiteren Updates geben, außer der Author entscheidet sich, die Archivierung des Projekts aufzuheben.`,
         publishingChecklist: {
             required: "Benötigt",
             suggestion: "Vorschlag",
@@ -343,7 +342,7 @@ export default {
             progress: "Fortschritt:",
             title: "Veröffentlichungs-Checkliste",
             uploadVersion: "Eine Version hochladen",
-            uploadVersionDesc: "Wenigstens eine Version ist benötigt, um das Projekt zur Prüfung vorzulegen.",
+            uploadVersionDesc: "Mindestens eine Version ist benötigt, um das Projekt zur Prüfung vorzulegen.",
             addDescription: "Beschribung hinzufügen",
             addDescriptionDesc: "Eine Beschreibung, die den Sinn und die Funktion des Projektes klar darlegt, wird benötigt.",
             addIcon: "Ein Icon hinzufügen",
@@ -360,7 +359,7 @@ export default {
                 `Wähle die Lizenz, unter der ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} verbreitet wird.`,
             selectEnv: "Wähle unterstützte Umgebungen",
             selectEnvDesc: (projectType: string) =>
-                `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Server-seitige Funktionen hat.`,
+                `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
@@ -422,9 +421,9 @@ export default {
         selectFiles: "Dateien wählen",
         primaryFileRequired: "Eine primäre Datei wird benötigt",
         metadata: "Metadaten",
-        devReleasesNote: "Notiz:- Ältere Development-Versionen werden automatisch gelöscht, sobaeit eine neue Veröffentlicht wird.",
+        devReleasesNote: "Notiz:- Ältere Development-Versionen werden automatisch gelöscht, sobald eine neue veröffentlicht wird.",
         publicationDate: "Veröffentlichungsdatum",
-        publisher: "Veröffentlichender",
+        publisher: "Veröffentlicher",
         versionID: "Versions ID",
         copySha1: "SHA-1 Hash kopieren",
         copySha512: "SHA-512 Hash kopieren",
@@ -449,7 +448,7 @@ export default {
         discordInvite: "Discord-Einladung",
         discordInviteDesc: "Ein Einladungslink zu deinem Discord-Server.",
         licenseDesc1: (projectType: string) =>
-            `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfallst wird der Text der Lizenz angezeigt.`,
+            `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfalls wird der Text der Lizenz angezeigt.`,
         licenseDesc2:
             "Gib einen gültigen [SPDX Lizenz-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizenz keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizenz selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizenz ein.",
         selectLicense: "Lizenz wählen",
@@ -461,26 +460,25 @@ export default {
         tagsDesc:
             "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
         tagsDesc2: (projectType: string) =>
-            `Wähle alle Kategorien aut, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,
+            `Wähle alle Kategorien aus, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,
         featuredCategories: "Hervorgehobene Kategorien",
         featuredCategoriesDesc: (count: number) => `Du kannst bis zu ${count} deiner relevantesten Tags hervorheben.`,
         selectAtLeastOneCategory: "Wähle mindestens eine Kategorie, um eine Kategorie hervorzuheben.",
         projectInfo: "Projekt",
         clientSide: "Clientseitig",
         clientSideDesc: (projectType: string) =>
-            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client-seitige Funktionalität hat.`,
-        serverSide: "Serverseitg",
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Clientseitige Funktionalität hat.`,
+        serverSide: "Serverseitig",
         serverSideDesc: (projectType: string) =>
-            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Server-seitige Funktionalität hat.`,
+            `Wähle dies, wenn ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Serverseitige Funktionalität hat.`,
         unknown: "Unbekannt",
-        // ? New strings
-        // clientOrServer: "Client or server",
-        // clientAndServer: "Client and server",
+        clientOrServer: "Client oder Server",
+        clientAndServer: "Client und Server",
         required: "Benötigt",
         optional: "Optional",
         unsupported: "Nicht unterstützt",
         visibilityDesc:
-            "Gelistete und archivierte Projekte sind in der Suche sichtbar. Ungelistete Projekte sind veröffentlicht, aber nicht in der Suche oder auf Benutzerseiten sichtbar. Private Projekte können nur von Mitgliedern des Projektes eingesehen werden.",
+            "Gelistete und archivierte Projekte sind in der Suche sichtbar. Nicht gelistete Projekte sind veröffentlicht, aber nicht in der Suche oder auf Benutzerseiten sichtbar. Private Projekte können nur von Mitgliedern des Projektes eingesehen werden.",
         ifApproved: "Wenn von den Moderatoren zugelassen:",
         visibleInSearch: "Sichtbar in der Suche",
         visibleOnProfile: "Sichtbar auf deinem Profil",
@@ -488,11 +486,11 @@ export default {
         visibleToMembersOnly: "Nur Mitglieder werden das Projekt sehen können",
         listed: "Gelistet",
         private: "Privat",
-        unlisted: "Ungelistet",
+        unlisted: "Nicht gelistet",
         archived: "Archiviert",
         deleteProject: "Projekt löschen",
         deleteProjectDesc: (site: string) =>
-            `Entfernt sein Projekt von ${site}s Servern und aus der Suche. Du löschst dein Projekt damit entgültig, sei also extra-vosichtig!`,
+            `Entfernt sein Projekt von ${site}s Servern und aus der Suche. Du löschst dein Projekt damit entgültig, sei also extra vosichtig!`,
         sureToDeleteProject: "Bist du sicher, dass du dieses Projekt löschen willst?",
         deleteProjectDesc2:
             "Wenn du fortfährst, werden alle Versionen und jegliche zusammenhängende Information von unseren Server entfernt. Das kann die Funktion anderer Projekte stören oder sie kaputt machen, sei also vorsichtig.",
@@ -513,7 +511,7 @@ export default {
         memberUpdated: "Mitglied erfolgreich aktualisiert",
         pending: "Ausstehend",
         role: "Rolle",
-        roleDesc: "Der Titel der Rolle die dieses Mitglied für dieses Team spielt.",
+        roleDesc: "Der Titel der Rolle die dieses Mitglied für das Team spielt.",
         permissions: "Berechtigungen",
         perms: {
             upload_version: "Version hochladen",
@@ -532,7 +530,7 @@ export default {
         transferOwnership: "Besitz übertragen",
         overrideValues: "Werte überschreiben",
         overrideValuesDesc:
-            "Standardwerte der Organisation überschreiben und Berechtigungen und Rollen für den Nutzer für dieses Projekt festlegen.",
+            "Standardwerte der Organisation überschreiben und damit Berechtigungen und Rollen für den Nutzer für dieses Projekt festlegen",
         projectNotManagedByOrg:
             "Dieses Projekt wird nicht von einer Organisation verwaltet. Wenn du einer Organisation angehörst, kannst du die Verwaltungsrechte an diese übertragen.",
         transferManagementToOrg: "Verwaltungsrechte übertragen",
@@ -542,7 +540,7 @@ export default {
         removeFromOrg: "Aus Organisation entfernen",
         memberRemoved: "Mitglied erfolgreich entfernt",
         sureToRemoveMember: (memberName: string) => `Möchtest du ${memberName} wirklich aus diesem Team entfernen?`,
-        ownershipTransfered: "Besitz erfolgreich übertragen",
+        ownershipTransfered: "Besitz erfolgreich übertragen.",
         sureToTransferOwnership: (memberName: string) => `Möchtest du wirklich ${memberName} zum Besitzer machen?`,
     },
 
@@ -573,8 +571,7 @@ export default {
     },
 
     user: {
-        // ? New string
-        // admin: "Admin",
+        admin: "Admin",
         moderator: "Moderator",
         doesntHaveProjects: (user: string) => `${user} hat noch keine Projekte.`,
         isntPartOfAnyOrgs: (user: string) => `${user} ist nicht Mitglied einer Organization.`,
@@ -593,7 +590,7 @@ export default {
         socials: "Sociale Medien",
         about: "Über Uns",
         changeTheme: "Theme wechseln",
-        siteOfferedIn: (site: string) => `${site} angeboten in:`,
+        siteOfferedIn: (site: string) => `${site} wird angeboten in:`,
     },
 
     legal: {
@@ -623,7 +620,7 @@ export default {
         },
         submitted: (when: string) => `${Capitalize(when)} abgeschickt`, // eg: Submitted 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
         viewProject: "Projekt anzeigen",
-        awaitingApproval: "Project ist in der Warteschlange zur Prüfung",
+        awaitingApproval: "Projekt ist in der Prüfungs-Warteschlange",
         draft: "Entwurf",
         approve: "Zulassen",
         reject: "Ablehnen",
@@ -664,12 +661,12 @@ export default {
     },
 
     error: {
-        sthWentWrong: "Ups! Etwas ist schiefgelaufen",
+        sthWentWrong: "Ups! Etwas ist schiefgelaufen.",
         errorDesc:
             "Sieht aus als wäre etwas kaputt. Während wir versuchen, das Problem zu lösen, kannst du versuchen, die Seite neu zu laden.",
         refresh: "Neu laden",
         pageNotFound: "404 | Seite nicht gefunden.",
-        pageNotFoundDesc: "Sorry, wir konnten die Seite, nach der du gesucht hast, nicht finden.",
+        pageNotFoundDesc: "Sorry, aber wir konnten die Seite nach der du gesucht hast nicht finden.",
         projectNotFound: "Projekt nicht gefunden",
         projectNotFoundDesc: (type: string, slug: string) =>
             `${Capitalize(indefiniteArticleNominative[genderOf[type] || ("a" as Gender)])} ${type} mit der ID "${slug}" existiert nicht.`,
@@ -685,8 +682,8 @@ export default {
         strikethrough: "Durchgestrichen",
         code: "Code",
         spoiler: "Spoiler",
-        bulletedList: "Bulleted list",
-        numberedList: "Numbered list",
+        bulletedList: "Stichpunkte-Liste",
+        numberedList: "Numerierte Liste",
         quote: "Zitat",
         insertLink: "Link einfügen",
         label: "Label",
