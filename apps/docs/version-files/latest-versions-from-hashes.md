@@ -41,7 +41,12 @@ _Returns a map from input hash to the latest version of the project the version 
                 "sha512_hash": "f33bcc6d09ffc253112bb1c74ef328c920612785bfc9edb862ec533ffe7c4968bc3be11cc9af5d6d70ca15bd06b642896eed3ed8acbefe5fd48043f6c4d974ec"
             }
         ],
-        "authorId": "ah2LyusAsuzzobzcRe",
+        "author": {
+            "id": "ah2LyusAsuzzobzcRe",
+            "userName": "Shfloop",
+            "avatar": "https://cdn.crmm.tech/cdn/data/user/ah2LyusAsuzzobzcRe/repqJiI8XfwnHGnMSa_128.jpeg",
+            "role": ""
+        },
         "dependencies": [
             {
                 "id": "nftsPiuIKeOyO_c3uK",
@@ -50,7 +55,8 @@ _Returns a map from input hash to the latest version of the project the version 
                 "dependencyType": "required"
             }
         ]
-    }
+    },
+    ...
 }
 ```
 
