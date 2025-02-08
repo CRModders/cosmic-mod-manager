@@ -279,7 +279,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
 
     const VersionFilesDataMap = await getFilesFromId(versionFileIds);
     // Input has to latest version data map
-    const LatestProjectVersionMap: Record<string, ProjectUpdateVersionData> = {};
+    const LatestProjectVersionMap: Record<string, ProjectVersionData> = {};
 
     for (const project of Projects_Filtered) {
         const version = project.versions[0];
@@ -323,22 +323,23 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
             loaders: version.loaders,
             primaryFile: files.find((f) => f.isPrimary) as VersionFile,
             files: files,
-            authorId: version.authorId,
+            author: {
+                id: version.author.id,
+                userName: version.author.userName,
+                avatar: userIconUrl(version.author.id, version.author.avatar),
+                role: "",
+            },
             dependencies: version.dependencies.map((dependency) => ({
                 id: dependency.id,
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
             })),
-        } satisfies ProjectUpdateVersionData;
+        } satisfies ProjectVersionData;
     }
 
     return {
         data: LatestProjectVersionMap,
         status: HTTP_STATUS.OK,
     };
-}
-
-interface ProjectUpdateVersionData extends Omit<ProjectVersionData, "author"> {
-    authorId: string;
 }
