@@ -37,7 +37,19 @@ export default defineConfig({
             },
             {
                 text: "Version",
-                items: [{ text: "Upload a version", link: "/version/upload" }],
+                items: [
+                    { text: "Get project versions", link: "/version/get-project-versions" },
+                    { text: "Upload a version", link: "/version/upload" },
+                ],
+            },
+            {
+                text: "Version files",
+                items: [
+                    { text: "Get version from hash", link: "/version-files/version-from-hash" },
+                    { text: "Get latest version from hash", link: "/version-files/latest-version-from-hash" },
+                    { text: "Get versions from hashes", link: "/version-files/versions-from-hashes" },
+                    { text: "Get latest versions from hashes", link: "/version-files/latest-versions-from-hashes" },
+                ],
             },
 
             { text: "CONTRIBUTING.md", link: "/contributing" },

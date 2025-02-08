@@ -47,6 +47,16 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
     });
     if (!files.length) return notFoundResponseData("No versions found from the provided hashes!");
 
+    // A map of file ids to their respective input hash
+    const FileIdToInputHash_Map = new Map<string, string>();
+    for (const file of files) {
+        const matchingHash = hashList.find((h) => h === file.sha1_hash || h === file.sha512_hash);
+
+        if (matchingHash) {
+            FileIdToInputHash_Map.set(file.id, matchingHash);
+        }
+    }
+
     const versionFiles = await prisma.versionFile.findMany({
         where: {
             fileId: {
@@ -65,15 +75,20 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
     });
     if (!versionFiles.length) return notFoundResponseData("No versions found from the provided hashes!");
 
+    // A map of project ids to their respective input hash
+    const ProjectIdToInputHash_Map = new Map<string, string>();
     const fileIds = [];
-    for (const item of versionFiles) {
-        for (const file of item.version.files) {
+    for (const ver_file of versionFiles) {
+        for (const file of ver_file.version.files) {
             fileIds.push(file.fileId);
         }
+
+        const relatedInputHash = FileIdToInputHash_Map.get(ver_file.fileId);
+        if (relatedInputHash) ProjectIdToInputHash_Map.set(ver_file.version.projectId, relatedInputHash);
     }
 
     const filesDataMap = await getFilesFromId(fileIds);
-    const versionDataList: ProjectVersionData[] = [];
+    const ProjectVersions_Map: Record<string, ProjectVersionData> = {};
 
     for (const item of versionFiles) {
         const version = item.version;
@@ -87,7 +102,7 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
                 id: versionFile.id,
                 isPrimary: versionFile.isPrimary,
                 name: fileData.name,
-                url: versionFileUrl(version.projectId, version.id, fileData.name),
+                url: versionFileUrl(version.projectId, version.id, fileData.name) || "",
                 size: fileData.size,
                 type: fileData.type,
                 sha1_hash: fileData.sha1_hash,
@@ -95,7 +110,13 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
             });
         }
 
-        versionDataList.push({
+        let relatedInputHash = ProjectIdToInputHash_Map.get(version.projectId);
+        if (!relatedInputHash) {
+            if (algorithm === HashAlgorithms.SHA1) relatedInputHash = files[0].sha1_hash || "";
+            else relatedInputHash = files[0].sha512_hash || "";
+        }
+
+        ProjectVersions_Map[relatedInputHash] = {
             id: version.id,
             projectId: version.projectId,
             title: version.title,
@@ -122,11 +143,11 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
             })),
-        } satisfies ProjectVersionData);
+        } satisfies ProjectVersionData;
     }
 
     return {
-        data: versionDataList,
+        data: ProjectVersions_Map,
         status: HTTP_STATUS.OK,
     };
 }
@@ -176,12 +197,12 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
     if (!files.length) return notFoundResponseData("No versions found from the provided hashes!");
 
     // A map of file ids to their respective input hash
-    const FileIdToInputHashMap = new Map<string, string>();
+    const FileIdToInputHash_Map = new Map<string, string>();
     for (const file of files) {
         const matchingHash = hashList.find((h) => h === file.sha1_hash || h === file.sha512_hash);
 
         if (matchingHash) {
-            FileIdToInputHashMap.set(file.id, matchingHash);
+            FileIdToInputHash_Map.set(file.id, matchingHash);
         }
     }
 
@@ -207,7 +228,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
     for (const item of versionFiles) {
         projectIds.push(item.version.projectId);
 
-        const relatedInputHash = FileIdToInputHashMap.get(item.fileId);
+        const relatedInputHash = FileIdToInputHash_Map.get(item.fileId);
         if (relatedInputHash) ProjectIdToInputHashMap.set(item.version.projectId, relatedInputHash);
     }
 
@@ -259,6 +280,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
     const VersionFilesDataMap = await getFilesFromId(versionFileIds);
     // Input has to latest version data map
     const LatestProjectVersionMap: Record<string, ProjectUpdateVersionData> = {};
+
     for (const project of Projects_Filtered) {
         const version = project.versions[0];
         if (!version?.id) continue;
@@ -272,7 +294,7 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
                 id: versionFile.id,
                 isPrimary: versionFile.isPrimary,
                 name: fileData.name,
-                url: versionFileUrl(version.projectId, version.id, fileData.name),
+                url: versionFileUrl(version.projectId, version.id, fileData.name) || "",
                 size: fileData.size,
                 type: fileData.type,
                 sha1_hash: fileData.sha1_hash,
