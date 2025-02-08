@@ -3,7 +3,6 @@ import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { reactRouterHonoServer } from "./../../packages/react-router-hono-server/src/dev";
 import { formatLocaleCode } from "./app/locales";
 import SupportedLocales, { DefaultLocale } from "./app/locales/meta";
 import { ASSETS_URL } from "./app/utils/server-config";
@@ -68,5 +67,5 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
-    plugins: [reactRouterHonoServer(), reactRouter(), tsconfigPaths()],
+    plugins: [reactRouter(), tsconfigPaths()],
 });

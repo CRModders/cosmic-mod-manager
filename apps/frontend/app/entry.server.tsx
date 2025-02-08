@@ -13,65 +13,11 @@ import { useUrlLocale } from "./utils/urls";
 const ABORT_DELAY = 5000;
 
 export default function handleRequest(request: Request, responseStatusCode: number, responseHeaders: Headers, routerContext: EntryContext) {
-    if (import.meta.env.DEV) {
-        return HandleReq_Dev(request, responseStatusCode, responseHeaders, routerContext);
-    } else if (import.meta.env.PROD) {
-        return HandleReq_Prod(request, responseStatusCode, responseHeaders, routerContext);
-    }
-}
-
-function HandleReq_Prod(request: Request, responseStatusCode: number, responseHeaders: Headers, routerContext: EntryContext) {
-    const AbortSignal = new AbortController();
-
-    const response = new Promise(async (resolve) => {
+    return new Promise((resolve, reject) => {
         let shellRendered = false;
         const userAgent = request.headers.get("user-agent");
 
-        const localeCode = useUrlLocale(true, new URL(request.url).pathname);
-        const initLocaleModule = await getLocale(localeCode);
-        const initLocaleMetadata = GetLocaleMetadata(localeCode);
-
-        const stream = await ReactDomServer.renderToReadableStream(
-            <LocaleProvider initLocale={initLocaleModule} initMetadata={initLocaleMetadata}>
-                <ServerRouter context={routerContext} url={request.url} />
-            </LocaleProvider>,
-            {
-                onError(error: unknown) {
-                    responseStatusCode = 500;
-                    if (shellRendered) {
-                        console.error(error);
-                    }
-                },
-                signal: AbortSignal.signal,
-            },
-        );
-        shellRendered = true;
-
-        if ((userAgent && isbot(userAgent)) || routerContext.isSpaMode) await stream.allReady;
-
-        responseHeaders.set("Content-Type", "text/html");
-        resolve(
-            new Response(stream, {
-                headers: responseHeaders,
-                status: responseStatusCode,
-            }),
-        );
-    });
-
-    // Abort the request after a delay to prevent hanging requests
-    setTimeout(() => {
-        AbortSignal.abort();
-    }, ABORT_DELAY);
-
-    return response;
-}
-
-function HandleReq_Dev(request: Request, responseStatusCode: number, responseHeaders: Headers, routerContext: EntryContext) {
-    return new Promise((resolve, reject) => {
-        let shellRendered = false;
-        let userAgent = request.headers.get("user-agent");
-
-        let readyOption: keyof RenderToPipeableStreamOptions =
+        const readyOption: keyof RenderToPipeableStreamOptions =
             (userAgent && isbot(userAgent)) || routerContext.isSpaMode ? "onAllReady" : "onShellReady";
 
         const localeCode = useUrlLocale(true, new URL(request.url).pathname);
