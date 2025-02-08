@@ -1,7 +1,7 @@
 # Get latest version from hash
 _SHA1 and SHA512 hashes are supported_
 
-POST `/api/version-files/update`
+POST `/api/version-files/update` \
 _Returns a map from input hash to the latest version of the project the version of the provided hash belongs to_
 
 ```json
