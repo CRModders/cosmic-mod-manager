@@ -44,6 +44,7 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
         console.log(`${green}${pathname} ${magenta}${Date.now() - startTime}ms ${gray}| ${cyan}${clientIp}${reset}`);
         return res;
     } catch (error) {
+        console.error("Server fetch error\n", error);
         return new Response(null, { status: 500 });
     }
 }
@@ -51,7 +52,8 @@ export async function serverFetch(clientReq: Request, pathname: string, init?: R
 export async function resJson<T>(res: Response): Promise<T | null> {
     try {
         return (await res.json()) as T;
-    } catch {
+    } catch (err) {
+        console.error("Failed to parse response json\n", err);
         return null;
     }
 }
