@@ -412,9 +412,9 @@ export default {
         wikiPageDesc: "A page containing information, documentation, and help for the project.",
         discordInvite: "Discord invite",
         discordInviteDesc: "An invitation link to your Discord server.",
-        licenseDesc1: (projectType: string) =>
+        licenseDesc: (projectType: string) =>
             `It is very important to choose a proper license for your ${projectType}. You may choose one from our list or provide a custom license. You may also provide a custom URL to your chosen license; otherwise, the license text will be displayed.`,
-        licenseDesc2:
+        customLicenseDesc:
             "Enter a valid [SPDX license identifier](https://spdx.org/licenses) in the marked area. If your license does not have a SPDX identifier (for example, if you created the license yourself or if the license is Cosmic Reach specific), simply check the box and enter the name of the license instead.",
         selectLicense: "Select license",
         custom: "Custom",

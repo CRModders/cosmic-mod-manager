@@ -447,9 +447,9 @@ export default {
         wikiPageDesc: "Eine Seite die Informationen, Dokumentation und Hilfe zu deinem Projekt enthält.",
         discordInvite: "Discord-Einladung",
         discordInviteDesc: "Ein Einladungslink zu deinem Discord-Server.",
-        licenseDesc1: (projectType: string) =>
+        licenseDesc: (projectType: string) =>
             `Es ist sehr wichtig, die richtige Lizenz für ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} zu wählen. Du kannst eine von unserer Liste wählen, oder eine eigene Lizenz festlegen. Du kannst auch eine URL zu deiner gewählten Lizenz festlegen; andernfalls wird der Text der Lizenz angezeigt.`,
-        licenseDesc2:
+        customLicenseDesc:
             "Gib einen gültigen [SPDX Lizenz-Identifikator](https://spdx.org/licenses) in den markierten Bereich ein. Wenn deine Lizenz keinen SPDX-Identifikator hat (zum Beispiel, wenn du die Lizenz selber erstellt hast, oder, wenn sie sich speziell auf Cosmic Reach bezieht), setze einfach einen Haken in der Box und gib stattdessen den Namen der Lizenz ein.",
         selectLicense: "Lizenz wählen",
         custom: "Eigene",

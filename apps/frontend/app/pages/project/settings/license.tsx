@@ -89,12 +89,12 @@ export default function LicenseSettingsPage() {
                         <MarkdownRenderBox
                             divElem
                             text={`
-${t.projectSettings.licenseDesc1(projectType)} \n
-${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
+${t.projectSettings.licenseDesc(projectType)} \n
+${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
 `}
                         />
 
-                        <div className="w-full md:w-[48ch] min-w-[32ch] flex flex-col items-start justify-start">
+                        <div className="w-full md:w-[52ch] min-w-[32ch] flex flex-col items-start justify-start">
                             <FormField
                                 control={form.control}
                                 name="id"
@@ -149,7 +149,7 @@ ${isCustomLicense ? t.projectSettings.licenseDesc2 : ""}
                                             }
                                         }}
                                     >
-                                        <span className="sm:text-nowrap">{t.projectSettings.doesntHaveSpdxId}</span>
+                                        <span>{t.projectSettings.doesntHaveSpdxId}</span>
                                     </LabelledCheckbox>
                                     {doesNotHaveASpdxId && (
                                         <FormField

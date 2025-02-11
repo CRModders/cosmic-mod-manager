@@ -397,9 +397,9 @@ export default {
         wikiPageDesc: "Una página que contiene información, documentación y ayuda para el proyecto.",
         discordInvite: "Invitación a Discord",
         discordInviteDesc: "Un enlace de invitación a tu servidor de Discord.",
-        licenseDesc1: (projectType: string) =>
+        licenseDesc: (projectType: string) =>
             `Es muy importante elegir una licencia adecuada para tu ${projectType}. Puedes elegir una de nuestra lista o proporcionar una licencia personalizada. También puedes proporcionar una URL personalizada para tu licencia elegida; de lo contrario, se mostrará el texto de la licencia.`,
-        licenseDesc2:
+        customLicenseDesc:
             "Ingresa un [identificador de licencia SPDX](https://spdx.org/licenses) válido en el lugar indicado. Si tu licencia no tiene un identificador SPDX (por ejemplo, si creaste la licencia tú mismo o es específica de Cosmic Reach), simplemente marca la casilla e ingresa el nombre de la licencia.",
         selectLicense: "Seleccionar licencia",
         custom: "Personalizada",
