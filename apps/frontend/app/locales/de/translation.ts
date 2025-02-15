@@ -362,6 +362,8 @@ export default {
             selectEnv: "Wähle unterstützte Umgebungen",
             selectEnvDesc: (projectType: string) =>
                 `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
+            // ? New string
+            // requiredStepsDesc: "All marked with an asterisk(*) are required",
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",

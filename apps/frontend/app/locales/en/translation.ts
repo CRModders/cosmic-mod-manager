@@ -336,6 +336,7 @@ export default {
             selectLicenseDesc: (projectType: string) => `Select the license your ${projectType} is distributed under.`,
             selectEnv: "Select supported environments",
             selectEnvDesc: (projectType: string) => `Select if the ${projectType} functions on the client-side and/or server-side.`,
+            requiredStepsDesc: "All marked with an asterisk(*) are required",
             submitForReview: "Submit for review",
             submitForReviewDesc:
                 "Your project is only viewable by members of the project. It must be reviewed by moderators in order to be published.",

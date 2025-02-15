@@ -327,6 +327,8 @@ export default {
             selectLicenseDesc: (projectType: string) => `Выберите лицензию, под которой вы распространяете ${projectType}.`,
             selectEnv: "Выберите поддерживаемые среды",
             selectEnvDesc: (projectType: string) => `Выберите среды, где применяется ваш ${projectType}.`,
+            // ? New string
+            // requiredStepsDesc: "All marked with an asterisk(*) are required",
             submitForReview: "Отправить на рассмотрение",
             submitForReviewDesc:
                 "Ваш проект виден только для участников. Он должен быть рассмотрен модераторами, чтобы стать доступным для всех.",

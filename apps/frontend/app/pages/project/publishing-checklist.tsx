@@ -272,7 +272,7 @@ export function PublishingChecklist() {
                                         <>
                                             {!readyToSubmit && (
                                                 <span className="text-muted-foreground leading-tight">
-                                                    All marked with an asterisk({RequiredIcon}) are required.
+                                                    {pubChecklist.requiredStepsDesc}
                                                 </span>
                                             )}
 
