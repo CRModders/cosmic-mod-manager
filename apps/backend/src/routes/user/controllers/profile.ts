@@ -71,6 +71,7 @@ export async function updateUserProfile(userSession: ContextUserData, profileDat
         },
     });
 
+    // Clear the session cache, unrelated to normal user profile cache
     await deleteUserDataCache(user.id);
     return { data: { success: true, message: "Profile updated successfully", profileData }, status: HTTP_STATUS.OK };
 }

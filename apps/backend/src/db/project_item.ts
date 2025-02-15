@@ -360,7 +360,7 @@ export async function CreateProject<T extends Prisma.ProjectCreateArgs>(args: Pr
 // ? Update and delete project functions
 export async function UpdateProject<T extends Prisma.ProjectUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectUpdateArgs>) {
     const project = await prisma.project.update(args);
-    if (project?.id) await Delete_ProjectCache_All(project.id, project.slug);
+    if (project?.id) await Delete_ProjectCache_All(project.id);
     if (isProjectIndexable(project.visibility, project.status)) {
         const shouldUpdateIndex =
             IsSome(args.data.gameVersions) ||

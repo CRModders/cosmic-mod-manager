@@ -181,7 +181,7 @@ export function CreateUser<T extends Prisma.UserCreateArgs>(args: Prisma.SelectS
 
 export async function UpdateUser<T extends Prisma.UserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>) {
     const user = await prisma.user.update(args);
-    if (user) await Delete_UserCache(user.id, user.userName);
+    if (user) await Delete_UserCache(user.id);
     return user;
 }
 

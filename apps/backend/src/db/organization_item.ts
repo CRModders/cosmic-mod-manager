@@ -146,7 +146,7 @@ export async function UpdateOrganization<T extends Prisma.OrganisationUpdateArgs
     args: Prisma.SelectSubset<T, Prisma.OrganisationUpdateArgs>,
 ) {
     const data = await prisma.organisation.update(args);
-    await Delete_OrganizationCache_All(data.id, data.slug);
+    await Delete_OrganizationCache_All(data.id);
     return data;
 }
 
