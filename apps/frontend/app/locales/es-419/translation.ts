@@ -212,7 +212,7 @@ export default {
         itemHeader: (project: string, author: string) => {
             return [
                 [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " by "],
+                [SearchItemHeader_Keys.BY, " por "],
                 [SearchItemHeader_Keys.AUTHOR_NAME, author],
             ];
         },
@@ -230,8 +230,7 @@ export default {
         organization: "Organización",
         project: "Proyecto",
         details: "Detalles",
-        // ? New string
-        // licensed: (license: string) => ["LICENSED", license, ""],
+        licensed: (license: string) => ["Con licencia", license, ""],
         updatedAt: (when: string) => `Actualizado ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Publicado ${when}`, // eg: Published 3 days ago
         gallery: "Galería",
@@ -311,8 +310,7 @@ export default {
             selectLicenseDesc: (projectType: string) => `Selecciona la licencia bajo la cual se distribuye tu ${projectType}.`,
             selectEnv: "Seleccionar entornos compatibles",
             selectEnvDesc: (projectType: string) => `Selecciona si el ${projectType} funciona en el lado del cliente o del servidor.`,
-            // ? New string
-            // requiredStepsDesc: "All marked with an asterisk(*) are required",
+            requiredStepsDesc: "Todo lo que está marcado con un asterisco (*) es obligatorio",
             submitForReview: "Enviar para revisión",
             submitForReviewDesc:
                 "Tu proyecto solo es visible para los miembros del proyecto. Debe ser revisado por moderadores para ser publicado.",
@@ -585,8 +583,7 @@ export default {
         username: "Nombre de usuario",
         password: "Contraseña",
         name: "Nombre",
-        // ? New string
-        // displayName: "Display name",
+        displayName: "Nombre visible",
         icon: "Ícono",
         details: "Detalles",
         description: "Descripción",
