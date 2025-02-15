@@ -68,6 +68,7 @@ import ModerationBanner from "./moderation-banner";
 import { PublishingChecklist } from "./publishing-checklist";
 import SecondaryNav from "./secondary-nav";
 import { ProjectSupprotedEnvironments } from "./supported-env";
+import { TextSpacer } from "@app/components/misc/text";
 
 export default function ProjectPageLayout() {
     const { t } = useTranslation();
@@ -115,6 +116,8 @@ export default function ProjectPageLayout() {
         if (OrgMembers.some((m) => m.userId === member.userId)) continue;
         ExclusiveProjectMembers.push(member);
     }
+
+    const licensed_str = t.project.licensed(projectLicenseData.id || projectLicenseData.name || "");
 
     return (
         <main
@@ -339,7 +342,7 @@ export default function ProjectPageLayout() {
                         <div className="flex items-center justify-start gap-2 text-muted-foreground">
                             <BookTextIcon aria-hidden className="w-btn-icon h-btn-icon shrink-0" />
                             <p>
-                                LICENSED{" "}
+                                <TextSpacer text={licensed_str[0]} />
                                 {projectLicenseData.url ? (
                                     <a
                                         target="_blank"
@@ -348,13 +351,14 @@ export default function ProjectPageLayout() {
                                         className="font-bold link_blue hover:underline"
                                         title={projectLicenseData.url}
                                     >
-                                        {projectLicenseData.id || projectLicenseData.name}
+                                        {licensed_str[1]}
                                     </a>
                                 ) : (
                                     <span className="font-bold" title={projectLicenseData.text}>
-                                        {projectLicenseData.id || projectLicenseData.name}
+                                        {licensed_str[1]}
                                     </span>
                                 )}
+                                <TextSpacer text={licensed_str[2]} spacing="before" />
                             </p>
                         </div>
                     ) : null}

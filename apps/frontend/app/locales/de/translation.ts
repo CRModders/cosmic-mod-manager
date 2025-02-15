@@ -69,20 +69,20 @@ export default {
 
     count: {
         downloads: (count: number) => {
-            if (count === 1) return ["", count.toString(), "Download"];
-            return ["", count.toString(), "Downloads"];
+            if (count === 1) return ["", count, "Download"];
+            return ["", count, "Downloads"];
         },
         followers: (count: number) => {
-            if (count === 1) return ["", count.toString(), "Follower"];
-            return ["", count.toString(), "Followers"];
+            if (count === 1) return ["", count, "Follower"];
+            return ["", count, "Followers"];
         },
         projects: (count: number) => {
-            if (count === 1) return ["", count.toString(), "Projekt"];
-            return ["", count.toString(), "Projekte"];
+            if (count === 1) return ["", count, "Projekt"];
+            return ["", count, "Projekte"];
         },
         members: (count: number) => {
-            if (count === 1) return ["", count.toString(), "Mitglied"];
-            return ["", count.toString(), "Mitglieder"];
+            if (count === 1) return ["", count, "Mitglied"];
+            return ["", count, "Mitglieder"];
         },
     },
 
@@ -277,6 +277,8 @@ export default {
         organization: "Organisation",
         project: "Projekt",
         details: "Details",
+        // ? New string
+        // licensed: (license: string) => ["LICENSED", license, ""],
         updatedAt: (when: string) => `${Capitalize(when)} aktualisiert`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `${Capitalize(when)} veröffentlicht`, // eg: Published 3 days ago
         gallery: "Gallerie",

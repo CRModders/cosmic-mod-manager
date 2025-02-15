@@ -377,8 +377,8 @@ function getDefaultStrings() {
 
     return {
         count: {
-            downloads: (count: number) => ["", count.toString(), "downloads"],
-            followers: (count: number) => ["", count.toString(), "followers"],
+            downloads: (count: number) => ["", count, "downloads"] as const,
+            followers: (count: number) => ["", count, "followers"] as const,
         },
 
         project: {
@@ -398,7 +398,7 @@ function getDefaultStrings() {
                 itemHeader: (project: string, author: string) => {
                     return [
                         [SearchItemHeader_Keys.PROJECT_NAME, project],
-                        [SearchItemHeader_Keys.BY, "by"],
+                        [SearchItemHeader_Keys.BY, " by "],
                         [SearchItemHeader_Keys.AUTHOR_NAME, author],
                     ];
                 },

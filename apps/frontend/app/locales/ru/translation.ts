@@ -4,16 +4,11 @@ import tags from "./tags";
 // import { Rules } from "./legal";
 
 function Pluralize(num: number, str_1: string, str_234: string, str_other: string) {
-    if (num === 1) {
-        return str_1;
-    }
-
+    if (num === 1) return str_1;
     const lastDigit = num % 10;
 
     if (lastDigit === 1) {
-        if (Math.floor((num % 100) / 10) === 1) {
-            return str_other;
-        }
+        if (Math.floor((num % 100) / 10) === 1) return str_other;
         return str_1;
     }
 
@@ -44,19 +39,19 @@ export default {
     count: {
         downloads: (count: number) => {
             const word = Pluralize(count, "загрузка", "загрузки", "загрузок");
-            return ["", count.toString(), word];
+            return ["", count, word];
         },
         followers: (count: number) => {
             const word = Pluralize(count, "фолловер", "фолловера", "фолловеров");
-            return ["", count.toString(), word];
+            return ["", count, word];
         },
         projects: (count: number) => {
             const word = Pluralize(count, "проект", "проекта", "проектов");
-            return ["", count.toString(), word];
+            return ["", count, word];
         },
         members: (count: number) => {
             const word = Pluralize(count, "участник", "участника", "участников");
-            return ["", count.toString(), word];
+            return ["", count, word];
         },
     },
 
@@ -252,6 +247,8 @@ export default {
         organization: "Организация",
         project: "Проект",
         details: "Подробнее",
+        // ? New string
+        // licensed: (license: string) => ["LICENSED", license, ""],
         updatedAt: (when: string) => `Обновлено ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Опубликовано ${when}`, // eg: Published 3 days ago
         gallery: "Галерея",

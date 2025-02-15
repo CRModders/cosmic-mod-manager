@@ -14,9 +14,12 @@ export interface LocaleMetaData {
     };
 }
 
+type TranslationReturnType = string | number;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type TranslationFunction = (...args: any[]) => TranslationReturnType | TranslationReturnType[] | TranslationReturnType[][];
+
 export interface Translation {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    [key: string]: string | ((...args: any[]) => string | string[] | Translation | string[][]) | Translation;
+    [key: string]: string | TranslationFunction | Translation;
 }
 
 export type Locale = typeof en;

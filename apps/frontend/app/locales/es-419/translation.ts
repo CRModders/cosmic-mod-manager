@@ -24,20 +24,20 @@ export default {
     // it's here just for readability
     count: {
         downloads: (count: number) => {
-            if (count === 1) return ["", count.toString(), "descarga"];
-            return ["", count.toString(), "descargas"];
+            if (count === 1) return ["", count, "descarga"];
+            return ["", count, "descargas"];
         },
         followers: (count: number) => {
-            if (count === 1) return ["", count.toString(), "seguidor"];
-            return ["", count.toString(), "seguidores"];
+            if (count === 1) return ["", count, "seguidor"];
+            return ["", count, "seguidores"];
         },
         projects: (count: number) => {
-            if (count === 1) return ["", count.toString(), "proyecto"];
-            return ["", count.toString(), "proyectos"];
+            if (count === 1) return ["", count, "proyecto"];
+            return ["", count, "proyectos"];
         },
         members: (count: number) => {
-            if (count === 1) return ["", count.toString(), "miembro"];
-            return ["", count.toString(), "miembros"];
+            if (count === 1) return ["", count, "miembro"];
+            return ["", count, "miembros"];
         },
     },
 
@@ -230,6 +230,8 @@ export default {
         organization: "Organización",
         project: "Proyecto",
         details: "Detalles",
+        // ? New string
+        // licensed: (license: string) => ["LICENSED", license, ""],
         updatedAt: (when: string) => `Actualizado ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Publicado ${when}`, // eg: Published 3 days ago
         gallery: "Galería",

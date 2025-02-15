@@ -2,8 +2,13 @@ import type { Translation } from "~/locales/types";
 import { SearchItemHeader_Keys } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
+import type { FixedStringArray } from "@app/utils/types/helpers";
 
-export type CountTranslation = [string, string, string];
+export type CountTranslation = [string, number | string, string];
+
+function Pluralize(count: number, singular: string, plural: string) {
+    return count === 1 ? singular : plural;
+}
 
 export default {
     common: {
@@ -24,22 +29,24 @@ export default {
 
     // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html
     // it's here just for readability
+    // The returned format should be [prefix, count, suffix]
+    // If there's no suffix or no prefix, just put an empty string there
     count: {
         downloads: (count: number): CountTranslation => {
-            if (count === 1) return ["", count.toString(), "download"];
-            return ["", count.toString(), "downloads"];
+            const downloads = Pluralize(count, "download", "downloads");
+            return ["", count, downloads];
         },
         followers: (count: number): CountTranslation => {
-            if (count === 1) return ["", count.toString(), "follower"];
-            return ["", count.toString(), "followers"];
+            const followers = Pluralize(count, "follower", "followers");
+            return ["", count, followers];
         },
         projects: (count: number): CountTranslation => {
-            if (count === 1) return ["", count.toString(), "project"];
-            return ["", count.toString(), "projects"];
+            const projects = Pluralize(count, "project", "projects");
+            return ["", count, projects];
         },
         members: (count: number): CountTranslation => {
-            if (count === 1) return ["", count.toString(), "member"];
-            return ["", count.toString(), "members"];
+            const members = Pluralize(count, "member", "members");
+            return ["", count, members];
         },
     },
 
@@ -63,7 +70,7 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string): [string, string, string] => ["The place for Cosmic Reach ", projectType, ""],
+        title: (projectType: string): FixedStringArray<3> => ["The place for Cosmic Reach ", projectType, ""],
         desc: "The best place for your Cosmic Reach mods. Discover, play, and create content, all in one spot.",
         exploreMods: "Explore mods",
     },
@@ -151,7 +158,10 @@ export default {
         viewNotifHistory: "View notification history",
         noUnreadNotifs: "You don't have any unread notifications.",
         totalDownloads: "Total downloads",
-        fromProjects: (count: number) => `from ${count} projects`,
+        fromProjects: (count: number) => {
+            const projects = Pluralize(count, "project", "projects");
+            return `from ${count} ${projects}`;
+        },
         totalFollowers: "Total followers",
         viewHistory: "View history",
         markAllRead: "Mark all as read",
@@ -246,6 +256,7 @@ export default {
         organization: "Organization",
         project: "Project",
         details: "Details",
+        licensed: (license: string): FixedStringArray<3> => ["LICENSED", license, ""],
         updatedAt: (when: string) => `Updated ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Published ${when}`, // eg: Published 3 days ago
         gallery: "Gallery",
