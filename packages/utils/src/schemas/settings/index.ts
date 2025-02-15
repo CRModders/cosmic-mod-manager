@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+    MAX_DISPLAY_NAME_LENGTH,
     MAX_EMAIL_LENGTH,
     MAX_PASSWORD_LENGTH,
     MAX_USERNAME_LENGTH,
@@ -23,6 +24,7 @@ const userNameSchema = z
     );
 
 export const profileUpdateFormSchema = z.object({
+    name: z.string().max(MAX_DISPLAY_NAME_LENGTH).optional(),
     avatar: iconFieldSchema.or(z.string()).optional(),
     userName: userNameSchema,
     bio: z.string().max(MAX_USER_BIO_LENGTH).optional(),

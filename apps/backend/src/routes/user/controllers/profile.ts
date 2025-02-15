@@ -65,6 +65,7 @@ export async function updateUserProfile(userSession: ContextUserData, profileDat
             id: user.id,
         },
         data: {
+            name: profileData.name,
             avatar: avatarFileId,
             userName: profileData.userName,
             bio: profileData.bio,

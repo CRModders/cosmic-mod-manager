@@ -7,10 +7,10 @@ import { GetData_FromCache, SetCache, USER_DATA_CACHE_EXPIRY_seconds } from "./_
 
 const USER_DATA_SELECT_FIELDS = {
     id: true,
-    name: true,
     email: true,
     avatar: true,
     userName: true,
+    name: true,
     dateJoined: true,
     emailVerified: true,
     role: true,

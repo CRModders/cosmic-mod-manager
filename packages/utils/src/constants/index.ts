@@ -34,7 +34,7 @@ export const MAX_USERNAME_LENGTH = 32;
 export const MAX_USER_BIO_LENGTH = 256;
 
 export const MIN_DISPLAY_NAME_LENGTH = 2;
-export const MAX_DISPLAY_NAME_LENGTH = 32;
+export const MAX_DISPLAY_NAME_LENGTH = 64;
 
 // Project
 export const MIN_PROJECT_NAME_LENGTH = 2;

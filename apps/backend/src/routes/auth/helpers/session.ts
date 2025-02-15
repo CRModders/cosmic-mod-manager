@@ -56,7 +56,7 @@ export async function createUserSession({ userId, providerName, ctx, isFirstSign
         // Send email alert if the user is signing in from a new location
         if (!similarSession?.id) {
             sendNewSigninAlertEmail({
-                fullName: user.name,
+                fullName: user.name || user.userName,
                 receiverEmail: user.email,
                 region: sessionMetadata.city || "",
                 country: sessionMetadata.country || "",

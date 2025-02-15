@@ -32,6 +32,7 @@ interface Props {
 
 function initForm(user: LoggedInUserData) {
     return {
+        name: user.name || "",
         userName: user.userName,
         avatar: user.avatar || "",
         bio: user.bio || "",
@@ -58,6 +59,7 @@ export function ProfileSettingsPage({ session }: Props) {
 
         try {
             const formData = new FormData();
+            formData.append("name", values.name || "");
             formData.append("userName", values.userName);
             formData.append("avatar", values.avatar || "");
             formData.append("bio", values.bio || "");
@@ -171,6 +173,26 @@ export function ProfileSettingsPage({ session }: Props) {
                                         <FormMessage />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="username-input" autoComplete="off" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-foreground font-bold" htmlFor="displayname-input">
+                                        {t.form.displayName}
+                                        <FormMessage />
+                                    </FormLabel>
+                                    <Input
+                                        {...field}
+                                        className="md:w-[32ch]"
+                                        id="displayname-input"
+                                        autoComplete="off"
+                                        placeholder={form.getValues().userName}
+                                    />
                                 </FormItem>
                             )}
                         />

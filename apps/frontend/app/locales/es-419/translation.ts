@@ -585,6 +585,8 @@ export default {
         username: "Nombre de usuario",
         password: "Contraseña",
         name: "Nombre",
+        // ? New string
+        // displayName: "Display name",
         icon: "Ícono",
         details: "Detalles",
         description: "Descripción",

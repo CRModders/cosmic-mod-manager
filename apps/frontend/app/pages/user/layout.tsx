@@ -151,7 +151,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             icon={imageUrl(userData.avatar)}
             iconClassName="rounded-full"
             fallbackIcon={fallbackUserIcon}
-            title={userData.userName}
+            title={userData.name || userData.userName}
             description={userData.bio || ""}
             titleBadge={
                 title ? (

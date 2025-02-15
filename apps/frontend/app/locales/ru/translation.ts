@@ -604,6 +604,8 @@ export default {
         username: "Имя пользователя",
         password: "Пароль",
         name: "Название",
+        // ? New string
+        // displayName: "Display name",
         icon: "Иконка",
         details: "Подробности",
         description: "Описание",

@@ -83,9 +83,9 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     const newUser = await CreateUser({
         data: {
             id: userId,
-            name: profileData?.name || "",
             email: profileData.email,
             userName: userName,
+            name: profileData?.name || "",
             emailVerified: profileData.emailVerified === true,
             role: GlobalUserRole.USER,
             newSignInAlerts: true,

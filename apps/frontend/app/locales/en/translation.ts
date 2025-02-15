@@ -607,6 +607,7 @@ export default {
         username: "Username",
         password: "Password",
         name: "Name",
+        displayName: "Display name",
         icon: "Icon",
         details: "Details",
         description: "Description",

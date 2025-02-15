@@ -89,6 +89,7 @@ async function user_patch(ctx: Context) {
         const formData = ctx.get(REQ_BODY_NAMESPACE);
         const obj = {
             avatar: formData.get("avatar"),
+            name: formData.get("name"),
             userName: formData.get("userName"),
             bio: formData.get("bio"),
         } satisfies z.infer<typeof profileUpdateFormSchema>;

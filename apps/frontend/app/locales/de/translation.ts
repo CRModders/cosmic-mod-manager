@@ -638,6 +638,8 @@ export default {
         email: "Email",
         username: "Nutzername",
         password: "Passwort",
+        // ? New string
+        // displayName: "Display name",
         name: "Name",
         icon: "Icon",
         details: "Details",
