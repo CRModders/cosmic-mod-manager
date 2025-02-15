@@ -1,4 +1,4 @@
-import { MODERATOR_ROLES } from "@app/utils/config/roles";
+import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import { type Context, Hono } from "hono";
 import { AuthenticationMiddleware } from "~/middleware/auth";
 import { addInvalidAuthAttempt, invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";

@@ -13,7 +13,7 @@ import {
 } from "@app/components/ui/dialog";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { hasRootAccess } from "@app/utils/config/roles";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesMemberHaveAccess } from "@app/utils/project";
 import { type LoggedInUserData, ProjectPermission } from "@app/utils/types";
 import type { Organisation, TeamMember } from "@app/utils/types/api";

@@ -1,4 +1,4 @@
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
 import { useProjectType } from "~/hooks/project";
 import { SearchResultsPage } from "~/pages/search/page";
 import Config from "~/utils/config";

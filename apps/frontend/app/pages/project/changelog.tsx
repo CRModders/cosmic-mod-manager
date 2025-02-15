@@ -9,7 +9,7 @@ import { MultiSelect } from "@app/components/ui/multi-select";
 import { releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
 import { TooltipProvider, TooltipTemplate } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
-import { getGameVersionsFromValues, isExperimentalGameVersion } from "@app/utils/config/game-versions";
+import { getGameVersionsFromValues, isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import { getLoaderFromString } from "@app/utils/convertors";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { VersionReleaseChannel } from "@app/utils/types";

@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { TeamMember } from "@app/utils/types/api";
 import type { MetaArgs } from "react-router";

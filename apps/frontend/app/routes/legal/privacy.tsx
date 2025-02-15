@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";

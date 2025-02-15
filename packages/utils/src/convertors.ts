@@ -1,7 +1,8 @@
 import type { BunFile } from "bun";
-import { loaders, projectTypes } from "~/config/project";
+import { loaders } from "~/constants/loaders";
 import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "~/types";
-import { getFileSignatures } from "./file-signature";
+import { getFileSignatures } from "~/file-signature";
+import { projectTypes } from "~/config/project";
 
 export function getUserRoleFromString(roleName: string) {
     switch (roleName) {

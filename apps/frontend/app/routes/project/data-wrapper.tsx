@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { getProjectTypeFromName } from "@app/utils/convertors";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData } from "@app/utils/types/api";

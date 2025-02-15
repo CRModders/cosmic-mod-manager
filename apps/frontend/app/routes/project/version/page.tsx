@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { FormatDate_ToLocaleString } from "@app/utils/date";
 import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";

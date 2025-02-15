@@ -1,4 +1,4 @@
-import { categories } from "@app/utils/config/project";
+import { categories } from "@app/utils/constants/categories";
 import { getLoadersFromNames } from "@app/utils/convertors";
 import { getProjectCategoriesDataFromNames } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
@@ -247,11 +247,11 @@ function BaseView(props: SearchListItemProps) {
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon aria-hidden className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
-                            {!galleryViewType && ProjectDownloads[0]?.length > 0 && (
+                            {!galleryViewType && ProjectDownloads[0]?.toString().length > 0 && (
                                 <span className="hidden sm:inline lowercase">{ProjectDownloads[0]} </span>
                             )}
                             <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.downloads)}</strong>
-                            {!galleryViewType && ProjectDownloads[2]?.length > 0 && (
+                            {!galleryViewType && ProjectDownloads[2]?.toString().length > 0 && (
                                 <span className="hidden sm:inline lowercase"> {ProjectDownloads[2]}</span>
                             )}
                         </p>
@@ -260,11 +260,11 @@ function BaseView(props: SearchListItemProps) {
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <HeartIcon aria-hidden className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
-                            {!galleryViewType && ProjectFollowers[0]?.length > 0 && (
+                            {!galleryViewType && ProjectFollowers[0]?.toString().length > 0 && (
                                 <span className="hidden sm:inline lowercase">{ProjectFollowers[0]} </span>
                             )}
                             <strong className="text-lg-plus font-extrabold">{props.NumberFormatter(props.followers)}</strong>
-                            {!galleryViewType && ProjectFollowers[2]?.length > 0 && (
+                            {!galleryViewType && ProjectFollowers[2]?.toString().length > 0 && (
                                 <span className="hidden sm:inline lowercase"> {ProjectFollowers[2]}</span>
                             )}
                         </p>
@@ -377,8 +377,8 @@ function getDefaultStrings() {
 
     return {
         count: {
-            downloads: (count: number) => ["", count, "downloads"] as const,
-            followers: (count: number) => ["", count, "followers"] as const,
+            downloads: (count: number) => ["", count, "downloads"],
+            followers: (count: number) => ["", count, "followers"],
         },
 
         project: {

@@ -1,4 +1,4 @@
-import { STRING_ID_LENGTH } from "@app/utils/config";
+import { STRING_ID_LENGTH } from "@app/utils/constants";
 import { nanoid } from "nanoid";
 
 export function generateRandomId(len = STRING_ID_LENGTH) {

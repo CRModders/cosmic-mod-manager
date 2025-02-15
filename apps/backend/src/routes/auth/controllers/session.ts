@@ -1,4 +1,4 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE } from "@app/utils/config";
+import { AUTHTOKEN_COOKIE_NAMESPACE } from "@app/utils/constants";
 import type { UserSessionStates } from "@app/utils/types";
 import type { SessionListData } from "@app/utils/types/api";
 import type { Context } from "hono";

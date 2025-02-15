@@ -17,7 +17,7 @@ import {
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
-import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@app/utils/config/game-versions";
+import { getGameVersionFromValue, getGameVersionsFromValues, isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData } from "@app/utils/types/api";

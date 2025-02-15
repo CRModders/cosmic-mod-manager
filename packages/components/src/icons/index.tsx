@@ -1,4 +1,3 @@
-import { SITE_NAME_LONG } from "@app/utils/config";
 import { ProjectPublishingStatus } from "@app/utils/types";
 import { Building2Icon, EyeOffIcon, FileCheckIcon, FileQuestionIcon, FileText, LoaderIcon, UserIcon, XIcon } from "lucide-react";
 import type React from "react";
@@ -61,9 +60,9 @@ export const BrandIcon: React.FC<IconSvgProps> = ({ size, width, height, strokeW
             xmlnsXlink="http://www.w3.org/1999/xlink"
             width={size || width || DefaultSvgSize}
             height={size || height || DefaultSvgSize}
+            aria-hidden="true"
             {...props}
         >
-            <title>{SITE_NAME_LONG}</title>
             <defs>
                 <linearGradient
                     id="b"

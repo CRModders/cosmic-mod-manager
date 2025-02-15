@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 
 export function newSignInAlertEmailTemplate({

@@ -7,7 +7,7 @@ import { Form, FormField } from "@app/components/ui/form";
 import { FormErrorMessage } from "@app/components/ui/form-message";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { MAX_FEATURED_PROJECT_TAGS } from "@app/utils/config/constants";
+import { MAX_FEATURED_PROJECT_TAGS } from "@app/utils/src/constants";
 import { getValidProjectCategories } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";

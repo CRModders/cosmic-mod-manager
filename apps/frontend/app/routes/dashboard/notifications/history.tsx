@@ -1,5 +1,5 @@
 import { SuspenseFallback } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { useLoaderData } from "react-router";
 import NotificationsHistoryPage from "~/pages/dashboard/notification/history";
 import Config from "~/utils/config";

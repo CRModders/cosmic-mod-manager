@@ -1,4 +1,4 @@
-import GAME_VERSIONS, { gameVersionsList as AllGameVersions, type GameVersion } from "~/config/game-versions";
+import GAME_VERSIONS, { gameVersionsList as AllGameVersions, type GameVersion } from "~/constants/game-versions";
 import { sortVersionsWithReference } from "~/project";
 import { GameVersionReleaseType } from "~/types";
 import type { ProjectDetailsData } from "~/types/api";

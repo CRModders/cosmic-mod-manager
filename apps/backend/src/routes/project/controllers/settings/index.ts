@@ -1,4 +1,4 @@
-import { ICON_WIDTH } from "@app/utils/config/constants";
+import { ICON_WIDTH } from "@app/utils/src/constants";
 import { GetProjectEnvironment } from "@app/utils/config/project";
 import { getFileType } from "@app/utils/convertors";
 import { doesMemberHaveAccess, getCurrMember } from "@app/utils/project";

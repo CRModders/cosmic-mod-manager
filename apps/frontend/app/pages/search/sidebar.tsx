@@ -3,7 +3,7 @@ import { Button } from "@app/components/ui/button";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { Input } from "@app/components/ui/input";
 import { cn } from "@app/components/utils";
-import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/config/game-versions";
+import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import {
     categoryFilterParamNamespace,
     environmentFilterParamNamespace,

@@ -1,6 +1,6 @@
-import { gameVersionsList } from "@app/utils/config/game-versions";
-import { type Loader, loaders } from "@app/utils/config/project";
-import { isModerator } from "@app/utils/config/roles";
+import { gameVersionsList } from "@app/utils/src/constants/game-versions";
+import { type Loader, loaders } from "@app/utils/constants/loaders";
+import { isModerator } from "@app/utils/src/constants/roles";
 import { getFileType } from "@app/utils/convertors";
 import { type PartialTeamMember, combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
 import { type GlobalUserRole, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";

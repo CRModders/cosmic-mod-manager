@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useOrgData } from "~/hooks/org";

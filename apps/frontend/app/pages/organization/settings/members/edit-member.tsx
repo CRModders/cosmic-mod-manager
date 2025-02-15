@@ -7,7 +7,7 @@ import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { cn } from "@app/components/utils";
 import { OrgPermissionsList, ProjectPermissionsList } from "@app/utils/config/project";
-import { hasRootAccess } from "@app/utils/config/roles";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesOrgMemberHaveAccess } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import { updateTeamMemberFormSchema } from "@app/utils/schemas/project/settings/members";

@@ -1,4 +1,4 @@
-import { ICON_WIDTH } from "@app/utils/config/constants";
+import { ICON_WIDTH } from "@app/utils/src/constants";
 import { getFileType } from "@app/utils/convertors";
 import type { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { formatUserName } from "@app/utils/string";

@@ -9,7 +9,7 @@ import {
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
 import { Prefetch } from "@app/components/ui/link";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { imageUrl } from "@app/utils/url";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet } from "react-router";

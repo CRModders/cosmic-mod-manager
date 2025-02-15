@@ -3,7 +3,7 @@ import { Button } from "@app/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";

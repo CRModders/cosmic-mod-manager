@@ -6,7 +6,7 @@ import {
     MAX_USER_BIO_LENGTH,
     MIN_EMAIL_LENGTH,
     MIN_PASSWORD_LENGTH,
-} from "~/config/constants";
+} from "~/constants";
 import { iconFieldSchema } from "~/schemas/project/settings/general";
 import { createURLSafeSlug } from "~/string";
 

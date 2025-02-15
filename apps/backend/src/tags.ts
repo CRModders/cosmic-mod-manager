@@ -1,5 +1,5 @@
-import GAME_VERSIONS from "@app/utils/config/game-versions";
-import SPDX_LICENSE_LIST, { FEATURED_LICENSE_OPTIONS } from "@app/utils/config/license-list";
+import GAME_VERSIONS from "@app/utils/src/constants/game-versions";
+import SPDX_LICENSE_LIST, { FEATURED_LICENSE_OPTIONS } from "@app/utils/src/constants/license-list";
 import { projectTypes } from "@app/utils/config/project";
 import { getAllLoaderCategories, getValidProjectCategories } from "@app/utils/project";
 import type { ProjectType, TagHeaderType } from "@app/utils/types";

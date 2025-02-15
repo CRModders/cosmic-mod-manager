@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/config/constants";
+import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/constants";
 import { validateProjectTypesCompatibility } from "~/project";
 import { createURLSafeSlug, isValidUrl } from "~/string";
 import { ProjectType, ProjectVisibility } from "~/types";

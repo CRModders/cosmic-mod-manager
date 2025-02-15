@@ -4,7 +4,7 @@ import { Prefetch } from "@app/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { DotSeparator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
 import { ArrowUpRightIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type LinkProps, useLocation } from "react-router";

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_PROJECT_GALLERY_IMAGE_SIZE } from "~/config/constants";
+import { MAX_PROJECT_GALLERY_IMAGE_SIZE } from "~/constants";
 import { getFileType } from "~/convertors";
 import { isImageFile } from "~/schemas/validation";
 

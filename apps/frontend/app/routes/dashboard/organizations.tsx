@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Organisation } from "@app/utils/types/api";
 import { useLoaderData } from "react-router";
 import Redirect from "~/components/ui/redirect";

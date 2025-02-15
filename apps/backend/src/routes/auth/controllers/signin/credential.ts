@@ -1,4 +1,4 @@
-import { USER_SESSION_VALIDITY } from "@app/utils/config";
+import { USER_SESSION_VALIDITY } from "@app/utils/constants";
 import type { LoginFormSchema } from "@app/utils/schemas/auth";
 import { AuthProvider } from "@app/utils/types";
 import type { Context } from "hono";

@@ -2,7 +2,7 @@ import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { toast } from "@app/components/ui/sonner";
-import { MODERATOR_ROLES } from "@app/utils/config/roles";
+import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import { ProjectPublishingStatus } from "@app/utils/types";
 import { CheckIcon, EyeOffIcon, MoreVerticalIcon, XIcon } from "lucide-react";

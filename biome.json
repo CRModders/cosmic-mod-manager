@@ -8,7 +8,8 @@
             "./**/public/*",
             "./**/pm2.config.cjs",
             "./**/.react-router/*",
-            "./**/wailsjs/*"
+            "./**/wailsjs/*",
+            "./**/.vitepress/*"
         ],
         "include": ["./*"]
     },

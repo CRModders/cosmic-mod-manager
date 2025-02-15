@@ -1,5 +1,5 @@
-import { ICON_WIDTH } from "@app/utils/config/constants";
-import { hasRootAccess } from "@app/utils/config/roles";
+import { ICON_WIDTH } from "@app/utils/src/constants";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { getFileType } from "@app/utils/convertors";
 import { doesOrgMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";

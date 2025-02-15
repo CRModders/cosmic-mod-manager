@@ -25,7 +25,7 @@ import { Textarea } from "@app/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { ShowEnvSupportSettingsForType, projectTypes } from "@app/utils/config/project";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@app/utils/convertors";
 import type { z } from "@app/utils/schemas";

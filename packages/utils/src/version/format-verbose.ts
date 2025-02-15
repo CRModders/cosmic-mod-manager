@@ -1,4 +1,4 @@
-import GAME_VERSIONS, { type GameVersion, getGameVersionsFromValues, isExperimentalGameVersion } from "~/config/game-versions";
+import GAME_VERSIONS, { type GameVersion, getGameVersionsFromValues, isExperimentalGameVersion } from "~/constants/game-versions";
 import { sortVersionsWithReference } from "~/project";
 
 function gameVersionIndex(version: GameVersion, referenceList: GameVersion[]): number {

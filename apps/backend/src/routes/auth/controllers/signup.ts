@@ -1,4 +1,4 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@app/utils/config";
+import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@app/utils/constants";
 import { createURLSafeSlug } from "@app/utils/string";
 import { GlobalUserRole } from "@app/utils/types";
 import type { Context } from "hono";

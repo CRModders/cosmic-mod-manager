@@ -1,4 +1,4 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@app/utils/config";
+import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@app/utils/constants";
 import { getSessionMetadata } from "@app/utils/headers";
 import { type GlobalUserRole, UserSessionStates } from "@app/utils/types";
 import type { Session, User } from "@prisma/client";

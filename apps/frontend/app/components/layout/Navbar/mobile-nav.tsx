@@ -1,7 +1,7 @@
 import { fallbackUserIcon } from "@app/components/icons";
 import { NotificationBadge } from "@app/components/ui/badge";
 import { cn } from "@app/components/utils";
-import { MODERATOR_ROLES } from "@app/utils/config/roles";
+import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";

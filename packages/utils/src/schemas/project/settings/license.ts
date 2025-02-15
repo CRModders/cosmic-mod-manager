@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_LICENSE_NAME_LENGTH } from "~/config/constants";
+import { MAX_LICENSE_NAME_LENGTH } from "~/constants";
 import { formLink } from "../index";
 
 export const updateProjectLicenseFormSchema = z.object({

@@ -8,7 +8,7 @@ import { toast } from "@app/components/ui/sonner";
 import { Switch } from "@app/components/ui/switch";
 import { cn } from "@app/components/utils";
 import { ProjectPermissionsList } from "@app/utils/config/project";
-import { hasRootAccess } from "@app/utils/config/roles";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesMemberHaveAccess } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import { updateTeamMemberFormSchema } from "@app/utils/schemas/project/settings/members";

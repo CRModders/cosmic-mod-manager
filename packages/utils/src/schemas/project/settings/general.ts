@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_ICON_SIZE, MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/config/constants";
+import { MAX_ICON_SIZE, MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/constants";
 import { getFileType } from "~/convertors";
 import { isImageFile } from "~/schemas/validation";
 import { EnvironmentSupport, ProjectVisibility } from "~/types";

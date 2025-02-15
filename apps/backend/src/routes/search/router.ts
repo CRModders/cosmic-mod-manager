@@ -1,4 +1,4 @@
-import GAME_VERSIONS from "@app/utils/config/game-versions";
+import GAME_VERSIONS from "@app/utils/src/constants/game-versions";
 import {
     MAX_SEARCH_LIMIT,
     categoryFilterParamNamespace,

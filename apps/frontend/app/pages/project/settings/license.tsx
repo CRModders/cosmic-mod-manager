@@ -7,7 +7,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/componen
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { FEATURED_LICENSE_OPTIONS } from "@app/utils/config/license-list";
+import { FEATURED_LICENSE_OPTIONS } from "@app/utils/src/constants/license-list";
 import type { z } from "@app/utils/schemas";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
 import { zodResolver } from "@hookform/resolvers/zod";

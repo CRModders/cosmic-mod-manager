@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { MAX_FEATURED_PROJECT_TAGS } from "~/config/constants";
-import { categories } from "~/config/project";
+import { MAX_FEATURED_PROJECT_TAGS } from "~/constants";
+import { categories } from "~/constants/categories";
 
 const categoryNames = [...categories.map((category) => category.name)] as const;
 

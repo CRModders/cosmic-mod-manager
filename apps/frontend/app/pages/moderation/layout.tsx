@@ -1,6 +1,6 @@
 import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/components/misc/panel";
 import { Prefetch } from "@app/components/ui/link";
-import { MODERATOR_ROLES } from "@app/utils/config/roles";
+import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import type { GlobalUserRole } from "@app/utils/types";
 import { FlagIcon, LayoutDashboardIcon, ScaleIcon } from "lucide-react";
 import { Outlet } from "react-router";

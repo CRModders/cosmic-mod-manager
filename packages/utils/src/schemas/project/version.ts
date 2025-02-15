@@ -7,9 +7,9 @@ import {
     MAX_VERSION_NUMBER_LENGTH,
     MAX_VERSION_TITLE_LENGTH,
     MIN_VERSION_TITLE_LENGTH,
-} from "~/config/constants";
-import GAME_VERSIONS from "~/config/game-versions";
-import { loaders } from "~/config/project";
+} from "~/constants";
+import GAME_VERSIONS from "~/constants/game-versions";
+import { loaders } from "~/constants/loaders";
 import { getFileType } from "~/convertors";
 import { createURLSafeSlug } from "~/string";
 import { DependencyType, VersionReleaseChannel } from "~/types";

@@ -1,4 +1,4 @@
-import { gameVersionsList } from "@app/utils/config/game-versions";
+import { gameVersionsList } from "@app/utils/src/constants/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
 import { type DependencyType, ProjectVisibility, type VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";

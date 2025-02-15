@@ -1,4 +1,4 @@
-import { GUEST_SESSION_ID_VALIDITY } from "@app/utils/config";
+import { GUEST_SESSION_ID_VALIDITY } from "@app/utils/constants";
 import type { Context, Next } from "hono";
 import { getCookie } from "hono/cookie";
 import { getUserIpAddress } from "~/routes/auth/helpers";

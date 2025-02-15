@@ -1,4 +1,4 @@
-import { isModerator } from "@app/utils/config/roles";
+import { isModerator } from "@app/utils/src/constants/roles";
 import Redirect from "~/components/ui/redirect";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";

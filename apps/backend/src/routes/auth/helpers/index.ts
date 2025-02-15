@@ -1,4 +1,4 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE, CSRF_STATE_COOKIE_NAMESPACE, PASSWORD_HASH_SALT_ROUNDS } from "@app/utils/config";
+import { AUTHTOKEN_COOKIE_NAMESPACE, CSRF_STATE_COOKIE_NAMESPACE, PASSWORD_HASH_SALT_ROUNDS } from "@app/utils/constants";
 import { getSessionIp } from "@app/utils/headers";
 import { type AuthActionIntent, AuthProvider } from "@app/utils/types";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";

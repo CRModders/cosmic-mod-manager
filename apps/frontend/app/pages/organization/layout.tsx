@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/car
 import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
-import { isModerator } from "@app/utils/config/roles";
+import { isModerator } from "@app/utils/src/constants/roles";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { FormatCount } from "@app/utils/number";
 import type { LoggedInUserData, ProjectType } from "@app/utils/types";

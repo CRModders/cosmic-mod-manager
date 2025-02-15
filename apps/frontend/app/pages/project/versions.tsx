@@ -15,7 +15,12 @@ import { Separator } from "@app/components/ui/separator";
 import { FullWidthSpinner } from "@app/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@app/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigger } from "@app/components/ui/tooltip";
-import { type GameVersion, gameVersionsList, getGameVersionsFromValues, isExperimentalGameVersion } from "@app/utils/config/game-versions";
+import {
+    type GameVersion,
+    gameVersionsList,
+    getGameVersionsFromValues,
+    isExperimentalGameVersion,
+} from "@app/utils/src/constants/game-versions";
 import { getLoaderFromString } from "@app/utils/convertors";
 import { parseFileSize } from "@app/utils/number";
 import { doesMemberHaveAccess, sortVersionsWithReference } from "@app/utils/project";

@@ -9,7 +9,7 @@ import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { handleFormError, validImgFileExtensions } from "@app/utils/schemas/utils";

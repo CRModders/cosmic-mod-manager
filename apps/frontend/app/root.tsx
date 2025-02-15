@@ -2,7 +2,7 @@ import "./index.css";
 
 import { DownloadRipple } from "@app/components/misc/download-animation";
 import LoaderBar from "@app/components/misc/loader-bar";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
 import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";

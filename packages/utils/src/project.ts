@@ -1,7 +1,8 @@
-import { getRolePerms } from "~/config/roles";
+import { getRolePerms } from "~/constants/roles";
 import { CapitalizeAndFormatString } from "~/string";
-import { type CategoryType, type Loader, categories, loaders } from "./config/project";
-import { GlobalUserRole, type OrganisationPermission, type ProjectPermission, ProjectType, type TagHeaderType } from "./types";
+import { type CategoryType, categories } from "~/constants/categories";
+import { type Loader, loaders } from "~/constants/loaders";
+import { GlobalUserRole, type OrganisationPermission, type ProjectPermission, ProjectType, type TagHeaderType } from "~/types";
 
 export function doesMemberHaveAccess(
     requiredPermission: ProjectPermission,

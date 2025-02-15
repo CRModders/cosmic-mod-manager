@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Redirect from "~/components/ui/redirect";
 import { useSession } from "~/hooks/session";
 import { ProfileSettingsPage } from "~/pages/settings/profile";

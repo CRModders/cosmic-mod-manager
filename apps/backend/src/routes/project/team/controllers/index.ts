@@ -1,4 +1,4 @@
-import { hasRootAccess } from "@app/utils/config/roles";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesMemberHaveAccess, doesOrgMemberHaveAccess, getCurrMember } from "@app/utils/project";
 import type { overrideOrgMemberFormSchema, updateTeamMemberFormSchema } from "@app/utils/schemas/project/settings/members";
 import { OrganisationPermission, ProjectPermission } from "@app/utils/types";

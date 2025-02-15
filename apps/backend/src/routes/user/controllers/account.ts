@@ -2,7 +2,7 @@ import {
     CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms,
     CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms,
     DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
-} from "@app/utils/config";
+} from "@app/utils/constants";
 import { getConfirmActionTypeFromStringName } from "@app/utils/convertors";
 import type {
     removeAccountPasswordFormSchema,

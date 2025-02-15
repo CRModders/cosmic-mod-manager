@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_USERNAME_LENGTH } from "~/config/constants";
+import { MAX_USERNAME_LENGTH } from "~/constants";
 import { OrganisationPermission, ProjectPermission } from "~/types";
 
 export const inviteTeamMemberFormSchema = z.object({

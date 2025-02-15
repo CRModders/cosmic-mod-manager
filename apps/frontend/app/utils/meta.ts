@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { MetaDescriptor } from "react-router";
 import { formatLocaleCode } from "~/locales";
 import SupportedLocales, { DefaultLocale } from "~/locales/meta";

@@ -1,4 +1,4 @@
-import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@app/utils/config/license-list";
+import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@app/utils/src/constants/license-list";
 import { doesMemberHaveAccess, getCurrMember, getValidProjectCategories } from "@app/utils/project";
 import type { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
 import type { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";

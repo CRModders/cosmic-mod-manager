@@ -1,4 +1,4 @@
-import { SITE_NAME_LONG } from "@app/utils/config";
+import { SITE_NAME_LONG } from "@app/utils/constants";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { useLoaderData } from "react-router";
 import HomePage from "~/pages/page";

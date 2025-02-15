@@ -1,4 +1,4 @@
-import { SITE_NAME_SHORT, USER_SESSION_VALIDITY } from "@app/utils/config";
+import { SITE_NAME_SHORT, USER_SESSION_VALIDITY } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 import type { Context } from "hono";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";

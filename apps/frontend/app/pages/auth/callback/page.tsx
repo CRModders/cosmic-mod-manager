@@ -2,7 +2,7 @@ import RefreshPage from "@app/components/misc/refresh-page";
 import { FormErrorMessage } from "@app/components/ui/form-message";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { CSRF_STATE_COOKIE_NAMESPACE } from "@app/utils/config";
+import { CSRF_STATE_COOKIE_NAMESPACE } from "@app/utils/constants";
 import { getAuthProviderFromString } from "@app/utils/convertors";
 import { getCookie } from "@app/utils/cookie";
 import { AuthActionIntent, AuthProvider } from "@app/utils/types";

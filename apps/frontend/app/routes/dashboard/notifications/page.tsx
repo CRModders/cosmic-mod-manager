@@ -1,5 +1,5 @@
 import { SuspenseFallback } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/config";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { useLoaderData } from "react-router";
