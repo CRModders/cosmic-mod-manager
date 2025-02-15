@@ -3,7 +3,7 @@ import { type Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import bodyParserMiddleware from "~/middleware/body-parser";
 import { applyCacheHeaders } from "~/middleware/cache";
-import { logger } from "~/middleware/logger";
+import { logger } from "~/middleware/http-logger";
 import { ddosProtectionRateLimiter } from "~/middleware/rate-limit/ddos";
 import authRouter from "~/routes/auth/router";
 import { queueDownloadsCounterQueueProcessing } from "~/routes/cdn/downloads-counter";
@@ -24,7 +24,7 @@ import { getStatistics } from "~/statistics";
 import tagsRouter from "~/tags";
 import env from "~/utils/env";
 import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
-import { QueueSearchIndexUpdate } from "./routes/search/search-db";
+import { QueueSearchIndexUpdate } from "~/routes/search/search-db";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 const corsAllowedOrigins = env.CORS_ALLOWED_URLS.split(" ");

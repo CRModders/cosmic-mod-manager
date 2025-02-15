@@ -3,6 +3,7 @@ import { DateFromStr } from "@app/utils/date";
 import { getCurrMember } from "@app/utils/project";
 import { ProjectPublishingStatus } from "@app/utils/types";
 import { GetProject_Details, UpdateProject } from "~/db/project_item";
+import { Log, Log_SubType } from "~/middleware/logger";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 
@@ -44,6 +45,8 @@ export async function QueueProjectForApproval(projectId: string, userSession: Co
             dateQueued: currDate,
         },
     });
+
+    Log(`Project ${project.id} queued for approval by ${userSession.id}`, undefined, Log_SubType.MODERATION);
 
     return {
         data: {

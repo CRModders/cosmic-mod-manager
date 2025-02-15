@@ -1,3 +1,4 @@
+import { projectTypes } from "~/config/project";
 import { ProjectType, TagHeaderType } from "~/types";
 
 export interface CategoryType {
@@ -81,6 +82,11 @@ export const categories = [
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.FEATURE,
     },
+    // {
+    //     name: "bug-fix",
+    //     projectTypes: [ProjectType.MOD, ProjectType.MODPACK],
+    //     header: TagHeaderType.CATEGORY,
+    // },
     {
         name: "cartoon",
         projectTypes: [ProjectType.SHADER],

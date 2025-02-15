@@ -42,7 +42,7 @@ async function moderationProject_post(ctx: Context) {
         const body = ctx.get(REQ_BODY_NAMESPACE);
         const newStatus = body.status;
 
-        const res = await updateModerationProject(id, newStatus);
+        const res = await updateModerationProject(id, newStatus, userSession);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

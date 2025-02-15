@@ -2,7 +2,9 @@ import { ProjectPublishingStatus, type ProjectVisibility } from "@app/utils/type
 import type { ModerationProjectItem } from "@app/utils/types/api/moderation";
 import type { Prisma } from "@prisma/client";
 import { GetManyProjects_ListItem, GetProject_ListItem, UpdateOrRemoveProject_FromSearchIndex, UpdateProject } from "~/db/project_item";
+import { Log, Log_SubType } from "~/middleware/logger";
 import prisma from "~/services/prisma";
+import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
 
@@ -69,7 +71,7 @@ export async function getModerationProjects() {
     };
 }
 
-export async function updateModerationProject(id: string, status: string) {
+export async function updateModerationProject(id: string, status: string, userSession: ContextUserData) {
     const Project = await GetProject_ListItem(undefined, id);
     if (!Project) return notFoundResponseData("Project not found");
 
@@ -115,6 +117,12 @@ export async function updateModerationProject(id: string, status: string) {
             visibility: UpdatedProject.visibility,
             status: UpdatedProject.status,
         },
+    );
+
+    Log(
+        `Status of project ${id} updated to ${updatedStatus} from ${Project.status} by ${userSession.id}`,
+        undefined,
+        Log_SubType.MODERATION,
     );
 
     return {
