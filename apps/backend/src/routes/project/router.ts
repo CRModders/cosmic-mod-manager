@@ -25,6 +25,7 @@ import { deleteProject, deleteProjectIcon, updateProject, updateProjectIcon } fr
 import { updateProjectDescription } from "./controllers/settings/description";
 import { updateProjectExternalLinks, updateProjectLicense, updateProjectTags } from "./controllers/settings/general";
 import versionRouter from "./version/router";
+import { getAllProjectVersions } from "./version/controllers";
 
 const projectRouter = new Hono();
 projectRouter.use(invalidAuthAttemptLimiter);
@@ -75,7 +76,21 @@ async function project_get(ctx: Context) {
         if (!slug) return invalidReqestResponse(ctx);
         const userSession = getUserFromCtx(ctx);
 
+        const includeVersions = ctx.req.query("includeVersions") === "true";
+        const featuredVersionsOnly = ctx.req.query("featuredOnly") === "true";
+
         const res = await getProjectData(slug, userSession);
+        // Fetch the project versions if it's to be included
+        if (includeVersions === true && res.data.project) {
+            const versions = await getAllProjectVersions(slug, userSession, featuredVersionsOnly);
+
+            if ("data" in versions.data && versions.data.data) {
+                res.data.project.versions = versions.data.data;
+            } else {
+                res.data.project.versions = [];
+            }
+        }
+
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

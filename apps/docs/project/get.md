@@ -65,3 +65,15 @@ GET [`/api/project/{ID|slug}`](/api/project/4xvLkWrQx2lt6Vyx6Z)
 ```
 
 [Type reference](/packages/utils/src/types/api/index.ts#L52)
+
+
+### Query parameters
+- **Include Project Versions** \
+    key: `includeVersions` \
+    type: `true | false` \
+    default: `false`
+
+- **Featured versions only** \
+    key: `featuredOnly` \
+    type: `true | false` \
+    default: `false`

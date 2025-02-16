@@ -42,69 +42,71 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
     const currSessionMember = allMembers.get(userSession?.id || "");
     const org = project.organisation;
 
+    const FormattedData: ProjectDetailsData = {
+        id: project.id,
+        teamId: project.team.id,
+        orgId: null,
+        name: project.name,
+        icon: projectIconUrl(project.id, project.iconFileId),
+        status: project.status as ProjectPublishingStatus,
+        requestedStatus: project.requestedStatus as ProjectPublishingStatus,
+        summary: project.summary,
+        description: project.description,
+        type: project.type as ProjectType[],
+        categories: project.categories,
+        featuredCategories: project.featuredCategories,
+        licenseId: project.licenseId,
+        licenseName: project.licenseName,
+        licenseUrl: project.licenseUrl,
+        dateUpdated: project.dateUpdated,
+        datePublished: project.datePublished,
+        downloads: project.downloads,
+        followers: project.followers,
+        slug: project.slug,
+        visibility: project.visibility as ProjectVisibility,
+        issueTrackerUrl: project?.issueTrackerUrl,
+        projectSourceUrl: project?.projectSourceUrl,
+        projectWikiUrl: project?.projectWikiUrl,
+        discordInviteUrl: project?.discordInviteUrl,
+        clientSide: project.clientSide as EnvironmentSupport,
+        serverSide: project.serverSide as EnvironmentSupport,
+        loaders: project.loaders,
+        gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
+        gallery: project.gallery
+            .map((galleryItem) => {
+                const rawImage = projectGalleryFileUrl(project.id, galleryItem.imageFileId);
+                const imageThumbnail = projectGalleryFileUrl(project.id, galleryItem.thumbnailFileId);
+                if (!rawImage || !imageThumbnail) return null;
+
+                return {
+                    id: galleryItem.id,
+                    name: galleryItem.name,
+                    description: galleryItem.description,
+                    image: rawImage,
+                    imageThumbnail: imageThumbnail,
+                    featured: galleryItem.featured,
+                    dateCreated: galleryItem.dateCreated,
+                    orderIndex: galleryItem.orderIndex,
+                };
+            })
+            .filter((item) => item !== null),
+        members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+        organisation: org
+            ? {
+                  id: org.id,
+                  name: org.name,
+                  slug: org.slug,
+                  description: org.description,
+                  icon: orgIconUrl(org.id, org.iconFileId),
+                  members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+              }
+            : null,
+    };
+
     return {
         data: {
             success: true,
-            project: {
-                id: project.id,
-                teamId: project.team.id,
-                orgId: null,
-                name: project.name,
-                icon: projectIconUrl(project.id, project.iconFileId),
-                status: project.status as ProjectPublishingStatus,
-                requestedStatus: project.requestedStatus as ProjectPublishingStatus,
-                summary: project.summary,
-                description: project.description,
-                type: project.type as ProjectType[],
-                categories: project.categories,
-                featuredCategories: project.featuredCategories,
-                licenseId: project.licenseId,
-                licenseName: project.licenseName,
-                licenseUrl: project.licenseUrl,
-                dateUpdated: project.dateUpdated,
-                datePublished: project.datePublished,
-                downloads: project.downloads,
-                followers: project.followers,
-                slug: project.slug,
-                visibility: project.visibility as ProjectVisibility,
-                issueTrackerUrl: project?.issueTrackerUrl,
-                projectSourceUrl: project?.projectSourceUrl,
-                projectWikiUrl: project?.projectWikiUrl,
-                discordInviteUrl: project?.discordInviteUrl,
-                clientSide: project.clientSide as EnvironmentSupport,
-                serverSide: project.serverSide as EnvironmentSupport,
-                loaders: project.loaders,
-                gameVersions: sortVersionsWithReference(project.gameVersions || [], gameVersionsList),
-                gallery: project.gallery
-                    .map((galleryItem) => {
-                        const rawImage = projectGalleryFileUrl(project.id, galleryItem.imageFileId);
-                        const imageThumbnail = projectGalleryFileUrl(project.id, galleryItem.thumbnailFileId);
-                        if (!rawImage || !imageThumbnail) return null;
-
-                        return {
-                            id: galleryItem.id,
-                            name: galleryItem.name,
-                            description: galleryItem.description,
-                            image: rawImage,
-                            imageThumbnail: imageThumbnail,
-                            featured: galleryItem.featured,
-                            dateCreated: galleryItem.dateCreated,
-                            orderIndex: galleryItem.orderIndex,
-                        };
-                    })
-                    .filter((item) => item !== null),
-                members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
-                organisation: org
-                    ? {
-                          id: org.id,
-                          name: org.name,
-                          slug: org.slug,
-                          description: org.description,
-                          icon: orgIconUrl(org.id, org.iconFileId),
-                          members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
-                      }
-                    : null,
-            } satisfies ProjectDetailsData,
+            project: FormattedData,
         },
         status: HTTP_STATUS.OK,
     };
