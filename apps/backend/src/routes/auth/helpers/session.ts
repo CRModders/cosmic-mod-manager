@@ -134,11 +134,24 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
 
     await setSessionTokenCache(tokenHash, session.id, session.userId, session.user); // SESSION_CACHE : SET
 
-    const sessionUser = {
-        ...session.user,
-        role: session.user.role as GlobalUserRole,
+    const user = session.user;
+    const sessionData: ContextUserData = {
+        id: user.id,
+        email: user.email,
+        avatar: user.avatar,
+        userName: user.userName,
+        name: user.name || user.userName,
+        dateJoined: user.dateJoined,
+        emailVerified: user.emailVerified,
+        role: user.role as GlobalUserRole,
+        bio: user.bio,
+        password: user.password,
+        newSignInAlerts: user.newSignInAlerts,
+
+        sessionId: session.id,
     };
-    return { ...sessionUser, sessionId: session.id };
+
+    return sessionData;
 }
 
 export async function validateContextSession(ctx: Context): Promise<ContextUserData | null> {

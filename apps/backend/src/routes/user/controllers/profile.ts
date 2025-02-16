@@ -25,7 +25,7 @@ export async function getUserProfileData(slug: string) {
 
     const dataObj = {
         id: user.id,
-        name: user.name,
+        name: user.name || user.userName,
         userName: user.userName,
         role: user.role as GlobalUserRole,
         avatar: userIconUrl(user.id, user.avatar),

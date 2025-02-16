@@ -73,16 +73,16 @@ export default function UserPageLayout({ userData, projectsList, orgsList, child
                     </div>
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
-                        <p className="text-lg text-muted-foreground italic text-center">{t.user.doesntHaveProjects(userData.userName)}</p>
+                        <p className="text-lg text-muted-foreground italic text-center">{t.user.doesntHaveProjects(userData.name)}</p>
                     </div>
                 )}
             </div>
-            <PageSidebar userName={userData.userName} userId={userData.id} orgsList={orgsList || []} />
+            <PageSidebar displayName={userData.name} userId={userData.id} orgsList={orgsList || []} />
         </main>
     );
 }
 
-function PageSidebar({ userName, userId, orgsList }: { userName: string; userId: string; orgsList: Organisation[] }) {
+function PageSidebar({ displayName, userId, orgsList }: { displayName: string; userId: string; orgsList: Organisation[] }) {
     const { t } = useTranslation();
     const joinedOrgs = orgsList.filter((org) => {
         const member = org.members.find((member) => member.userId === userId);
@@ -92,7 +92,9 @@ function PageSidebar({ userName, userId, orgsList }: { userName: string; userId:
     return (
         <div style={{ gridArea: "sidebar" }} className="w-full flex flex-col gap-panel-cards">
             <ContentCardTemplate title={t.dashboard.organizations} titleClassName="text-lg">
-                {!joinedOrgs.length ? <span className="text-muted-foreground/75 italic">{t.user.isntPartOfAnyOrgs(userName)}</span> : null}
+                {!joinedOrgs.length ? (
+                    <span className="text-muted-foreground/75 italic">{t.user.isntPartOfAnyOrgs(displayName)}</span>
+                ) : null}
 
                 <div className="flex flex-wrap gap-2 items-start justify-start">
                     <TooltipProvider>
@@ -151,7 +153,7 @@ function ProfilePageHeader({ userData, totalProjects, totalDownloads }: ProfileP
             icon={imageUrl(userData.avatar)}
             iconClassName="rounded-full"
             fallbackIcon={fallbackUserIcon}
-            title={userData.name || userData.userName}
+            title={userData.name}
             description={userData.bio || ""}
             titleBadge={
                 title ? (

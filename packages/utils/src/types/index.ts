@@ -35,7 +35,7 @@ export interface LoggedInUserData {
     id: string;
     email: string;
     userName: string;
-    name: string | null;
+    name: string;
     hasAPassword: boolean;
     avatar?: string | null;
     role: GlobalUserRole;
