@@ -73,6 +73,10 @@ GET [`/api/project/{ID|slug}`](/api/project/4xvLkWrQx2lt6Vyx6Z)
     type: `true | false` \
     default: `false`
 
+:::info
+If `true`, the API returns an additional `versions` field in the project object which contains the [project's versions list](/version/get-project-versions.html).
+:::
+
 - **Featured versions only** \
     key: `featuredOnly` \
     type: `true | false` \

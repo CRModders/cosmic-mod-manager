@@ -29,7 +29,7 @@ export default defineConfig({
                 text: "Project",
                 items: [
                     { text: "Search Projects", link: "/project/search" },
-                    { text: "Search a project", link: "/project/get" },
+                    { text: "Get a project", link: "/project/get" },
                     { text: "Get multiple projects", link: "/project/get-multiple" },
                     { text: "Get random projects", link: "/project/random" },
                     { text: "Modify a project", link: "/project/modify" },
