@@ -168,7 +168,7 @@ export function meta() {
     return MetaTags({
         title: "Markdown Editor",
         description: "A simple markdown editor with preview capabilities to help you write markdown easily.",
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: `${Config.FRONTEND_URL}/markdown.png`,
         url: `${Config.FRONTEND_URL}${PageUrl("md-editor")}`,
         suffixTitle: true,
     });
