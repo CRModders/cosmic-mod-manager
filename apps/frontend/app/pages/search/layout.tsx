@@ -94,7 +94,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
     // Update the state when the search param changes
     useEffect(() => {
         setSearchTerm_state(searchQueryParam);
-    }, [nextLocation?.pathname, nextLocation?.search]); // FIXME:
+    }, [nextLocation?.pathname]);
 
     useEffect(() => {
         document.addEventListener("keyup", handleSearchInputFocus);
