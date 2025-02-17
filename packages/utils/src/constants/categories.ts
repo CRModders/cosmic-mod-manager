@@ -82,11 +82,11 @@ export const categories = [
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.FEATURE,
     },
-    // {
-    //     name: "bug-fix",
-    //     projectTypes: [ProjectType.MOD, ProjectType.MODPACK],
-    //     header: TagHeaderType.CATEGORY,
-    // },
+    {
+        name: "bug-fix",
+        projectTypes: [ProjectType.MOD],
+        header: TagHeaderType.CATEGORY,
+    },
     {
         name: "cartoon",
         projectTypes: [ProjectType.SHADER],
