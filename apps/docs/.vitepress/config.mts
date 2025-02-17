@@ -11,7 +11,7 @@ export default defineConfig({
     lastUpdated: true,
 
     themeConfig: {
-        logo: { src: "https://assets.crmm.tech/icon.svg", width: 24, height: 24 },
+        logo: { src: "https://assets-cdn.crmm.tech/icon.svg", width: 24, height: 24 },
 
         editLink: {
             pattern: (data) => {

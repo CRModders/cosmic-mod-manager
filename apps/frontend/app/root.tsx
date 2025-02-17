@@ -52,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
                 <script
                     defer
-                    src="https://assets.crmm.tech/telemetry.js"
+                    src="https://assets-cdn.crmm.tech/telemetry.js"
                     data-website-id="1bbb8989-cc84-4b4c-bfca-51e53779f587"
                     data-exclude-search="true"
                     data-exclude-hash="true"
@@ -202,7 +202,7 @@ export const links: LinksFunction = () => {
         },
         {
             rel: "preconnect",
-            href: "https://assets.crmm.tech",
+            href: "https://assets-cdn.crmm.tech",
         },
         {
             rel: "preconnect",
