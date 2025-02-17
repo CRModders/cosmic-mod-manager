@@ -65,11 +65,7 @@
     @apply pl-10;
 }
 
-.markdown-body li {
-    @apply mb-1;
-}
-
-/* Reduced bottom margin of p tags if there's a list just below it */
+.markdown-body li:not(:has(> p)),
 .markdown-body li > p,
 .markdown-body p:has(+ ul),
 .markdown-body p:has(+ ol),
@@ -78,18 +74,14 @@
     @apply mb-2;
 }
 
-.markdown-body li li {
-    @apply mb-0.5;
+ul li:last-child,
+ol li:last-child {
+    @apply mb-0;
 }
 
 li ul li:first-child,
 li ol li:first-child {
-    @apply mt-0.5;
-}
-
-li ul li:last-child,
-li ol li:last-child {
-    @apply mb-0;
+    @apply mt-1;
 }
 
 .markdown-body ul li {
