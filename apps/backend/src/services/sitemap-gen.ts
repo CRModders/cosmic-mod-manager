@@ -238,7 +238,7 @@ function navigationLinksXml() {
     </url>
     `;
 
-    for (const type of ["project", ...projectTypes]) {
+    for (const type of ["project", "md-editor", ...projectTypes]) {
         links += `
     <url>
         <loc>${env.FRONTEND_URL}/${type}s</loc>

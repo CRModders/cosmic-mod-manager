@@ -362,7 +362,8 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                             name="markdown-textarea"
                             placeholder={placeholder}
                             className={cn(
-                                "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base text-foreground dark:text-foreground focus-within:!bg-background-shallow/10",
+                                "h-[32rem] min-h-[16rem] w-full resize-y rounded-lg font-mono text-base focus-within:!bg-background-shallow/10",
+                                "text-muted-foreground dark:text-muted-foreground focus-within:text-black dark:focus-within:text-white",
                                 wordWrap === true ? "overflow-x-auto whitespace-nowrap" : "break-words",
                                 textAreaClassName,
                             )}
@@ -408,12 +409,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                 <InfoIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 <p>
                                     You can use{" "}
-                                    <a
-                                        rel="noreferrer"
-                                        target="_blank"
-                                        href="https://www.markdownguide.org/basic-syntax/"
-                                        className="link_blue"
-                                    >
+                                    <a target="_blank" href="/md-editor" className="link_blue" rel="noreferrer">
                                         Markdown format
                                     </a>{" "}
                                     here.

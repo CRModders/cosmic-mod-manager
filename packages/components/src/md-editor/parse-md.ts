@@ -1,4 +1,5 @@
 import MarkdownIt from "markdown-it";
+import { full as emoji } from "markdown-it-emoji";
 import type {
     FilterXSS as _FilterXSS,
     escapeAttrValue as _escapeAttrValue,
@@ -156,8 +157,9 @@ export function md(options = {}) {
         html: true,
         linkify: true,
         breaks: false,
+        typographer: true,
         ...options,
-    });
+    }).use(emoji);
 
     const defaultLinkOpenRenderer =
         md.renderer.rules.link_open || ((tokens, idx, options, _env, self) => self.renderToken(tokens, idx, options));

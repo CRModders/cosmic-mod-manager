@@ -110,6 +110,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                     route("", path("moderation/page.tsx"), { id: `${lang}__moderation__index-page`, index: true });
                     route("review", path("moderation/review.tsx"), { id: `${lang}__moderation__review-page` });
                 });
+
+                // Miscellaneous pages
+                route("md-editor", path("editor/page.tsx"), { id: `${lang}__md-editor` });
             });
         }
 

@@ -12,6 +12,10 @@ export default {
             },
         },
         extend: {
+            fontFamily: {
+                mono: ["JetBrainsMono Nerd Font Mono", "JetBrainsMono", "ui-monospace", "monospace"],
+            },
+
             keyframes: {
                 "accordion-down": {
                     from: { height: "0" },

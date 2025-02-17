@@ -75,7 +75,7 @@
 .markdown-body p:has(+ ol),
 .markdown-body li p:has(+ ul),
 .markdown-body li p:has(+ ol) {
-    @apply mb-2;
+    @apply mb-1;
 }
 
 .markdown-body li li {
