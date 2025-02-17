@@ -47,7 +47,7 @@ export function SearchResultsPage() {
 
     useEffect(() => {
         refetchSearchResults();
-    }, [searchParams]);
+    }, [searchParams.toString()]);
 
     useEffect(() => {
         if (validInitData) return setShowSpinner(false);
