@@ -48,6 +48,7 @@ import {
     TypeIcon,
     UsersIcon,
     WandSparklesIcon,
+    WrenchIcon,
     ZapIcon,
 } from "lucide-react";
 import type { IconSvgProps } from "../types";
@@ -253,7 +254,7 @@ const tagIcons = {
     audio: <HeadphonesIcon className={defaultIconClass} aria-hidden />,
     blocks: <CubeIcon className={defaultIconClass} aria-hidden />,
     bloom: <LampIcon className={defaultIconClass} aria-hidden />,
-    // "bug-fix": <WrenchIcon className={defaultIconClass} aria-hidden />,
+    "bug-fix": <WrenchIcon className={defaultIconClass} aria-hidden />,
     cartoon: <BrushIcon className={defaultIconClass} aria-hidden />,
     challenging: <BarChartIcon className={defaultIconClass} aria-hidden />,
     "colored-lighting": <PaletteIcon className={defaultIconClass} aria-hidden />,
