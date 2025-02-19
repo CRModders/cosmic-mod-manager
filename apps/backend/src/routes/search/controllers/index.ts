@@ -1,7 +1,7 @@
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import meilisearch from "~/services/meilisearch";
-import { HTTP_STATUS } from "~/utils/http";
+import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 import { type ProjectSearchDocument, projectSearchNamespace } from "../sync-utils";
 
 interface Props {
@@ -18,6 +18,18 @@ interface Props {
 }
 
 export async function searchProjects(props: Props) {
+    // Validate the filters
+    if (props.query?.length > 64) return invalidReqestResponseData(`Query string too long: '${props.query}'`);
+
+    const Items = [props.type, ...props.loaders, ...props.gameVersions, ...props.categories];
+    for (let i = 0; i < Items.length; i++) {
+        const item = Items[i];
+        if (!item) continue;
+
+        if (item?.length > 32) return invalidReqestResponseData(`Filter string too long: ${item}`);
+        if (isValidFilterStr(item) === false) return invalidReqestResponseData(`Invalid filter string: ${item}`);
+    }
+
     const index = meilisearch.index(projectSearchNamespace);
     let sortBy = null;
 
@@ -48,13 +60,13 @@ export async function searchProjects(props: Props) {
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${esc(loader)}`).join(" AND "),
-        props.gameVersions.map((gameVersion) => `gameVersions = ${esc(gameVersion)}`).join(" AND "),
-        props.categories.map((category) => `categories = ${esc(category)}`).join(" AND "),
+        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
+        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),
+        props.categories.map((category) => `categories = ${category}`).join(" AND "),
         environments.join(" AND "),
     ];
 
-    if (props.type) filters.push(`type = ${esc(props.type)}`);
+    if (props.type) filters.push(`type = ${props.type}`);
     if (props.openSourceOnly) filters.push("openSource = true");
 
     const result = await index.search(props.query, {
@@ -96,6 +108,7 @@ export async function searchProjects(props: Props) {
     return { data: result, status: HTTP_STATUS.OK };
 }
 
-function esc(str: string) {
-    return encodeURIComponent(str);
+function isValidFilterStr(str: string) {
+    const regex = /^[a-zA-Z0-9-_]+$/;
+    return regex.test(str);
 }
