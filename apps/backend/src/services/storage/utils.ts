@@ -46,5 +46,5 @@ export function orgDir(orgId: string, extra?: string) {
 }
 
 export function createFilePathSafeString(str: string) {
-    return str.replace(/[^a-zA-Z0-9.-_]/gi, "-");
+    return str.replace(/[^a-zA-Z0-9._-]/gi, "-");
 }
