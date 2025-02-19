@@ -48,13 +48,13 @@ export async function searchProjects(props: Props) {
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
-        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),
-        props.categories.map((category) => `categories = ${category}`).join(" AND "),
+        props.loaders.map((loader) => `loaders = ${esc(loader)}`).join(" AND "),
+        props.gameVersions.map((gameVersion) => `gameVersions = ${esc(gameVersion)}`).join(" AND "),
+        props.categories.map((category) => `categories = ${esc(category)}`).join(" AND "),
         environments.join(" AND "),
     ];
 
-    if (props.type) filters.push(`type = ${props.type}`);
+    if (props.type) filters.push(`type = ${esc(props.type)}`);
     if (props.openSourceOnly) filters.push("openSource = true");
 
     const result = await index.search(props.query, {
@@ -94,4 +94,8 @@ export async function searchProjects(props: Props) {
     result.hits = projects;
 
     return { data: result, status: HTTP_STATUS.OK };
+}
+
+function esc(str: string) {
+    return encodeURIComponent(str);
 }
