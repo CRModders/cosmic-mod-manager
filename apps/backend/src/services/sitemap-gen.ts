@@ -179,7 +179,7 @@ async function generateXml(type: ProjectType, projects: ProjectSearchDocument[])
         <loc>${env.FRONTEND_URL}/${type}/${project.slug}/version/latest</loc>
         <lastmod>${formatDate(project.dateUpdated)}</lastmod>
     </url>
-`;
+        `;
     }
 
     return links;
@@ -232,19 +232,20 @@ export async function getSitemap(name: string) {
 function navigationLinksXml() {
     let links = "";
 
-    links += `
-    <url>
-        <loc>${env.FRONTEND_URL}/</loc>
-    </url>
-    `;
+    links += xmlURL("");
+    links += xmlURL("md-editor");
 
-    for (const type of ["project", "md-editor", ...projectTypes]) {
-        links += `
-    <url>
-        <loc>${env.FRONTEND_URL}/${type}s</loc>
-    </url>
-        `;
+    for (const type of ["project", ...projectTypes]) {
+        links += xmlURL(`${type}s`);
     }
 
     return xmlUrlSet(links);
+}
+
+function xmlURL(path: string) {
+    return `
+    <url>
+        <loc>${env.FRONTEND_SECRET}/${path}</loc>
+    </url>
+    `;
 }
