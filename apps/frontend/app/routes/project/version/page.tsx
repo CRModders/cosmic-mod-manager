@@ -1,9 +1,11 @@
+import type { Route } from "./+types/page";
 import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { FormatDate_ToLocaleString } from "@app/utils/date";
 import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
+import type { ProjectVersionData } from "@app/utils/types/api";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
-import { type MetaArgs, useParams, useSearchParams } from "react-router";
+import { type MetaArgs, useLocation, useParams, useSearchParams } from "react-router";
 import { useProjectData } from "~/hooks/project";
 import NotFoundPage from "~/pages/not-found";
 import VersionPage from "~/pages/project/version/page";
@@ -17,24 +19,7 @@ export default function VersionPageRoute() {
     const { projectSlug, versionSlug } = useParams();
     const [searchParams] = useSearchParams();
 
-    let versionData = ctx.allProjectVersions?.find((version) => version.slug === versionSlug || version.id === versionSlug);
-    if (versionSlug === "latest") {
-        const gameVersion = searchParams.get("gameVersion");
-        const loader = searchParams.get("loader");
-        const releaseChannel = searchParams.get("releaseChannel");
-
-        if (!gameVersion && !loader && !releaseChannel) versionData = ctx.allProjectVersions[0];
-        else {
-            versionData = ctx.allProjectVersions?.filter((ver) => {
-                if (gameVersion?.length && !ver.gameVersions.includes(gameVersion)) return false;
-                if (loader?.length && !ver.loaders.includes(loader)) return false;
-                if (releaseChannel?.length && ver.releaseChannel !== releaseChannel.toLowerCase()) return false;
-
-                return true;
-            })[0];
-        }
-    }
-
+    const versionData = filterGameVersion(ctx.allProjectVersions, versionSlug, searchParams);
     if (!versionData?.id || !projectSlug || !versionSlug) {
         return (
             <NotFoundPage
@@ -50,10 +35,9 @@ export default function VersionPageRoute() {
     return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} />;
 }
 
-export function meta(props: MetaArgs) {
+export function meta(props: Route.MetaArgs) {
     const parentMetaTags = props.matches?.at(-3)?.meta;
-
-    const parentData = props.matches[2].data as projectDataLoader;
+    const parentData = props.matches[2].data;
     const project = parentData.projectData;
     const versionSlug = props.params.versionSlug;
 
@@ -67,10 +51,8 @@ export function meta(props: MetaArgs) {
         });
     }
 
-    let version = parentData.versions?.find((v) => v.slug === versionSlug || v.id === versionSlug);
-    if (versionSlug === "latest") {
-        version = parentData.versions?.[0];
-    }
+    const url = useLocation();
+    const version = filterGameVersion(parentData.versions, versionSlug, new URLSearchParams(url.search));
 
     if (!version?.id) {
         return MetaTags({
@@ -93,4 +75,27 @@ export function meta(props: MetaArgs) {
         image: project.icon || "",
         parentMetaTags,
     });
+}
+
+function filterGameVersion(gameVersions: ProjectVersionData[] | undefined, slug: string | undefined, searchParams: URLSearchParams) {
+    if (!slug || !gameVersions?.length) return null;
+    if (slug !== "latest") return gameVersions?.find((version) => version.slug === slug || version.id === slug);
+
+    const gameVersion = searchParams.get("gameVersion");
+    const loader = searchParams.get("loader");
+    const releaseChannel = searchParams.get("releaseChannel");
+
+    if (!gameVersion && !loader && !releaseChannel) return gameVersions[0];
+
+    for (let i = 0; i < gameVersions.length; i++) {
+        const version = gameVersions[i];
+
+        if (gameVersion?.length && !version.gameVersions.includes(gameVersion)) continue;
+        if (loader?.length && !version.loaders.includes(loader)) continue;
+        if (releaseChannel?.length && version.releaseChannel !== releaseChannel.toLowerCase()) continue;
+
+        return version;
+    }
+
+    return null;
 }
