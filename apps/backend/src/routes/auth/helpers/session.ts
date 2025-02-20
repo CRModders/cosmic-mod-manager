@@ -1,7 +1,7 @@
 import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@app/utils/constants";
 import { getSessionMetadata } from "@app/utils/headers";
 import { type GlobalUserRole, UserSessionStates } from "@app/utils/types";
-import type { Session, User } from "@prisma/client";
+import type { Prisma, Session, User } from "@prisma/client";
 import type { Context } from "hono";
 import type { CookieOptions } from "hono/utils/cookie";
 import {
@@ -113,23 +113,34 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
         return null;
     }
 
-    if (Date.now() >= session.dateExpires.getTime()) {
+    const now = Date.now();
+    const sessionExpiry = session.dateExpires.getTime();
+    const timeToExpire = sessionExpiry - now;
+
+    if (timeToExpire <= 0) {
         await DeleteSession({
             where: {
                 id: session.id,
             },
         });
+
         await deleteSessionTokenAndIdCache([session.tokenHash], [session.id]); // SESSION_CACHE : DELETE
         return null;
+    }
+
+    const sessionUpdateData: Prisma.SessionUpdateInput = {
+        dateLastActive: new Date(),
+    };
+    // If the session is about to expire, extend the session
+    if (timeToExpire < USER_SESSION_VALIDITY_ms / 3) {
+        sessionUpdateData.dateExpires = new Date(now + USER_SESSION_VALIDITY_ms);
     }
 
     await UpdateSession({
         where: {
             id: session.id,
         },
-        data: {
-            dateLastActive: new Date(),
-        },
+        data: sessionUpdateData,
     });
 
     await setSessionTokenCache(tokenHash, session.id, session.userId, session.user); // SESSION_CACHE : SET
