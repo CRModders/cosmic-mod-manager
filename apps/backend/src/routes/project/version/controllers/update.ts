@@ -6,7 +6,7 @@ import type { Context } from "hono";
 import type { z } from "zod";
 import { GetManyFiles_ByID } from "~/db/file_item";
 import { GetProject_Details, GetProject_ListItem, UpdateProject } from "~/db/project_item";
-import { GetVersions, UpdateVersion } from "~/db/version_item";
+import { DeleteVersion, GetVersions, UpdateVersion } from "~/db/version_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getFilesFromId } from "~/routes/project/queries/file";
 import {
@@ -287,7 +287,7 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
     // Delete the version directory
     await deleteProjectVersionDirectory(FILE_STORAGE_SERVICE.LOCAL, Project.id, targetVersion.id);
 
-    const deletedVersion = await prisma.version.delete({
+    const deletedVersion = await DeleteVersion({
         where: {
             id: targetVersion.id,
         },

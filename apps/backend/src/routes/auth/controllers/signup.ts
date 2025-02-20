@@ -66,7 +66,7 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     let userName = createURLSafeSlug(profileData.name || "").value;
 
     // Check if the username is available
-    const existingUserWithSameUserName = await GetUser_ByIdOrUsername(userName);
+    const existingUserWithSameUserName = userName?.length > 0 ? await GetUser_ByIdOrUsername(userName) : null;
     if (existingUserWithSameUserName) userName = `${userName}-${userId}`;
 
     // Create the avatar image
