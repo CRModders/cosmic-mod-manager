@@ -245,7 +245,7 @@ function navigationLinksXml() {
 function xmlURL(path: string) {
     return `
     <url>
-        <loc>${env.FRONTEND_SECRET}/${path}</loc>
+        <loc>${env.FRONTEND_URL}/${path}</loc>
     </url>
     `;
 }
