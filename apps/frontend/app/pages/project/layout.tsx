@@ -197,7 +197,7 @@ export default function ProjectPageLayout() {
                 projectData?.projectWikiUrl ||
                 projectData?.discordInviteUrl ? (
                     <Card className="p-card-surround grid grid-cols-1 gap-1">
-                        <h2 className="text-lg font-bold pb-2">Links</h2>
+                        <h2 className="text-lg font-bold pb-2">{t.projectSettings.links}</h2>
                         {projectData?.issueTrackerUrl ? (
                             <ExternalLink
                                 url={projectData?.issueTrackerUrl}
