@@ -27,7 +27,7 @@ export function projectGalleryFileUrl(projectId: string, galleryFile: string) {
 
 export function versionFileUrl(projectId: string, versionId: string, fileName: string, useCacheCdn?: boolean) {
     if (fileName.startsWith("http")) return fileName;
-    return cdnUrl(`project/${projectId}/version/${versionId}/${encodeURIComponent(fileName)}`, useCacheCdn);
+    return cdnUrl(`project/${projectId}/version/${versionId}/${encodeURIComponent(fileName)}`, useCacheCdn === true);
 }
 
 export function orgIconUrl(orgId: string, icon: string | null) {
