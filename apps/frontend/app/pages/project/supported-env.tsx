@@ -24,7 +24,7 @@ function ServerSide({ className }: Props) {
     return (
         <span
             className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
-            title="Needs to be installed on the server"
+            title="Needs to be installed on the game server"
         >
             <HardDriveIcon aria-hidden className="w-btn-icon h-btn-icon" />
             {t.projectSettings.serverSide}
@@ -37,7 +37,7 @@ function ClientOrServerSide({ className }: Props) {
     return (
         <span
             className={cn("flex items-center justify-start gap-x-1 font-semibold text-muted-foreground cursor-help", className)}
-            title="Can be installed on either the game client or the server"
+            title="Needs to be installed on either the game client or the server"
         >
             <GlobeIcon aria-hidden className="w-btn-icon h-btn-icon" />
             {t.projectSettings.clientOrServer}
@@ -76,18 +76,26 @@ export function ProjectSupprotedEnvironments({
 
     if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.REQUIRED) {
         environments.push(<ClientAndServerSide key="Client-and-server" />);
-    } else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(
-            ...[<ClientSide key="Client-size" />, <ServerSide key="Server-size" />, <ClientAndServerSide key="Client-and-server" />],
-        );
-    } else if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ClientSide key="Client-size" />, <ClientAndServerSide key="Client-and-server" />]);
-    } else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.REQUIRED) {
-        environments.push(...[<ServerSide key="Server-size" />, <ClientAndServerSide key="Client-and-server" />]);
-    } else if (clientSide === EnvironmentSupport.REQUIRED || clientSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ClientSide key="Client-size" />]);
-    } else if (serverSide === EnvironmentSupport.REQUIRED || serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ServerSide key="Server-size" />]);
+    }
+    //
+    else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL) {
+        environments.push(<ClientOrServerSide key="Client-or-server" />);
+    }
+    //
+    else if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.OPTIONAL) {
+        environments.push(...[<ClientSide key="Client-side" />, <ClientAndServerSide key="Client-and-server" />]);
+    }
+    //
+    else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.REQUIRED) {
+        environments.push(...[<ServerSide key="Server-side" />, <ClientAndServerSide key="Client-and-server" />]);
+    }
+    //
+    else if (clientSide === EnvironmentSupport.REQUIRED || clientSide === EnvironmentSupport.OPTIONAL) {
+        environments.push(...[<ClientSide key="Client-side" />]);
+    }
+    //
+    else if (serverSide === EnvironmentSupport.REQUIRED || serverSide === EnvironmentSupport.OPTIONAL) {
+        environments.push(...[<ServerSide key="Server-side" />]);
     }
 
     return environments;
