@@ -7,7 +7,7 @@ import { GetProject_Details, GetProject_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { GetVersions } from "~/db/version_item";
 import { getUserIpAddress } from "~/routes/auth/helpers";
-import { isProjectAccessible } from "~/routes/project/utils";
+import { isProjectAccessible, isProjectPublic } from "~/routes/project/utils";
 import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile, getUserFile } from "~/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponse } from "~/utils/http";
@@ -41,7 +41,7 @@ export async function serveVersionFile(
         return notFoundResponse(ctx);
     }
 
-    const isPublicallyAccessible = project.visibility !== ProjectVisibility.PRIVATE && project.status === ProjectPublishingStatus.APPROVED;
+    const isPublicallyAccessible = isProjectPublic(project.visibility, project.status);
     const fileIds = targetVersion.files.map((file) => file.fileId);
     const VersionFileDataList = await GetManyFiles_ByID(fileIds);
 

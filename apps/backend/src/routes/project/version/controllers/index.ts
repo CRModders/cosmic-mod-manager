@@ -1,6 +1,6 @@
 import { gameVersionsList } from "@app/utils/src/constants/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
-import { type DependencyType, ProjectVisibility, type VersionReleaseChannel } from "@app/utils/types";
+import type { DependencyType, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
 import type { Prisma } from "@prisma/client";
 import { GetProject_Details } from "~/db/project_item";
@@ -47,7 +47,6 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
     const versionFilesMap = await getFilesFromId(idsList);
 
     const versionsList: ProjectVersionData[] = [];
-    const isProjectPrivate = project.visibility === ProjectVisibility.PRIVATE;
 
     for (let i = 0; i < projectVersions.length; i++) {
         const version = projectVersions[i];
@@ -59,7 +58,6 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
         for (const file of version.files) {
             const fileData = versionFilesMap.get(file.fileId);
             if (!fileData?.id) continue;
-            const useDirectCacheCdnUrl = !isProjectPrivate && !file.isPrimary;
 
             const formattedFile = {
                 id: file.id,
@@ -67,8 +65,7 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
                 name: fileData.name,
                 size: fileData.size,
                 type: fileData.type,
-                // ? Don't use cache cdn for primary files or private project files
-                url: versionFileUrl(project.id, version.id, fileData.name, useDirectCacheCdnUrl) || "",
+                url: versionFileUrl(project.id, version.id, fileData.name) || "",
                 sha1_hash: fileData.sha1_hash,
                 sha512_hash: fileData.sha512_hash,
             };
