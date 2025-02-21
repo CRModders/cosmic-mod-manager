@@ -38,36 +38,15 @@ async function UploadBackupFile(file: BunFile, s3_ref: S3File) {
     const stream = file.stream();
     const reader = stream.getReader();
 
-    const buffer = new Uint8Array(chunkSize);
-    let offset = 0;
-    let readComplete = false;
-    // This variable is used to store the size of the first chunk read, just to estimate the chunk size of the stream read
-    let readChunkSize = 0;
-
     console.log(`Uploading backup file to backblaze. Ref: ${s3_ref.name}`);
-    while (!readComplete) {
+    while (true) {
         const _res = await reader.read();
+        if (_res.done) break;
 
-        if (_res.done) {
-            readComplete = true;
-        }
-
-        if (_res.value) {
-            buffer.set(_res.value, offset);
-            offset += _res.value.length;
-
-            if (!readChunkSize) readChunkSize = _res.value.length;
-        }
-
-        // Adding the read buffer length again just to check if the buffer can fit the next chunk
-        // If it can't, then write the chunk to the writer and reset the offset
-        if (readComplete || offset + readChunkSize >= chunkSize) {
-            const chunk = buffer.slice(0, offset);
-            writer.write(chunk);
-            offset = 0;
-        }
+        writer.write(_res.value);
     }
 
+    await reader.cancel();
     await writer.end();
     console.log(`Backup file uploaded to backblaze. ${s3_ref.name} ${file.size} bytes`);
 }
