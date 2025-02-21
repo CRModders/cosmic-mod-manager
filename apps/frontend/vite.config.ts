@@ -3,13 +3,7 @@ import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { formatLocaleCode } from "./app/locales";
-import SupportedLocales, { DefaultLocale } from "./app/locales/meta";
 import { ASSETS_URL } from "./app/utils/server-config";
-
-const localesList = SupportedLocales.map((locale) => formatLocaleCode(locale)).filter(
-    (locale) => locale !== formatLocaleCode(DefaultLocale),
-);
 
 const CustomSrcChunks = [
     ["utils-extras", ["packages/utils/src"]],
@@ -38,11 +32,12 @@ export default defineConfig({
                         return `vendor/${parts[0]}`;
                     }
 
-                    // Locales
-                    for (const locale of localesList) {
-                        if (id.includes(`locales/${locale}`)) return `locale-${locale}`;
+                    // Utils package
+                    if (id.includes("packages/utils/src")) {
+                        const parts = id.split("/packages/utils/src/")[1].split("/");
+                        if (!parts[1]) return "utils/core";
+                        return `utils/${parts[0]}`;
                     }
-                    if (id.includes("locales/en")) return "locale-en";
 
                     // Styles
                     if (id.endsWith(".css")) return "styles";
