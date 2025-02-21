@@ -6,7 +6,13 @@ import { BackupToBackblaze } from "./backblaze";
 const FILES_BACKUP_NAME = "files_backup.zip";
 const DB_BACKUP_NAME = "db_backup.sql";
 
+const filesDir = path.resolve(LOCAL_BASE_STORAGE_PATH);
+const zipPath = path.resolve(LOCAL_BASE_STORAGE_PATH, FILES_BACKUP_NAME);
+const dbBackupPath = path.resolve(LOCAL_BASE_STORAGE_PATH, DB_BACKUP_NAME);
+
 export async function BackupLocalData() {
+    await RemoveOldBackupFiles();
+
     console.log("STARTING PROJECT FILES BACKUP...");
     const projectFilesBackupZip = await CreateProjectFilesBackupZip();
     await BackupToBackblaze(projectFilesBackupZip, FILES_BACKUP_NAME);
@@ -19,22 +25,17 @@ export async function BackupLocalData() {
 }
 await BackupLocalData();
 
-export async function CreateDbBackupZip() {
-    const dbBackupPath = path.resolve(LOCAL_BASE_STORAGE_PATH, DB_BACKUP_NAME);
-
-    await $`rm -f ${dbBackupPath}`;
+async function CreateDbBackupZip() {
     await $`pg_dump -U postgres -p 5432 crmm_prod > ${dbBackupPath}`;
-
     return Bun.file(dbBackupPath);
 }
 
-export async function CreateProjectFilesBackupZip() {
-    const filesDir = path.resolve(LOCAL_BASE_STORAGE_PATH);
-    const zipPath = path.resolve(LOCAL_BASE_STORAGE_PATH, FILES_BACKUP_NAME);
-
-    // Delete the previous backup file to prevent it from being included in the new backup
-    await $`rm -f ${zipPath}`;
+async function CreateProjectFilesBackupZip() {
     await $`zip -r ${zipPath} ${filesDir}`;
-
     return Bun.file(zipPath);
+}
+
+async function RemoveOldBackupFiles() {
+    // Delete the previous backup files to prevent it from being included in the new backup
+    await $`rm -f ${zipPath} && rm -f ${dbBackupPath}`;
 }
