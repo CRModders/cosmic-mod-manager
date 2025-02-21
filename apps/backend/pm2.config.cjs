@@ -50,6 +50,18 @@ const apps = [
     isDev ? dev_backend : prod_backend,
 ];
 
+if (!isDev) {
+    apps.push({
+        name: "crmm-auto-backups",
+        script: "src/services/storage/backup/index.ts",
+        interpreter: "bun",
+        cwd: backendDir,
+        autorestart: false,
+        watch: false,
+        cron_restart: "0 0 * * *", // Every day at midnight
+    })
+}
+
 module.exports = {
     apps: apps,
     deploy: {

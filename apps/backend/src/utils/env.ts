@@ -27,6 +27,8 @@ const envKeys = [
     "ADMIN_EMAIL",
     "ADMIN_EMAIL_PASSWORD",
     "SAFE_BROWSING_API_KEY",
+    "BACKBLAZE_BACKUP_API_KEY_ID",
+    "BACKBLAZE_BACKUP_API_KEY",
 ] as const;
 
 type EnvKeys = (typeof envKeys)[number];
