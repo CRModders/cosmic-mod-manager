@@ -78,3 +78,9 @@ export function FormatDate_ToLocaleString(_date: string | Date, _options: Format
 
     return date.toLocaleString(_options.locale, options);
 }
+
+export function GetTimestamp() {
+    const now = new Date();
+    const month = `${now.getMonth() + 1}`.padStart(2, "0");
+    return `${now.getFullYear()}-${month}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+}

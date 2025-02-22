@@ -1,3 +1,5 @@
+import { GetTimestamp } from "@app/utils/date";
+
 // Store files outeside of the project folder
 export const LOCAL_BASE_STORAGE_PATH = "./../../../uploads";
 
@@ -47,4 +49,9 @@ export function orgDir(orgId: string, extra?: string) {
 
 export function createFilePathSafeString(str: string) {
     return str.replace(/[^a-zA-Z0-9._-]/gi, "-");
+}
+
+export function LogWithTimestamp(...args: unknown[]) {
+    const timestamp = GetTimestamp();
+    console.log(`[${timestamp}] `, ...args);
 }

@@ -1,6 +1,6 @@
 import { $ } from "bun";
 import path from "node:path/posix";
-import { LOCAL_BASE_STORAGE_PATH } from "../utils";
+import { LOCAL_BASE_STORAGE_PATH, LogWithTimestamp } from "../utils";
 import { BackupToBackblaze } from "./backblaze";
 
 const FILES_BACKUP_NAME = "files_backup.zip";
@@ -13,15 +13,15 @@ const dbBackupPath = path.resolve(LOCAL_BASE_STORAGE_PATH, DB_BACKUP_NAME);
 export async function BackupLocalData() {
     await RemoveOldBackupFiles();
 
-    console.log("STARTING PROJECT FILES BACKUP...");
+    LogWithTimestamp("Starting project files backup...");
     const projectFilesBackupZip = await CreateProjectFilesBackupZip();
     await BackupToBackblaze(projectFilesBackupZip, FILES_BACKUP_NAME);
-    console.log("PROJECT FILES BACKUP FINISHED!");
+    LogWithTimestamp("Project files backup completed successfully!");
 
-    console.log("STARTING DB BACKUP...");
+    LogWithTimestamp("Starting db backup...");
     const dbBackup = await CreateDbBackupZip();
     await BackupToBackblaze(dbBackup, DB_BACKUP_NAME);
-    console.log("DB BACKUP FINISHED!");
+    LogWithTimestamp("DB backup completed successfully!");
 }
 await BackupLocalData();
 
