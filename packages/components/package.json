@@ -23,7 +23,6 @@
         "highlight.js": "^11.11.1",
         "lucide-react": "^0.469.0",
         "markdown-it": "^14.1.0",
-        "markdown-it-emoji": "^3.0.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-hook-form": "^7.54.2",
@@ -40,7 +39,6 @@
     "devDependencies": {
         "@react-router/dev": "^7.1.1",
         "@types/markdown-it": "^14.1.2",
-        "@types/markdown-it-emoji": "^3.0.1",
         "@types/react": "^19.0.2",
         "@types/react-dom": "^19.0.2",
         "autoprefixer": "^10.4.20",

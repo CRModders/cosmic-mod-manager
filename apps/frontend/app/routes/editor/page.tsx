@@ -4,7 +4,7 @@ import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { PageUrl } from "~/utils/urls";
 
-const defaultText = `# h1 Heading 8-)
+const defaultText = `# h1 Heading
 ## h2 Heading
 ### h3 Heading
 #### h4 Heading
@@ -138,15 +138,6 @@ Like links, Images also have a footnote style syntax
 <!-- With a reference later in the document defining the URL location: -->
 
 [id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
-
-
-### Emojies
-
-> Classic markup: \`:wink: :cry: :laughing: :yum:\` \\
-> :wink: :cry: :laughing: :yum:
->
-> Shortcuts (emoticons): \`:-) :-( 8-) ;) :P\` \\
-> :-) :-( 8-) ;) :P
 
 
 ### Abbreviations
