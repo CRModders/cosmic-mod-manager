@@ -218,10 +218,6 @@ body.no-scrollbar {
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
-    .text-shadow {
-        text-shadow: 1px 1px 8px black, -1px -1px 8px black;
-    }
 }
 
 a {

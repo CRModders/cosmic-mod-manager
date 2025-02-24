@@ -275,8 +275,10 @@ function ImageDialog({
 
                     <div className="max-w-full flex flex-col items-center justify-center group p-16 pt-24 pb-4 rounded w-fit absolute left-[50%] bottom-[0.5rem] translate-x-[-50%] z-20">
                         <div className="max-w-full w-max flex flex-col items-center justify-center transition-all duration-300 opacity-0 scale-75 translate-y-[1rem] group-hover:translate-y-[-1rem] group-hover:scale-100 group-hover:opacity-100 text-[hsla(var(--foreground-dark))]">
-                            <span className="text-shadow font-bold text-lg text-center">{galleryItem.name}</span>
-                            <span className="text-shadow text-pretty text-center">{galleryItem.description}</span>
+                            <span className="font-bold text-lg text-center bg-background/80 rounded-[0.1rem] px-1">{galleryItem.name}</span>
+                            <span className="max-w-[80ch] text-pretty text-center bg-background/80 rounded-[0.1rem] px-1">
+                                {galleryItem.description}
+                            </span>
                         </div>
 
                         <div className="flex items-center justify-start gap-2 p-2.5 px-3 rounded-xl bg-card-background opacity-45 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300 origin-bottom">
