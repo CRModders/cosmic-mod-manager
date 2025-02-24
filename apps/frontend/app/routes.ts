@@ -3,7 +3,7 @@ import { remixRoutesOptionAdapter } from "@react-router/remix-routes-option-adap
 import { formatLocaleCode } from "./../app/locales";
 import SupportedLocales from "./../app/locales/meta";
 
-const ProjectTypes = ["project", "mod", "modpack", "shader", "resource-pack", "datamod", "plugin"];
+const ProjectTypes = ["project", "mod", "modpack", "shader", "resource-pack", "datamod", "plugin", "world"];
 const langs = SupportedLocales.map((locale) => formatLocaleCode(locale));
 
 export default remixRoutesOptionAdapter((defineRoutes) => {

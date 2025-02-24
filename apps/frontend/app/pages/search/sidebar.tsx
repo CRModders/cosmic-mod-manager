@@ -22,6 +22,8 @@ import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
 import { deletePageOffsetParam, updateSearchParam } from "./layout";
 
+const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /* ProjectType.DATAMOD */];
+
 interface Props {
     type: ProjectType[];
     showFilters: boolean;
@@ -123,7 +125,6 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
         matchesSearch([license.label, license.value, licenseFilterLabel], query),
     );
 
-    const isModOrModpack = type.includes(ProjectType.MOD) || type.includes(ProjectType.MODPACK);
     const isUniversalSearchPage = type.length > 1;
     const defaultOpenAdditionalFilters = !isUniversalSearchPage;
 
@@ -205,7 +206,7 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 }
             />
 
-            {isModOrModpack && (
+            {SHOW_ENV_FILTER_FOR_TYPES.some((t) => type.includes(t)) && (
                 <FilterCategory
                     items={environmentFilterOptions}
                     selectedItems={searchParams.getAll(environmentFilterParamNamespace)}

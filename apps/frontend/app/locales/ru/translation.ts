@@ -68,6 +68,9 @@ export default {
         modpacks: "модпаки",
         plugin: "плагин",
         plugins: "плагины",
+        // ? New strings
+        // world: "world",
+        // worlds: "worlds",
         signout: "Выйти",
         dashboard: "Панель управления",
         profile: "Профиль",
@@ -197,6 +200,8 @@ export default {
         plugin: "Найти плагины",
         modpack: "Найти модпаки",
         datamod: "Найти дата-моды",
+        // ? New string
+        // world: "Search worlds",
 
         // Sorting methods
         showPerPage: "На странице",
@@ -299,6 +304,8 @@ export default {
             shader: "Найти шейдеры",
             modpack: "Найти модпаки",
             plugin: "Найти плагины",
+            // ? New string
+            world: "Browse worlds",
         },
 
         rejected: "Отклонено",

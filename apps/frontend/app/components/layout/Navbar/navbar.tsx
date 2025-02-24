@@ -10,26 +10,28 @@ import type { Notification } from "@app/utils/types/api";
 import { Building2Icon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigation } from "react-router";
+import { useLocation, useNavigation } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
-import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import CreateNewOrg_Dialog from "~/pages/dashboard/organization/new-organization";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
+import { projectTypes } from "@app/utils/config/project";
 
 interface NavbarProps {
     session: LoggedInUserData | null;
     notifications: Notification[];
 }
 
+let closeOtherLinksPopup_timeout: number | undefined;
+
 export default function Navbar(props: NavbarProps) {
-    const session = useSession();
     const [isNavMenuOpen, setIsNavMenuOpen] = useState<boolean>(false);
+    const [otherLinksPopoverOpen, setOtherLinksPopoverOpen] = useState(false);
     const { t } = useTranslation();
     const nav = t.navbar;
 
@@ -37,32 +39,40 @@ export default function Navbar(props: NavbarProps) {
         setIsNavMenuOpen((current) => (newState === true || newState === false ? newState : !current));
     }
 
-    const NavLinks = [
-        {
-            label: Capitalize(nav.mods),
-            href: "mods",
-        },
-        {
-            label: Capitalize(nav.datamods),
-            href: "datamods",
-        },
-        {
-            label: Capitalize(nav["resource-packs"]),
-            href: "resource-packs",
-        },
-        {
-            label: Capitalize(nav.shaders),
-            href: "shaders",
-        },
-        {
-            label: Capitalize(nav.modpacks),
-            href: "modpacks",
-        },
-        {
-            label: Capitalize(nav.plugins),
-            href: "plugins",
-        },
-    ];
+    const NavLinks = projectTypes.map((type) => {
+        return {
+            label: Capitalize(nav[`${type}s`]),
+            href: `${type}s`,
+        };
+    });
+
+    const Important_NavLinks = NavLinks.slice(0, 4);
+    const Other_NavLinks = NavLinks.slice(4);
+    Other_NavLinks.push({
+        label: t.common.all,
+        href: "projects",
+    });
+
+    function OpenOtherLinksPopup() {
+        if (closeOtherLinksPopup_timeout) {
+            clearTimeout(closeOtherLinksPopup_timeout);
+        }
+        setOtherLinksPopoverOpen(true);
+    }
+
+    function CloseOtherLinksPopup(instant = false) {
+        if (closeOtherLinksPopup_timeout) {
+            clearTimeout(closeOtherLinksPopup_timeout);
+        }
+
+        if (instant) {
+            return setOtherLinksPopoverOpen(false);
+        }
+
+        closeOtherLinksPopup_timeout = window.setTimeout(() => {
+            setOtherLinksPopoverOpen(false);
+        }, 600);
+    }
 
     useEffect(() => {
         if (isNavMenuOpen === true) {
@@ -99,15 +109,45 @@ export default function Navbar(props: NavbarProps) {
                         </Link>
 
                         <ul className="hidden lg:flex items-center justify-center gap-1">
-                            {NavLinks.map((link) => {
+                            {Important_NavLinks.map((link) => {
                                 return (
                                     <li key={link.href} className="flex items-center justify-center">
-                                        <Navlink href={link.href} label={link.label} className="h-9">
+                                        <Navlink href={link.href} label={link.label}>
                                             {link.label}
                                         </Navlink>
                                     </li>
                                 );
                             })}
+
+                            <li className="flex items-center justify-center">
+                                <Popover open={otherLinksPopoverOpen}>
+                                    <PopoverTrigger asChild onMouseEnter={OpenOtherLinksPopup} onMouseLeave={() => CloseOtherLinksPopup()}>
+                                        <Button variant="ghost" className="text-extra-muted-foreground" onClick={() => {}}>
+                                            More <ChevronDownIcon className="h-btn-icon w-btn-icon" />
+                                        </Button>
+                                    </PopoverTrigger>
+
+                                    <PopoverContent
+                                        className="p-1 min-w-0"
+                                        onMouseEnter={OpenOtherLinksPopup}
+                                        onMouseLeave={() => CloseOtherLinksPopup()}
+                                        onClick={() => CloseOtherLinksPopup(true)}
+                                    >
+                                        {Other_NavLinks.map((link) => {
+                                            return (
+                                                <NavMenuLink
+                                                    key={link.href}
+                                                    href={link.href}
+                                                    label={link.label}
+                                                    toggleNavMenu={toggleNavMenu}
+                                                >
+                                                    {link.label}
+                                                </NavMenuLink>
+                                            );
+                                        })}
+                                    </PopoverContent>
+                                </Popover>
+                            </li>
                         </ul>
                     </div>
                     <div className="flex items-center gap-4">

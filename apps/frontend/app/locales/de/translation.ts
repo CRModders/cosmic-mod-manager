@@ -99,6 +99,9 @@ export default {
         modpacks: "Modpacks",
         plugin: "Plugin",
         plugins: "Plugins",
+        // ? New strings
+        // world: "world",
+        // worlds: "worlds",
         signout: "Ausloggen",
         dashboard: "Dashboard",
         profile: "Profil",
@@ -227,6 +230,8 @@ export default {
         plugin: "Entdecke Plugins",
         modpack: "Entdecke Modpacks",
         datamod: "Entdecke Datamods",
+        // ? New string
+        // world: "Search worlds",
 
         // Sorting methods
         showPerPage: "Zeige pro Seite",
@@ -331,6 +336,8 @@ export default {
             shader: "Durchsuche Shaders",
             modpack: "Durchsuche Modpacks",
             plugin: "Durchsuche Plugins",
+            // ? New string
+            world: "Browse worlds",
         },
 
         rejected: "Abgelehnt",

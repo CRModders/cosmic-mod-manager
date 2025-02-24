@@ -16,6 +16,7 @@ import {
     FeatherIcon,
     FilmIcon,
     FlipHorizontal2Icon,
+    GhostIcon,
     GlobeIcon,
     HardDriveIcon,
     HeadphonesIcon,
@@ -239,6 +240,170 @@ export const PotatoIcon: React.FC<IconSvgProps> = ({ size, width, height, ...pro
     );
 };
 
+export const PumpkinIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            {...props}
+        >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 15l1.5 1l1.5 -1l1.5 1l1.5 -1" />
+            <path d="M10 11h.01" />
+            <path d="M14 11h.01" />
+            <path d="M17 6.082c2.609 .588 3.627 4.162 2.723 7.983c-.903 3.82 -2.75 6.44 -5.359 5.853a3.355 3.355 0 0 1 -.774 -.279a3.728 3.728 0 0 1 -1.59 .361c-.556 0 -1.09 -.127 -1.59 -.362a3.296 3.296 0 0 1 -.774 .28c-2.609 .588 -4.456 -2.033 -5.36 -5.853c-.903 -3.82 .115 -7.395 2.724 -7.983c1.085 -.244 1.575 .066 2.585 .787c.716 -.554 1.54 -.869 2.415 -.869c.876 0 1.699 .315 2.415 .87c1.01 -.722 1.5 -1.032 2.585 -.788z" />
+            <path d="M12 6c0 -1.226 .693 -2.346 1.789 -2.894l.211 -.106" />
+        </svg>
+    );
+};
+
+export const ParkourIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256 256"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            {...props}
+        >
+            <rect width="256" height="256" fill="none" />
+            <circle
+                cx="152"
+                cy="56"
+                r="24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="22"
+            />
+            <path
+                d="M56,105.6s32-25.67,80,7c50.47,34.3,80,20.85,80,20.85"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="22"
+            />
+            <path
+                d="M110.64,161.16C128.47,165,176,180,176,232"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="22"
+            />
+            <path
+                d="M134.44,111.51C128.37,135.24,98.81,206.68,32,200"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="22"
+            />
+        </svg>
+    );
+};
+
+export const ChristmasTreeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            {...props}
+        >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M12 3l4 4l-2 1l4 4l-3 1l4 4h-14l4 -4l-3 -1l4 -4l-2 -1z" />
+            <path d="M14 17v3a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-3" />
+        </svg>
+    );
+};
+
+export const PixelArtIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            fill="currentColor"
+            {...props}
+        >
+            <path d="M14 10V14H10V10H14ZM16 10H21V14H16V10ZM14 21H10V16H14V21ZM16 21V16H21V20C21 20.5523 20.5523 21 20 21H16ZM14 3V8H10V3H14ZM16 3H20C20.5523 3 21 3.44772 21 4V8H16V3ZM8 10V14H3V10H8ZM8 21H4C3.44772 21 3 20.5523 3 20V16H8V21ZM8 3V8H3V4C3 3.44772 3.44772 3 4 3H8Z" />
+        </svg>
+    );
+};
+
+export const MazeIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-33 -33 396.00 396.00"
+            xmlSpace="preserve"
+            transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            fill="currentColor"
+            {...props}
+        >
+            <g stroke-width="0" />
+            <g stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.32" />
+            <g>
+                <g>
+                    <path d="M69.166,230c-8.284,0-15,6.716-15,15s6.716,15,15,15h95.836c8.284,0,15-6.716,15-15v-65H230v65c0,8.284,6.716,15,15,15 s15-6.716,15-15V71.547c0-8.284-6.716-15-15-15s-15,6.716-15,15V150H30V30h75.082c8.284,0,15-6.716,15-15s-6.716-15-15-15H15 C6.716,0,0,6.716,0,15v300c0,8.284,6.716,15,15,15h150c8.284,0,15-6.716,15-15s-6.716-15-15-15H30V180h120.002v50H69.166z" />
+                    <path d="M315,0H165.002c-8.284,0-15,6.716-15,15v65H75c-8.284,0-15,6.716-15,15s6.716,15,15,15h90.002c8.284,0,15-6.716,15-15V30 H300v270h-75c-8.284,0-15,6.716-15,15s6.716,15,15,15h90c8.284,0,15-6.716,15-15V15C330,6.716,323.284,0,315,0z" />
+                </g>
+            </g>
+        </svg>
+    );
+};
+
+export const IslandIcon: React.FC<IconSvgProps> = ({ size, width, height, ...props }) => {
+    return (
+        <svg
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 511.998 511.998"
+            xmlSpace="preserve"
+            xmlns="http://www.w3.org/2000/svg"
+            width={size || width || DefaultSvgSize}
+            height={size || height || DefaultSvgSize}
+            aria-hidden="true"
+            fill="currentColor"
+            {...props}
+        >
+            <g strokeWidth="0" />
+            <g strokeLinecap="round" strokeLinejoin="round" />
+            <g>
+                <g>
+                    <g>
+                        <path d="M481.771,180.215c-8.032-18.891-20.464-35.363-36.296-48.461c12.603-3.935,23.805-7.896,29.051-9.791 c7.917-2.86,12.471-11.161,10.629-19.375c-11.546-51.496-71.993-74.378-119.825-51.925c-3.721-9.587-9.225-18.418-16.296-25.974 C325.289-0.674,289.196-7.214,259.221,8.421c-6.811,3.552-10.325,11.291-8.514,18.757c2.505,10.327,5.298,21.211,8.797,31.687 c-54.797-9.37-113.422,11.635-141.22,54.955c-5.738,8.94-1.772,20.898,8.146,24.655c26.558,10.06,55.902,15.804,87.661,17.187 c-7.628,8.889-14.102,18.629-19.265,29.056c-11.81,23.852-15.937,50.103-11.621,73.916c1.793,9.902,11.879,15.985,21.479,12.957 c7.278-2.299,14.86-5.407,22.547-9.102c-3.2,6.569-6.31,13.259-9.331,20.102c-18.902,42.831-31.65,85.091-39.783,131.961 c-54.826,5.549-157.339,26.024-157.339,80.71c0,9.242,7.493,16.736,16.736,16.736h401.653c9.242,0,16.736-7.493,16.736-16.736 c0-53.826-99.391-74.441-153.517-80.306c-0.318-30.855,2.588-59.937,8.991-90.412c4.628-22.014,10.598-42.616,18.294-62.97 c7.771,15.37,16.737,29.334,26.348,39.044c6.584,6.65,17.331,6.593,23.847-0.095c18.139-18.615,29.138-40.385,32.676-64.24 c15.879,12.959,32.36,24.638,47.801,33.762c8.775,5.185,20.133,1.368,23.982-8.087 C494.336,237.371,493.406,207.576,481.771,180.215z M407.633,478.529H69.05c39.462-25.428,117.256-33.471,169.291-33.471 C293.992,445.058,369.635,454.045,407.633,478.529z M278.622,317.664c-6.712,31.945-9.856,62.46-9.722,94.672 c-10.038-0.495-20.244-0.749-30.559-0.749c-8.685,0-17.292,0.179-25.788,0.531c7.692-41.154,19.048-77.668,35.968-116.01 c11.41-25.847,24.092-49.421,38.687-71.996c7.569-5.99,14.642-12.05,20.944-17.907c1.08,3.803,2.286,7.736,3.602,11.746 C296.608,250.56,286.029,282.428,278.622,317.664z M457.756,228.617c-17.367-12.108-35.179-26.8-50.937-42.139 c-5.211-5.072-13.106-6.192-19.519-2.771c-6.418,3.421-9.885,10.598-8.578,17.752c4.108,22.485,0.527,42.742-10.648,60.453 c-19.208-30.379-33.275-79.335-32.965-91.223c0.194-7.422-4.532-14.081-11.599-16.349c-7.068-2.269-14.788,0.397-18.948,6.546 c-11.026,16.288-50.826,50.892-89.054,70.11c3.008-27.112,19.521-58.454,54.404-78.68c6.77-3.926,9.91-12.026,7.553-19.49 c-2.356-7.464-9.592-12.293-17.376-11.618c-35.946,3.108-68.895,0.888-98.301-6.596c31.558-26.507,83.425-32.366,122.756-12.925 c7.07,3.493,15.617,1.572,20.511-4.611c4.893-6.183,4.8-14.945-0.224-21.021c-8.121-9.822-13.95-27.438-17.934-42.126 c13.46-2.264,27.36,2.521,37.734,13.605c0,0,0,0,0.001,0c7.815,8.35,12.374,19.427,12.834,31.188 c0.254,6.517,4.276,12.289,10.3,14.786c6.024,2.497,12.949,1.262,17.74-3.163c24.118-22.284,64.98-18.601,81.225,5.883 c-17.281,5.751-36.058,11.238-46.651,12.552c-7.569,0.938-13.542,6.883-14.519,14.446c-0.976,7.564,3.292,14.83,10.375,17.659 c25.473,10.176,45.031,28.788,55.074,52.409C455.995,205.015,458.26,217.186,457.756,228.617z" />
+                    </g>
+                </g>
+            </g>
+        </svg>
+    );
+};
+
 const defaultIconClass = "inline w-4 leading-none aspect-square";
 
 const tagIcons = {
@@ -257,6 +422,7 @@ const tagIcons = {
     "bug-fix": <WrenchIcon className={defaultIconClass} aria-hidden />,
     cartoon: <BrushIcon className={defaultIconClass} aria-hidden />,
     challenging: <BarChartIcon className={defaultIconClass} aria-hidden />,
+    christmas: <ChristmasTreeIcon className={defaultIconClass} aria-hidden />,
     "colored-lighting": <PaletteIcon className={defaultIconClass} aria-hidden />,
     combat: <SwordsIcon className={defaultIconClass} aria-hidden />,
     "core-shaders": <CpuIcon className={defaultIconClass} aria-hidden />,
@@ -272,7 +438,10 @@ const tagIcons = {
     food: <CarrotIcon className={defaultIconClass} aria-hidden />,
     "game-mechanics": <SlidersIcon className={defaultIconClass} aria-hidden />,
     gui: <PanelsTopLeftIcon className={defaultIconClass} aria-hidden />,
+    horror: <GhostIcon className={defaultIconClass} aria-hidden />,
+    halloween: <PumpkinIcon className={defaultIconClass} />,
     high: <SignalHighIcon className={defaultIconClass} aria-hidden />,
+    island: <IslandIcon className={defaultIconClass} />,
     items: <BookIcon className={defaultIconClass} aria-hidden />,
     "kitchen-sink": <KitchenSinkIcon className={defaultIconClass} aria-hidden />,
     library: <BookIcon className={defaultIconClass} aria-hidden />,
@@ -280,6 +449,7 @@ const tagIcons = {
     locale: <GlobeIcon className={defaultIconClass} aria-hidden />,
     low: <SignalLowIcon className={defaultIconClass} aria-hidden />,
     magic: <WandSparklesIcon className={defaultIconClass} aria-hidden />,
+    maze: <MazeIcon className={defaultIconClass} />,
     management: <ServerIcon className={defaultIconClass} aria-hidden />,
     medium: <SignalMediumIcon className={defaultIconClass} aria-hidden />,
     minigame: <AwardIcon className={defaultIconClass} aria-hidden />,
@@ -288,14 +458,17 @@ const tagIcons = {
     models: <LayersIcon className={defaultIconClass} aria-hidden />,
     multiplayer: <UsersIcon className={defaultIconClass} aria-hidden />,
     optimization: <ZapIcon className={defaultIconClass} aria-hidden />,
+    parkour: <ParkourIcon className={defaultIconClass} />,
     "path-tracing": <RayReflectingIcon className={defaultIconClass} aria-hidden />,
     pbr: <LightbulbIcon className={defaultIconClass} aria-hidden />,
+    "pixel-art": <PixelArtIcon className={defaultIconClass} />,
     potato: <PotatoIcon className={defaultIconClass} aria-hidden />,
     quests: <NetworkIcon className={defaultIconClass} aria-hidden />,
     realistic: <CameraIcon className={defaultIconClass} aria-hidden />,
     reflections: <FlipHorizontal2Icon className={defaultIconClass} aria-hidden />,
     screenshot: <ImageIcon className={defaultIconClass} aria-hidden />,
     "semi-realistic": <FilmIcon className={defaultIconClass} aria-hidden />,
+    survival: <PickaxeIcon className={defaultIconClass} aria-hidden />,
     shadows: <MountainIcon className={defaultIconClass} aria-hidden />,
     simplistic: <HexagonIcon className={defaultIconClass} aria-hidden />,
     social: <MessageCircleIcon className={defaultIconClass} aria-hidden />,

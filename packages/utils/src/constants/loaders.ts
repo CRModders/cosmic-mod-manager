@@ -14,7 +14,7 @@ export type Loader = {
 export const loaders: Loader[] = [
     {
         name: "quilt",
-        supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK, ProjectType.WORLD],
         metadata: {
             foreground: {
                 light: "#8B61B4",
@@ -24,7 +24,7 @@ export const loaders: Loader[] = [
     },
     {
         name: "puzzle_loader",
-        supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK],
+        supportedProjectTypes: [ProjectType.MOD, ProjectType.MODPACK, ProjectType.WORLD],
         metadata: {
             foreground: {
                 light: "#4A953F",

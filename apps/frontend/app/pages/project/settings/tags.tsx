@@ -72,6 +72,10 @@ export default function TagsSettingsPage() {
 
     const projectType = t.navbar[projectData.type[0]];
 
+    if (allAvailableCategories.length === 0) {
+        return <FormErrorMessage text="No categories available for the selected project type!" />;
+    }
+
     return (
         <Form {...form}>
             <form
@@ -86,125 +90,115 @@ export default function TagsSettingsPage() {
                         <span className="text-muted-foreground">{t.projectSettings.tagsDesc}</span>
                     </div>
 
-                    {allAvailableCategories?.length ? (
-                        <>
-                            <div className="w-full flex flex-col items-start justify-start">
-                                <span className="text-lg font-bold">{t.search.category}</span>
-                                <span className="text-muted-foreground">{t.projectSettings.tagsDesc2(projectType.toLowerCase())}</span>
-                                <FormField
-                                    control={form.control}
-                                    name="categories"
-                                    render={({ field }) => (
-                                        <div className="autofit-grid w-full grid mt-2">
-                                            {allAvailableCategories.map((category) => {
-                                                // @ts-ignore
-                                                const categoryName = t.search.tags[category.name] || category.name;
+                    <div className="w-full flex flex-col items-start justify-start">
+                        <span className="text-lg font-bold">{t.search.category}</span>
+                        <span className="text-muted-foreground">{t.projectSettings.tagsDesc2(projectType.toLowerCase())}</span>
+                        <FormField
+                            control={form.control}
+                            name="categories"
+                            render={({ field }) => (
+                                <div className="autofit-grid w-full grid mt-2">
+                                    {allAvailableCategories.map((category) => {
+                                        // @ts-ignore
+                                        const categoryName = t.search.tags[category.name] || category.name;
 
-                                                return (
-                                                    <LabelledCheckbox
-                                                        title={`${CapitalizeAndFormatString(categoryName)} (${t.search[category.header]})`}
-                                                        key={categoryName}
-                                                        name={categoryName}
-                                                        checked={field.value.includes(category.name)}
-                                                        onCheckedChange={(e) => {
-                                                            if (e === true) {
-                                                                field.onChange([...field.value, category.name]);
-                                                            } else {
-                                                                field.onChange(field.value.filter((tag) => tag !== category.name));
+                                        return (
+                                            <LabelledCheckbox
+                                                title={`${CapitalizeAndFormatString(categoryName)} (${t.search[category.header]})`}
+                                                key={categoryName}
+                                                name={categoryName}
+                                                checked={field.value.includes(category.name)}
+                                                onCheckedChange={(e) => {
+                                                    if (e === true) {
+                                                        field.onChange([...field.value, category.name]);
+                                                    } else {
+                                                        field.onChange(field.value.filter((tag) => tag !== category.name));
 
-                                                                // Also remove the category from featured tags if it was featured
-                                                                const selectedFeaturedTagsList = form.getValues().featuredCategories;
-                                                                if (selectedFeaturedTagsList.includes(category.name)) {
-                                                                    form.setValue(
-                                                                        "featuredCategories",
-                                                                        selectedFeaturedTagsList.filter((tag) => tag !== category.name),
-                                                                    );
-                                                                }
-                                                            }
-                                                        }}
-                                                    >
-                                                        <span className="flex items-center justify-start gap-1">
-                                                            <TagIcon name={category.name} />
-                                                            {CapitalizeAndFormatString(categoryName)}
-                                                        </span>
-                                                    </LabelledCheckbox>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                />
-                            </div>
-
-                            <div className="w-full flex flex-col items-start justify-start">
-                                <span className="flex items-center justify-center gap-2 text-lg font-bold">
-                                    <StarIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
-                                    {t.projectSettings.featuredCategories}
-                                </span>
-                                <span className="text-muted-foreground">
-                                    {t.projectSettings.featuredCategoriesDesc(MAX_FEATURED_PROJECT_TAGS)}
-                                </span>
-                                <FormField
-                                    control={form.control}
-                                    name="featuredCategories"
-                                    render={({ field }) => (
-                                        <div className="autofit-grid w-full grid mt-2">
-                                            {form.getValues().categories.map((tag) => {
-                                                // @ts-ignore
-                                                const tagName = t.search.tags[tag] || tag;
-
-                                                return (
-                                                    <LabelledCheckbox
-                                                        key={tagName}
-                                                        name={tagName}
-                                                        className="w-fit"
-                                                        checked={field.value.includes(tag)}
-                                                        disabled={
-                                                            field.value.length >= MAX_FEATURED_PROJECT_TAGS && !field.value.includes(tag)
+                                                        // Also remove the category from featured tags if it was featured
+                                                        const selectedFeaturedTagsList = form.getValues().featuredCategories;
+                                                        if (selectedFeaturedTagsList.includes(category.name)) {
+                                                            form.setValue(
+                                                                "featuredCategories",
+                                                                selectedFeaturedTagsList.filter((tag) => tag !== category.name),
+                                                            );
                                                         }
-                                                        onCheckedChange={(e) => {
-                                                            if (e === true) {
-                                                                if (field.value.length >= MAX_FEATURED_PROJECT_TAGS) return;
-                                                                field.onChange([...field.value, tag]);
-                                                            } else {
-                                                                field.onChange(field.value.filter((selectedTag) => tag !== selectedTag));
-                                                            }
-                                                        }}
-                                                    >
-                                                        <span className="flex items-center justify-start gap-1">
-                                                            <TagIcon name={tag} />
-                                                            {CapitalizeAndFormatString(tagName)}
-                                                        </span>
-                                                    </LabelledCheckbox>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                />
+                                                    }
+                                                }}
+                                            >
+                                                <span className="flex items-center justify-start gap-1">
+                                                    <TagIcon name={category.name} />
+                                                    {CapitalizeAndFormatString(categoryName)}
+                                                </span>
+                                            </LabelledCheckbox>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        />
+                    </div>
 
-                                {!form.getValues().categories?.length ? (
-                                    <span className="text-muted-foreground">{t.projectSettings.selectAtLeastOneCategory}</span>
-                                ) : null}
-                            </div>
+                    <div className="w-full flex flex-col items-start justify-start">
+                        <span className="flex items-center justify-center gap-2 text-lg font-bold">
+                            <StarIcon aria-hidden className="w-btn-icon h-btn-icon text-muted-foreground" />
+                            {t.projectSettings.featuredCategories}
+                        </span>
+                        <span className="text-muted-foreground">{t.projectSettings.featuredCategoriesDesc(MAX_FEATURED_PROJECT_TAGS)}</span>
+                        <FormField
+                            control={form.control}
+                            name="featuredCategories"
+                            render={({ field }) => (
+                                <div className="autofit-grid w-full grid mt-2">
+                                    {form.getValues().categories.map((tag) => {
+                                        // @ts-ignore
+                                        const tagName = t.search.tags[tag] || tag;
 
-                            <div className="w-full flex items-center justify-end">
-                                <Button
-                                    type="submit"
-                                    disabled={isLoading || isSubmitBtnDisabled}
-                                    onClick={async () => {
-                                        await handleFormError(async () => {
-                                            const formValues = await updateProjectTagsFormSchema.parseAsync(form.getValues());
-                                            await updateTags(formValues);
-                                        }, toast.error);
-                                    }}
-                                >
-                                    {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
-                                    {t.form.saveChanges}
-                                </Button>
-                            </div>
-                        </>
-                    ) : (
-                        <FormErrorMessage text="Please upload a version first in order to select tags!" className="w-fit" />
-                    )}
+                                        return (
+                                            <LabelledCheckbox
+                                                key={tagName}
+                                                name={tagName}
+                                                className="w-fit"
+                                                checked={field.value.includes(tag)}
+                                                disabled={field.value.length >= MAX_FEATURED_PROJECT_TAGS && !field.value.includes(tag)}
+                                                onCheckedChange={(e) => {
+                                                    if (e === true) {
+                                                        if (field.value.length >= MAX_FEATURED_PROJECT_TAGS) return;
+                                                        field.onChange([...field.value, tag]);
+                                                    } else {
+                                                        field.onChange(field.value.filter((selectedTag) => tag !== selectedTag));
+                                                    }
+                                                }}
+                                            >
+                                                <span className="flex items-center justify-start gap-1">
+                                                    <TagIcon name={tag} />
+                                                    {CapitalizeAndFormatString(tagName)}
+                                                </span>
+                                            </LabelledCheckbox>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        />
+
+                        {!form.getValues().categories?.length ? (
+                            <span className="text-muted-foreground">{t.projectSettings.selectAtLeastOneCategory}</span>
+                        ) : null}
+                    </div>
+
+                    <div className="w-full flex items-center justify-end">
+                        <Button
+                            type="submit"
+                            disabled={isLoading || isSubmitBtnDisabled}
+                            onClick={async () => {
+                                await handleFormError(async () => {
+                                    const formValues = await updateProjectTagsFormSchema.parseAsync(form.getValues());
+                                    await updateTags(formValues);
+                                }, toast.error);
+                            }}
+                        >
+                            {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
+                            {t.form.saveChanges}
+                        </Button>
+                    </div>
                 </Card>
             </form>
         </Form>

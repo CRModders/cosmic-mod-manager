@@ -160,6 +160,7 @@ export function getLoadersByProjectType(projectType: ProjectType[]) {
 }
 
 export const compatibleProjectTypes = {
+    [ProjectType.WORLD]: [],
     [ProjectType.MODPACK]: [],
     [ProjectType.SHADER]: [ProjectType.RESOURCE_PACK],
     [ProjectType.RESOURCE_PACK]: [ProjectType.SHADER],
@@ -184,6 +185,7 @@ export function filterInCompatibleProjectTypes(primaryType: ProjectType, currTyp
 export function validateProjectTypesCompatibility(types: ProjectType[]) {
     if (types.length < 2) return types;
 
+    if (types.includes(ProjectType.WORLD)) return filterInCompatibleProjectTypes(ProjectType.WORLD, types);
     if (types.includes(ProjectType.MODPACK)) return filterInCompatibleProjectTypes(ProjectType.MODPACK, types);
     if (types.includes(ProjectType.SHADER)) return filterInCompatibleProjectTypes(ProjectType.SHADER, types);
     if (types.includes(ProjectType.RESOURCE_PACK)) return filterInCompatibleProjectTypes(ProjectType.RESOURCE_PACK, types);

@@ -15,6 +15,7 @@ export const projectTypes: ProjectType[] = [
     ProjectType.SHADER,
     ProjectType.MODPACK,
     ProjectType.PLUGIN,
+    ProjectType.WORLD,
 ];
 
 export const ProjectPermissionsList: ProjectPermission[] = [
@@ -58,6 +59,14 @@ export function GetProjectEnvironment(type: ProjectType[], clientSide?: Environm
     if (type.includes(ProjectType.PLUGIN)) {
         return {
             clientSide: type.includes(ProjectType.MOD) && clientSide ? clientSide : EnvironmentSupport.UNSUPPORTED,
+            serverSide: EnvironmentSupport.REQUIRED,
+        };
+    }
+
+    // Worlds are server only
+    if (type.includes(ProjectType.WORLD)) {
+        return {
+            clientSide: EnvironmentSupport.UNSUPPORTED,
             serverSide: EnvironmentSupport.REQUIRED,
         };
     }

@@ -14,6 +14,7 @@ const DefaultViewPrefs = {
     [ProjectType.SHADER]: ViewType.GALLERY,
     [ProjectType.MODPACK]: ViewType.LIST,
     [ProjectType.PLUGIN]: ViewType.LIST,
+    [ProjectType.WORLD]: ViewType.GALLERY,
 };
 
 export interface UserConfig {

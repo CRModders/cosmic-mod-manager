@@ -18,7 +18,8 @@ export function allowedPrimaryFileTypes(projectType: ProjectType[]) {
     if (
         projectType.includes(ProjectType.RESOURCE_PACK) ||
         projectType.includes(ProjectType.MODPACK) ||
-        projectType.includes(ProjectType.DATAMOD)
+        projectType.includes(ProjectType.DATAMOD) ||
+        projectType.includes(ProjectType.WORLD)
     ) {
         allowedFileTypes.add(FileType.ZIP);
         allowedFileTypes.add(FileType.SEVEN_Z);

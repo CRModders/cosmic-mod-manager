@@ -8,7 +8,7 @@ export interface CategoryType {
     isDisplayed?: boolean;
 }
 
-export const categories = [
+export const categories: CategoryType[] = [
     {
         name: "8x-",
         projectTypes: [ProjectType.RESOURCE_PACK],
@@ -59,7 +59,7 @@ export const categories = [
     },
     {
         name: "adventure",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.MODPACK],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.MODPACK, ProjectType.WORLD],
         header: TagHeaderType.CATEGORY,
     },
     {
@@ -98,6 +98,16 @@ export const categories = [
         header: TagHeaderType.CATEGORY,
     },
     {
+        name: "christmas",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
+        name: "city",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
         name: "colored-lighting",
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.FEATURE,
@@ -114,12 +124,12 @@ export const categories = [
     },
     {
         name: "cursed",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.RESOURCE_PACK, ProjectType.SHADER],
+        projectTypes: projectTypes,
         header: TagHeaderType.CATEGORY,
     },
     {
         name: "decoration",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.RESOURCE_PACK],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.RESOURCE_PACK],
         header: TagHeaderType.CATEGORY,
     },
     {
@@ -140,6 +150,11 @@ export const categories = [
     {
         name: "equipment",
         projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.RESOURCE_PACK],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
+        name: "escape",
+        projectTypes: [ProjectType.WORLD],
         header: TagHeaderType.CATEGORY,
     },
     {
@@ -171,6 +186,11 @@ export const categories = [
         name: "gui",
         projectTypes: [ProjectType.RESOURCE_PACK],
         header: TagHeaderType.FEATURE,
+    },
+    {
+        name: "island",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
     },
     {
         name: "items",
@@ -208,8 +228,13 @@ export const categories = [
         header: TagHeaderType.CATEGORY,
     },
     {
+        name: "medieval",
+        projectTypes: [ProjectType.MODPACK, ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
         name: "minigame",
-        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
+        projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN, ProjectType.WORLD],
         header: TagHeaderType.CATEGORY,
     },
     {
@@ -229,12 +254,17 @@ export const categories = [
     },
     {
         name: "multiplayer",
-        projectTypes: [ProjectType.MODPACK],
+        projectTypes: [ProjectType.MODPACK, ProjectType.WORLD],
         header: TagHeaderType.CATEGORY,
     },
     {
         name: "optimization",
         projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.MODPACK, ProjectType.PLUGIN],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
+        name: "parkour",
+        projectTypes: [ProjectType.WORLD],
         header: TagHeaderType.CATEGORY,
     },
     {
@@ -248,9 +278,19 @@ export const categories = [
         header: TagHeaderType.FEATURE,
     },
     {
+        name: "pixel-art",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
         name: "potato",
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.PERFORMANCE_IMPACT,
+    },
+    {
+        name: "puzzle",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
     },
     {
         name: "low",
@@ -258,9 +298,24 @@ export const categories = [
         header: TagHeaderType.PERFORMANCE_IMPACT,
     },
     {
+        name: "maze",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
         name: "medium",
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.PERFORMANCE_IMPACT,
+    },
+    {
+        name: "halloween",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
+        name: "hide-and-seek",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
     },
     {
         name: "high",
@@ -268,9 +323,24 @@ export const categories = [
         header: TagHeaderType.PERFORMANCE_IMPACT,
     },
     {
+        name: "horror",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
         name: "screenshot",
         projectTypes: [ProjectType.SHADER],
         header: TagHeaderType.PERFORMANCE_IMPACT,
+    },
+    {
+        name: "skyblock",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
+    },
+    {
+        name: "survival",
+        projectTypes: [ProjectType.WORLD],
+        header: TagHeaderType.CATEGORY,
     },
     {
         name: "quests",
@@ -352,7 +422,7 @@ export const categories = [
         projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderType.CATEGORY,
     },
-] satisfies CategoryType[];
+];
 
 // ?                LIGHT       DARK
 // fabric:          #8A7B71     #DBB69B;

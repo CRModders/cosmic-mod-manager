@@ -53,6 +53,7 @@ export async function generateSitemap() {
         await saveSitemap(ProjectType.SHADER, fragments.shaderPackLinks, "s");
         await saveSitemap(ProjectType.MODPACK, fragments.modpackLinks, "s");
         await saveSitemap(ProjectType.PLUGIN, fragments.pluginLinks, "s");
+        await saveSitemap(ProjectType.WORLD, fragments.worldLinks, "s");
 
         console.log("Sitemap generation complete");
     } finally {
@@ -61,9 +62,10 @@ export async function generateSitemap() {
 }
 
 async function collectSitemapFragments() {
+    let offset = 0;
+
     // Mods
     let modLinks = "";
-    let offset = 0;
     while (true) {
         const mods = await getProjects(ProjectType.MOD, offset);
         if (mods.length === 0) break;
@@ -120,6 +122,16 @@ async function collectSitemapFragments() {
         pluginLinks += await generateXml(ProjectType.PLUGIN, plugins);
         offset += BATCH_SIZE;
     }
+    offset = 0;
+
+    // Worlds
+    let worldLinks = "";
+    while (true) {
+        const worlds = await getProjects(ProjectType.WORLD, offset);
+        if (worlds.length === 0) break;
+        worldLinks += await generateXml(ProjectType.WORLD, worlds);
+        offset += BATCH_SIZE;
+    }
 
     const indexFile = `<?xml version="1.0" encoding="UTF-8"?>
     <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -144,6 +156,9 @@ async function collectSitemapFragments() {
         <sitemap>
             <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.PLUGIN}s.xml</loc>
         </sitemap>
+        <sitemap>
+            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.WORLD}s.xml</loc>
+        </sitemap>
     </sitemapindex>
         `;
 
@@ -155,6 +170,7 @@ async function collectSitemapFragments() {
         shaderPackLinks: xmlUrlSet(shaderPackLinks),
         modpackLinks: xmlUrlSet(modpackLinks),
         pluginLinks: xmlUrlSet(pluginLinks),
+        worldLinks: xmlUrlSet(worldLinks),
     };
 }
 

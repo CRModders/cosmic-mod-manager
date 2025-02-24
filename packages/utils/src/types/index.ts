@@ -50,6 +50,7 @@ export enum ProjectType {
     RESOURCE_PACK = "resource-pack",
     DATAMOD = "datamod",
     PLUGIN = "plugin",
+    WORLD = "world",
 }
 
 export enum AuthActionIntent {
