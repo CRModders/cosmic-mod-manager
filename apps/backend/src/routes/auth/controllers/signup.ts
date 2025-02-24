@@ -69,6 +69,9 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
     const existingUserWithSameUserName = userName?.length > 0 ? await GetUser_ByIdOrUsername(userName) : null;
     if (existingUserWithSameUserName) userName = `${userName}-${userId}`;
 
+    // If the provider didn't provide a name, just set userName equal to the userId
+    if (!userName) userName = userId;
+
     // Create the avatar image
     let avatarImgId: string | null = null;
     try {
