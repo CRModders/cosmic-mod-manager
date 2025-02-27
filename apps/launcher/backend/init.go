@@ -36,26 +36,26 @@ func GetGameVersions() ([]GameVersion, error) {
 	}
 
 	VersionsList := []GameVersion{}
-	for _, version := range data["versions"].([]interface{}) {
+	for _, version := range data["versions"].([]any) {
 		ListItem := GameVersion{
-			Id:          version.(map[string]interface{})["id"].(string),
-			Type:        version.(map[string]interface{})["type"].(string),
-			ReleaseTime: int(version.(map[string]interface{})["releaseTime"].(float64)),
+			Id:          version.(map[string]any)["id"].(string),
+			Type:        version.(map[string]any)["type"].(string),
+			ReleaseTime: int(version.(map[string]any)["releaseTime"].(float64)),
 		}
 
-		if version.(map[string]interface{})["client"] != nil {
+		if version.(map[string]any)["client"] != nil {
 			ListItem.Client = GameVersionFile{
-				Url:    version.(map[string]interface{})["client"].(map[string]interface{})["url"].(string),
-				Sha256: version.(map[string]interface{})["client"].(map[string]interface{})["sha256"].(string),
-				Size:   int(version.(map[string]interface{})["client"].(map[string]interface{})["size"].(float64)),
+				Url:    version.(map[string]any)["client"].(map[string]any)["url"].(string),
+				Sha256: version.(map[string]any)["client"].(map[string]any)["sha256"].(string),
+				Size:   int(version.(map[string]any)["client"].(map[string]any)["size"].(float64)),
 			}
 		}
 
-		if version.(map[string]interface{})["server"] != nil {
+		if version.(map[string]any)["server"] != nil {
 			ListItem.Server = GameVersionFile{
-				Url:    version.(map[string]interface{})["server"].(map[string]interface{})["url"].(string),
-				Sha256: version.(map[string]interface{})["server"].(map[string]interface{})["sha256"].(string),
-				Size:   int(version.(map[string]interface{})["server"].(map[string]interface{})["size"].(float64)),
+				Url:    version.(map[string]any)["server"].(map[string]any)["url"].(string),
+				Sha256: version.(map[string]any)["server"].(map[string]any)["sha256"].(string),
+				Size:   int(version.(map[string]any)["server"].(map[string]any)["size"].(float64)),
 			}
 		}
 

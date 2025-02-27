@@ -25,39 +25,36 @@ export default function handleRequest(
         let readyOption: keyof RenderToPipeableStreamOptions =
             (userAgent && isbot(userAgent)) || routerContext.isSpaMode ? "onAllReady" : "onShellReady";
 
-        const { pipe, abort } = renderToPipeableStream(
-            <ServerRouter context={routerContext} url={request.url} abortDelay={ABORT_DELAY} />,
-            {
-                [readyOption]() {
-                    shellRendered = true;
-                    const body = new PassThrough();
-                    const stream = createReadableStreamFromReadable(body);
+        const { pipe, abort } = renderToPipeableStream(<ServerRouter context={routerContext} url={request.url} />, {
+            [readyOption]() {
+                shellRendered = true;
+                const body = new PassThrough();
+                const stream = createReadableStreamFromReadable(body);
 
-                    responseHeaders.set("Content-Type", "text/html");
+                responseHeaders.set("Content-Type", "text/html");
 
-                    resolve(
-                        new Response(stream, {
-                            headers: responseHeaders,
-                            status: responseStatusCode,
-                        }),
-                    );
+                resolve(
+                    new Response(stream, {
+                        headers: responseHeaders,
+                        status: responseStatusCode,
+                    }),
+                );
 
-                    pipe(body);
-                },
-                onShellError(error: unknown) {
-                    reject(error);
-                },
-                onError(error: unknown) {
-                    responseStatusCode = 500;
-                    // Log streaming rendering errors from inside the shell.  Don't log
-                    // errors encountered during initial shell rendering since they'll
-                    // reject and get logged in handleDocumentRequest.
-                    if (shellRendered) {
-                        console.error(error);
-                    }
-                },
+                pipe(body);
             },
-        );
+            onShellError(error: unknown) {
+                reject(error);
+            },
+            onError(error: unknown) {
+                responseStatusCode = 500;
+                // Log streaming rendering errors from inside the shell.  Don't log
+                // errors encountered during initial shell rendering since they'll
+                // reject and get logged in handleDocumentRequest.
+                if (shellRendered) {
+                    console.error(error);
+                }
+            },
+        });
 
         setTimeout(abort, ABORT_DELAY);
     });

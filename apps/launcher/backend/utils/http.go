@@ -29,8 +29,8 @@ func StringFromBytes(bytes []byte) string {
 	return string(bytes)
 }
 
-func JSONFromBytes(bytes []byte) (map[string]interface{}, error) {
-	var jsonData = make(map[string]interface{})
+func JSONFromBytes(bytes []byte) (map[string]any, error) {
+	var jsonData = make(map[string]any)
 	err := json.Unmarshal(bytes, &jsonData)
 	if err != nil {
 		fmt.Println(err)
