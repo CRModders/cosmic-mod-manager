@@ -71,7 +71,7 @@ export default function Navbar(props: NavbarProps) {
 
         closeOtherLinksPopup_timeout = window.setTimeout(() => {
             setOtherLinksPopoverOpen(false);
-        }, 600);
+        }, 450);
     }
 
     useEffect(() => {
