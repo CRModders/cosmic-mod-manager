@@ -2,7 +2,7 @@ import CollectionPageLayout from "~/pages/collection/layout";
 import type { ProjectListItem, Collection, CollectionOwner } from "@app/utils/types/api";
 import type { Route } from "./+types/layout";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import { useLoaderData } from "react-router";
+import { useLoaderData, type ShouldRevalidateFunctionArgs } from "react-router";
 import NotFoundPage from "~/pages/not-found";
 import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Config from "~/utils/config";
@@ -50,6 +50,18 @@ export async function loader(props: Route.LoaderArgs): Promise<CollectionLoaderD
         projects: projects || [],
         owner: owner,
     };
+}
+
+export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
+    const revalidate = nextUrl.searchParams.get("revalidate") === "true";
+    if (revalidate) return true;
+
+    const currentId = currentParams?.collectionId?.toLowerCase();
+    const nextId = nextParams?.collectionId?.toLowerCase();
+
+    if (currentId === nextId) return false;
+
+    return defaultShouldRevalidate;
 }
 
 export function meta(props: Route.MetaArgs) {
