@@ -187,7 +187,11 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
         });
     }
 
-    return { data: projectsList, status: HTTP_STATUS.OK };
+    return {
+        // sort in descending order by downloads
+        data: projectsList.sort((a, b) => b.downloads - a.downloads),
+        status: HTTP_STATUS.OK,
+    };
 }
 
 export async function getRandomProjects(userSession: ContextUserData | undefined, count: number, cached = false) {
