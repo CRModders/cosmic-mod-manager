@@ -28,6 +28,9 @@ model User {
     teamMemberships  TeamMember[]       @relation(name: "TeamMemberships")
     authoredVersions Version[]          @relation(name: "UserAuthoredVersions")
     notifications    Notification[]     @relation(name: "UserNotifications")
+    collections      Collection[]       @relation(name: "UserCollections")
+
+    followingProjects String[] @db.VarChar(32) // Project IDs
 }
 
 model Session {
@@ -248,4 +251,18 @@ model Notification {
     body        Json
 
     user User @relation(name: "UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Collection {
+    id          String   @id @db.VarChar(32)
+    userId      String   @db.VarChar(32)
+    name        String   @db.VarChar(32)
+    description String?  @db.VarChar(256)
+    iconFileId  String?  @db.VarChar(32)
+    visibility  String   @db.VarChar(32)
+    dateCreated DateTime @default(now())
+    dateUpdated DateTime @default(now())
+    projects    String[] // Project IDs
+
+    user User @relation(name: "UserCollections", fields: [userId], references: [id], onDelete: Cascade)
 }

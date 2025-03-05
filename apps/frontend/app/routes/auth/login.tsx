@@ -16,7 +16,7 @@ export function meta() {
     return MetaTags({
         title: "Login",
         description: `Log into your ${SITE_NAME_SHORT} account to access your projects and dashboard`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/login`,
         suffixTitle: true,
     });

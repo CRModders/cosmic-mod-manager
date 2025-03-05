@@ -29,7 +29,7 @@ export function meta() {
     return MetaTags({
         title: "Account settings",
         description: `Your ${SITE_NAME_SHORT} account settings`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("settings/account")}`,
         suffixTitle: true,
     });

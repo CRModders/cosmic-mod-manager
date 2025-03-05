@@ -7,7 +7,15 @@ import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
 import type { LinksFunction } from "react-router";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
+import {
+    Links,
+    Meta,
+    Outlet,
+    Scripts,
+    ScrollRestoration,
+    type ShouldRevalidateFunctionArgs,
+    useLoaderData,
+} from "react-router";
 import ClientOnly from "~/components/client-only";
 import Navbar from "~/components/layout/Navbar/navbar";
 import Footer from "~/components/layout/footer";
@@ -46,7 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <meta name="publisher" content={SITE_NAME_SHORT} />
                 <meta name="theme-color" content="#F04570" />
                 <meta name="color-scheme" content="dark light" />
-                <meta property="og:logo" content={`${Config.FRONTEND_URL}/icon.png`} />
+                <meta property="og:logo" content={Config.SITE_ICON} />
                 <meta name="google-site-verification" content="saVDIhLaNSit_2LnqK9Zz-yxY2hMGTEC_Vud5v7-Tug" />
                 <Meta />
                 <Links />
@@ -172,7 +180,10 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     // If the url prefix is same as the default and the user's set locale is the same as the default,
     // redirect to the url without the default locale prefix
     if (urlLocalePrefix === formatLocaleCode(DefaultLocale) && urlLocalePrefix === formatLocaleCode(cookieLocale)) {
-        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(formatLocaleCode(DefaultLocale), "");
+        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(
+            formatLocaleCode(DefaultLocale),
+            "",
+        );
         const redirectUrl = new URL(pathWithoutDefaultLocale, Config.FRONTEND_URL);
         throw Response.redirect(redirectUrl, 302);
     }
@@ -227,7 +238,7 @@ export function meta() {
         title: SITE_NAME_LONG,
         description:
             "Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on CRMM (Cosmic Reach Mod Manager). Discover and publish projects on CRMM with a modern, easy to use interface and API.",
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: Config.FRONTEND_URL,
     });
 }

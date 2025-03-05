@@ -9,7 +9,7 @@ import { type Context, Hono } from "hono";
 import type { z } from "zod";
 import { AuthenticationMiddleware, LoginProtectedRoute } from "~/middleware/auth";
 import { sendEmailRateLimiter } from "~/middleware/rate-limit/email";
-import { strictGetReqRateLimiter } from "~/middleware/rate-limit/get-req";
+import { getReqRateLimiter, strictGetReqRateLimiter } from "~/middleware/rate-limit/get-req";
 import { addInvalidAuthAttempt, invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { critModifyReqRateLimiter } from "~/middleware/rate-limit/modify-req";
 import {
@@ -23,18 +23,27 @@ import {
     removeAccountPassword,
     sendAccountPasswordChangeLink,
 } from "~/routes/user/controllers/account";
-import { getAllVisibleProjects, getUserProfileData, updateUserProfile } from "~/routes/user/controllers/profile";
+import {
+    getAllVisibleProjects,
+    getUserFollowedProjects,
+    getUserProfileData,
+    updateUserProfile,
+} from "~/routes/user/controllers/profile";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
+import { GetUserCollections } from "../collections/controllers";
 
 const userRouter = new Hono();
 userRouter.use(invalidAuthAttemptLimiter);
 userRouter.use(AuthenticationMiddleware);
 
 userRouter.get("/", strictGetReqRateLimiter, user_get);
+userRouter.get("/follows", strictGetReqRateLimiter, userFollows_get);
 userRouter.get("/:slug", strictGetReqRateLimiter, user_get);
 userRouter.get("/:slug/projects", strictGetReqRateLimiter, userProjects_get);
+userRouter.get("/:slug/collections", getReqRateLimiter, userCollections_get);
+
 userRouter.patch("/", critModifyReqRateLimiter, LoginProtectedRoute, user_patch);
 userRouter.delete("/", critModifyReqRateLimiter, user_delete);
 userRouter.post("/delete-account", sendEmailRateLimiter, LoginProtectedRoute, deleteAccountConfirmation_post);
@@ -64,6 +73,23 @@ async function user_get(ctx: Context) {
     }
 }
 
+// Get the list of projects the user follows
+async function userFollows_get(ctx: Context) {
+    try {
+        const userSession = getUserFromCtx(ctx);
+        const slug = ctx.req.param("slug") || userSession?.id;
+        if (!slug) return invalidReqestResponse(ctx);
+
+        const idsOnly = ctx.req.query("idsOnly") === "true";
+
+        const res = await getUserFollowedProjects(slug, userSession, idsOnly);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
 // Get all projects of the user
 async function userProjects_get(ctx: Context) {
     try {
@@ -73,6 +99,21 @@ async function userProjects_get(ctx: Context) {
         const userSession = getUserFromCtx(ctx);
 
         const res = await getAllVisibleProjects(userSession, slug, listedProjectsOnly);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+// Get all projects of the user
+async function userCollections_get(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        if (!slug) return invalidReqestResponse(ctx);
+        const userSession = getUserFromCtx(ctx);
+
+        const res = await GetUserCollections(slug, userSession);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);
@@ -203,7 +244,10 @@ async function userPassword_delete(ctx: Context) {
 // Send change password confirmation email
 async function changePasswordConfirmationEmail_post(ctx: Context) {
     try {
-        const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(REQ_BODY_NAMESPACE));
+        const { data, error } = await parseValueToSchema(
+            sendAccoutPasswordChangeLinkFormSchema,
+            ctx.get(REQ_BODY_NAMESPACE),
+        );
         if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await sendAccountPasswordChangeLink(ctx, data);

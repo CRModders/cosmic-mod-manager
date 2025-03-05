@@ -8,6 +8,7 @@ export const PROJECTS_FOLDER_NAMESPACE = "projects";
 export const VERSIONS_FOLDER_NAMESPACE = "versions";
 export const GALLERY_FOLDER_NAMESPACE = "gallery";
 export const ORGS_FOLDER_NAMESPACE = "organizations";
+export const COLLECTIONS_FOLDER_NAMESPACE = "collections";
 
 // ? User Files
 export function userDir(userId: string, extra?: string) {
@@ -42,6 +43,14 @@ export function projectGalleryDir(projectId: string, extra?: string) {
 // ? Organization Files
 export function orgDir(orgId: string, extra?: string) {
     let path = `${ORGS_FOLDER_NAMESPACE}/${orgId}`;
+    if (extra) path += `/${extra}`;
+
+    return path;
+}
+
+// ? Collection Files
+export function collectionDir(collectionId: string, extra?: string) {
+    let path = `${COLLECTIONS_FOLDER_NAMESPACE}/${collectionId}`;
     if (extra) path += `/${extra}`;
 
     return path;

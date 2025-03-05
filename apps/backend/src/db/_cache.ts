@@ -17,6 +17,9 @@ export const VERSION_CACHE_EXPIRY_seconds = TIME_12HR;
 // Organization
 export const ORGANIZATION_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
 
+// Collection
+export const COLLECTION_CACHE_EXPIRY_seconds = TIME_12HR;
+
 // Team
 export const TEAM_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
 

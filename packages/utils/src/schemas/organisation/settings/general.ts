@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { MAX_ORGANISATION_DESCRIPTION_LENGTH, MAX_ORGANISATION_NAME_LENGTH } from "~/constants";
-import { iconFieldSchema } from "~/schemas/project/settings/general";
+import { iconFieldSchema } from "~/schemas";
 import { orgSlugField } from "..";
 
 export const orgSettingsFormSchema = z.object({

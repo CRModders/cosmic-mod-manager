@@ -25,6 +25,7 @@ import tagsRouter from "~/tags";
 import env from "~/utils/env";
 import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
 import { QueueSearchIndexUpdate } from "~/routes/search/search-db";
+import collectionsRouter from "./routes/collections/router";
 
 const app = new Hono<{ Bindings: { ip: SocketAddress } }>();
 const corsAllowedOrigins = env.CORS_ALLOWED_URLS.split(" ");
@@ -74,6 +75,8 @@ app.route("/api/team", teamRouter);
 app.route("/api/organization", orgRouter); // Uses the userSession's userId instead of getting it from the URL
 app.route("/api/user/:userId/organization", orgRouter);
 app.route("/api/organizations", bulkOrgsRouter);
+
+app.route("/api/collections", collectionsRouter);
 
 app.route("/cdn", cdnRouter);
 

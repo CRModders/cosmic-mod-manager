@@ -25,7 +25,7 @@ export function meta() {
     return MetaTags({
         title: title,
         description: `The ${title} of ${SITE_NAME_SHORT}, ${descriptionSuffix}.`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("legal/security")}`,
         suffixTitle: true,
     });

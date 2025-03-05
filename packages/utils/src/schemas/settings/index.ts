@@ -8,8 +8,8 @@ import {
     MIN_EMAIL_LENGTH,
     MIN_PASSWORD_LENGTH,
 } from "~/constants";
-import { iconFieldSchema } from "~/schemas/project/settings/general";
 import { createURLSafeSlug } from "~/string";
+import { iconFieldSchema } from "..";
 
 const userNameSchema = z
     .string()

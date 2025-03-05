@@ -3,8 +3,10 @@ import UserProjectsList from "~/pages/user/page";
 import type { UserOutletData } from "~/routes/user/layout";
 
 export default function _UserProjects() {
-    const { projectsList } = useOutletContext<UserOutletData>();
+    const data = useOutletContext<UserOutletData>();
 
-    if (!projectsList) return null;
-    return <UserProjectsList projectsList={projectsList} />;
+    if (!data.projectsList) return null;
+    return (
+        <UserProjectsList projectsList={data.projectsList} collections={data.collections} userData={data.userData} />
+    );
 }

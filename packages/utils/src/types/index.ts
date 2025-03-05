@@ -189,3 +189,9 @@ export enum NotificationType {
     MODERATOR_MESSAGE = "moderator_message",
     UNKNOWN = "unknown",
 }
+
+export enum CollectionVisibility {
+    PUBLIC = "public",
+    PRIVATE = "private",
+    UNLISTED = "unlisted",
+}

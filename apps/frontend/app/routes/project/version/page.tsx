@@ -45,7 +45,7 @@ export function meta(props: Route.MetaArgs) {
         return MetaTags({
             title: "Project not found",
             description: `The project with the slug/ID "${parentData.projectSlug}" does not exist.`,
-            image: `${Config.FRONTEND_URL}/icon.png`,
+            image: Config.SITE_ICON,
             url: `${Config.FRONTEND_URL}`,
             suffixTitle: true,
         });
@@ -58,13 +58,19 @@ export function meta(props: Route.MetaArgs) {
         return MetaTags({
             title: `Version not found - ${project.name}`,
             description: `${project.name} does not have a version with the slug/ID "${versionSlug}".`,
-            image: `${Config.FRONTEND_URL}/icon.png`,
+            image: Config.SITE_ICON,
             url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, "versions")}`,
         });
     }
 
-    const loaders = version.loaders.length ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ") : null;
-    const publishedAt = FormatDate_ToLocaleString(version.datePublished, { includeTime: false, shortMonthNames: false, utc: true });
+    const loaders = version.loaders.length
+        ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ")
+        : null;
+    const publishedAt = FormatDate_ToLocaleString(version.datePublished, {
+        includeTime: false,
+        shortMonthNames: false,
+        utc: true,
+    });
 
     const titleIncludesProjectName = version.title.toLowerCase().includes(project.name.toLowerCase());
 
@@ -77,7 +83,11 @@ export function meta(props: Route.MetaArgs) {
     });
 }
 
-function filterGameVersion(gameVersions: ProjectVersionData[] | undefined, slug: string | undefined, searchParams: URLSearchParams) {
+function filterGameVersion(
+    gameVersions: ProjectVersionData[] | undefined,
+    slug: string | undefined,
+    searchParams: URLSearchParams,
+) {
     if (!slug || !gameVersions?.length) return null;
     if (slug !== "latest") return gameVersions?.find((version) => version.slug === slug || version.id === slug);
 

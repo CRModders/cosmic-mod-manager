@@ -1,4 +1,7 @@
-import { OrgListItemCard as DefaultOrgListItemCard } from "@app/components/misc/item-card";
+import {
+    OrgListItemCard as DefaultOrgListItemCard,
+    CollectionListItemCard as DefaultCollectionListItemCard,
+} from "@app/components/misc/item-card";
 import type React from "react";
 import { useRootData } from "~/hooks/root-data";
 import { useTranslation } from "~/locales/provider";
@@ -10,4 +13,12 @@ export function OrgListItemCard(props: OrgListItemCardProps) {
     const { t } = useTranslation();
 
     return <DefaultOrgListItemCard {...props} t={t} viewTransitions={viewTransitions} />;
+}
+
+type CollectionListItemCardProps = Omit<React.ComponentProps<typeof DefaultCollectionListItemCard>, "t">;
+
+export function CollectionListItemCard(props: CollectionListItemCardProps) {
+    const { t } = useTranslation();
+
+    return <DefaultCollectionListItemCard {...props} t={t} />;
 }

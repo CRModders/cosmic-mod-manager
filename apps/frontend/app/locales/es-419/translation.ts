@@ -168,7 +168,6 @@ export default {
         chooseProjectType: "Elige el tipo de proyecto",
         projectTypeDesc: "Selecciona el tipo adecuado para tu proyecto",
         createOrg: "Crear organización",
-        createAnOrg: "Crear una organización",
         creatingOrg: "Creando una organización",
         enterOrgName: "Ingresa el nombre de la organización",
         enterOrgDescription: "Ingresa una breve descripción de tu organización",

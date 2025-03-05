@@ -2,7 +2,7 @@ import type React from "react";
 import { cn } from "~/utils";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-    src: string;
+    src: string | React.ReactNode;
     alt: string;
     className?: string;
     fallback?: React.ReactNode;
@@ -12,7 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewTransitions, ...props }: Props) {
-    if (!src) {
+    if (!src || typeof src !== "string") {
         return (
             <div
                 {...props}
@@ -21,7 +21,7 @@ export function ImgWrapper({ vtId, src, alt, className, loading, fallback, viewT
                     className,
                 )}
             >
-                {fallback}
+                {src || fallback}
             </div>
         );
     }

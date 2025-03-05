@@ -1,5 +1,5 @@
 import { UsersIcon } from "lucide-react";
-import { fallbackOrgIcon } from "~/icons";
+import { CubeIcon, fallbackOrgIcon, fallbackProjectIcon } from "~/icons";
 import { ImgWrapper } from "~/ui/avatar";
 import Link from "~/ui/link";
 import { cn } from "~/utils";
@@ -8,7 +8,7 @@ interface ListItemCardProps {
     vtId: string;
     title: string;
     url: string;
-    icon?: string;
+    icon?: string | React.ReactNode;
     description?: string;
     children: React.ReactNode;
     fallbackIcon?: React.ReactNode;
@@ -48,7 +48,9 @@ export function ListItemCard({
             <div className="flex flex-col items-start justify-start">
                 <div className="w-full text-md font-bold text-foreground-bright">{title}</div>
                 <span className="w-full text-sm text-muted-foreground/75 leading-tight">{description}</span>
-                <div className="w-full flex items-start justify-start mt-auto text-muted-foreground">{children}</div>
+                <div className="w-full flex items-start justify-start gap-x-3 flex-wrap mt-auto text-extra-muted-foreground">
+                    {children}
+                </div>
             </div>
         </Link>
     );
@@ -76,11 +78,45 @@ export function OrgListItemCard({ members, ...props }: OrgListItemCard) {
     );
 }
 
+interface CollectionListItemCard extends Omit<ListItemCardProps, "children"> {
+    visibility: React.ReactNode;
+    projects: number;
+    t?: {
+        count: {
+            projects: typeof projectsCount;
+        };
+    };
+}
+
+export function CollectionListItemCard(props: CollectionListItemCard) {
+    const t = props.t || { count: { projects: projectsCount } };
+
+    return (
+        <ListItemCard {...props} fallbackIcon={fallbackProjectIcon}>
+            <div className="flex gap-1 items-center justify-center whitespace-nowrap">
+                <CubeIcon aria-hidden className="font-medium w-btn-icon h-btn-icon" />
+                {t.count.projects(props.projects).join(" ")}
+            </div>
+
+            {props.visibility}
+        </ListItemCard>
+    );
+}
+
 function membersCount(count: number) {
     switch (count) {
         case 1:
             return ["", "1", "member"];
         default:
-            return ["", `${count}`, "members"];
+            return ["", count, "members"];
+    }
+}
+
+function projectsCount(count: number) {
+    switch (count) {
+        case 1:
+            return ["", "1", "project"];
+        default:
+            return ["", count, "projects"];
     }
 }

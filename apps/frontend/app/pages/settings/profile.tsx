@@ -20,6 +20,7 @@ import { SaveIcon, UploadIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router";
+import IconPicker from "~/components/icon-picker";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
@@ -100,66 +101,13 @@ export function ProfileSettingsPage({ session }: Props) {
                             control={form.control}
                             name="avatar"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold">
-                                        {t.settings.profilePic}
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <div className="flex flex-wrap items-center justify-start gap-4">
-                                        <input
-                                            hidden
-                                            className="hidden"
-                                            id="user-icon-input"
-                                            accept={validImgFileExtensions.join(", ")}
-                                            type="file"
-                                            value={""}
-                                            name={field.name}
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-
-                                                try {
-                                                    await profileUpdateFormSchema.parseAsync({
-                                                        ...form.getValues(),
-                                                        icon: file,
-                                                    });
-                                                    field.onChange(file);
-                                                } catch (error) {
-                                                    // @ts-ignore
-                                                    toast.error(error?.issues?.[0]?.message || "Error with the file");
-                                                    console.error(error);
-                                                }
-                                            }}
-                                        />
-
-                                        <ImgWrapper
-                                            vtId={session.id}
-                                            alt={session.userName}
-                                            src={(() => {
-                                                const image = form.getValues()?.avatar;
-                                                if (image instanceof File) {
-                                                    return URL.createObjectURL(image);
-                                                }
-                                                if (!image) {
-                                                    return "";
-                                                }
-                                                return imageUrl(session.avatar || "");
-                                            })()}
-                                            className="rounded-full"
-                                            fallback={fallbackUserIcon}
-                                        />
-
-                                        <div className="flex flex-col items-center justify-center gap-2">
-                                            <InteractiveLabel
-                                                htmlFor="user-icon-input"
-                                                className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
-                                            >
-                                                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                                {t.form.uploadIcon}
-                                            </InteractiveLabel>
-                                        </div>
-                                    </div>
-                                </FormItem>
+                                <IconPicker
+                                    icon={form.getValues().avatar}
+                                    fieldName={field.name}
+                                    onChange={field.onChange}
+                                    fallbackIcon={fallbackUserIcon}
+                                    originalIcon={session.avatar || ""}
+                                />
                             )}
                         />
 
@@ -203,7 +151,10 @@ export function ProfileSettingsPage({ session }: Props) {
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="flex flex-col items-start justify-center">
-                                        <FormLabel className="text-foreground font-bold" htmlFor="user-description-input">
+                                        <FormLabel
+                                            className="text-foreground font-bold"
+                                            htmlFor="user-description-input"
+                                        >
                                             {t.settings.bio}
                                             <FormMessage />
                                         </FormLabel>
@@ -223,7 +174,9 @@ export function ProfileSettingsPage({ session }: Props) {
                         <div className="w-full flex flex-wrap items-center mt-2 gap-x-3 gap-y-2">
                             <Button
                                 type="submit"
-                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
+                                disabled={
+                                    JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading
+                                }
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const parsedValues = await profileUpdateFormSchema.parseAsync(form.getValues());
@@ -231,7 +184,11 @@ export function ProfileSettingsPage({ session }: Props) {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
+                                )}
                                 {t.form.saveChanges}
                             </Button>
 

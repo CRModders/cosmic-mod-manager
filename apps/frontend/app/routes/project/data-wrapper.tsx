@@ -45,7 +45,7 @@ export interface ProjectLoaderData {
 }
 
 export async function loader(props: Route.LoaderArgs): Promise<ProjectLoaderData> {
-    const projectSlug = props.params.projectSlug;
+    const projectSlug = props.params?.projectSlug;
 
     if (!projectSlug) {
         return {
@@ -88,7 +88,7 @@ export function meta(props: Route.MetaArgs) {
         return MetaTags({
             title: "Project Not Found",
             description: "The project you are looking for could not be found.",
-            image: `${Config.FRONTEND_URL}/icon.png`,
+            image: Config.SITE_ICON,
             url: Config.FRONTEND_URL,
             suffixTitle: true,
         });
@@ -97,7 +97,9 @@ export function meta(props: Route.MetaArgs) {
     const creator = project.members.find((member) => member.isOwner);
     const author = project.organisation?.name || creator?.userName;
 
-    const authorProfileLink = creator?.userName ? `${Config.FRONTEND_URL}${UserProfilePath(creator.userName)}` : undefined;
+    const authorProfileLink = creator?.userName
+        ? `${Config.FRONTEND_URL}${UserProfilePath(creator.userName)}`
+        : undefined;
 
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
@@ -109,7 +111,12 @@ export function meta(props: Route.MetaArgs) {
     });
 }
 
-export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate({
+    currentParams,
+    nextParams,
+    nextUrl,
+    defaultShouldRevalidate,
+}: ShouldRevalidateFunctionArgs) {
     const revalidate = nextUrl.searchParams.get("revalidate") === "true";
     if (revalidate) return true;
 

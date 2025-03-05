@@ -1,4 +1,5 @@
 import type {
+    CollectionVisibility,
     DependencyType,
     EnvironmentSupport,
     OrganisationPermission,
@@ -205,4 +206,22 @@ export interface SearchResult {
     processingTimeMs: number;
     query: string;
     projectType?: string;
+}
+
+export interface Collection {
+    id: string;
+    userId: string;
+    name: string;
+    description: string | null;
+    icon: string | null;
+    visibility: CollectionVisibility;
+    dateCreated: Date;
+    dateUpdated: Date;
+    projects: string[];
+}
+
+export interface CollectionOwner {
+    id: string;
+    userName: string;
+    avatar: string | null;
 }

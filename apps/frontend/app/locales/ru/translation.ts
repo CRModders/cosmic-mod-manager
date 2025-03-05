@@ -185,7 +185,6 @@ export default {
         chooseProjectType: "Выберите тип проекта",
         projectTypeDesc: "Выберите подходящий тип для вашего проекта",
         createOrg: "Создать организацию",
-        createAnOrg: "Создать организацию",
         creatingOrg: "Создание организации",
         enterOrgName: "Введите название организации",
         enterOrgDescription: "Кратко опишите вашу организацию",

@@ -29,7 +29,7 @@ export function meta() {
         title: SITE_NAME_LONG,
         description:
             "Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on CRMM (Cosmic Reach Mod Manager). Discover and publish projects on CRMM with a modern, easy to use interface and API.",
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: Config.FRONTEND_URL,
     });
 }

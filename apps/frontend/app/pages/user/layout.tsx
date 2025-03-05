@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/c
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { FormatCount } from "@app/utils/number";
 import { GlobalUserRole } from "@app/utils/types";
-import type { Organisation, ProjectListItem } from "@app/utils/types/api";
+import type { Collection, Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { imageUrl } from "@app/utils/url";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
@@ -28,24 +28,44 @@ interface Props {
     userData: UserProfileData;
     projectsList: ProjectListItem[];
     orgsList: Organisation[];
+    collections: Collection[];
 }
 
-export default function UserPageLayout({ userData, projectsList, orgsList, children }: Props) {
+export default function UserPageLayout(props: Props) {
     const { t } = useTranslation();
-    const aggregatedDownloads = (projectsList || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
-    const totalProjects = (projectsList || [])?.length;
+    const aggregatedDownloads = (props.projectsList || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
+    const totalProjects = (props.projectsList || [])?.length;
 
     const aggregatedProjectTypes = new Set<string>();
-    for (const project of projectsList || []) {
+    for (const project of props.projectsList || []) {
         for (const type of project.type) {
             aggregatedProjectTypes.add(type);
         }
     }
     const projectTypesList = Array.from(aggregatedProjectTypes);
+    const navLinks = [{ label: t.common.all, href: "" }];
+    if (props.collections.length > 0) {
+        navLinks.push({ label: t.dashboard.collections, href: "/collections" });
+    }
+
+    navLinks.push(
+        ...getProjectTypesFromNames(projectTypesList).map((type) => ({
+            label: t.navbar[`${type}s`],
+            href: `/${type}s`,
+        })),
+    );
 
     return (
-        <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
-            <ProfilePageHeader userData={userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
+        <main
+            className="profile-page-layout pb-12 gap-panel-cards"
+            itemScope
+            itemType={itemType(MicrodataItemType.Person)}
+        >
+            <ProfilePageHeader
+                userData={props.userData}
+                totalDownloads={aggregatedDownloads}
+                totalProjects={totalProjects}
+            />
             <div
                 className="h-fit grid grid-cols-1 gap-panel-cards"
                 style={{
@@ -55,34 +75,34 @@ export default function UserPageLayout({ userData, projectsList, orgsList, child
                 {projectTypesList?.length > 1 && totalProjects > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
-                        urlBase={UserProfilePath(userData.userName)}
-                        links={[
-                            { label: t.common.all, href: "" },
-                            ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-                                label: t.navbar[`${type}s`],
-                                href: `/${type}s`,
-                            })),
-                        ]}
+                        urlBase={UserProfilePath(props.userData.userName)}
+                        links={navLinks}
                     />
                 ) : null}
 
                 {totalProjects ? (
                     // biome-ignore lint/a11y/useSemanticElements: <explanation>
                     <div className="w-full flex flex-col gap-panel-cards" role="list">
-                        {children}
+                        {props.children}
                     </div>
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
-                        <p className="text-lg text-muted-foreground italic text-center">{t.user.doesntHaveProjects(userData.name)}</p>
+                        <p className="text-lg text-muted-foreground italic text-center">
+                            {t.user.doesntHaveProjects(props.userData.name)}
+                        </p>
                     </div>
                 )}
             </div>
-            <PageSidebar displayName={userData.name} userId={userData.id} orgsList={orgsList || []} />
+            <PageSidebar displayName={props.userData.name} userId={props.userData.id} orgsList={props.orgsList || []} />
         </main>
     );
 }
 
-function PageSidebar({ displayName, userId, orgsList }: { displayName: string; userId: string; orgsList: Organisation[] }) {
+function PageSidebar({
+    displayName,
+    userId,
+    orgsList,
+}: { displayName: string; userId: string; orgsList: Organisation[] }) {
     const { t } = useTranslation();
     const joinedOrgs = orgsList.filter((org) => {
         const member = org.members.find((member) => member.userId === userId);
@@ -117,9 +137,13 @@ function PageSidebar({ displayName, userId, orgsList }: { displayName: string; u
                     </TooltipProvider>
                 </div>
             </ContentCardTemplate>
-            {/* <ContentCardTemplate title="Badges" titleClassName="text-lg">
-                <span className="text-muted-foreground italic">List of badges the user has earned</span>
-            </ContentCardTemplate> */}
+
+            {
+                // TODO:
+                /* <ContentCardTemplate title="Badges" titleClassName="text-lg">
+                    <span className="text-muted-foreground italic">List of badges the user has earned</span>
+                </ContentCardTemplate> */
+            }
         </div>
     );
 }

@@ -26,7 +26,12 @@ export default function NotFoundPage({ className, title, description, linkHref, 
                 {description || t.error.pageNotFoundDesc}
             </p>
 
-            <VariantButtonLink variant="link" url={linkHref || "/"} label={linkLabel || t.common.home} className="mt-4 text-lg">
+            <VariantButtonLink
+                variant="link"
+                url={linkHref || "/"}
+                label={linkLabel || t.common.home}
+                className="mt-4 text-lg"
+            >
                 {linkLabel || t.common.home}
             </VariantButtonLink>
         </div>
@@ -37,7 +42,7 @@ export function meta() {
     return MetaTags({
         title: "404 | Page not found.",
         description: "Sorry, we couldn't find the page you're looking for.",
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: Config.FRONTEND_URL,
     });
 }

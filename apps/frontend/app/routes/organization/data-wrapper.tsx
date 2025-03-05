@@ -39,7 +39,10 @@ export async function loader(props: Route.LoaderArgs): Promise<OrgLoaderData> {
         serverFetch(props.request, `/api/organization/${orgSlug}`),
         serverFetch(props.request, `/api/organization/${orgSlug}/projects`),
     ]);
-    const [orgData, orgProjects] = await Promise.all([resJson<Organisation>(orgDataRes), resJson<ProjectListItem[]>(orgProjectsRes)]);
+    const [orgData, orgProjects] = await Promise.all([
+        resJson<Organisation>(orgDataRes),
+        resJson<ProjectListItem[]>(orgProjectsRes),
+    ]);
 
     return {
         orgSlug,
@@ -48,7 +51,12 @@ export async function loader(props: Route.LoaderArgs): Promise<OrgLoaderData> {
     };
 }
 
-export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate({
+    currentParams,
+    nextParams,
+    nextUrl,
+    defaultShouldRevalidate,
+}: ShouldRevalidateFunctionArgs) {
     const revalidate = nextUrl.searchParams.get("revalidate") === "true";
     if (revalidate) return true;
 
@@ -68,7 +76,7 @@ export function meta(props: Route.MetaArgs) {
         return MetaTags({
             title: "Organization Not Found",
             description: "The organization you are looking for could not be found.",
-            image: `${Config.FRONTEND_URL}/icon.png`,
+            image: Config.SITE_ICON,
             url: Config.FRONTEND_URL,
             suffixTitle: true,
         });

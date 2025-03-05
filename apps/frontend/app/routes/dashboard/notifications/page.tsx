@@ -76,7 +76,7 @@ export function meta() {
     return MetaTags({
         title: "Notifications",
         description: `Your ${SITE_NAME_SHORT} notifications`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard/notifications`,
         suffixTitle: true,
     });

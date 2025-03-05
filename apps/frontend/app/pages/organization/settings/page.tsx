@@ -1,4 +1,4 @@
-import { fallbackOrgIcon } from "@app/components/icons";
+import { fallbackOrgIcon, fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button, buttonVariants } from "@app/components/ui/button";
@@ -32,6 +32,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SaveIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import IconPicker from "~/components/icon-picker";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { CancelButton } from "~/components/ui/button";
@@ -113,77 +114,13 @@ export default function GeneralOrgSettings() {
                             control={form.control}
                             name="icon"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-bold">
-                                        {t.form.icon}
-                                        <FormMessage />
-                                    </FormLabel>
-                                    <div className="flex flex-wrap items-center justify-start gap-4">
-                                        <input
-                                            hidden
-                                            className="hidden"
-                                            id="org-icon-input"
-                                            accept={validImgFileExtensions.join(", ")}
-                                            type="file"
-                                            value={""}
-                                            name={field.name}
-                                            onChange={async (e) => {
-                                                const file = e.target.files?.[0];
-                                                if (!file) return;
-
-                                                try {
-                                                    await orgSettingsFormSchema.parseAsync({
-                                                        ...form.getValues(),
-                                                        icon: file,
-                                                    });
-                                                    field.onChange(file);
-                                                } catch (error) {
-                                                    // @ts-ignore
-                                                    toast.error(error?.issues?.[0]?.message || "Error with the file");
-                                                    console.error(error);
-                                                }
-                                            }}
-                                        />
-
-                                        <ImgWrapper
-                                            alt={orgData.name}
-                                            src={(() => {
-                                                const image = form.getValues()?.icon;
-                                                if (image instanceof File) {
-                                                    return URL.createObjectURL(image);
-                                                }
-                                                if (!image) {
-                                                    return "";
-                                                }
-                                                return imageUrl(orgData.icon || "");
-                                            })()}
-                                            className="rounded"
-                                            fallback={fallbackOrgIcon}
-                                        />
-
-                                        <div className="flex flex-col items-start justify-center gap-2">
-                                            <InteractiveLabel
-                                                htmlFor="org-icon-input"
-                                                className={cn(buttonVariants({ variant: "secondary", size: "default" }), "cursor-pointer")}
-                                            >
-                                                <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                                {t.form.uploadIcon}
-                                            </InteractiveLabel>
-                                            {form.getValues().icon ? (
-                                                <Button
-                                                    variant={"secondary"}
-                                                    type="button"
-                                                    onClick={() => {
-                                                        form.setValue("icon", undefined);
-                                                    }}
-                                                >
-                                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
-                                                    {t.form.removeIcon}
-                                                </Button>
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                </FormItem>
+                                <IconPicker
+                                    icon={form.getValues().icon}
+                                    fieldName={field.name}
+                                    onChange={field.onChange}
+                                    fallbackIcon={fallbackProjectIcon}
+                                    originalIcon={orgData.icon || ""}
+                                />
                             )}
                         />
 
@@ -222,7 +159,9 @@ export default function GeneralOrgSettings() {
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
                                             {Config.FRONTEND_URL}/organization/
-                                            <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
+                                            <em className="not-italic text-foreground font-[500]">
+                                                {form.getValues().slug}
+                                            </em>
                                         </span>
                                     </div>
                                 </FormItem>
@@ -251,7 +190,9 @@ export default function GeneralOrgSettings() {
                         <div className="w-full flex items-center justify-end mt-2">
                             <Button
                                 type="submit"
-                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
+                                disabled={
+                                    JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading
+                                }
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const parsedValues = await orgSettingsFormSchema.parseAsync(form.getValues());
@@ -259,7 +200,11 @@ export default function GeneralOrgSettings() {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
+                                )}
                                 {t.form.saveChanges}
                             </Button>
                         </div>
@@ -312,7 +257,10 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
     }
 
     return (
-        <ContentCardTemplate title={t.organization.deleteOrg} className="w-full flex-row flex flex-wrap gap-4 justify-between">
+        <ContentCardTemplate
+            title={t.organization.deleteOrg}
+            className="w-full flex-row flex flex-wrap gap-4 justify-between"
+        >
             <p className="text-muted-foreground max-w-[65ch]">{t.organization.deleteOrgDesc}</p>
 
             <Dialog>
@@ -352,7 +300,11 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
                                 <CancelButton />
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteOrg}>
-                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
+                                {isLoading ? (
+                                    <LoadingSpinner size="xs" />
+                                ) : (
+                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
+                                )}
                                 {t.organization.deleteOrg}
                             </Button>
                         </DialogFooter>

@@ -24,6 +24,10 @@ export const PROJECT_VERSIONS_CACHE_KEY = "project:versions";
 // Organization
 export const ORGANIZATION_DATA_CACHE_KEY = "organization:data";
 
+// Collection
+export const COLLECTION_DATA_CACHE_KEY = "collection:data";
+export const USER_COLLECTIONS_LIST_CACHE_KEY = "user:collections";
+
 // Team
 export const TEAM_DATA_CACHE_KEY = "team:data";
 

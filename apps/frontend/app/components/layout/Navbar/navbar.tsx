@@ -7,7 +7,7 @@ import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
-import { Building2Icon, ChevronDownIcon, PlusIcon } from "lucide-react";
+import { Building2Icon, ChevronDownIcon, LibraryIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigation } from "react-router";
@@ -21,6 +21,7 @@ import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
 import { projectTypes } from "@app/utils/config/project";
+import CreateNewCollection_Dialog from "~/pages/dashboard/collections/new-collection";
 
 interface NavbarProps {
     session: LoggedInUserData | null;
@@ -71,7 +72,7 @@ export default function Navbar(props: NavbarProps) {
 
         closeOtherLinksPopup_timeout = window.setTimeout(() => {
             setOtherLinksPopoverOpen(false);
-        }, 450);
+        }, 500);
     }
 
     useEffect(() => {
@@ -121,8 +122,12 @@ export default function Navbar(props: NavbarProps) {
 
                             <li className="flex items-center justify-center">
                                 <Popover open={otherLinksPopoverOpen}>
-                                    <PopoverTrigger asChild onMouseEnter={OpenOtherLinksPopup} onMouseLeave={() => CloseOtherLinksPopup()}>
-                                        <Button variant="ghost" className="text-extra-muted-foreground" onClick={() => {}}>
+                                    <PopoverTrigger
+                                        asChild
+                                        onMouseEnter={OpenOtherLinksPopup}
+                                        onMouseLeave={() => CloseOtherLinksPopup()}
+                                    >
+                                        <Button variant="ghost" className="text-extra-muted-foreground">
                                             More <ChevronDownIcon className="h-btn-icon w-btn-icon" />
                                         </Button>
                                     </PopoverTrigger>
@@ -151,12 +156,18 @@ export default function Navbar(props: NavbarProps) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="hidden lg:flex">{props.session?.id ? <CreateThingsPopup /> : MemoizedThemeSwitch}</div>
+                        <div className="hidden lg:flex">
+                            {props.session?.id ? <CreateThingsPopup /> : MemoizedThemeSwitch}
+                        </div>
 
                         <div className="flex lg:hidden">{MemoizedThemeSwitch}</div>
 
                         <div className="hidden lg:flex">
-                            <NavButton session={props.session} notifications={props.notifications} toggleNavMenu={toggleNavMenu} />
+                            <NavButton
+                                session={props.session}
+                                notifications={props.notifications}
+                                toggleNavMenu={toggleNavMenu}
+                            />
                         </div>
 
                         <div className="flex lg:hidden align-center justify-center">
@@ -196,7 +207,10 @@ export function Navlink({ href, label, children, className }: NavlinkProps) {
     return (
         <ButtonLink
             url={href}
-            className={cn("bg-background hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold", className)}
+            className={cn(
+                "bg-background hover:bg-card-background/70 dark:hover:bg-shallow-background/75 font-semibold",
+                className,
+            )}
             activeClassName="bg-card-background dark:bg-shallow-background"
         >
             {children ? children : label}
@@ -243,11 +257,19 @@ function CreateThingsPopup() {
     return (
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
-                <Button variant="ghost-inverted" size="sm" aria-label="Create new project or organization" className="bg-background">
+                <Button
+                    variant="ghost-inverted"
+                    size="sm"
+                    aria-label="Create new project or organization"
+                    className="bg-background"
+                >
                     <PlusIcon aria-hidden className="w-5 h-5" />
                     <ChevronDownIcon
                         aria-hidden
-                        className={cn("w-5 h-5 text-extra-muted-foreground transition-all", popoverOpen && "rotate-180")}
+                        className={cn(
+                            "w-5 h-5 text-extra-muted-foreground transition-all",
+                            popoverOpen && "rotate-180",
+                        )}
                     />
                 </Button>
             </PopoverTrigger>
@@ -260,6 +282,13 @@ function CreateThingsPopup() {
                         </Button>
                     }
                 />
+
+                <CreateNewCollection_Dialog>
+                    <Button className="space-y-0 justify-start" variant="ghost" size="sm">
+                        <LibraryIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
+                        {t.dashboard.createCollection}
+                    </Button>
+                </CreateNewCollection_Dialog>
 
                 <Separator />
 

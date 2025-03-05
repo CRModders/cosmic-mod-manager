@@ -1,6 +1,5 @@
 import { createOrganisationFormSchema } from "@app/utils/schemas/organisation";
 import { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";
-import { iconFieldSchema } from "@app/utils/schemas/project/settings/general";
 import { parseValueToSchema } from "@app/utils/schemas/utils";
 import { type Context, Hono } from "hono";
 import type { z } from "zod";
@@ -20,6 +19,7 @@ import {
     updateOrg,
     updateOrgIcon,
 } from "./controllers/modify-org";
+import { iconFieldSchema } from "@app/utils/schemas";
 
 const orgRouter = new Hono();
 orgRouter.use(invalidAuthAttemptLimiter);

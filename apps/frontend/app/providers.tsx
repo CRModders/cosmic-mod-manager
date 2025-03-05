@@ -4,6 +4,7 @@ import { Toaster } from "@app/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "~/hooks/theme";
 import { BreadcrumbsContextProvider } from "./hooks/breadcrumb";
+import { CollectionsProvider } from "./pages/collection/provider";
 
 export const reactQueryClient = new QueryClient({
     defaultOptions: {
@@ -26,7 +27,7 @@ export default function ContextProviders({ children, theme }: ContextProvidersPr
             <BreadcrumbsContextProvider>
                 <ThemeProvider initTheme={theme}>
                     <DownloadAnimationProvider>
-                        {children}
+                        <CollectionsProvider>{children}</CollectionsProvider>
                         <Toaster initTheme={theme} />
                     </DownloadAnimationProvider>
                 </ThemeProvider>

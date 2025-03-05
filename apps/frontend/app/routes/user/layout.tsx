@@ -1,5 +1,5 @@
 import { SITE_NAME_SHORT } from "@app/utils/constants";
-import type { Organisation, ProjectListItem } from "@app/utils/types/api";
+import type { Collection, Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { MetaDescriptor } from "react-router";
 import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
@@ -13,6 +13,8 @@ import type { Route } from "./+types/layout";
 
 export interface UserOutletData {
     projectsList: ProjectListItem[];
+    collections: Collection[];
+    userData: UserProfileData;
 }
 
 export default function _UserLayout() {
@@ -30,11 +32,18 @@ export default function _UserLayout() {
     }
 
     return (
-        <UserPageLayout userData={data.userData} projectsList={data.projects || []} orgsList={data.orgs || []}>
+        <UserPageLayout
+            userData={data.userData}
+            projectsList={data.projects || []}
+            orgsList={data.orgs || []}
+            collections={data.collections}
+        >
             <Outlet
                 context={
                     {
                         projectsList: data.projects,
+                        collections: data.collections,
+                        userData: data.userData,
                     } satisfies UserOutletData
                 }
             />
@@ -47,6 +56,7 @@ interface LoaderData {
     userData: UserProfileData | null;
     projects: ProjectListItem[];
     orgs: Organisation[];
+    collections: Collection[];
 }
 
 export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
@@ -58,35 +68,41 @@ export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
             userData: null,
             projects: [],
             orgs: [],
+            collections: [],
         };
 
-    const [userRes, projectsRes, orgsRes] = await Promise.all([
+    const [userRes, projectsRes, orgsRes, collectionsRes] = await Promise.all([
         serverFetch(props.request, `/api/user/${userName}`),
         serverFetch(props.request, `/api/user/${userName}/projects?listedOnly=true`),
         serverFetch(props.request, `/api/user/${userName}/organization`),
+        serverFetch(props.request, `/api/user/${userName}/collections`),
     ]);
 
-    const userData = await resJson<UserProfileData>(userRes);
-    const projects = await resJson<ProjectListItem[]>(projectsRes);
-    const orgs = await resJson<Organisation[]>(orgsRes);
+    const [userData, projects, orgs, collections] = await Promise.all([
+        resJson<UserProfileData>(userRes),
+        resJson<ProjectListItem[]>(projectsRes),
+        resJson<Organisation[]>(orgsRes),
+        resJson<Collection[]>(collectionsRes),
+    ]);
 
     return {
         userSlug: userName,
         userData: userData,
         projects: projects || [],
         orgs: orgs || [],
+        collections: collections || [],
     };
 }
 
 export function meta(props: Route.MetaArgs): MetaDescriptor[] {
     const { userData, orgs, projects, userSlug } = props.data as LoaderData;
-    const image = userData?.avatar || `${Config.FRONTEND_URL}/icon.png`;
+    const image = userData?.avatar || Config.SITE_ICON;
 
     if (!userData?.id) {
         return MetaTags({
             title: "User not found",
             description: `No user with the username/ID ${userSlug} exists on ${SITE_NAME_SHORT}`,
-            image: `${Config.FRONTEND_URL}/icon.png`,
+            image: Config.SITE_ICON,
             url: `${Config.FRONTEND_URL}${UserProfilePath(userSlug || "")}`,
             suffixTitle: true,
         });

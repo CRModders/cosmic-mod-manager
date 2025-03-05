@@ -38,6 +38,11 @@ export function DateFromStr(date: string | Date) {
     }
 }
 
+export function date(date: string | Date) {
+    if (date instanceof Date) return date;
+    return new Date(date);
+}
+
 export function DateToISOStr(date: string | Date): string | null {
     try {
         return new Date(date).toISOString();

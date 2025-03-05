@@ -14,7 +14,7 @@ export function meta() {
         title: `Search ${type}`,
         description: `Search and download your favorite cosmic reach ${type} with ease here on ${SITE_NAME_SHORT} (${SITE_NAME_LONG}).`,
         url: `${Config.FRONTEND_URL}${PageUrl(type)}`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         suffixTitle: true,
     });
 }

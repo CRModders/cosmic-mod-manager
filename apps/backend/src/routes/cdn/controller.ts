@@ -8,11 +8,26 @@ import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { GetVersions } from "~/db/version_item";
 import { getUserIpAddress } from "~/routes/auth/helpers";
 import { isProjectAccessible, isProjectPublic } from "~/routes/project/utils";
-import { getOrgFile, getProjectFile, getProjectGalleryFile, getProjectVersionFile, getUserFile } from "~/services/storage";
+import {
+    getCollectionFile,
+    getOrgFile,
+    getProjectFile,
+    getProjectGalleryFile,
+    getProjectVersionFile,
+    getUserFile,
+} from "~/services/storage";
 import type { ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponse } from "~/utils/http";
-import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl, versionFileUrl } from "~/utils/urls";
+import {
+    collectionIconUrl,
+    orgIconUrl,
+    projectGalleryFileUrl,
+    projectIconUrl,
+    userIconUrl,
+    versionFileUrl,
+} from "~/utils/urls";
 import { addToDownloadsQueue } from "./downloads-counter";
+import { GetCollection } from "~/db/collection_item";
 
 export async function serveVersionFile(
     ctx: Context,
@@ -22,7 +37,10 @@ export async function serveVersionFile(
     userSession: ContextUserData | undefined,
     isCdnRequest = true,
 ) {
-    const [project, _projectVersions] = await Promise.all([GetProject_ListItem(undefined, projectId), GetVersions(undefined, projectId)]);
+    const [project, _projectVersions] = await Promise.all([
+        GetProject_ListItem(undefined, projectId),
+        GetVersions(undefined, projectId),
+    ]);
 
     const targetVersion = (_projectVersions?.versions || []).find((version) => version.id === versionId);
     if (!project?.id || !targetVersion?.files?.[0]?.fileId) {
@@ -105,7 +123,11 @@ export async function serveProjectIconFile(ctx: Context, projectId: string, isCd
         return ctx.redirect(`${projectIconUrl(project.id, project.iconFileId)}`);
     }
 
-    const iconFile = await getProjectFile(iconFileData.storageService as FILE_STORAGE_SERVICE, project.id, iconFileData.name);
+    const iconFile = await getProjectFile(
+        iconFileData.storageService as FILE_STORAGE_SERVICE,
+        project.id,
+        iconFileData.name,
+    );
 
     // Redirect to the file if it's a URL
     if (typeof iconFile === "string") return ctx.redirect(iconFile);
@@ -117,11 +139,18 @@ export async function serveProjectIconFile(ctx: Context, projectId: string, isCd
     return response;
 }
 
-export async function serveProjectGalleryImage(ctx: Context, projectId: string, imgFileId: string, isCdnRequest: boolean) {
+export async function serveProjectGalleryImage(
+    ctx: Context,
+    projectId: string,
+    imgFileId: string,
+    isCdnRequest: boolean,
+) {
     const project = await GetProject_Details(undefined, projectId);
     if (!project || !project?.gallery?.[0]?.id) return notFoundResponse(ctx);
 
-    const targetGalleryItem = project.gallery.find((item) => item.imageFileId === imgFileId || item.thumbnailFileId === imgFileId);
+    const targetGalleryItem = project.gallery.find(
+        (item) => item.imageFileId === imgFileId || item.thumbnailFileId === imgFileId,
+    );
     if (!targetGalleryItem) return notFoundResponse(ctx);
 
     const dbFile = await GetFile(imgFileId);
@@ -170,7 +199,6 @@ export async function serveOrgIconFile(ctx: Context, orgId: string, isCdnRequest
 }
 
 export async function serveUserAvatar(ctx: Context, userId: string, isCdnRequest: boolean) {
-    GetUser_ByIdOrUsername(undefined, userId);
     const user = await GetUser_ByIdOrUsername(undefined, userId);
     if (!user?.avatar) return notFoundResponse(ctx);
 
@@ -188,6 +216,31 @@ export async function serveUserAvatar(ctx: Context, userId: string, isCdnRequest
 
     const response = new Response(icon);
     response.headers.set("Cache-Control", "public, max-age=31536000"); // For a full year
+    response.headers.set("Content-Type", getMimeFromType(iconFileData.type));
+    response.headers.set("Content-Disposition", `inline; filename="${iconFileData.name}"`);
+    return response;
+}
+
+export async function serveCollectionIcon(ctx: Context, collectionId: string, isCdnRequest: boolean) {
+    const collection = await GetCollection(collectionId);
+    if (!collection?.iconFileId) return notFoundResponse(ctx);
+
+    const iconFileData = await GetFile(collection.iconFileId);
+    if (!iconFileData?.id) return notFoundResponse(ctx);
+
+    if (!isCdnRequest) {
+        return ctx.redirect(`${collectionIconUrl(collection.id, collection.iconFileId)}`);
+    }
+
+    const icon = await getCollectionFile(
+        iconFileData.storageService as FILE_STORAGE_SERVICE,
+        collection.id,
+        iconFileData.name,
+    );
+    if (typeof icon === "string") return ctx.redirect(icon);
+
+    const response = new Response(icon);
+    response.headers.set("Cache-Control", "public, max-age=31536000");
     response.headers.set("Content-Type", getMimeFromType(iconFileData.type));
     response.headers.set("Content-Disposition", `inline; filename="${iconFileData.name}"`);
     return response;

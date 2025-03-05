@@ -1,8 +1,11 @@
 import { newProjectFormSchema } from "@app/utils/schemas/project";
 import { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@app/utils/schemas/project/settings/description";
-import { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@app/utils/schemas/project/settings/gallery";
-import { generalProjectSettingsFormSchema, iconFieldSchema } from "@app/utils/schemas/project/settings/general";
+import {
+    addNewGalleryImageFormSchema,
+    updateGalleryImageFormSchema,
+} from "@app/utils/schemas/project/settings/gallery";
+import { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
 import { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
 import { parseValueToSchema } from "@app/utils/schemas/utils";
@@ -26,6 +29,8 @@ import { updateProjectDescription } from "./controllers/settings/description";
 import { updateProjectExternalLinks, updateProjectLicense, updateProjectTags } from "./controllers/settings/general";
 import versionRouter from "./version/router";
 import { getAllProjectVersions } from "./version/controllers";
+import { iconFieldSchema } from "@app/utils/schemas";
+import { addProjectFollower, removeProjectFollower } from "./controllers/follows";
 
 const projectRouter = new Hono();
 projectRouter.use(invalidAuthAttemptLimiter);
@@ -38,10 +43,18 @@ projectRouter.get("/:slug", getReqRateLimiter, project_get);
 projectRouter.get("/:slug/dependencies", getReqRateLimiter, projectDependencies_get);
 projectRouter.get("/:slug/check", getReqRateLimiter, projectCheck_get);
 
+projectRouter.post("/:slug/follow", getReqRateLimiter, LoginProtectedRoute, projectFollow_post);
+projectRouter.delete("/:slug/follow", critModifyReqRateLimiter, LoginProtectedRoute, projectFollow_delete);
+
 projectRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, project_post);
 projectRouter.patch("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_patch);
 projectRouter.delete("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_delete);
-projectRouter.post("/:id/submit-for-review", critModifyReqRateLimiter, LoginProtectedRoute, project_queueForApproval_post);
+projectRouter.post(
+    "/:id/submit-for-review",
+    critModifyReqRateLimiter,
+    LoginProtectedRoute,
+    project_queueForApproval_post,
+);
 projectRouter.patch("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_patch);
 projectRouter.delete("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_delete);
 projectRouter.patch("/:slug/description", critModifyReqRateLimiter, LoginProtectedRoute, description_patch);
@@ -60,7 +73,8 @@ async function projects_get(ctx: Context) {
         const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
         const userSession = getUserFromCtx(ctx);
         const userName = userSession?.userName;
-        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, HTTP_STATUS.UNAUTHENTICATED);
+        if (!userName)
+            return ctx.json({ success: false, message: "You're not logged in" }, HTTP_STATUS.UNAUTHENTICATED);
 
         const res = await getAllVisibleProjects(userSession, userName, listedProjectsOnly);
         return ctx.json(res.data, res.status);
@@ -118,6 +132,34 @@ async function projectCheck_get(ctx: Context) {
         if (!slug) return invalidReqestResponse(ctx);
 
         const res = await checkProjectSlugValidity(slug);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function projectFollow_post(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        const user = getUserFromCtx(ctx);
+        if (!slug || !user?.id) return invalidReqestResponse(ctx);
+
+        const res = await addProjectFollower(slug, user);
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function projectFollow_delete(ctx: Context) {
+    try {
+        const slug = ctx.req.param("slug");
+        const user = getUserFromCtx(ctx);
+        if (!slug || !user?.id) return invalidReqestResponse(ctx);
+
+        const res = await removeProjectFollower(slug, user);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);
@@ -206,7 +248,8 @@ async function projectIcon_patch(ctx: Context) {
         const formData = ctx.get(REQ_BODY_NAMESPACE);
         const icon = formData.get("icon");
 
-        if (!userSession || !slug || !icon || !(icon instanceof File)) return invalidReqestResponse(ctx, "Invalid data");
+        if (!userSession || !slug || !icon || !(icon instanceof File))
+            return invalidReqestResponse(ctx, "Invalid data");
 
         const { data, error } = await parseValueToSchema(iconFieldSchema, icon);
         if (error || !data) {

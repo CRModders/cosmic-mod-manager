@@ -19,9 +19,6 @@ export const CONFIRM_NEW_PASSWORD_EMAIL_VALIDITY_ms = 7200_000; // 2 hour
 export const CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms = 7200_000; // 2 hour
 export const DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms = 7200_000; // 2 hour
 
-// ? Form validation
-export const MAX_ICON_SIZE = 524288; // 512 KiB
-
 export const MIN_EMAIL_LENGTH = 5;
 export const MAX_EMAIL_LENGTH = 256;
 
@@ -36,15 +33,18 @@ export const MAX_USER_BIO_LENGTH = 256;
 export const MIN_DISPLAY_NAME_LENGTH = 2;
 export const MAX_DISPLAY_NAME_LENGTH = 64;
 
+// Images
+export const ICON_WIDTH = 128;
+export const MAX_ICON_SIZE = 524288; // 512 KiB
+export const GALLERY_IMG_THUMBNAIL_WIDTH = 420;
+export const MAX_PROJECT_GALLERY_IMAGE_SIZE = 5242880; // 5 MiB
+
 // Project
 export const MIN_PROJECT_NAME_LENGTH = 2;
 export const MAX_PROJECT_NAME_LENGTH = 32;
 export const MAX_PROJECT_SUMMARY_LENGTH = 320;
 export const MAX_PROJECT_DESCRIPTION_LENGTH = 65256;
-export const MAX_PROJECT_GALLERY_IMAGE_SIZE = 5242880; // 5 MiB
 export const MAX_PROJECT_GALLERY_IMAGES_COUNT = 32;
-export const GALLERY_IMG_THUMBNAIL_WIDTH = 420;
-export const ICON_WIDTH = 128;
 
 // Project_Settings
 export const MAX_FEATURED_PROJECT_TAGS = 3;
@@ -63,3 +63,7 @@ export const MAX_ADDITIONAL_VERSION_FILE_SIZE = 5242880; // 5 MiB
 // Organisation
 export const MAX_ORGANISATION_NAME_LENGTH = 32;
 export const MAX_ORGANISATION_DESCRIPTION_LENGTH = 256;
+
+// Collections
+export const MAX_COLLECTION_NAME_LENGTH = 32;
+export const MAX_COLLECTION_DESCRIPTION_LENGTH = 256;

@@ -86,3 +86,9 @@ export function UserProfilePath(username: string, extra?: string) {
     if (extra) pathname += `/${extra}`;
     return pathname;
 }
+
+export function CollectionPagePath(id: string, extra?: string) {
+    let pathname = PageUrl("collection", id);
+    if (extra) pathname += `/${extra}`;
+    return pathname;
+}

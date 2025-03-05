@@ -1,7 +1,7 @@
 import { isUrl } from "@app/utils/url";
 import { FILE_STORAGE_SERVICE } from "~/types";
 import { type WritableFile, deleteFromLocalStorage, getFileFromLocalStorage, saveFileToLocalStorage } from "./local";
-import { orgDir, projectGalleryDir, projectsDir, userDir, versionsDir } from "./utils";
+import { collectionDir, orgDir, projectGalleryDir, projectsDir, userDir, versionsDir } from "./utils";
 
 export async function getFile(storageService: FILE_STORAGE_SERVICE, path: string) {
     try {
@@ -59,7 +59,12 @@ export async function deleteDirectory(storageService: FILE_STORAGE_SERVICE, path
 }
 
 // ? User Files
-export async function saveUserFile(storageService: FILE_STORAGE_SERVICE, userId: string, file: WritableFile, fileName: string) {
+export async function saveUserFile(
+    storageService: FILE_STORAGE_SERVICE,
+    userId: string,
+    file: WritableFile,
+    fileName: string,
+) {
     return await saveFile(storageService, file, userDir(userId, fileName));
 }
 
@@ -76,7 +81,12 @@ export async function getUserFile(storageService: FILE_STORAGE_SERVICE, userId: 
 }
 
 // ? Project Files
-export async function saveProjectFile(storageService: FILE_STORAGE_SERVICE, projectId: string, file: WritableFile, fileName: string) {
+export async function saveProjectFile(
+    storageService: FILE_STORAGE_SERVICE,
+    projectId: string,
+    file: WritableFile,
+    fileName: string,
+) {
     return await saveFile(storageService, file, projectsDir(projectId, fileName));
 }
 
@@ -112,11 +122,20 @@ export async function deleteProjectVersionFile(
     return await deleteFile(storageService, versionsDir(projectId, versionId, fileName));
 }
 
-export async function deleteProjectVersionDirectory(storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string) {
+export async function deleteProjectVersionDirectory(
+    storageService: FILE_STORAGE_SERVICE,
+    projectId: string,
+    versionId: string,
+) {
     return await deleteDirectory(storageService, versionsDir(projectId, versionId));
 }
 
-export async function getProjectVersionFile(storageService: FILE_STORAGE_SERVICE, projectId: string, versionId: string, fileName: string) {
+export async function getProjectVersionFile(
+    storageService: FILE_STORAGE_SERVICE,
+    projectId: string,
+    versionId: string,
+    fileName: string,
+) {
     return await getFile(storageService, versionsDir(projectId, versionId, fileName));
 }
 
@@ -136,24 +155,50 @@ export async function saveProjectGalleryFile(
     return await saveFile(storageService, file, projectGalleryDir(projectId, fileName));
 }
 
-export async function deleteProjectGalleryFile(storageService: FILE_STORAGE_SERVICE, projectId: string, fileName: string) {
+export async function deleteProjectGalleryFile(
+    storageService: FILE_STORAGE_SERVICE,
+    projectId: string,
+    fileName: string,
+) {
     if (isUrl(fileName)) return fileName;
     return await deleteFile(storageService, projectGalleryDir(projectId, fileName));
 }
 
 // ? Organization Files
-export async function saveOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, file: WritableFile, fileName: string) {
-    return await saveFile(storageService, file, orgDir(orgId, fileName));
+export function saveOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, file: WritableFile, fileName: string) {
+    return saveFile(storageService, file, orgDir(orgId, fileName));
 }
 
-export async function deleteOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
-    return await deleteFile(storageService, orgDir(orgId, fileName));
+export function deleteOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
+    return deleteFile(storageService, orgDir(orgId, fileName));
 }
 
-export async function deleteOrgDirectory(storageService: FILE_STORAGE_SERVICE, orgId: string) {
-    return await deleteDirectory(storageService, orgDir(orgId));
+export function deleteOrgDirectory(storageService: FILE_STORAGE_SERVICE, orgId: string) {
+    return deleteDirectory(storageService, orgDir(orgId));
 }
 
-export async function getOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
-    return await getFile(storageService, orgDir(orgId, fileName));
+export function getOrgFile(storageService: FILE_STORAGE_SERVICE, orgId: string, fileName: string) {
+    return getFile(storageService, orgDir(orgId, fileName));
+}
+
+// ? Collection Files
+export function saveCollectionFile(
+    storageService: FILE_STORAGE_SERVICE,
+    collectionId: string,
+    file: WritableFile,
+    filename: string,
+) {
+    return saveFile(storageService, file, collectionDir(collectionId, filename));
+}
+
+export function deleteCollectionFile(storageService: FILE_STORAGE_SERVICE, collectionId: string, filename: string) {
+    return deleteFile(storageService, collectionDir(collectionId, filename));
+}
+
+export function deleteCollectionDirectory(storageService: FILE_STORAGE_SERVICE, collectionId: string) {
+    return deleteDirectory(storageService, collectionDir(collectionId));
+}
+
+export function getCollectionFile(storageService: FILE_STORAGE_SERVICE, collectionId: string, filename: string) {
+    return getFile(storageService, collectionDir(collectionId, filename));
 }

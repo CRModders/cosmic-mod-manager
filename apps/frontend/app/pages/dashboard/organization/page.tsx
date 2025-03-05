@@ -26,12 +26,12 @@ export default function OrganisationDashboardPage({ organisations }: Props) {
                 <CreateNewOrg_Dialog>
                     <Button>
                         <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
-                        {t.dashboard.createAnOrg}
+                        {t.dashboard.createOrg}
                     </Button>
                 </CreateNewOrg_Dialog>
             </CardHeader>
             <CardContent>
-                {!organisations?.length && <p className="text-muted-foreground">{t.dashboard.createAnOrg}</p>}
+                {!organisations?.length && <p className="text-muted-foreground">{t.common.noResults}</p>}
                 {organisations === undefined ? (
                     <FullWidthSpinner />
                 ) : (

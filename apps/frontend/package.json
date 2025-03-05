@@ -14,9 +14,13 @@
         "@react-router/node": "*",
         "@react-router/serve": "*",
         "@tanstack/react-query": "^5.61.3",
-        "isbot": "^4.1.0"
+        "isbot": "^4.1.0",
+
+        "react-router": "^7.1.1"
     },
     "devDependencies": {
+        "@react-router/dev": "^7.1.1",
+
         "@react-router/remix-routes-option-adapter": "^7.0.2",
         "@types/ua-parser-js": "^0.7.39",
         "cross-env": "^7.0.3",

@@ -11,7 +11,6 @@ import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, GetUser_Unique, Get_UserProjects, UpdateUser } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
 import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
-import { deleteUserDataCache } from "~/services/cache/session";
 import { deleteUserFile, saveUserFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
@@ -36,7 +35,31 @@ export async function getUserProfileData(slug: string) {
     return { data: dataObj, status: HTTP_STATUS.OK };
 }
 
-export async function updateUserProfile(userSession: ContextUserData, profileData: z.infer<typeof profileUpdateFormSchema>) {
+export async function getUserFollowedProjects(
+    userSlug: string,
+    userSession: ContextUserData | undefined,
+    idsOnly = true,
+) {
+    if (userSession && (userSlug === userSession.userName || userSlug === userSession.id)) {
+        if (idsOnly) return { data: userSession.followingProjects, status: HTTP_STATUS.OK };
+
+        const UserProjects = await GetManyProjects_ListItem(userSession.followingProjects);
+        return { data: UserProjects, status: HTTP_STATUS.OK };
+    }
+
+    const userData = await GetUser_ByIdOrUsername(userSlug, userSlug);
+    if (!userData?.id) return notFoundResponseData("User not found");
+
+    if (idsOnly) return { data: userData.followingProjects, status: HTTP_STATUS.OK };
+
+    const UserProjects = await GetManyProjects_ListItem(userData.followingProjects);
+    return { data: UserProjects, status: HTTP_STATUS.OK };
+}
+
+export async function updateUserProfile(
+    userSession: ContextUserData,
+    profileData: z.infer<typeof profileUpdateFormSchema>,
+) {
     const user = await GetUser_Unique({
         where: {
             id: userSession.id,
@@ -72,8 +95,6 @@ export async function updateUserProfile(userSession: ContextUserData, profileDat
         },
     });
 
-    // Clear the session cache, unrelated to normal user profile cache
-    await deleteUserDataCache(user.id);
     return { data: { success: true, message: "Profile updated successfully", profileData }, status: HTTP_STATUS.OK };
 }
 
@@ -121,7 +142,11 @@ export async function getUserAvatar(
     return imgFile_Id;
 }
 
-export async function getAllVisibleProjects(userSession: ContextUserData | undefined, userSlug: string, listedProjectsOnly: boolean) {
+export async function getAllVisibleProjects(
+    userSession: ContextUserData | undefined,
+    userSlug: string,
+    listedProjectsOnly: boolean,
+) {
     const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
@@ -135,7 +160,9 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
     for (const project of UserProjects) {
         if (!project) continue;
 
-        const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility);
+        const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(
+            project.visibility as ProjectVisibility,
+        );
         if (listedProjectsOnly === true && !isProjectListed) continue;
 
         const projectAccessible = isProjectAccessible({

@@ -16,7 +16,6 @@ import { GetUser_Unique, UpdateUser } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { generateRandomToken, hashPassword, hashString, matchPassword } from "~/routes/auth/helpers";
 import { invalidateAllOtherUserSessions } from "~/routes/auth/helpers/session";
-import { deleteUserDataCache } from "~/services/cache/session";
 import prisma from "~/services/prisma";
 import type { ContextUserData } from "~/types";
 import { isConfirmationCodeValid } from "~/utils";
@@ -30,7 +29,10 @@ const confirmationEmailValidityDict = {
     [ConfirmationType.DELETE_USER_ACCOUNT]: DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms,
 };
 
-export async function addNewPassword_ConfirmationEmail(userSession: ContextUserData, formData: z.infer<typeof setNewPasswordFormSchema>) {
+export async function addNewPassword_ConfirmationEmail(
+    userSession: ContextUserData,
+    formData: z.infer<typeof setNewPasswordFormSchema>,
+) {
     if (formData.newPassword !== formData.confirmNewPassword)
         return { data: { success: false, message: "Passwords do not match" }, status: HTTP_STATUS.BAD_REQUEST };
 
@@ -56,7 +58,10 @@ export async function addNewPassword_ConfirmationEmail(userSession: ContextUserD
         receiverEmail: userSession.email,
     });
 
-    return { data: { message: "You should receive a confirmation email shortly.", success: true }, status: HTTP_STATUS.OK };
+    return {
+        data: { message: "You should receive a confirmation email shortly.", success: true },
+        status: HTTP_STATUS.OK,
+    };
 }
 
 export async function getConfirmActionTypeFromCode(token: string) {
@@ -134,7 +139,6 @@ export async function confirmAddingNewPassword(code: string) {
             },
         },
     });
-    await deleteUserDataCache(user.id);
 
     return { data: { success: true, message: "Successfully added the new password" }, status: HTTP_STATUS.OK };
 }
@@ -163,12 +167,14 @@ export async function removeAccountPassword(
             password: null,
         },
     });
-    await deleteUserDataCache(userSession.id);
 
     return { data: { success: true, message: "Account password removed successfully" }, status: HTTP_STATUS.OK };
 }
 
-export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>) {
+export async function sendAccountPasswordChangeLink(
+    ctx: Context,
+    formData: z.infer<typeof sendAccoutPasswordChangeLinkFormSchema>,
+) {
     const targetUser = await GetUser_Unique({
         where: {
             email: formData.email,
@@ -180,7 +186,8 @@ export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.in
         return {
             data: {
                 success: true,
-                message: "You should receive an email with a link to change your password if you entered correct email address.",
+                message:
+                    "You should receive an email with a link to change your password if you entered correct email address.",
             },
             status: HTTP_STATUS.OK,
         };
@@ -199,7 +206,7 @@ export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.in
     });
 
     sendChangePasswordEmail({
-        name: targetUser.name,
+        name: targetUser.name || targetUser.userName,
         code: token,
         receiverEmail: targetUser.email,
     });
@@ -207,7 +214,8 @@ export async function sendAccountPasswordChangeLink(ctx: Context, formData: z.in
     return {
         data: {
             success: true,
-            message: "You should receive an email with a link to change your password if you entered correct email address.",
+            message:
+                "You should receive an email with a link to change your password if you entered correct email address.",
         },
         status: HTTP_STATUS.OK,
     };
@@ -219,7 +227,8 @@ export async function changeUserPassword(
     formData: z.infer<typeof setNewPasswordFormSchema>,
     userSession: ContextUserData | undefined,
 ) {
-    if (formData.newPassword !== formData.confirmNewPassword) return invalidReqestResponseData("Passwords do not match");
+    if (formData.newPassword !== formData.confirmNewPassword)
+        return invalidReqestResponseData("Passwords do not match");
 
     const tokenHash = await hashString(token);
     const confirmationEmail = await prisma.userConfirmation.findUnique({
@@ -234,7 +243,10 @@ export async function changeUserPassword(
         return invalidReqestResponseData();
     }
 
-    if (!confirmationEmail?.userId || !isConfirmationCodeValid(confirmationEmail.dateCreated, CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms)) {
+    if (
+        !confirmationEmail?.userId ||
+        !isConfirmationCodeValid(confirmationEmail.dateCreated, CHANGE_ACCOUNT_PASSWORD_EMAIL_VALIDITY_ms)
+    ) {
         return invalidReqestResponseData();
     }
     const hashedPassword = await hashPassword(formData.newPassword);
@@ -278,7 +290,10 @@ export async function deleteUserAccountConfirmationEmail(userSession: ContextUse
     });
 
     sendDeleteUserAccountEmail({ fullName: userSession.name, code: token, receiverEmail: userSession.email });
-    return { data: { success: true, message: "You should receive a confirmation email shortly" }, status: HTTP_STATUS.OK };
+    return {
+        data: { success: true, message: "You should receive a confirmation email shortly" },
+        status: HTTP_STATUS.OK,
+    };
 }
 
 export async function confirmAccountDeletion(token: string) {

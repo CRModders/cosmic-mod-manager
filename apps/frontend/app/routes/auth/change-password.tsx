@@ -11,7 +11,7 @@ export function meta() {
     return MetaTags({
         title: "Change password",
         description: `Change your ${SITE_NAME_SHORT} account password`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/change-password`,
         suffixTitle: true,
     });

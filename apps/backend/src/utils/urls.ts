@@ -47,3 +47,10 @@ export function userIconUrl(userId: string, icon: string | null) {
     // Otherwise, construct and return the CDN URL
     return cdnUrl(`user/${userId}/${icon}`);
 }
+
+export function collectionIconUrl(collectionId: string, icon: string | null) {
+    if (!icon) return null;
+    // If the icon has a full URL, return it
+    if (icon.startsWith("http")) return icon;
+    return cdnUrl(`collection/${collectionId}/${icon}`);
+}

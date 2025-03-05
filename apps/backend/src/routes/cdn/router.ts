@@ -8,7 +8,14 @@ import { getSitemap } from "~/services/sitemap-gen";
 import env from "~/utils/env";
 import { invalidReqestResponse, notFoundResponse, serverErrorResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
-import { serveOrgIconFile, serveProjectGalleryImage, serveProjectIconFile, serveUserAvatar, serveVersionFile } from "./controller";
+import {
+    serveCollectionIcon,
+    serveOrgIconFile,
+    serveProjectGalleryImage,
+    serveProjectIconFile,
+    serveUserAvatar,
+    serveVersionFile,
+} from "./controller";
 
 const cdnRouter = new Hono();
 cdnRouter.use(
@@ -41,6 +48,7 @@ cdnRouter.get(
 
 cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
 cdnRouter.get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get);
+cdnRouter.get("/data/collection/:collectionId/:icon", cdnAssetRateLimiter, collectionIcon_get);
 
 // Sitemaps
 cdnRouter.get("/sitemap/:name", cdnAssetRateLimiter, sitemap_get);
@@ -102,7 +110,7 @@ async function versionFile_get(ctx: Context) {
 
 async function orgFile_get(ctx: Context) {
     try {
-        const { orgId } = ctx.req.param();
+        const orgId = ctx.req.param("orgId");
         if (!orgId) {
             return invalidReqestResponse(ctx);
         }
@@ -115,12 +123,23 @@ async function orgFile_get(ctx: Context) {
 
 async function userFile_get(ctx: Context) {
     try {
-        const { userId } = ctx.req.param();
+        const userId = ctx.req.param("userId");
         if (!userId) {
             return invalidReqestResponse(ctx);
         }
 
         return await serveUserAvatar(ctx, userId, IsCdnRequest(ctx));
+    } catch (error) {
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function collectionIcon_get(ctx: Context) {
+    try {
+        const collectionId = ctx.req.param("collectionId");
+        if (!collectionId) return invalidReqestResponse(ctx);
+
+        return await serveCollectionIcon(ctx, collectionId, IsCdnRequest(ctx));
     } catch (error) {
         return serverErrorResponse(ctx);
     }

@@ -11,7 +11,7 @@ import type { Route } from "./+types/organizations";
 
 export default function _Organizations() {
     const session = useSession();
-    const orgs = useLoaderData<typeof loader>() as Organisation[];
+    const orgs = useLoaderData<typeof loader>();
 
     if (!session?.id) return <Redirect to="/login" />;
     return <OrganisationDashboardPage organisations={orgs} />;
@@ -28,7 +28,7 @@ export function meta() {
     return MetaTags({
         title: "Organizations",
         description: `Your ${SITE_NAME_SHORT} organizations`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard/organizations`,
         suffixTitle: true,
     });

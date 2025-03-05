@@ -20,6 +20,7 @@ import { sendNewSigninAlertEmail } from "~/utils/email";
 import { deleteCookie, setCookie } from "~/utils/http";
 import { generateDbId, generateRandomId } from "~/utils/str";
 import { generateRandomToken, getUserSessionCookie, hashString } from "./index";
+import { GetUser_ByIdOrUsername } from "~/db/user_item";
 
 interface CreateNewSessionProps {
     userId: string;
@@ -104,14 +105,14 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
         where: {
             tokenHash: tokenHash,
         },
-        include: {
-            user: true,
-        },
     });
     if (!session) {
         // TODO: await addInvalidAuthAttempt(ctx);
         return null;
     }
+
+    const sessionUser = await GetUser_ByIdOrUsername(undefined, session.userId);
+    if (!sessionUser) return null;
 
     const now = Date.now();
     const sessionExpiry = session.dateExpires.getTime();
@@ -143,21 +144,21 @@ export async function validateSessionToken(token: string): Promise<ContextUserDa
         data: sessionUpdateData,
     });
 
-    await setSessionTokenCache(tokenHash, session.id, session.userId, session.user); // SESSION_CACHE : SET
+    await setSessionTokenCache(tokenHash, session.id, session.userId); // SESSION_CACHE : SET
 
-    const user = session.user;
     const sessionData: ContextUserData = {
-        id: user.id,
-        email: user.email,
-        avatar: user.avatar,
-        userName: user.userName,
-        name: user.name || user.userName,
-        dateJoined: user.dateJoined,
-        emailVerified: user.emailVerified,
-        role: user.role as GlobalUserRole,
-        bio: user.bio,
-        password: user.password,
-        newSignInAlerts: user.newSignInAlerts,
+        id: sessionUser.id,
+        email: sessionUser.email,
+        avatar: sessionUser.avatar,
+        userName: sessionUser.userName,
+        name: sessionUser.name || sessionUser.userName,
+        dateJoined: sessionUser.dateJoined,
+        emailVerified: sessionUser.emailVerified,
+        role: sessionUser.role as GlobalUserRole,
+        bio: sessionUser.bio,
+        password: sessionUser.password,
+        newSignInAlerts: sessionUser.newSignInAlerts,
+        followingProjects: sessionUser.followingProjects,
 
         sessionId: session.id,
     };

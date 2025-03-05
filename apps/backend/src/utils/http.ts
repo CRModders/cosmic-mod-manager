@@ -40,6 +40,11 @@ export function unauthorizedReqResponse(ctx: Context, message?: string) {
     return ctx.json(res.data, res.status);
 }
 
+export function unauthenticatedReqResponse(ctx: Context, message?: string) {
+    const res = unauthenticatedReqResponseData(message);
+    return ctx.json(res.data, res.status);
+}
+
 export function serverErrorResponseData(msg?: string) {
     return {
         data: {
@@ -83,6 +88,15 @@ export function unauthorizedReqResponseData(message?: string) {
             message: message || "Unauthorized",
         },
         status: HTTP_STATUS.UNAUTHORIZED,
+    } as const;
+}
+export function unauthenticatedReqResponseData(message?: string) {
+    return {
+        data: {
+            success: false,
+            message: message || "Unauthenticated",
+        },
+        status: HTTP_STATUS.UNAUTHENTICATED,
     } as const;
 }
 

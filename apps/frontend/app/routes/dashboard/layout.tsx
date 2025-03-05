@@ -16,7 +16,7 @@ export function meta() {
     return MetaTags({
         title: "Dashboard",
         description: `Your ${SITE_NAME_SHORT} dashboard`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard`,
         suffixTitle: true,
     });

@@ -38,6 +38,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
 
                     route("projects", path("dashboard/projects.tsx"), { id: `${lang}__dashboard-projects` });
                     route("organizations", path("dashboard/organizations.tsx"), { id: `${lang}__dashboard-organizations` });
+                    route("collections", path("dashboard/collections.tsx"), { id: `${lang}__dashboard-collections` });
                     route("*", path("$.tsx"), { id: `${lang}__dashboard-not-found` });
                 });
 
@@ -88,6 +89,12 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                         route("", path("organization/page.tsx"), { index: true, id: `${lang}__organization__projects-all` });
                         route(":projectType", path("organization/page.tsx"), { id: `${lang}__organization__projects` });
                     });
+                });
+
+                // Collections page
+                route("collection/:collectionId", path("collection/layout.tsx"), { id: `${lang}__collection__layout` }, () => {
+                    route("", path("collection/page.tsx"), { index: true, id: `${lang}__collection__projects-all` });
+                    route(":projectType", path("collection/page.tsx"), { id: `${lang}__collection__projects` });
                 });
 
                 // User profile

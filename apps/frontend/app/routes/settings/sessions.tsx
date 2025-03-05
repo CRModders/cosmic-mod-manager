@@ -28,7 +28,7 @@ export function meta() {
     return MetaTags({
         title: "User Sessions",
         description: "All the devices where you are logged in",
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("settings/sessions")}`,
         suffixTitle: true,
     });

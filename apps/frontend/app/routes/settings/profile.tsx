@@ -17,7 +17,7 @@ export function meta() {
     return MetaTags({
         title: "Profile settings",
         description: `Your ${SITE_NAME_SHORT} profile settings`,
-        image: `${Config.FRONTEND_URL}/icon.png`,
+        image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("settings/profile")}`,
         suffixTitle: true,
     });
