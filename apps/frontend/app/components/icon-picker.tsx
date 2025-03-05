@@ -1,4 +1,3 @@
-import { fallbackProjectIcon } from "@app/components/icons";
 import { buttonVariants, Button } from "@app/components/ui/button";
 import { FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { InteractiveLabel } from "@app/components/ui/label";

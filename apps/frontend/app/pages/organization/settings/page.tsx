@@ -1,7 +1,7 @@
-import { fallbackOrgIcon, fallbackProjectIcon } from "@app/components/icons";
+import { fallbackProjectIcon } from "@app/components/icons";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import RefreshPage from "@app/components/misc/refresh-page";
-import { Button, buttonVariants } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import { Card, CardContent } from "@app/components/ui/card";
 import {
     Dialog,
@@ -16,25 +16,21 @@ import {
 } from "@app/components/ui/dialog";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
-import { InteractiveLabel } from "@app/components/ui/label";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
-import { cn } from "@app/components/utils";
 import type { z } from "@app/utils/schemas";
 import { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";
-import { handleFormError, validImgFileExtensions } from "@app/utils/schemas/utils";
+import { handleFormError } from "@app/utils/schemas/utils";
 import { createURLSafeSlug } from "@app/utils/string";
 import type { Organisation } from "@app/utils/types/api";
-import { imageUrl } from "@app/utils/url";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SaveIcon, Trash2Icon, UploadIcon } from "lucide-react";
+import { SaveIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import IconPicker from "~/components/icon-picker";
 import MarkdownRenderBox from "~/components/md-renderer";
-import { ImgWrapper } from "~/components/ui/avatar";
 import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";

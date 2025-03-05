@@ -1,6 +1,6 @@
 import { Button } from "@app/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
-import { BookmarkIcon, ExternalLinkIcon, PlusIcon, SquareArrowOutUpRightIcon, SquareArrowUpRightIcon } from "lucide-react";
+import { BookmarkIcon, PlusIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { useSession } from "~/hooks/session";
 import useCollections from "./provider";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";

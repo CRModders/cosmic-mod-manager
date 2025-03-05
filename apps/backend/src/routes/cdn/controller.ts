@@ -1,5 +1,4 @@
 import { getMimeFromType } from "@app/utils/file-signature";
-import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { Context } from "hono";
 import { GetFile, type GetFile_ReturnType, GetManyFiles_ByID } from "~/db/file_item";
 import { GetOrganization_BySlugOrId } from "~/db/organization_item";

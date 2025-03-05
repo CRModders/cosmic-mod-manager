@@ -1,10 +1,8 @@
 import type { GlobalUserRole } from "@app/utils/types";
-import type { User } from "@prisma/client";
 import { hashString } from "~/routes/auth/helpers";
 import redis from "~/services/redis";
 import type { ContextUserData } from "~/types";
-import { SESSION_IDS_CACHE_KEY, SESSION_TOKENS_CACHE_KEY, USER_SESSION_CACHE_KEY } from "~/types/namespaces";
-import { parseJson } from "~/utils/str";
+import { SESSION_IDS_CACHE_KEY, SESSION_TOKENS_CACHE_KEY } from "~/types/namespaces";
 import { cacheKey } from "./utils";
 import { GetUser_ByIdOrUsername } from "~/db/user_item";
 

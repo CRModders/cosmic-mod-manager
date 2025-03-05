@@ -18,7 +18,8 @@
         "ignore": ["./**/*.css", "./**/entry.server.tsx"],
         "rules": {
             "correctness": {
-                "useExhaustiveDependencies": "off"
+                "useExhaustiveDependencies": "off",
+                "noUnusedImports": "error"
             },
             "style": {
                 "noParameterAssign": "off"

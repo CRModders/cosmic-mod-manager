@@ -10,7 +10,7 @@ import type { Notification } from "@app/utils/types/api";
 import { Building2Icon, ChevronDownIcon, LibraryIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigation } from "react-router";
+import { useNavigation } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";

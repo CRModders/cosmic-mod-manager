@@ -1,13 +1,12 @@
 import { CubeIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import type { Collection, CollectionOwner, ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
-import { Outlet, useLocation } from "react-router";
+import { Outlet } from "react-router";
 import { PageHeader } from "~/components/page-header";
-import { useNavigate, VariantButtonLink } from "~/components/ui/link";
+import { useNavigate } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
-import { CalendarIcon, ClipboardCopyIcon, EarthIcon, EditIcon, HeartIcon, LockIcon, Trash2Icon } from "lucide-react";
-import { Prefetch } from "@app/components/ui/link";
+import { CalendarIcon, ClipboardCopyIcon, EarthIcon, HeartIcon, LockIcon, Trash2Icon } from "lucide-react";
 import { CollectionPagePath, UserProfilePath } from "~/utils/urls";
 import SecondaryNav from "../project/secondary-nav";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
