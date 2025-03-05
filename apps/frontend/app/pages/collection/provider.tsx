@@ -2,6 +2,7 @@ import { toast } from "@app/components/ui/sonner";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import type { Collection } from "@app/utils/types/api";
 import { createContext, use, useEffect, useState } from "react";
+import { useSession } from "~/hooks/session";
 import clientFetch from "~/utils/client-fetch";
 
 interface CollectionsContext {
@@ -29,6 +30,7 @@ export const CollectionsContext = createContext<CollectionsContext>({
 });
 
 export function CollectionsProvider(props: { children: React.ReactNode }) {
+    const session = useSession();
     const [collections, setCollections_state] = useState<Collection[]>([]);
     const [followingProjects, setFollowingProjects] = useState<string[]>([]);
 
@@ -105,9 +107,11 @@ export function CollectionsProvider(props: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
+        if (!session?.id) return;
+
         FetchCollections();
         FetchFollowingProjects();
-    }, []);
+    }, [session?.id]);
 
     return (
         <CollectionsContext
