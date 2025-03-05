@@ -48,12 +48,14 @@ export default function UserPageLayout(props: Props) {
         navLinks.push({ label: t.dashboard.collections, href: "/collections" });
     }
 
-    navLinks.push(
-        ...getProjectTypesFromNames(projectTypesList).map((type) => ({
-            label: t.navbar[`${type}s`],
-            href: `/${type}s`,
-        })),
-    );
+    if (projectTypesList.length > 1) {
+        navLinks.push(
+            ...getProjectTypesFromNames(projectTypesList).map((type) => ({
+                label: t.navbar[`${type}s`],
+                href: `/${type}s`,
+            })),
+        );
+    }
 
     return (
         <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
@@ -64,7 +66,7 @@ export default function UserPageLayout(props: Props) {
                     gridArea: "content",
                 }}
             >
-                {projectTypesList?.length > 1 && totalProjects > 1 ? (
+                {navLinks?.length > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
                         urlBase={UserProfilePath(props.userData.userName)}
