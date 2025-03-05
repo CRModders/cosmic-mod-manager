@@ -33,18 +33,8 @@ collectionsRouter.patch("/:collectionId", critModifyReqRateLimiter, LoginProtect
 collectionsRouter.delete("/:collectionId", critModifyReqRateLimiter, LoginProtectedRoute, collection_byID_delete);
 
 collectionsRouter.get("/:collectionId/projects", getReqRateLimiter, collectionProjects_get);
-collectionsRouter.patch(
-    "/:collectionId/projects",
-    critModifyReqRateLimiter,
-    LoginProtectedRoute,
-    collectionProjects_patch,
-);
-collectionsRouter.delete(
-    "/:collectionId/projects",
-    critModifyReqRateLimiter,
-    LoginProtectedRoute,
-    collectionProjects_delete,
-);
+collectionsRouter.patch("/:collectionId/projects", critModifyReqRateLimiter, LoginProtectedRoute, collectionProjects_patch);
+collectionsRouter.delete("/:collectionId/projects", critModifyReqRateLimiter, LoginProtectedRoute, collectionProjects_delete);
 
 async function collections_get(ctx: Context) {
     try {

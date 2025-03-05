@@ -119,12 +119,7 @@ export default function CreateNewCollection_Dialog({ children }: { children: Rea
                                             {t.form.description}
                                             <FormMessage />
                                         </FormLabel>
-                                        <Textarea
-                                            id="collection-description-input"
-                                            {...field}
-                                            className="resize-none"
-                                            placeholder="..."
-                                        />
+                                        <Textarea id="collection-description-input" {...field} className="resize-none" placeholder="..." />
                                     </FormItem>
                                 )}
                             />

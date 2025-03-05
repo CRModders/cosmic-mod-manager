@@ -85,8 +85,7 @@ export default {
         alreadyHaveAccount: "Already have an account?",
         forgotPassword: "Forgot Password?",
         signupWithProviders: "Signup using any of the auth providers:",
-        aggrement:
-            "By creating an account, you agree to our [Terms](/legal/terms) and [Privacy Policy](/legal/privacy).",
+        aggrement: "By creating an account, you agree to our [Terms](/legal/terms) and [Privacy Policy](/legal/privacy).",
         invalidCode: "Invalid or expired code",
         didntRequest: "Didn't request this?",
         checkSessions: "Check loggedIn sessions",
@@ -302,8 +301,7 @@ export default {
         platform: "Platform:",
         selectPlatform: "Select platform",
         onlyAvailableFor: (project: string, platform: string) => `${project} is only available for ${platform}`,
-        noVersionsAvailableFor: (gameVersion: string, loader: string) =>
-            `No versions available for ${gameVersion} on ${loader}`,
+        noVersionsAvailableFor: (gameVersion: string, loader: string) => `No versions available for ${gameVersion} on ${loader}`,
         declinedInvitation: "Declined invitation",
         teamInvitationTitle: (teamType: string) => `Invitation to join ${teamType}`, // teamType = organization | project
         teamInviteDesc: (teamType: string, role: string) =>
@@ -344,8 +342,7 @@ export default {
             selectLicense: "Select license",
             selectLicenseDesc: (projectType: string) => `Select the license your ${projectType} is distributed under.`,
             selectEnv: "Select supported environments",
-            selectEnvDesc: (projectType: string) =>
-                `Select if the ${projectType} functions on the client-side and/or server-side.`,
+            selectEnvDesc: (projectType: string) => `Select if the ${projectType} functions on the client-side and/or server-side.`,
             requiredStepsDesc: "All marked with an asterisk(*) are required",
             submitForReview: "Submit for review",
             submitForReviewDesc:
@@ -408,8 +405,7 @@ export default {
         selectFiles: "Select files",
         primaryFileRequired: "Primary file is required",
         metadata: "Metadata",
-        devReleasesNote:
-            "NOTE:- Older dev releases will be automatically deleted after a new dev release is published.",
+        devReleasesNote: "NOTE:- Older dev releases will be automatically deleted after a new dev release is published.",
         publicationDate: "Publication date",
         publisher: "Publisher",
         versionID: "Version ID",
@@ -445,20 +441,16 @@ export default {
         licenseUrl: "License URL (optional)",
         spdxId: "SPDX identifier",
         doesntHaveSpdxId: "License does not have a SPDX identifier",
-        tagsDesc:
-            "Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.",
-        tagsDesc2: (projectType: string) =>
-            `Select all categories that reflect the themes or function of your ${projectType}.`,
+        tagsDesc: "Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.",
+        tagsDesc2: (projectType: string) => `Select all categories that reflect the themes or function of your ${projectType}.`,
         featuredCategories: "Featured categories",
         featuredCategoriesDesc: (count: number) => `You can feature up to ${count} of your most relevant tags.`,
         selectAtLeastOneCategory: "Select at least one category in order to feature a category.",
         projectInfo: "Project information",
         clientSide: "Client side",
-        clientSideDesc: (projectType: string) =>
-            `Select based on if your ${projectType} has functionality on the client side.`,
+        clientSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the client side.`,
         serverSide: "Server side",
-        serverSideDesc: (projectType: string) =>
-            `Select based on if your ${projectType} has functionality on the logical server.`,
+        serverSideDesc: (projectType: string) => `Select based on if your ${projectType} has functionality on the logical server.`,
         unknown: "Unknown",
         clientOrServer: "Client or server",
         clientAndServer: "Client and server",
@@ -494,10 +486,8 @@ export default {
         sureToLeaveTeam: "Are you sure you want to leave this team?",
         cantManageInvites: "You don't have access to manage member invites",
         inviteMember: "Invite a member",
-        inviteProjectMemberDesc:
-            "Enter the username of the person you'd like to invite to be a member of this project.",
-        inviteOrgMemberDesc:
-            "Enter the username of the person you'd like to invite to be a member of this organization.",
+        inviteProjectMemberDesc: "Enter the username of the person you'd like to invite to be a member of this project.",
+        inviteOrgMemberDesc: "Enter the username of the person you'd like to invite to be a member of this organization.",
         invite: "Invite",
         memberUpdated: "Member updated successfully",
         pending: "Pending",
@@ -520,8 +510,7 @@ export default {
         removeMember: "Remove member",
         transferOwnership: "Transfer ownership",
         overrideValues: "Override values",
-        overrideValuesDesc:
-            "Override organization default values and assign custom permissions and roles to this user on the project.",
+        overrideValuesDesc: "Override organization default values and assign custom permissions and roles to this user on the project.",
         projectNotManagedByOrg:
             "This project is not managed by an organization. If you are the member of any organizations, you can transfer management to one of them.",
         transferManagementToOrg: "Transfer management",
@@ -532,16 +521,14 @@ export default {
         memberRemoved: "Member removed successfully",
         sureToRemoveMember: (memberName: string) => `Are you sure you want to remove ${memberName} from this team?`,
         ownershipTransfered: "Ownership transferred successfully",
-        sureToTransferOwnership: (memberName: string) =>
-            `Are you sure you want to transfer ownership to ${memberName}?`,
+        sureToTransferOwnership: (memberName: string) => `Are you sure you want to transfer ownership to ${memberName}?`,
     },
 
     organization: {
         orgDoesntHaveProjects: "This organization doesn't have any projects yet.",
         manageProjects: "Manage projects",
         orgSettings: "Organization settings",
-        transferProjectsTip:
-            "You can transfer your existing projects to this organisation from: Project settings > Members",
+        transferProjectsTip: "You can transfer your existing projects to this organisation from: Project settings > Members",
         noProjects_CreateOne: "This organization don't have any projects. Click the button above to create one.",
         orgInfo: "Organization information",
         deleteOrg: "Delete organization",

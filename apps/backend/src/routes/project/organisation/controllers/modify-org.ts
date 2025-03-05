@@ -143,7 +143,10 @@ export async function updateOrgIcon(ctx: Context, userSession: ContextUserData, 
         });
     }
 
-    return { data: { success: true, message: "Organization icon updated", newIcon: iconImg_Id }, status: HTTP_STATUS.OK };
+    return {
+        data: { success: true, message: "Organization icon updated", newIcon: iconImg_Id },
+        status: HTTP_STATUS.OK,
+    };
 }
 
 export async function deleteOrgIcon(ctx: Context, userSession: ContextUserData, slug: string) {

@@ -90,7 +90,10 @@ export async function updateProject(
         },
     );
 
-    return { data: { success: true, message: "Project details updated", slug: UpdatedProject.slug }, status: HTTP_STATUS.OK };
+    return {
+        data: { success: true, message: "Project details updated", slug: UpdatedProject.slug },
+        status: HTTP_STATUS.OK,
+    };
 }
 
 export async function deleteProject(userSession: ContextUserData, slug: string) {

@@ -304,7 +304,10 @@ export default function ProjectVersionsPage() {
                             key={channel}
                             className={releaseChannelTextColor(channel as VersionReleaseChannel)}
                             onClick={() => {
-                                setFilters((prev) => ({ ...prev, releaseChannels: prev.releaseChannels.filter((c) => c !== channel) }));
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    releaseChannels: prev.releaseChannels.filter((c) => c !== channel),
+                                }));
                             }}
                         >
                             {CapitalizeAndFormatString(channel)}
@@ -316,7 +319,10 @@ export default function ProjectVersionsPage() {
                         <ChipButton
                             key={version.value}
                             onClick={() => {
-                                setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version.value) }));
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    gameVersions: prev.gameVersions.filter((v) => v !== version.value),
+                                }));
                             }}
                         >
                             {version.label}
@@ -337,7 +343,10 @@ export default function ProjectVersionsPage() {
                             <ChipButton
                                 key={loader}
                                 onClick={() => {
-                                    setFilters((prev) => ({ ...prev, loaders: prev.loaders.filter((l) => l !== loader) }));
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        loaders: prev.loaders.filter((l) => l !== loader),
+                                    }));
                                 }}
                                 style={{
                                     color: color,

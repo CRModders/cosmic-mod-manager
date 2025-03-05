@@ -9,7 +9,10 @@ export async function parseValueToSchema<T extends z.Schema>(schema: T, data: un
         const errorMsg = error?.issues?.[0]?.message;
         // @ts-ignore
         const errorPath = error?.issues?.[0]?.path?.[0];
-        return { data: null, error: errorMsg && (errorPath as string) ? `${errorPath}: ${errorMsg}` : (error as string) };
+        return {
+            data: null,
+            error: errorMsg && (errorPath as string) ? `${errorPath}: ${errorMsg}` : (error as string),
+        };
     }
 }
 

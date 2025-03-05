@@ -56,16 +56,8 @@ export default function UserPageLayout(props: Props) {
     );
 
     return (
-        <main
-            className="profile-page-layout pb-12 gap-panel-cards"
-            itemScope
-            itemType={itemType(MicrodataItemType.Person)}
-        >
-            <ProfilePageHeader
-                userData={props.userData}
-                totalDownloads={aggregatedDownloads}
-                totalProjects={totalProjects}
-            />
+        <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
+            <ProfilePageHeader userData={props.userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div
                 className="h-fit grid grid-cols-1 gap-panel-cards"
                 style={{
@@ -87,9 +79,7 @@ export default function UserPageLayout(props: Props) {
                     </div>
                 ) : (
                     <div className="w-full flex items-center justify-center py-12">
-                        <p className="text-lg text-muted-foreground italic text-center">
-                            {t.user.doesntHaveProjects(props.userData.name)}
-                        </p>
+                        <p className="text-lg text-muted-foreground italic text-center">{t.user.doesntHaveProjects(props.userData.name)}</p>
                     </div>
                 )}
             </div>
@@ -98,11 +88,7 @@ export default function UserPageLayout(props: Props) {
     );
 }
 
-function PageSidebar({
-    displayName,
-    userId,
-    orgsList,
-}: { displayName: string; userId: string; orgsList: Organisation[] }) {
+function PageSidebar({ displayName, userId, orgsList }: { displayName: string; userId: string; orgsList: Organisation[] }) {
     const { t } = useTranslation();
     const joinedOrgs = orgsList.filter((org) => {
         const member = org.members.find((member) => member.userId === userId);

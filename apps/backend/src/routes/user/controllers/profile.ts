@@ -35,11 +35,7 @@ export async function getUserProfileData(slug: string) {
     return { data: dataObj, status: HTTP_STATUS.OK };
 }
 
-export async function getUserFollowedProjects(
-    userSlug: string,
-    userSession: ContextUserData | undefined,
-    idsOnly = true,
-) {
+export async function getUserFollowedProjects(userSlug: string, userSession: ContextUserData | undefined, idsOnly = true) {
     if (userSession && (userSlug === userSession.userName || userSlug === userSession.id)) {
         if (idsOnly) return { data: userSession.followingProjects, status: HTTP_STATUS.OK };
 
@@ -56,10 +52,7 @@ export async function getUserFollowedProjects(
     return { data: UserProjects, status: HTTP_STATUS.OK };
 }
 
-export async function updateUserProfile(
-    userSession: ContextUserData,
-    profileData: z.infer<typeof profileUpdateFormSchema>,
-) {
+export async function updateUserProfile(userSession: ContextUserData, profileData: z.infer<typeof profileUpdateFormSchema>) {
     const user = await GetUser_Unique({
         where: {
             id: userSession.id,
@@ -142,11 +135,7 @@ export async function getUserAvatar(
     return imgFile_Id;
 }
 
-export async function getAllVisibleProjects(
-    userSession: ContextUserData | undefined,
-    userSlug: string,
-    listedProjectsOnly: boolean,
-) {
+export async function getAllVisibleProjects(userSession: ContextUserData | undefined, userSlug: string, listedProjectsOnly: boolean) {
     const user = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!user) return { data: { success: false, message: "user not found" }, status: HTTP_STATUS.NOT_FOUND };
 
@@ -160,9 +149,7 @@ export async function getAllVisibleProjects(
     for (const project of UserProjects) {
         if (!project) continue;
 
-        const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(
-            project.visibility as ProjectVisibility,
-        );
+        const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility);
         if (listedProjectsOnly === true && !isProjectListed) continue;
 
         const projectAccessible = isProjectAccessible({

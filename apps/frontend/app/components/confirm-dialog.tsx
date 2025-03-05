@@ -45,11 +45,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                         </DialogClose>
 
                         <Button onClick={props.onConfirm} variant={props.confirmBtnVariant || "default"}>
-                            {props.confirmIcon ? (
-                                props.confirmIcon
-                            ) : (
-                                <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
-                            )}
+                            {props.confirmIcon ? props.confirmIcon : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
 
                             {props.confirmText}
                         </Button>

@@ -317,5 +317,8 @@ export async function deleteProjectVersion(ctx: Context, projectSlug: string, ve
         },
     });
 
-    return { data: { success: true, message: `Version "${deletedVersion.title}" deleted successfully.` }, status: HTTP_STATUS.OK };
+    return {
+        data: { success: true, message: `Version "${deletedVersion.title}" deleted successfully.` },
+        status: HTTP_STATUS.OK,
+    };
 }

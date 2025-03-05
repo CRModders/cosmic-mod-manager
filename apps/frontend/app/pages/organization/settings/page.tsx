@@ -159,9 +159,7 @@ export default function GeneralOrgSettings() {
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
                                             {Config.FRONTEND_URL}/organization/
-                                            <em className="not-italic text-foreground font-[500]">
-                                                {form.getValues().slug}
-                                            </em>
+                                            <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
                                 </FormItem>
@@ -190,9 +188,7 @@ export default function GeneralOrgSettings() {
                         <div className="w-full flex items-center justify-end mt-2">
                             <Button
                                 type="submit"
-                                disabled={
-                                    JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading
-                                }
+                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const parsedValues = await orgSettingsFormSchema.parseAsync(form.getValues());
@@ -200,11 +196,7 @@ export default function GeneralOrgSettings() {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                )}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
                         </div>
@@ -257,10 +249,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
     }
 
     return (
-        <ContentCardTemplate
-            title={t.organization.deleteOrg}
-            className="w-full flex-row flex flex-wrap gap-4 justify-between"
-        >
+        <ContentCardTemplate title={t.organization.deleteOrg} className="w-full flex-row flex flex-wrap gap-4 justify-between">
             <p className="text-muted-foreground max-w-[65ch]">{t.organization.deleteOrgDesc}</p>
 
             <Dialog>
@@ -300,11 +289,7 @@ function DeleteOrgDialog({ name, slug }: { name: string; slug: string }) {
                                 <CancelButton />
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteOrg}>
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
-                                )}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.organization.deleteOrg}
                             </Button>
                         </DialogFooter>

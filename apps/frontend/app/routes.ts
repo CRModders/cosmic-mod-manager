@@ -20,7 +20,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                 route("change-password", path("auth/change-password.tsx"), { id: `${lang}__change-password-page` });
                 route("auth/revoke-session", path("auth/revoke-session.tsx"), { id: `${lang}__revoke-session-page` });
                 route("auth/confirm-action", path("auth/confirm-action.tsx"), { id: `${lang}__confirm-action-page` });
-                route("auth/callback/:authProvider", path("auth/auth-callback.tsx"), { id: `${lang}__auth-callback-page` });
+                route("auth/callback/:authProvider", path("auth/auth-callback.tsx"), {
+                    id: `${lang}__auth-callback-page`,
+                });
 
                 // User Settings
                 route("settings", path("settings/layout.tsx"), { id: `${lang}__settings-layout` }, () => {
@@ -34,10 +36,14 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                 route("dashboard", path("dashboard/layout.tsx"), { id: `${lang}__dashboard-layout` }, () => {
                     route("", path("dashboard/overview.tsx"), { index: true, id: `${lang}__overview` });
                     route("notifications", path("dashboard/notifications/page.tsx"), { id: `${lang}__notifications` });
-                    route("notifications/history", path("dashboard/notifications/history.tsx"), { id: `${lang}__notifications-history` });
+                    route("notifications/history", path("dashboard/notifications/history.tsx"), {
+                        id: `${lang}__notifications-history`,
+                    });
 
                     route("projects", path("dashboard/projects.tsx"), { id: `${lang}__dashboard-projects` });
-                    route("organizations", path("dashboard/organizations.tsx"), { id: `${lang}__dashboard-organizations` });
+                    route("organizations", path("dashboard/organizations.tsx"), {
+                        id: `${lang}__dashboard-organizations`,
+                    });
                     route("collections", path("dashboard/collections.tsx"), { id: `${lang}__dashboard-collections` });
                     route("*", path("$.tsx"), { id: `${lang}__dashboard-not-found` });
                 });
@@ -55,22 +61,43 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                         route("", path("project/layout.tsx"), { id: `${lang}__${type}__layout` }, () => {
                             route("", path("project/page.tsx"), { index: true, id: `${lang}__${type}__page` });
                             route("gallery", path("project/gallery.tsx"), { id: `${lang}__${type}__gallery` });
-                            route("changelog", path("project/changelog.tsx"), { id: `${lang}__${type}__changelog` });
+                            route("changelog", path("project/changelog.tsx"), {
+                                id: `${lang}__${type}__changelog`,
+                            });
                             route("versions", path("project/versions.tsx"), { id: `${lang}__${type}__versions` });
-                            route("version", path("project/versions.tsx"), { id: `${lang}__${type}__versions_alternate` });
-                            route("version/:versionSlug", path("project/version/page.tsx"), { id: `${lang}__${type}__version__page` });
-                            route("version/new", path("project/version/new.tsx"), { id: `${lang}__${type}__version__new` });
-                            route("version/:versionSlug/edit", path("project/version/edit.tsx"), { id: `${lang}__${type}__version__edit` });
+                            route("version", path("project/versions.tsx"), {
+                                id: `${lang}__${type}__versions_alternate`,
+                            });
+                            route("version/:versionSlug", path("project/version/page.tsx"), {
+                                id: `${lang}__${type}__version__page`,
+                            });
+                            route("version/new", path("project/version/new.tsx"), {
+                                id: `${lang}__${type}__version__new`,
+                            });
+                            route("version/:versionSlug/edit", path("project/version/edit.tsx"), {
+                                id: `${lang}__${type}__version__edit`,
+                            });
                         });
                         route("settings", path("project/settings/layout.tsx"), { id: `${lang}__${type}__settings-layout` }, () => {
-                            route("", path("project/settings/general.tsx"), { id: `${lang}__${type}__settings__general`, index: true });
-                            route("tags", path("project/settings/tags.tsx"), { id: `${lang}__${type}__settings__tags` });
+                            route("", path("project/settings/general.tsx"), {
+                                id: `${lang}__${type}__settings__general`,
+                                index: true,
+                            });
+                            route("tags", path("project/settings/tags.tsx"), {
+                                id: `${lang}__${type}__settings__tags`,
+                            });
                             route("description", path("project/settings/description.tsx"), {
                                 id: `${lang}__${type}__settings__description`,
                             });
-                            route("license", path("project/settings/license.tsx"), { id: `${lang}__${type}__settings__license` });
-                            route("links", path("project/settings/links.tsx"), { id: `${lang}__${type}__settings__links` });
-                            route("members", path("project/settings/members.tsx"), { id: `${lang}__${type}__settings__members` });
+                            route("license", path("project/settings/license.tsx"), {
+                                id: `${lang}__${type}__settings__license`,
+                            });
+                            route("links", path("project/settings/links.tsx"), {
+                                id: `${lang}__${type}__settings__links`,
+                            });
+                            route("members", path("project/settings/members.tsx"), {
+                                id: `${lang}__${type}__settings__members`,
+                            });
                             route("*", path("$.tsx"), { id: `${lang}__${type}__settings-not-found` });
                         });
                     });
@@ -79,21 +106,36 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                 // Organization pages
                 route("organization/:orgSlug", path("organization/data-wrapper.tsx"), { id: `${lang}__organization-data-wrapper` }, () => {
                     route("settings", path("organization/settings/layout.tsx"), { id: `${lang}__org-settings` }, () => {
-                        route("", path("organization/settings/page.tsx"), { index: true, id: `${lang}__org-general-settings` });
-                        route("projects", path("organization/settings/projects.tsx"), { id: `${lang}__org-projects-settings` });
-                        route("members", path("organization/settings/members.tsx"), { id: `${lang}__org-members-settings` });
+                        route("", path("organization/settings/page.tsx"), {
+                            index: true,
+                            id: `${lang}__org-general-settings`,
+                        });
+                        route("projects", path("organization/settings/projects.tsx"), {
+                            id: `${lang}__org-projects-settings`,
+                        });
+                        route("members", path("organization/settings/members.tsx"), {
+                            id: `${lang}__org-members-settings`,
+                        });
                         route("*", path("$.tsx"), { id: `${lang}__org-settings-not-found` });
                     });
 
                     route("", path("organization/layout.tsx"), { id: `${lang}__organization__layout` }, () => {
-                        route("", path("organization/page.tsx"), { index: true, id: `${lang}__organization__projects-all` });
-                        route(":projectType", path("organization/page.tsx"), { id: `${lang}__organization__projects` });
+                        route("", path("organization/page.tsx"), {
+                            index: true,
+                            id: `${lang}__organization__projects-all`,
+                        });
+                        route(":projectType", path("organization/page.tsx"), {
+                            id: `${lang}__organization__projects`,
+                        });
                     });
                 });
 
                 // Collections page
                 route("collection/:collectionId", path("collection/layout.tsx"), { id: `${lang}__collection__layout` }, () => {
-                    route("", path("collection/page.tsx"), { index: true, id: `${lang}__collection__projects-all` });
+                    route("", path("collection/page.tsx"), {
+                        index: true,
+                        id: `${lang}__collection__projects-all`,
+                    });
                     route(":projectType", path("collection/page.tsx"), { id: `${lang}__collection__projects` });
                 });
 

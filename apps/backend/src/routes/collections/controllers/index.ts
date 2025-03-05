@@ -153,10 +153,7 @@ export async function GetCollectionOwner(collectionId: string, userSession: Cont
     };
 }
 
-export async function CreateNewCollection(
-    formData: z.infer<typeof createCollectionFormSchema>,
-    userSession: ContextUserData,
-) {
+export async function CreateNewCollection(formData: z.infer<typeof createCollectionFormSchema>, userSession: ContextUserData) {
     const collection = await CreateCollection({
         data: {
             id: generateDbId(),
@@ -177,11 +174,7 @@ export async function CreateNewCollection(
     };
 }
 
-export async function AddProjectsToCollection(
-    collectionId: string,
-    projectIds: string[],
-    sessionUser: ContextUserData,
-) {
+export async function AddProjectsToCollection(collectionId: string, projectIds: string[], sessionUser: ContextUserData) {
     const collection = await GetCollection(collectionId);
     if (!collection) return notFoundResponseData("Collection not found!");
 
@@ -216,11 +209,7 @@ export async function AddProjectsToCollection(
     };
 }
 
-export async function DeleteProjectsFromCollection(
-    collectionId: string,
-    projectIds: string[],
-    sessionUser: ContextUserData,
-) {
+export async function DeleteProjectsFromCollection(collectionId: string, projectIds: string[], sessionUser: ContextUserData) {
     const collection = await GetCollection(collectionId);
     if (!collection) return notFoundResponseData("Collection not found!");
 

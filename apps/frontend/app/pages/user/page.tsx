@@ -53,13 +53,7 @@ export default function UserProjectsList(props: Props) {
                                     ) : (
                                         <EarthIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     )}
-                                    {
-                                        t.projectSettings[
-                                            collection.visibility === CollectionVisibility.PRIVATE
-                                                ? "private"
-                                                : "public"
-                                        ]
-                                    }
+                                    {t.projectSettings[collection.visibility === CollectionVisibility.PRIVATE ? "private" : "public"]}
                                 </div>
                             }
                         />

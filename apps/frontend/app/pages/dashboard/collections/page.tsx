@@ -30,11 +30,7 @@ export default function CollectionsDashboardPage(props: Props) {
 
             <CardContent className="gap-4">
                 <div className="w-full gap-3 flex items-center justify-between flex-wrap sm:flex-nowrap">
-                    <Input
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder={t.collection.searchCollections}
-                    />
+                    <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t.collection.searchCollections} />
 
                     <CreateNewCollection_Dialog>
                         <Button>
@@ -68,13 +64,7 @@ export default function CollectionsDashboardPage(props: Props) {
                                         ) : (
                                             <EarthIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         )}
-                                        {
-                                            t.projectSettings[
-                                                collection.visibility === CollectionVisibility.PRIVATE
-                                                    ? "private"
-                                                    : "public"
-                                            ]
-                                        }
+                                        {t.projectSettings[collection.visibility === CollectionVisibility.PRIVATE ? "private" : "public"]}
                                     </div>
                                 }
                             />

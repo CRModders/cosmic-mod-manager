@@ -148,19 +148,13 @@ export default function CollectionPageLayout(props: Props) {
                     )}
 
                     <span className="font-semibold">
-                        {
-                            t.projectSettings[
-                                props.collection.visibility === CollectionVisibility.PRIVATE ? "private" : "public"
-                            ]
-                        }
+                        {t.projectSettings[props.collection.visibility === CollectionVisibility.PRIVATE ? "private" : "public"]}
                     </span>
                 </div>
 
                 <div className="flex items-center gap-2">
                     <CalendarIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
-                    <span className="font-semibold">
-                        {t.settings.created(TimePassedSince({ date: props.collection.dateCreated }))}
-                    </span>
+                    <span className="font-semibold">{t.settings.created(TimePassedSince({ date: props.collection.dateCreated }))}</span>
                 </div>
             </PageHeader>
 

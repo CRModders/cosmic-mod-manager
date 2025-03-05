@@ -190,12 +190,7 @@ export default function EditCollection(props: EditCollectionProps) {
                                             {t.form.description}
                                             <FormMessage />
                                         </FormLabel>
-                                        <Textarea
-                                            id="collection-description-input"
-                                            {...field}
-                                            className="resize-none"
-                                            placeholder="..."
-                                        />
+                                        <Textarea id="collection-description-input" {...field} className="resize-none" placeholder="..." />
                                     </FormItem>
                                 )}
                             />

@@ -58,7 +58,10 @@ export async function updateProjectExternalLinks(
         userSession.role,
     );
     if (!hasEditAccess) {
-        return { data: { success: false, message: "You don't the permission to update links" }, status: HTTP_STATUS.UNAUTHORIZED };
+        return {
+            data: { success: false, message: "You don't the permission to update links" },
+            status: HTTP_STATUS.UNAUTHORIZED,
+        };
     }
 
     await UpdateProject({

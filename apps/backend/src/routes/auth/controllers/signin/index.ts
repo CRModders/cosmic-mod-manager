@@ -60,7 +60,10 @@ export async function oAuthSignInHandler(ctx: Context, authProvider: string, tok
     setSessionCookie(ctx, AUTH_COOKIE_NAMESPACE, newSession, { maxAge: USER_SESSION_VALIDITY });
 
     return {
-        data: { success: true, message: `Successfuly logged in using ${profileData.providerName} as ${expectedAuthAccount.user.name}` },
+        data: {
+            success: true,
+            message: `Successfuly logged in using ${profileData.providerName} as ${expectedAuthAccount.user.name}`,
+        },
         status: HTTP_STATUS.OK,
     };
 }

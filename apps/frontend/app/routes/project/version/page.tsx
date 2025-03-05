@@ -63,9 +63,7 @@ export function meta(props: Route.MetaArgs) {
         });
     }
 
-    const loaders = version.loaders.length
-        ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ")
-        : null;
+    const loaders = version.loaders.length ? version.loaders.map((l) => CapitalizeAndFormatString(l)).join(" & ") : null;
     const publishedAt = FormatDate_ToLocaleString(version.datePublished, {
         includeTime: false,
         shortMonthNames: false,
@@ -83,11 +81,7 @@ export function meta(props: Route.MetaArgs) {
     });
 }
 
-function filterGameVersion(
-    gameVersions: ProjectVersionData[] | undefined,
-    slug: string | undefined,
-    searchParams: URLSearchParams,
-) {
+function filterGameVersion(gameVersions: ProjectVersionData[] | undefined, slug: string | undefined, searchParams: URLSearchParams) {
     if (!slug || !gameVersions?.length) return null;
     if (slug !== "latest") return gameVersions?.find((version) => version.slug === slug || version.id === slug);
 

@@ -1,12 +1,6 @@
 import { Button } from "@app/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
-import {
-    BookmarkIcon,
-    ExternalLinkIcon,
-    PlusIcon,
-    SquareArrowOutUpRightIcon,
-    SquareArrowUpRightIcon,
-} from "lucide-react";
+import { BookmarkIcon, ExternalLinkIcon, PlusIcon, SquareArrowOutUpRightIcon, SquareArrowUpRightIcon } from "lucide-react";
 import { useSession } from "~/hooks/session";
 import useCollections from "./provider";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
@@ -30,16 +24,8 @@ export function AddToCollection_Popup({ projectId }: { projectId: string }) {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button
-                    variant="secondary-inverted"
-                    className="rounded-full w-11 h-11 p-0"
-                    aria-label="Add to collection"
-                >
-                    <BookmarkIcon
-                        aria-hidden
-                        className="h-btn-icon-lg w-btn-icon-lg"
-                        fill={bookmarked ? "currentColor" : "none"}
-                    />
+                <Button variant="secondary-inverted" className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
+                    <BookmarkIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" fill={bookmarked ? "currentColor" : "none"} />
                 </Button>
             </PopoverTrigger>
 
@@ -64,10 +50,7 @@ export function AddToCollection_Popup({ projectId }: { projectId: string }) {
                         const checked = collection.projects.includes(projectId);
 
                         return (
-                            <div
-                                key={collection.id}
-                                className="flex items-center justify-between gap-2 group/collection-wrapper"
-                            >
+                            <div key={collection.id} className="flex items-center justify-between gap-2 group/collection-wrapper">
                                 <LabelledCheckbox
                                     checked={checked}
                                     onCheckedChange={(checked) => {

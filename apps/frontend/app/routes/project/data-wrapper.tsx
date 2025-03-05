@@ -97,9 +97,7 @@ export function meta(props: Route.MetaArgs) {
     const creator = project.members.find((member) => member.isOwner);
     const author = project.organisation?.name || creator?.userName;
 
-    const authorProfileLink = creator?.userName
-        ? `${Config.FRONTEND_URL}${UserProfilePath(creator.userName)}`
-        : undefined;
+    const authorProfileLink = creator?.userName ? `${Config.FRONTEND_URL}${UserProfilePath(creator.userName)}` : undefined;
 
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
@@ -111,12 +109,7 @@ export function meta(props: Route.MetaArgs) {
     });
 }
 
-export function shouldRevalidate({
-    currentParams,
-    nextParams,
-    nextUrl,
-    defaultShouldRevalidate,
-}: ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate({ currentParams, nextParams, nextUrl, defaultShouldRevalidate }: ShouldRevalidateFunctionArgs) {
     const revalidate = nextUrl.searchParams.get("revalidate") === "true";
     if (revalidate) return true;
 

@@ -6,7 +6,5 @@ export default function _UserProjects() {
     const data = useOutletContext<UserOutletData>();
 
     if (!data.projectsList) return null;
-    return (
-        <UserProjectsList projectsList={data.projectsList} collections={data.collections} userData={data.userData} />
-    );
+    return <UserProjectsList projectsList={data.projectsList} collections={data.collections} userData={data.userData} />;
 }

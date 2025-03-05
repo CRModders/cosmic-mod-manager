@@ -224,7 +224,10 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             key={channel}
                             className={releaseChannelTextColor(channel as VersionReleaseChannel)}
                             onClick={() => {
-                                setFilters((prev) => ({ ...prev, releaseChannels: prev.releaseChannels.filter((c) => c !== channel) }));
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    releaseChannels: prev.releaseChannels.filter((c) => c !== channel),
+                                }));
                             }}
                         >
                             {CapitalizeAndFormatString(channel)}
@@ -236,7 +239,10 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                         <ChipButton
                             key={version.value}
                             onClick={() => {
-                                setFilters((prev) => ({ ...prev, gameVersions: prev.gameVersions.filter((v) => v !== version.value) }));
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    gameVersions: prev.gameVersions.filter((v) => v !== version.value),
+                                }));
                             }}
                         >
                             {version.label}
@@ -253,7 +259,10 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             <ChipButton
                                 key={loader}
                                 onClick={() => {
-                                    setFilters((prev) => ({ ...prev, loaders: prev.loaders.filter((l) => l !== loader) }));
+                                    setFilters((prev) => ({
+                                        ...prev,
+                                        loaders: prev.loaders.filter((l) => l !== loader),
+                                    }));
                                 }}
                                 style={{
                                     color: accentForeground

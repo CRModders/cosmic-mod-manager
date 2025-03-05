@@ -248,7 +248,10 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                             options={GAME_VERSIONS.filter(
                                 (version) => showAllVersions || !isExperimentalGameVersion(version.releaseType),
                             ).map((version) => ({ label: version.label, value: version.value }))}
-                            allOptions={GAME_VERSIONS.map((version) => ({ label: version.label, value: version.value }))}
+                            allOptions={GAME_VERSIONS.map((version) => ({
+                                label: version.label,
+                                value: version.value,
+                            }))}
                             onValueChange={field.onChange}
                             selectedValues={field.value || []}
                             placeholder={t.version.selectVersions}
@@ -613,7 +616,12 @@ function AdditionalFiles({
     selectedFiles,
     inputId,
     onChange,
-}: { children: React.ReactNode; selectedFiles?: (File | FileObjectType)[]; inputId: string; onChange: (...event: unknown[]) => void }) {
+}: {
+    children: React.ReactNode;
+    selectedFiles?: (File | FileObjectType)[];
+    inputId: string;
+    onChange: (...event: unknown[]) => void;
+}) {
     const { t } = useTranslation();
 
     function deleteFileFromList(index: number) {

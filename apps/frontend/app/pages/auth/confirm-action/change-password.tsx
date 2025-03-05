@@ -18,7 +18,10 @@ import SessionsPageLink from "./help-link";
 
 export default function ChangePasswordCard({ code }: { code: string }) {
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState<{ value: boolean; action: null | "cancel" | "set" }>({ value: false, action: null });
+    const [isLoading, setIsLoading] = useState<{ value: boolean; action: null | "cancel" | "set" }>({
+        value: false,
+        action: null,
+    });
     const [successMessage, setSuccessMessage] = useState("");
 
     const form = useForm<z.infer<typeof setNewPasswordFormSchema>>({

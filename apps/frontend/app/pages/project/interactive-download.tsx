@@ -75,7 +75,10 @@ export default function InteractiveDownloadPopup() {
     const loadersList = useMemo(() => {
         if (!projectData || !allProjectVersions) return [];
         if (!selectedGameVersion)
-            return projectData.loaders.map((loader) => ({ label: CapitalizeAndFormatString(loader) || "", value: loader }));
+            return projectData.loaders.map((loader) => ({
+                label: CapitalizeAndFormatString(loader) || "",
+                value: loader,
+            }));
 
         const list = [];
         for (const loader of projectData.loaders) {

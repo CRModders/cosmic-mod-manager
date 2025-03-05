@@ -75,7 +75,12 @@ export async function createNewProject(userSession: ContextUserData, formData: z
     });
 
     return {
-        data: { success: true, message: "Successfully created new project", urlSlug: newProject.slug, type: newProject.type },
+        data: {
+            success: true,
+            message: "Successfully created new project",
+            urlSlug: newProject.slug,
+            type: newProject.type,
+        },
         status: HTTP_STATUS.OK,
     };
 }

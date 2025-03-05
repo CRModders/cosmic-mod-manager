@@ -7,15 +7,7 @@ import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
 import type { LinksFunction } from "react-router";
-import {
-    Links,
-    Meta,
-    Outlet,
-    Scripts,
-    ScrollRestoration,
-    type ShouldRevalidateFunctionArgs,
-    useLoaderData,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Navbar from "~/components/layout/Navbar/navbar";
 import Footer from "~/components/layout/footer";
@@ -180,10 +172,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     // If the url prefix is same as the default and the user's set locale is the same as the default,
     // redirect to the url without the default locale prefix
     if (urlLocalePrefix === formatLocaleCode(DefaultLocale) && urlLocalePrefix === formatLocaleCode(cookieLocale)) {
-        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(
-            formatLocaleCode(DefaultLocale),
-            "",
-        );
+        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(formatLocaleCode(DefaultLocale), "");
         const redirectUrl = new URL(pathWithoutDefaultLocale, Config.FRONTEND_URL);
         throw Response.redirect(redirectUrl, 302);
     }

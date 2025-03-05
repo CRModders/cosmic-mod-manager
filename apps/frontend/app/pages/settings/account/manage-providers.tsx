@@ -18,7 +18,10 @@ import clientFetch from "~/utils/client-fetch";
 
 export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAuthProviders: LinkedProvidersListData[] }) {
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({ value: false, provider: null });
+    const [isLoading, setIsLoading] = useState<{ value: boolean; provider: AuthProvider | null }>({
+        value: false,
+        provider: null,
+    });
 
     const navigate = useNavigate();
     const location = useLocation();

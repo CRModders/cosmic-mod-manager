@@ -23,12 +23,7 @@ import {
     removeAccountPassword,
     sendAccountPasswordChangeLink,
 } from "~/routes/user/controllers/account";
-import {
-    getAllVisibleProjects,
-    getUserFollowedProjects,
-    getUserProfileData,
-    updateUserProfile,
-} from "~/routes/user/controllers/profile";
+import { getAllVisibleProjects, getUserFollowedProjects, getUserProfileData, updateUserProfile } from "~/routes/user/controllers/profile";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
@@ -244,10 +239,7 @@ async function userPassword_delete(ctx: Context) {
 // Send change password confirmation email
 async function changePasswordConfirmationEmail_post(ctx: Context) {
     try {
-        const { data, error } = await parseValueToSchema(
-            sendAccoutPasswordChangeLinkFormSchema,
-            ctx.get(REQ_BODY_NAMESPACE),
-        );
+        const { data, error } = await parseValueToSchema(sendAccoutPasswordChangeLinkFormSchema, ctx.get(REQ_BODY_NAMESPACE));
         if (error || !data) return invalidReqestResponse(ctx, error);
 
         const res = await sendAccountPasswordChangeLink(ctx, data);

@@ -85,11 +85,7 @@ export default function ProjectPageLayout() {
 
     if (!projectData) return null;
 
-    const isVersionDetailsPage = isCurrLinkActive(
-        ProjectPagePath(ctx.projectType, projectData.slug, "version/"),
-        location.pathname,
-        false,
-    );
+    const isVersionDetailsPage = isCurrLinkActive(ProjectPagePath(ctx.projectType, projectData.slug, "version/"), location.pathname, false);
 
     const projectEnvironments = ProjectSupprotedEnvironments({
         clientSide: projectData.clientSide,
@@ -183,10 +179,7 @@ export default function ProjectPageLayout() {
 
                         {projectEnvironments?.length ? (
                             <section className="flex flex-wrap items-start justify-start gap-1">
-                                <h3
-                                    className="block w-full font-bold text-muted-foreground"
-                                    title="Environment(s) the mod is made for"
-                                >
+                                <h3 className="block w-full font-bold text-muted-foreground" title="Environment(s) the mod is made for">
                                     {t.project.environments}
                                 </h3>
                                 {projectEnvironments.map((item, i) => {
@@ -234,12 +227,7 @@ export default function ProjectPageLayout() {
                             <ExternalLink
                                 url={projectData?.discordInviteUrl}
                                 label={t.project.joinDiscord}
-                                icon={
-                                    <DiscordIcon
-                                        aria-hidden
-                                        className="w-btn-icon h-btn-icon fill-current dark:fill-current"
-                                    />
-                                }
+                                icon={<DiscordIcon aria-hidden className="w-btn-icon h-btn-icon fill-current dark:fill-current" />}
                             />
                         ) : null}
                     </Card>
@@ -259,11 +247,7 @@ export default function ProjectPageLayout() {
                                             // @ts-expect-error
                                             !e.target.closest(".noClickRedirect")
                                         ) {
-                                            const link = VersionPagePath(
-                                                ctx.projectType,
-                                                projectData.slug,
-                                                version.slug,
-                                            );
+                                            const link = VersionPagePath(ctx.projectType, projectData.slug, version.slug);
                                             if (window.location.pathname !== link) {
                                                 customNavigate(link);
                                             }
@@ -276,10 +260,7 @@ export default function ProjectPageLayout() {
                                             className=" group-hover/card:hidden group-focus-within/card:hidden"
                                         />
                                         <Tooltip>
-                                            <TooltipTrigger
-                                                asChild
-                                                className="hidden group-hover/card:flex group-focus-within/card:flex"
-                                            >
+                                            <TooltipTrigger asChild className="hidden group-hover/card:flex group-focus-within/card:flex">
                                                 <a
                                                     href={version.primaryFile?.url}
                                                     className={cn(
@@ -296,16 +277,11 @@ export default function ProjectPageLayout() {
                                                     download={version.primaryFile?.name}
                                                     onClick={showDownloadAnimation}
                                                 >
-                                                    <DownloadIcon
-                                                        aria-hidden
-                                                        className="w-[1.07rem] h-[1.07rem]"
-                                                        strokeWidth={2.2}
-                                                    />
+                                                    <DownloadIcon aria-hidden className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
                                                 </a>
                                             </TooltipTrigger>
                                             <TooltipContent className="hidden group-hover/card:flex group-focus-within/card:flex">
-                                                {version?.primaryFile?.name} (
-                                                {parseFileSize(version.primaryFile?.size || 0)})
+                                                {version?.primaryFile?.name} ({parseFileSize(version.primaryFile?.size || 0)})
                                             </TooltipContent>
                                         </Tooltip>
                                     </div>
@@ -318,9 +294,7 @@ export default function ProjectPageLayout() {
                                             <p className="font-bold leading-tight">{version.title}</p>
                                         </Link>
                                         <p className="text-pretty leading-tight">
-                                            {version.loaders
-                                                .map((loader) => CapitalizeAndFormatString(loader))
-                                                .join(", ")}{" "}
+                                            {version.loaders.map((loader) => CapitalizeAndFormatString(loader)).join(", ")}{" "}
                                             {formatVersionsForDisplay(version.gameVersions).join(", ")}
                                         </p>
                                     </div>
@@ -504,11 +478,9 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                 title={projectData.name}
                 description={projectData.summary}
                 titleBadge={
-                    [
-                        ProjectPublishingStatus.REJECTED,
-                        ProjectPublishingStatus.PROCESSING,
-                        ProjectPublishingStatus.WITHHELD,
-                    ].includes(projectData.status) ? (
+                    [ProjectPublishingStatus.REJECTED, ProjectPublishingStatus.PROCESSING, ProjectPublishingStatus.WITHHELD].includes(
+                        projectData.status,
+                    ) ? (
                         <span
                             title={ProjectStatusDesc(projectData.status)}
                             className="flex items-center justify-center gap-x-1.5 text-muted-foreground font-semibold bg-card-background text-sm cursor-help px-2 py-[0.13rem] rounded-full"
@@ -629,11 +601,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
 
             {invitedMember && (
                 <Suspense>
-                    <TeamInvitationBanner
-                        refreshData={fetchProjectData}
-                        role={invitedMember.role}
-                        teamId={projectData.teamId}
-                    />
+                    <TeamInvitationBanner refreshData={fetchProjectData} role={invitedMember.role} teamId={projectData.teamId} />
                 </Suspense>
             )}
 
@@ -694,10 +662,7 @@ export function ProjectMember({
                         {userName}
                     </span>
                     {isOwner === true && (
-                        <CrownIcon
-                            aria-hidden
-                            className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400"
-                        />
+                        <CrownIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm shrink-0 text-orange-500 dark:text-orange-400" />
                     )}
                 </div>
                 <span className="text-sm font-medium leading-tight text-muted-foreground/75">{roleName}</span>

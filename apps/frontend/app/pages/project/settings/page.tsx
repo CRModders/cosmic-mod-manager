@@ -112,9 +112,7 @@ export default function GeneralSettingsPage() {
     if (!session?.id) return;
 
     const isProjectTeamMember = projectData.members.some((member) => member.userId === session.id);
-    const isOrgMember = projectData.organisation?.members?.some(
-        (member) => member.userId === session.id && member.accepted,
-    );
+    const isOrgMember = projectData.organisation?.members?.some((member) => member.userId === session.id && member.accepted);
 
     return (
         <>
@@ -149,12 +147,7 @@ export default function GeneralSettingsPage() {
                                         {t.form.name}
                                         <FormMessage />
                                     </FormLabel>
-                                    <Input
-                                        {...field}
-                                        className="md:w-[32ch]"
-                                        id="project-name-input"
-                                        autoComplete="off"
-                                    />
+                                    <Input {...field} className="md:w-[32ch]" id="project-name-input" autoComplete="off" />
                                 </FormItem>
                             )}
                         />
@@ -180,9 +173,7 @@ export default function GeneralSettingsPage() {
                                         />
                                         <span className="text-sm lg:text-base text-muted-foreground px-1">
                                             {Config.FRONTEND_URL}/{form.getValues().type?.[0] || "project"}/
-                                            <em className="not-italic text-foreground font-[500]">
-                                                {form.getValues().slug}
-                                            </em>
+                                            <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
                                 </FormItem>
@@ -257,15 +248,8 @@ export default function GeneralSettingsPage() {
                                                 </span>
                                             </div>
 
-                                            <Select
-                                                name={field.name}
-                                                value={field.value}
-                                                onValueChange={field.onChange}
-                                            >
-                                                <SelectTrigger
-                                                    className="w-[15rem] max-w-full"
-                                                    aria-label="Client-side"
-                                                >
+                                            <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-[15rem] max-w-full" aria-label="Client-side">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -299,15 +283,8 @@ export default function GeneralSettingsPage() {
                                                 </span>
                                             </div>
 
-                                            <Select
-                                                name={field.name}
-                                                value={field.value}
-                                                onValueChange={field.onChange}
-                                            >
-                                                <SelectTrigger
-                                                    className="w-[15rem] max-w-full"
-                                                    aria-label="Server-side"
-                                                >
+                                            <Select name={field.name} value={field.value} onValueChange={field.onChange}>
+                                                <SelectTrigger className="w-[15rem] max-w-full" aria-label="Server-side">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -348,30 +325,18 @@ export default function GeneralSettingsPage() {
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
                                                     field.value === ProjectVisibility.ARCHIVED ? (
-                                                        <CheckIcon
-                                                            aria-hidden
-                                                            className="w-btn-icon h-btn-icon text-success-foreground"
-                                                        />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
-                                                        <XIcon
-                                                            aria-hidden
-                                                            className="w-btn-icon h-btn-icon text-danger-foreground"
-                                                        />
+                                                        <XIcon aria-hidden className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleInSearch}
                                                 </span>
                                                 <span className="flex items-center justify-center gap-1.5">
                                                     {field.value === ProjectVisibility.LISTED ||
                                                     field.value === ProjectVisibility.ARCHIVED ? (
-                                                        <CheckIcon
-                                                            aria-hidden
-                                                            className="w-btn-icon h-btn-icon text-success-foreground"
-                                                        />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     ) : (
-                                                        <XIcon
-                                                            aria-hidden
-                                                            className="w-btn-icon h-btn-icon text-danger-foreground"
-                                                        />
+                                                        <XIcon aria-hidden className="w-btn-icon h-btn-icon text-danger-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleOnProfile}
                                                 </span>
@@ -387,16 +352,11 @@ export default function GeneralSettingsPage() {
                                                                         />
                                                                     </span>
                                                                 </TooltipTrigger>
-                                                                <TooltipContent>
-                                                                    {t.projectSettings.visibleToMembersOnly}
-                                                                </TooltipContent>
+                                                                <TooltipContent>{t.projectSettings.visibleToMembersOnly}</TooltipContent>
                                                             </Tooltip>
                                                         </TooltipProvider>
                                                     ) : (
-                                                        <CheckIcon
-                                                            aria-hidden
-                                                            className="w-btn-icon h-btn-icon text-success-foreground"
-                                                        />
+                                                        <CheckIcon aria-hidden className="w-btn-icon h-btn-icon text-success-foreground" />
                                                     )}
                                                     {t.projectSettings.visibleViaUrl}
                                                 </span>
@@ -430,23 +390,15 @@ export default function GeneralSettingsPage() {
                         <div className="w-full flex items-center justify-end mt-2">
                             <Button
                                 type="submit"
-                                disabled={
-                                    JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading
-                                }
+                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                                 onClick={async () => {
                                     await handleFormError(async () => {
-                                        const parsedValues = await generalProjectSettingsFormSchema.parseAsync(
-                                            form.getValues(),
-                                        );
+                                        const parsedValues = await generalProjectSettingsFormSchema.parseAsync(form.getValues());
                                         saveSettings(parsedValues);
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                )}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
                         </div>
@@ -462,9 +414,7 @@ export default function GeneralSettingsPage() {
                             currUsersMembership={ctx.currUsersMembership}
                             teamId={ctx.projectData.teamId}
                             isOrgTeam={false}
-                            refreshData={async () =>
-                                RefreshPage(navigate, ProjectPagePath(projectData.type[0], projectData.slug))
-                            }
+                            refreshData={async () => RefreshPage(navigate, ProjectPagePath(projectData.type[0], projectData.slug))}
                         />
                     </CardContent>
                 </Card>
@@ -502,10 +452,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
     }
 
     return (
-        <ContentCardTemplate
-            title={t.projectSettings.deleteProject}
-            className="w-full flex flex-row flex-wrap gap-4 justify-between"
-        >
+        <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-row flex-wrap gap-4 justify-between">
             <p className="text-muted-foreground max-w-[65ch]">{t.projectSettings.deleteProjectDesc(SITE_NAME_SHORT)}</p>
 
             <Dialog>
@@ -545,11 +492,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
                                 <CancelButton />
                             </DialogClose>
                             <Button disabled={!submittable || isLoading} variant="destructive" onClick={deleteProject}>
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
-                                )}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.projectSettings.deleteProject}
                             </Button>
                         </DialogFooter>

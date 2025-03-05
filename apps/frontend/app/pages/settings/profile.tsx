@@ -151,10 +151,7 @@ export function ProfileSettingsPage({ session }: Props) {
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="flex flex-col items-start justify-center">
-                                        <FormLabel
-                                            className="text-foreground font-bold"
-                                            htmlFor="user-description-input"
-                                        >
+                                        <FormLabel className="text-foreground font-bold" htmlFor="user-description-input">
                                             {t.settings.bio}
                                             <FormMessage />
                                         </FormLabel>
@@ -174,9 +171,7 @@ export function ProfileSettingsPage({ session }: Props) {
                         <div className="w-full flex flex-wrap items-center mt-2 gap-x-3 gap-y-2">
                             <Button
                                 type="submit"
-                                disabled={
-                                    JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading
-                                }
+                                disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
                                 onClick={async () => {
                                     await handleFormError(async () => {
                                         const parsedValues = await profileUpdateFormSchema.parseAsync(form.getValues());
@@ -184,11 +179,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                     }, toast.error);
                                 }}
                             >
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                )}
+                                {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}
                             </Button>
 

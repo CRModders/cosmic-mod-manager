@@ -1,10 +1,7 @@
 import { newProjectFormSchema } from "@app/utils/schemas/project";
 import { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@app/utils/schemas/project/settings/description";
-import {
-    addNewGalleryImageFormSchema,
-    updateGalleryImageFormSchema,
-} from "@app/utils/schemas/project/settings/gallery";
+import { addNewGalleryImageFormSchema, updateGalleryImageFormSchema } from "@app/utils/schemas/project/settings/gallery";
 import { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
 import { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
@@ -49,12 +46,7 @@ projectRouter.delete("/:slug/follow", critModifyReqRateLimiter, LoginProtectedRo
 projectRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, project_post);
 projectRouter.patch("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_patch);
 projectRouter.delete("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_delete);
-projectRouter.post(
-    "/:id/submit-for-review",
-    critModifyReqRateLimiter,
-    LoginProtectedRoute,
-    project_queueForApproval_post,
-);
+projectRouter.post("/:id/submit-for-review", critModifyReqRateLimiter, LoginProtectedRoute, project_queueForApproval_post);
 projectRouter.patch("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_patch);
 projectRouter.delete("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_delete);
 projectRouter.patch("/:slug/description", critModifyReqRateLimiter, LoginProtectedRoute, description_patch);
@@ -73,8 +65,7 @@ async function projects_get(ctx: Context) {
         const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
         const userSession = getUserFromCtx(ctx);
         const userName = userSession?.userName;
-        if (!userName)
-            return ctx.json({ success: false, message: "You're not logged in" }, HTTP_STATUS.UNAUTHENTICATED);
+        if (!userName) return ctx.json({ success: false, message: "You're not logged in" }, HTTP_STATUS.UNAUTHENTICATED);
 
         const res = await getAllVisibleProjects(userSession, userName, listedProjectsOnly);
         return ctx.json(res.data, res.status);
@@ -248,8 +239,7 @@ async function projectIcon_patch(ctx: Context) {
         const formData = ctx.get(REQ_BODY_NAMESPACE);
         const icon = formData.get("icon");
 
-        if (!userSession || !slug || !icon || !(icon instanceof File))
-            return invalidReqestResponse(ctx, "Invalid data");
+        if (!userSession || !slug || !icon || !(icon instanceof File)) return invalidReqestResponse(ctx, "Invalid data");
 
         const { data, error } = await parseValueToSchema(iconFieldSchema, icon);
         if (error || !data) {

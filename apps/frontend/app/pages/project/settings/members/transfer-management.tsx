@@ -85,7 +85,14 @@ export function TransferProjectManagementCard({ organisations, projectId }: Prop
 
 interface RemoveProjectFromOrgProps {
     projectId: string;
-    org: { id: string; name: string; slug: string; icon: string | null; description: string | null; members: TeamMember[] };
+    org: {
+        id: string;
+        name: string;
+        slug: string;
+        icon: string | null;
+        description: string | null;
+        members: TeamMember[];
+    };
 }
 
 export function RemoveProjectFromOrg({ org, projectId }: RemoveProjectFromOrgProps) {
