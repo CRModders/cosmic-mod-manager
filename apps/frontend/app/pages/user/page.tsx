@@ -68,6 +68,14 @@ export default function UserProjectsList(props: Props) {
         ? props.projectsList?.filter((project) => project.type.includes(formattedProjectType))
         : props.projectsList;
 
+    if (!filteredProjects.length) {
+        return (
+            <div className="w-full flex items-center justify-center py-12">
+                <p className="text-lg text-muted-foreground italic text-center">{t.common.noResults}</p>
+            </div>
+        );
+    }
+
     return (
         <>
             {filteredProjects.map((project) => {

@@ -22,9 +22,10 @@ import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath, UserProfilePath } from "~/utils/urls";
 import SecondaryNav from "../project/secondary-nav";
+import type { UserOutletData } from "~/routes/user/layout";
+import { Outlet } from "react-router";
 
 interface Props {
-    children: React.ReactNode;
     userData: UserProfileData;
     projectsList: ProjectListItem[];
     orgsList: Organisation[];
@@ -43,10 +44,9 @@ export default function UserPageLayout(props: Props) {
         }
     }
     const projectTypesList = Array.from(aggregatedProjectTypes);
+
     const navLinks = [{ label: t.common.all, href: "" }];
-    if (props.collections.length > 0) {
-        navLinks.push({ label: t.dashboard.collections, href: "/collections" });
-    }
+    if (props.collections.length > 0) navLinks.push({ label: t.dashboard.collections, href: "/collections" });
 
     if (projectTypesList.length > 1) {
         navLinks.push(
@@ -60,12 +60,7 @@ export default function UserPageLayout(props: Props) {
     return (
         <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
             <ProfilePageHeader userData={props.userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
-            <div
-                className="h-fit grid grid-cols-1 gap-panel-cards"
-                style={{
-                    gridArea: "content",
-                }}
-            >
+            <div className="h-fit grid grid-cols-1 gap-panel-cards" style={{ gridArea: "content" }}>
                 {navLinks?.length > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
@@ -74,17 +69,26 @@ export default function UserPageLayout(props: Props) {
                     />
                 ) : null}
 
-                {totalProjects ? (
-                    // biome-ignore lint/a11y/useSemanticElements: <explanation>
-                    <div className="w-full flex flex-col gap-panel-cards" role="list">
-                        {props.children}
-                    </div>
-                ) : (
+                {navLinks.length < 1 ? (
                     <div className="w-full flex items-center justify-center py-12">
                         <p className="text-lg text-muted-foreground italic text-center">{t.user.doesntHaveProjects(props.userData.name)}</p>
                     </div>
+                ) : (
+                    // biome-ignore lint/a11y/useSemanticElements: <explanation>
+                    <div className="w-full flex flex-col gap-panel-cards" role="list">
+                        <Outlet
+                            context={
+                                {
+                                    projectsList: props.projectsList,
+                                    collections: props.collections,
+                                    userData: props.userData,
+                                } satisfies UserOutletData
+                            }
+                        />
+                    </div>
                 )}
             </div>
+
             <PageSidebar displayName={props.userData.name} userId={props.userData.id} orgsList={props.orgsList || []} />
         </main>
     );

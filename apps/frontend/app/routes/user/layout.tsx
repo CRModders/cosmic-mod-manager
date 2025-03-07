@@ -2,7 +2,7 @@ import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Collection, Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { MetaDescriptor } from "react-router";
-import { Outlet, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
+import { type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import NotFoundPage from "~/pages/not-found";
 import UserPageLayout from "~/pages/user/layout";
 import Config from "~/utils/config";
@@ -37,17 +37,7 @@ export default function _UserLayout() {
             projectsList={data.projects || []}
             orgsList={data.orgs || []}
             collections={data.collections}
-        >
-            <Outlet
-                context={
-                    {
-                        projectsList: data.projects,
-                        collections: data.collections,
-                        userData: data.userData,
-                    } satisfies UserOutletData
-                }
-            />
-        </UserPageLayout>
+        />
     );
 }
 
