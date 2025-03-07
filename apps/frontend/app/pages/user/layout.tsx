@@ -45,7 +45,8 @@ export default function UserPageLayout(props: Props) {
     }
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
-    const navLinks = [{ label: t.common.all, href: "" }];
+    const navLinks = [];
+    if (props.projectsList.length > 0) navLinks.push({ label: t.common.all, href: "" });
     if (props.collections.length > 0) navLinks.push({ label: t.dashboard.collections, href: "/collections" });
 
     if (projectTypesList.length > 1) {
