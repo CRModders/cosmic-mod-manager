@@ -24,6 +24,7 @@ import ConfirmDialog from "~/components/confirm-dialog";
 import clientFetch from "~/utils/client-fetch";
 import { toast } from "@app/components/ui/sonner";
 import RefreshPage from "@app/components/misc/refresh-page";
+import { isModerator } from "@app/utils/constants/roles";
 
 interface Props {
     collection: Collection;
@@ -117,7 +118,7 @@ export default function CollectionPageLayout(props: Props) {
                             </Button>
                         </PopoverClose>
 
-                        {!isFollowsCollection ? (
+                        {!isFollowsCollection && (props.collection.userId === session?.id || isModerator(session?.role)) ? (
                             <ConfirmDialog
                                 title={t.collection.deleteCollection}
                                 description={t.collection.sureToDeleteCollection}
