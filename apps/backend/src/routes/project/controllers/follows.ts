@@ -3,13 +3,14 @@ import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { isProjectPublic } from "../utils";
 import { GetUser_ByIdOrUsername, UpdateUser } from "~/db/user_item";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 
 export async function addProjectFollower(slug: string, userSession: ContextUserData) {
     const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData("Project not found!");
 
     if (!isProjectPublic(project.visibility, project.status)) {
-        return notFoundResponseData("Project not found!");
+        return notFoundResponseData("Can't follow a project that isn't publically accessible!");
     }
 
     const userData = await GetUser_ByIdOrUsername(undefined, userSession.id);
@@ -33,6 +34,8 @@ export async function addProjectFollower(slug: string, userSession: ContextUserD
                 },
             },
         }),
+
+        UpdateProjects_SearchIndex([project.id]),
     ]);
 
     return {
@@ -80,6 +83,8 @@ export async function removeProjectFollower(slug: string, userSession: ContextUs
                 },
             },
         }),
+
+        UpdateProjects_SearchIndex([project.id]),
     ]);
 
     return {
