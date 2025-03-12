@@ -12,6 +12,8 @@ import {
 } from "@app/components/ui/dialog";
 import { CancelButton } from "~/components/ui/button";
 import { Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import { LoadingSpinner } from "@app/components/ui/spinner";
 
 interface ConfirmDialogProps {
     title: string;
@@ -26,6 +28,10 @@ interface ConfirmDialogProps {
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps) {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const primaryBtnIcon = props.confirmIcon ? props.confirmIcon : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />;
+
     return (
         <Dialog>
             <DialogTrigger asChild>{props.children}</DialogTrigger>
@@ -44,8 +50,16 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                             <CancelButton />
                         </DialogClose>
 
-                        <Button onClick={props.onConfirm} variant={props.confirmBtnVariant || "default"}>
-                            {props.confirmIcon ? props.confirmIcon : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
+                        <Button
+                            onClick={async () => {
+                                setIsLoading(true);
+                                await props.onConfirm();
+                                setIsLoading(false);
+                            }}
+                            variant={props.confirmBtnVariant || "default"}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? <LoadingSpinner size="xs" /> : primaryBtnIcon}
 
                             {props.confirmText}
                         </Button>

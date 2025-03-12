@@ -15,7 +15,6 @@ import { critModifyReqRateLimiter } from "~/middleware/rate-limit/modify-req";
 import {
     addNewPassword_ConfirmationEmail,
     changeUserPassword,
-    confirmAccountDeletion,
     confirmAddingNewPassword,
     deleteConfirmationActionCode,
     deleteUserAccountConfirmationEmail,
@@ -28,6 +27,7 @@ import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
 import { GetUserCollections } from "../collections/controllers";
+import { confirmUserAccountDeletion } from "./controllers/delete-account";
 
 const userRouter = new Hono();
 userRouter.use(invalidAuthAttemptLimiter);
@@ -150,7 +150,7 @@ async function user_delete(ctx: Context) {
             return invalidReqestResponse(ctx);
         }
 
-        const res = await confirmAccountDeletion(token);
+        const res = await confirmUserAccountDeletion(token);
         return ctx.json(res.data, res.status);
     } catch (err) {
         console.error(err);

@@ -10,6 +10,7 @@ export function CollectionAccessible(visibility: string, ownerId: string, user: 
 
 export function CanEditCollection(ownerId: string, user: ContextUserData | undefined) {
     if (!user) return false;
+    // @MOD-PRIVILEGE
     if (isModerator(user.role)) return true;
     return user.id === ownerId;
 }

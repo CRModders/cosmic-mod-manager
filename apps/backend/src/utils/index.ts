@@ -1,5 +1,5 @@
-export function isConfirmationCodeValid(dateCreated: Date, validity: number) {
-    return Date.now() <= new Date(dateCreated).getTime() + validity;
+export function isConfirmationCodeValid(dateCreated: Date, validity_ms: number) {
+    return Date.now() <= new Date(dateCreated).getTime() + validity_ms;
 }
 
 export function isNumber(num: number | string) {

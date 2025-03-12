@@ -4,7 +4,7 @@ import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import { ORGANIZATION_DATA_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, ORGANIZATION_DATA_CACHE_EXPIRY_seconds, SetCache } from "./_cache";
-import { GetManyTeams, GetTeam } from "./team_item";
+import { GetManyTeams_ById, GetTeam } from "./team_item";
 
 const ORGANIZATION_SELECT_FIELDS = {
     id: true,
@@ -70,8 +70,8 @@ export async function GetOrganization_BySlugOrId(_slug?: string, id?: string) {
     return Object.assign(OrgData, { team: OrgTeam });
 }
 
-export type GetManyOrganizations_ReturnType = Awaited<ReturnType<typeof GetManyOrganizations>>;
-export async function GetManyOrganizations(ids: string[]) {
+export type GetManyOrganizations_ReturnType = Awaited<ReturnType<typeof GetManyOrganizations_ById>>;
+export async function GetManyOrganizations_ById(ids: string[]) {
     const OrgIds = Array.from(new Set(ids));
     const Organizations = [];
     const _OrgTeamIds = [];
@@ -121,7 +121,7 @@ export async function GetManyOrganizations(ids: string[]) {
     }
 
     // Get the teams for the organizations
-    const OrgItems_Teams = await GetManyTeams(_OrgTeamIds);
+    const OrgItems_Teams = await GetManyTeams_ById(_OrgTeamIds);
 
     const FormattedOrgs = [];
     // Combine the organizations with their teams
@@ -154,12 +154,34 @@ export function CreateOrganization<T extends Prisma.OrganisationCreateArgs>(args
     return prisma.organisation.create(args);
 }
 
+export function GetManyOrganizations<T extends Prisma.OrganisationFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OrganisationFindManyArgs>,
+) {
+    return prisma.organisation.findMany(args);
+}
+
 export async function DeleteOrganization<T extends Prisma.OrganisationDeleteArgs>(
     args: Prisma.SelectSubset<T, Prisma.OrganisationDeleteArgs>,
 ) {
     const data = await prisma.organisation.delete(args);
     await Delete_OrganizationCache_All(data.id, data.slug);
     return data;
+}
+
+export async function DeleteManyOrganizations<T extends Prisma.OrganisationDeleteManyArgs>(
+    ids: string[],
+    args: Prisma.SelectSubset<T, Prisma.OrganisationDeleteManyArgs>,
+) {
+    {
+        const promises = [];
+        for (const orgId of ids) {
+            promises.push(Delete_OrganizationCache_All(orgId));
+        }
+
+        await Promise.all(promises);
+    }
+
+    return await prisma.organisation.deleteMany(args);
 }
 
 // Cache functions

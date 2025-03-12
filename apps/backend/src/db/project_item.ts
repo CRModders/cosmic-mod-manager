@@ -6,8 +6,8 @@ import prisma from "~/services/prisma";
 import redis from "~/services/redis";
 import { PROJECT_DETAILS_CACHE_KEY, PROJECT_LIST_ITEM_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, PROJECT_CACHE_EXPIRY_seconds, SetCache } from "./_cache";
-import { Delete_OrganizationCache_All, GetManyOrganizations, GetOrganization_BySlugOrId } from "./organization_item";
-import { GetManyTeams, GetTeam } from "./team_item";
+import { Delete_OrganizationCache_All, GetManyOrganizations_ById, GetOrganization_BySlugOrId } from "./organization_item";
+import { GetManyTeams_ById, GetTeam } from "./team_item";
 
 // ? Select fields
 function PROJECT_DETAILS_SELECT_FIELDS() {
@@ -210,7 +210,10 @@ export async function GetManyProjects_Details(_ProjectIds: string[]) {
         await Promise.all(_setCache_promises);
     }
 
-    const [_OrgItems, _TeamItems] = await Promise.all([GetManyOrganizations(Array.from(_OrgIds)), GetManyTeams(Array.from(_TeamIds))]);
+    const [_OrgItems, _TeamItems] = await Promise.all([
+        GetManyOrganizations_ById(Array.from(_OrgIds)),
+        GetManyTeams_ById(Array.from(_TeamIds)),
+    ]);
 
     const FormattedProjects = [];
     for (let i = 0; i < Projects.length; i++) {
@@ -335,7 +338,10 @@ export async function GetManyProjects_ListItem(ids: string[]) {
         await Promise.all(_setCache_promises);
     }
 
-    const [_OrgItems, _TeamItems] = await Promise.all([GetManyOrganizations(Array.from(_OrgIds)), GetManyTeams(Array.from(_TeamIds))]);
+    const [_OrgItems, _TeamItems] = await Promise.all([
+        GetManyOrganizations_ById(Array.from(_OrgIds)),
+        GetManyTeams_ById(Array.from(_TeamIds)),
+    ]);
 
     const FormattedProjects = [];
     for (let i = 0; i < Projects.length; i++) {
@@ -385,15 +391,13 @@ export async function UpdateManyProjects<T extends Prisma.ProjectUpdateManyArgs>
     args: Prisma.SelectSubset<T, Prisma.ProjectUpdateManyArgs>,
     projectIds: string[],
 ) {
-    const result = await prisma.project.updateMany(args);
-
     const _deleteCache_promises = [];
     for (const id of projectIds) {
         _deleteCache_promises.push(Delete_ProjectCache_All(id));
     }
     await Promise.all(_deleteCache_promises);
 
-    return result;
+    return await prisma.project.updateMany(args);
 }
 
 export async function DeleteProject<T extends Prisma.ProjectDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.ProjectDeleteArgs>) {

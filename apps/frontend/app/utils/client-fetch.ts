@@ -16,7 +16,6 @@ export default async function clientFetch(pathname: string, init?: RequestInit):
         ...init,
     });
 
-    // console.log(`[Fetch] ${pathname} ${Date.now() - startTime}ms`);
     console.log(
         `%c[Fetch]: %c${pathname} %c${Date.now() - startTime}%cms`,
         "color: #8288A4; font-weight: bold;",

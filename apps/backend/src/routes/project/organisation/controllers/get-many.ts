@@ -1,10 +1,10 @@
 import type { OrganisationListItem } from "@app/utils/types/api";
-import { GetManyOrganizations } from "~/db/organization_item";
+import { GetManyOrganizations_ById } from "~/db/organization_item";
 import { HTTP_STATUS } from "~/utils/http";
 import { orgIconUrl } from "~/utils/urls";
 
 export async function getManyOrgs(orgIds: string[]) {
-    const list = await GetManyOrganizations(orgIds);
+    const list = await GetManyOrganizations_ById(orgIds);
     const orgsList: OrganisationListItem[] = [];
 
     for (const org of list) {

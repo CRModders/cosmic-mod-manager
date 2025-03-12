@@ -1,4 +1,4 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY_ms } from "@app/utils/constants";
+import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY, USER_SESSION_VALIDITY_ms } from "@app/utils/constants";
 import { getSessionMetadata } from "@app/utils/headers";
 import { type GlobalUserRole, UserSessionStates } from "@app/utils/types";
 import type { Prisma, Session, User } from "@prisma/client";
@@ -177,13 +177,13 @@ export async function validateContextSession(ctx: Context): Promise<ContextUserD
         // Get the current logged in user from the cookie data
         const session = await validateSessionToken(cookie);
         if (!session?.id) {
-            deleteSessionCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
+            deleteSessionCookie(ctx);
             return null;
         }
 
         return session;
     } catch (error) {
-        deleteSessionCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
+        deleteSessionCookie(ctx);
         console.error(error);
         return null;
     }
@@ -246,16 +246,17 @@ export async function invalidateAllOtherUserSessions(userId: string, currSession
 }
 
 // Cookie things
-export function setSessionCookie(ctx: Context, name: string, value: string, options?: CookieOptions) {
-    return setCookie(ctx, name, value, {
+export function setSessionCookie(ctx: Context, value: string, options?: CookieOptions) {
+    return setCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE, value, {
         httpOnly: true,
         secure: true,
+        maxAge: USER_SESSION_VALIDITY,
         ...options,
     });
 }
 
-export function deleteSessionCookie(ctx: Context, name: string, options?: CookieOptions) {
-    return deleteCookie(ctx, name, options);
+export function deleteSessionCookie(ctx: Context, options?: CookieOptions) {
+    return deleteCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE, options);
 }
 
 export function getUserFromCtx(ctx: Context) {

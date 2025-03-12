@@ -73,7 +73,7 @@ export function meta(props: Route.MetaArgs) {
 
     return MetaTags({
         title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
-        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author.userName}. ${FormatCount(version.downloads)} downloads.`,
+        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author?.userName}. ${FormatCount(version.downloads)} downloads.`,
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, `version/${version.slug}`)}`,
         image: project.icon || "",
         parentMetaTags,

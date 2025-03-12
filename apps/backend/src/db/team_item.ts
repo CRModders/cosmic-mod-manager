@@ -52,7 +52,7 @@ export async function GetTeam(teamId: string) {
     };
 }
 
-export async function GetManyTeams(ids: string[]) {
+export async function GetManyTeams_ById(ids: string[]) {
     const TeamIds = Array.from(new Set(ids));
     const Teams = [];
     const _UserIds = new Set<string>();
@@ -103,33 +103,27 @@ export async function GetManyTeams(ids: string[]) {
         }
         await Promise.all(_Set_TeamCache_promises);
     }
-
     // Get the user data of all the team members
     const Users = await GetManyUsers_ByIds(Array.from(_UserIds));
 
-    const FormattedTeams = [];
     // Attach user data to the team members
-    for (let i = 0; i < Teams.length; i++) {
-        const Team = Teams[i];
+    const FormattedTeams = Teams.map((team) => {
         const MembersList = [];
-        for (const member of Team.members) {
+        for (const member of team.members) {
             const User = Users.find((user) => user.id === member.userId);
             if (!User) continue;
 
-            MembersList.push({
-                ...member,
-                user: {
-                    id: User.id,
-                    userName: User.userName,
-                    avatar: User.avatar,
-                },
-            });
+            MembersList.push(Object.assign(member, { user: User }));
         }
 
-        FormattedTeams.push(Object.assign(Team, { members: MembersList }));
-    }
+        return { ...team, members: MembersList };
+    });
 
     return FormattedTeams;
+}
+
+export function GetManyTeams<T extends Prisma.TeamFindManyArgs>(args: Prisma.SelectSubset<T, Prisma.TeamFindManyArgs>) {
+    return prisma.team.findMany(args);
 }
 
 export async function DeleteTeam<T extends Prisma.TeamDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TeamDeleteArgs>) {

@@ -1,12 +1,11 @@
-import { SITE_NAME_SHORT, USER_SESSION_VALIDITY } from "@app/utils/constants";
-import { Capitalize } from "@app/utils/string";
+import { SITE_NAME_SHORT } from "@app/utils/constants";
+import { Capitalize, CapitalizeAndFormatString } from "@app/utils/string";
 import type { Context } from "hono";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { getAuthProviderProfileData } from "~/routes/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/routes/auth/helpers/session";
 import prisma from "~/services/prisma";
-import { AUTH_COOKIE_NAMESPACE } from "~/types/namespaces";
-import { HTTP_STATUS } from "~/utils/http";
+import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
 
 export async function oAuthSignInHandler(ctx: Context, authProvider: string, tokenExchangeCode: string) {
     const profileData = await getAuthProviderProfileData(authProvider, tokenExchangeCode);
@@ -29,40 +28,47 @@ export async function oAuthSignInHandler(ctx: Context, authProvider: string, tok
         };
     }
 
-    const expectedAuthAccount = await prisma.authAccount.findFirst({
+    const authAccount = await prisma.authAccount.findFirst({
         where: {
             providerName: profileData.providerName,
             OR: [{ providerAccountEmail: profileData.email }, { providerAccountId: profileData.providerAccountId }],
         },
-        select: {
-            id: true,
+        include: {
             user: true,
         },
     });
 
-    if (!expectedAuthAccount?.id) {
-        await addInvalidAuthAttempt(ctx);
-        return {
-            data: {
-                success: false,
-                message: `This ${Capitalize(profileData.providerName)} account (${profileData.email}) is not linked to any ${SITE_NAME_SHORT} user account. First link ${Capitalize(profileData.providerName)} auth provider to your user account to be able to signin using ${Capitalize(profileData.providerName)}`,
+    if (!authAccount?.id) {
+        const otherProviderAccount = await prisma.authAccount.findFirst({
+            where: {
+                OR: [{ providerAccountEmail: profileData.email }, { providerAccountId: profileData.providerAccountId }],
             },
-            status: HTTP_STATUS.BAD_REQUEST,
-        };
+        });
+
+        if (!otherProviderAccount?.id) {
+            return invalidReqestResponseData(
+                "No user account found with this email or provider account id. Sign up first to link this account",
+            );
+        }
+
+        await addInvalidAuthAttempt(ctx);
+        return invalidReqestResponseData(
+            `This ${Capitalize(profileData.providerName)} account is not linked to your ${SITE_NAME_SHORT} user account. We found a ${CapitalizeAndFormatString(otherProviderAccount.providerName)} account linked to your user account, please sign in using that.\nNOTE: You can manage linked providers in account settings.`,
+        );
     }
 
     const newSession = await createUserSession({
-        userId: expectedAuthAccount.user.id,
+        userId: authAccount.user.id,
         providerName: profileData.providerName,
         ctx: ctx,
-        user: expectedAuthAccount.user,
+        user: authAccount.user,
     });
-    setSessionCookie(ctx, AUTH_COOKIE_NAMESPACE, newSession, { maxAge: USER_SESSION_VALIDITY });
+    setSessionCookie(ctx, newSession);
 
     return {
         data: {
             success: true,
-            message: `Successfuly logged in using ${profileData.providerName} as ${expectedAuthAccount.user.name}`,
+            message: `Successfuly logged in using ${profileData.providerName} as ${authAccount.user.userName}`,
         },
         status: HTTP_STATUS.OK,
     };

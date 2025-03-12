@@ -7,7 +7,7 @@ import {
     DeleteCollection,
     GetCollection,
     GetCollections_ByUserId,
-    GetManyCollections,
+    GetManyCollections_ById,
     UpdateCollection,
 } from "~/db/collection_item";
 import { GetManyProjects_ListItem } from "~/db/project_item";
@@ -18,7 +18,7 @@ import { generateDbId } from "~/utils/str";
 import { collectionIconUrl, userIconUrl } from "~/utils/urls";
 import { CanEditCollection, CollectionAccessible } from "../utils";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
-import { deleteCollectionFile, saveCollectionFile } from "~/services/storage";
+import { deleteCollectionDirectory, deleteCollectionFile, saveCollectionFile } from "~/services/storage";
 import { ICON_WIDTH } from "@app/utils/constants";
 import { getFileType } from "@app/utils/convertors";
 import { resizeImageToWebp } from "~/utils/images";
@@ -38,7 +38,7 @@ export async function GetUserCollections(userSlug: string, userSession: ContextU
     const collections = await GetCollections_ByUserId(userId);
     if (!collections) return { data: [], status: HTTP_STATUS.OK };
 
-    const collectionsData = (await GetManyCollections(collections)).sort(
+    const collectionsData = (await GetManyCollections_ById(collections)).sort(
         (a, b) => date(b.dateCreated)?.getTime() - date(a.dateCreated)?.getTime(),
     );
     const formattedData = [];
@@ -247,9 +247,13 @@ export async function deleteUserCollection(collectionId: string, sessionUser: Co
         return unauthorizedReqResponseData("You don't have permission to edit this collection!");
     }
 
+    // Delete the collection icon and stuff
+    await deleteCollectionDirectory(FILE_STORAGE_SERVICE.LOCAL, collection.id);
+
+    // Delete the collection from database
     await DeleteCollection({
         where: {
-            id: collectionId,
+            id: collection.id,
         },
     });
 

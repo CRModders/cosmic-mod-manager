@@ -96,16 +96,21 @@ export async function getUserAvatar(
     prevAvatarId: string | null,
     avatarFile?: null | string | File,
 ): Promise<string | null> {
-    if (typeof avatarFile === "string") return prevAvatarId;
-    // If the user didn't upload a new avatar, return the previous avatar
-    if (!avatarFile) return prevAvatarId;
+    if (typeof avatarFile === "string" || !avatarFile) {
+        // If the user didn't upload a new avatar, return the previous avatar
+        if (avatarFile && avatarFile.length > 0) return prevAvatarId;
 
-    try {
-        if (prevAvatarId) {
-            const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
-            await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
-        }
-    } catch {}
+        // If the avatarFile is null, delete the user's avatar
+        try {
+            if (prevAvatarId && !avatarFile) {
+                const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
+                await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
+            }
+        } catch {}
+
+        return null;
+    }
+    // set the new avatar if the user uploaded one
 
     const uploadedImg_Type = await getFileType(avatarFile);
     if (!uploadedImg_Type) return null;

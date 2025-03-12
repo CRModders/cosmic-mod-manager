@@ -283,33 +283,3 @@ export async function deleteUserAccountConfirmationEmail(userSession: ContextUse
         status: HTTP_STATUS.OK,
     };
 }
-
-export async function confirmAccountDeletion(token: string) {
-    // const tokenHash = await hashString(token);
-    // const confirmationEmail = await prisma.userConfirmation.findUnique({
-    //     where: { accessCode: tokenHash, confirmationType: ConfirmationType.DELETE_USER_ACCOUNT },
-    // });
-
-    // if (!confirmationEmail?.id || !isConfirmationCodeValid(confirmationEmail.dateCreated, DELETE_USER_ACCOUNT_EMAIL_VALIDITY_ms)) {
-    //     return ctx.json({ success: false, message: "Expired or invalid code" }, status.BAD_REQUEST);
-    // }
-
-    // await prisma.user.delete({
-    //     where: {
-    //         id: confirmationEmail.userId,
-    //     },
-    // });
-
-    // await prisma.userConfirmation.deleteMany({
-    //     where: {
-    //         userId: confirmationEmail.userId,
-    //         confirmationType: ConfirmationType.DELETE_USER_ACCOUNT,
-    //     },
-    // });
-
-    // deleteUserCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
-
-    // return ctx.json({ success: true, message: `Successfully deleted your ${SITE_NAME_SHORT} account` }, status.OK);
-
-    return { data: { success: false, message: "Method not implemented" }, status: HTTP_STATUS.SERVER_ERROR };
-}

@@ -10,7 +10,6 @@ import { CreateTeamMember, DeleteTeamMember, Delete_ManyTeamMembers, UpdateTeamM
 import { GetTeam } from "~/db/team_item";
 import { GetUser_ByIdOrUsername } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
-import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { createOrgTeamInviteNotification, createProjectTeamInviteNotification } from "~/routes/user/notification/controllers/helpers";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthorizedReqResponseData } from "~/utils/http";
@@ -369,58 +368,6 @@ export async function removeProjectMember(ctx: Context, userSession: ContextUser
     }
 
     return { data: { success: true }, status: HTTP_STATUS.OK };
-}
-
-export async function changeTeamOwner(ctx: Context, userSession: ContextUserData, teamId: string, targetUserId: string) {
-    const team = await GetTeam(teamId);
-    if (!team) return notFoundResponseData();
-
-    const targetMember = team.members.find((member) => member.userId === targetUserId);
-    if (!targetMember || !targetMember.accepted) return notFoundResponseData("Member not found");
-
-    const currOwner = team.members.find((member) => member.isOwner);
-    if (!currOwner) return invalidReqestResponseData("For some unknown reason the owner of the team was not found");
-
-    const currMember = team.members.find((member) => member.userId === userSession.id);
-    if (!hasRootAccess(currMember?.isOwner, userSession.role)) {
-        await addInvalidAuthAttempt(ctx);
-        return unauthorizedReqResponseData("You don't have access to change the team owner");
-    }
-
-    if (currOwner?.id === targetMember.id) return invalidReqestResponseData("The target member is already the owner of the team");
-
-    await Promise.all([
-        // Give ownership to the target member
-        UpdateTeamMember({
-            where: {
-                id: targetMember.id,
-            },
-            data: {
-                isOwner: true,
-                role: "Owner",
-                permissions: [],
-                organisationPermissions: [],
-            },
-        }),
-
-        // Remove ownership from the current owner
-        UpdateTeamMember({
-            where: {
-                id: currOwner.id,
-            },
-            data: {
-                isOwner: false,
-                role: "Member",
-                permissions: [],
-                organisationPermissions: [],
-            },
-        }),
-
-        // Update the index of team's project
-        team.project?.id ? UpdateProjects_SearchIndex([team.project.id]) : null,
-    ]);
-
-    return { data: { success: true, message: "Team owner changed" }, status: HTTP_STATUS.OK };
 }
 
 async function removeMemberFromAllOrgProjects(orgId: string, userId: string) {

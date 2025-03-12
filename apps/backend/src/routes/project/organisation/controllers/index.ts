@@ -9,7 +9,7 @@ import {
 } from "@app/utils/types";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { z } from "zod";
-import { CreateOrganization, GetManyOrganizations, GetOrganization_BySlugOrId } from "~/db/organization_item";
+import { CreateOrganization, GetManyOrganizations_ById, GetOrganization_BySlugOrId } from "~/db/organization_item";
 import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, Get_UserOrganizations } from "~/db/user_item";
 import { isProjectAccessible } from "~/routes/project/utils";
@@ -64,7 +64,7 @@ export async function getUserOrganisations(userSession: ContextUserData | undefi
     const UserOrgs_Id = await Get_UserOrganizations(userId);
     if (!UserOrgs_Id) return { data: [], status: HTTP_STATUS.OK };
 
-    const UserOrganizations = await GetManyOrganizations(UserOrgs_Id);
+    const UserOrganizations = await GetManyOrganizations_ById(UserOrgs_Id);
 
     const organisationsList: Organisation[] = [];
     for (const org of UserOrganizations) {

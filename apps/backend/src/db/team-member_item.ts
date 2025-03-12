@@ -35,6 +35,18 @@ export async function UpdateTeamMember<T extends Prisma.TeamMemberUpdateArgs>(ar
     return data;
 }
 
+export async function UpdateManyTeamMembers<T extends Prisma.TeamMemberUpdateManyArgs>(
+    teamIds: string[],
+    args: Prisma.SelectSubset<T, Prisma.TeamMemberUpdateManyArgs>,
+) {
+    const _DeleteCache_Promises = [];
+    for (const id of teamIds) {
+        _DeleteCache_Promises.push(Clear_TeamCache(id));
+    }
+    await Promise.all(_DeleteCache_Promises);
+    return await prisma.teamMember.updateMany(args);
+}
+
 export async function DeleteTeamMember<T extends Prisma.TeamMemberDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.TeamMemberDeleteArgs>) {
     const data = await prisma.teamMember.delete(args);
     await Promise.all([Clear_TeamCache(data.teamId), Delete_UserProjectsCache(data.userId), Delete_UserOrganizationsCache(data.userId)]);

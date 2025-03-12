@@ -36,7 +36,7 @@ export async function GetCollection(id: string) {
     return data;
 }
 
-export async function GetManyCollections(ids: string[]) {
+export async function GetManyCollections_ById(ids: string[]) {
     const CollectionIds = Array.from(new Set(ids));
     const Collections = [];
 
@@ -113,6 +113,12 @@ export async function UpdateCollection<T extends Prisma.CollectionUpdateArgs>(ar
     return data;
 }
 
+export async function GetManyCollections<T extends Prisma.CollectionFindManyArgs>(
+    args: Prisma.SelectSubset<T, Prisma.CollectionFindManyArgs>,
+) {
+    return prisma.collection.findMany(args);
+}
+
 export async function DeleteCollection<T extends Prisma.CollectionDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.CollectionDeleteArgs>) {
     const collection = await prisma.collection.delete(args);
     await Delete_CollectionCache(collection.id);
@@ -122,16 +128,16 @@ export async function DeleteCollection<T extends Prisma.CollectionDeleteArgs>(ar
 
 export async function DeleteManyCollections_ByUserId(userId: string) {
     const collection_ids = await GetCollections_ByUserId(userId);
-    if (!collection_ids) return 0;
+    if (!collection_ids) return [];
 
+    await Promise.all([Delete_UserCollectionsListCache(userId), ...collection_ids.map((id) => Delete_CollectionCache(id))]);
     await prisma.collection.deleteMany({
         where: {
             userId: userId,
         },
     });
 
-    await Promise.all([Delete_UserCollectionsListCache(userId), ...collection_ids.map((id) => Delete_CollectionCache(id))]);
-    return collection_ids.length;
+    return collection_ids;
 }
 
 // export function DeleteManyCollections<T extends Prisma.CollectionDeleteManyArgs>(

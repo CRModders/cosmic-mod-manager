@@ -1,4 +1,3 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE } from "@app/utils/constants";
 import type { UserSessionStates } from "@app/utils/types";
 import type { SessionListData } from "@app/utils/types/api";
 import type { Context } from "hono";
@@ -52,7 +51,7 @@ export async function deleteUserSession(ctx: Context, userSession: ContextUserDa
         await addInvalidAuthAttempt(ctx);
         return invalidReqestResponseData();
     }
-    if (userSession.sessionId === deletedSession.id) deleteSessionCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE);
+    if (userSession.sessionId === deletedSession.id) deleteSessionCookie(ctx);
 
     return {
         data: { success: true, message: `Session with id: ${sessionId} logged out successfully` },

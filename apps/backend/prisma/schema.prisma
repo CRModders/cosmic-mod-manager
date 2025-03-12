@@ -123,7 +123,7 @@ model TeamMember {
     dateAccepted DateTime?
 
     team Team @relation(name: "TeamMembers", fields: [teamId], references: [id], onDelete: Cascade)
-    user User @relation(name: "TeamMemberships", fields: [userId], references: [id])
+    user User @relation(name: "TeamMemberships", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Project {
@@ -177,7 +177,7 @@ model Project {
 model Version {
     id             String   @id @db.VarChar(32)
     projectId      String   @db.VarChar(32)
-    authorId       String   @db.VarChar(32)
+    authorId       String?  @db.VarChar(32)
     title          String   @db.VarChar(64)
     versionNumber  String   @db.VarChar(32)
     changelog      String?  @db.VarChar(65256)
@@ -191,7 +191,7 @@ model Version {
 
     files        VersionFile[] @relation(name: "VersionFiles")
     project      Project       @relation(name: "ProjectVersions", fields: [projectId], references: [id], onDelete: Cascade)
-    author       User          @relation(name: "UserAuthoredVersions", fields: [authorId], references: [id])
+    author       User?         @relation(name: "UserAuthoredVersions", fields: [authorId], references: [id], onDelete: SetNull)
     // Dependencies this project has
     dependencies Dependency[]  @relation(name: "VersionDependencies")
 }

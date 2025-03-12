@@ -1,4 +1,3 @@
-import { USER_SESSION_VALIDITY } from "@app/utils/constants";
 import type { LoginFormSchema } from "@app/utils/schemas/auth";
 import { AuthProvider } from "@app/utils/types";
 import type { Context } from "hono";
@@ -7,7 +6,6 @@ import { GetUser_Unique } from "~/db/user_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { matchPassword } from "~/routes/auth/helpers";
 import { createUserSession, setSessionCookie } from "~/routes/auth/helpers/session";
-import { AUTH_COOKIE_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS } from "~/utils/http";
 
 async function credentialSignIn(ctx: Context, formData: z.infer<typeof LoginFormSchema>) {
@@ -43,7 +41,7 @@ async function credentialSignIn(ctx: Context, formData: z.infer<typeof LoginForm
         isFirstSignIn: false,
         user: user,
     });
-    setSessionCookie(ctx, AUTH_COOKIE_NAMESPACE, newSession, { maxAge: USER_SESSION_VALIDITY });
+    setSessionCookie(ctx, newSession);
 
     return {
         data: { success: true, message: `Logged in as ${user.name}` },

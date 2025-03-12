@@ -8,13 +8,7 @@ import type { Context } from "hono";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
 import { DeleteOrganization, Delete_OrganizationCache_All, GetOrganization_BySlugOrId, UpdateOrganization } from "~/db/organization_item";
-import {
-    Delete_ProjectCache_All,
-    GetManyProjects_ListItem,
-    GetProject_ListItem,
-    UpdateManyProjects,
-    UpdateProject,
-} from "~/db/project_item";
+import { GetManyProjects_ListItem, GetProject_ListItem, UpdateManyProjects, UpdateProject } from "~/db/project_item";
 import { CreateTeamMember, Create_ManyTeamMembers, Delete_ManyTeamMembers } from "~/db/team-member_item";
 import { addInvalidAuthAttempt } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
@@ -219,13 +213,6 @@ export async function deleteOrg(ctx: Context, userSession: ContextUserData, slug
         for (const member of _orgProject.team.members) {
             memberUserIds.push(member.userId);
         }
-    }
-
-    // Remove project cache
-    // TODO: Move this to DeleteManyProjects function when rewriting the prisma transaction
-    for (const _project of OrgProjects) {
-        // not awaiting on purpose
-        if (_project) Delete_ProjectCache_All(_project.id);
     }
 
     await Promise.all([

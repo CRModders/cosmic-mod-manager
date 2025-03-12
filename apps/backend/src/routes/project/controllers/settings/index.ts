@@ -14,7 +14,7 @@ import {
     UpdateProject,
 } from "~/db/project_item";
 import { DeleteTeam } from "~/db/team_item";
-import { Delete_UserProjectsCache } from "~/db/user_item";
+import { Delete_UserProjectsCache, GetManyUsers, UpdateUser } from "~/db/user_item";
 import { DeleteManyVersions_ByIds, GetVersions } from "~/db/version_item";
 import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteDirectory, deleteProjectFile, deleteProjectVersionDirectory, saveProjectFile } from "~/services/storage";
@@ -24,6 +24,7 @@ import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData, unauthori
 import { getAverageColor, resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
 import { isProjectIndexable } from "../../utils";
+import { GetManyCollections, UpdateCollection } from "~/db/collection_item";
 
 export async function updateProject(
     slug: string,
@@ -139,6 +140,12 @@ export async function deleteProject(userSession: ContextUserData, slug: string) 
         ...project.team.members.map((member) => {
             return Delete_UserProjectsCache(member.userId);
         }),
+
+        // Delete the project from following list of all the members
+        deleteProjectFromUserFollows(project.id),
+
+        // Delete the project from all collections
+        deleteProjectFromUserCollections(project.id),
     ]);
 
     // Delete the project associated team
@@ -269,4 +276,58 @@ export async function deleteProjectIcon(userSession: ContextUserData, slug: stri
     isProjectIndexable(Project.visibility, Project.status) ? UpdateProjects_SearchIndex([Project.id]) : null;
 
     return { data: { success: true, message: "Project icon deleted" }, status: HTTP_STATUS.OK };
+}
+
+async function deleteProjectFromUserFollows(projectId: string) {
+    const users = await GetManyUsers({
+        where: {
+            followingProjects: {
+                has: projectId,
+            },
+        },
+    });
+
+    const promises = [];
+    for (const user of users) {
+        const updatedFollowingProjects = user.followingProjects.filter((id) => id !== projectId);
+        promises.push(
+            UpdateUser({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    followingProjects: updatedFollowingProjects,
+                },
+            }),
+        );
+    }
+
+    return await Promise.all(promises);
+}
+
+async function deleteProjectFromUserCollections(projectId: string) {
+    const collections = await GetManyCollections({
+        where: {
+            projects: {
+                has: projectId,
+            },
+        },
+    });
+
+    const promises = [];
+    for (const collection of collections) {
+        const updatedProjects = collection.projects.filter((id) => id !== projectId);
+        promises.push(
+            UpdateCollection({
+                where: {
+                    id: collection.id,
+                },
+                data: {
+                    projects: updatedProjects,
+                },
+            }),
+        );
+    }
+
+    return await Promise.all(promises);
 }

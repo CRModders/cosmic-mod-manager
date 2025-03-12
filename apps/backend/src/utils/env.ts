@@ -29,6 +29,7 @@ const envKeys = [
     "SAFE_BROWSING_API_KEY",
     "BACKBLAZE_BACKUP_API_KEY_ID",
     "BACKBLAZE_BACKUP_API_KEY",
+    "ARCHIVE_USER_ID",
 ] as const;
 
 type EnvKeys = (typeof envKeys)[number];

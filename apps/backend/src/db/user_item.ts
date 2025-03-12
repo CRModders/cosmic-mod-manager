@@ -176,8 +176,24 @@ export function GetUser_First<T extends Prisma.UserFindFirstArgs>(args: Prisma.S
     return prisma.user.findFirst(args);
 }
 
+export function GetManyUsers<T extends Prisma.UserFindManyArgs>(args: Prisma.SelectSubset<T, Prisma.UserFindManyArgs>) {
+    return prisma.user.findMany(args);
+}
+
 export function CreateUser<T extends Prisma.UserCreateArgs>(args: Prisma.SelectSubset<T, Prisma.UserCreateArgs>) {
     return prisma.user.create(args);
+}
+
+export async function DeleteUser<T extends Prisma.UserDeleteArgs>(args: Prisma.SelectSubset<T, Prisma.UserDeleteArgs>) {
+    const user = await prisma.user.delete(args);
+
+    await Promise.all([
+        Delete_UserCache(user.id, user.userName),
+        Delete_UserProjectsCache(user.id),
+        Delete_UserOrganizationsCache(user.id),
+    ]);
+
+    return user;
 }
 
 export async function UpdateUser<T extends Prisma.UserUpdateArgs>(args: Prisma.SelectSubset<T, Prisma.UserUpdateArgs>) {

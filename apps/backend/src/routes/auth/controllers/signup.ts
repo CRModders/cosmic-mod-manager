@@ -1,4 +1,3 @@
-import { AUTHTOKEN_COOKIE_NAMESPACE, USER_SESSION_VALIDITY } from "@app/utils/constants";
 import { createURLSafeSlug } from "@app/utils/string";
 import { GlobalUserRole } from "@app/utils/types";
 import type { Context } from "hono";
@@ -105,7 +104,7 @@ export async function oAuthSignUpHandler(ctx: Context, authProvider: string, tok
         isFirstSignIn: true,
         user: newUser,
     });
-    setSessionCookie(ctx, AUTHTOKEN_COOKIE_NAMESPACE, newSession, { maxAge: USER_SESSION_VALIDITY });
+    setSessionCookie(ctx, newSession);
 
     return {
         data: {

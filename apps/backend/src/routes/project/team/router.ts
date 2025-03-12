@@ -9,13 +9,13 @@ import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 import {
     acceptProjectTeamInvite,
-    changeTeamOwner,
     editProjectMember,
     inviteMember,
     leaveProjectTeam,
     overrideOrgMember,
     removeProjectMember,
 } from "./controllers";
+import { changeTeamOwner } from "./controllers/change-owners";
 
 const teamRouter = new Hono();
 teamRouter.use(invalidAuthAttemptLimiter);
@@ -82,10 +82,10 @@ async function teamOwner_patch(ctx: Context) {
     try {
         const { teamId } = ctx.req.param();
         const userSession = getUserFromCtx(ctx);
-        const targetUserId = ctx.get(REQ_BODY_NAMESPACE)?.userId;
-        if (!userSession || !teamId || !targetUserId) return invalidReqestResponse(ctx);
+        const newOwner = ctx.get(REQ_BODY_NAMESPACE)?.userId;
+        if (!userSession || !teamId || !newOwner) return invalidReqestResponse(ctx);
 
-        const res = await changeTeamOwner(ctx, userSession, teamId, targetUserId);
+        const res = await changeTeamOwner(ctx, userSession, teamId, newOwner);
         return ctx.json(res.data, res.status);
     } catch (error) {
         console.error(error);

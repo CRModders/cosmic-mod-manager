@@ -6,7 +6,6 @@ import type { Prisma } from "@prisma/client";
 import { GetProject_Details } from "~/db/project_item";
 import { GetVersions } from "~/db/version_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
-import { formatTeamMemberData } from "~/routes/project/queries/project";
 import { isProjectAccessible } from "~/routes/project/utils";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
@@ -77,8 +76,7 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
         }
 
         const allMembers = combineProjectMembers(project.team.members, project.organisation?.team.members || []);
-        const authorData = allMembers.get(version.author.id);
-        const formattedAuthor = authorData ? formatTeamMemberData(authorData) : null;
+        const authorData = allMembers.get(version.author?.id || "");
         const isDuplicate =
             nextVersion?.changelog &&
             nextVersion.changelog.length > 0 &&
@@ -100,12 +98,19 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
             loaders: version.loaders,
             primaryFile: primaryFile?.id ? primaryFile : null,
             files: files,
-            author: {
-                id: version.author.id,
-                userName: version.author.userName,
-                avatar: userIconUrl(version.author.id, version.author.avatar),
-                role: formattedAuthor?.role || "",
-            },
+            author: authorData
+                ? {
+                      id: authorData.id,
+                      userName: authorData.user.userName,
+                      avatar: userIconUrl(authorData.userId, authorData.user.userName),
+                      role: authorData?.role || "",
+                  }
+                : {
+                      id: "_deleted_",
+                      userName: "Deleted User",
+                      avatar: null,
+                      role: "",
+                  },
             dependencies: version.dependencies.map((dependency) => ({
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,
