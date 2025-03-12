@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RESERVED_PROJECT_SLUGS } from "~/config/reserved";
 import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH, MIN_PROJECT_NAME_LENGTH } from "~/constants";
 import { validateProjectTypesCompatibility } from "~/project";
 import { createURLSafeSlug, isValidUrl } from "~/string";
@@ -41,6 +42,13 @@ export const ProjectSlugField = z
             return true;
         },
         { message: "Slug must be a URL safe string" },
+    )
+    .refine(
+        (slug) => {
+            if (RESERVED_PROJECT_SLUGS.includes(slug)) return false;
+            return true;
+        },
+        { message: "Can't use a reserved project slug" },
     );
 
 export type newProjectFormSchemaType = z.infer<typeof newProjectFormSchema>;

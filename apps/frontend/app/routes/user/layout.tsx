@@ -20,6 +20,14 @@ export interface UserOutletData {
 export default function _UserLayout() {
     const data = useLoaderData() as LoaderData;
 
+    if (data.userSlug === "deleted_user") {
+        return (
+            <div className="w-full flex py-12 items-center justify-center">
+                <p className="text-md text-muted-foreground">The user account was deleted.</p>
+            </div>
+        );
+    }
+
     if (!data.userData?.id) {
         return (
             <NotFoundPage
@@ -52,7 +60,7 @@ interface LoaderData {
 export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
     const userName = props.params.userName;
 
-    if (!userName)
+    if (!userName || userName === "deleted_user")
         return {
             userSlug: userName,
             userData: null,

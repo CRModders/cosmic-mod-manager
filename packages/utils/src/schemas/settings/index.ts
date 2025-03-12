@@ -10,17 +10,25 @@ import {
 } from "~/constants";
 import { createURLSafeSlug } from "~/string";
 import { iconFieldSchema } from "..";
+import { RESERVED_USERNAMES } from "~/config/reserved";
 
 const userNameSchema = z
     .string()
     .min(2)
     .max(MAX_USERNAME_LENGTH)
     .refine(
-        (slug) => {
-            if (slug.length !== createURLSafeSlug(slug).value.length) return false;
+        (userName) => {
+            if (userName.length !== createURLSafeSlug(userName).value.length) return false;
             return true;
         },
         { message: "Username must be a URL safe string" },
+    )
+    .refine(
+        (userName) => {
+            if (RESERVED_USERNAMES.includes(userName)) return false;
+            return true;
+        },
+        { message: "Can't use a reserved username. Please choose something else" },
     );
 
 export const profileUpdateFormSchema = z.object({

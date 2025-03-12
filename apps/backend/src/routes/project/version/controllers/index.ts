@@ -106,8 +106,8 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
                       role: authorData?.role || "",
                   }
                 : {
-                      id: "_deleted_",
-                      userName: "Deleted User",
+                      id: "deleted_user",
+                      userName: "deleted_user",
                       avatar: null,
                       role: "",
                   },
