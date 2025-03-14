@@ -33,6 +33,8 @@ export default function CollectionProjectsList() {
                         projectType={project.type[0]}
                         projectSlug={project.slug}
                         icon={project.icon}
+                        featuredGallery={project.featured_gallery}
+                        color={project.color}
                         summary={project.summary}
                         loaders={project.loaders}
                         featuredCategories={project.featuredCategories}
@@ -40,8 +42,8 @@ export default function CollectionProjectsList() {
                         followers={project.followers}
                         dateUpdated={new Date(project.dateUpdated)}
                         datePublished={new Date(project.datePublished)}
-                        color={project.color}
-                        featuredGallery={null}
+                        author={project?.author || ""}
+                        isOrgOwned={project.isOrgOwned}
                         visibility={project.visibility}
                     />
                 );
