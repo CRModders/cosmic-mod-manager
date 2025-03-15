@@ -109,6 +109,6 @@ export async function searchProjects(props: Props) {
 }
 
 function isValidFilterStr(str: string) {
-    const regex = /^[a-zA-Z0-9-_]+$/;
+    const regex = /^[a-zA-Z0-9-_.]+$/;
     return regex.test(str);
 }
