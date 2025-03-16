@@ -6,12 +6,13 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectVersionData } from "@app/utils/types/api";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
 import { useLocation, useParams, useSearchParams } from "react-router";
+import { SoftRedirect } from "~/components/ui/redirect";
 import { useProjectData } from "~/hooks/project";
 import NotFoundPage from "~/pages/not-found";
 import VersionPage from "~/pages/project/version/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { ProjectPagePath } from "~/utils/urls";
+import { ProjectPagePath, VersionPagePath } from "~/utils/urls";
 
 export default function VersionPageRoute() {
     const ctx = useProjectData();
@@ -29,6 +30,10 @@ export default function VersionPageRoute() {
                 linkHref={ProjectPagePath(ctx.projectType, projectSlug || "", "versions")}
             />
         );
+    }
+
+    if (versionSlug === "latest") {
+        return <SoftRedirect to={VersionPagePath(ctx.projectType, projectSlug, versionData.slug)} />;
     }
 
     return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} />;
