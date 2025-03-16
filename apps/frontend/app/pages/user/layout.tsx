@@ -16,7 +16,7 @@ import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } fro
 import { PageHeader } from "~/components/page-header";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { TimePassedSince } from "~/components/ui/date";
-import Link, { VariantButtonLink } from "~/components/ui/link";
+import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
@@ -24,6 +24,7 @@ import { OrgPagePath, UserProfilePath } from "~/utils/urls";
 import SecondaryNav from "../project/secondary-nav";
 import type { UserOutletData } from "~/routes/user/layout";
 import { Outlet } from "react-router";
+import { useEffect } from "react";
 
 interface Props {
     userData: UserProfileData;
@@ -34,6 +35,8 @@ interface Props {
 
 export default function UserPageLayout(props: Props) {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
     const aggregatedDownloads = (props.projectsList || [])?.reduce((acc, project) => acc + project.downloads, 0) || 0;
     const totalProjects = (props.projectsList || [])?.length;
 
@@ -58,11 +61,17 @@ export default function UserPageLayout(props: Props) {
         );
     }
 
+    useEffect(() => {
+        if (props.projectsList.length === 0 && props.collections.length > 0) {
+            navigate(UserProfilePath(props.userData.userName, "collections"));
+        }
+    }, []);
+
     return (
         <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
             <ProfilePageHeader userData={props.userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div className="h-fit grid grid-cols-1 gap-panel-cards" style={{ gridArea: "content" }}>
-                {navLinks?.length > 1 ? (
+                {navLinks?.length > 1 || navLinks[0].href.length > 0 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
                         urlBase={UserProfilePath(props.userData.userName)}
