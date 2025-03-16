@@ -20,7 +20,7 @@ interface ConfirmDialogProps {
     shortDesc?: string;
     description: string;
 
-    onConfirm: () => void | Promise<void>;
+    onConfirm: () => unknown | Promise<unknown>;
     children: React.ReactNode;
     confirmIcon?: React.ReactNode;
     confirmText: string;
@@ -42,8 +42,8 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
                     {props.shortDesc ? <DialogDescription>{props.shortDesc}</DialogDescription> : null}
                 </DialogHeader>
 
-                <DialogBody>
-                    <p className="mb-4">{props.description}</p>
+                <DialogBody className="grid grid-cols-1 gap-form-elements">
+                    <p>{props.description}</p>
 
                     <DialogFooter>
                         <DialogClose asChild>
@@ -52,9 +52,12 @@ export default function ConfirmDialog(props: ConfirmDialogProps) {
 
                         <Button
                             onClick={async () => {
-                                setIsLoading(true);
-                                await props.onConfirm();
-                                setIsLoading(false);
+                                try {
+                                    setIsLoading(true);
+                                    await props.onConfirm();
+                                } finally {
+                                    setIsLoading(false);
+                                }
                             }}
                             variant={props.confirmBtnVariant || "default"}
                             disabled={isLoading}

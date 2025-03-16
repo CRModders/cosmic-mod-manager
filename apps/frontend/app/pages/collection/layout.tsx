@@ -1,7 +1,7 @@
 import { CubeIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import type { Collection, CollectionOwner, ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { PageHeader } from "~/components/page-header";
 import { useNavigate } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
@@ -25,6 +25,10 @@ import clientFetch from "~/utils/client-fetch";
 import { toast } from "@app/components/ui/sonner";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { isModerator } from "@app/utils/constants/roles";
+import { Separator } from "@app/components/ui/separator";
+import useCollections from "./provider";
+import { LoadingSpinner } from "@app/components/ui/spinner";
+import { FOLLOWS_COLLECTIONS_ID } from "@app/utils/constants";
 
 interface Props {
     collection: Collection;
@@ -34,13 +38,16 @@ interface Props {
 
 export default function CollectionPageLayout(props: Props) {
     const { t } = useTranslation();
+    const collectionsContext = useCollections();
     const session = useSession();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [editMode, setEditMode] = useState(false);
+    const [removingProjects, setRemovingProjects] = useState(false);
     const [markedProjects, setMarkedProjects] = useState<string[]>([]);
 
     function addMarkedProject(projectId: string) {
+        if (markedProjects.includes(projectId)) return;
         setMarkedProjects((prev) => [...prev, projectId]);
     }
 
@@ -72,9 +79,21 @@ export default function CollectionPageLayout(props: Props) {
         RefreshPage(navigate, "/dashboard/collections");
     }
 
-    const isFollowsCollection = props.collection.id === "follows";
+    async function RemoveCollectionProjects() {
+        if (removingProjects) return;
+        try {
+            setRemovingProjects(true);
+            await collectionsContext.removeProjectsFromCollection(props.collection.id, markedProjects);
+            RefreshPage(navigate, location);
+            setMarkedProjects([]);
+        } finally {
+            setRemovingProjects(false);
+        }
+    }
+
+    const isFollowsCollection = props.collection.id === FOLLOWS_COLLECTIONS_ID;
     const icon =
-        props.collection.id === "follows" ? (
+        props.collection.id === FOLLOWS_COLLECTIONS_ID ? (
             <HeartIcon aria-hidden className="w-[65%] h-[65%] text-accent-background fill-current" />
         ) : (
             imageUrl(props.collection.icon)
@@ -95,8 +114,11 @@ export default function CollectionPageLayout(props: Props) {
                     </div>
                 }
                 actionBtns={
-                    props.collection.userId === session?.id && !isFollowsCollection ? (
-                        <EditCollection collection={props.collection} />
+                    markedProjects.length > 0 ? (
+                        <Button variant="secondary-destructive-inverted" onClick={RemoveCollectionProjects} disabled={removingProjects}>
+                            {removingProjects ? <LoadingSpinner size="xs" /> : <Trash2Icon className="w-btn-icon h-btn-icon" />}
+                            {t.form.remove}
+                        </Button>
                     ) : null
                 }
                 threeDotMenu={
@@ -119,18 +141,24 @@ export default function CollectionPageLayout(props: Props) {
                         </PopoverClose>
 
                         {!isFollowsCollection && (props.collection.userId === session?.id || isModerator(session?.role)) ? (
-                            <ConfirmDialog
-                                title={t.collection.deleteCollection}
-                                description={t.collection.sureToDeleteCollection}
-                                confirmText={t.form.delete}
-                                confirmBtnVariant="destructive"
-                                onConfirm={DeleteCollection}
-                            >
-                                <Button variant="ghost-destructive">
-                                    <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
-                                    {t.form.delete}
-                                </Button>
-                            </ConfirmDialog>
+                            <>
+                                <Separator />
+
+                                <EditCollection collection={props.collection} />
+
+                                <ConfirmDialog
+                                    title={t.collection.deleteCollection}
+                                    description={t.collection.sureToDeleteCollection}
+                                    confirmText={t.form.delete}
+                                    confirmBtnVariant="destructive"
+                                    onConfirm={DeleteCollection}
+                                >
+                                    <Button variant="ghost-destructive" size="sm" className="w-full">
+                                        <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
+                                        {t.form.delete}
+                                    </Button>
+                                </ConfirmDialog>
+                            </>
                         ) : null}
                     </>
                 }
@@ -184,7 +212,6 @@ export default function CollectionPageLayout(props: Props) {
                         context={
                             {
                                 ...props,
-                                editMode: true,
                                 markedProjects,
                                 addMarkedProject,
                                 removeMarkedProject,
@@ -200,7 +227,6 @@ export default function CollectionPageLayout(props: Props) {
 }
 
 export interface CollectionOutletData extends Props {
-    editMode: boolean;
     markedProjects: string[];
     addMarkedProject: (projectId: string) => void;
     removeMarkedProject: (projectId: string) => void;

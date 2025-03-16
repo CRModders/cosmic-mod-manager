@@ -1,26 +1,13 @@
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardTitle } from "@app/components/ui/card";
-import {
-    Dialog,
-    DialogBody,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@app/components/ui/dialog";
 import { toast } from "@app/components/ui/sonner";
-import { LoadingSpinner } from "@app/components/ui/spinner";
 import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesMemberHaveAccess } from "@app/utils/project";
 import { type LoggedInUserData, ProjectPermission } from "@app/utils/types";
 import type { Organisation, TeamMember } from "@app/utils/types/api";
 import { UserXIcon } from "lucide-react";
-import { useState } from "react";
 import { type Location, useLocation } from "react-router";
-import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
@@ -29,6 +16,7 @@ import { OrgTeamMember, ProjectTeamMember } from "./edit-member";
 import InviteMemberForm from "./invite-member";
 import { RemoveProjectFromOrg, TransferProjectManagementCard } from "./transfer-management";
 import { leaveTeam } from "./utils";
+import ConfirmDialog from "~/components/confirm-dialog";
 
 interface Props {
     userOrgs: Organisation[];
@@ -113,21 +101,13 @@ interface LeaveTeamProps {
 
 export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam }: LeaveTeamProps) {
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState(false);
 
     async function handleLeaveProject() {
-        if (isLoading) return;
-        setIsLoading(true);
+        const data = await leaveTeam(teamId);
+        if (!data?.success) return toast.error(data?.message || t.common.error);
 
-        try {
-            const data = await leaveTeam(teamId);
-            if (!data?.success) return toast.error(data?.message || t.common.error);
-
-            await refreshData();
-            return toast.success(t.projectSettings.leftProjectTeam);
-        } finally {
-            setIsLoading(false);
-        }
+        await refreshData();
+        return toast.success(t.projectSettings.leftProjectTeam);
     }
 
     const leaveTeamMsg = isOrgTeam ? t.projectSettings.leaveOrg : t.projectSettings.leaveProject;
@@ -148,36 +128,19 @@ export function LeaveTeam({ currUsersMembership, teamId, refreshData, isOrgTeam 
                 <p className="text-muted-foreground">{leaveTeamDesc}</p>
             </div>
 
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="secondary-destructive" disabled={disabled}>
-                        <UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
-                        {leaveTeamMsg}
-                    </Button>
-                </DialogTrigger>
-
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{leaveTeamMsg}</DialogTitle>
-                    </DialogHeader>
-                    <DialogBody className="flex flex-col gap-4">
-                        <p>{t.projectSettings.sureToLeaveTeam}</p>
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <CancelButton />
-                            </DialogClose>
-                            <Button variant="destructive" disabled={isLoading} onClick={handleLeaveProject}>
-                                {isLoading ? (
-                                    <LoadingSpinner size="xs" />
-                                ) : (
-                                    <UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
-                                )}
-                                {leaveTeamMsg}
-                            </Button>
-                        </DialogFooter>
-                    </DialogBody>
-                </DialogContent>
-            </Dialog>
+            <ConfirmDialog
+                title={leaveTeamMsg}
+                description={t.projectSettings.sureToLeaveTeam}
+                confirmText={leaveTeamMsg}
+                onConfirm={handleLeaveProject}
+                confirmIcon={<UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />}
+                confirmBtnVariant="destructive"
+            >
+                <Button variant="secondary-destructive" disabled={disabled}>
+                    <UserXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" strokeWidth={2.5} />
+                    {leaveTeamMsg}
+                </Button>
+            </ConfirmDialog>
         </div>
     );
 }

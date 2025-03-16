@@ -19,11 +19,12 @@ import { collectionIconUrl, userIconUrl } from "~/utils/urls";
 import { CanEditCollection, CollectionAccessible } from "../utils";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
 import { deleteCollectionDirectory, deleteCollectionFile, saveCollectionFile } from "~/services/storage";
-import { ICON_WIDTH } from "@app/utils/constants";
+import { FOLLOWS_COLLECTIONS_ID, ICON_WIDTH } from "@app/utils/constants";
 import { getFileType } from "@app/utils/convertors";
 import { resizeImageToWebp } from "~/utils/images";
 import { date } from "@app/utils/date";
 import { getManyProjects } from "~/routes/project/controllers";
+import { addProjectsToUserFollows, removeProjectsFromUserFollows } from "~/routes/project/controllers/follows";
 
 export async function GetUserCollections(userSlug: string, userSession: ContextUserData | undefined) {
     let userId: string | undefined = undefined;
@@ -68,10 +69,10 @@ export async function GetUserCollections(userSlug: string, userSession: ContextU
 }
 
 export async function GetUserCollection_ByCollectionId(collectionId: string, userSession: ContextUserData | undefined) {
-    if (collectionId.toLowerCase() === "follows" && userSession?.id) {
+    if (collectionId.toLowerCase() === FOLLOWS_COLLECTIONS_ID && userSession?.id) {
         return {
             data: {
-                id: "follows",
+                id: FOLLOWS_COLLECTIONS_ID,
                 userId: userSession?.id,
                 name: "Followed Projects",
                 description: "Auto-generated collection of all the projects you're following.",
@@ -109,7 +110,7 @@ export async function GetUserCollection_ByCollectionId(collectionId: string, use
 }
 
 export async function GetCollectionProjects(collectionId: string, sessionUser: ContextUserData | undefined) {
-    if (collectionId.toLowerCase() === "follows" && sessionUser?.id) {
+    if (collectionId.toLowerCase() === FOLLOWS_COLLECTIONS_ID && sessionUser?.id) {
         return await getManyProjects(sessionUser, sessionUser.followingProjects);
     }
 
@@ -122,7 +123,7 @@ export async function GetCollectionProjects(collectionId: string, sessionUser: C
 }
 
 export async function GetCollectionOwner(collectionId: string, userSession: ContextUserData | undefined) {
-    if (collectionId.toLowerCase() === "follows" && userSession?.id) {
+    if (collectionId.toLowerCase() === FOLLOWS_COLLECTIONS_ID && userSession?.id) {
         return {
             data: {
                 id: userSession.id,
@@ -175,6 +176,10 @@ export async function CreateNewCollection(formData: z.infer<typeof createCollect
 }
 
 export async function AddProjectsToCollection(collectionId: string, projectIds: string[], sessionUser: ContextUserData) {
+    if (collectionId?.toLowerCase() === FOLLOWS_COLLECTIONS_ID && sessionUser.id) {
+        return await addProjectsToUserFollows(projectIds, sessionUser);
+    }
+
     const collection = await GetCollection(collectionId);
     if (!collection) return notFoundResponseData("Collection not found!");
 
@@ -210,6 +215,10 @@ export async function AddProjectsToCollection(collectionId: string, projectIds: 
 }
 
 export async function DeleteProjectsFromCollection(collectionId: string, projectIds: string[], sessionUser: ContextUserData) {
+    if (collectionId?.toLowerCase() === FOLLOWS_COLLECTIONS_ID && sessionUser.id) {
+        return await removeProjectsFromUserFollows(projectIds, sessionUser);
+    }
+
     const collection = await GetCollection(collectionId);
     if (!collection) return notFoundResponseData("Collection not found!");
 

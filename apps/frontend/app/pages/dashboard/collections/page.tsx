@@ -11,6 +11,7 @@ import { CollectionVisibility } from "@app/utils/types";
 import useCollections from "~/pages/collection/provider";
 import { useState } from "react";
 import { Input } from "@app/components/ui/input";
+import { FOLLOWS_COLLECTIONS_ID } from "@app/utils/constants";
 
 interface Props {
     collections: Collection[];
@@ -81,9 +82,9 @@ export function FollowsCollectionItem(props: { followingProjects: number; classN
 
     return (
         <CollectionListItemCard
-            vtId={"follows_collection"}
+            vtId={FOLLOWS_COLLECTIONS_ID}
             title={t.collection.followedProjects}
-            url={CollectionPagePath("follows")}
+            url={CollectionPagePath(FOLLOWS_COLLECTIONS_ID)}
             icon={<HeartIcon aria-hidden className="w-[60%] h-[60%] text-accent-background fill-current" />}
             description={t.collection.followedProjectsDesc}
             projects={props.followingProjects}

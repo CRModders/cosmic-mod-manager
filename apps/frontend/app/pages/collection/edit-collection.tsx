@@ -98,7 +98,7 @@ export default function EditCollection(props: EditCollectionProps) {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant="secondary-inverted">
+                <Button variant="ghost" size="sm" className="w-full">
                     <EditIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.form.edit}
                 </Button>

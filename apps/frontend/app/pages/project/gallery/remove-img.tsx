@@ -1,24 +1,8 @@
 import RefreshPage from "@app/components/misc/refresh-page";
-import { Button } from "@app/components/ui/button";
-import {
-    Dialog,
-    DialogBody,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@app/components/ui/dialog";
 import { toast } from "@app/components/ui/sonner";
-import { LoadingSpinner } from "@app/components/ui/spinner";
-import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import type { ProjectDetailsData } from "@app/utils/types/api";
-import { Trash2Icon } from "lucide-react";
-import { useState } from "react";
 import { useLocation } from "react-router";
-import { CancelButton } from "~/components/ui/button";
+import ConfirmDialog from "~/components/confirm-dialog";
 import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
@@ -31,56 +15,33 @@ interface Props {
 
 export default function RemoveGalleryImage({ children, id, projectData }: Props) {
     const { t } = useTranslation();
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
     async function deleteImage() {
-        if (isLoading) return;
-        setIsLoading(true);
+        const response = await clientFetch(`/api/project/${projectData?.slug}/gallery/${id}`, {
+            method: "DELETE",
+        });
 
-        try {
-            const response = await clientFetch(`/api/project/${projectData?.slug}/gallery/${id}`, {
-                method: "DELETE",
-            });
+        const result = await response.json();
 
-            const result = await response.json();
-
-            if (!response.ok || !result?.success) {
-                return toast.error(result?.message || t.common.error);
-            }
-
-            RefreshPage(navigate, location);
-            return toast.success(result?.message || t.common.success);
-        } catch (error) {
-            setIsLoading(false);
+        if (!response.ok || !result?.success) {
+            return toast.error(result?.message || t.common.error);
         }
+
+        RefreshPage(navigate, location);
+        return toast.success(result?.message || t.common.success);
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{t.project.sureToDeleteImg}</DialogTitle>
-                    <VisuallyHidden>
-                        <DialogDescription>{t.project.sureToDeleteImg}</DialogDescription>
-                    </VisuallyHidden>
-                </DialogHeader>
-                <DialogBody className="flex flex-col gap-4">
-                    <span className="text-muted-foreground">{t.project.deleteImgDesc}</span>
-                    <DialogFooter>
-                        <DialogClose asChild disabled={isLoading}>
-                            <CancelButton disabled={isLoading} />
-                        </DialogClose>
-
-                        <Button variant={"destructive"} disabled={isLoading} onClick={deleteImage}>
-                            {isLoading ? <LoadingSpinner size="xs" /> : <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />}
-                            {t.form.delete}
-                        </Button>
-                    </DialogFooter>
-                </DialogBody>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDialog
+            title={t.project.sureToDeleteImg}
+            description={t.project.deleteImgDesc}
+            confirmText={t.form.delete}
+            confirmBtnVariant="destructive"
+            onConfirm={deleteImage}
+        >
+            {children}
+        </ConfirmDialog>
     );
 }

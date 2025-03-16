@@ -19,6 +19,7 @@ type CollectionListItemCardProps = Omit<React.ComponentProps<typeof DefaultColle
 
 export function CollectionListItemCard(props: CollectionListItemCardProps) {
     const { t } = useTranslation();
+    const viewTransitions = useRootData()?.userConfig.viewTransitions !== false;
 
-    return <DefaultCollectionListItemCard {...props} t={t} />;
+    return <DefaultCollectionListItemCard {...props} t={t} viewTransitions={viewTransitions} />;
 }

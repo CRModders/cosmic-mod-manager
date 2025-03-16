@@ -16,40 +16,30 @@ interface ListItemCardProps {
     viewTransitions?: boolean;
 }
 
-export function ListItemCard({
-    vtId,
-    title,
-    url,
-    icon,
-    description,
-    children,
-    fallbackIcon,
-    className,
-    viewTransitions,
-}: ListItemCardProps) {
+export function ListItemCard(props: ListItemCardProps) {
     return (
         <Link
-            to={url}
-            aria-label={title}
+            to={props.url}
+            aria-label={props.title}
             className={cn(
                 "w-full grid grid-cols-[max-content_1fr] gap-panel-cards p-card-surround rounded bg-background/75 hover:bg-background/50 transition-colors",
-                className,
+                props.className,
             )}
         >
             <ImgWrapper
-                vtId={vtId}
-                viewTransitions={viewTransitions}
-                src={icon || ""}
-                alt={title}
-                fallback={fallbackIcon}
+                vtId={props.vtId}
+                viewTransitions={props.viewTransitions}
+                src={props.icon || ""}
+                alt={props.title}
+                fallback={props.fallbackIcon}
                 className="border-shallower-background dark:border-shallow-background w-20 h-20 sm:w-24 sm:h-24"
             />
 
             <div className="flex flex-col items-start justify-start">
-                <div className="w-full text-md font-bold text-foreground-bright">{title}</div>
-                <span className="w-full text-sm text-muted-foreground/75 leading-tight">{description}</span>
+                <div className="w-full text-md font-bold text-foreground-bright">{props.title}</div>
+                <span className="w-full text-sm text-muted-foreground/75 leading-tight">{props.description}</span>
                 <div className="w-full flex items-start justify-start gap-x-3 flex-wrap mt-auto text-extra-muted-foreground">
-                    {children}
+                    {props.children}
                 </div>
             </div>
         </Link>

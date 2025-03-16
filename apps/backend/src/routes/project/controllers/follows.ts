@@ -1,4 +1,4 @@
-import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
+import { GetManyProjects_ListItem, GetProject_ListItem, UpdateManyProjects } from "~/db/project_item";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { isProjectPublic } from "../utils";
@@ -9,33 +9,59 @@ export async function addProjectFollower(slug: string, userSession: ContextUserD
     const project = await GetProject_ListItem(slug, slug);
     if (!project?.id) return notFoundResponseData("Project not found!");
 
-    if (!isProjectPublic(project.visibility, project.status)) {
-        return notFoundResponseData("Can't follow a project that isn't publically accessible!");
-    }
+    return await addProjectsToUserFollows([project.id], userSession);
+}
+
+export async function removeProjectFollower(slug: string, userSession: ContextUserData) {
+    const project = await GetProject_ListItem(slug, slug);
+    if (!project?.id) return notFoundResponseData("Project not found!");
+
+    return await removeProjectsFromUserFollows([project.id], userSession);
+}
+
+// Bulk actions
+export async function addProjectsToUserFollows(projectIds: string[], userSession: ContextUserData) {
+    const projects = await GetManyProjects_ListItem(projectIds);
+    if (!projects.length) return invalidReqestResponseData("No projects found!");
 
     const userData = await GetUser_ByIdOrUsername(undefined, userSession.id);
     if (!userData?.id) return notFoundResponseData("User not found!");
 
-    if (userData.followingProjects.includes(project.id)) return invalidReqestResponseData("Already following project!");
+    const addedProjects: string[] = [];
+    for (const project of projects) {
+        if (!isProjectPublic(project.visibility, project.status)) continue;
+        if (userData.followingProjects.includes(project.id)) continue;
+
+        addedProjects.push(project.id);
+    }
+
+    if (!addedProjects.length) return invalidReqestResponseData("Already following!");
 
     await Promise.all([
         UpdateUser({
             where: { id: userData.id },
             data: {
-                followingProjects: userData.followingProjects.concat(project.id),
+                followingProjects: userData.followingProjects.concat(addedProjects),
             },
         }),
 
-        UpdateProject({
-            where: { id: project.id },
-            data: {
-                followers: {
-                    increment: 1,
+        UpdateManyProjects(
+            {
+                where: {
+                    id: {
+                        in: addedProjects,
+                    },
+                },
+                data: {
+                    followers: {
+                        increment: 1,
+                    },
                 },
             },
-        }),
+            addedProjects,
+        ),
 
-        UpdateProjects_SearchIndex([project.id]),
+        UpdateProjects_SearchIndex(addedProjects),
     ]);
 
     return {
@@ -46,45 +72,46 @@ export async function addProjectFollower(slug: string, userSession: ContextUserD
     };
 }
 
-export async function removeProjectFollower(slug: string, userSession: ContextUserData) {
-    const project = await GetProject_ListItem(slug, slug);
-    if (!project?.id) return notFoundResponseData("Project not found!");
-
-    if (!isProjectPublic(project.visibility, project.status)) {
-        return notFoundResponseData("Project not found!");
-    }
+export async function removeProjectsFromUserFollows(projectIds: string[], userSession: ContextUserData) {
+    if (!projectIds.length) return invalidReqestResponseData("No projects found!");
 
     const userData = await GetUser_ByIdOrUsername(undefined, userSession.id);
     if (!userData?.id) return notFoundResponseData("User not found!");
 
-    if (!userData.followingProjects.includes(project.id)) return invalidReqestResponseData("Not following project!");
-
-    const newFollowsList = [];
-    for (let i = 0; i < userData.followingProjects.length; i++) {
-        const id = userData.followingProjects[i];
-        if (id === project.id) continue;
-
-        newFollowsList.push(id);
+    const newList: string[] = [];
+    const removedProjects: string[] = [];
+    for (const id of userData.followingProjects) {
+        if (projectIds.includes(id)) removedProjects.push(id);
+        else newList.push(id);
     }
+
+    if (!removedProjects.length) return invalidReqestResponseData("No projects removed!");
 
     await Promise.all([
         UpdateUser({
             where: { id: userData.id },
             data: {
-                followingProjects: newFollowsList,
+                followingProjects: newList,
             },
         }),
 
-        UpdateProject({
-            where: { id: project.id },
-            data: {
-                followers: {
-                    decrement: 1,
+        UpdateManyProjects(
+            {
+                where: {
+                    id: {
+                        in: removedProjects,
+                    },
+                },
+                data: {
+                    followers: {
+                        decrement: 1,
+                    },
                 },
             },
-        }),
+            removedProjects,
+        ),
 
-        UpdateProjects_SearchIndex([project.id]),
+        UpdateProjects_SearchIndex(removedProjects),
     ]);
 
     return {
