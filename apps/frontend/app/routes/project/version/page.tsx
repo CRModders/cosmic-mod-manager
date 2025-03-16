@@ -5,8 +5,9 @@ import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectVersionData } from "@app/utils/types/api";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
+import { useEffect } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router";
-import { SoftRedirect } from "~/components/ui/redirect";
+import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import NotFoundPage from "~/pages/not-found";
 import VersionPage from "~/pages/project/version/page";
@@ -18,6 +19,7 @@ export default function VersionPageRoute() {
     const ctx = useProjectData();
     const { projectSlug, versionSlug } = useParams();
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const versionData = filterGameVersion(ctx.allProjectVersions, versionSlug, searchParams);
     if (!versionData?.id || !projectSlug || !versionSlug) {
@@ -32,9 +34,9 @@ export default function VersionPageRoute() {
         );
     }
 
-    if (versionSlug === "latest") {
-        return <SoftRedirect to={VersionPagePath(ctx.projectType, projectSlug, versionData.slug)} />;
-    }
+    useEffect(() => {
+        navigate(VersionPagePath(ctx.projectType, projectSlug, versionData.slug));
+    }, []);
 
     return <VersionPage ctx={ctx} versionData={versionData} projectSlug={projectSlug} />;
 }
