@@ -8,25 +8,32 @@ import { useState } from "react";
 import { Input } from "@app/components/ui/input";
 import { useTranslation } from "~/locales/provider";
 import CreateNewCollection_Dialog from "../dashboard/collections/new-collection";
-import Link from "~/components/ui/link";
+import Link, { useNavigate } from "~/components/ui/link";
 
 export function AddToCollection_Popup({ projectId }: { projectId: string }) {
     const { t } = useTranslation();
     const session = useSession();
     const ctx = useCollections();
-
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
 
-    if (!session?.id) return null;
+    if (!session?.id) {
+        return (
+            <AddToCollection_PopupTrigger
+                bookmarked={false}
+                onClick={() => {
+                    navigate("/login");
+                }}
+            />
+        );
+    }
 
-    const bookmarked = ctx.collections.some((collection) => collection.projects.includes(projectId));
-
+    // Check if the project is in any of the user collections
+    const isBookmarked = ctx.collections.some((collection) => collection.projects.includes(projectId));
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="secondary-inverted" className="rounded-full w-11 h-11 p-0" aria-label="Add to collection">
-                    <BookmarkIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" fill={bookmarked ? "currentColor" : "none"} />
-                </Button>
+                <AddToCollection_PopupTrigger bookmarked={isBookmarked} />
             </PopoverTrigger>
 
             <PopoverContent className="p-3 min-w-fit gap-3">
@@ -84,5 +91,18 @@ export function AddToCollection_Popup({ projectId }: { projectId: string }) {
                 </CreateNewCollection_Dialog>
             </PopoverContent>
         </Popover>
+    );
+}
+
+interface TriggerProps {
+    bookmarked: boolean;
+    onClick?: () => void;
+}
+
+function AddToCollection_PopupTrigger(props: TriggerProps) {
+    return (
+        <Button variant="secondary-inverted" className="rounded-full w-11 h-11 p-0" aria-label="Add to collection" onClick={props.onClick}>
+            <BookmarkIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" fill={props.bookmarked ? "currentColor" : "none"} />
+        </Button>
     );
 }
