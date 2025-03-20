@@ -18,6 +18,8 @@ export default {
         copyId: "Copiar ID",
         all: "Todo",
         noResults: "Sin resultados",
+        // ?
+        // more: "More",
     },
 
     // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
@@ -58,7 +60,6 @@ export default {
         // world: "world",
         // worlds: "worlds",
         signout: "Cerrar sesión",
-        dashboard: "Panel de control",
         profile: "Perfil",
         skipToMainContent: "Ir al contenido principal",
     },
@@ -145,6 +146,8 @@ export default {
         projects: "Proyectos",
         organizations: "Organizaciones",
         collections: "Colecciones",
+        // ?
+        // collection: "Collection",
         revenue: "Ingresos",
         manage: "Gestionar",
         seeAll: "Ver todo",
@@ -171,6 +174,10 @@ export default {
         creatingOrg: "Creando una organización",
         enterOrgName: "Ingresa el nombre de la organización",
         enterOrgDescription: "Ingresa una breve descripción de tu organización",
+        // ?
+        // creatingACollection: "Creating a collection",
+        // enterCollectionName: "Enter collection name",
+        // createCollection: "Create collection",
     },
 
     search: {
@@ -441,6 +448,8 @@ export default {
         visibleToMembersOnly: "Solo los miembros podrán ver el proyecto",
         listed: "Listado",
         private: "Privado",
+        // ?
+        // public: "Public",
         unlisted: "No listado",
         archived: "Archivado",
         deleteProject: "Eliminar proyecto",
@@ -613,6 +622,8 @@ export default {
         removeIcon: "Eliminar ícono",
         noFileChosen: "No se ha elegido ningún archivo",
         showAllVersions: "Mostrar todas las versiones",
+        // ?
+        // createNew: "Create new",
     },
 
     error: {

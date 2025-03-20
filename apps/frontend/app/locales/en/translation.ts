@@ -32,6 +32,9 @@ export default {
     // it's here just for readability
     // The returned format should be [prefix, count, suffix]
     // If there's no suffix or no prefix, just put an empty string there
+
+    // If you're wondering as to why we are returning an array instead of a string, then the reason is html formatting
+    // the count in most places is put in a different html tag for styling purposes
     count: {
         downloads: (count: number): CountTranslation => {
             const downloads = Pluralize(count, "download", "downloads");
@@ -67,7 +70,6 @@ export default {
         world: "world",
         worlds: "worlds",
         signout: "Sign Out",
-        dashboard: "Dashboard",
         profile: "Profile",
         skipToMainContent: "Skip to main content",
     },

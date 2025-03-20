@@ -103,7 +103,6 @@ export default {
         // world: "world",
         // worlds: "worlds",
         signout: "Ausloggen",
-        dashboard: "Dashboard",
         profile: "Profil",
         skipToMainContent: "Zum Hauptinhalt vorspringen",
     },

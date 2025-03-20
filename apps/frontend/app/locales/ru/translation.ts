@@ -72,7 +72,6 @@ export default {
         // world: "world",
         // worlds: "worlds",
         signout: "Выйти",
-        dashboard: "Панель управления",
         profile: "Профиль",
         skipToMainContent: "Перейти к основному контенту",
     },

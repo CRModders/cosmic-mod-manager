@@ -127,8 +127,12 @@ export default function HomePage({ projects }: Props) {
                             </VariantButtonLink>
                         ) : (
                             <VariantButtonLink url="/dashboard/projects" size={"lg"} className="px-6" variant="secondary-inverted">
-                                <LayoutDashboardIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" aria-label={t.navbar.dashboard} />
-                                {t.navbar.dashboard}
+                                <LayoutDashboardIcon
+                                    aria-hidden
+                                    className="w-btn-icon-md h-btn-icon-md"
+                                    aria-label={t.dashboard.dashboard}
+                                />
+                                {t.dashboard.dashboard}
                             </VariantButtonLink>
                         )}
                     </div>
