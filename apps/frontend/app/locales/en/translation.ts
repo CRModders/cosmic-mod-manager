@@ -25,6 +25,7 @@ export default {
         copyId: "Copy ID",
         all: "All",
         noResults: "No results",
+        more: "More",
     },
 
     // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html

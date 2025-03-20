@@ -124,7 +124,7 @@ export default function Navbar(props: NavbarProps) {
                                 <Popover open={otherLinksPopoverOpen}>
                                     <PopoverTrigger asChild onMouseEnter={OpenOtherLinksPopup} onMouseLeave={() => CloseOtherLinksPopup()}>
                                         <Button variant="ghost" className="text-extra-muted-foreground">
-                                            More <ChevronDownIcon className="h-btn-icon w-btn-icon" />
+                                            {t.common.more} <ChevronDownIcon className="h-btn-icon w-btn-icon" />
                                         </Button>
                                     </PopoverTrigger>
 
