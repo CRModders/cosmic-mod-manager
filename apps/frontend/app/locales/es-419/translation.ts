@@ -422,7 +422,8 @@ export default {
         licenseUrl: "URL de la licencia (opcional)",
         spdxId: "Identificador SPDX",
         doesntHaveSpdxId: "La licencia no tiene un identificador SPDX",
-        tagsDesc:
+        // ? Use the projectType string instead of "Mod"
+        tagsDesc: (projectType) =>
             "Es importante etiquetar correctamente para ayudar a las personas a encontrar tu mod. Asegúrate de seleccionar todas las etiquetas que correspondan.",
         tagsDesc2: (projectType: string) => `Selecciona todas las categorías que reflejen los temas o la función de tu ${projectType}.`,
         featuredCategories: "Categorías destacadas",

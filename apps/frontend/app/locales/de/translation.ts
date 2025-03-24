@@ -466,7 +466,8 @@ export default {
         licenseUrl: "Lizenz-URL (optional)",
         spdxId: "SPDX-Identifikator",
         doesntHaveSpdxId: "Die Lizenz hat keinen SPDX-Identifikator",
-        tagsDesc:
+        // ? Use the projectType string instead of "Mod"
+        tagsDesc: (projectType) =>
             "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
         tagsDesc2: (projectType: string) =>
             `Wähle alle Kategorien aus, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,

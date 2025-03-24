@@ -444,7 +444,8 @@ export default {
         licenseUrl: "License URL (optional)",
         spdxId: "SPDX identifier",
         doesntHaveSpdxId: "License does not have a SPDX identifier",
-        tagsDesc: "Accurate tagging is important to help people find your mod. Make sure to select all tags that apply.",
+        tagsDesc: (projectType: string) =>
+            `Accurate tagging is important to help people find your ${projectType}. Make sure to select all tags that apply.`,
         tagsDesc2: (projectType: string) => `Select all categories that reflect the themes or function of your ${projectType}.`,
         featuredCategories: "Featured categories",
         featuredCategoriesDesc: (count: number) => `You can feature up to ${count} of your most relevant tags.`,

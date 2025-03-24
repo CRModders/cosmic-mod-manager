@@ -421,7 +421,7 @@ export default {
         wikiPageDesc: "Страница, содержащая информацию, документацию и помощь к вашему проекту.",
         discordInvite: "Приглашение в Discord",
         discordInviteDesc: "Ссылка-приглашение на ваш Discord сервер.",
-        licenseDesc: (projectType: string) =>
+        licenseDesc: (projectType) =>
             `Очень важно выбрать правильную лицензию для ${projectType}. Вы можете выбрать одну из нашего списка или использовать свою. Вы также можете оставить ссылку на свою лицензию; иначе, будет отображен текст лицензии.`,
         customLicenseDesc:
             "Введите корректный [SPDX идентификатор лицензии](https://spdx.org/licenses) в указанную область. Если ваша лицензия не имеет SPDX идентификатор (например, если вы создали лицензию сами или лицензия специфична для Cosmic Reach), просто поставьте галочку и введите название лицензии.",
@@ -431,16 +431,17 @@ export default {
         licenseUrl: "URL Лицензии (необязательно)",
         spdxId: "SPDX идентификатор",
         doesntHaveSpdxId: "Лицензия не имеет SPDX идентификатор",
-        tagsDesc: "Правильно выбранные теги помогут людям найти ваш мод. Убедитесь, что выбрали все подходящие теги.",
-        tagsDesc2: (projectType: string) => `Выберите все категории, под которые подходит ваш ${projectType}.`,
+        // ? Use the projectType string instead of "Mod"
+        tagsDesc: (projectType) => "Правильно выбранные теги помогут людям найти ваш мод. Убедитесь, что выбрали все подходящие теги.",
+        tagsDesc2: (projectType) => `Выберите все категории, под которые подходит ваш ${projectType}.`,
         featuredCategories: "Избранные категории",
-        featuredCategoriesDesc: (count: number) => `Вы можете избрать до ${count} самых релевантных тегов.`,
+        featuredCategoriesDesc: (count) => `Вы можете избрать до ${count} самых релевантных тегов.`,
         selectAtLeastOneCategory: "Выберите как минимум одну категорию, чтобы сделать ее избранной.",
         projectInfo: "Информация о проекте",
         clientSide: "Клиент",
-        clientSideDesc: (projectType: string) => `Выберите, если ваш ${projectType} имеет функционал на клиенте.`,
+        clientSideDesc: (projectType) => `Выберите, если ваш ${projectType} имеет функционал на клиенте.`,
         serverSide: "Сервер",
-        serverSideDesc: (projectType: string) => `Выберите, если ваш ${projectType} имеет функционал на сервере.`,
+        serverSideDesc: (projectType) => `Выберите, если ваш ${projectType} имеет функционал на сервере.`,
         unknown: "Неизвестно",
         clientOrServer: "Клиент или сервер",
         clientAndServer: "Клиент и сервер",
@@ -459,12 +460,12 @@ export default {
         unlisted: "По ссылке",
         archived: "Архивирован",
         deleteProject: "Удалить проект",
-        deleteProjectDesc: (site: string) =>
+        deleteProjectDesc: (site) =>
             `Удалит ваш проект с серверов ${site}'s и поиска. Если вы нажмёте на эту кнопку, ваш проект будет удалён, так что будьте очень осторожны!`,
         sureToDeleteProject: "Вы уверены, что хотите удалить этот проект?",
         deleteProjectDesc2:
             "Если вы продолжите, все версии и любые другие данные будут удалены с наших серверов. Это может поломать другие проекты, так что будьте очень осторожны!.",
-        typeToVerify: (projectName: string) => `Чтобы подтвердить, введите **${projectName}** ниже:`,
+        typeToVerify: (projectName) => `Чтобы подтвердить, введите **${projectName}** ниже:`,
         typeHere: "Введите сюда...",
         manageMembers: "Управлять участниками",
         leftProjectTeam: "Вы покинули команду проекта",

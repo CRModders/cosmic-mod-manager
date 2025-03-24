@@ -87,7 +87,7 @@ export default function TagsSettingsPage() {
                 <Card className="w-full flex flex-col p-card-surround gap-4">
                     <div className="w-full flex flex-col items-start justify-start gap-1">
                         <CardTitle>{t.projectSettings.tags}</CardTitle>
-                        <span className="text-muted-foreground">{t.projectSettings.tagsDesc}</span>
+                        <span className="text-muted-foreground">{t.projectSettings.tagsDesc(projectType.toLowerCase())}</span>
                     </div>
 
                     <div className="w-full flex flex-col items-start justify-start">
