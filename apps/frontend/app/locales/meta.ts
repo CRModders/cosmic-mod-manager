@@ -34,6 +34,13 @@ const SupportedLocales = [
         nativeName: "Deutsch",
         dir: "ltr",
     }),
+
+    meta({
+        code: "ja",
+        name: "Japanese",
+        nativeName: "日本語",
+        dir: "ltr",
+    }),
 ];
 
 export default SupportedLocales;
