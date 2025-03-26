@@ -532,8 +532,8 @@ export default {
         orgDoesntHaveProjects: "This organization doesn't have any projects yet.",
         manageProjects: "Manage projects",
         orgSettings: "Organization settings",
-        transferProjectsTip: "You can transfer your existing projects to this organisation from: Project settings > Members",
-        noProjects_CreateOne: "This organization don't have any projects. Click the button above to create one.",
+        transferProjectsTip: "You can transfer your existing projects to this organization from: Project settings > Members",
+        noProjects_CreateOne: "This organization doesn't have any projects. Click the button above to create one.",
         orgInfo: "Organization information",
         deleteOrg: "Delete organization",
         deleteOrgDesc:
