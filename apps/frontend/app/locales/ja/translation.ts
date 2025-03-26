@@ -432,7 +432,7 @@ export default {
         licenseUrl: "ライセンスのURL（任意）",
         spdxId: "SPDX Identifier",
         doesntHaveSpdxId: "ライセンスにSPDX Identiferがありません",
-        tagsDesc: "正確なタグ付けは、他のユーザーがあなたのModを見つけやすくために重要です。該当するタグをすべて選択してください。",
+        tagsDesc: (projectType: string) => `正確なタグ付けは、他のユーザーがあなたの${projectType}を見つけやすくために重要です。該当するタグをすべて選択してください。`,
         tagsDesc2: (projectType: string) => `${projectType}のテーマや機能に一致するカテゴリーをすべて選択してください。`,
         featuredCategories: "優先表示カテゴリー",
         featuredCategoriesDesc: (count: number) => `最も関連性の高いタグを最大${count}個まで優先表示できます。`,
