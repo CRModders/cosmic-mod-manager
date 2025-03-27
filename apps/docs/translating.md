@@ -3,16 +3,16 @@
 1. Open [app/locales/meta.ts](/apps/frontend/app/locales/meta.ts) and add the metadata for the language you are adding.
 
     ```ts
-        const SupportedLocales = [
-            meta({
+        const SupportedLocales: LocaleMetaData[] = [
+            {
                 code: "en",
                 name: "English",
                 nativeName: "English",
                 dir: "ltr",
-            }),
+            },
         
             // Example
-    +       meta({
+    +       {
     +           code: "es", // ISO-639 code of the language
     +           name: "Spanish",
     +           nativeName: "Español",
@@ -22,7 +22,7 @@
     +               name: "Spain",
     +               displayName: "España",
     +           },
-    +       }),
+    +       },
     +   ];
     ```
 
@@ -31,9 +31,8 @@
 
 
 2. Create the language folder in `/apps/frontend/app/locales` directory. \
-The name of the folder should be 
-`LANG_CODE-REGION_CODE` (eg: `es-ES`). \
-If your lang's metadata doesn't have region field then just `LANG_CODE` (eg: `en`).
+The name of the folder should be `{lang}-{REGION}` (eg: `es-ES`). \
+If your lang's metadata doesn't have region field then just `{lang}` (eg: `en`).
 
 3. Create a file named `tags.ts` in the folder you just created and paste the following: \
     You can reference the [`en/tags.ts`](/apps/frontend/app/locales/en/tags.ts) file for the keys.
