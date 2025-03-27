@@ -9,6 +9,7 @@ import { Input } from "@app/components/ui/input";
 import { useTranslation } from "~/locales/provider";
 import CreateNewCollection_Dialog from "../dashboard/collections/new-collection";
 import Link, { useNavigate } from "~/components/ui/link";
+import type { RefProp } from "@app/components/types";
 
 export function AddToCollection_Popup({ projectId }: { projectId: string }) {
     const { t } = useTranslation();
@@ -99,9 +100,15 @@ interface TriggerProps {
     onClick?: () => void;
 }
 
-function AddToCollection_PopupTrigger(props: TriggerProps) {
+function AddToCollection_PopupTrigger(props: TriggerProps & RefProp<HTMLButtonElement>) {
     return (
-        <Button variant="secondary-inverted" className="rounded-full w-11 h-11 p-0" aria-label="Add to collection" onClick={props.onClick}>
+        <Button
+            ref={props.ref}
+            variant="secondary-inverted"
+            className="rounded-full w-11 h-11 p-0"
+            aria-label="Add to collection"
+            onClick={props.onClick}
+        >
             <BookmarkIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" fill={props.bookmarked ? "currentColor" : "none"} />
         </Button>
     );
