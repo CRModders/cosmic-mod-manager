@@ -1,7 +1,7 @@
 import en from "./en/translation";
 import SupportedLocales, { DefaultLocale } from "./meta";
 import type { Locale, LocaleMetaData } from "./types";
-import { fillEmptyKeys } from "./utils";
+import { fillEmptyKeys } from "./obj-merge";
 
 export async function getLocale(locale: string): Promise<Locale> {
     const localeModule = await getLocaleFile(locale);

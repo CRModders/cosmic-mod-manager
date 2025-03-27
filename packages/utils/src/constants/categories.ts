@@ -428,6 +428,8 @@ export type Categories = {
     [K in (typeof categories)[number]['name']]: string;
 }
 
+export type Keys_ToNotTranslate = "8x-" | "16x" | "32x" | "48x" | "64x" | "128x" | "256x" | "512x+";
+
 // ?                LIGHT       DARK
 // fabric:          #8A7B71     #DBB69B;
 // quilt:           #8B61B4     #C796F9;

@@ -1,4 +1,8 @@
-import type { Translation } from "../types";
+import type { Categories, Keys_ToNotTranslate } from "@app/utils/constants/categories";
+
+interface TagsTranslation extends Omit<Categories, Keys_ToNotTranslate> {
+    [key: string]: string;
+}
 
 export default {
     adventure: "Adventure",
@@ -80,4 +84,4 @@ export default {
     // Env options
     client: "Client",
     server: "Server",
-} satisfies Translation;
+} satisfies TagsTranslation;

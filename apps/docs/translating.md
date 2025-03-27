@@ -78,3 +78,10 @@ If your lang's metadata doesn't have region field then just `{lang}` (eg: `en`).
 If you decide to copy paste an existing lang folder and then edit that with the translation, make sure you don't use the default `en` for that, if you do you'll need to change the `TypeScript` types imported in the files. \
 I'd recommend you to use a code editor that supports typescript because there are types available for all the translation keys so your editor will let you know when something doesn't match the expected type.
 :::
+
+
+### A really helpful tip for those who will be using VS Code for this
+
+_NOTE: This doesn't work in vscode web version. You can use GitHub codespace if you don't have it installed._
+
+If you don't wanna search for every missing key manually in the base translation when updating your translation files your editor can lend you a hand. Put your cursor inside the translation object and press `Ctrl` + `Space`, it'll pop open a list of suggestions that includes all the keys that are missing from that object.
