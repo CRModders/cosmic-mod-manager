@@ -49,9 +49,9 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
     const { theme } = useTheme();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
-    const perPageLimit = 20;
+    const ITEMS_PER_PAGE = 15;
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
-    const pagesCount = Math.ceil((versionsList?.length || 0) / perPageLimit);
+    const pagesCount = Math.ceil((versionsList?.length || 0) / ITEMS_PER_PAGE);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
 
     const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
@@ -60,7 +60,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
     const Pagination =
-        (versionsList.length || 0) > perPageLimit ? (
+        (versionsList.length || 0) > ITEMS_PER_PAGE ? (
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
         ) : null;
 
@@ -99,7 +99,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
             filteredItems.push(version);
         }
 
-        return filteredItems.slice((activePage - 1) * perPageLimit, activePage * perPageLimit);
+        return filteredItems.slice((activePage - 1) * ITEMS_PER_PAGE, activePage * ITEMS_PER_PAGE);
     }, [activePage, filters, versionsList]);
 
     const availableReleaseChannels: string[] = [];

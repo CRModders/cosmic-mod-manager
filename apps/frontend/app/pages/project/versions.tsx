@@ -407,9 +407,9 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
 
-    const perPageLimit = 20;
+    const ITEMS_PER_PAGE = 15;
     const page = urlSearchParams.get(pageSearchParamKey) || "1";
-    const pagesCount = Math.ceil((allProjectVersions?.length || 0) / perPageLimit);
+    const pagesCount = Math.ceil((allProjectVersions?.length || 0) / ITEMS_PER_PAGE);
     const activePage = Number.parseInt(page) <= pagesCount ? Number.parseInt(page) : 1;
 
     const customNavigate = useNavigate();
@@ -420,7 +420,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
     }
 
     const Pagination =
-        (allProjectVersions?.length || 0) > perPageLimit ? (
+        (allProjectVersions?.length || 0) > ITEMS_PER_PAGE ? (
             <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
         ) : null;
 
@@ -465,7 +465,7 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {allProjectVersions.slice((activePage - 1) * perPageLimit, activePage * perPageLimit).map((version) => (
+                                {allProjectVersions.slice((activePage - 1) * ITEMS_PER_PAGE, activePage * ITEMS_PER_PAGE).map((version) => (
                                     <TableRow
                                         key={version.id}
                                         className="cursor-pointer"
