@@ -8,7 +8,7 @@ export interface CategoryType {
     isDisplayed?: boolean;
 }
 
-export const categories: CategoryType[] = [
+export const categories = [
     {
         name: "8x-",
         projectTypes: [ProjectType.RESOURCE_PACK],
@@ -422,7 +422,11 @@ export const categories: CategoryType[] = [
         projectTypes: [ProjectType.MOD, ProjectType.DATAMOD, ProjectType.PLUGIN],
         header: TagHeaderType.CATEGORY,
     },
-];
+] as const satisfies CategoryType[];
+
+export type Categories = {
+    [K in (typeof categories)[number]['name']]: string;
+}
 
 // ?                LIGHT       DARK
 // fabric:          #8A7B71     #DBB69B;
