@@ -84,6 +84,7 @@ export default {
         email: "Email",
         password: "Password",
         changePassword: "Change Password",
+        loginUsing: "Login using:",
         dontHaveAccount: "Don't have an account?",
         alreadyHaveAccount: "Already have an account?",
         forgotPassword: "Forgot Password?",
@@ -695,5 +696,7 @@ export default {
         video: "Video",
         preview: "Preview",
         insert: "Insert",
+        keyboardShortcuts: "Keyboard shortcuts",
+        youCanUse: "You can use [Markdown format](/md-editor) here."
     },
 } satisfies Translation;
