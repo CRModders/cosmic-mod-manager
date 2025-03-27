@@ -8,33 +8,24 @@ export async function getLocale(locale: string): Promise<Locale> {
     return fillEmptyKeys(localeModule.default, en);
 }
 
-export async function getLocaleFile(locale: string) {
-    let module = null;
-
+export function getLocaleFile(locale: string) {
     switch (parseLocale(locale)) {
         case "es-419":
-            module = await import("./es-419/translation");
-            break;
+            return import("./es-419/translation");
 
         case "ru":
-            module = await import("./ru/translation");
-            break;
+            return import("./ru/translation");
 
         case "de":
-            module = await import("./de/translation");
-            break;
+            return import("./de/translation");
 
         case "ja":
-            module = await import("./ja/translation");
-            break;
+            return import("./ja/translation");
 
         // case "en":
         default:
-            module = await import("./en/translation");
-            break;
+            return import("./en/translation");
     }
-
-    return module;
 }
 
 export function parseLocale(code: string) {
