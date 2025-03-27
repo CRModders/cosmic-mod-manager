@@ -77,11 +77,11 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
 
         const allMembers = combineProjectMembers(project.team.members, project.organisation?.team.members || []);
         const authorData = allMembers.get(version.author?.id || "");
-        const isDuplicate =
-            nextVersion?.changelog &&
-            nextVersion.changelog.length > 0 &&
-            nextVersion?.changelog === version.changelog &&
-            version.releaseChannel === nextVersion.releaseChannel;
+        // const isDuplicate =
+        //     nextVersion?.changelog &&
+        //     nextVersion.changelog.length > 0 &&
+        //     nextVersion?.changelog === version.changelog &&
+        //     version.releaseChannel === nextVersion.releaseChannel;
 
         versionsList.push({
             id: version.id,
@@ -100,23 +100,22 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
             files: files,
             author: authorData
                 ? {
-                      id: authorData.id,
-                      userName: authorData.user.userName,
-                      avatar: userIconUrl(authorData.userId, authorData.user.userName),
-                      role: authorData?.role || "",
-                  }
+                    id: authorData.id,
+                    userName: authorData.user.userName,
+                    avatar: userIconUrl(authorData.userId, authorData.user.userName),
+                    role: authorData?.role || "",
+                }
                 : {
-                      id: "deleted_user",
-                      userName: "deleted_user",
-                      avatar: null,
-                      role: "",
-                  },
+                    id: "deleted_user",
+                    userName: "deleted_user",
+                    avatar: null,
+                    role: "",
+                },
             dependencies: version.dependencies.map((dependency) => ({
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,
                 dependencyType: dependency.dependencyType as DependencyType,
             })),
-            isDuplicate: isDuplicate === true,
         });
     }
 

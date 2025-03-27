@@ -281,12 +281,19 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
             ) : null}
 
             <Card className="p-5 w-full flex flex-col items-start justify-start">
-                {visibleItems.map((version) => {
+                {visibleItems.map((version, index) => {
+                    const nextVersion = visibleItems[index + 1];
+                    const isDuplicate =
+                        nextVersion?.changelog &&
+                        nextVersion.changelog.length > 0 &&
+                        nextVersion?.changelog === version.changelog &&
+                        version.releaseChannel === nextVersion.releaseChannel;
+
                     return (
                         <div key={version.id} className="w-full ps-7 mb-4 relative dark:text-muted-foreground">
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                                 <div className="flex flex-wrap gap-x-1.5 items-baseline justify-start">
-                                    <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={version.isDuplicate === true} />
+                                    <ChangelogBar releaseChannel={version.releaseChannel} isDuplicate={isDuplicate === true} />
                                     {version.releaseChannel === VersionReleaseChannel.DEV ? (
                                         <TooltipProvider>
                                             <TooltipTemplate content="Dev release!" className="font-normal">
@@ -328,7 +335,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                     </a>
                                 ) : null}
                             </div>
-                            {version.changelog && !version.isDuplicate ? (
+                            {version.changelog && !isDuplicate ? (
                                 <MarkdownRenderBox addIdToHeadings={false} text={version.changelog} className="me-2" />
                             ) : null}
                         </div>
