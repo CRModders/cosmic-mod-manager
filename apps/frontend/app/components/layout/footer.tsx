@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { DotSeparator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
 import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
-import { ArrowUpRightIcon, GlobeIcon, Settings2Icon } from "lucide-react";
+import { ArrowUpRightIcon, LanguagesIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type LinkProps, useLocation } from "react-router";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
@@ -189,7 +189,7 @@ export function LangSwitcher() {
                     minWidth: `calc(${currLocaleLabel.length}ch + 1.3rem)`,
                 }}
             >
-                <GlobeIcon aria-hidden size="1.15rem" className="text-muted-foreground" aria-label="Language switcher" />
+                <LanguagesIcon aria-hidden size="1.15rem" className="text-muted-foreground" aria-label="Language switcher" />
                 <SelectValue className="flex items-center justify-start" placeholder={<p>{currLang}</p>} />
             </SelectTrigger>
 
