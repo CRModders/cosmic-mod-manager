@@ -238,13 +238,13 @@ function BaseView(props: SearchListItemProps) {
             </div>
 
             <div
-                className={cn("flex flex-wrap items-start justify-end gap-x-4", galleryViewType && "mx-card-surround")}
+                className={cn("flex flex-wrap justify-end gap-x-4", galleryViewType && "mx-card-surround justify-between")}
                 style={{
                     gridArea: "stats",
                 }}
             >
-                <div className={cn("lg:w-min flex flex-wrap justify-end items-center gap-x-5", galleryViewType && "justify-start")}>
-                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                <div className={cn("flex flex-wrap flex-row lg:flex-col gap-x-5", galleryViewType && "lg:flex-row")}>
+                    <div className="h-fit flex justify-end items-center gap-x-1.5">
                         <DownloadIcon aria-hidden className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectDownloads[0]?.toString().length > 0 && (
@@ -257,7 +257,7 @@ function BaseView(props: SearchListItemProps) {
                         </p>
                     </div>
 
-                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                    <div className="h-fit flex justify-end items-center gap-x-1.5">
                         <HeartIcon aria-hidden className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectFollowers[0]?.toString().length > 0 && (
@@ -274,7 +274,7 @@ function BaseView(props: SearchListItemProps) {
                 <div
                     className={cn(
                         "h-fit flex items-center gap-1.5 whitespace-nowrap",
-                        listViewType && "justify-end ms-auto mt-auto",
+                        listViewType && "justify-end ms-auto my-auto lg:mb-0",
                         galleryViewType && "justify-start my-auto",
                     )}
                 >
