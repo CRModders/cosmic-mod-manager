@@ -2,21 +2,19 @@ import { ICON_WIDTH } from "@app/utils/src/constants";
 import { getFileType } from "@app/utils/convertors";
 import type { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { formatUserName } from "@app/utils/string";
-import { FileType, type GlobalUserRole, type ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
-import type { ProjectListItem } from "@app/utils/types/api";
+import { FileType, type GlobalUserRole, } from "@app/utils/types";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
-import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, GetUser_Unique, Get_UserProjects, UpdateUser } from "~/db/user_item";
-import { isProjectAccessible } from "~/routes/project/utils";
 import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { deleteUserFile, saveUserFile } from "~/services/storage";
 import { type ContextUserData, FILE_STORAGE_SERVICE } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { resizeImageToWebp } from "~/utils/images";
 import { generateDbId } from "~/utils/str";
-import { projectIconUrl, userIconUrl } from "~/utils/urls";
+import { userIconUrl } from "~/utils/urls";
+import { getManyProjects } from "~/routes/project/controllers";
 
 export async function getUserProfileData(slug: string) {
     const user = await GetUser_ByIdOrUsername(slug, slug);
@@ -39,17 +37,14 @@ export async function getUserFollowedProjects(userSlug: string, userSession: Con
     if (userSession && (userSlug === userSession.userName || userSlug === userSession.id)) {
         if (idsOnly) return { data: userSession.followingProjects, status: HTTP_STATUS.OK };
 
-        const UserProjects = await GetManyProjects_ListItem(userSession.followingProjects);
-        return { data: UserProjects, status: HTTP_STATUS.OK };
+        return getManyProjects(userSession, userSession.followingProjects);
     }
 
     const userData = await GetUser_ByIdOrUsername(userSlug, userSlug);
     if (!userData?.id) return notFoundResponseData("User not found");
 
     if (idsOnly) return { data: userData.followingProjects, status: HTTP_STATUS.OK };
-
-    const UserProjects = await GetManyProjects_ListItem(userData.followingProjects);
-    return { data: UserProjects, status: HTTP_STATUS.OK };
+    return await getManyProjects(userSession, userData.followingProjects);
 }
 
 export async function updateUserProfile(userSession: ContextUserData, profileData: z.infer<typeof profileUpdateFormSchema>) {
@@ -106,7 +101,7 @@ export async function getUserAvatar(
                 const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
                 await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
             }
-        } catch {}
+        } catch { }
 
         return null;
     }
@@ -147,47 +142,5 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
     const UserProjects_Id = await Get_UserProjects(user.id);
     if (!UserProjects_Id.length) return { data: [], status: HTTP_STATUS.OK };
 
-    const UserProjects = await GetManyProjects_ListItem(UserProjects_Id);
-    UserProjects.sort((a, b) => b.downloads - a.downloads);
-
-    const projectListData: ProjectListItem[] = [];
-    for (const project of UserProjects) {
-        if (!project) continue;
-
-        const isProjectListed = [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(project.visibility as ProjectVisibility);
-        if (listedProjectsOnly === true && !isProjectListed) continue;
-
-        const projectAccessible = isProjectAccessible({
-            visibility: project.visibility as ProjectVisibility,
-            publishingStatus: project.status as ProjectPublishingStatus,
-            userId: userSession?.id,
-            teamMembers: project.team.members,
-            orgMembers: project.organisation?.team.members || [],
-            sessionUserRole: userSession?.role,
-        });
-        if (!projectAccessible) continue;
-
-        projectListData.push({
-            id: project.id,
-            slug: project.slug,
-            name: project.name,
-            summary: project.summary,
-            type: project.type,
-            status: project.status as ProjectPublishingStatus,
-            icon: projectIconUrl(project.id, project.iconFileId),
-            downloads: project.downloads,
-            followers: project.followers,
-            dateUpdated: project.dateUpdated,
-            datePublished: project.datePublished,
-            featuredCategories: project.featuredCategories,
-            categories: project.categories,
-            gameVersions: project.gameVersions,
-            loaders: project.loaders,
-            featured_gallery: null,
-            color: project.color,
-            visibility: project.visibility as ProjectVisibility,
-        });
-    }
-
-    return { data: projectListData, status: HTTP_STATUS.OK };
+    return await getManyProjects(userSession, UserProjects_Id);
 }

@@ -1,22 +1,18 @@
 import { getCurrMember } from "@app/utils/project";
 import type { createOrganisationFormSchema } from "@app/utils/schemas/organisation";
-import {
-    type EnvironmentSupport,
-    type OrganisationPermission,
-    type ProjectPermission,
-    type ProjectPublishingStatus,
-    ProjectVisibility,
+import type {
+    OrganisationPermission,
+    ProjectPermission,
 } from "@app/utils/types";
-import type { Organisation, ProjectListItem } from "@app/utils/types/api";
+import type { Organisation } from "@app/utils/types/api";
 import type { z } from "zod";
 import { CreateOrganization, GetManyOrganizations_ById, GetOrganization_BySlugOrId } from "~/db/organization_item";
-import { GetManyProjects_ListItem } from "~/db/project_item";
 import { GetUser_ByIdOrUsername, Get_UserOrganizations } from "~/db/user_item";
-import { isProjectAccessible } from "~/routes/project/utils";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { generateDbId } from "~/utils/str";
-import { orgIconUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
+import { orgIconUrl, userIconUrl } from "~/utils/urls";
+import { getManyProjects } from "../../controllers";
 
 export async function getOrganisationById(userSession: ContextUserData | undefined, slug: string) {
     const organisation = await GetOrganization_BySlugOrId(slug.toLowerCase(), slug);
@@ -137,48 +133,5 @@ export async function getOrganisationProjects(userSession: ContextUserData | und
     if (!Org) return notFoundResponseData("Organisation not found");
     if (!Org.projects) return { data: [], status: HTTP_STATUS.OK };
 
-    const OrgProjects = await GetManyProjects_ListItem(Org.projects.map((project) => project.id));
-    const formattedProjects: ProjectListItem[] = [];
-
-    for (const project of OrgProjects) {
-        if (!project) continue;
-        if (listedOnly && project.visibility !== ProjectVisibility.LISTED) continue;
-
-        const projectAccessible = isProjectAccessible({
-            visibility: project.visibility,
-            publishingStatus: project.status,
-            userId: userSession?.id,
-            teamMembers: project.team.members,
-            orgMembers: project.organisation?.team.members || [],
-            sessionUserRole: userSession?.role,
-        });
-        if (!projectAccessible) continue;
-
-        formattedProjects.push({
-            id: project.id,
-            slug: project.slug,
-            name: project.name,
-            summary: project.summary,
-            type: project.type,
-            icon: projectIconUrl(project.id, project.iconFileId),
-            downloads: project.downloads,
-            followers: project.followers,
-            dateUpdated: project.dateUpdated,
-            datePublished: project.datePublished,
-            featuredCategories: project.featuredCategories,
-            categories: project.categories,
-            gameVersions: project.gameVersions,
-            loaders: project.loaders,
-            status: project.status as ProjectPublishingStatus,
-            visibility: project.visibility as ProjectVisibility,
-            clientSide: project.clientSide as EnvironmentSupport,
-            serverSide: project.serverSide as EnvironmentSupport,
-            featured_gallery: null,
-            color: project.color,
-        });
-    }
-    // Sort the projects by downloads count in descending order
-    formattedProjects.sort((_projectA, _projectB) => _projectB.downloads - _projectA.downloads);
-
-    return { data: formattedProjects, status: HTTP_STATUS.OK };
+    return await getManyProjects(userSession, Org.projects.map((project) => project.id), listedOnly)
 }

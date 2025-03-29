@@ -14,6 +14,10 @@ import type { FILE_STORAGE_SERVICE } from "~/types";
 import { createHashFromFile } from "~/utils/file";
 import { generateRandomId } from "~/utils/str";
 
+export function isProjectListed(visibility: string) {
+    return [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED].includes(visibility as ProjectVisibility);
+}
+
 export function isProjectPublic(visibility: string, publishingStatus: string) {
     const isPublic = visibility !== ProjectVisibility.PRIVATE;
     const isPublished = publishingStatus === ProjectPublishingStatus.APPROVED;

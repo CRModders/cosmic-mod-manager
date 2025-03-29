@@ -18,7 +18,7 @@ import { isNumber } from "~/utils";
 import { HTTP_STATUS } from "~/utils/http";
 import { parseJson } from "~/utils/str";
 import { orgIconUrl, projectGalleryFileUrl, projectIconUrl, userIconUrl } from "~/utils/urls";
-import { isProjectAccessible } from "../utils";
+import { isProjectAccessible, isProjectListed } from "../utils";
 
 export async function getProjectData(slug: string, userSession: ContextUserData | undefined) {
     const project = await GetProject_Details(slug, slug);
@@ -93,13 +93,13 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
         organisation: org
             ? {
-                  id: org.id,
-                  name: org.name,
-                  slug: org.slug,
-                  description: org.description,
-                  icon: orgIconUrl(org.id, org.iconFileId),
-                  members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
-              }
+                id: org.id,
+                name: org.name,
+                slug: org.slug,
+                description: org.description,
+                icon: orgIconUrl(org.id, org.iconFileId),
+                members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+            }
             : null,
     };
 
@@ -145,13 +145,14 @@ export async function checkProjectSlugValidity(slug: string) {
     return { data: { id: project.id }, status: HTTP_STATUS.OK };
 }
 
-export async function getManyProjects(userSession: ContextUserData | undefined, projectIds: string[]) {
+export async function getManyProjects(userSession: ContextUserData | undefined, projectIds: string[], listedOnly = false) {
     const list = await GetManyProjects_ListItem(projectIds);
 
     const projectsList: ProjectListItem[] = [];
 
     for (const project of list) {
         if (!project) continue;
+        if (listedOnly === true && !isProjectListed(project.visibility)) continue;
 
         const projectAccessible = isProjectAccessible({
             visibility: project.visibility,
@@ -162,6 +163,11 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             sessionUserRole: userSession?.role,
         });
         if (!projectAccessible) continue;
+
+        const isOrgOwned = !!project.organisationId;
+        const author = isOrgOwned ?
+            project.organisation?.slug :
+            project.team.members.find((member) => member.isOwner)?.user.userName;
 
         projectsList.push({
             icon: projectIconUrl(project.id, project.iconFileId),
@@ -184,6 +190,9 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
             loaders: project.loaders,
             featured_gallery: null,
             color: project.color,
+
+            author: author,
+            isOrgOwned: isOrgOwned,
         });
     }
 
