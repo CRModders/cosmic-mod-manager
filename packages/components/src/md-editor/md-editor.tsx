@@ -408,10 +408,10 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                             <div className="flex items-center justify-start gap-2">
                                 <InfoIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 <p>
-                                    <MarkdownRenderBox text={`${t.youCanUse}`} />
+                                    <MarkdownRenderBox text={`${t.supportsMarkdown("/md-editor")}`} />
                                 </p>
                             </div>
-                            <KeyboardShortcutsDialog open={keyboardShortcutsModalOpen} setOpen={setKeyboardShortcutsModalOpen}>
+                            <KeyboardShortcutsDialog open={keyboardShortcutsModalOpen} setOpen={setKeyboardShortcutsModalOpen} t={t}>
                                 <div className="hidden lg:flex items-center justify-center gap-2 cursor-pointer font-mono">
                                     <span>{t.keyboardShortcuts}</span>
                                     <div className="flex items-center justify-center gap-1 font-mono">
@@ -544,7 +544,7 @@ function EditorModal({ disabled, title, trigger, children, modalOpen, t, setModa
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <CancelButton type="button" />
+                            <CancelButton type="button">{t.cancel}</CancelButton>
                         </DialogClose>
 
                         <Button
@@ -721,16 +721,17 @@ export function cleanUrl(input: string): string {
 }
 
 function KeyboardShortcutsDialog({
+    t,
     open,
     setOpen,
     children,
 }: {
+    t: LocaleObj;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     children: React.ReactNode;
 }) {
-    const shortcutsString =
-        "|  Action  |  Shortcut  |\n|---|---|\n|  Bold  | <kbd>alt</kbd> <kbd>b</kbd>  |\n|  Italic  | <kbd>alt</kbd> <kbd>i</kbd>  |\n|  Underline  | <kbd>alt</kbd> <kbd>u</kbd>  |\n|  Code  |  <kbd>alt</kbd> <kbd>c</kbd>  |\n|  Spoiler  |  <kbd>alt</kbd> <kbd>s</kbd>  |\n|  Quote  |  <kbd>alt</kbd> <kbd>q</kbd>  |\n|  Bulleted list  |  <kbd>alt</kbd> <kbd>l</kbd>  |\n|  Toggle word wrap  |  <kbd>alt</kbd> <kbd>z</kbd>  |";
+    const shortcutsString = `|  ${t.action}  |  ${t.shortcut}  |\n|---|---|\n|  ${t.bold}  | <kbd>alt</kbd> <kbd>b</kbd>  |\n|  ${t.italic}  | <kbd>alt</kbd> <kbd>i</kbd>  |\n|  ${t.underline}  | <kbd>alt</kbd> <kbd>u</kbd>  |\n|  ${t.code}  |  <kbd>alt</kbd> <kbd>c</kbd>  |\n|  ${t.spoiler}  |  <kbd>alt</kbd> <kbd>s</kbd>  |\n|  ${t.quote}  |  <kbd>alt</kbd> <kbd>q</kbd>  |\n|  ${t.bulletedList}  |  <kbd>alt</kbd> <kbd>l</kbd>  |\n|  ${t.toggleLineWrap}  |  <kbd>alt</kbd> <kbd>z</kbd>  |`;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -740,7 +741,7 @@ function KeyboardShortcutsDialog({
 
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Keyboard shortcuts</DialogTitle>
+                    <DialogTitle>{t.keyboardShortcuts}</DialogTitle>
                 </DialogHeader>
 
                 <DialogBody className="markdown-body flex w-full flex-col items-center justify-center">
@@ -751,35 +752,42 @@ function KeyboardShortcutsDialog({
     );
 }
 
+// please note that this object is here just for the type, these string aren't actually used
+// a translation object is passed to the editor as prop which contains all these required keys
 const editorLocaleObj = {
-    heading1: "Heading 1",
-    heading2: "Heading 2",
-    heading3: "Heading 3",
-    bold: "Bold",
-    italic: "Italic",
-    underline: "Underline",
-    strikethrough: "Strikethrough",
-    code: "Code",
-    spoiler: "Spoiler",
-    bulletedList: "Bulleted list",
-    numberedList: "Numbered list",
-    quote: "Quote",
-    insertLink: "Insert link",
-    label: "Label",
-    enterLabel: "Enter label",
-    link: "Link", // Noun
-    enterUrl: "Enter the link URL",
-    insertImage: "Insert image",
-    imgAlt: "Description (alt text)",
-    imgAltDesc: "Enter a description for the image",
-    enterImgUrl: "Enter the image URL",
-    image: "Image",
-    inserYtVideo: "Insert YouTube video",
-    ytVideoUrl: "YouTube video URL",
-    enterYtUrl: "Enter the YouTube video URL",
-    video: "Video",
-    preview: "Preview",
-    insert: "Insert",
-    cancel: "Cancel",
-    url: "URL",
+    heading1: "",
+    heading2: "",
+    heading3: "",
+    bold: "",
+    italic: "",
+    underline: "",
+    strikethrough: "",
+    code: "",
+    spoiler: "",
+    bulletedList: "",
+    numberedList: "",
+    quote: "",
+    insertLink: "",
+    label: "",
+    enterLabel: "",
+    link: "",
+    enterUrl: "",
+    insertImage: "",
+    imgAlt: "",
+    imgAltDesc: "",
+    enterImgUrl: "",
+    image: "",
+    inserYtVideo: "",
+    ytVideoUrl: "",
+    enterYtUrl: "",
+    video: "",
+    preview: "",
+    insert: "",
+    cancel: "",
+    url: "",
+    supportsMarkdown: (markdownPageUrl: string) => "",
+    keyboardShortcuts: "",
+    action: "",
+    shortcut: "",
+    toggleLineWrap: "",
 };

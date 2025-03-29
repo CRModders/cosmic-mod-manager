@@ -684,6 +684,6 @@ export default {
         preview: "プレビュー",
         insert: "挿入",
         keyboardShortcuts: "キーボードショートカット",
-        youCanUse: "ここでは[Markdown](/md-editor)が使えます。"
+        supportsMarkdown: (markdownPageUrl: string) => `ここでは[Markdown](${markdownPageUrl})が使えます。`
     },
 } satisfies Locale;

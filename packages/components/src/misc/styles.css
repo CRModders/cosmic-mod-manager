@@ -23,7 +23,7 @@
 }
 
 /* MD+ */
-@media screen and (min-width: 47rem) {
+@media screen and (min-width: 48rem) {
     .search-list-item.list {
         grid-template-areas:
             "icon title"
@@ -44,7 +44,7 @@
 }
 
 /* LG+ */
-@media screen and (min-width: 63rem) {
+@media screen and (min-width: 64rem) {
     .search-list-item.list {
         grid-template-columns: max-content 1fr min-content;
         grid-template-rows: min-content 1fr auto;

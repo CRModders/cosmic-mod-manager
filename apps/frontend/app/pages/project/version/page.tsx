@@ -346,7 +346,7 @@ function FileDetailsItem({
                         <span className={!isPrimary ? "text-muted-foreground" : ""}>
                             <strong className="font-semibold">{fileName}</strong>{" "}
                             <span className="whitespace-nowrap ms-0.5">({parseFileSize(fileSize)})</span>{" "}
-                            {isPrimary ? <span className="text-muted-foreground italic ms-1">Primary</span> : null}
+                            {isPrimary ? <span className="text-muted-foreground italic ms-1">{t.version.primary}</span> : null}
                         </span>
                     </div>
 

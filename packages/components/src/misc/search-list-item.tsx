@@ -238,12 +238,12 @@ function BaseView(props: SearchListItemProps) {
             </div>
 
             <div
-                className={cn("flex flex-wrap items-start justify-between gap-x-4", galleryViewType && "mx-card-surround")}
+                className={cn("flex flex-wrap items-start justify-end gap-x-4", galleryViewType && "mx-card-surround")}
                 style={{
                     gridArea: "stats",
                 }}
             >
-                <div className={cn("flex flex-wrap justify-end items-end gap-x-5", galleryViewType && "justify-start")}>
+                <div className={cn("lg:w-min flex flex-wrap justify-end items-center gap-x-5", galleryViewType && "justify-start")}>
                     <div className="h-fit flex justify-center items-center gap-x-1.5">
                         <DownloadIcon aria-hidden className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">

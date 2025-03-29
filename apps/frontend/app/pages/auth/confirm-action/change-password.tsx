@@ -135,6 +135,7 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                                 onClick={cancelSettingNewPassword}
                                 icon={isLoading.action === "cancel" ? <LoadingSpinner size="xs" /> : null}
                             />
+
                             <Button
                                 type="submit"
                                 disabled={

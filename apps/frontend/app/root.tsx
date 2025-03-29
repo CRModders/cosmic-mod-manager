@@ -78,12 +78,12 @@ export default function App() {
     function handleNavigate(e: MouseEvent) {
         try {
             if (!(e.target instanceof HTMLAnchorElement)) return;
+            e.preventDefault();
 
             const target = e.target as HTMLAnchorElement;
             const targetUrl = new URL(target.href);
 
             if (target.getAttribute("href")?.startsWith("#")) {
-                e.preventDefault();
                 navigate(`${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`, { preventScrollReset: true });
                 return;
             }
@@ -91,9 +91,11 @@ export default function App() {
             const targetHost = targetUrl.hostname;
             const currHost = window.location.hostname;
 
-            if (currHost.replace("www.", "") !== targetHost.replace("www.", "")) return;
+            if (currHost.replace("www.", "") !== targetHost.replace("www.", "")) {
+                window.open(targetUrl.href, "_blank");
+                return;
+            }
 
-            e.preventDefault();
             navigate(`${targetUrl.pathname}${targetUrl.search}`, { viewTransition: true });
         } catch {}
     }

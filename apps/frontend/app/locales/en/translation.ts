@@ -698,7 +698,10 @@ export default {
         video: "Video",
         preview: "Preview",
         insert: "Insert",
+        supportsMarkdown: (markdownPageUrl: string) => `You can use [Markdown](${markdownPageUrl}) format here.`,
         keyboardShortcuts: "Keyboard shortcuts",
-        youCanUse: "You can use [Markdown format](/md-editor) here."
+        action: "Action",
+        shortcut: "Shortcut",
+        toggleLineWrap: "Toggle line wrap"
     },
 } satisfies Translation;
