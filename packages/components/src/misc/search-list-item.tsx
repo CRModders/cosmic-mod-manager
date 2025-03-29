@@ -244,7 +244,7 @@ function BaseView(props: SearchListItemProps) {
                 }}
             >
                 <div className={cn("flex flex-wrap flex-row lg:flex-col gap-x-5", galleryViewType && "lg:flex-row")}>
-                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                    <div className="h-fit flex justify-end items-center gap-x-1.5">
                         <DownloadIcon aria-hidden className="inline w-[1.17rem] h-[1.17rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectDownloads[0]?.toString().length > 0 && (
@@ -257,7 +257,7 @@ function BaseView(props: SearchListItemProps) {
                         </p>
                     </div>
 
-                    <div className="h-fit flex justify-center items-center gap-x-1.5">
+                    <div className="h-fit flex justify-end items-center gap-x-1.5">
                         <HeartIcon aria-hidden className="inline w-[1.07rem] h-[1.07rem] text-extra-muted-foreground" />{" "}
                         <p className="text-nowrap">
                             {!galleryViewType && ProjectFollowers[0]?.toString().length > 0 && (
