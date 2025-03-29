@@ -16,7 +16,6 @@ import {
     sortByParamNamespace,
 } from "@app/utils/config/search";
 import { getProjectTypeFromName } from "@app/utils/convertors";
-import { Capitalize } from "@app/utils/string";
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { SearchResult } from "@app/utils/types/api";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
@@ -289,11 +288,7 @@ function ViewTypeToggle({
 
     return (
         <TooltipProvider>
-            <TooltipTemplate content={viewType === ViewType.GALLERY ? (
-                t.search.gallery_view
-            ) : (
-                t.search.list_view
-            )}>
+            <TooltipTemplate content={t.search.view[viewType]}>
                 <Button
                     variant="secondary"
                     size="icon"

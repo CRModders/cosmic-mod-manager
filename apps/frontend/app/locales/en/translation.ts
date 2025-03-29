@@ -212,8 +212,12 @@ export default {
         follow_count: "Follow count",
         recently_updated: "Recently updated",
         recently_published: "Recently published",
-        gallery_view: "Gallery view",
-        list_view: "List view",
+
+        // View types
+        view: {
+            gallery: "Gallery view",
+            list: "List view",
+        },
 
         filters: "Filters",
         searchFilters: "Search filters",

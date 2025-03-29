@@ -200,8 +200,12 @@ export default {
         follow_count: "フォロー数順",
         recently_updated: "更新日順",
         recently_published: "公開日順",
-        gallery_view: "ギャラリー表示",
-        list_view: "リスト表示",
+
+        // View types
+        view: {
+            gallery: "ギャラリー表示",
+            list: "リスト表示",
+        },
 
         filters: "フィルター",
         searchFilters: "検索フィルター",
@@ -684,6 +688,6 @@ export default {
         preview: "プレビュー",
         insert: "挿入",
         keyboardShortcuts: "キーボードショートカット",
-        supportsMarkdown: (markdownPageUrl: string) => `ここでは[Markdown](${markdownPageUrl})が使えます。`
+        supportsMarkdown: (markdownPageUrl: string) => `ここでは[Markdown](${markdownPageUrl})が使えます。`,
     },
 } satisfies Locale;
