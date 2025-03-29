@@ -145,7 +145,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                             customTrigger={
                                 <Button variant="secondary-inverted">
                                     <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                    Loaders
+                                    {t.search.loaders}
                                     <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
                                 </Button>
                             }
@@ -359,10 +359,10 @@ function ChangelogBar({ releaseChannel, isDuplicate }: { releaseChannel: Version
                     releaseChannel === VersionReleaseChannel.RELEASE
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA
-                          ? "text-orange-500 dark:text-orange-400"
-                          : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
-                            ? "text-danger-background"
-                            : "",
+                            ? "text-orange-500 dark:text-orange-400"
+                            : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
+                                ? "text-danger-background"
+                                : "",
 
                     isDuplicate && "duplicate",
                 )}
