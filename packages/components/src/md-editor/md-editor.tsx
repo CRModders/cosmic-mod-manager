@@ -544,7 +544,7 @@ function EditorModal({ disabled, title, trigger, children, modalOpen, t, setModa
 
                     <DialogFooter>
                         <DialogClose asChild>
-                            <CancelButton type="button" />
+                            <CancelButton type="button">{t.cancel}</CancelButton>
                         </DialogClose>
 
                         <Button

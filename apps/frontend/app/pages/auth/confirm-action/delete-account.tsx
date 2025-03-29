@@ -1,4 +1,4 @@
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@app/components/ui/card";
 import { FormSuccessMessage } from "@app/components/ui/form-message";
 import { toast } from "@app/components/ui/sonner";
@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import SessionsPageLink from "./help-link";
+import { CancelButton } from "~/components/ui/button";
 
 export default function DeleteAccountConfirmationCard({ code }: { code: string }) {
     const { t } = useTranslation();
@@ -86,6 +87,7 @@ export default function DeleteAccountConfirmationCard({ code }: { code: string }
                                     onClick={cancelAccountDeletion}
                                     disabled={isLoading.value}
                                 />
+
                                 <Button variant={"destructive"} onClick={confirmAccountDeletion} disabled={isLoading.value}>
                                     {isLoading.action === "confirming" ? (
                                         <LoadingSpinner size="xs" />

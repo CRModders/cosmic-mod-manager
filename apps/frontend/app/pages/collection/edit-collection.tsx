@@ -1,4 +1,4 @@
-import { Button, CancelButton } from "@app/components/ui/button";
+import { Button } from "@app/components/ui/button";
 import {
     Dialog,
     DialogTrigger,
@@ -34,6 +34,7 @@ import { CollectionVisibility } from "@app/utils/types";
 import { Capitalize } from "@app/utils/string";
 import IconPicker from "~/components/icon-picker";
 import { fallbackProjectIcon } from "@app/components/icons";
+import { CancelButton } from "~/components/ui/button";
 
 interface EditCollectionProps {
     collection: Collection;
