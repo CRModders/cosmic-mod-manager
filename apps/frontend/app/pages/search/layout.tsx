@@ -273,6 +273,7 @@ function ViewTypeToggle({
     reRender,
 }: { projectType: ProjectType; viewType: ViewType; reRender: (str: string) => void }) {
     const userConfig = useUserConfig();
+    const { t } = useTranslation();
 
     function toggleViewType() {
         let newDisplayType = viewType;
@@ -288,7 +289,11 @@ function ViewTypeToggle({
 
     return (
         <TooltipProvider>
-            <TooltipTemplate content={`${Capitalize(viewType)} view`}>
+            <TooltipTemplate content={viewType === ViewType.GALLERY ? (
+                t.search.gallery_view
+            ) : (
+                t.search.list_view
+            )}>
                 <Button
                     variant="secondary"
                     size="icon"

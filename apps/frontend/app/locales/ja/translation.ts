@@ -200,6 +200,8 @@ export default {
         follow_count: "フォロー数順",
         recently_updated: "更新日順",
         recently_published: "公開日順",
+        gallery_view: "ギャラリー表示",
+        list_view: "リスト表示",
 
         filters: "フィルター",
         searchFilters: "検索フィルター",
