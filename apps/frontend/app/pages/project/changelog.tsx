@@ -59,12 +59,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
 
     const { show: showDownloadAnimation } = useContext(DownloadAnimationContext);
 
-    const Pagination =
-        (versionsList.length || 0) > ITEMS_PER_PAGE ? (
-            <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
-        ) : null;
-
-    const visibleItems = useMemo(() => {
+    const versionsDisplayList = useMemo(() => {
         const filteredItems: ProjectVersionData[] = [];
 
         for (const version of versionsList) {
@@ -99,8 +94,15 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
             filteredItems.push(version);
         }
 
-        return filteredItems.slice((activePage - 1) * ITEMS_PER_PAGE, activePage * ITEMS_PER_PAGE);
+        return filteredItems;
     }, [activePage, filters, versionsList]);
+
+    const Pagination =
+        (versionsDisplayList.length || 0) > ITEMS_PER_PAGE ? (
+            <PaginatedNavigation pagesCount={pagesCount} activePage={activePage} searchParamKey={pageSearchParamKey} />
+        ) : null;
+
+    const visibleVersionItems = versionsDisplayList.slice((activePage - 1) * ITEMS_PER_PAGE, activePage * ITEMS_PER_PAGE);
 
     const availableReleaseChannels: string[] = [];
     for (const version of versionsList) {
@@ -281,8 +283,8 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
             ) : null}
 
             <Card className="p-5 w-full flex flex-col items-start justify-start">
-                {visibleItems.map((version, index) => {
-                    const nextVersion = visibleItems[index + 1];
+                {visibleVersionItems.map((version, index) => {
+                    const nextVersion = visibleVersionItems[index + 1];
                     const isDuplicate =
                         nextVersion?.changelog &&
                         nextVersion.changelog.length > 0 &&
