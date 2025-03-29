@@ -135,7 +135,7 @@ export default function LoginPage() {
                     <HorizontalSeparator />
 
                     <div className="w-full flex flex-col items-start justify-start gap-2">
-                        <p>Login using:</p>
+                        <p>{t.auth.loginUsing}</p>
                         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <OAuthProvidersWidget actionIntent={AuthActionIntent.SIGN_IN} />
                         </div>

@@ -341,7 +341,7 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                                 altTextInputVisible={false}
                                 t={t}
                             >
-                                <IconButton tooltipContent={"Video"} disabled={previewOpen}>
+                                <IconButton tooltipContent={t.video} disabled={previewOpen}>
                                     <VideoIcon aria-hidden className="h-5 w-5" />
                                 </IconButton>
                             </LinkInsertionModal>
@@ -408,16 +408,12 @@ export default function MarkdownEditor({ editorValue, setEditorValue, placeholde
                             <div className="flex items-center justify-start gap-2">
                                 <InfoIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 <p>
-                                    You can use{" "}
-                                    <a target="_blank" href="/md-editor" className="link_blue" rel="noreferrer">
-                                        Markdown format
-                                    </a>{" "}
-                                    here.
+                                    <MarkdownRenderBox text={`${t.youCanUse}`} />
                                 </p>
                             </div>
                             <KeyboardShortcutsDialog open={keyboardShortcutsModalOpen} setOpen={setKeyboardShortcutsModalOpen}>
                                 <div className="hidden lg:flex items-center justify-center gap-2 cursor-pointer font-mono">
-                                    <span>Keyboard shortcuts</span>
+                                    <span>{t.keyboardShortcuts}</span>
                                     <div className="flex items-center justify-center gap-1 font-mono">
                                         <span className="flex items-center justify-center bg-shallow-background rounded px-1">ctrl</span>
                                         <span className="flex items-center justify-center bg-shallow-background rounded px-1">/</span>

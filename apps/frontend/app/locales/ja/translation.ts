@@ -73,6 +73,7 @@ export default {
         email: "メールアドレス",
         password: "パスワード",
         changePassword: "パスワードを再設定する",
+        loginUsing: "外部アカウントでログイン：",
         dontHaveAccount: "アカウントをお持ちではありませんか？",
         alreadyHaveAccount: "すでにアカウントをお持ちですか？",
         forgotPassword: "パスワードをお忘れですか？",
@@ -680,5 +681,7 @@ export default {
         video: "動画",
         preview: "プレビュー",
         insert: "挿入",
+        keyboardShortcuts: "キーボードショートカット",
+        youCanUse: "ここでは[Markdown](/md-editor)が使えます。"
     },
 } satisfies Locale;
