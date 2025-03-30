@@ -217,7 +217,7 @@ function BaseView(props: SearchListItemProps) {
                             className="flex gap-1 items-center justify-center"
                             key={category.name}
                             aria-label={category.name}
-                            title={`${tagName} (${t.search[category.header]})`}
+                            title={`${t.search[category.header]} / ${tagName}`}
                         >
                             <TagIcon name={category.name} />
                             <span itemProp={MicrodataItemProps.name}>{tagName}</span>

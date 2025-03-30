@@ -104,7 +104,7 @@ export default function TagsSettingsPage() {
 
                                         return (
                                             <LabelledCheckbox
-                                                title={`${CapitalizeAndFormatString(categoryName)} (${t.search[category.header]})`}
+                                                title={`${t.search[category.header]} / ${CapitalizeAndFormatString(categoryName)}`}
                                                 key={categoryName}
                                                 name={categoryName}
                                                 checked={field.value.includes(category.name)}

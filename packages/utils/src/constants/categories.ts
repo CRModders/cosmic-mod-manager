@@ -8,7 +8,7 @@ export interface CategoryType {
     isDisplayed?: boolean;
 }
 
-export const categories = [
+export const categories_list = [
     {
         name: "8x-",
         projectTypes: [ProjectType.RESOURCE_PACK],
@@ -423,6 +423,8 @@ export const categories = [
         header: TagHeaderType.CATEGORY,
     },
 ] as const satisfies CategoryType[];
+
+export const categories = categories_list as CategoryType[];
 
 export type Categories = {
     [K in (typeof categories)[number]['name']]: string;
