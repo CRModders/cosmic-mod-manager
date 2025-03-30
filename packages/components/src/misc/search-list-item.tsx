@@ -229,7 +229,11 @@ function BaseView(props: SearchListItemProps) {
                     const loaderName = CapitalizeAndFormatString(loader.name);
 
                     return (
-                        <span key={loader.name} className="flex gap-1 items-center justify-center" title={`${loaderName} (Loader)`}>
+                        <span
+                            key={loader.name}
+                            className="flex gap-1 items-center justify-center"
+                            title={`${t.search.loaders} / ${loaderName}`}
+                        >
                             <TagIcon name={loader.name} />
                             {loaderName}
                         </span>
@@ -402,6 +406,7 @@ function getDefaultStrings() {
                         [SearchItemHeader_Keys.AUTHOR_NAME, author],
                     ];
                 },
+                loaders: "",
             },
             headerStrings,
         ),
