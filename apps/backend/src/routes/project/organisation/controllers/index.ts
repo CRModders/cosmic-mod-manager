@@ -1,9 +1,6 @@
 import { getCurrMember } from "@app/utils/project";
 import type { createOrganisationFormSchema } from "@app/utils/schemas/organisation";
-import type {
-    OrganisationPermission,
-    ProjectPermission,
-} from "@app/utils/types";
+import type { OrganisationPermission, ProjectPermission } from "@app/utils/types";
 import type { Organisation } from "@app/utils/types/api";
 import type { z } from "zod";
 import { CreateOrganization, GetManyOrganizations_ById, GetOrganization_BySlugOrId } from "~/db/organization_item";
@@ -133,5 +130,9 @@ export async function getOrganisationProjects(userSession: ContextUserData | und
     if (!Org) return notFoundResponseData("Organisation not found");
     if (!Org.projects) return { data: [], status: HTTP_STATUS.OK };
 
-    return await getManyProjects(userSession, Org.projects.map((project) => project.id), listedOnly)
+    return await getManyProjects(
+        userSession,
+        Org.projects.map((project) => project.id),
+        listedOnly,
+    );
 }

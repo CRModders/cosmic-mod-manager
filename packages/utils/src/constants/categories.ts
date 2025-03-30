@@ -427,8 +427,8 @@ export const categories_list = [
 export const categories = categories_list as CategoryType[];
 
 export type Categories = {
-    [K in (typeof categories)[number]['name']]: string;
-}
+    [K in (typeof categories)[number]["name"]]: string;
+};
 
 export type Keys_ToNotTranslate = "8x-" | "16x" | "32x" | "48x" | "64x" | "128x" | "256x" | "512x+";
 

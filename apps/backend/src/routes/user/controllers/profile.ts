@@ -2,7 +2,7 @@ import { ICON_WIDTH } from "@app/utils/src/constants";
 import { getFileType } from "@app/utils/convertors";
 import type { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { formatUserName } from "@app/utils/string";
-import { FileType, type GlobalUserRole, } from "@app/utils/types";
+import { FileType, type GlobalUserRole } from "@app/utils/types";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { z } from "zod";
 import { CreateFile, DeleteFile_ByID } from "~/db/file_item";
@@ -101,7 +101,7 @@ export async function getUserAvatar(
                 const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
                 await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
             }
-        } catch { }
+        } catch {}
 
         return null;
     }

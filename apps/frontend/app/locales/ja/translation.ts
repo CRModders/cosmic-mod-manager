@@ -78,20 +78,19 @@ export default {
         alreadyHaveAccount: "すでにアカウントをお持ちですか？",
         forgotPassword: "パスワードをお忘れですか？",
         signupWithProviders: "外部アカウントでログイン：",
-        aggrement: "アカウントを作成すると、CRMMの[利用規約](/legal/terms)および[プライバシーポリシー](/legal/privacy)に同意したものとみなされます。",
+        aggrement:
+            "アカウントを作成すると、CRMMの[利用規約](/legal/terms)および[プライバシーポリシー](/legal/privacy)に同意したものとみなされます。",
         invalidCode: "無効または期限切れのコード",
         didntRequest: "これをリクエストしませんでしたか？",
         checkSessions: "ログインされいるセッションを見る",
         confirmNewPass: "新しいパスワードの確認",
-        confirmNewPassDesc:
-            "あなたのアカウントに新しいパスワードが追加されました。ご本人であることを確認してください。",
+        confirmNewPassDesc: "あなたのアカウントに新しいパスワードが追加されました。ご本人であることを確認してください。",
         newPass: "新しいパスワード",
         newPass_label: "新しいパスワードを入力",
         confirmPass: "新しいパスワードの確認",
         confirmPass_label: "確認のためもう一度入力",
         deleteAccount: "アカウントの削除",
-        deleteAccountDesc:
-            "アカウントを削除すると、データベースからすべてのデータが削除されます。アカウント削除後は、後戻りはできません。",
+        deleteAccountDesc: "アカウントを削除すると、データベースからすべてのデータが削除されます。アカウント削除後は、後戻りはできません。",
         enterEmail: "メールアドレスを入力",
     },
 
@@ -270,8 +269,7 @@ export default {
         uploadNewImg: "ギャラリーに新しい画像をアップロード",
         uploadImg: "ギャラリーに画像をアップロード",
         galleryOrderingDesc: "番号の大きい画像が最初に表示されます。",
-        featuredGalleryImgDesc:
-            "代表ギャラリー画像は検索結果とプロジェクトカードに表示されます。代表ギャラリー画像は1つのみ設定できます。",
+        featuredGalleryImgDesc: "代表ギャラリー画像は検索結果とプロジェクトカードに表示されます。代表ギャラリー画像は1つのみ設定できます。",
         addGalleryImg: "ギャラリー画像を追加",
         featureImg: "代表画像に設定",
         unfeatureImg: "代表画像の設定を解除",
@@ -302,8 +300,7 @@ export default {
         noVersionsAvailableFor: (gameVersion: string, loader: string) => `${gameVersion}のためのバージョンは${loader}にありません`,
         declinedInvitation: "招待を辞退しました",
         teamInvitationTitle: (teamType: string) => `${teamType}に参加する招待`, // teamType = organization | project
-        teamInviteDesc: (teamType: string, role: string) =>
-            `あなたは${teamType}の'${role}'として招待されています。`,
+        teamInviteDesc: (teamType: string, role: string) => `あなたは${teamType}の'${role}'として招待されています。`,
 
         browse: {
             mod: "Modを見る",
@@ -343,8 +340,7 @@ export default {
             selectEnvDesc: (projectType: string) => `${projectType}がクライアント側／サーバー側のどちらで機能するかを選択してください。`,
             requiredStepsDesc: "＊印は必須項目です",
             submitForReview: "審査に提出",
-            submitForReviewDesc:
-                "プロジェクトはプロジェクトのメンバーだけが閲覧できます。公開するにはモデレーターの審査が必要です。",
+            submitForReviewDesc: "プロジェクトはプロジェクトのメンバーだけが閲覧できます。公開するにはモデレーターの審査が必要です。",
             resubmitForReview: "審査に再提出",
             resubmit_ApprovalRejected:
                 "プロジェクトがモデレーターに却下されました。ほとんどの場合、モデレーターのメッセージに対応した後、審査に再提出できます。",
@@ -439,7 +435,8 @@ export default {
         licenseUrl: "ライセンスのURL（任意）",
         spdxId: "SPDX Identifier",
         doesntHaveSpdxId: "ライセンスにSPDX Identiferがありません",
-        tagsDesc: (projectType: string) => `正確なタグ付けは、他のユーザーがあなたの${projectType}を見つけやすくために重要です。該当するタグをすべて選択してください。`,
+        tagsDesc: (projectType: string) =>
+            `正確なタグ付けは、他のユーザーがあなたの${projectType}を見つけやすくために重要です。該当するタグをすべて選択してください。`,
         tagsDesc2: (projectType: string) => `${projectType}のテーマや機能に一致するカテゴリーをすべて選択してください。`,
         featuredCategories: "優先表示カテゴリー",
         featuredCategoriesDesc: (count: number) => `最も関連性の高いタグを最大${count}個まで優先表示できます。`,
@@ -530,8 +527,7 @@ export default {
         noProjects_CreateOne: "Tこの組織にはプロジェクトがありません。作成するには上のボタンをクリックしてください。",
         orgInfo: "組織情報",
         deleteOrg: "組織を削除",
-        deleteOrgDesc:
-            "組織を削除すると、組織のすべてのプロジェクトが組織のオーナーに移転されます。この操作は元に戻せません。",
+        deleteOrgDesc: "組織を削除すると、組織のすべてのプロジェクトが組織のオーナーに移転されます。この操作は元に戻せません。",
         sureToDeleteOrg: "本当にこの組織を削除しますか？",
         deleteOrgNamed: (orgName: string) => `組織「${orgName}」を削除`,
         deletionWarning: "これにより、この組織は永久に削除されます（本当に永久です）。",

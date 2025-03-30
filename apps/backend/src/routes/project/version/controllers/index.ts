@@ -100,17 +100,17 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
             files: files,
             author: authorData
                 ? {
-                    id: authorData.id,
-                    userName: authorData.user.userName,
-                    avatar: userIconUrl(authorData.userId, authorData.user.userName),
-                    role: authorData?.role || "",
-                }
+                      id: authorData.id,
+                      userName: authorData.user.userName,
+                      avatar: userIconUrl(authorData.userId, authorData.user.userName),
+                      role: authorData?.role || "",
+                  }
                 : {
-                    id: "deleted_user",
-                    userName: "deleted_user",
-                    avatar: null,
-                    role: "",
-                },
+                      id: "deleted_user",
+                      userName: "deleted_user",
+                      avatar: null,
+                      role: "",
+                  },
             dependencies: version.dependencies.map((dependency) => ({
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,

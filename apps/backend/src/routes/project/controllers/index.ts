@@ -93,13 +93,13 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
         organisation: org
             ? {
-                id: org.id,
-                name: org.name,
-                slug: org.slug,
-                description: org.description,
-                icon: orgIconUrl(org.id, org.iconFileId),
-                members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
-            }
+                  id: org.id,
+                  name: org.name,
+                  slug: org.slug,
+                  description: org.description,
+                  icon: orgIconUrl(org.id, org.iconFileId),
+                  members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+              }
             : null,
     };
 
@@ -165,9 +165,7 @@ export async function getManyProjects(userSession: ContextUserData | undefined, 
         if (!projectAccessible) continue;
 
         const isOrgOwned = !!project.organisationId;
-        const author = isOrgOwned ?
-            project.organisation?.slug :
-            project.team.members.find((member) => member.isOwner)?.user.userName;
+        const author = isOrgOwned ? project.organisation?.slug : project.team.members.find((member) => member.isOwner)?.user.userName;
 
         projectsList.push({
             icon: projectIconUrl(project.id, project.iconFileId),

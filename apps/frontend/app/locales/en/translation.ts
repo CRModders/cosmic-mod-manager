@@ -706,6 +706,6 @@ export default {
         keyboardShortcuts: "Keyboard shortcuts",
         action: "Action",
         shortcut: "Shortcut",
-        toggleLineWrap: "Toggle line wrap"
+        toggleLineWrap: "Toggle line wrap",
     },
 } satisfies Translation;

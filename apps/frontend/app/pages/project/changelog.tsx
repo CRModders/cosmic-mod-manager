@@ -359,10 +359,10 @@ function ChangelogBar({ releaseChannel, isDuplicate }: { releaseChannel: Version
                     releaseChannel === VersionReleaseChannel.RELEASE
                         ? "text-blue-500 dark:text-blue-400"
                         : releaseChannel === VersionReleaseChannel.BETA
-                            ? "text-orange-500 dark:text-orange-400"
-                            : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
-                                ? "text-danger-background"
-                                : "",
+                          ? "text-orange-500 dark:text-orange-400"
+                          : releaseChannel === VersionReleaseChannel.ALPHA || releaseChannel === VersionReleaseChannel.DEV
+                            ? "text-danger-background"
+                            : "",
 
                     isDuplicate && "duplicate",
                 )}
