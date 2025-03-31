@@ -7,7 +7,18 @@ export interface GameVersion {
     major: boolean;
 }
 
-const GAME_VERSIONS: GameVersion[] = [
+const GAME_VERSIONS: GameVersion[] = [{
+        label: "0.4.6",
+        value: "0.4.6",
+        releaseType: GameVersionReleaseType.ALPHA,
+        major: false,
+    },
+    {
+        label: "0.4.5",
+        value: "0.4.5",
+        releaseType: GameVersionReleaseType.ALPHA,
+        major: false,
+    },
     {
         label: "0.4.4",
         value: "0.4.4",
