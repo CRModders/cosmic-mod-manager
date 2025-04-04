@@ -1,13 +1,20 @@
 import type tags from "~/locales/en/tags";
 
+interface TagsTranslation extends Omit<Categories, Keys_ToNotTranslate> {
+    [key: string]: string;
+}
+
 export default {
     adventure: "Aventura",
     atmosphere: "Atmósfera",
     audio: "Audio",
     blocks: "Bloques",
     bloom: "Bloom",
+    "bug-fix": "Parche",
     cartoon: "Cartoon",
     challenging: "Desafiante",
+    christmas: "Navidad",
+    city: "Ciudad",
     "colored-lighting": "Iluminación coloreada",
     combat: "Combate",
     "core-shaders": "Shaders integrados",
@@ -17,12 +24,17 @@ export default {
     entities: "Entidades",
     environment: "Entorno",
     equipment: "Equipo",
+    escape: "Escape",
     fantasy: "Fantasía",
     foliage: "Follaje",
     fonts: "Fuentes",
     food: "Comida",
     "game-mechanics": "Mecánicas de juego",
-    gui: "Interfaz de usuario",
+    gui: "Interfaz",
+    halloween: "Halloween",
+    "hide-and-seek": "Escondite",
+    horror: "Horror",
+    island: "Isla",
     items: "Objetos",
     "kitchen-sink": "De todo un poco",
     library: "Librería",
@@ -30,27 +42,37 @@ export default {
     locale: "Idioma",
     magic: "Magia",
     management: "Gestión",
+    maze: "Laberinto",
+    medieval: "Medieval",
     minigame: "Minijuego",
     mobs: "Criaturas",
     modded: "Modificado",
     models: "Modelos",
     multiplayer: "Multijugador",
     optimization: "Optimización",
+    parkour: "Parkour",
     "path-tracing": "Path tracing",
-    pbr: "PBR",
+    pbr: "Pbr",
+    "pixel-art": "Pixel art",
+
+    //performance impact
     potato: "PC del gobierno",
     low: "Bajo",
     medium: "Medio",
     high: "Alto",
     screenshot: "Para sacar capturas, nada más",
+
+    puzzle: "Rompecabezas",
     quests: "Misiones",
     realistic: "Realista",
     reflections: "Reflejos",
     "semi-realistic": "Semirrealista",
     shadows: "Sombras",
     simplistic: "Simple",
+    skyblock: "Skyblock",
     social: "Social",
     storage: "Almacenamiento",
+    survival: "Supervivencia",
     technology: "Tecnología",
     themed: "Temático",
     transportation: "Transporte",
@@ -59,6 +81,7 @@ export default {
     "vanilla-like": "Similar a vanilla",
     worldgen: "Generación de mundo",
 
+    // Env options
     client: "Cliente",
     server: "Servidor",
 } satisfies typeof tags;
