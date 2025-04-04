@@ -1,7 +1,14 @@
 import type { Locale } from "~/locales/types";
-import { SearchItem_Header } from "../shared-enums";
+import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
+import type { FixedStringArray } from "@app/utils/types/helpers";
+
+export type CountTranslation = [string, number | string, string];
+
+function Pluralize(count: number, singular: string, plural: string) {
+    return count === 1 ? singular : plural;
+}
 
 export default {
     common: {
@@ -18,28 +25,32 @@ export default {
         copyId: "Copiar ID",
         all: "Todo",
         noResults: "Sin resultados",
-        // ?
-        // more: "More",
+        more: "Más",
     },
 
-    // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
+    // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html
     // it's here just for readability
+    // The returned format should be [prefix, count, suffix]
+    // If there's no suffix or no prefix, just put an empty string there
+
+    // If you're wondering as to why we are returning an array instead of a string, then the reason is html formatting
+    // the count in most places is put in a different html tag for styling purposes
     count: {
-        downloads: (count: number) => {
-            if (count === 1) return ["", count, "descarga"];
-            return ["", count, "descargas"];
+        downloads: (count: number): CountTranslation => {
+            const downloads = Pluralize(count, "descarga", "descargas");
+            return ["", count, downloads];
         },
-        followers: (count: number) => {
-            if (count === 1) return ["", count, "seguidor"];
-            return ["", count, "seguidores"];
+        followers: (count: number): CountTranslation => {
+            const followers = Pluralize(count, "seguidor", "seguidores");
+            return ["", count, followers];
         },
-        projects: (count: number) => {
-            if (count === 1) return ["", count, "proyecto"];
-            return ["", count, "proyectos"];
+        projects: (count: number): CountTranslation => {
+            const projects = Pluralize(count, "proyecto", "proyectos");
+            return ["", count, projects];
         },
-        members: (count: number) => {
-            if (count === 1) return ["", count, "miembro"];
-            return ["", count, "miembros"];
+        members: (count: number): CountTranslation => {
+            const members = Pluralize(count, "miembro", "miembros");
+            return ["", count, members];
         },
     },
 
@@ -56,16 +67,15 @@ export default {
         modpacks: "paquetes de mods",
         plugin: "plugin",
         plugins: "plugins",
-        // ? New strings
-        // world: "world",
-        // worlds: "worlds",
+        world: "mundo",
+        worlds: "mundos",
         signout: "Cerrar sesión",
         profile: "Perfil",
         skipToMainContent: "Ir al contenido principal",
     },
 
     homePage: {
-        title: (projectType: string) => ["El lugar para ", projectType, " de Cosmic Reach"],
+        title: (projectType: string): FixedStringArray<3> => ["El lugar para ", projectType, " de Cosmic Reach"],
         desc: "El mejor lugar para tus mods de Cosmic Reach. Descubre, juega y crea contenido, todo en un solo sitio.",
         exploreMods: "Explorar mods",
     },
@@ -74,6 +84,7 @@ export default {
         email: "Correo electrónico",
         password: "Contraseña",
         changePassword: "Cambiar contraseña",
+        loginUsing: "Inicia sesión usando:",
         dontHaveAccount: "¿No tienes una cuenta?",
         alreadyHaveAccount: "¿Ya tienes una cuenta?",
         forgotPassword: "¿Olvidaste tu contraseña?",
@@ -90,7 +101,8 @@ export default {
         confirmPass: "Confirmar contraseña",
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
-        deleteAccountDesc: "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
+        deleteAccountDesc:
+            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
@@ -146,15 +158,17 @@ export default {
         projects: "Proyectos",
         organizations: "Organizaciones",
         collections: "Colecciones",
-        // ?
-        // collection: "Collection",
+        collection: "Colección",
         revenue: "Ingresos",
         manage: "Gestionar",
         seeAll: "Ver todo",
         viewNotifHistory: "Ver historial de notificaciones",
         noUnreadNotifs: "No tienes notificaciones no leídas.",
         totalDownloads: "Descargas totales",
-        fromProjects: (count: number) => `de ${count} proyectos`,
+        fromProjects: (count: number) => {
+            const projects = Pluralize(count, "proyecto", "proyectos");
+            return `de ${count} ${projects}`;
+        },
         totalFollowers: "Seguidores totales",
         viewHistory: "Ver historial",
         markAllRead: "Marcar todo como leído",
@@ -170,14 +184,13 @@ export default {
         creatingProject: "Creando un proyecto",
         chooseProjectType: "Elige el tipo de proyecto",
         projectTypeDesc: "Selecciona el tipo adecuado para tu proyecto",
-        createOrg: "Crear organización",
+        createOrg: "Crear una organización",
         creatingOrg: "Creando una organización",
         enterOrgName: "Ingresa el nombre de la organización",
         enterOrgDescription: "Ingresa una breve descripción de tu organización",
-        // ?
-        // creatingACollection: "Creating a collection",
-        // enterCollectionName: "Enter collection name",
-        // createCollection: "Create collection",
+        creatingACollection: "Creando una colección",
+        enterCollectionName: "Ingresa el nombre de la colección",
+        createCollection: "Crear una colección",
     },
 
     search: {
@@ -189,8 +202,7 @@ export default {
         plugin: "Buscar plugins",
         modpack: "Buscar paquetes de mods",
         datamod: "Buscar datamods",
-        // ? New string
-        // world: "Search worlds",
+        world: "Buscar mundos",
 
         // Sorting methods
         showPerPage: "Mostrar por página",
@@ -201,15 +213,21 @@ export default {
         recently_updated: "Actualizado recientemente",
         recently_published: "Publicado recientemente",
 
+        // View types
+        view: {
+            gallery: "Vista de galería",
+            list: "Vista de lista",
+        },
+
         filters: "Filtros",
         searchFilters: "Filtros de búsqueda",
         loaders: "Cargadores",
         gameVersions: "Versiones del juego",
         channels: "Canales",
         environment: "Entorno",
-        category: "Categorías",
-        feature: "Características",
-        resolution: "Resoluciones",
+        category: "Categorías", // The key is kept singular just for ease of acess, the string is plural
+        feature: "Características", // __
+        resolution: "Resoluciones", // __
         performance_impact: "Impacto en el rendimiento",
         license: "Licencia",
         openSourceOnly: "Solo código abierto",
@@ -218,7 +236,19 @@ export default {
         tags: tags,
 
         /**
-         * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
+         * Project item header format \
+         * The array items will be arranged in the order they are returned \
+         * so in the current case, the string format will be `{Project_Name} by {Author}` \
+         * \
+         * **Custom format example** \
+         * For the returned value to be formatted like `{Author}'s {Project_Name}`
+         * The returned array will look something like this
+         * ```ts
+         * return [
+         *     [SearchItem_Header.AUTHOR_NAME, `${author}'s`],
+         *     [SearchItem_Header.PROJECT_NAME, project],
+         * ]
+         * ```
          */
         itemHeader: (project: string, author: string) => {
             return [
@@ -241,7 +271,7 @@ export default {
         organization: "Organización",
         project: "Proyecto",
         details: "Detalles",
-        licensed: (license: string) => ["Con licencia", license, ""],
+        licensed: (license: string): FixedStringArray<3> => ["Con licencia", license, ""],
         updatedAt: (when: string) => `Actualizado ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Publicado ${when}`, // eg: Published 3 days ago
         gallery: "Galería",
@@ -269,7 +299,7 @@ export default {
         stats: "Estadísticas",
         published: "Publicado", // Used for table headers
         downloads: "Descargas", // Used for table headers
-        openInNewTab: "Abrir en nueva pestaña",
+        openInNewTab: "Abrir en una nueva pestaña",
         copyLink: "Copiar enlace",
         doesNotSupport: (project: string, version: string, loader: string) => {
             return `${project} no es compatible con la versión ${version} de ${loader}`;
@@ -284,7 +314,7 @@ export default {
         declinedInvitation: "Invitación rechazada",
         teamInvitationTitle: (teamType: string) => `Invitación para unirse a un equipo (${teamType})`, // teamType = organization | project
         teamInviteDesc: (teamType: string, role: string) =>
-            `Has sido invitado a ser miembro de este equipo (${teamType}) con el rol de '${role}'.`,
+            `Te invitaron a ser miembro de este equipo ${teamType} con el rol de '${role}'.`,
 
         browse: {
             mod: "Explorar mods",
@@ -293,8 +323,7 @@ export default {
             shader: "Explorar shaders",
             modpack: "Explorar paquetes de mods",
             plugin: "Explorar plugins",
-            // ? New string
-            world: "Browse worlds",
+            world: "Explorar mundos",
         },
 
         rejected: "Rechazado",
@@ -310,9 +339,9 @@ export default {
             uploadVersion: "Subir una versión",
             uploadVersionDesc: "Se requiere al menos una versión para enviar un proyecto a revisión.",
             addDescription: "Añadir una descripción",
-            addDescriptionDesc: "Es necesaria una descripción que explique claramente el propósito y la función del proyecto.",
-            addIcon: "Añadir un ícono",
-            addIconDesc: "Tu proyecto merece un ícono llamativo que lo distinga al instante.",
+            addDescriptionDesc: "Se requiere una descripción que explique claramente el propósito y la función del proyecto.",
+            addIcon: "Añadir un icono",
+            addIconDesc: "Tu proyecto merece un icono llamativo que lo distinga al instante.",
             featureGalleryImg: "Destacar una imagen en la galería",
             featureGalleryImgDesc: "Las imágenes destacadas en la galería pueden ser la primera impresión para muchos usuarios.",
             selectTags: "Seleccionar etiquetas",
@@ -385,14 +414,27 @@ export default {
         selectFiles: "Seleccionar archivos",
         primaryFileRequired: "Se requiere un archivo principal",
         metadata: "Metadatos",
-        devReleasesNote:
-            "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
+        devReleasesNote: "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
         publicationDate: "Fecha de publicación",
         publisher: "Editor",
         versionID: "ID de versión",
         copySha1: "Copiar hash SHA-1",
         copySha512: "Copiar hash SHA-512",
         copyFileUrl: "Copiar URL del archivo",
+
+        /**
+         * We need to tell what a string is becuase there needs to be links attached to the author and version \
+         * Because the order doesn't dictate which string is which, we can return this in whatever order we like
+         */
+        authoredBy: (version: string, author: string, publish_date: string) => {
+            return [
+                [VersionAuthor_Header.VERSION, version],
+                [VersionAuthor_Header.STR, " por "],
+                [VersionAuthor_Header.AUTHOR, author],
+                [VersionAuthor_Header.STR, " el "],
+                [VersionAuthor_Header.PUBLISH_DATE, publish_date],
+            ]
+        }
     },
 
     projectSettings: {
@@ -422,9 +464,8 @@ export default {
         licenseUrl: "URL de la licencia (opcional)",
         spdxId: "Identificador SPDX",
         doesntHaveSpdxId: "La licencia no tiene un identificador SPDX",
-        // ? Use the projectType string instead of "Mod"
-        tagsDesc: (projectType) =>
-            "Es importante etiquetar correctamente para ayudar a las personas a encontrar tu mod. Asegúrate de seleccionar todas las etiquetas que correspondan.",
+        tagsDesc: (projectType: string) =>
+            `Es importante etiquetar correctamente para ayudar a las personas a encontrar tu ${projectType}. Asegúrate de seleccionar todas las etiquetas que correspondan.`,
         tagsDesc2: (projectType: string) => `Selecciona todas las categorías que reflejen los temas o la función de tu ${projectType}.`,
         featuredCategories: "Categorías destacadas",
         featuredCategoriesDesc: (count: number) => `Puedes destacar hasta ${count} de tus etiquetas más relevantes.`,
@@ -449,14 +490,13 @@ export default {
         visibleToMembersOnly: "Solo los miembros podrán ver el proyecto",
         listed: "Listado",
         private: "Privado",
-        // ?
-        // public: "Public",
+        public: "Público",
         unlisted: "No listado",
         archived: "Archivado",
         deleteProject: "Eliminar proyecto",
         deleteProjectDesc: (site: string) =>
             `Elimina tu proyecto de los servidores de ${site} y de la búsqueda. ¡Al hacer clic aquí, eliminarás tu proyecto, así que ten mucho cuidado!`,
-        sureToDeleteProject: "¿Estás seguro de que quieres eliminar este proyecto?",
+        sureToDeleteProject: "¿Estás seguro de que quieres eliminar tu proyecto?",
         deleteProjectDesc2:
             "Si procedes, todas las versiones y los datos adjuntos se eliminarán de nuestros servidores. Esto podría afectar a otros proyectos, así que ten cuidado.",
         typeToVerify: (projectName: string) => `Para verificar, escribe **${projectName}** abajo:`,
@@ -494,8 +534,7 @@ export default {
         removeMember: "Eliminar miembro",
         transferOwnership: "Transferir propiedad",
         overrideValues: "Sobrescribir valores",
-        overrideValuesDesc:
-            "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
+        overrideValuesDesc: "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
         projectNotManagedByOrg:
             "Este proyecto no está gestionado por una organización. Si eres miembro de alguna organización, puedes transferir la gestión a una de ellas.",
         transferManagementToOrg: "Transferir gestión",
@@ -518,10 +557,11 @@ export default {
         orgInfo: "Información de la organización",
         deleteOrg: "Eliminar organización",
         deleteOrgDesc:
-            "Eliminar tu organización transferirá todos sus proyectos al propietario de la organización. Esta acción no se puede deshacer.",
+            "Eliminar tu organización transferirá todos sus proyectos al propietario de la organización. Este proceso es irreversible.",
         sureToDeleteOrg: "¿Estás seguro de que quieres eliminar esta organización?",
         deleteOrgNamed: (orgName: string) => `Eliminar organización ${orgName}`,
         deletionWarning: "Esto eliminará esta organización para siempre (de verdad, para siempre).",
+
         perms: {
             edit_details: "Editar detalles",
             manage_invites: "Gestionar invitaciones",
@@ -540,6 +580,16 @@ export default {
         doesntHaveProjects: (user: string) => `${user} no tiene proyectos aún.`,
         isntPartOfAnyOrgs: (user: string) => `${user} no es miembro de ninguna organización.`,
         joined: (when: string) => `Se unió ${when}`, // eg: Joined 2 months ago
+    },
+
+    collection: {
+        curatedBy: "Hecha por",
+        searchCollections: "Buscar colecciones",
+        editingCollection: "Editando colección",
+        deleteCollection: "Eliminar colección",
+        sureToDeleteCollection: "¿Estás seguro de que quieres eliminar esta colección?",
+        followedProjects: "Proyectos seguidos",
+        followedProjectsDesc: "Colección generada automáticamente con todos los proyectos que sigues.",
     },
 
     footer: {
@@ -582,9 +632,9 @@ export default {
             if (count === 1) return `1 proyecto ha estado en la cola por más de ${hours} horas.`;
             return `${count} proyectos han estado en la cola por más de ${hours} horas.`;
         },
-        submitted: (when: string) => `Enviado ${when}`, // eg: Created 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
+        submitted: (when: string) => `Enviado ${when}`, // eg: Submitted 4 hours ago, (the date string comes from the localized phrases defined at end of the file)
         viewProject: "Ver proyecto",
-        awaitingApproval: "El proyecto está en cola para aprobación",
+        awaitingApproval: "El proyecto está en la cola para aprobación",
         draft: "Borrador",
         approve: "Aprobar",
         reject: "Rechazar",
@@ -600,7 +650,7 @@ export default {
         password: "Contraseña",
         name: "Nombre",
         displayName: "Nombre visible",
-        icon: "Ícono",
+        icon: "Icono",
         details: "Detalles",
         description: "Descripción",
         id: "ID",
@@ -619,12 +669,11 @@ export default {
         delete: "Eliminar",
         cancel: "Cancelar",
         saveChanges: "Guardar cambios",
-        uploadIcon: "Subir ícono",
-        removeIcon: "Eliminar ícono",
+        uploadIcon: "Subir icono",
+        removeIcon: "Eliminar icono",
         noFileChosen: "No se ha elegido ningún archivo",
         showAllVersions: "Mostrar todas las versiones",
-        // ?
-        // createNew: "Create new",
+        createNew: "Crear nuevo",
     },
 
     error: {
@@ -666,5 +715,10 @@ export default {
         video: "Video",
         preview: "Vista previa",
         insert: "Insertar",
+        supportsMarkdown: (markdownPageUrl: string) => `Puedes usar el formato [Markdown](${markdownPageUrl}) aquí.`,
+        keyboardShortcuts: "Atajos de teclado",
+        action: "Acción",
+        shortcut: "Atajo",
+        toggleLineWrap: "Activar/desactivar ajuste de línea",
     },
 } satisfies Locale;
