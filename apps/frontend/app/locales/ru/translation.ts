@@ -1,5 +1,5 @@
 import type { Locale } from "~/locales/types";
-import { SearchItemHeader_Keys } from "../shared-enums";
+import { SearchItem_Header } from "../shared-enums";
 import tags from "./tags";
 // import { Rules } from "./legal";
 
@@ -32,6 +32,7 @@ export default {
         copyId: "Скопировать ID",
         all: "Все",
         noResults: "Ничего не найдено",
+        // ? more: "More"
     },
 
     // NOTE: It isn't necessary to return the count in the array, because a Intl formatted count is used in the actual html
@@ -86,6 +87,7 @@ export default {
         email: "Почта",
         password: "Пароль",
         changePassword: "Сменить пароль",
+        // ? loginUsing: "Login using:",
         dontHaveAccount: "Не зарегистрированы?",
         alreadyHaveAccount: "Уже зарегистрированы?",
         forgotPassword: "Забыли пароль?",
@@ -161,6 +163,7 @@ export default {
         projects: "Проекты",
         organizations: "Организации",
         collections: "Коллекции",
+        // ? collection: "Collection",
         revenue: "Доход",
         manage: "Управление",
         seeAll: "Посмотреть все",
@@ -187,6 +190,10 @@ export default {
         creatingOrg: "Создание организации",
         enterOrgName: "Введите название организации",
         enterOrgDescription: "Кратко опишите вашу организацию",
+        // ? creatingACollection: "Creating a collection",
+        // ? enterCollectionName: "Enter collection name",
+        // ? createCollection: "Create collection",
+
     },
 
     search: {
@@ -231,9 +238,9 @@ export default {
          */
         itemHeader: (project: string, author: string) => {
             return [
-                [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " от "],
-                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                [SearchItem_Header.PROJECT_NAME, project],
+                [SearchItem_Header.STR, " от "],
+                [SearchItem_Header.AUTHOR_NAME, author],
             ];
         },
     },

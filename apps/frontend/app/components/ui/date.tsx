@@ -17,7 +17,7 @@ export function FormattedDate(props: FormatDateProps) {
                 <DefaultFormattedDate
                     date={props.date}
                     locale={formatLocaleCode(locale)}
-                    utc
+                    utc={true}
                     showTime={props.showTime}
                     shortMonthNames={props.shortMonthNames}
                 />

@@ -1,6 +1,6 @@
 import { Capitalize } from "@app/utils/string";
 import type { Locale } from "~/locales/types";
-import { SearchItemHeader_Keys } from "../shared-enums";
+import { SearchItem_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -261,9 +261,9 @@ export default {
          */
         itemHeader: (project: string, author: string) => {
             return [
-                [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " von "],
-                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                [SearchItem_Header.PROJECT_NAME, project],
+                [SearchItem_Header.STR, " von "],
+                [SearchItem_Header.AUTHOR_NAME, author],
             ];
         },
     },

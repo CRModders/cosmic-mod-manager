@@ -1,5 +1,5 @@
 import type { Locale } from "~/locales/types";
-import { SearchItemHeader_Keys } from "../shared-enums";
+import { SearchItem_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -221,28 +221,11 @@ export default {
         clearFilters: "すべてのフィルターをクリア",
 
         tags: tags,
-
-        /**
-         * Project item header format \
-         * The array items will be arranged in the order they are returned \
-         * so in the current case, the string format will be `{Project_Name} by {Author}` \
-         * \
-         * **Custom format example** \
-         * For the returned value to be formatted like `{Author}'s {Project_Name}`
-         * The returned array will look something like this
-         * ```ts
-         * return [
-         *     [SearchItemHeader_Keys.AUTHOR_NAME, `${author}'s`],
-         *     [SearchItemHeader_Keys.BY, " "],
-         *     [SearchItemHeader_Keys.PROJECT_NAME, project],
-         * ]
-         * ```
-         */
         itemHeader: (project: string, author: string) => {
             return [
-                [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, "作成者："],
-                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                [SearchItem_Header.PROJECT_NAME, project],
+                [SearchItem_Header.STR, "作成者："],
+                [SearchItem_Header.AUTHOR_NAME, author],
             ];
         },
     },

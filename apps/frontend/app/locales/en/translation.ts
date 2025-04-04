@@ -1,5 +1,5 @@
 import type { Translation } from "~/locales/types";
-import { SearchItemHeader_Keys } from "../shared-enums";
+import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 import type { FixedStringArray } from "@app/utils/types/helpers";
@@ -245,17 +245,16 @@ export default {
          * The returned array will look something like this
          * ```ts
          * return [
-         *     [SearchItemHeader_Keys.AUTHOR_NAME, `${author}'s`],
-         *     [SearchItemHeader_Keys.BY, " "],
-         *     [SearchItemHeader_Keys.PROJECT_NAME, project],
+         *     [SearchItem_Header.AUTHOR_NAME, `${author}'s`],
+         *     [SearchItem_Header.PROJECT_NAME, project],
          * ]
          * ```
          */
         itemHeader: (project: string, author: string) => {
             return [
-                [SearchItemHeader_Keys.PROJECT_NAME, project],
-                [SearchItemHeader_Keys.BY, " by "],
-                [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                [SearchItem_Header.PROJECT_NAME, project],
+                [SearchItem_Header.STR, " by "],
+                [SearchItem_Header.AUTHOR_NAME, author],
             ];
         },
     },
@@ -422,6 +421,20 @@ export default {
         copySha1: "Copy SHA-1 hash",
         copySha512: "Copy SHA-512 hash",
         copyFileUrl: "Copy file URL",
+
+        /**
+         * We need to tell what a string is becuase there needs to be links attached to the author and version \
+         * Because the order doesn't dictate which string is which, we can return this in whatever order we like
+         */
+        authoredBy: (version: string, author: string, publish_date: string) => {
+            return [
+                [VersionAuthor_Header.VERSION, version],
+                [VersionAuthor_Header.STR, " by "],
+                [VersionAuthor_Header.AUTHOR, author],
+                [VersionAuthor_Header.STR, " on "],
+                [VersionAuthor_Header.PUBLISH_DATE, publish_date],
+            ]
+        }
     },
 
     projectSettings: {

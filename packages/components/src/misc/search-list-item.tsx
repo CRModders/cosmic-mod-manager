@@ -83,7 +83,7 @@ function BaseView(props: SearchListItemProps) {
         const header = t.search.itemHeader(props.projectName, props.author);
 
         for (const item of header) {
-            if (item[0] === SearchItemHeader_Keys.PROJECT_NAME) {
+            if (item[0] === SearchItem_Header.PROJECT_NAME) {
                 items.push(
                     <ProjectLink
                         key={`${props.projectSlug}`}
@@ -92,9 +92,10 @@ function BaseView(props: SearchListItemProps) {
                         galleryViewType={galleryViewType}
                     />,
                 );
-            } else if (item[0] === SearchItemHeader_Keys.BY) {
+            } else if (item[0] === SearchItem_Header.STR) {
+                // If its a string, just push it
                 items.push(item[1]);
-            } else if (item[0] === SearchItemHeader_Keys.AUTHOR_NAME) {
+            } else if (item[0] === SearchItem_Header.AUTHOR_NAME) {
                 items.push(
                     <AuthorLink
                         key={`${props.projectSlug}-${props.author}`}
@@ -360,10 +361,10 @@ function AuthorLink(props: AuthorLinkProps) {
     );
 }
 
-enum SearchItemHeader_Keys {
+export enum SearchItem_Header {
     PROJECT_NAME = "0",
-    BY = "1",
-    AUTHOR_NAME = "2",
+    AUTHOR_NAME = "1",
+    STR = "2",
 }
 
 function getDefaultStrings() {
@@ -401,9 +402,9 @@ function getDefaultStrings() {
                  */
                 itemHeader: (project: string, author: string) => {
                     return [
-                        [SearchItemHeader_Keys.PROJECT_NAME, project],
-                        [SearchItemHeader_Keys.BY, " by "],
-                        [SearchItemHeader_Keys.AUTHOR_NAME, author],
+                        [SearchItem_Header.PROJECT_NAME, project],
+                        [SearchItem_Header.STR, " by "],
+                        [SearchItem_Header.AUTHOR_NAME, author],
                     ];
                 },
                 loaders: "",

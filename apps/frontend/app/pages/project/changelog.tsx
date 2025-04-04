@@ -18,12 +18,14 @@ import { ChevronDownIcon, DownloadIcon, FilterIcon, FlaskConicalIcon, XCircleIco
 import { useContext, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
-import { FormattedDate } from "~/components/ui/date";
 import Link from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
 import { UserProfilePath, VersionPagePath } from "~/utils/urls";
+import { FormatDate_ToLocaleString } from "@app/utils/date";
+import { formatLocaleCode } from "~/locales";
+import { VersionAuthor_Header } from "~/locales/shared-enums";
 
 export default function VersionChangelogs() {
     const ctx = useProjectData();
@@ -45,7 +47,7 @@ interface ListProps {
 }
 
 function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     const { theme } = useTheme();
     const pageSearchParamKey = "page";
     const [urlSearchParams] = useSearchParams();
@@ -291,6 +293,16 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                         nextVersion?.changelog === version.changelog &&
                         version.releaseChannel === nextVersion.releaseChannel;
 
+                    const header = t.version.authoredBy(
+                        version.title,
+                        version.author.userName,
+                        FormatDate_ToLocaleString(version.datePublished, {
+                            includeTime: false,
+                            shortMonthNames: true,
+                            locale: formatLocaleCode(locale),
+                        }),
+                    );
+
                     return (
                         <div key={version.id} className="w-full ps-7 mb-4 relative dark:text-muted-foreground">
                             <div className="w-full flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
@@ -307,23 +319,39 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         </TooltipProvider>
                                     ) : null}
 
-                                    <h2 className="leading-tight">
-                                        <Link
-                                            to={VersionPagePath(projectType, projectData.slug, version.slug)}
-                                            className="text-[1.25rem] font-bold flex items-baseline gap-2"
-                                        >
-                                            {version.title}
-                                        </Link>
-                                    </h2>
-                                    <span>
-                                        by{" "}
-                                        <Link to={UserProfilePath(version.author.userName)} className="link_blue hover:underline">
-                                            {version.author.userName}
-                                        </Link>
-                                    </span>
-                                    <span>
-                                        on <FormattedDate date={version.datePublished} showTime={false} shortMonthNames={true} />
-                                    </span>
+                                    {header.map((item, index) => {
+                                        const key = `${version.id}-${index}-${item[0]}`;
+                                        if (item[0] === VersionAuthor_Header.VERSION) {
+                                            return (
+                                                <h2 className="leading-tight" key={key}>
+                                                    <Link
+                                                        to={VersionPagePath(projectType, projectData.slug, version.slug)}
+                                                        className="text-[1.25rem] font-bold flex items-baseline gap-2"
+                                                    >
+                                                        {item[1]}
+                                                    </Link>
+                                                </h2>
+                                            );
+                                        }
+
+                                        if (item[0] === VersionAuthor_Header.AUTHOR) {
+                                            return (
+                                                <Link
+                                                    key={key}
+                                                    to={UserProfilePath(version.author.userName)}
+                                                    className="link_blue hover:underline"
+                                                >
+                                                    {version.author.userName}
+                                                </Link>
+                                            );
+                                        }
+
+                                        if (item[0] === VersionAuthor_Header.PUBLISH_DATE) {
+                                            return <span key={key}> {item[1]} </span>;
+                                        }
+
+                                        return <span key={key}>{item[1]}</span>;
+                                    })}
                                 </div>
 
                                 {version.primaryFile?.url ? (
