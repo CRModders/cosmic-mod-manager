@@ -89,7 +89,7 @@ async function userFollows_get(ctx: Context) {
 async function userProjects_get(ctx: Context) {
     try {
         const slug = ctx.req.param("slug");
-        const listedProjectsOnly = ctx.req.query("listedOnly") === "true";
+        const listedProjectsOnly = !!ctx.req.query("listedOnly");
         if (!slug) return invalidReqestResponse(ctx);
         const userSession = getUserFromCtx(ctx);
 

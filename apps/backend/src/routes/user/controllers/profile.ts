@@ -101,7 +101,7 @@ export async function getUserAvatar(
                 const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
                 await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
             }
-        } catch {}
+        } catch { }
 
         return null;
     }
@@ -142,5 +142,5 @@ export async function getAllVisibleProjects(userSession: ContextUserData | undef
     const UserProjects_Id = await Get_UserProjects(user.id);
     if (!UserProjects_Id.length) return { data: [], status: HTTP_STATUS.OK };
 
-    return await getManyProjects(userSession, UserProjects_Id);
+    return await getManyProjects(userSession, UserProjects_Id, listedProjectsOnly);
 }
