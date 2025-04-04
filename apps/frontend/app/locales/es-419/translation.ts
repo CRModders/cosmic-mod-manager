@@ -314,7 +314,7 @@ export default {
         declinedInvitation: "Invitación rechazada",
         teamInvitationTitle: (teamType: string) => `Invitación para unirse a un equipo (${teamType})`, // teamType = organization | project
         teamInviteDesc: (teamType: string, role: string) =>
-            `Te invitaron a ser miembro de este equipo ${teamType} con el rol de '${role}'.`,
+            `Te invitaron a ser miembro de este equipo (${teamType}) con el rol de '${role}'.`,
 
         browse: {
             mod: "Explorar mods",
