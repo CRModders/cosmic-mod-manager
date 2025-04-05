@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-export function fillEmptyKeys<T extends object>(obj: T, fallback: object): T {
+export function fillEmptyKeys<T extends object>(obj: object, fallback: T): T {
     // Return the object as it is if the fallback itself is null or undefinded or not of object type
     if (!fallback || typeof fallback !== "object") return obj;
     const objKeys = Object.keys(fallback);

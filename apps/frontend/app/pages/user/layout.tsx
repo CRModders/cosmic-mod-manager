@@ -71,7 +71,7 @@ export default function UserPageLayout(props: Props) {
         <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
             <ProfilePageHeader userData={props.userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
             <div className="h-fit grid grid-cols-1 gap-panel-cards" style={{ gridArea: "content" }}>
-                {navLinks?.length > 1 || navLinks[0].href.length > 0 ? (
+                {navLinks?.length > 1 || navLinks[0]?.href?.length > 0 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
                         urlBase={UserProfilePath(props.userData.userName)}

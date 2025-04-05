@@ -8,7 +8,7 @@ export async function getLocale(locale: string): Promise<Locale> {
     return fillEmptyKeys(localeModule.default, en);
 }
 
-export function getLocaleFile(locale: string) {
+function getLocaleFile(locale: string) {
     switch (parseLocale(locale)) {
         case "es-419":
             return import("./es-419/translation");
