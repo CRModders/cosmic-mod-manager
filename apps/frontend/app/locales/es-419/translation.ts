@@ -2,9 +2,6 @@ import type { Locale } from "~/locales/types";
 import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
-import type { FixedStringArray } from "@app/utils/types/helpers";
-
-export type CountTranslation = [string, number | string, string];
 
 function Pluralize(count: number, singular: string, plural: string) {
     return count === 1 ? singular : plural;
@@ -28,27 +25,20 @@ export default {
         more: "Más",
     },
 
-    // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html
-    // it's here just for readability
-    // The returned format should be [prefix, count, suffix]
-    // If there's no suffix or no prefix, just put an empty string there
-
-    // If you're wondering as to why we are returning an array instead of a string, then the reason is html formatting
-    // the count in most places is put in a different html tag for styling purposes
     count: {
-        downloads: (count: number): CountTranslation => {
+        downloads: (count: number) => {
             const downloads = Pluralize(count, "descarga", "descargas");
             return ["", count, downloads];
         },
-        followers: (count: number): CountTranslation => {
+        followers: (count: number) => {
             const followers = Pluralize(count, "seguidor", "seguidores");
             return ["", count, followers];
         },
-        projects: (count: number): CountTranslation => {
+        projects: (count: number) => {
             const projects = Pluralize(count, "proyecto", "proyectos");
             return ["", count, projects];
         },
-        members: (count: number): CountTranslation => {
+        members: (count: number) => {
             const members = Pluralize(count, "miembro", "miembros");
             return ["", count, members];
         },
@@ -75,7 +65,7 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string): FixedStringArray<3> => ["El lugar para ", projectType, " de Cosmic Reach"],
+        title: (projectType: string) => ["El lugar para ", projectType, " de Cosmic Reach"],
         desc: "El mejor lugar para tus mods de Cosmic Reach. Descubre, juega y crea contenido, todo en un solo sitio.",
         exploreMods: "Explorar mods",
     },
@@ -271,7 +261,7 @@ export default {
         organization: "Organización",
         project: "Proyecto",
         details: "Detalles",
-        licensed: (license: string): FixedStringArray<3> => ["Con licencia", license, ""],
+        licensed: (license: string) => ["Con licencia", license, ""],
         updatedAt: (when: string) => `Actualizado ${when}`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `Publicado ${when}`, // eg: Published 3 days ago
         gallery: "Galería",

@@ -1,9 +1,5 @@
 import type tags from "~/locales/en/tags";
 
-interface TagsTranslation extends Omit<Categories, Keys_ToNotTranslate> {
-    [key: string]: string;
-}
-
 export default {
     adventure: "Aventura",
     atmosphere: "Atmósfera",
