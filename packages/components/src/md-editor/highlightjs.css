@@ -62,7 +62,7 @@
 
 .markdown-body ul,
 .markdown-body ol {
-    @apply pl-10;
+    @apply ps-10;
 }
 
 .markdown-body li {
@@ -123,11 +123,11 @@ li ol li:last-child {
 }
 
 .markdown-body blockquote {
-    @apply ml-6 px-4 border-l-[0.25rem] border-shallower-background;
+    @apply ms-6 px-4 border-s-[0.25rem] border-shallower-background;
 }
 
 .markdown-body blockquote blockquote {
-    @apply ml-4 px-4 border-l-[0.25rem] border-shallower-background;
+    @apply ms-4 px-4 border-s-[0.25rem] border-shallower-background;
 }
 
 .markdown-body a {
@@ -186,7 +186,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 
 .markdown-body table td:not(:last-of-type),
 .markdown-body table th:not(:last-of-type) {
-    @apply border-r-[0.1rem] border-shallow-background;
+    @apply border-e-[0.1rem] border-shallow-background;
 }
 
 .markdown-body table tr:not(:last-of-type) td,

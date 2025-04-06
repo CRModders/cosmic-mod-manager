@@ -250,3 +250,15 @@ img {
     pointer-events: none;
     filter: brightness(80%);
 }
+
+/* RTL things */
+
+html[dir="rtl"] .lucide-chevron-right,
+html[dir="rtl"] .lucide-arrow-right {
+    rotate: 180deg;
+}
+
+html[dir="rtl"] .lucide-chevron-left,
+html[dir="rtl"] .lucide-arrow-left {
+    rotate: 180deg;
+}

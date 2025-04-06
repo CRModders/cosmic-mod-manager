@@ -40,7 +40,7 @@ function DialogContent({ ref, className, children, ...props }: React.ComponentPr
                 {children}
                 <DialogPrimitive.Close
                     id="dialog_close_btn"
-                    className="absolute right-4 top-4 rounded p-1.5 transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background disabled:pointer-events-none"
+                    className="absolute end-4 top-4 rounded p-1.5 transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background disabled:pointer-events-none"
                 >
                     <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="sr-only">Close</span>
@@ -54,7 +54,7 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
-            className={cn("flex flex-col gap-1 px-card-surround pb-4 text-left border-b border-b-shallow-background", className)}
+            className={cn("flex flex-col gap-1 px-card-surround pb-4 text-start border-b border-b-shallow-background", className)}
             {...props}
         />
     );
