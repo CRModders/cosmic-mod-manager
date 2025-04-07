@@ -23,8 +23,7 @@ const dev_backend = {
 
 const prod_backend = {
     name: "crmm-backend",
-    script: "src/index.ts",
-    interpreter: "bun",
+    command: "bun run start",
     cwd: backendDir,
     autorestart: true,
     watch: false,
