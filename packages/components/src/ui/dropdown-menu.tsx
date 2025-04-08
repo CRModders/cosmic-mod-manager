@@ -117,7 +117,7 @@ function DropdownMenuCheckboxItem({
             checked={checked}
             {...props}
         >
-            <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+            <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
                 <DropdownMenuPrimitive.ItemIndicator>
                     <CheckIcon aria-hidden className="h-4 w-4" />
                 </DropdownMenuPrimitive.ItemIndicator>
@@ -143,7 +143,7 @@ function DropdownMenuRadioItem({
             )}
             {...props}
         >
-            <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+            <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
                 <DropdownMenuPrimitive.ItemIndicator>
                     <DotIcon aria-hidden className="h-4 w-4 fill-current" />
                 </DropdownMenuPrimitive.ItemIndicator>

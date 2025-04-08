@@ -37,8 +37,8 @@ const notificationBadgeVariants = cva(
                 secondary: "bg-shallower-background/75 text-foreground",
             },
             align: {
-                left: "top-0 left-0 -translate-x-1/4 -translate-y-1/4",
-                right: "top-0 right-0 translate-x-1/4 -translate-y-1/4",
+                left: "top-0 start-0 -translate-x-1/4 -translate-y-1/4",
+                right: "top-0 end-0 translate-x-1/4 -translate-y-1/4",
             },
         },
         defaultVariants: {

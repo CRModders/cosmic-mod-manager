@@ -128,7 +128,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
                             aria-label={searchLabel}
                         />
 
-                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1 rounded-[0.3rem] bg-shallower-background/50 border border-shallower-background/85">
+                        <kbd className="absolute end-3 top-1/2 -translate-y-1/2 px-1 rounded-[0.3rem] bg-shallower-background/50 border border-shallower-background/85">
                             /
                         </kbd>
                     </label>
@@ -234,7 +234,7 @@ function SearchBarIcon() {
     const { showSpinner } = useSpinnerCtx();
 
     return (
-        <span className="absolute left-2.5 top-[50%] translate-y-[-50%] grid grid-cols-1 grid-rows-1">
+        <span className="absolute start-2.5 top-[50%] translate-y-[-50%] grid grid-cols-1 grid-rows-1">
             <Spinner className={cn("col-span-full row-span-full opacity-0", showSpinner && "opacity-100")} />
             <SearchIcon
                 aria-hidden

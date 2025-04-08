@@ -22,8 +22,10 @@ const SelectTrigger = ({
         ref={ref}
         className={cn(noDefaultStyles !== true && "input_box_styles gap-2 w-full justify-between [&>span]:line-clamp-1", className)}
         {...props}
+        dir="default"
     >
         {children}
+
         <SelectPrimitive.Icon asChild>
             <ChevronDown className="w-btn-icon h-btn-icon text-muted-foreground" />
         </SelectPrimitive.Icon>
@@ -76,6 +78,7 @@ function SelectContent({
                 )}
                 position={position}
                 {...props}
+                dir="default"
             >
                 <SelectScrollUpButton />
                 <SelectPrimitive.Viewport
@@ -107,8 +110,9 @@ function SelectItem({ ref, className, children, ...props }: React.ComponentProps
                 className,
             )}
             {...props}
+            dir="default"
         >
-            <span className="absolute right-2 flex h-btn-icon w-btn-icon items-center justify-center">
+            <span className="absolute end-2 flex h-btn-icon w-btn-icon items-center justify-center">
                 <SelectPrimitive.ItemIndicator>
                     <CheckIcon aria-hidden className="w-btn-icon h-btn-icon" />
                 </SelectPrimitive.ItemIndicator>
