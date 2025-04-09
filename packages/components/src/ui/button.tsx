@@ -51,7 +51,9 @@ const buttonVariants = cva(
     },
 );
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+export type ButtonVariants_T = VariantProps<typeof buttonVariants>;
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants_T {
     asChild?: boolean;
     icon?: React.ReactNode | null;
 }

@@ -17,14 +17,12 @@ import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
-import { toast } from "@app/components/ui/sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
 import SPDX_LICENSE_LIST from "@app/utils/src/constants/license-list";
 import { RejectedStatuses } from "@app/utils/config/project";
 import { MODERATOR_ROLES, isModerator } from "@app/utils/src/constants/roles";
 import { getLoadersFromNames } from "@app/utils/convertors";
-import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import { parseFileSize } from "@app/utils/number";
 import { Capitalize, CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
@@ -59,7 +57,6 @@ import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
-import clientFetch from "~/utils/client-fetch";
 import { OrgPagePath, ProjectPagePath, UserProfilePath, VersionPagePath, isCurrLinkActive } from "~/utils/urls";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
@@ -70,6 +67,7 @@ import { ProjectSupprotedEnvironments } from "./supported-env";
 import { TextSpacer } from "@app/components/misc/text";
 import { AddToCollection_Popup } from "../collection/add-to-collection";
 import { FollowProject_Btn } from "../collection/follow-btn";
+import UpdateProjectStatusDialog from "./update-project-status";
 
 export default function ProjectPageLayout() {
     const { t } = useTranslation();
@@ -450,24 +448,6 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
         }
     }
 
-    async function updateStatus(status = ProjectPublishingStatus.REJECTED) {
-        disableInteractions();
-
-        const res = await clientFetch(`/api/moderation/project/${projectData.id}`, {
-            method: "POST",
-            body: JSON.stringify({ status: status }),
-        });
-        const data = await res.json();
-
-        if (!res.ok || data?.success === false) {
-            toast.error(data?.message);
-            enableInteractions();
-        }
-
-        toast.success(data?.message);
-        RefreshPage(navigate, location);
-    }
-
     return (
         <div className="w-full flex flex-col [grid-area:_header] gap-panel-cards">
             <PageHeader
@@ -536,30 +516,34 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                                 <Separator />
 
                                 {projectData.status !== ProjectPublishingStatus.DRAFT && (
-                                    <Button
-                                        className="w-full justify-start"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => {
-                                            updateStatus(ProjectPublishingStatus.DRAFT);
+                                    <UpdateProjectStatusDialog
+                                        projectId={projectData.id}
+                                        projectName={projectData.name}
+                                        projectType={projectData.type[0]}
+                                        prevStatus={projectData.status}
+                                        newStatus={ProjectPublishingStatus.DRAFT}
+                                        trigger={{
+                                            text: t.moderation.draft,
+                                            variant: "ghost",
+                                            className: "w-full justify-start",
                                         }}
-                                    >
-                                        <ProjectStatusIcon status={ProjectPublishingStatus.DRAFT} />
-                                        {t.moderation.draft}
-                                    </Button>
+                                        dialogConfirmBtn={{ variant: "destructive" }}
+                                    />
                                 )}
 
-                                <Button
-                                    className="w-full justify-start"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                        updateStatus(ProjectPublishingStatus.WITHHELD);
+                                <UpdateProjectStatusDialog
+                                    projectId={projectData.id}
+                                    projectName={projectData.name}
+                                    projectType={projectData.type[0]}
+                                    prevStatus={projectData.status}
+                                    newStatus={ProjectPublishingStatus.WITHHELD}
+                                    trigger={{
+                                        text: t.moderation.withhold,
+                                        variant: "ghost",
+                                        className: "w-full justify-start",
                                     }}
-                                >
-                                    <ProjectStatusIcon status={ProjectPublishingStatus.WITHHELD} />
-                                    {t.moderation.withhold}
-                                </Button>
+                                    dialogConfirmBtn={{ variant: "destructive" }}
+                                />
                             </>
                         ) : null}
                     </>

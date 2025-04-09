@@ -94,7 +94,7 @@ function BaseView(props: SearchListItemProps) {
                 );
             } else if (item[0] === SearchItem_Header.STR) {
                 // If its a string, just push it
-                items.push(item[1]);
+                items.push(<p className="inline">{item[1]}</p>);
             } else if (item[0] === SearchItem_Header.AUTHOR_NAME) {
                 items.push(
                     <AuthorLink
@@ -326,9 +326,9 @@ function ProjectLink(props: ProjectLinkProps) {
             className={cn("w-fit text-xl font-bold leading-none mobile-break-words", props.galleryViewType && "block leading-tight")}
             aria-label={props.projectName}
         >
-            <span itemProp={MicrodataItemProps.name} className={cn("leading-none", props.galleryViewType && "leading-tight")}>
+            <p itemProp={MicrodataItemProps.name} className={cn("inline leading-none", props.galleryViewType && "leading-tight")}>
                 {props.projectName}
-            </span>
+            </p>
         </Link>
     );
 }
@@ -354,7 +354,7 @@ function AuthorLink(props: AuthorLinkProps) {
             {props.isOrgOwned ? (
                 <>
                     {" "}
-                    <Building2Icon aria-hidden className="inline w-4 h-4" />
+                    <Building2Icon aria-hidden className="inline-block w-4 h-4" />
                 </>
             ) : null}
         </Link>

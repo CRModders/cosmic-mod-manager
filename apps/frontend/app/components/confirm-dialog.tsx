@@ -12,13 +12,14 @@ import {
 } from "@app/components/ui/dialog";
 import { CancelButton } from "~/components/ui/button";
 import { Trash2Icon } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 
 interface ConfirmDialogProps {
     title: string;
     shortDesc?: string;
-    description: string;
+    description: React.ReactNode;
 
     onConfirm: () => unknown | Promise<unknown>;
     children: React.ReactNode;
