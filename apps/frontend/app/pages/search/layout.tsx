@@ -20,7 +20,7 @@ import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { SearchResult } from "@app/utils/types/api";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Outlet, useNavigation, useSearchParams } from "react-router";
+import { Outlet, useLocation, useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectType } from "~/hooks/project";
@@ -46,10 +46,8 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
     const searchInput = useRef<HTMLInputElement>(null);
     const [showFilters, setShowFilters] = useState(false);
 
-    const nextLocation = useNavigation().location;
-    const nextSearchParams = new URLSearchParams(nextLocation?.search);
-    const [currSearchParams] = useSearchParams();
-    const searchParams = nextLocation?.search ? nextSearchParams : currSearchParams;
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
 
     // Param values
     const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
@@ -93,7 +91,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
     // Update the state when the search param changes
     useEffect(() => {
         setSearchTerm_state(searchQueryParam);
-    }, [nextLocation?.pathname]);
+    }, [location.pathname]);
 
     useEffect(() => {
         document.addEventListener("keyup", handleSearchInputFocus);

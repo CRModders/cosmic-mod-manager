@@ -6,7 +6,7 @@ import { SearchResultSortMethod } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useLocation, useNavigation, useOutletContext } from "react-router";
+import { useLocation, useOutletContext } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import SearchListItem, { ViewType } from "~/components/search-list-item";
 import { useTranslation } from "~/locales/provider";
@@ -18,10 +18,8 @@ export function SearchResultsPage() {
     const { projectType_Coerced, projectType, viewType, searchParams, initialSearchData } = useOutletContext<SearchOutlet>();
 
     const { setShowSpinner } = useSpinnerCtx();
-    const currLocation = useLocation();
-    const nextLocation = useNavigation().location;
+    const location = useLocation();
 
-    const location = nextLocation || currLocation;
     const searchQuery = useQuery(
         getSearchResultsQuery(location.search?.replace("?", ""), projectType_Coerced === projectType ? projectType_Coerced : undefined),
     );
