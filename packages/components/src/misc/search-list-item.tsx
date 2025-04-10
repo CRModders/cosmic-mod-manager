@@ -94,7 +94,11 @@ function BaseView(props: SearchListItemProps) {
                 );
             } else if (item[0] === SearchItem_Header.STR) {
                 // If its a string, just push it
-                items.push(<p className="inline">{item[1]}</p>);
+                items.push(
+                    <p key={item[1]} className="inline">
+                        {item[1]}
+                    </p>,
+                );
             } else if (item[0] === SearchItem_Header.AUTHOR_NAME) {
                 items.push(
                     <AuthorLink

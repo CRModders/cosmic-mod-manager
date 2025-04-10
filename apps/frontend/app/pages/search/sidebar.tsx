@@ -20,7 +20,7 @@ import { useState } from "react";
 import { useNavigate } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
-import { deletePageOffsetParam, updateSearchParam } from "./layout";
+import { deletePageOffsetParam, updateSearchParam } from "./provider";
 
 const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /* ProjectType.DATAMOD */];
 

@@ -4,13 +4,16 @@ import { SpinnerCtxProvider } from "~/components/global-spinner";
 import SearchPageLayout from "~/pages/search/layout";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/layout";
+import { SearchProvider } from "~/pages/search/provider";
 
 export default function _() {
     const initialData = useLoaderData<typeof loader>();
 
     return (
         <SpinnerCtxProvider>
-            <SearchPageLayout initialSearchData={initialData} />
+            <SearchProvider initialSearchResult={initialData}>
+                <SearchPageLayout />
+            </SearchProvider>
         </SpinnerCtxProvider>
     );
 }

@@ -25,7 +25,7 @@ export function getSearchResultsQuery(params: string, type?: ProjectType) {
     return {
         queryKey: ["search-results", type],
         queryFn: () => getSearchResults(params, type),
-        refetchOnMount: true,
+        refetchOnMount: false,
         staleTime: 5 * 1000,
     } satisfies UseQueryOptions;
 }

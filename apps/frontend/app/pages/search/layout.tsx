@@ -10,54 +10,37 @@ import {
     MAX_SEARCH_LIMIT,
     defaultSearchLimit,
     defaultSortBy,
-    pageOffsetParamNamespace,
     searchLimitParamNamespace,
-    searchQueryParamNamespace,
     sortByParamNamespace,
 } from "@app/utils/config/search";
-import { getProjectTypeFromName } from "@app/utils/convertors";
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
-import type { SearchResult } from "@app/utils/types/api";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Outlet, useLocation, useSearchParams } from "react-router";
+import { Outlet } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import { useNavigate } from "~/components/ui/link";
-import { useProjectType } from "~/hooks/project";
 import { type UserConfig, setUserConfig, useUserConfig } from "~/hooks/user-config";
 import { useTranslation } from "~/locales/provider";
 import FilterSidebar from "./sidebar";
+import { deletePageOffsetParam, updateSearchParam, useSearchContext } from "./provider";
 
-interface UpdateSearchParamProps {
-    key: string;
-    value: string;
-    newParamsInsertionMode?: "replace" | "append";
-    deleteIfMatches?: string;
-    deleteIfExists?: boolean;
-    deleteIfFalsyValue?: boolean;
-    deleteParamsWithMatchingValueOnly?: boolean;
-    customURLModifier?: (url: URL) => URL;
-}
-
-let updateSearchParam_timeoutRef: number | undefined;
-
-export default function SearchPageLayout(props: { initialSearchData: SearchResult | null }) {
+export default function SearchPageLayout() {
     const { t } = useTranslation();
-    const searchInput = useRef<HTMLInputElement>(null);
     const [showFilters, setShowFilters] = useState(false);
+    const searchInput = useRef<HTMLInputElement>(null);
 
-    const location = useLocation();
-    const [searchParams] = useSearchParams();
+    const {
+        params: searchParams,
+        searchTerm,
+        setSearchTerm,
+        sortBy,
+        projectsPerPage,
 
-    // Param values
-    const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
-    const sortBy = searchParams.get(sortByParamNamespace);
-    const showPerPage = searchParams.get(searchLimitParamNamespace);
-    const [searchTerm_state, setSearchTerm_state] = useState(searchQueryParam);
+        projectType,
+        projectType_Coerced,
+    } = useSearchContext();
 
     const navigate = useNavigate(undefined, { viewTransition: false });
-    const projectType = useProjectType();
-    const projectType_Coerced = getProjectTypeFromName(projectType);
 
     const viewType = getSearchDisplayPreference(projectType_Coerced);
     const [_, reRender] = useState("0");
@@ -71,27 +54,6 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
             if (searchInput.current) searchInput.current.focus();
         }
     }
-
-    useEffect(() => {
-        if (searchQueryParam === searchTerm_state) return;
-        if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
-
-        updateSearchParam_timeoutRef = window.setTimeout(() => {
-            const urlPathname = updateSearchParam({
-                key: searchQueryParamNamespace,
-                value: searchTerm_state,
-                deleteIfFalsyValue: true,
-                newParamsInsertionMode: "replace",
-                customURLModifier: deletePageOffsetParam,
-            });
-            navigate(urlPathname, { viewTransition: false });
-        }, 200);
-    }, [searchTerm_state]);
-
-    // Update the state when the search param changes
-    useEffect(() => {
-        setSearchTerm_state(searchQueryParam);
-    }, [location.pathname]);
 
     useEffect(() => {
         document.addEventListener("keyup", handleSearchInputFocus);
@@ -118,8 +80,8 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
                         <SearchBarIcon />
                         <Input
                             ref={searchInput}
-                            value={searchTerm_state}
-                            onChange={(e) => setSearchTerm_state(e.target.value || "")}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value || "")}
                             placeholder={`${searchLabel}...`}
                             className="text-md font-medium !ps-9 focus:[&>kbd]:invisible"
                             id="search-input"
@@ -169,7 +131,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
                     </Select>
 
                     <Select
-                        value={showPerPage || defaultSearchLimit.toString()}
+                        value={projectsPerPage.toString()}
                         onValueChange={(val) => {
                             const urlPathname = updateSearchParam({
                                 key: searchLimitParamNamespace,
@@ -215,11 +177,7 @@ export default function SearchPageLayout(props: { initialSearchData: SearchResul
                 <Outlet
                     context={
                         {
-                            projectType_Coerced,
-                            projectType,
                             viewType,
-                            searchParams,
-                            initialSearchData: props.initialSearchData,
                         } satisfies SearchOutlet
                     }
                 />
@@ -257,11 +215,7 @@ function Spinner({ className }: { className?: string }) {
 }
 
 export interface SearchOutlet {
-    projectType_Coerced: ProjectType;
-    projectType: string;
     viewType: ViewType;
-    searchParams: URLSearchParams;
-    initialSearchData: SearchResult | null;
 }
 
 function ViewTypeToggle({
@@ -312,37 +266,4 @@ function saveSearchDisplayPreference(projectType: ProjectType, viewType: ViewTyp
 
 function getSearchDisplayPreference(projectType: ProjectType) {
     return useUserConfig().viewPrefs[projectType];
-}
-
-export function updateSearchParam({
-    key,
-    value,
-    deleteIfMatches,
-    deleteIfFalsyValue,
-    deleteIfExists,
-    deleteParamsWithMatchingValueOnly = false,
-    newParamsInsertionMode = "append",
-    customURLModifier,
-}: UpdateSearchParamProps) {
-    let currUrl = new URL(window.location.href);
-
-    if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else if ((deleteIfFalsyValue === true && !value) || (deleteIfMatches !== undefined && deleteIfMatches === value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else {
-        if (newParamsInsertionMode === "replace") currUrl.searchParams.set(key, value);
-        else currUrl.searchParams.append(key, value);
-    }
-
-    if (customURLModifier) currUrl = customURLModifier(currUrl);
-
-    return currUrl.href.replace(window.location.origin, "");
-}
-
-export function deletePageOffsetParam(url: URL) {
-    url.searchParams.delete(pageOffsetParamNamespace);
-    return url;
 }
