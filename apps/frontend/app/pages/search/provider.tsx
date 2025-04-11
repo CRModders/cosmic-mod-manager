@@ -85,7 +85,7 @@ export function SearchProvider(props: SearchProviderProps) {
 
     useEffect(() => {
         fetchQuery();
-    }, [searchParams.toString()]);
+    }, [searchParams.toString(), projectType]);
 
     useEffect(() => {
         if (searchQueryParam === searchTerm_state) return;
@@ -103,9 +103,17 @@ export function SearchProvider(props: SearchProviderProps) {
         }, 250);
     }, [searchTerm_state]);
 
-    // Update the state when the search param changes
+    // Reset search term and query data when navigating away from curr page
     useEffect(() => {
         setSearchTerm_state(searchQueryParam);
+
+        if (query.data?.projectType !== projectType) {
+            setQuery({
+                isLoading: false,
+                isFetching: true,
+                data: null,
+            });
+        }
     }, [location.pathname]);
 
     // Handle showing and hiding loading spinner

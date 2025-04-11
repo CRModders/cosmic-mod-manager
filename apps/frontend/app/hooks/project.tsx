@@ -74,9 +74,9 @@ export function useProjectData(): ProjectContextData {
     };
 }
 
-export function useProjectType(): "project" | ProjectType {
-    const pathname = usePathname();
-    const langPrefix = useUrlLocale();
+export function useProjectType(customPath?: string): "project" | ProjectType {
+    const pathname = customPath ? customPath : usePathname();
+    const langPrefix = useUrlLocale(undefined, pathname);
 
     const typeIndex = langPrefix.length ? 2 : 1;
     let typeStr = pathname?.split("/")[typeIndex];
