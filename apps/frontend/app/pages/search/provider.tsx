@@ -15,6 +15,8 @@ import { getProjectTypeFromName } from "@app/utils/convertors";
 import { getSearchResults } from "./loader";
 import { isNumber } from "@app/utils/number";
 import { useSpinnerCtx } from "~/components/global-spinner";
+import { useUrlLocale } from "~/utils/urls";
+import { projectTypes } from "@app/utils/config/project";
 
 interface SearchContext {
     searchTerm: string | undefined;
@@ -47,6 +49,7 @@ export function SearchProvider(props: SearchProviderProps) {
     const { setShowSpinner } = useSpinnerCtx();
     const navigation = useNavigation();
     const [searchParams] = useSearchParams();
+    const localePrefix = useUrlLocale(undefined, navigation.location?.pathname || "");
 
     // Params
     const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
@@ -112,7 +115,11 @@ export function SearchProvider(props: SearchProviderProps) {
         if (!navigation.location?.pathname) return;
         setSearchTerm_state("");
 
-        if (query.data?.projectType !== projectType && !!projectType) {
+        const nextPathname_WithoutLocalePrefix = navigation.location.pathname.replace(localePrefix, "").replace("/", "");
+        const isNavigatedPage_SearchPage = ["project", ...projectTypes].map((t) => `${t}s`).includes(nextPathname_WithoutLocalePrefix);
+
+        // If the user navigates to a different project type search page, reset the query data
+        if (query.data?.projectType !== projectType && isNavigatedPage_SearchPage === true) {
             setQuery({
                 isLoading: false,
                 isFetching: true,
