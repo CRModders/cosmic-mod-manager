@@ -1,7 +1,7 @@
 import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { SearchResult } from "@app/utils/types/api";
 import { createContext, use, useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router";
+import { useNavigation, useSearchParams } from "react-router";
 import {
     defaultSearchLimit,
     pageOffsetParamNamespace,
@@ -45,7 +45,7 @@ let updateSearchParam_timeoutRef: number | undefined;
 
 export function SearchProvider(props: SearchProviderProps) {
     const { setShowSpinner } = useSpinnerCtx();
-    const location = useLocation();
+    const navigation = useNavigation();
     const [searchParams] = useSearchParams();
 
     // Params
@@ -83,6 +83,17 @@ export function SearchProvider(props: SearchProviderProps) {
     let activePage = pageOffsetParamValue ? Number.parseInt(pageOffsetParamValue || "1") : 1;
     if (!isNumber(activePage)) activePage = 1;
 
+    function updateSearchTerm_Param(q: string) {
+        const urlPathname = updateSearchParam({
+            key: searchQueryParamNamespace,
+            value: q,
+            deleteIfFalsyValue: true,
+            newParamsInsertionMode: "replace",
+            customURLModifier: deletePageOffsetParam,
+        });
+        navigate(urlPathname, { viewTransition: false });
+    }
+
     useEffect(() => {
         fetchQuery();
     }, [searchParams.toString(), projectType]);
@@ -92,20 +103,14 @@ export function SearchProvider(props: SearchProviderProps) {
         if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
 
         updateSearchParam_timeoutRef = window.setTimeout(() => {
-            const urlPathname = updateSearchParam({
-                key: searchQueryParamNamespace,
-                value: searchTerm_state,
-                deleteIfFalsyValue: true,
-                newParamsInsertionMode: "replace",
-                customURLModifier: deletePageOffsetParam,
-            });
-            navigate(urlPathname, { viewTransition: false });
+            updateSearchTerm_Param(searchTerm_state);
         }, 250);
     }, [searchTerm_state]);
 
     // Reset search term and query data when navigating away from curr page
     useEffect(() => {
-        setSearchTerm_state(searchQueryParam);
+        if (!navigation.location?.pathname) return;
+        setSearchTerm_state("");
 
         if (query.data?.projectType !== projectType) {
             setQuery({
@@ -114,7 +119,7 @@ export function SearchProvider(props: SearchProviderProps) {
                 data: null,
             });
         }
-    }, [location.pathname]);
+    }, [navigation.location?.pathname]);
 
     // Handle showing and hiding loading spinner
     useEffect(() => {
