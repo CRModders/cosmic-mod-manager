@@ -12,8 +12,7 @@ import {
 import { useNavigate } from "~/components/ui/link";
 import { useProjectType } from "~/hooks/project";
 import { getProjectTypeFromName } from "@app/utils/convertors";
-import { useQuery } from "@tanstack/react-query";
-import { getSearchResultsQuery } from "./loader";
+import { getSearchResults } from "./loader";
 import { isNumber } from "@app/utils/number";
 import { useSpinnerCtx } from "~/components/global-spinner";
 
@@ -45,7 +44,7 @@ interface SearchProviderProps {
 let updateSearchParam_timeoutRef: number | undefined;
 
 export function SearchProvider(props: SearchProviderProps) {
-    const { showSpinner, setShowSpinner } = useSpinnerCtx();
+    const { setShowSpinner } = useSpinnerCtx();
     const location = useLocation();
     const [searchParams] = useSearchParams();
 
@@ -59,16 +58,24 @@ export function SearchProvider(props: SearchProviderProps) {
     const projectType = useProjectType();
     const projectType_Coerced = getProjectTypeFromName(projectType);
 
-    const query = useQuery(
-        getSearchResultsQuery(
-            searchParams.toString()?.replace("?", ""),
-            projectType_Coerced === projectType ? projectType_Coerced : undefined,
-        ),
-    );
+    const [query, setQuery] = useState({
+        isLoading: false,
+        isFetching: false,
+        data: props.initialSearchResult,
+    });
 
-    const shouldUseInitData = query.isLoading && projectType === props.initialSearchResult?.projectType && props.initialSearchResult;
-    const searchResults = shouldUseInitData ? props.initialSearchResult : query.data;
+    async function fetchQuery() {
+        setQuery({
+            isLoading: !!query.data,
+            isFetching: true,
+            data: query.data || null,
+        });
 
+        const res = await getSearchResults(searchParams.toString(), projectType_Coerced === projectType ? projectType_Coerced : undefined);
+        setQuery({ isLoading: false, isFetching: false, data: res });
+    }
+
+    const searchResults = query.data;
     const projectsPerPage = Number.parseInt(pageSize || "0") || defaultSearchLimit;
 
     const pagesCount = Math.ceil((searchResults?.estimatedTotalHits || 0) / projectsPerPage);
@@ -77,7 +84,7 @@ export function SearchProvider(props: SearchProviderProps) {
     if (!isNumber(activePage)) activePage = 1;
 
     useEffect(() => {
-        query.refetch();
+        fetchQuery();
     }, [searchParams.toString()]);
 
     useEffect(() => {
@@ -103,8 +110,6 @@ export function SearchProvider(props: SearchProviderProps) {
 
     // Handle showing and hiding loading spinner
     useEffect(() => {
-        if (shouldUseInitData) return setShowSpinner(false);
-
         setShowSpinner(query.isFetching);
     }, [query.isFetching]);
 

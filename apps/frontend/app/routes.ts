@@ -49,11 +49,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                 });
 
                 // Search pages
-                route("", path("search/layout.tsx"), { id: `${lang}__search-layout` }, () => {
-                    for (const type of ProjectTypes) {
-                        route(`${type}s`, path("search/page.tsx"), { id: `${lang}__${type}s-search` });
-                    }
-                });
+                for (const type of ProjectTypes) {
+                    route(`${type}s`, path("search/page.tsx"), { id: `${lang}__${type}s-search` });
+                }
 
                 for (const type of ProjectTypes) {
                     // Project pages
