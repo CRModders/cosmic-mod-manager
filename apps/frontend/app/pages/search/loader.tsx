@@ -6,7 +6,7 @@ import { resJson } from "~/utils/server-fetch";
 let searchResultsFetchReqAbortController: AbortController;
 
 export async function getSearchResults(params: string, type?: ProjectType) {
-    if (searchResultsFetchReqAbortController) searchResultsFetchReqAbortController.abort();
+    if (searchResultsFetchReqAbortController) searchResultsFetchReqAbortController.abort("Aborted due to new request");
     searchResultsFetchReqAbortController = new AbortController();
 
     let queryParams = `${params ? "?" : ""}${params}`;

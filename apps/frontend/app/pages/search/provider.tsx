@@ -112,7 +112,7 @@ export function SearchProvider(props: SearchProviderProps) {
         if (!navigation.location?.pathname) return;
         setSearchTerm_state("");
 
-        if (query.data?.projectType !== projectType) {
+        if (query.data?.projectType !== projectType && !!projectType) {
             setQuery({
                 isLoading: false,
                 isFetching: true,
