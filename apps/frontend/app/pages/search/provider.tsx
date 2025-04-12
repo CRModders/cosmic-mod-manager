@@ -115,7 +115,7 @@ export function SearchProvider(props: SearchProviderProps) {
         if (!navigation.location?.pathname) return;
         setSearchTerm_state("");
 
-        const nextPathname_WithoutLocalePrefix = navigation.location.pathname.replace(localePrefix, "").replace("/", "");
+        const nextPathname_WithoutLocalePrefix = navigation.location.pathname.replace(localePrefix, "").replaceAll("/", "");
         const isNavigatedPage_SearchPage = ["project", ...projectTypes].map((t) => `${t}s`).includes(nextPathname_WithoutLocalePrefix);
 
         // If the user navigates to a different project type search page, reset the query data
