@@ -1,5 +1,4 @@
 import { TagIcon } from "@app/components/icons/tag-icons";
-import { Button } from "@app/components/ui/button";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { Input } from "@app/components/ui/input";
 import { cn } from "@app/components/utils";
@@ -14,15 +13,15 @@ import {
 import { getALlLoaderFilters, getValidProjectCategories } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectType, TagHeaderType } from "@app/utils/types";
-import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import { useNavigate } from "~/components/ui/link";
+import Link, { VariantButtonLink } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
-import { deletePageOffsetParam, updateSearchParam } from "./provider";
+import { deletePageOffsetParam, getCurrUrl, updateSearchParam } from "./provider";
 
-const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /* ProjectType.DATAMOD */];
+const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /*, ProjectType.DATAMOD */];
 
 interface Props {
     type: ProjectType[];
@@ -51,23 +50,18 @@ const filtersKeyList = [
 ];
 
 function clearFilters() {
-    const currUrl = new URL(window.location.href);
+    const currUrl = getCurrUrl();
     for (const key of filtersKeyList) {
         currUrl.searchParams.delete(key);
     }
 
-    return currUrl.href.replace(window.location.origin, "");
+    return currUrl.href.replace(currUrl.origin, "");
 }
 
 function FilterSidebar({ type, showFilters, searchParams }: Props) {
     const { t } = useTranslation();
     const [showAllVersions, setShowAllVersions] = useState(false);
     const [query, setQuery] = useState("");
-    const _navigate = useNavigate();
-
-    function navigate(to: string) {
-        return _navigate(to, { preventScrollReset: true });
-    }
 
     // Labels
     const loadersFilterLabel = t.search.loaders;
@@ -147,33 +141,29 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                     }}
                 />
 
-                <Button
+                <VariantButtonLink
+                    url={clearFilters()}
                     variant="secondary"
                     className="shrink-0 !w-10 !h-10"
                     title={t.search.clearFilters}
                     size="icon"
-                    onClick={() => {
-                        const newUrl = clearFilters();
-                        navigate(newUrl);
-                    }}
                 >
                     <FilterXIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
-                </Button>
+                </VariantButtonLink>
             </div>
 
             <FilterCategory
                 items={loaderFilterOptions}
                 selectedItems={searchParams.getAll(loaderFilterParamNamespace)}
                 label={loadersFilterLabel}
-                onCheckedChange={(loaderName) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(loaderName) => {
+                    return updateSearchParam({
                         key: loaderFilterParamNamespace,
                         value: loaderName,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
             />
 
@@ -183,15 +173,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 label={gameVersionsFilterLabel}
                 listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
                 formatLabel={false}
-                onCheckedChange={(version) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(version) => {
+                    return updateSearchParam({
                         key: gameVersionFilterParamNamespace,
                         value: version,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 footerItem={
                     <LabelledCheckbox
@@ -211,15 +200,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                     items={environmentFilterOptions}
                     selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
                     label={environmentFilterLabel}
-                    onCheckedChange={(env) => {
-                        const newUrl = updateSearchParam({
+                    filterToggledUrl={(env) => {
+                        return updateSearchParam({
                             key: environmentFilterParamNamespace,
                             value: env,
                             deleteIfExists: true,
                             deleteParamsWithMatchingValueOnly: true,
                             customURLModifier: deletePageOffsetParam,
                         });
-                        navigate(newUrl);
                     }}
                     defaultOpen={defaultOpenAdditionalFilters}
                 />
@@ -229,15 +217,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={categoryFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={categoryFilterLabel}
-                onCheckedChange={(category) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(category) => {
+                    return updateSearchParam({
                         key: categoryFilterParamNamespace,
                         value: category,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
             />
@@ -246,15 +233,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={featureFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={featureFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(feature) => {
+                    return updateSearchParam({
                         key: categoryFilterParamNamespace,
                         value: feature,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
             />
@@ -263,15 +249,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={resolutionFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={resolutionFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(feature) => {
+                    return updateSearchParam({
                         key: categoryFilterParamNamespace,
                         value: feature,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
             />
@@ -280,15 +265,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={performanceFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={performanceFilterLabel}
-                onCheckedChange={(feature) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(feature) => {
+                    return updateSearchParam({
                         key: categoryFilterParamNamespace,
                         value: feature,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
             />
@@ -297,15 +281,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={licenseFilterOptions}
                 selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
                 label={licenseFilterLabel}
-                onCheckedChange={(license) => {
-                    const newUrl = updateSearchParam({
+                filterToggledUrl={(license) => {
+                    return updateSearchParam({
                         key: licenseFilterParamNamespace,
                         value: license,
                         deleteIfExists: true,
                         deleteParamsWithMatchingValueOnly: true,
                         customURLModifier: deletePageOffsetParam,
                     });
-                    navigate(newUrl);
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
             />
@@ -324,7 +307,8 @@ interface FilterCategoryProps {
     items: FilterItem[] | string[];
     selectedItems: string[];
     label: string;
-    onCheckedChange: (checked: string) => void;
+    // The function is expected to return the pathname after toggling the filter
+    filterToggledUrl: (prevVal: string) => string;
     listWrapperClassName?: string;
     className?: string;
     formatLabel?: boolean;
@@ -337,7 +321,7 @@ function FilterCategory({
     items,
     selectedItems,
     label,
-    onCheckedChange,
+    filterToggledUrl,
     className,
     listWrapperClassName,
     formatLabel = true,
@@ -382,19 +366,29 @@ function FilterCategory({
                     }
 
                     const itemLabel = formatLabel ? CapitalizeAndFormatString(_itemLabel) || "" : _itemLabel;
+                    const isChecked = selectedItems.includes(itemValue);
 
                     return (
-                        <LabelledCheckbox
-                            checked={selectedItems.includes(itemValue)}
-                            onCheckedChange={() => onCheckedChange(itemValue)}
+                        <Link
+                            to={filterToggledUrl(itemValue)}
                             key={itemValue}
-                            name={itemLabel}
+                            preventScrollReset
+                            className="flex text-base font-normal py-1 gap-x-2.5 leading-tight items-center justify-start transition text-muted-foreground hover:brightness-[85%]"
                         >
+                            <div
+                                className={cn(
+                                    "w-4 h-4 rounded-sm bg-shallower-background/85 flex items-center justify-center",
+                                    isChecked && "bg-[hsla(var(--accent-background-dark))] text-background",
+                                )}
+                            >
+                                {isChecked && <CheckIcon aria-hidden className="h-btn-icon-sm w-btn-icon-sm" strokeWidth="2.5" />}
+                            </div>
+
                             <span className="flex items-center justify-center gap-1">
                                 <TagIcon name={itemValue} />
                                 {itemLabel}
                             </span>
-                        </LabelledCheckbox>
+                        </Link>
                     );
                 })}
             </div>

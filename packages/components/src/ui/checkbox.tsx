@@ -16,7 +16,7 @@ function Checkbox({ ref, className, name, ...props }: React.ComponentPropsWithRe
             aria-label={name}
             {...props}
         >
-            <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
+            <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
                 <CheckIcon aria-hidden className="h-btn-icon-sm w-btn-icon-sm" strokeWidth="2.5" />
             </CheckboxPrimitive.Indicator>
         </CheckboxPrimitive.Root>
@@ -28,7 +28,7 @@ interface LabelledCheckboxProps {
     checked: boolean;
     className?: string;
     checkBoxClassname?: string;
-    onCheckedChange: (e: CheckboxPrimitive.CheckedState) => void;
+    onCheckedChange?: (e: CheckboxPrimitive.CheckedState) => void;
     disabled?: boolean;
     checkBoxId?: string;
     name?: string;

@@ -1,7 +1,7 @@
 import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { SearchResult } from "@app/utils/types/api";
 import { createContext, use, useEffect, useState } from "react";
-import { useNavigation, useSearchParams } from "react-router";
+import { useLocation, useNavigation, useSearchParams } from "react-router";
 import {
     defaultSearchLimit,
     pageOffsetParamNamespace,
@@ -181,7 +181,8 @@ export function updateSearchParam({
     newParamsInsertionMode = "append",
     customURLModifier,
 }: UpdateSearchParamProps) {
-    let currUrl = new URL(window.location.href);
+    // let currUrl = globalThis.window ? new URL(window.location.href) : new URL();
+    let currUrl = getCurrUrl();
 
     if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
         if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
@@ -196,10 +197,19 @@ export function updateSearchParam({
 
     if (customURLModifier) currUrl = customURLModifier(currUrl);
 
-    return currUrl.href.replace(window.location.origin, "");
+    return currUrl.href.replace(currUrl.origin, "");
 }
 
 export function deletePageOffsetParam(url: URL) {
     url.searchParams.delete(pageOffsetParamNamespace);
     return url;
+}
+
+export function getCurrUrl() {
+    if (globalThis.window) {
+        return new URL(window.location.href);
+    }
+
+    const location = useLocation();
+    return new URL(`https://example.com${location.pathname}${location.hash}${location.search}`);
 }

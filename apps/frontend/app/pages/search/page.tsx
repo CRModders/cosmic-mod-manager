@@ -11,6 +11,7 @@ import {
     defaultSearchLimit,
     defaultSortBy,
     searchLimitParamNamespace,
+    searchQueryParamNamespace,
     sortByParamNamespace,
 } from "@app/utils/config/search";
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
@@ -76,22 +77,34 @@ export default function SearchPage() {
 
             <main id="main" style={{ gridArea: "content" }} className="h-fit grid grid-cols-1 gap-panel-cards">
                 <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2">
-                    <label htmlFor="search-input" className="grow relative flex items-center justify-center min-w-full sm:min-w-[32ch]">
-                        <SearchBarIcon />
-                        <Input
-                            ref={searchInput}
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value || "")}
-                            placeholder={`${searchLabel}...`}
-                            className="text-md font-medium !ps-9 focus:[&>kbd]:invisible"
-                            id="search-input"
-                            aria-label={searchLabel}
-                        />
+                    <form
+                        method="get"
+                        className="grow flex items-center justify-center min-w-full sm:min-w-[32ch]"
+                        // If JS is enabled, prevent the form from submitting
+                        // and instead use the search input value to update the URL
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                    >
+                        <label htmlFor="search-input" className="w-full relative flex items-center justify-center">
+                            <SearchBarIcon />
+                            <Input
+                                ref={searchInput}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value || "")}
+                                placeholder={`${searchLabel}...`}
+                                className="text-md font-medium !ps-9 focus:[&>kbd]:invisible"
+                                id="search-input"
+                                name={searchQueryParamNamespace}
+                                aria-label={searchLabel}
+                            />
 
-                        <kbd className="absolute end-3 top-1/2 -translate-y-1/2 px-1 rounded-[0.3rem] bg-shallower-background/50 border border-shallower-background/85">
-                            /
-                        </kbd>
-                    </label>
+                            <kbd className="absolute end-3 top-1/2 -translate-y-1/2 px-1 rounded-[0.3rem] bg-shallower-background/50 border border-shallower-background/85">
+                                /
+                            </kbd>
+                        </label>
+                    </form>
 
                     <Select
                         value={sortBy || defaultSortBy}
