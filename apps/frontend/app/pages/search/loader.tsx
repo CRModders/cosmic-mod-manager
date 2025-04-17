@@ -15,7 +15,9 @@ export async function getSearchResults(params: string, type?: ProjectType) {
     const res = await clientFetch(`/api/search${queryParams}`, {
         signal: searchResultsFetchReqAbortController.signal,
     });
-    const data = await resJson(res);
+    const data = await resJson<SearchResult>(res);
+    if (!data) return null;
 
-    return (data || {}) as SearchResult;
+    data.projectType = type || "project";
+    return data;
 }
