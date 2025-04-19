@@ -81,10 +81,11 @@ export default function UserProjectsList(props: Props) {
             {filteredProjects.map((project) => {
                 return (
                     <SearchListItem
+                        projectType={project.type[0] as ProjectType}
+                        pageProjectType={(formattedProjectType as ProjectType) || "project"}
                         key={project.id}
                         vtId={project.id}
                         projectName={project.name}
-                        projectType={project.type[0] as ProjectType}
                         projectSlug={project.slug}
                         icon={project.icon}
                         summary={project.summary}

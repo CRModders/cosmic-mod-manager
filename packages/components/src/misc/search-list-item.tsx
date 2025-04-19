@@ -21,8 +21,12 @@ export enum ViewType {
 }
 
 interface SearchListItemProps {
-    projectName: string;
+    // Which project type is the current page for
+    // "project" means no filter based on project type
+    pageProjectType: ProjectType | "project";
     projectType: ProjectType;
+
+    projectName: string;
     projectSlug: string;
     icon: string | null;
     featuredGallery: string | null;
@@ -66,7 +70,8 @@ function BaseView(props: SearchListItemProps) {
     const projectCategoriesData = getProjectCategoriesDataFromNames(props.featuredCategories);
     const loadersData = getLoadersFromNames(props.loaders);
 
-    const projectPageUrl = props.ProjectPagePath(props.projectType, props.projectSlug);
+    const effectiveProjectType = !props.pageProjectType || props.pageProjectType === "project" ? props.projectType : props.pageProjectType;
+    const projectPageUrl = props.ProjectPagePath(effectiveProjectType, props.projectSlug);
 
     // View Types
     const galleryViewType = props.viewType === ViewType.GALLERY;
@@ -218,7 +223,7 @@ function BaseView(props: SearchListItemProps) {
                 )}
                 style={{ gridArea: "tags" }}
             >
-                {!HideEnvSupportFor.includes(props.projectType) && props.supportedEnv}
+                {!HideEnvSupportFor.includes(effectiveProjectType) && props.supportedEnv}
 
                 {projectCategoriesData.map((category) => {
                     // @ts-ignore

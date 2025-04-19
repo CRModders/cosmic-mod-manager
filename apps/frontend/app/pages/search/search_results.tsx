@@ -9,7 +9,16 @@ import { useSearchContext } from "./provider";
 
 export function SearchResults(props: { viewType: ViewType }) {
     const { t } = useTranslation();
-    const { result: searchResult, sortBy, projectsPerPage, pageOffset, pagesCount, isLoading, isFetching } = useSearchContext();
+    const {
+        result: searchResult,
+        sortBy,
+        projectsPerPage,
+        pageOffset,
+        pagesCount,
+        isLoading,
+        isFetching,
+        projectType,
+    } = useSearchContext();
 
     const pagination =
         (searchResult?.estimatedTotalHits || 0) > projectsPerPage ? (
@@ -28,11 +37,12 @@ export function SearchResults(props: { viewType: ViewType }) {
             >
                 {searchResult?.hits?.map((project: ProjectListItem) => (
                     <SearchListItem
+                        projectType={project.type[0] as ProjectType}
+                        pageProjectType={projectType}
                         key={project.id}
                         vtId={project.id}
                         viewType={props.viewType}
                         projectName={project.name}
-                        projectType={project.type[0] as ProjectType}
                         projectSlug={project.slug}
                         icon={project.icon}
                         featuredGallery={project.featured_gallery}
