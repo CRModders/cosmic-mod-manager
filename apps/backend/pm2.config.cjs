@@ -52,8 +52,7 @@ const apps = [
 if (!isDev) {
     apps.push({
         name: "crmm-auto-backups",
-        script: "src/services/storage/backup/index.ts",
-        interpreter: "bun",
+        command: "bun run file-backup",
         cwd: backendDir,
         autorestart: false,
         watch: false,
