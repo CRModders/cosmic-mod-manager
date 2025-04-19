@@ -223,7 +223,7 @@ function BaseView(props: SearchListItemProps) {
                 )}
                 style={{ gridArea: "tags" }}
             >
-                {!HideEnvSupportFor.includes(effectiveProjectType) && props.supportedEnv}
+                {!HideEnvSupportFor.includes(props.pageProjectType as ProjectType) && props.supportedEnv}
 
                 {projectCategoriesData.map((category) => {
                     // @ts-ignore
