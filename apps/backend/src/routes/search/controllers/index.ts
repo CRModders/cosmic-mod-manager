@@ -58,11 +58,11 @@ export async function searchProjects(props: Props) {
     }
     // If only client is selected, include projects that require only client or optionally server
     else if (props.environments.includes("client")) {
-        envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide != ${EnvironmentSupport.REQUIRED}`
+        envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide != ${EnvironmentSupport.REQUIRED}`;
     }
     // If only server is selected, include projects that require only server or optionally client
     else if (props.environments.includes("server")) {
-        envFilter = `serverSide = ${EnvironmentSupport.REQUIRED} AND clientSide != ${EnvironmentSupport.REQUIRED}`
+        envFilter = `serverSide = ${EnvironmentSupport.REQUIRED} AND clientSide != ${EnvironmentSupport.REQUIRED}`;
     }
 
     const filters = [

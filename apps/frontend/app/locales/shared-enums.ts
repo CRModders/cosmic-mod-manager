@@ -5,10 +5,9 @@ export enum SearchItem_Header {
     STR = "2",
 }
 
-
 export enum VersionAuthor_Header {
     VERSION = "0",
     AUTHOR = "1",
     PUBLISH_DATE = "2",
-    STR = "3"
+    STR = "3",
 }

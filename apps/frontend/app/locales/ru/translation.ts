@@ -193,7 +193,6 @@ export default {
         // ? creatingACollection: "Creating a collection",
         // ? enterCollectionName: "Enter collection name",
         // ? createCollection: "Create collection",
-
     },
 
     search: {

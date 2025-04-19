@@ -331,7 +331,8 @@ export default {
         archivedMessage: (project: string) =>
             `${project} has been archived. It will not receive any further updates unless the author decides to unarchive the project.`,
         updateProjectStatus: "Update project status",
-        sureToUpdateStatus: (projectName: string, projectType: string, prevStatus: string, newStatus: string) => `Are you sure you want to update the status of **${projectName}** ${projectType} from **${prevStatus}** to **${newStatus}**?`,
+        sureToUpdateStatus: (projectName: string, projectType: string, prevStatus: string, newStatus: string) =>
+            `Are you sure you want to update the status of **${projectName}** ${projectType} from **${prevStatus}** to **${newStatus}**?`,
 
         publishingChecklist: {
             required: "Required",
@@ -436,8 +437,8 @@ export default {
                 [VersionAuthor_Header.AUTHOR, author],
                 [VersionAuthor_Header.STR, " on "],
                 [VersionAuthor_Header.PUBLISH_DATE, publish_date],
-            ]
-        }
+            ];
+        },
     },
 
     projectSettings: {

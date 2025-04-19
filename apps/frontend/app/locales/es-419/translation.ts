@@ -91,8 +91,7 @@ export default {
         confirmPass: "Confirmar contraseña",
         confirmPass_label: "Vuelve a ingresar tu contraseña",
         deleteAccount: "Eliminar cuenta",
-        deleteAccountDesc:
-            "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
+        deleteAccountDesc: "Al eliminar tu cuenta, se borrarán todos tus datos de nuestra base de datos. Este proceso es irreversible.",
         enterEmail: "Ingresa tu dirección de correo electrónico",
     },
 
@@ -404,7 +403,8 @@ export default {
         selectFiles: "Seleccionar archivos",
         primaryFileRequired: "Se requiere un archivo principal",
         metadata: "Metadatos",
-        devReleasesNote: "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
+        devReleasesNote:
+            "NOTA: Las versiones en desarrollo antiguas serán eliminadas automáticamente después de que se publique una nueva versión en desarrollo.",
         publicationDate: "Fecha de publicación",
         publisher: "Editor",
         versionID: "ID de versión",
@@ -423,8 +423,8 @@ export default {
                 [VersionAuthor_Header.AUTHOR, author],
                 [VersionAuthor_Header.STR, " el "],
                 [VersionAuthor_Header.PUBLISH_DATE, publish_date],
-            ]
-        }
+            ];
+        },
     },
 
     projectSettings: {
@@ -524,7 +524,8 @@ export default {
         removeMember: "Eliminar miembro",
         transferOwnership: "Transferir propiedad",
         overrideValues: "Sobrescribir valores",
-        overrideValuesDesc: "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
+        overrideValuesDesc:
+            "Sobrescribe los valores predeterminados de la organización y asigna permisos y roles personalizados a este usuario en el proyecto.",
         projectNotManagedByOrg:
             "Este proyecto no está gestionado por una organización. Si eres miembro de alguna organización, puedes transferir la gestión a una de ellas.",
         transferManagementToOrg: "Transferir gestión",
