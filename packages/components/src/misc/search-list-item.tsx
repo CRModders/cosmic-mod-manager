@@ -2,7 +2,7 @@ import { categories } from "@app/utils/constants/categories";
 import { getLoadersFromNames } from "@app/utils/convertors";
 import { getProjectCategoriesDataFromNames } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
-import { type EnvironmentSupport, ProjectVisibility, TagHeaderType } from "@app/utils/types";
+import { type EnvironmentSupport, ProjectType, ProjectVisibility, TagHeaderType } from "@app/utils/types";
 import { imageUrl } from "@app/utils/url";
 import { Building2Icon, CalendarIcon, DownloadIcon, HeartIcon, RefreshCcwIcon } from "lucide-react";
 import { type ReactNode, useMemo } from "react";
@@ -22,15 +22,16 @@ export enum ViewType {
 
 interface SearchListItemProps {
     projectName: string;
-    projectType: string;
+    projectType: ProjectType;
     projectSlug: string;
     icon: string | null;
     featuredGallery: string | null;
     color: string | null;
     author?: string;
     summary: string;
-    clientSide?: EnvironmentSupport;
-    serverSide?: EnvironmentSupport;
+    clientSide: EnvironmentSupport;
+    serverSide: EnvironmentSupport;
+    supportedEnv: React.ReactNode;
     loaders: string[];
     featuredCategories: string[];
     downloads: number;
@@ -44,6 +45,8 @@ interface SearchListItemProps {
     vtId: string; // View Transition ID
     viewTransitions?: boolean;
     t?: ReturnType<typeof getDefaultStrings>;
+
+    // Functions to override default behavior
     ProjectPagePath: ProjectPagePath;
     OrgPagePath: OrgPagePath;
     UserProfilePath: UserProfilePath;
@@ -51,6 +54,8 @@ interface SearchListItemProps {
     NumberFormatter: (num: number) => string;
     DateFormatter: (date: string | Date) => ReactNode;
 }
+
+const HideEnvSupportFor = [ProjectType.RESOURCE_PACK, ProjectType.SHADER, ProjectType.PLUGIN, ProjectType.WORLD];
 
 export default function SearchListItem(props: SearchListItemProps) {
     return <BaseView {...props} viewType={props.viewType || ViewType.LIST} />;
@@ -213,6 +218,8 @@ function BaseView(props: SearchListItemProps) {
                 )}
                 style={{ gridArea: "tags" }}
             >
+                {!HideEnvSupportFor.includes(props.projectType) && props.supportedEnv}
+
                 {projectCategoriesData.map((category) => {
                     // @ts-ignore
                     const tagName = t.search.tags[category.name] || CapitalizeAndFormatString(category.name);

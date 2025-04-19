@@ -4,6 +4,7 @@ import type { CollectionOutletData } from "./layout";
 import { useTranslation } from "~/locales/provider";
 import { Checkbox } from "@app/components/ui/checkbox";
 import { useSession } from "~/hooks/session";
+import type { ProjectType } from "@app/utils/types";
 
 export default function CollectionProjectsList() {
     const { t } = useTranslation();
@@ -31,7 +32,7 @@ export default function CollectionProjectsList() {
                 key={project.id}
                 vtId={project.id}
                 projectName={project.name}
-                projectType={project.type[0]}
+                projectType={project.type[0] as ProjectType}
                 projectSlug={project.slug}
                 icon={project.icon}
                 featuredGallery={project.featured_gallery}
@@ -39,6 +40,8 @@ export default function CollectionProjectsList() {
                 summary={project.summary}
                 loaders={project.loaders}
                 featuredCategories={project.featuredCategories}
+                clientSide={project.clientSide}
+                serverSide={project.serverSide}
                 downloads={project.downloads}
                 followers={project.followers}
                 dateUpdated={new Date(project.dateUpdated)}

@@ -1,4 +1,4 @@
-import { CollectionVisibility } from "@app/utils/types";
+import { CollectionVisibility, type ProjectType } from "@app/utils/types";
 import type { Collection, ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
 import { useParams } from "react-router";
@@ -84,12 +84,14 @@ export default function UserProjectsList(props: Props) {
                         key={project.id}
                         vtId={project.id}
                         projectName={project.name}
-                        projectType={project.type[0]}
+                        projectType={project.type[0] as ProjectType}
                         projectSlug={project.slug}
                         icon={project.icon}
                         summary={project.summary}
                         loaders={project.loaders}
                         featuredCategories={project.featuredCategories}
+                        clientSide={project.clientSide}
+                        serverSide={project.serverSide}
                         downloads={project.downloads}
                         followers={project.followers}
                         dateUpdated={new Date(project.dateUpdated)}

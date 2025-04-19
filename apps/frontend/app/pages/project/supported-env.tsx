@@ -72,49 +72,50 @@ export function ProjectSupprotedEnvironments({
     clientSide,
     serverSide,
 }: { clientSide: EnvironmentSupport; serverSide: EnvironmentSupport }) {
-    const environments = [];
-
     if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.REQUIRED) {
-        environments.push(<ClientAndServerSide key="Client-and-server" />);
-    }
-    //
-    else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(<ClientOrServerSide key="Client-or-server" />);
-    }
-    //
-    else if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ClientSide key="Client-side" />, <ClientAndServerSide key="Client-and-server" />]);
-    }
-    //
-    else if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.REQUIRED) {
-        environments.push(...[<ServerSide key="Server-side" />, <ClientAndServerSide key="Client-and-server" />]);
-    }
-    //
-    else if (clientSide === EnvironmentSupport.REQUIRED || clientSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ClientSide key="Client-side" />]);
-    }
-    //
-    else if (serverSide === EnvironmentSupport.REQUIRED || serverSide === EnvironmentSupport.OPTIONAL) {
-        environments.push(...[<ServerSide key="Server-side" />]);
+        return [<ClientAndServerSide key="Client-and-server" />];
     }
 
-    return environments;
+    if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL) {
+        return [<ServerSide key="Server-side" />, <ClientSide key="Client-side" />, <ClientAndServerSide key="Client-and-server" />];
+    }
+
+    if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.OPTIONAL) {
+        return [<ClientSide key="Client-side" />, <ClientAndServerSide key="Client-and-server" />];
+    }
+
+    if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.REQUIRED) {
+        return [<ServerSide key="Server-side" />, <ClientAndServerSide key="Client-and-server" />];
+    }
+
+    if (clientSide === EnvironmentSupport.REQUIRED || clientSide === EnvironmentSupport.OPTIONAL) {
+        return [<ClientSide key="Client-side" />];
+    }
+
+    if (serverSide === EnvironmentSupport.REQUIRED || serverSide === EnvironmentSupport.OPTIONAL) {
+        return [<ServerSide key="Server-side" />];
+    }
+
+    return [];
 }
 
 export default function ProjectSupportedEnv({
     clientSide,
     serverSide,
-}: { clientSide: EnvironmentSupport; serverSide: EnvironmentSupport }) {
-    if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.REQUIRED) return <ClientAndServerSide />;
-    if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL) return <ClientOrServerSide />;
+    className,
+}: { clientSide: EnvironmentSupport; serverSide: EnvironmentSupport; className?: string }) {
+    if (clientSide === EnvironmentSupport.REQUIRED && serverSide === EnvironmentSupport.REQUIRED)
+        return <ClientAndServerSide className={className} />;
+    if (clientSide === EnvironmentSupport.OPTIONAL && serverSide === EnvironmentSupport.OPTIONAL)
+        return <ClientOrServerSide className={className} />;
 
-    if (serverSide === EnvironmentSupport.REQUIRED) return <ServerSide />;
-    if (clientSide === EnvironmentSupport.REQUIRED) return <ClientSide />;
+    if (serverSide === EnvironmentSupport.REQUIRED) return <ServerSide className={className} />;
+    if (clientSide === EnvironmentSupport.REQUIRED) return <ClientSide className={className} />;
 
-    if (serverSide === EnvironmentSupport.OPTIONAL) return <ServerSide />;
-    if (clientSide === EnvironmentSupport.OPTIONAL) return <ClientSide />;
+    if (serverSide === EnvironmentSupport.OPTIONAL) return <ServerSide className={className} />;
+    if (clientSide === EnvironmentSupport.OPTIONAL) return <ClientSide className={className} />;
 
     if (serverSide === EnvironmentSupport.UNKNOWN || clientSide === EnvironmentSupport.UNKNOWN) return null;
 
-    return <Unsupported />;
+    return <Unsupported className={className} />;
 }

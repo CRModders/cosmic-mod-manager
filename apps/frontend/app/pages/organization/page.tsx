@@ -1,3 +1,4 @@
+import type { ProjectType } from "@app/utils/types";
 import { useParams } from "react-router";
 import SearchListItem from "~/components/search-list-item";
 import { useOrgData } from "~/hooks/org";
@@ -21,12 +22,14 @@ function OrganizationPage() {
                         key={project.id}
                         vtId={project.id}
                         projectName={project.name}
-                        projectType={project.type[0]}
+                        projectType={project.type[0] as ProjectType}
                         projectSlug={project.slug}
                         icon={project.icon}
                         summary={project.summary}
                         loaders={project.loaders}
                         featuredCategories={project.featuredCategories}
+                        clientSide={project.clientSide}
+                        serverSide={project.serverSide}
                         downloads={project.downloads}
                         followers={project.followers}
                         dateUpdated={new Date(project.dateUpdated)}

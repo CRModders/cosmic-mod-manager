@@ -18,9 +18,9 @@
     /* DARK THEME */
     --accent-foreground-dark: var(--accent-color-hue), 85%, 70%;
     --foreground-bright-dark: var(--text-tint-hue), var(--body-text-saturation), 98%;
-    --foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 91%;
-    --muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 80%;
-    --extra-muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 64%;
+    --foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 92%;
+    --muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 81%;
+    --extra-muted-foreground-dark: var(--text-tint-hue), var(--body-text-saturation), 67%;
     --background-dark: var(--bg-tint-hue), var(--bg-saturation), 8%;
     --card-background-dark: var(--bg-tint-hue), var(--bg-saturation), 15%;
     --accent-background-dark: var(--accent-color-hue), 85%, 62%;
@@ -38,9 +38,9 @@
     /* LIGHT THEME */
     --accent-foreground-light: var(--accent-color-hue), 85%, 42%;
     --foreground-bright-light: var(--text-tint-hue), var(--body-text-saturation), 8%;
-    --foreground-light: var(--text-tint-hue), var(--body-text-saturation), 16%;
-    --muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 26%;
-    --extra-muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 38%;
+    --foreground-light: var(--text-tint-hue), var(--body-text-saturation), 15%;
+    --muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 24%;
+    --extra-muted-foreground-light: var(--text-tint-hue), var(--body-text-saturation), 36%;
     --background-light: var(--bg-tint-hue), var(--bg-saturation), 92%;
     --card-background-light: var(--bg-tint-hue), var(--bg-saturation), 100%;
     --accent-background-light: var(--accent-color-hue), 80%, 54%;
