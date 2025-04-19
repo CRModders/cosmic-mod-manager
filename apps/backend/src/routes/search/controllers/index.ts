@@ -1,4 +1,4 @@
-import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
+import { EnvironmentSupport, type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import type { ProjectListItem } from "@app/utils/types/api";
 import meilisearch from "~/services/meilisearch";
 import { HTTP_STATUS, invalidReqestResponseData } from "~/utils/http";
@@ -51,19 +51,25 @@ export async function searchProjects(props: Props) {
             break;
     }
 
-    const environments = [];
-    if (props.environments.includes("client")) {
-        environments.push("clientSide = true");
+    let envFilter = "";
+    // If both client and server are selected, only include projects that require both environments
+    if (props.environments.includes("client") && props.environments.includes("server")) {
+        envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide = ${EnvironmentSupport.REQUIRED}`;
     }
-    if (props.environments.includes("server")) {
-        environments.push("serverSide = true");
+    // If only client is selected, include projects that require only client or optionally server
+    else if (props.environments.includes("client")) {
+        envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide != ${EnvironmentSupport.REQUIRED}`
+    }
+    // If only server is selected, include projects that require only server or optionally client
+    else if (props.environments.includes("server")) {
+        envFilter = `serverSide = ${EnvironmentSupport.REQUIRED} AND clientSide != ${EnvironmentSupport.REQUIRED}`
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
-        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" AND "),
+        props.loaders.map((loader) => `loaders = ${loader}`).join(" OR "),
+        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" OR "),
         props.categories.map((category) => `categories = ${category}`).join(" AND "),
-        environments.join(" AND "),
+        envFilter,
     ];
 
     if (props.type) filters.push(`type = ${props.type}`);
@@ -96,6 +102,8 @@ export async function searchProjects(props: Props) {
             gameVersions: project.gameVersions,
             loaders: project.loaders,
             author: project.author,
+            clientSide: project.clientSide,
+            serverSide: project.serverSide,
             featured_gallery: project.featured_gallery,
             color: project.color || null,
             isOrgOwned: project.isOrgOwned,

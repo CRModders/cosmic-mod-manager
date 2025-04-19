@@ -1,4 +1,4 @@
-import { EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
+import { type EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { EnqueuedTask } from "meilisearch";
 import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
 import { isProjectIndexable } from "~/routes/project/utils";
@@ -52,8 +52,8 @@ export interface ProjectSearchDocument {
     gameVersions: string[];
     categories: string[];
     featuredCategories: string[];
-    clientSide: boolean;
-    serverSide: boolean;
+    clientSide: EnvironmentSupport;
+    serverSide: EnvironmentSupport;
     summary: string;
     downloads: number;
     followers: number;
@@ -128,8 +128,8 @@ export function FormatSearchDocument<T extends NonNullable<GetProject_Details_Re
         datePublished: Project.datePublished,
         dateUpdated: Project.dateUpdated,
         openSource: !!Project.projectSourceUrl,
-        clientSide: Project.clientSide === EnvironmentSupport.OPTIONAL || Project.clientSide === EnvironmentSupport.REQUIRED,
-        serverSide: Project.serverSide === EnvironmentSupport.OPTIONAL || Project.serverSide === EnvironmentSupport.REQUIRED,
+        clientSide: Project.clientSide as EnvironmentSupport,
+        serverSide: Project.serverSide as EnvironmentSupport,
         featured_gallery: featured_gallery,
         color: Project.color,
         author: author,

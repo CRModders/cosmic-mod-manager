@@ -9,7 +9,7 @@ import type {
     ProjectVisibility,
     UserSessionStates,
     VersionReleaseChannel,
-} from "../";
+} from "../index";
 
 export interface SessionListData {
     id: string;
@@ -154,8 +154,8 @@ export interface ProjectListItem {
     datePublished: Date;
     status?: ProjectPublishingStatus;
     visibility: ProjectVisibility;
-    clientSide?: EnvironmentSupport;
-    serverSide?: EnvironmentSupport;
+    clientSide: EnvironmentSupport;
+    serverSide: EnvironmentSupport;
     featuredCategories: string[];
     categories: string[];
     gameVersions: string[];
