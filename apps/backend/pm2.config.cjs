@@ -9,27 +9,15 @@ const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will
 const sourceDir = !isDev ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
 const backendDir = `${sourceDir}/apps/backend`; // Root of the backend
 
-const reloadBackend =
-    "pm2 reload pm2.config.cjs --only crmm-meilisearch && pm2 reload pm2.config.cjs --only crmm-redis && pm2 reload pm2.config.cjs --only crmm-backend";
-const processDownloadsQueue = "bun src/routes/cdn/process-downloads.ts";
-
-const dev_backend = {
-    name: "crmm-backend",
-    command: "bun run dev",
-    cwd: backendDir,
-    autorestart: true,
-    watch: false,
-};
-
-const prod_backend = {
-    name: "crmm-backend",
-    command: "bun run start",
-    cwd: backendDir,
-    autorestart: true,
-    watch: false,
-};
-
 const apps = [
+    {
+        name: "crmm-redis",
+        command: "/usr/bin/redis-server",
+        args: ["--port", "5501"],
+        cwd: `${backendDir}/redis`,
+        autorestart: true,
+        watch: false,
+    },
     {
         name: "crmm-meilisearch",
         command: "/usr/bin/meilisearch",
@@ -39,15 +27,20 @@ const apps = [
         watch: false,
     },
     {
-        name: "crmm-redis",
-        command: "/usr/bin/redis-server",
-        args: ["--port", "5501"],
-        cwd: `${backendDir}/redis`,
+        name: "crmm-backend",
+        command: `bun run ${isDev ? "dev" : "start"}`,
+        cwd: backendDir,
         autorestart: true,
         watch: false,
-    },
-    isDev ? dev_backend : prod_backend,
+    }
 ];
+
+let processes_ToReload = [];
+for (const app of apps) {
+    processes_ToReload.push(`pm2 reload pm2.config.cjs --only ${app.name}`);
+}
+
+const processDownloadsQueue = "bun run src/routes/cdn/process-downloads.ts";
 
 if (!isDev) {
     apps.push({
@@ -70,7 +63,7 @@ module.exports = {
             ref: "origin/main",
             repo: "https://github.com/CRModders/cosmic-mod-manager.git",
             path: rootDir,
-            "post-deploy": `cd ${backendDir} && ${processDownloadsQueue} && bun install && bun run prisma-generate && bun run prisma-push && ${reloadBackend}`,
+            "post-deploy": `cd ${backendDir} && ${processDownloadsQueue} && bun install && bun run prisma-generate && bun run prisma-push && ${processes_ToReload.join(" && ")}`,
         },
     },
 };

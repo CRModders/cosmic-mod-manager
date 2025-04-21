@@ -2,10 +2,10 @@ import { cacheKey } from "~/services/cache/utils";
 import redis from "~/services/redis";
 import { parseJson } from "~/utils/str";
 
-const TIME_1HR = 3600;
-const TIME_3HR = 10800;
-const TIME_6HR = 21600;
-const TIME_12HR = 43200;
+// const TIME_1HR = 3600;
+// const TIME_3HR = 10800;
+// const TIME_6HR = 21600;
+const TIME_12HR = 43200; // seconds
 
 // User
 export const USER_DATA_CACHE_EXPIRY_seconds = TIME_12HR;
@@ -29,7 +29,7 @@ export const FILE_ITEM_EXPIRY_seconds = TIME_12HR;
 // Statistics
 export const STATISTICS_CACHE_EXPIRY_seconds = TIME_12HR;
 
-export async function GetData_FromCache<T extends object | null>(NAMESPACE: string, key?: string): Promise<T | null> {
+export async function GetData_FromCache<T extends (object | null)>(NAMESPACE: string, key?: string): Promise<T | null> {
     const rawData = await GetRawData_FromCache(NAMESPACE, key);
     if (!rawData) return null;
 

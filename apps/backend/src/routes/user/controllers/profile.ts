@@ -101,7 +101,7 @@ export async function getUserAvatar(
                 const deletedDbFile = await DeleteFile_ByID(prevAvatarId);
                 await deleteUserFile(deletedDbFile.storageService as FILE_STORAGE_SERVICE, userId, deletedDbFile.name);
             }
-        } catch {}
+        } catch { }
 
         return null;
     }
