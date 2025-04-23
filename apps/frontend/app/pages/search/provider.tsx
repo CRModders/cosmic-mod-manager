@@ -108,10 +108,10 @@ export function SearchProvider(props: SearchProviderProps) {
     useEffect(() => {
         if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
         if (searchQueryParam === searchTerm_state) return;
-        if (!isNavigatedPage_SearchPage) return;
+        if (navigation.location && !isNavigatedPage_SearchPage) return;
 
         updateSearchParam_timeoutRef = window.setTimeout(() => {
-            if (!isNavigatedPage_SearchPage) return;
+            if (navigation.location && !isNavigatedPage_SearchPage) return;
             updateSearchTerm_Param(searchTerm_state);
         }, 250);
     }, [searchTerm_state]);
