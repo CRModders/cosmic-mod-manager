@@ -314,6 +314,7 @@ function AvailableVersionsList({ selectedGameVersion, selectedLoader }: Availabl
                             className={cn("shrink-0", isDownloadAnimationVisible && "pointer-events-none")}
                             label={`download ${version.title}`}
                             onClick={showDownloadAnimation}
+                            rel="nofollow noindex"
                         >
                             <DownloadIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         </VariantButtonLink>

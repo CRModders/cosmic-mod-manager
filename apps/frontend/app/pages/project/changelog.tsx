@@ -359,6 +359,7 @@ function ChangelogsList({ projectType, projectData, versionsList }: ListProps) {
                                         href={version.primaryFile.url}
                                         className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
                                         onClick={showDownloadAnimation}
+                                        rel="nofollow noindex"
                                     >
                                         <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                         {t.common.download}

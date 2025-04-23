@@ -274,6 +274,7 @@ export default function ProjectPageLayout() {
                                                     aria-label={`download ${version.title}`}
                                                     download={version.primaryFile?.name}
                                                     onClick={showDownloadAnimation}
+                                                    rel="nofollow noindex"
                                                 >
                                                     <DownloadIcon aria-hidden className="w-[1.07rem] h-[1.07rem]" strokeWidth={2.2} />
                                                 </a>

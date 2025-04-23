@@ -92,6 +92,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                                     variant={"default"}
                                     url={versionData.primaryFile?.url ? versionData.primaryFile?.url : ""}
                                     onClick={showDownloadAnimation}
+                                    rel="nofollow noindex"
                                 >
                                     <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     {t.common.download}
@@ -355,6 +356,7 @@ function FileDetailsItem({
                         url={downloadLink}
                         className={cn(!isPrimary && "hover:bg-transparent dark:hover:bg-transparent hover:text-foreground")}
                         onClick={showDownloadAnimation}
+                        rel="nofollow noindex"
                     >
                         <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                         {t.common.download}
