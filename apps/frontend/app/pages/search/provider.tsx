@@ -61,6 +61,10 @@ export function SearchProvider(props: SearchProviderProps) {
     const projectType = useProjectType();
     const projectType_Coerced = getProjectTypeFromName(projectType);
 
+    const navigated_ProjectType = useProjectType(navigation?.location?.pathname || "");
+    const nextPathname_WithoutLocalePrefix = (navigation?.location?.pathname || "").replace(localePrefix, "").replaceAll("/", "");
+    const isNavigatedPage_SearchPage = ["project", ...projectTypes].map((t) => `${t}s`).includes(nextPathname_WithoutLocalePrefix);
+
     const [query, setQuery] = useState({
         isLoading: false,
         isFetching: false,
@@ -102,10 +106,12 @@ export function SearchProvider(props: SearchProviderProps) {
     }, [searchParams.toString(), projectType]);
 
     useEffect(() => {
-        if (searchQueryParam === searchTerm_state) return;
         if (updateSearchParam_timeoutRef) window.clearTimeout(updateSearchParam_timeoutRef);
+        if (searchQueryParam === searchTerm_state) return;
+        if (!isNavigatedPage_SearchPage) return;
 
         updateSearchParam_timeoutRef = window.setTimeout(() => {
+            if (!isNavigatedPage_SearchPage) return;
             updateSearchTerm_Param(searchTerm_state);
         }, 250);
     }, [searchTerm_state]);
@@ -114,10 +120,6 @@ export function SearchProvider(props: SearchProviderProps) {
     useEffect(() => {
         if (!navigation.location?.pathname) return;
         setSearchTerm_state("");
-
-        const nextPathname_WithoutLocalePrefix = navigation.location.pathname.replace(localePrefix, "").replaceAll("/", "");
-        const isNavigatedPage_SearchPage = ["project", ...projectTypes].map((t) => `${t}s`).includes(nextPathname_WithoutLocalePrefix);
-        const navigated_ProjectType = useProjectType(navigation.location.pathname);
 
         // If the user navigates to a different project type search page, reset the query data
         if (query.data?.projectType !== navigated_ProjectType && isNavigatedPage_SearchPage === true) {

@@ -8,7 +8,7 @@ enum LogPrefix {
 }
 
 const METHOD_WIDTH = 5;
-const PATH_WIDTH = 50;
+const PATH_WIDTH = 70;
 const STATUS_WIDTH = 6;
 const ELAPSED_WIDTH = 6;
 const IP_WIDTH = 45;
