@@ -207,8 +207,10 @@ export default {
         // Sorting methods
         showPerPage: "Show per page",
         sortBy: "Sort by",
+
         relevance: "Relevance",
         downloads: "Downloads",
+        trending: "Trending",
         follow_count: "Follow count",
         recently_updated: "Recently updated",
         recently_published: "Recently published",

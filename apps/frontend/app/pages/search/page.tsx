@@ -128,6 +128,7 @@ export default function SearchPage() {
                                 <SelectLabel className="text-foreground font-bold">{t.search.sortBy}</SelectLabel>
                                 {[
                                     SearchResultSortMethod.RELEVANCE,
+                                    SearchResultSortMethod.TRENDING,
                                     SearchResultSortMethod.DOWNLOADS,
                                     SearchResultSortMethod.FOLLOW_COUNT,
                                     SearchResultSortMethod.RECENTLY_UPDATED,

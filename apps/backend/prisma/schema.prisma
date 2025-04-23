@@ -266,3 +266,13 @@ model Collection {
 
     user User @relation(name: "UserCollections", fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// Non-Project related stuff
+
+model ProjectDailyStats {
+    projectId String @id @unique @db.VarChar(32)
+    date      String // Format YYYY-MM-DD
+    downloads Int    @default(0)
+    follows   Int    @default(0)
+    unfollows Int    @default(0)
+}

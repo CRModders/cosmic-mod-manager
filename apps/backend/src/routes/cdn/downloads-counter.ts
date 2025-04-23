@@ -3,6 +3,8 @@ import { UpdateVersion } from "~/db/version_item";
 import redis from "~/services/redis";
 import { generateRandomId } from "~/utils/str";
 import { UpdateProjects_SearchIndex } from "../search/search-db";
+import { Analytics_InsertProjectDownloads } from "~/services/clickhouse/project-downloads";
+import prisma from "~/services/prisma";
 
 interface DownloadsQueueItem {
     id: string;
@@ -12,13 +14,16 @@ interface DownloadsQueueItem {
     versionId: string;
 }
 
-const QUEUE_PROCESS_INTERVAL = 300_000; // 5 minutes
-const HISTORY_VALIDITY = 7200_000; // 2 hours
+const QUEUE_PROCESS_INTERVAL = 600_000; // 10 minutes
+const HISTORY_VALIDITY = 10800_000; // 3 hours
 
 const DOWNLOADS_QUEUE_KEY = "downloads-counter-queue";
 const DOWNLOADS_HISTORY_KEY = "downloads-history";
 
 const MAX_DOWNLOADS_PER_USER_PER_HISTORY_WINDOW = 3;
+
+await processDownloads();
+queueDownloadsHistoryRefresh();
 
 async function getDownloadsHistory() {
     const list: DownloadsQueueItem[] = [];
@@ -84,8 +89,6 @@ export async function processDownloads() {
         // History counters
         const userDownloadsHistory = new Map<string, number>();
         const ipDownloadsHistory = new Map<string, number>();
-        const userDownloadsHistoryMapKey = (userId: string, projectId: string) => `${userId}:${projectId}`;
-        const ipDownloadsHistoryMapKey = (ipAddr: string, projectId: string) => `${ipAddr}:${projectId}`;
 
         for (let i = 0; i < downloadsQueue.length; i++) {
             const queueItem = downloadsQueue[i];
@@ -114,8 +117,8 @@ export async function processDownloads() {
             }
 
             if (!isDuplicateDownload) {
-                await addToHistory(queueItem);
-                downloadsHistory.push(queueItem);
+                await addToHistory(queueItem); // redis
+                downloadsHistory.push(queueItem); // also push to the current history array
 
                 versionDownloadsMap.set(queueItem.versionId, (versionDownloadsMap.get(queueItem.versionId) || 0) + 1);
                 projectDownloadsMap.set(queueItem.projectId, (projectDownloadsMap.get(queueItem.projectId) || 0) + 1);
@@ -140,8 +143,15 @@ export async function processDownloads() {
 
         // Update all the projects
         const projectIds = Array.from(projectDownloadsMap.keys());
+        const today = new Date().toISOString().split("T")[0];
+        const prevDayProjectsStats = await prisma.projectDailyStats.findMany({
+            where: {
+                projectId: { in: projectIds },
+            },
+        });
+
         for (const projectId of projectIds) {
-            const downloadsCount = projectDownloadsMap.get(projectId);
+            const downloadsCount = projectDownloadsMap.get(projectId) || 0;
             try {
                 promises.push(
                     UpdateProject({
@@ -149,6 +159,34 @@ export async function processDownloads() {
                         data: { downloads: { increment: downloadsCount } },
                     }),
                 );
+
+                const prevDayStats = prevDayProjectsStats.find((stats) => stats.projectId === projectId);
+                if (prevDayStats?.date && prevDayStats.date !== today) {
+                    promises.push(
+                        Analytics_InsertProjectDownloads(projectId, prevDayStats.downloads),
+                        prisma.projectDailyStats.update({
+                            where: { projectId },
+                            data: { downloads: downloadsCount, date: today },
+                        }),
+                    );
+                } else {
+                    promises.push(
+                        prisma.projectDailyStats.upsert({
+                            where: { projectId },
+                            update: {
+                                downloads: {
+                                    increment: downloadsCount,
+                                },
+                            },
+
+                            create: {
+                                projectId: projectId,
+                                downloads: downloadsCount,
+                                date: today,
+                            },
+                        }),
+                    );
+                }
             } catch {}
         }
 
@@ -180,5 +218,9 @@ export async function addToDownloadsQueue(item: Omit<DownloadsQueueItem, "id">) 
     await redis.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: generateRandomId() }));
 }
 
-await processDownloads();
-queueDownloadsHistoryRefresh();
+function userDownloadsHistoryMapKey(userId: string, projectId: string) {
+    return `${userId}:${projectId}`;
+}
+function ipDownloadsHistoryMapKey(ipAddr: string, projectId: string) {
+    return `${ipAddr}:${projectId}`;
+}

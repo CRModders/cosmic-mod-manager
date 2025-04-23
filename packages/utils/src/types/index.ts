@@ -176,6 +176,7 @@ export enum TagHeaderType {
 export enum SearchResultSortMethod {
     RELEVANCE = "relevance",
     DOWNLOADS = "downloads",
+    TRENDING = "trending",
     FOLLOW_COUNT = "follow_count",
     RECENTLY_UPDATED = "recently_updated",
     RECENTLY_PUBLISHED = "recently_published",

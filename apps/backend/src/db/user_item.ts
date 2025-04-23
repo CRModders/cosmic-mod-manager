@@ -101,8 +101,8 @@ export async function GetManyUsers_ByIds(ids: string[]) {
     const _DB_Users =
         UserIds_ToFetchFromDb.length > 0
             ? await prisma.user.findMany({
-                where: { id: { in: UserIds_ToFetchFromDb } },
-            })
+                  where: { id: { in: UserIds_ToFetchFromDb } },
+              })
             : [];
 
     // Set cache for remaining users

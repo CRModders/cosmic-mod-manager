@@ -1,2 +1,7 @@
 node_modules
 .env
+
+
+apps/backend/clickhouse
+apps/apps/backend/redis
+apps/backend/meilisearch

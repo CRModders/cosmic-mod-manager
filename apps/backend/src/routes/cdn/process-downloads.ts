@@ -1,6 +1,7 @@
 import { DownloadsProcessing, processDownloads } from "./downloads-counter";
 
 if ((await DownloadsProcessing()) === false) {
+    console.log("Processing the downloads queue before exiting...");
     await processDownloads();
 } else {
     while ((await DownloadsProcessing()) === true) {

@@ -30,6 +30,9 @@ const envKeys = [
     "BACKBLAZE_BACKUP_API_KEY_ID",
     "BACKBLAZE_BACKUP_API_KEY",
     "ARCHIVE_USER_ID",
+    "CLICKHOUSE_PORT",
+    "CLICKHOUSE_USER",
+    "CLICKHOUSE_PASSWORD",
 ] as const;
 
 type EnvKeys = (typeof envKeys)[number];

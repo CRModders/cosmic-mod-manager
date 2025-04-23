@@ -3,6 +3,7 @@ import meilisearch from "~/services/meilisearch";
 import redis from "~/services/redis";
 import { isProjectIndexable } from "../project/utils";
 import { AwaitEnqueuedTask, FormatSearchDocument, InitialiseSearchDb, projectSearchNamespace } from "./sync-utils";
+import { getLastMonthProjectDownloads } from "~/services/clickhouse/project-downloads";
 
 const ADDED_ITEMS_QUEUE = "search_projects_sync_queue:added";
 const REMOVED_ITEMS_QUEUE = "search_projects_sync_queue:removed";
@@ -66,6 +67,7 @@ async function UpdateSearchIndex() {
 async function Process_AddedProjects(ProjectIds: string[]) {
     const index = meilisearch.index(projectSearchNamespace);
     const Projects = await GetManyProjects_Details(ProjectIds);
+    const recentDownloads_Map = await getLastMonthProjectDownloads(ProjectIds);
 
     const documents = [];
     for (let i = 0; i < Projects.length; i++) {
@@ -74,7 +76,7 @@ async function Process_AddedProjects(ProjectIds: string[]) {
             RemoveProjects_FromSearchIndex([Project.id]);
         }
 
-        documents.push(FormatSearchDocument(Project));
+        documents.push(FormatSearchDocument(Project, recentDownloads_Map.get(Project.id) || 0));
     }
 
     await AwaitEnqueuedTask(await index.addDocuments(documents));

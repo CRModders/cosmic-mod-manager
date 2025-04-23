@@ -93,13 +93,13 @@ export async function getProjectData(slug: string, userSession: ContextUserData 
         members: project.team.members.map((member) => formatProjectMember(member, currSessionMember)),
         organisation: org
             ? {
-                id: org.id,
-                name: org.name,
-                slug: org.slug,
-                description: org.description,
-                icon: orgIconUrl(org.id, org.iconFileId),
-                members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
-            }
+                  id: org.id,
+                  name: org.name,
+                  slug: org.slug,
+                  description: org.description,
+                  icon: orgIconUrl(org.id, org.iconFileId),
+                  members: org.team.members.map((member) => formatProjectMember(member, currSessionMember)),
+              }
             : null,
     };
 

@@ -35,7 +35,10 @@ export async function searchProjects(props: Props) {
 
     switch (props.sortBy) {
         case SearchResultSortMethod.RELEVANCE:
-            sortBy = props.query ? null : "downloads:desc";
+            sortBy = props.query ? null : "recentDownloads:desc";
+            break;
+        case SearchResultSortMethod.TRENDING:
+            sortBy = "recentDownloads:desc";
             break;
         case SearchResultSortMethod.RECENTLY_PUBLISHED:
             sortBy = "datePublished:desc";

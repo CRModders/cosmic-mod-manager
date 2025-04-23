@@ -2,6 +2,7 @@ import { type EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } f
 import type { EnqueuedTask } from "meilisearch";
 import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
 import { isProjectIndexable } from "~/routes/project/utils";
+import { getLastMonthProjectDownloads } from "~/services/clickhouse/project-downloads";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
@@ -24,7 +25,7 @@ export async function InitialiseSearchDb() {
                 "clientSide",
                 "serverSide",
             ]),
-            await index.updateSortableAttributes(["downloads", "followers", "dateUpdated", "datePublished"]),
+            await index.updateSortableAttributes(["downloads", "followers", "dateUpdated", "datePublished", "recentDownloads"]),
             await index.updateRankingRules(["sort", "words", "typo", "proximity", "attribute"]),
             await index.updateSearchableAttributes(["name", "slug", "summary", "author"]),
 
@@ -56,6 +57,7 @@ export interface ProjectSearchDocument {
     serverSide: EnvironmentSupport;
     summary: string;
     downloads: number;
+    recentDownloads: number;
     followers: number;
     datePublished: Date;
     dateUpdated: Date;
@@ -71,7 +73,7 @@ async function _SyncBatch(cursor: null | string) {
     try {
         const index = meilisearch.index(projectSearchNamespace);
 
-        const _Projects_Ids = await prisma.project.findMany({
+        const _Projects_Ids_Res = await prisma.project.findMany({
             where: {
                 visibility: {
                     in: [ProjectVisibility.LISTED, ProjectVisibility.ARCHIVED],
@@ -86,28 +88,30 @@ async function _SyncBatch(cursor: null | string) {
             },
         });
 
-        if (_Projects_Ids.length === 0) return;
+        if (_Projects_Ids_Res.length === 0) return;
+        const _ProjectIds = _Projects_Ids_Res.map((p) => p.id);
 
-        const Projects = await GetManyProjects_Details(_Projects_Ids.map((project) => project.id));
+        const Projects = await GetManyProjects_Details(_ProjectIds);
+        const recentDownloadsCount_Map = await getLastMonthProjectDownloads(_ProjectIds);
         const formattedProjectsData: ProjectSearchDocument[] = [];
 
         for (const Project of Projects) {
             if (!Project) continue;
             if (!isProjectIndexable(Project.visibility, Project.status)) continue;
 
-            formattedProjectsData.push(FormatSearchDocument(Project));
+            formattedProjectsData.push(FormatSearchDocument(Project, recentDownloadsCount_Map.get(Project.id) || 0));
         }
 
         await AwaitEnqueuedTask(await index.addDocuments(formattedProjectsData));
 
         if (formattedProjectsData.length < SYNC_BATCH_SIZE) return null;
-        return _Projects_Ids.at(-1)?.id;
+        return _Projects_Ids_Res.at(-1)?.id;
     } catch (error) {
         console.error(error);
     }
 }
 
-export function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnType>>(Project: T) {
+export function FormatSearchDocument<T extends NonNullable<GetProject_Details_ReturnType>>(Project: T, recentDownloads: number) {
     const author = Project.organisation?.slug || Project.team.members?.[0]?.user?.userName;
     const FeaturedGalleryItem = Project.gallery.find((item) => item.featured === true);
     const featured_gallery = FeaturedGalleryItem ? projectGalleryFileUrl(Project.id, FeaturedGalleryItem.thumbnailFileId) : null;
@@ -124,6 +128,7 @@ export function FormatSearchDocument<T extends NonNullable<GetProject_Details_Re
         featuredCategories: Project.featuredCategories,
         summary: Project.summary,
         downloads: Project.downloads,
+        recentDownloads: recentDownloads,
         followers: Project.followers,
         datePublished: Project.datePublished,
         dateUpdated: Project.dateUpdated,
@@ -135,7 +140,7 @@ export function FormatSearchDocument<T extends NonNullable<GetProject_Details_Re
         author: author,
         isOrgOwned: !!Project.organisation?.slug,
         visibility: Project.visibility as ProjectVisibility,
-    };
+    } satisfies ProjectSearchDocument;
 }
 
 const PROCESSING_TASK_STATUSES = ["enqueued", "processing"];
