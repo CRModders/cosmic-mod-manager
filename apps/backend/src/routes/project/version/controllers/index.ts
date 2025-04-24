@@ -44,7 +44,6 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
         }
     }
     const versionFilesMap = await getFilesFromId(idsList);
-
     const versionsList: ProjectVersionData[] = [];
 
     for (let i = 0; i < projectVersions.length; i++) {
@@ -102,7 +101,7 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
                 ? {
                       id: authorData.id,
                       userName: authorData.user.userName,
-                      avatar: userIconUrl(authorData.userId, authorData.user.userName),
+                      avatar: userIconUrl(authorData.userId, authorData.user.avatar),
                       role: authorData?.role || "",
                   }
                 : {
