@@ -73,7 +73,7 @@ export default function SearchPage() {
                         searchParams={searchParams}
                     />
                 );
-            }, [projectType_Coerced, showFilters, searchParams.toString()])}
+            }, [projectType, showFilters, searchParams.toString()])}
 
             <main id="main" style={{ gridArea: "content" }} className="h-fit grid grid-cols-1 gap-panel-cards">
                 <Card className="h-fit p-card-surround flex flex-wrap items-center justify-start gap-2">
