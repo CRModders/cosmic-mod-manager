@@ -1,4 +1,4 @@
-import { fallbackProjectIcon } from "@app/components/icons";
+import { fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import {
@@ -278,7 +278,8 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                                 content: (
                                     <ProjectMember
                                         userName={versionData.author.userName}
-                                        avatarImageUrl={versionData.author.avatar || ""}
+                                        avatarImageUrl={imageUrl(versionData.author.avatar)}
+                                        fallbackIcon={fallbackUserIcon}
                                         isOwner={false}
                                         roleName={versionData.author.role}
                                     />
