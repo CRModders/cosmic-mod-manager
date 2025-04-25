@@ -17,6 +17,7 @@ interface IconPickerProps {
     onChange: (file: File | undefined) => void;
     fallbackIcon: React.ReactNode;
     originalIcon: string;
+    vtId?: string;
 }
 
 export default function IconPicker(props: IconPickerProps) {
@@ -61,6 +62,8 @@ export default function IconPicker(props: IconPickerProps) {
                     })()}
                     className="rounded"
                     fallback={props.fallbackIcon}
+                    // Only set view transition id if the icon has not changed
+                    vtId={!props.icon ? props.vtId : undefined}
                 />
 
                 <div className="flex flex-col items-start justify-center gap-2">

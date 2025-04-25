@@ -6,7 +6,7 @@ import type { Prisma } from "@prisma/client";
 import { GetProject_Details } from "~/db/project_item";
 import { GetVersions } from "~/db/version_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
-import { isProjectAccessible } from "~/routes/project/utils";
+import { DELETED_USER_AUTHOR_OBJ, isProjectAccessible } from "~/routes/project/utils";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, notFoundResponseData } from "~/utils/http";
 import { GetReleaseChannelFilter } from "~/utils/project";
@@ -104,12 +104,7 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
                       avatar: userIconUrl(authorData.userId, authorData.user.avatar),
                       role: authorData?.role || "",
                   }
-                : {
-                      id: "deleted_user",
-                      userName: "deleted_user",
-                      avatar: null,
-                      role: "",
-                  },
+                : DELETED_USER_AUTHOR_OBJ,
             dependencies: version.dependencies.map((dependency) => ({
                 projectId: dependency.projectId,
                 versionId: dependency.versionId,

@@ -260,3 +260,10 @@ export function aggregateProjectLoaders(projectLoaders: string[]) {
 export function aggregateProjectLoaderNames(projectLoaders: string[]) {
     return aggregateProjectLoaders(projectLoaders).map((loader) => loader.name);
 }
+
+export const DELETED_USER_AUTHOR_OBJ = {
+    id: "deleted_user",
+    userName: "deleted_user",
+    avatar: null,
+    role: "",
+};

@@ -1,11 +1,10 @@
-import type { ProjectVersionData } from "@app/utils/types/api";
 import { type Context, Hono } from "hono";
 import { AuthenticationMiddleware } from "~/middleware/auth";
 import { getReqRateLimiter, strictGetReqRateLimiter } from "~/middleware/rate-limit/get-req";
 import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
 import { HashAlgorithms } from "~/types";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
-import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "~/utils/http";
+import { HTTP_STATUS, invalidReqestResponse, notFoundResponse, serverErrorResponse } from "~/utils/http";
 import { GetReleaseChannelFilter } from "~/utils/project";
 import { versionFileUrl } from "~/utils/urls";
 import {
@@ -34,10 +33,14 @@ async function versionFromHash_get(ctx: Context, download = false) {
         }
 
         const res = await GetVersionFromFileHash(hash, hashAlgorithm);
+        if (res.status !== HTTP_STATUS.OK) return ctx.json(res.data, res.status);
+
         if (download) {
-            const version = res.data as ProjectVersionData;
+            const version = res.data;
+            if (!version.primaryFile) return notFoundResponse(ctx, "Couldn't find the version's primary file!");
+
             return ctx.redirect(
-                versionFileUrl(version.projectId as string, version.id, version.primaryFile?.name as string) as string,
+                versionFileUrl(version.projectId, version.id, version.primaryFile?.name) as string,
                 HTTP_STATUS.TEMPORARY_REDIRECT,
             );
         }

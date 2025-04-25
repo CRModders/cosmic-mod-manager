@@ -4,6 +4,7 @@ import type { Prisma } from "@prisma/client";
 import { GetManyFiles } from "~/db/file_item";
 import { GetMany_ProjectsVersions } from "~/db/version_item";
 import { getFilesFromId } from "~/routes/project/queries/file";
+import { DELETED_USER_AUTHOR_OBJ } from "~/routes/project/utils";
 import prisma from "~/services/prisma";
 import { HashAlgorithms } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
@@ -13,15 +14,11 @@ import { userIconUrl, versionFileUrl } from "~/utils/urls";
 export async function GetVersionFromFileHash(hash: string, algorithm: HashAlgorithms) {
     const res = await GetVersionsFromFileHashes([hash], algorithm);
 
-    if ("success" in res.data && res.data.success === false) return res;
-    if (Array.isArray(res.data)) {
-        return {
-            data: res.data[0],
-            status: res.status,
-        };
-    }
-
-    return res;
+    if (res.status !== HTTP_STATUS.OK) return res;
+    return {
+        data: res.data[hash],
+        status: res.status,
+    };
 }
 
 export async function GetVersionsFromFileHashes(hashes: string[], algorithm: HashAlgorithms) {
@@ -131,12 +128,14 @@ export async function GetVersionsFromFileHashes(hashes: string[], algorithm: Has
             loaders: version.loaders,
             primaryFile: files.find((f) => f.isPrimary) as VersionFile,
             files: files,
-            author: {
-                id: version.author.id,
-                userName: version.author.userName,
-                avatar: userIconUrl(version.author.id, version.author.avatar),
-                role: "",
-            },
+            author: version.author
+                ? {
+                      id: version.author.id,
+                      userName: version.author.userName,
+                      avatar: userIconUrl(version.author.id, version.author.avatar),
+                      role: "",
+                  }
+                : DELETED_USER_AUTHOR_OBJ,
             dependencies: version.dependencies.map((dependency) => ({
                 id: dependency.id,
                 projectId: dependency.projectId,
@@ -161,16 +160,11 @@ interface VersionFilter {
 export async function GetLatestProjectVersionFromHash(hash: string, algorithm: HashAlgorithms, filter: VersionFilter) {
     const res = await GetLatestProjectVersionsFromHashes([hash], algorithm, filter);
 
-    if (res.data.success === false) return res;
-
-    if (typeof res.data === "object") {
-        return {
-            data: res.data[hash as keyof typeof res.data],
-            status: res.status,
-        };
-    }
-
-    return res;
+    if (res.status !== HTTP_STATUS.OK) return res;
+    return {
+        data: res.data[hash],
+        status: res.status,
+    };
 }
 
 export async function GetLatestProjectVersionsFromHashes(hashes: string[], algorithm: HashAlgorithms, filter: VersionFilter) {
@@ -323,12 +317,14 @@ export async function GetLatestProjectVersionsFromHashes(hashes: string[], algor
             loaders: version.loaders,
             primaryFile: files.find((f) => f.isPrimary) as VersionFile,
             files: files,
-            author: {
-                id: version.author.id,
-                userName: version.author.userName,
-                avatar: userIconUrl(version.author.id, version.author.avatar),
-                role: "",
-            },
+            author: version.author
+                ? {
+                      id: version.author.id,
+                      userName: version.author.userName,
+                      avatar: userIconUrl(version.author.id, version.author.avatar),
+                      role: "",
+                  }
+                : DELETED_USER_AUTHOR_OBJ,
             dependencies: version.dependencies.map((dependency) => ({
                 id: dependency.id,
                 projectId: dependency.projectId,
