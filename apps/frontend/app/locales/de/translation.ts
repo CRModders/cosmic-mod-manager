@@ -1,6 +1,6 @@
 import { Capitalize } from "@app/utils/string";
 import type { Locale } from "~/locales/types";
-import { SearchItem_Header } from "../shared-enums";
+import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./legal";
 import tags from "./tags";
 
@@ -65,6 +65,7 @@ export default {
         copyId: "ID kopieren",
         all: "Alle",
         noResults: "Keine Ergebnisse",
+        more: "Mehr",
     },
 
     count: {
@@ -99,9 +100,8 @@ export default {
         modpacks: "Modpacks",
         plugin: "Plugin",
         plugins: "Plugins",
-        // ? New strings
-        // world: "world",
-        // worlds: "worlds",
+        world: "Welt",
+        worlds: "Welten",
         signout: "Ausloggen",
         profile: "Profil",
         skipToMainContent: "Zum Hauptinhalt vorspringen",
@@ -117,6 +117,7 @@ export default {
         email: "Email",
         password: "Passwort",
         changePassword: "Passwort ändern",
+        loginUsing: "Anmelden mit:",
         dontHaveAccount: "Du hast kein Konto?",
         alreadyHaveAccount: "Du hast bereits ein Konto?",
         forgotPassword: "Passwort vergessen?",
@@ -191,6 +192,7 @@ export default {
         projects: "Projekte",
         organizations: "Organisationen",
         collections: "Sammlungen",
+        collection: "Sammlung",
         revenue: "Einnahmen",
         manage: "Verwalten",
         seeAll: "Alles anzeigen",
@@ -217,19 +219,21 @@ export default {
         creatingOrg: "Erstellen einer Organisation",
         enterOrgName: "Organisationsname eingeben",
         enterOrgDescription: "Gebe eine kurze Beschreibung für deine Organisation ein",
+        creatingACollection: "Eine Sammlung erstellen",
+        enterCollectionName: "Gib der Sammlung einen Namen",
+        createCollection: "Sammlung erstellen",
     },
 
     search: {
         // Search labels
-        project: "Entdecke Projekte",
-        mod: "Entdecke Mods",
-        "resource-pack": "Entdecke Ressourcenpakete",
-        shader: "Entdecke Shader",
-        plugin: "Entdecke Plugins",
-        modpack: "Entdecke Modpacks",
-        datamod: "Entdecke Datamods",
-        // ? New string
-        // world: "Search worlds",
+        project: "Durchsuche Projekte",
+        mod: "Durchsuche Mods",
+        "resource-pack": "Durchsuche Ressourcenpakete",
+        shader: "Durchsuche Shader",
+        plugin: "Durchsuche Plugins",
+        modpack: "Durchsuche Modpacks",
+        datamod: "Durchsuche Datamods",
+        world: "Durchsuche Welten",
 
         // Sorting methods
         showPerPage: "Zeige pro Seite",
@@ -280,8 +284,7 @@ export default {
         organization: "Organisation",
         project: "Projekt",
         details: "Details",
-        // ? New string
-        // licensed: (license: string) => ["LICENSED", license, ""],
+        licensed: (license: string) => ["LIZENSIERT UNTER", license, ""],
         updatedAt: (when: string) => `${Capitalize(when)} aktualisiert`, // eg: Updated 3 days ago
         publishedAt: (when: string) => `${Capitalize(when)} veröffentlicht`, // eg: Published 3 days ago
         gallery: "Gallerie",
@@ -328,20 +331,23 @@ export default {
             `Du wurdest eingeladen, in ${demonstrativePronounDative[genderOf[teamType] || ("a" as Gender)]} ${teamType} Mitglied mit der Rolle '${role}' zu sein.`,
 
         browse: {
-            mod: "Durchsuche Mods",
-            datamod: "Durchsuche Datamods",
-            "resource-pack": "Durchsuche Ressourcenpakete",
-            shader: "Durchsuche Shaders",
-            modpack: "Durchsuche Modpacks",
-            plugin: "Durchsuche Plugins",
-            // ? New string
-            world: "Browse worlds",
+            mod: "Entdecke Mods",
+            datamod: "Entdecke Datamods",
+            "resource-pack": "Entdecke Ressourcenpakete",
+            shader: "Entdecke Shaders",
+            modpack: "Entdecke Modpacks",
+            plugin: "Entdecke Plugins",
+            world: "Entdecke Welten",
         },
 
         rejected: "Abgelehnt",
         withheld: "Zurückgehalten",
         archivedMessage: (project: string) =>
             `${project} wurde archiviert. Es wird keine weiteren Updates geben, außer der Author entscheidet sich, die Archivierung des Projekts aufzuheben.`,
+        updateProjectStatus: "Projektstatus ändern",
+        sureToUpdateStatus: (projectName: string, projectType: string, prevStatus: string, newStatus: string) =>
+            `Bist du dir sicher, dass du den Status des Projektes **${projectName}** ${projectType} von **${prevStatus}** zu **${newStatus}** ändern möchtest?`,
+
         publishingChecklist: {
             required: "Benötigt",
             suggestion: "Vorschlag",
@@ -367,8 +373,7 @@ export default {
             selectEnv: "Wähle unterstützte Umgebungen",
             selectEnvDesc: (projectType: string) =>
                 `Wähle, ob ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} Client- und/oder Serverseitige Funktionen hat.`,
-            // ? New string
-            // requiredStepsDesc: "All marked with an asterisk(*) are required",
+            requiredStepsDesc: "Alle mit einem Sternchen (*) markierten Felder werden benötigt.",
             submitForReview: "Zur Prüfung vorlegen",
             submitForReviewDesc:
                 "Dein Projekt kann nur von den Mitgliedern des Projektes gesehen werden. Es muss von Moderatoren zugelassen werden, um veröffentlicht zu werden.",
@@ -437,6 +442,16 @@ export default {
         copySha1: "SHA-1 Hash kopieren",
         copySha512: "SHA-512 Hash kopieren",
         copyFileUrl: "Datei-URL kopieren",
+
+        authoredBy: (version: string, author: string, publish_date: string) => {
+            return [
+                [VersionAuthor_Header.VERSION, version],
+                [VersionAuthor_Header.STR, " von "],
+                [VersionAuthor_Header.AUTHOR, author],
+                [VersionAuthor_Header.STR, " am "],
+                [VersionAuthor_Header.PUBLISH_DATE, publish_date],
+            ];
+        },
     },
 
     projectSettings: {
@@ -466,9 +481,8 @@ export default {
         licenseUrl: "Lizenz-URL (optional)",
         spdxId: "SPDX-Identifikator",
         doesntHaveSpdxId: "Die Lizenz hat keinen SPDX-Identifikator",
-        // ? Use the projectType string instead of "Mod"
         tagsDesc: (projectType) =>
-            "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
+            `Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.`,
         tagsDesc2: (projectType: string) =>
             `Wähle alle Kategorien aus, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,
         featuredCategories: "Hervorgehobene Kategorien",
@@ -496,6 +510,7 @@ export default {
         visibleToMembersOnly: "Nur Mitglieder werden das Projekt sehen können",
         listed: "Gelistet",
         private: "Privat",
+        public: "Öffentlich",
         unlisted: "Nicht gelistet",
         archived: "Archiviert",
         deleteProject: "Projekt löschen",
@@ -644,8 +659,7 @@ export default {
         email: "Email",
         username: "Nutzername",
         password: "Passwort",
-        // ? New string
-        // displayName: "Display name",
+        displayName: "Anzeigename",
         name: "Name",
         icon: "Icon",
         details: "Details",
@@ -670,6 +684,7 @@ export default {
         removeIcon: "Icon entfernen",
         noFileChosen: "Keine Datei gewählt",
         showAllVersions: "Zeige alle Versionen",
+        createNew: "Hinzufügen",
     },
 
     error: {
@@ -713,5 +728,10 @@ export default {
         video: "Video",
         preview: "Vorschau",
         insert: "Einfügen",
+        supportsMarkdown: (markdownPageUrl: string) => `Du kannst hier [Markdown](${markdownPageUrl}) nutzen.`,
+        keyboardShortcuts: "Tastenkombinationen",
+        action: "Aktion",
+        shortcut: "Tastenkombination",
+        toggleLineWrap: "Zeilenumbruch umschalten",
     },
 } satisfies Locale;
