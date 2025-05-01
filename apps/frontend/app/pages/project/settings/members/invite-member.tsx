@@ -54,7 +54,6 @@ export default function InviteMemberForm({ teamId, canInviteMembers, dataRefetch
         }
     }
 
-    const teamType = isOrg ? t.project.organization : t.project.project;
     const inviteDesc = isOrg ? t.projectSettings.inviteOrgMemberDesc : t.projectSettings.inviteProjectMemberDesc;
 
     return (

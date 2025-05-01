@@ -8,7 +8,7 @@ export function isUrl(str: string) {
         new URL(str);
 
         return true;
-    } catch (error) {
+    } catch {
         return false;
     }
 }

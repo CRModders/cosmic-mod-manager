@@ -33,7 +33,7 @@ export function timeSince(pastTime: Date, locale = "en-US"): string {
 export function DateFromStr(date: string | Date) {
     try {
         return new Date(date);
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -46,7 +46,7 @@ export function date(date: string | Date) {
 export function DateToISOStr(date: string | Date): string | null {
     try {
         return new Date(date).toISOString();
-    } catch (error) {
+    } catch {
         return null;
     }
 }

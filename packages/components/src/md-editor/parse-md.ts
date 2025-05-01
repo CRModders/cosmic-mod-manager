@@ -141,7 +141,7 @@ export function configureXss(urlModifier?: (url: string) => string) {
                         );
                     }
                     return safeAttrValue(tag, name, url.toString(), cssFilter);
-                } catch (err) {
+                } catch {
                     /* empty */
                 }
             }
@@ -177,7 +177,7 @@ export function md(options = {}) {
                 if (allowedHostnames.includes(url.hostname)) {
                     return defaultLinkOpenRenderer(tokens, idx, options, env, self);
                 }
-            } catch (err) {
+            } catch {
                 /* empty */
             }
         }

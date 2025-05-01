@@ -101,7 +101,7 @@ export async function unlinkAuthProvider(ctx: Context, userSession: ContextUserD
                 },
             })
         ).count;
-    } catch (err) {}
+    } catch {}
 
     if (!deletedAuthAccount || deletedAuthAccount < 1) {
         await addInvalidAuthAttempt(ctx);

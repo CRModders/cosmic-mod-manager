@@ -15,7 +15,7 @@ export default async function bodyParserMiddleware(ctx: Context, next: Next) {
         }
 
         ctx.set(REQ_BODY_NAMESPACE, body || null);
-    } catch (error) {}
+    } catch {}
 
     await next();
 }

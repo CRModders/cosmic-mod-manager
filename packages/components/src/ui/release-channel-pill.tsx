@@ -45,16 +45,16 @@ export function ReleaseChannelBadge({ releaseChannel, className }: Props) {
 function ReleaseChannelIcon({ releaseChannel, className }: Props) {
     switch (releaseChannel) {
         case VersionReleaseChannel.RELEASE:
-            return <span className="font-extrabold uppercase">R</span>;
+            return <span className={cn("font-extrabold uppercase", className)}>R</span>;
 
         case VersionReleaseChannel.BETA:
-            return <span className="font-bold text-lg">β</span>;
+            return <span className={cn("font-bold text-lg", className)}>β</span>;
 
         case VersionReleaseChannel.ALPHA:
-            return <span className="font-bold text-[1.25rem]">α</span>;
+            return <span className={cn("font-bold text-[1.25rem]", className)}>α</span>;
 
         case VersionReleaseChannel.DEV:
-            return <FlaskConicalIcon aria-hidden className="w-5 h-5" />;
+            return <FlaskConicalIcon aria-hidden className={cn("w-5 h-5", className)} />;
 
         default:
             return null;

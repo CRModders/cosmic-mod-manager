@@ -11,7 +11,7 @@ export async function getFile(storageService: FILE_STORAGE_SERVICE, path: string
             default:
                 return null;
         }
-    } catch (error) {
+    } catch {
         return null;
     }
 }

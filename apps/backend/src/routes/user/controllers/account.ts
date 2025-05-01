@@ -119,7 +119,7 @@ export async function confirmAddingNewPassword(code: string) {
         return invalidReqestResponseData("Invalid or expired code");
     if (confirmationEmail.user.password) return invalidReqestResponseData("A password already exists for your account");
 
-    const user = await UpdateUser({
+    await UpdateUser({
         where: {
             id: confirmationEmail.userId,
         },

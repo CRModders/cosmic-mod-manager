@@ -19,7 +19,11 @@
         "rules": {
             "correctness": {
                 "useExhaustiveDependencies": "off",
-                "noUnusedImports": "error"
+                "noUnusedImports": "error",
+                "noUnusedVariables": "error",
+                "noUnusedLabels": "error",
+                "noUnusedPrivateClassMembers": "error",
+                "noUnusedFunctionParameters": "error"
             },
             "style": {
                 "noParameterAssign": "off"

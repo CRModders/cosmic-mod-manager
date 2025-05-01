@@ -42,7 +42,7 @@ export default function CollectionsDashboardPage(props: Props) {
                 </div>
 
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {!search || t.collection.followedProjects.includes(search) ? (
+                    {!search || t.collection.followedProjects.toLowerCase().includes(search.toLowerCase()) ? (
                         <FollowsCollectionItem followingProjects={ctx.followingProjects.length} />
                     ) : null}
 

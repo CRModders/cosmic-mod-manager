@@ -49,6 +49,7 @@ export default function UpdateProjectStatusDialog(props: UpdateProjectStatusProp
         }
 
         toast.success(data?.message);
+        // TODO: Fix this
         navigate("/moderation/review");
     }
 

@@ -135,7 +135,7 @@ export function getUserSessionCookie(ctx: Context) {
             return null;
         }
         return cookie;
-    } catch (error) {}
+    } catch {}
     return null;
 }
 
@@ -153,7 +153,7 @@ export async function hashPassword(password: string) {
 export async function matchPassword(password: string, hash: string) {
     try {
         return await Bun.password.verify(password, hash, "argon2id");
-    } catch (error) {
+    } catch {
         return false;
     }
 }

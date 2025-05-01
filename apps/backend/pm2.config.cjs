@@ -6,7 +6,7 @@ dotenv.config({ path: "./.env" });
 const isDev = process.env.NODE_ENV !== "production";
 const rootDir = "/var/www/cosmic-mod-manager"; // The dir in which the repo will be cloned in prod
 
-const sourceDir = !isDev ? `${rootDir}/source` : "/home/abhinav/Code/Monorepos/cosmic-mod-manager"; // The actual root of the project
+const sourceDir = !isDev ? `${rootDir}/source` : "/home/abhinav/Code/Projects/cosmic-mod-manager"; // The actual root of the project
 const backendDir = `${sourceDir}/apps/backend`; // Root of the backend
 
 const apps = [
@@ -21,7 +21,7 @@ const apps = [
     {
         name: "crmm-meilisearch",
         command: "/usr/bin/meilisearch",
-        args: ["--master-key", `${process.env.MEILISEARCH_MASTER_KEY}`],
+        args: ["--master-key", `${process.env.MEILISEARCH_MASTER_KEY}`, "--no-analytics"],
         cwd: `${backendDir}/meilisearch`,
         autorestart: true,
         watch: false,

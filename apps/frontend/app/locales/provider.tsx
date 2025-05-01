@@ -15,7 +15,7 @@ interface LocaleContext {
 const LocaleContext = createContext<LocaleContext>({
     locale: DefaultLocale,
     t: en,
-    changeLocale: (locale: string, navigate?: NavigateFunction) => {},
+    changeLocale: (_locale: string, _navigate?: NavigateFunction) => {},
 });
 
 export function LocaleProvider({ children, initLocale, initMetadata }: Props) {

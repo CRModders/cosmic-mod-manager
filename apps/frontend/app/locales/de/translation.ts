@@ -34,7 +34,7 @@ const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
     a: "dein/e",
 };
 
-const teamTypeGenitive: { [noun: string]: string } = {
+const _teamTypeGenitive: { [noun: string]: string } = {
     Organisation: "Organisation",
     Projekt: "Projektes",
 };
@@ -467,7 +467,7 @@ export default {
         spdxId: "SPDX-Identifikator",
         doesntHaveSpdxId: "Die Lizenz hat keinen SPDX-Identifikator",
         // ? Use the projectType string instead of "Mod"
-        tagsDesc: (projectType) =>
+        tagsDesc: (_projectType) =>
             "Das korrekte Wählen von Tags ist wichtig, um Leuten zu helfen, deine Mod zu finden. Stelle sicher, alle Tags zu wählen, die zutreffen.",
         tagsDesc2: (projectType: string) =>
             `Wähle alle Kategorien aus, welche Themen oder Funktionen ${secondPersonPossesivePronouns[genderOf[projectType] || ("a" as Gender)]} ${projectType} wiederspiegeln.`,

@@ -93,7 +93,7 @@ export async function loader(props: Route.LoaderArgs): Promise<LoaderData> {
 }
 
 export function meta(props: Route.MetaArgs): MetaDescriptor[] {
-    const { userData, orgs, projects, userSlug } = props.data as LoaderData;
+    const { userData, userSlug } = props.data as LoaderData;
     const image = userData?.avatar || Config.SITE_ICON;
 
     if (!userData?.id) {

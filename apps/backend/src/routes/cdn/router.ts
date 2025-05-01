@@ -62,6 +62,7 @@ async function projectFile_get(ctx: Context) {
 
         return await serveProjectIconFile(ctx, projectId, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -75,6 +76,7 @@ async function galleryImage_get(ctx: Context) {
 
         return await serveProjectGalleryImage(ctx, projectId, image, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -104,6 +106,7 @@ async function versionFile_get(ctx: Context) {
 
         return await serveVersionFile(ctx, projectId, versionId, fileName, userSession, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -117,6 +120,7 @@ async function orgFile_get(ctx: Context) {
 
         return await serveOrgIconFile(ctx, orgId, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -130,6 +134,7 @@ async function userFile_get(ctx: Context) {
 
         return await serveUserAvatar(ctx, userId, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -141,6 +146,7 @@ async function collectionIcon_get(ctx: Context) {
 
         return await serveCollectionIcon(ctx, collectionId, IsCdnRequest(ctx));
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }
@@ -162,6 +168,7 @@ async function sitemap_get(ctx: Context) {
             },
         });
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }

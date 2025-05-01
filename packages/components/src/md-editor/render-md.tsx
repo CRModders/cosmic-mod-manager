@@ -141,7 +141,7 @@ function parseHeadingContent(str: string) {
         _str = _str.replace(/^\d+/, "");
 
         return _str.trim();
-    } catch (error) {
+    } catch {
         return "";
     }
 }

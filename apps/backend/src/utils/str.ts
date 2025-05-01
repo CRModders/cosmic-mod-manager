@@ -14,7 +14,7 @@ export function parseJson<T extends object | null>(str: string | null): Promise<
         try {
             if (str == null) resolve(str);
             else resolve(JSON.parse(str));
-        } catch (error) {
+        } catch {
             resolve(null);
         }
     });

@@ -92,7 +92,7 @@ app.get("/api/statistics", applyCacheHeaders({ maxAge: 600, sMaxAge: 7200 }), as
         const stats = await getStatistics();
 
         return ctx.json(stats, HTTP_STATUS.OK);
-    } catch (error) {
+    } catch {
         return serverErrorResponse(ctx);
     }
 });

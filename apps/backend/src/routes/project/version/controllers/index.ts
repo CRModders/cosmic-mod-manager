@@ -48,8 +48,6 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
 
     for (let i = 0; i < projectVersions.length; i++) {
         const version = projectVersions[i];
-        const nextVersion = projectVersions[i + 1];
-
         let primaryFile: VersionFile | null = null;
         const files: VersionFile[] = [];
 

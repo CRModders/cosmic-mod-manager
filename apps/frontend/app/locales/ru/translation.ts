@@ -438,7 +438,7 @@ export default {
         spdxId: "SPDX идентификатор",
         doesntHaveSpdxId: "Лицензия не имеет SPDX идентификатор",
         // ? Use the projectType string instead of "Mod"
-        tagsDesc: (projectType) => "Правильно выбранные теги помогут людям найти ваш мод. Убедитесь, что выбрали все подходящие теги.",
+        tagsDesc: (_projectType) => "Правильно выбранные теги помогут людям найти ваш мод. Убедитесь, что выбрали все подходящие теги.",
         tagsDesc2: (projectType) => `Выберите все категории, под которые подходит ваш ${projectType}.`,
         featuredCategories: "Избранные категории",
         featuredCategoriesDesc: (count) => `Вы можете избрать до ${count} самых релевантных тегов.`,
