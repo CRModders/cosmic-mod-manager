@@ -41,10 +41,13 @@ export default function ProjectAnalyticsPage() {
     const range = getTimeRange(timeline);
 
     function setTimeline(timeline: TimelineOptions) {
-        setSearchParams((prev) => {
-            prev.set(timelineKey, timeline);
-            return prev;
-        });
+        setSearchParams(
+            (prev) => {
+                prev.set(timelineKey, timeline);
+                return prev;
+            },
+            { preventScrollReset: true },
+        );
     }
 
     async function fetchAnalyticsData() {
