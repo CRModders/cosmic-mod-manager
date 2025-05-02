@@ -41,12 +41,10 @@ export async function getDownloadsAnalyticsData(user: ContextUserData, props: ge
     // Check user permissions
     for (const project of projectData) {
         const member = combineProjectMembers(project.team.members, project.organisation?.team.members || []).get(user.id);
-        if (!member?.id) continue;
-
         const canSeeAnalytics = doesMemberHaveAccess(
             ProjectPermission.VIEW_ANALYTICS,
-            member.permissions as ProjectPermission[],
-            member.isOwner,
+            member?.permissions as ProjectPermission[],
+            member?.isOwner,
             user.role,
         );
         if (!canSeeAnalytics) continue;
