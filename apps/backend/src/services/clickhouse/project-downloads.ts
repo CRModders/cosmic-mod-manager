@@ -58,13 +58,12 @@ export async function Analytics_InsertProjectDownloads(items: ProjectDownload_It
 
     const formattedItems = [];
     for (const item of items) {
-        if (!item.projectId || !item.downloadsCount) continue;
-        if (item.downloadsCount < 0) continue;
+        if (!item.projectId) continue;
 
         const dateString = (item.date || new Date()).toISOString().split("T")[0];
         formattedItems.push({
             project_id: item.projectId,
-            downloads_count: item.downloadsCount,
+            downloads_count: item.downloadsCount || 0,
             date: dateString,
         });
     }

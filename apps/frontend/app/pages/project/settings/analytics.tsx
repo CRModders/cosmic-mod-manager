@@ -28,6 +28,15 @@ export default function ProjectAnalyticsPage() {
     const { t, locale } = useTranslation();
     const [analyticsData, setAnalyticsData] = useState<ProjectDownloads_Analytics | null>(null);
 
+    let atLeastOneDataPoint = false;
+    const formattedAnalyticsData = Object.entries(analyticsData?.[ctx.projectData.id] || {}).map((entry) => {
+        if (entry[1] > 0) atLeastOneDataPoint = true;
+        return {
+            date: entry[0],
+            downloads: entry[1],
+        };
+    });
+
     const timeline = getValidTimeline(searchParams.get(timelineKey));
     const range = getTimeRange(timeline);
 
@@ -101,71 +110,73 @@ export default function ProjectAnalyticsPage() {
                 </Select>
             </div>
 
-            <ChartContainer config={chartConfig} className="aspect-auto h-[22rem] w-full">
-                <LineChart
-                    accessibilityLayer
-                    data={Object.entries(analyticsData?.[ctx.projectData.id] || {}).map((entry) => {
-                        return {
-                            date: entry[0],
-                            downloads: entry[1],
-                        };
-                    })}
-                    margin={{
-                        left: 12,
-                        right: 12,
-                    }}
-                >
-                    <CartesianGrid vertical={false} stroke="currentColor" className="text-shallow-background" />
-                    <XAxis
-                        className="text-shallow-background"
-                        stroke="currentColor"
-                        dataKey="date"
-                        tickMargin={8}
-                        minTickGap={32}
-                        tickFormatter={(value) => {
-                            const date = new Date(value);
+            {atLeastOneDataPoint ? (
+                <ChartContainer config={chartConfig} className="aspect-auto h-[22rem] w-full">
+                    <LineChart
+                        accessibilityLayer
+                        data={formattedAnalyticsData}
+                        margin={{
+                            left: 12,
+                            right: 12,
+                        }}
+                    >
+                        <CartesianGrid vertical={false} stroke="currentColor" className="text-shallow-background" />
+                        <XAxis
+                            className="text-shallow-background"
+                            stroke="currentColor"
+                            dataKey="date"
+                            tickMargin={8}
+                            minTickGap={32}
+                            tickFormatter={(value) => {
+                                const date = new Date(value);
 
-                            return FormatDate_ToLocaleString(date, {
-                                shortMonthNames: true,
-                                locale: formatLocaleCode(locale),
-                                includeTime: false,
-                                includeYear: false,
-                            });
-                        }}
-                    />
-                    <YAxis className="text-shallow-background" stroke="currentColor" dataKey="downloads" width={48} />
-                    <ChartTooltip
-                        cursor={{
-                            stroke: "currentColor",
-                            className: "text-shallow-background",
-                        }}
-                        content={
-                            <ChartTooltipContent
-                                color={chartConfig.downloads.color}
-                                nameKey="downloads"
-                                labelFormatter={(value) => {
-                                    return new Date(value).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    });
-                                }}
-                            />
-                        }
-                    />
-                    <Line
-                        dataKey="downloads"
-                        type="natural"
-                        color={chartConfig.downloads.color}
-                        stroke="currentColor"
-                        activeDot={{
-                            color: chartConfig.downloads.color,
-                        }}
-                        strokeWidth={2}
-                        dot={false}
-                    />
-                </LineChart>
-            </ChartContainer>
+                                return FormatDate_ToLocaleString(date, {
+                                    shortMonthNames: true,
+                                    locale: formatLocaleCode(locale),
+                                    includeTime: false,
+                                    includeYear: false,
+                                });
+                            }}
+                        />
+                        <YAxis className="text-shallow-background" stroke="currentColor" dataKey="downloads" width={48} />
+                        <ChartTooltip
+                            cursor={{
+                                stroke: "currentColor",
+                                className: "text-shallow-background",
+                            }}
+                            content={
+                                <ChartTooltipContent
+                                    color={chartConfig.downloads.color}
+                                    nameKey="downloads"
+                                    labelFormatter={(value) => {
+                                        return new Date(value).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                            year: "numeric",
+                                        });
+                                    }}
+                                />
+                            }
+                        />
+
+                        <Line
+                            dataKey="downloads"
+                            type="monotone"
+                            color={chartConfig.downloads.color}
+                            stroke="currentColor"
+                            activeDot={{
+                                color: chartConfig.downloads.color,
+                            }}
+                            strokeWidth={2.5}
+                            dot={false}
+                        />
+                    </LineChart>
+                </ChartContainer>
+            ) : (
+                <div className="ps-card-surround flex items-center justify-center">
+                    <span className="text-center font-mono text-extra-muted-foreground">{t.graph.noDataAvailable}</span>
+                </div>
+            )}
         </div>
     );
 }

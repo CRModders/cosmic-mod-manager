@@ -29,9 +29,6 @@ async function analytics_get(ctx: Context) {
         if (!timeline_query && (!startDate_query || !endDate_query))
             return invalidReqestResponse(ctx, "Either startDate and endDate (YYYY-MM-DD) or timeline query param must be provided");
 
-        console.log("projectIds_query", projectIds_query);
-        console.log("projectIds_query", decodeURIComponent(projectIds_query));
-
         const projectIds = await parseJson(projectIds_query);
         if (!projectIds || !Array.isArray(projectIds)) return invalidReqestResponse(ctx, "projectIds query param is not valid JSON");
 

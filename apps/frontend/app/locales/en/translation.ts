@@ -729,6 +729,7 @@ export default {
     },
 
     graph: {
+        noDataAvailable: "No data available for the selected date range.",
         timeline: {
             yesterday: "Yesterday",
             this_week: "This week",
