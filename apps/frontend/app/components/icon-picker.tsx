@@ -63,7 +63,7 @@ export default function IconPicker(props: IconPickerProps) {
                     className="rounded"
                     fallback={props.fallbackIcon}
                     // Only set view transition id if the icon has not changed
-                    vtId={!props.icon ? props.vtId : undefined}
+                    vtId={!(props.icon instanceof File) ? props.vtId : undefined}
                 />
 
                 <div className="flex flex-col items-start justify-center gap-2">

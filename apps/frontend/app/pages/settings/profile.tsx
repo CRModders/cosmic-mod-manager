@@ -98,6 +98,7 @@ export function ProfileSettingsPage({ session }: Props) {
                             name="avatar"
                             render={({ field }) => (
                                 <IconPicker
+                                    vtId={session.id}
                                     icon={form.getValues().avatar}
                                     fieldName={field.name}
                                     onChange={field.onChange}

@@ -37,7 +37,7 @@ export function ReleaseChannelBadge({ releaseChannel, className }: Props) {
                 className,
             )}
         >
-            <ReleaseChannelIcon releaseChannel={releaseChannel as VersionReleaseChannel} className="w-5 h-5" />
+            <ReleaseChannelIcon releaseChannel={releaseChannel as VersionReleaseChannel} />
         </div>
     );
 }

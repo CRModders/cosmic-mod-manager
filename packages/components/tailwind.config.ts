@@ -49,6 +49,7 @@ export default {
                 "success-foreground": "hsla(var(--success-foreground))",
                 "link-foreground": "hsla(var(--link-foreground))",
                 "link-hover-foreground": "hsla(var(--link-hover-foreground))",
+                "chart-1": "hsla(var(--chart-1))",
             },
             fontSize: {
                 tiny: "var(--font-tiny)",

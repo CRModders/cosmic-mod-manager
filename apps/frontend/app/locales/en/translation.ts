@@ -727,4 +727,21 @@ export default {
         shortcut: "Shortcut",
         toggleLineWrap: "Toggle line wrap",
     },
+
+    graph: {
+        timeline: {
+            yesterday: "Yesterday",
+            this_week: "This week",
+            last_week: "Last week",
+            previous_7_days: "Previous 7 days",
+            this_month: "This month",
+            last_month: "Last month",
+            previous_30_days: "Previous 30 days",
+            previous_90_days: "Previous 90 days",
+            this_year: "This year",
+            last_year: "Last year",
+            previous_365_days: "Previous 365 days",
+            all_time: "All time",
+        },
+    },
 } satisfies Translation;

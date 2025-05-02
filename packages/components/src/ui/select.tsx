@@ -9,7 +9,7 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-const SelectTrigger = ({
+function SelectTrigger({
     ref,
     className,
     children,
@@ -17,20 +17,22 @@ const SelectTrigger = ({
     ...props
 }: React.ComponentPropsWithRef<typeof SelectPrimitive.Trigger> & {
     noDefaultStyles?: boolean;
-}) => (
-    <SelectPrimitive.Trigger
-        ref={ref}
-        className={cn(noDefaultStyles !== true && "input_box_styles gap-2 w-full justify-between [&>span]:line-clamp-1", className)}
-        {...props}
-        dir="default"
-    >
-        {children}
+}) {
+    return (
+        <SelectPrimitive.Trigger
+            ref={ref}
+            className={cn(noDefaultStyles !== true && "input_box_styles gap-2 w-full justify-between [&>span]:line-clamp-1", className)}
+            {...props}
+            dir="default"
+        >
+            {children}
 
-        <SelectPrimitive.Icon asChild>
-            <ChevronDown className="w-btn-icon h-btn-icon text-muted-foreground" />
-        </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
-);
+            <SelectPrimitive.Icon asChild>
+                <ChevronDown className="w-btn-icon h-btn-icon text-muted-foreground" />
+            </SelectPrimitive.Icon>
+        </SelectPrimitive.Trigger>
+    );
+}
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 function SelectScrollUpButton({ ref, className, ...props }: React.ComponentPropsWithRef<typeof SelectPrimitive.ScrollUpButton>) {
@@ -40,7 +42,7 @@ function SelectScrollUpButton({ ref, className, ...props }: React.ComponentProps
             className={cn("flex cursor-default items-center justify-center py-1", className)}
             {...props}
         >
-            <ChevronUp />
+            <ChevronUp className="w-4 h-4" />
         </SelectPrimitive.ScrollUpButton>
     );
 }
@@ -53,7 +55,7 @@ function SelectScrollDownButton({ ref, className, ...props }: React.ComponentPro
             className={cn("flex cursor-default items-center justify-center py-1", className)}
             {...props}
         >
-            <ChevronDown />
+            <ChevronDown className="w-4 h-4" />
         </SelectPrimitive.ScrollDownButton>
     );
 }
