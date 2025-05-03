@@ -43,7 +43,7 @@ If your lang's metadata doesn't have region field then just `{lang}` (eg: `en`).
     ```
 
 4. Now create a file named `legal.ts` with the following contents:
-    Reference - [`en/legal.ts`](/apps/frontend/app/locales/en/legal.ts)
+    Reference - [`en/legal.ts`](/apps/frontend/app/locales/en/rules.ts)
     ```ts
     import type { RulesProps } from "~/locales/en/legal";
 

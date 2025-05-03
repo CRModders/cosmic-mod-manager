@@ -16,6 +16,8 @@ export default function PrivacyPolicy() {
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={`
 # ${t.legal.privacyPolicyTitle}
+
+${t.legal.privacyPolicy}
             `}
         />
     );

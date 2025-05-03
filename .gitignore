@@ -5,3 +5,8 @@ node_modules
 apps/backend/clickhouse
 apps/apps/backend/redis
 apps/backend/meilisearch
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/discord.xml
+.idea/cosmic-mod-manager.iml
