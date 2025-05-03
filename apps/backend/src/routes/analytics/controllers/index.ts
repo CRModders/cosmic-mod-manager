@@ -1,6 +1,6 @@
-import { ISO_DateStr } from "@app/utils/date";
+import { getTimeRange, ISO_DateStr } from "@app/utils/date";
 import { combineProjectMembers, doesMemberHaveAccess } from "@app/utils/project";
-import { ProjectPermission } from "@app/utils/types";
+import { ProjectPermission, type TimelineOptions } from "@app/utils/types";
 import type { ProjectDownloads_Analytics } from "@app/utils/types/api/stats";
 import { GetManyProjects_ListItem } from "~/db/project_item";
 import clickhouse, { ANALYTICS_DB } from "~/services/clickhouse";
@@ -12,16 +12,22 @@ interface getAnalyticsDataProps {
     // Either startDate and endDate or timeline must be provided
     startDate?: Date | null;
     endDate?: Date | null;
+    timeline?: TimelineOptions;
     projectIds: string[];
 }
 
 export async function getDownloadsAnalyticsData(user: ContextUserData, props: getAnalyticsDataProps) {
-    if (!props.startDate || !props.endDate) {
+    let startDate: Date;
+    let endDate: Date;
+
+    if (props.startDate && props.endDate) {
+        startDate = new Date(props.startDate);
+        endDate = new Date(props.endDate);
+    } else if (props.timeline) {
+        [startDate, endDate] = getTimeRange(props.timeline);
+    } else {
         return invalidReqestResponseData("Either startDate and endDate (YYYY-MM-DD) or timeline query param must be provided");
     }
-
-    const startDate = new Date(props.startDate);
-    const endDate = new Date(props.endDate);
 
     const projectData = await GetManyProjects_ListItem(props.projectIds);
     if (!projectData?.length) {
