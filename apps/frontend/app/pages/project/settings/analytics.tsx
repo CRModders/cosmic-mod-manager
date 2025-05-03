@@ -4,7 +4,6 @@ import { useTranslation } from "~/locales/provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { DateFromStr, FormatDate_ToLocaleString, getTimeRange, ISO_DateStr } from "@app/utils/date";
 import { FormattedDate } from "~/components/ui/date";
-import { TooltipProvider, TooltipTemplate } from "@app/components/ui/tooltip";
 import { TimelineOptions } from "@app/utils/types";
 import { formatLocaleCode } from "~/locales";
 import { useSearchParams } from "react-router";
@@ -82,21 +81,10 @@ export default function ProjectAnalyticsPage() {
                 <div>
                     <h1 className="text-foreground text-xl font-semibold leading-none">{t.project.downloads}</h1>
 
-                    <TooltipProvider>
-                        <TooltipTemplate
-                            asChild
-                            content={
-                                <span>
-                                    <FormattedDate showTime={false} shortMonthNames date={range[0]} /> -{" "}
-                                    <FormattedDate showTime={false} shortMonthNames date={range[1]} />
-                                </span>
-                            }
-                        >
-                            <span className="text-sm font-semibold text-extra-muted-foreground cursor-help leading-none">
-                                {t.graph.timeline[timeline]}
-                            </span>
-                        </TooltipTemplate>
-                    </TooltipProvider>
+                    <span className="text-sm font-semibold text-extra-muted-foreground leading-none">
+                        <FormattedDate showTime={false} shortMonthNames date={range[0]} /> -{" "}
+                        <FormattedDate showTime={false} shortMonthNames date={range[1]} />
+                    </span>
                 </div>
 
                 <Select value={timeline} onValueChange={(val) => setTimeline(val as TimelineOptions)}>
