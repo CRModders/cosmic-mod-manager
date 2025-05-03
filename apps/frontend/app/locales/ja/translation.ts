@@ -64,7 +64,7 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string) => ["Cosmic Reachの", projectType, "のための場所"],
+        title: (projectType: string) => ["Cosmic\u00A0Reachの", projectType, "のための場所"],
         desc: "Cosmic ReachのModに最高の場所。コンテンツを発見し、遊び、作成する、そのすべてを1つの場所で。",
         exploreMods: "Modを探してみよう",
     },

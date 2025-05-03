@@ -78,7 +78,7 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string) => ["Место, где вы найдете ", projectType, " для Cosmic Reach"],
+        title: (projectType: string) => ["Место, где вы найдете ", projectType, " для Cosmic\u00A0Reach"],
         desc: "Лучшее место для ваших модов Cosmic Reach. Открывайте, играйте и создавайте контент, здесь и сразу.",
         exploreMods: "Найти моды",
     },

@@ -75,7 +75,7 @@ export default {
     },
 
     homePage: {
-        title: (projectType: string): FixedStringArray<3> => ["The place for Cosmic Reach ", projectType, ""],
+        title: (projectType: string): FixedStringArray<3> => ["The place for Cosmic\u00A0Reach ", projectType, ""],
         desc: "The best place for your Cosmic Reach mods. Discover, play, and create content, all in one spot.",
         exploreMods: "Explore mods",
     },
