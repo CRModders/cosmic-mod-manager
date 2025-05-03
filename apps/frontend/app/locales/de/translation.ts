@@ -34,7 +34,7 @@ const secondPersonPossesivePronouns: { [Property in Gender]-?: string } = {
     a: "dein/e",
 };
 
-const teamTypeGenitive: { [noun: string]: string } = {
+const _teamTypeGenitive: { [noun: string]: string } = {
     Organisation: "Organisation",
     Projekt: "Projektes",
 };

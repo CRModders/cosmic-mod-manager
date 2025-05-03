@@ -72,7 +72,7 @@ function FormItem({ ref, className, ...props }: React.HTMLAttributes<HTMLDivElem
 FormItem.displayName = "FormItem";
 
 function FormLabel({ ref, className, ...props }: React.ComponentPropsWithRef<typeof LabelPrimitive.Root>) {
-    const { error, formItemId } = useFormField();
+    const { formItemId } = useFormField();
 
     return (
         <Label

@@ -98,6 +98,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                             route("members", path("project/settings/members.tsx"), {
                                 id: `${lang}__${type}__settings__members`,
                             });
+                            route("analytics", path("project/settings/analytics.tsx"), {
+                                id: `${lang}__${type}__settings__analytics`,
+                            });
                             route("*", path("$.tsx"), { id: `${lang}__${type}__settings-not-found` });
                         });
                     });

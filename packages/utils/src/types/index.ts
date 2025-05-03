@@ -196,3 +196,18 @@ export enum CollectionVisibility {
     PRIVATE = "private",
     UNLISTED = "unlisted",
 }
+
+export enum TimelineOptions {
+    YESTERDAY = "yesterday",
+    THIS_WEEK = "this_week",
+    LAST_WEEK = "last_week",
+    PREVIOUS_7_DAYS = "previous_7_days",
+    THIS_MONTH = "this_month",
+    LAST_MONTH = "last_month",
+    PREVIOUS_30_DAYS = "previous_30_days",
+    PREVIOUS_90_DAYS = "previous_90_days",
+    THIS_YEAR = "this_year",
+    LAST_YEAR = "last_year",
+    PREVIOUS_365_DAYS = "previous_365_days",
+    ALL_TIME = "all_time",
+}

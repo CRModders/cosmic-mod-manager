@@ -17,16 +17,16 @@ const TIME_48H = TIME_24H * 2;
 
 export default function ReviewProjects({ projects }: { projects: ModerationProjectItem[] }) {
     const { t } = useTranslation();
-    const [sortBy, setSortBy] = useState<"newest" | "oldest">("newest");
-    const [showing, setShowing] = useState<"all" | ProjectType>("all");
+    // const [sortBy, setSortBy] = useState<"newest" | "oldest">("newest");
+    const [showing, _setShowing] = useState<"all" | ProjectType>("all");
 
-    const _tempSet = new Set<string>();
-    for (const project of projects) {
-        for (const type of project.type) {
-            _tempSet.add(type);
-        }
-    }
-    const filterableTypes = Array.from(_tempSet);
+    // const _tempSet = new Set<string>();
+    // for (const project of projects) {
+    //     for (const type of project.type) {
+    //         _tempSet.add(type);
+    //     }
+    // }
+    // const filterableTypes = Array.from(_tempSet);
     let filteredProjects: ModerationProjectItem[] = [];
     if (showing === "all") filteredProjects = projects;
     else {
@@ -76,7 +76,6 @@ export default function ReviewProjects({ projects }: { projects: ModerationProje
 
 function ModerationItem({ project }: { project: ModerationProjectItem }) {
     const { t } = useTranslation();
-    const type = project.type[0] as ProjectType;
     const isOver48Hrs = TimePassed_ms(project.dateQueued) > TIME_48H;
     const isOver24Hrs = TimePassed_ms(project.dateQueued) > TIME_24H && !isOver48Hrs;
 
@@ -135,7 +134,7 @@ function ModerationItem({ project }: { project: ModerationProjectItem }) {
 function TimePassed_ms(date: string | Date) {
     try {
         return Date.now() - new Date(date).getTime();
-    } catch (error) {
+    } catch {
         return 0;
     }
 }

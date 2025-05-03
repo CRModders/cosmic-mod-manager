@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { newProjectFormSchema } from "./project";
 import { MAX_ICON_SIZE } from "~/constants";
 import { getFileType } from "~/convertors";
 import { isImageFile } from "./validation";
@@ -30,5 +29,3 @@ export const iconFieldSchema = z
         },
         { message: "Invalid file type, only image files allowed" },
     );
-
-type schema = z.infer<typeof newProjectFormSchema>;

@@ -86,6 +86,7 @@ async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
 
         return ctx.json({ success: true, url }, HTTP_STATUS.OK);
     } catch (error) {
+        console.error(error);
         return serverErrorResponse(ctx);
     }
 }

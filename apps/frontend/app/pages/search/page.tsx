@@ -18,15 +18,16 @@ import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSpinnerCtx } from "~/components/global-spinner";
-import { useNavigate } from "~/components/ui/link";
 import { type UserConfig, setUserConfig, useUserConfig } from "~/hooks/user-config";
 import { useTranslation } from "~/locales/provider";
 import FilterSidebar from "./sidebar";
 import { deletePageOffsetParam, updateSearchParam, useSearchContext } from "./provider";
 import { SearchResults } from "./search_results";
+import { useSearchParams } from "react-router";
 
 export default function SearchPage() {
     const { t } = useTranslation();
+    const [__, setSearchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const searchInput = useRef<HTMLInputElement>(null);
 
@@ -40,8 +41,6 @@ export default function SearchPage() {
         projectType,
         projectType_Coerced,
     } = useSearchContext();
-
-    const navigate = useNavigate(undefined, { viewTransition: false });
 
     const viewType = getSearchDisplayPreference(projectType_Coerced);
     const [_, reRender] = useState("0");
@@ -109,14 +108,15 @@ export default function SearchPage() {
                     <Select
                         value={sortBy || defaultSortBy}
                         onValueChange={(val) => {
-                            const urlPathname = updateSearchParam({
+                            const updatedParams = updateSearchParam({
                                 key: sortByParamNamespace,
                                 value: val,
                                 deleteIfMatches: defaultSortBy,
                                 newParamsInsertionMode: "replace",
                                 customURLModifier: deletePageOffsetParam,
                             });
-                            navigate(urlPathname, { viewTransition: false });
+
+                            setSearchParams(updatedParams, { preventScrollReset: true });
                         }}
                         name="sort-by"
                     >
@@ -147,14 +147,14 @@ export default function SearchPage() {
                     <Select
                         value={projectsPerPage.toString()}
                         onValueChange={(val) => {
-                            const urlPathname = updateSearchParam({
+                            const updatedParams = updateSearchParam({
                                 key: searchLimitParamNamespace,
                                 value: val,
                                 deleteIfMatches: `${defaultSearchLimit}`,
                                 newParamsInsertionMode: "replace",
                                 customURLModifier: deletePageOffsetParam,
                             });
-                            navigate(urlPathname, { viewTransition: false });
+                            setSearchParams(updatedParams, { preventScrollReset: true });
                         }}
                         name="Show per page"
                     >

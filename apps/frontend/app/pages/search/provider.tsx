@@ -48,7 +48,7 @@ let updateSearchParam_timeoutRef: number | undefined;
 export function SearchProvider(props: SearchProviderProps) {
     const { setShowSpinner } = useSpinnerCtx();
     const navigation = useNavigation();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const localePrefix = useUrlLocale(undefined, navigation.location?.pathname || "");
 
     // Params
@@ -91,14 +91,14 @@ export function SearchProvider(props: SearchProviderProps) {
     if (!isNumber(activePage)) activePage = 1;
 
     function updateSearchTerm_Param(q: string) {
-        const urlPathname = updateSearchParam({
+        const newSearchParams = updateSearchParam({
             key: searchQueryParamNamespace,
             value: q,
             deleteIfFalsyValue: true,
             newParamsInsertionMode: "replace",
             customURLModifier: deletePageOffsetParam,
         });
-        navigate(urlPathname, { viewTransition: false });
+        setSearchParams(newSearchParams, { preventScrollReset: true });
     }
 
     useEffect(() => {
@@ -183,7 +183,6 @@ export function updateSearchParam({
     newParamsInsertionMode = "append",
     customURLModifier,
 }: UpdateSearchParamProps) {
-    // let currUrl = globalThis.window ? new URL(window.location.href) : new URL();
     let currUrl = getCurrUrl();
 
     if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
@@ -199,7 +198,7 @@ export function updateSearchParam({
 
     if (customURLModifier) currUrl = customURLModifier(currUrl);
 
-    return currUrl.href.replace(currUrl.origin, "");
+    return currUrl.searchParams;
 }
 
 export function deletePageOffsetParam(url: URL) {

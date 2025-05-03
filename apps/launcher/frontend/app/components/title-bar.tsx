@@ -69,12 +69,12 @@ function ActionButton(props: Props) {
     );
 }
 
-interface NavigationHistory {
-    length: number;
-    state: null | {
-        idx: number;
-    };
-}
+// interface NavigationHistory {
+//     length: number;
+//     state: null | {
+//         idx: number;
+//     };
+// }
 
 function BreadCrumbs() {
     const { segments } = usePathSegments();
@@ -87,8 +87,8 @@ function BreadCrumbs() {
         window.history.back();
     }
 
-    const segment1 = segments[0];
-    const segment2 = segments[1];
+    // const segment1 = segments[0];
+    // const segment2 = segments[1];
 
     return (
         <>

@@ -202,7 +202,6 @@ function ImageDialog({
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const [imgLoaded, setImgLoaded] = useState(false);
     const [isFullWidth, setIsFullWidth] = useState(false);
 
     function toggleFullWidth() {
@@ -270,7 +269,7 @@ function ImageDialog({
                             "max-w-[calc(100vw_-_2rem)] sm:max-w-[calc(100vw_-_6rem)] max-h-[calc(100vh_-_4rem)]",
                             isFullWidth && "w-full h-full",
                         )}
-                        setLoaded={setImgLoaded}
+                        setLoaded={() => {}}
                     />
 
                     <div className="max-w-full flex flex-col items-center justify-center group p-16 pt-24 pb-4 rounded w-fit absolute left-[50%] bottom-[0.5rem] translate-x-[-50%] z-20">

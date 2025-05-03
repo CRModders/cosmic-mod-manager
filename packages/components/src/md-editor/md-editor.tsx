@@ -697,7 +697,7 @@ export function cleanUrl(input: string): string {
 
     try {
         url = new URL(input);
-    } catch (e) {
+    } catch {
         throw new Error("Invalid URL. Make sure the URL is well-formed.");
     }
 
@@ -785,7 +785,7 @@ const editorLocaleObj = {
     insert: "",
     cancel: "",
     url: "",
-    supportsMarkdown: (markdownPageUrl: string) => "",
+    supportsMarkdown: (_markdownPageUrl: string) => "",
     keyboardShortcuts: "",
     action: "",
     shortcut: "",

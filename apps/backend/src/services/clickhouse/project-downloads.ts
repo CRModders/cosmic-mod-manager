@@ -1,28 +1,26 @@
+import { ISO_DateStr } from "@app/utils/date";
 import clickhouse, { ANALYTICS_DB } from "./index";
 
 export async function getLastMonthProjectDownloads(projectIds: string[]) {
     if (!projectIds?.length) return new Map<string, number>();
 
     const today = new Date();
-    const endDate = today.toISOString().split("T")[0];
+    const endDate = ISO_DateStr(today);
 
     // Set the start date back a month
-    if (today.getMonth() > 0) today.setMonth(today.getMonth() - 1);
-    else {
-        today.setFullYear(today.getFullYear() - 1);
-        today.setMonth(11);
-    }
-    const startDate = today.toISOString().split("T")[0];
+    // *It handles the month overflow or underflow automatically
+    today.setMonth(today.getUTCMonth() - 1);
+    const startDate = ISO_DateStr(today);
 
-    return await getProjectDownloads(projectIds, new Date(startDate), new Date(endDate));
+    return await getProjectDownloads_Analytics(projectIds, new Date(startDate), new Date(endDate));
 }
 
-export async function getProjectDownloads(projectIds: string[], startDate: Date, endDate: Date) {
+export async function getProjectDownloads_Analytics(projectIds: string[], startDate: Date, endDate: Date) {
     const map = new Map<string, number>();
     if (!projectIds?.length) return map;
 
-    const startDateString = startDate.toISOString().split("T")[0];
-    const endDateString = endDate.toISOString().split("T")[0];
+    const startDateString = ISO_DateStr(startDate);
+    const endDateString = ISO_DateStr(endDate);
 
     const projectIds_String = projectIds.map((id) => `'${id}'`).join(", ");
 
@@ -50,22 +48,31 @@ export async function getProjectDownloads(projectIds: string[], startDate: Date,
     return map;
 }
 
-export async function Analytics_InsertProjectDownloads(projectId: string, downloadsCount: number, customDate?: string) {
-    if (!projectId || !downloadsCount) return;
+interface ProjectDownload_Item {
+    projectId: string;
+    downloadsCount: number;
+    date?: Date;
+}
 
-    const date = new Date();
-    const dateString = customDate ? customDate : date.toISOString().split("T")[0];
+export async function Analytics_InsertProjectDownloads(items: ProjectDownload_Item[]) {
+    if (!items?.length) return;
+
+    const formattedItems = [];
+    for (const item of items) {
+        if (!item.projectId || !item.downloadsCount) continue;
+
+        const dateString = ISO_DateStr(item.date);
+        formattedItems.push({
+            project_id: item.projectId,
+            downloads_count: item.downloadsCount,
+            date: dateString,
+        });
+    }
 
     try {
         await clickhouse.insert({
             table: `${ANALYTICS_DB}.project_downloads`,
-            values: [
-                {
-                    project_id: projectId,
-                    downloads_count: downloadsCount,
-                    date: dateString,
-                },
-            ],
+            values: formattedItems,
             format: "JSONEachRow",
         });
     } catch (error) {

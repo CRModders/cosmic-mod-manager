@@ -5,6 +5,7 @@ import { generateRandomId } from "~/utils/str";
 import { UpdateProjects_SearchIndex } from "../search/search-db";
 import { Analytics_InsertProjectDownloads } from "~/services/clickhouse/project-downloads";
 import prisma from "~/services/prisma";
+import { DateFromStr, ISO_DateStr } from "@app/utils/date";
 
 interface DownloadsQueueItem {
     id: string;
@@ -143,7 +144,7 @@ export async function processDownloads() {
 
         // Update all the projects
         const projectIds = Array.from(projectDownloadsMap.keys());
-        const today = new Date().toISOString().split("T")[0];
+        const today = ISO_DateStr();
         const prevDayProjectsStats = await prisma.projectDailyStats.findMany({
             where: {
                 projectId: { in: projectIds },
@@ -163,7 +164,14 @@ export async function processDownloads() {
                 const prevDayStats = prevDayProjectsStats.find((stats) => stats.projectId === projectId);
                 if (prevDayStats?.date && prevDayStats.date !== today) {
                     promises.push(
-                        Analytics_InsertProjectDownloads(projectId, prevDayStats.downloads),
+                        Analytics_InsertProjectDownloads([
+                            {
+                                projectId,
+                                downloadsCount: prevDayStats.downloads,
+                                date: DateFromStr(prevDayStats.date) || undefined,
+                            },
+                        ]),
+
                         prisma.projectDailyStats.update({
                             where: { projectId },
                             data: { downloads: downloadsCount, date: today },

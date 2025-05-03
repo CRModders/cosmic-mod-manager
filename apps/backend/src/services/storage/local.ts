@@ -25,7 +25,7 @@ export async function getFileFromLocalStorage(path: string) {
     try {
         const file = Bun.file(`${LOCAL_BASE_STORAGE_PATH}/${path}`);
         return file;
-    } catch (error) {
+    } catch {
         return null;
     }
 }

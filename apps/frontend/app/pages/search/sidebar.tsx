@@ -13,13 +13,14 @@ import {
 import { getALlLoaderFilters, getValidProjectCategories } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectType, TagHeaderType } from "@app/utils/types";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import Link, { VariantButtonLink } from "~/components/ui/link";
+import { VariantButtonLink } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
 import { deletePageOffsetParam, getCurrUrl, updateSearchParam } from "./provider";
+import { useSearchParams } from "react-router";
 
 const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /*, ProjectType.DATAMOD */];
 
@@ -308,7 +309,7 @@ interface FilterCategoryProps {
     selectedItems: string[];
     label: string;
     // The function is expected to return the pathname after toggling the filter
-    filterToggledUrl: (prevVal: string) => string;
+    filterToggledUrl: (prevVal: string) => URLSearchParams;
     listWrapperClassName?: string;
     className?: string;
     formatLabel?: boolean;
@@ -330,6 +331,7 @@ function FilterCategory({
     defaultOpen = true,
 }: FilterCategoryProps) {
     const { t } = useTranslation();
+    const [_, setSearchParams] = useSearchParams();
     const [isOpen, setIsOpen] = useState(defaultOpen);
     if (!items.length) return null;
 
@@ -366,29 +368,22 @@ function FilterCategory({
                     }
 
                     const itemLabel = formatLabel ? CapitalizeAndFormatString(_itemLabel) || "" : _itemLabel;
-                    const isChecked = selectedItems.includes(itemValue);
 
                     return (
-                        <Link
-                            to={filterToggledUrl(itemValue)}
+                        <LabelledCheckbox
+                            checked={selectedItems.includes(itemValue)}
+                            onCheckedChange={() => {
+                                const newUrl = filterToggledUrl(itemValue);
+                                setSearchParams(newUrl, { preventScrollReset: true });
+                            }}
                             key={itemValue}
-                            preventScrollReset
-                            className="flex text-base font-normal py-1 gap-x-2.5 leading-tight items-center justify-start transition text-muted-foreground hover:brightness-[85%]"
+                            name={itemLabel}
                         >
-                            <div
-                                className={cn(
-                                    "w-4 h-4 rounded-sm bg-shallower-background/85 flex items-center justify-center",
-                                    isChecked && "bg-[hsla(var(--accent-background-dark))] text-background",
-                                )}
-                            >
-                                {isChecked && <CheckIcon aria-hidden className="h-btn-icon-sm w-btn-icon-sm" strokeWidth="2.5" />}
-                            </div>
-
                             <span className="flex items-center justify-center gap-1">
                                 <TagIcon name={itemValue} />
                                 {itemLabel}
                             </span>
-                        </Link>
+                        </LabelledCheckbox>
                     );
                 })}
             </div>

@@ -1,3 +1,5 @@
+import { TimelineOptions } from "./types";
+
 export function timeSince(pastTime: Date, locale = "en-US"): string {
     try {
         const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
@@ -30,10 +32,12 @@ export function timeSince(pastTime: Date, locale = "en-US"): string {
     }
 }
 
-export function DateFromStr(date: string | Date) {
+export function DateFromStr(date: string | Date | undefined) {
+    if (!date) return null;
+
     try {
         return new Date(date);
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -43,19 +47,25 @@ export function date(date: string | Date) {
     return new Date(date);
 }
 
-export function DateToISOStr(date: string | Date): string | null {
+export function ISO_DateStr(date?: string | Date, utc = false): string {
     try {
-        return new Date(date).toISOString();
-    } catch (error) {
+        const _date = new Date(date);
+        if (utc === false) {
+            return `${_date.getFullYear()}-${(_date.getMonth() + 1).toString().padStart(2, "0")}-${_date.getDate().toString().padStart(2, "0")}`;
+        }
+
+        return `${_date.getUTCFullYear()}-${(_date.getUTCMonth() + 1).toString().padStart(2, "0")}-${_date.getUTCDate().toString().padStart(2, "0")}`;
+    } catch {
         return null;
     }
 }
 
 interface FormatDateOptions {
     locale?: string;
-    includeTime?: boolean;
     shortMonthNames?: boolean;
     utc?: boolean;
+    includeTime?: boolean;
+    includeYear?: boolean;
 }
 
 export function FormatDate_ToLocaleString(_date: string | Date, _options: FormatDateOptions = {}) {
@@ -63,22 +73,17 @@ export function FormatDate_ToLocaleString(_date: string | Date, _options: Format
     if (!date) return "";
 
     const options: Intl.DateTimeFormatOptions = {
-        year: "numeric",
         month: "long",
         day: "numeric",
     };
 
+    if (_options.includeYear !== false) options.year = "numeric";
+    if (_options.shortMonthNames === true) options.month = "short";
+    if (_options.utc === true) options.timeZone = "UTC";
+
     if (_options.includeTime !== false) {
         options.hour = "numeric";
         options.minute = "numeric";
-    }
-
-    if (_options.shortMonthNames === true) {
-        options.month = "short";
-    }
-
-    if (_options.utc === true) {
-        options.timeZone = "UTC";
     }
 
     return date.toLocaleString(_options.locale, options);
@@ -86,6 +91,108 @@ export function FormatDate_ToLocaleString(_date: string | Date, _options: Format
 
 export function GetTimestamp() {
     const now = new Date();
-    const month = `${now.getMonth() + 1}`.padStart(2, "0");
-    return `${now.getFullYear()}-${month}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+    const month = `${now.getUTCMonth() + 1}`.padStart(2, "0");
+    return `${now.getUTCFullYear()}-${month}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}`;
+}
+
+// Date operations functions
+
+export function SubtractDays(date: Date, days: number): Date {
+    if (!days) return date;
+
+    const result = new Date(date);
+    result.setDate(result.getDate() - days);
+    return result;
+}
+
+export function AddDays(date: Date, days: number): Date {
+    return SubtractDays(date, -days);
+}
+
+export function SubtractMonths(date: Date, months: number, resetDate = false): Date {
+    if (!months) return date;
+
+    const result = new Date(date);
+    // Set the date to the first of the month if resetDate is true
+    if (resetDate) result.setDate(1);
+
+    result.setMonth(result.getMonth() - months);
+    return result;
+}
+
+export function AddMonths(date: Date, months: number, resetDate?: boolean): Date {
+    return SubtractMonths(date, -months, resetDate);
+}
+
+export function SubtractYears(date: Date, years: number): Date {
+    if (!years) return date;
+
+    const result = new Date(date);
+    result.setFullYear(result.getFullYear() - years);
+    return result;
+}
+
+export function AddYears(date: Date, years: number): Date {
+    return SubtractYears(date, -years);
+}
+
+export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
+    const now = new Date();
+
+    switch (timeline) {
+        case TimelineOptions.YESTERDAY: {
+            const yesterday = SubtractDays(now, 1);
+            return [yesterday, yesterday];
+        }
+
+        case TimelineOptions.THIS_WEEK:
+            return [SubtractDays(now, now.getDay()), SubtractDays(now, 1)];
+
+        case TimelineOptions.LAST_WEEK:
+            return [SubtractDays(now, now.getDay() + 7), SubtractDays(now, now.getDay() + 1)];
+
+        case TimelineOptions.PREVIOUS_7_DAYS:
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 6), now];
+
+        case TimelineOptions.THIS_MONTH:
+            return [newDate(now.getFullYear(), now.getMonth(), 1), SubtractDays(now, 1)];
+
+        case TimelineOptions.LAST_MONTH:
+            return [newDate(now.getFullYear(), now.getMonth() - 1, 1), newDate(now.getFullYear(), now.getMonth(), 0)];
+
+        case TimelineOptions.PREVIOUS_30_DAYS:
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 29), now];
+
+        case TimelineOptions.PREVIOUS_90_DAYS:
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 89), now];
+
+        case TimelineOptions.THIS_YEAR:
+            return [newDate(now.getFullYear(), 0, 1), SubtractDays(now, 1)];
+
+        case TimelineOptions.LAST_YEAR:
+            return [newDate(now.getFullYear() - 1, 0, 1), newDate(now.getFullYear(), 0, 0)];
+
+        case TimelineOptions.PREVIOUS_365_DAYS:
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 364), now];
+
+        case TimelineOptions.ALL_TIME:
+            return [new Date(0), now];
+
+        default:
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 29), now];
+    }
+}
+
+export function newDate(year: number, month: number, date = 1, hour = 0, min = 0, sec = 0) {
+    try {
+        return new Date(year, month, date, hour, min, sec);
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }

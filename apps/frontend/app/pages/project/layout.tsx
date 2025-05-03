@@ -435,8 +435,6 @@ interface HeaderProps {
 function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetchProjectData }: HeaderProps) {
     const { t } = useTranslation();
     const session = useSession();
-    const navigate = useNavigate();
-    const location = useLocation();
     const isMod = session?.id && MODERATOR_ROLES.includes(session.role);
     let invitedMember = null;
 

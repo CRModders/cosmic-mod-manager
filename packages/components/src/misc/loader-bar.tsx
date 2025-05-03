@@ -8,7 +8,6 @@ let loaderStarted = false;
 
 // For performance logging
 let LoadingStartedAt: number | undefined = undefined;
-let NavigatingFrom: string | undefined = undefined;
 
 interface Props extends Partial<React.ComponentProps<typeof LoadingBar>> {
     instantStart?: boolean;
@@ -22,7 +21,6 @@ export default function LoaderBar(props?: Props) {
 
     function loadingStart() {
         LoadingStartedAt = Date.now();
-        NavigatingFrom = window.location.pathname;
 
         ref.current?.staticStart(99);
         loaderStarted = true;
@@ -47,7 +45,6 @@ export default function LoaderBar(props?: Props) {
             );
 
             LoadingStartedAt = undefined;
-            NavigatingFrom = undefined;
         }
     }
 
