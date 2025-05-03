@@ -252,7 +252,7 @@ function formatDownloadAnalyticsData(
 
     const timeLineRange = getTimeRange(timeline);
     const keys = Object.keys(data);
-    const analytics_StartDate = DateFromStr(keys[0]);
+    const analytics_StartDate = getStartDate(timeline, timeLineRange[0], DateFromStr(keys[0]));
     const analytics_EndDate = timeLineRange[1];
 
     if (!analytics_StartDate || !analytics_EndDate) return data;
@@ -281,4 +281,27 @@ function formatDownloadAnalyticsData(
     });
 
     return Object.fromEntries(entries);
+}
+
+function getStartDate(timeline: TimelineOptions, timelineStartDate: Date, firstEntryDate: Date | null) {
+    switch (timeline) {
+        case TimelineOptions.YESTERDAY:
+        case TimelineOptions.THIS_WEEK:
+        case TimelineOptions.LAST_WEEK:
+        case TimelineOptions.PREVIOUS_7_DAYS:
+        case TimelineOptions.THIS_MONTH:
+        case TimelineOptions.LAST_MONTH:
+        case TimelineOptions.PREVIOUS_30_DAYS:
+            return timelineStartDate;
+
+        case TimelineOptions.PREVIOUS_90_DAYS:
+        case TimelineOptions.THIS_YEAR:
+        case TimelineOptions.LAST_YEAR:
+        case TimelineOptions.PREVIOUS_365_DAYS:
+        case TimelineOptions.ALL_TIME:
+            return firstEntryDate || timelineStartDate;
+
+        default:
+            return timelineStartDate;
+    }
 }
