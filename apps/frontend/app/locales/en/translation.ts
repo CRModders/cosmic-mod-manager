@@ -3,6 +3,9 @@ import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./rules";
 import { PrivacyPolicy } from "./privacy";
 import { SecurityNotice } from "./security";
+import { TermsOfUse } from "./terms";
+import { CopyrightPolicy } from "./copyright";
+
 import tags from "./tags";
 import type { FixedStringArray } from "@app/utils/types/helpers";
 
@@ -617,11 +620,12 @@ export default {
 
     legal: {
         legal: "Legal",
-        rulesTitle: "Content Rules",
         contentRules: Rules,
         privacyPolicy: PrivacyPolicy,
         securityNotice: SecurityNotice,
         termsOfUse: TermsOfUse,
+        copyrightPolice: CopyrightPolice,
+        rulesTitle: "Content Rules",
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",
         securityNoticeTitle: "Security Notice",
