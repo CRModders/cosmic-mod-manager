@@ -1,15 +1,16 @@
+import { ISO_DateStr } from "@app/utils/date";
 import clickhouse, { ANALYTICS_DB } from "./index";
 
 export async function getLastMonthProjectDownloads(projectIds: string[]) {
     if (!projectIds?.length) return new Map<string, number>();
 
     const today = new Date();
-    const endDate = today.toISOString().split("T")[0];
+    const endDate = ISO_DateStr(today);
 
     // Set the start date back a month
     // *It handles the month overflow or underflow automatically
-    today.setMonth(today.getMonth() - 1);
-    const startDate = today.toISOString().split("T")[0];
+    today.setMonth(today.getUTCMonth() - 1);
+    const startDate = ISO_DateStr(today);
 
     return await getProjectDownloads_Analytics(projectIds, new Date(startDate), new Date(endDate));
 }
@@ -18,8 +19,8 @@ export async function getProjectDownloads_Analytics(projectIds: string[], startD
     const map = new Map<string, number>();
     if (!projectIds?.length) return map;
 
-    const startDateString = startDate.toISOString().split("T")[0];
-    const endDateString = endDate.toISOString().split("T")[0];
+    const startDateString = ISO_DateStr(startDate);
+    const endDateString = ISO_DateStr(endDate);
 
     const projectIds_String = projectIds.map((id) => `'${id}'`).join(", ");
 
@@ -58,12 +59,12 @@ export async function Analytics_InsertProjectDownloads(items: ProjectDownload_It
 
     const formattedItems = [];
     for (const item of items) {
-        if (!item.projectId) continue;
+        if (!item.projectId || !item.downloadsCount) continue;
 
-        const dateString = (item.date || new Date()).toISOString().split("T")[0];
+        const dateString = ISO_DateStr(item.date);
         formattedItems.push({
             project_id: item.projectId,
-            downloads_count: item.downloadsCount || 0,
+            downloads_count: item.downloadsCount,
             date: dateString,
         });
     }

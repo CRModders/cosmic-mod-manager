@@ -47,9 +47,14 @@ export function date(date: string | Date) {
     return new Date(date);
 }
 
-export function DateToISOStr(date: string | Date): string | null {
+export function ISO_DateStr(date?: string | Date, utc = false): string {
     try {
-        return new Date(date).toISOString();
+        const _date = new Date(date);
+        if (utc === false) {
+            return `${_date.getFullYear()}-${(_date.getMonth() + 1).toString().padStart(2, "0")}-${_date.getDate().toString().padStart(2, "0")}`;
+        }
+
+        return `${_date.getUTCFullYear()}-${(_date.getUTCMonth() + 1).toString().padStart(2, "0")}-${_date.getUTCDate().toString().padStart(2, "0")}`;
     } catch {
         return null;
     }
@@ -86,8 +91,8 @@ export function FormatDate_ToLocaleString(_date: string | Date, _options: Format
 
 export function GetTimestamp() {
     const now = new Date();
-    const month = `${now.getMonth() + 1}`.padStart(2, "0");
-    return `${now.getFullYear()}-${month}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+    const month = `${now.getUTCMonth() + 1}`.padStart(2, "0");
+    return `${now.getUTCFullYear()}-${month}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}`;
 }
 
 // Date operations functions
@@ -135,43 +140,59 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
     const now = new Date();
 
     switch (timeline) {
-        case TimelineOptions.YESTERDAY:
-            return [SubtractDays(now, 1), now];
+        case TimelineOptions.YESTERDAY: {
+            const yesterday = SubtractDays(now, 1);
+            return [yesterday, yesterday];
+        }
 
         case TimelineOptions.THIS_WEEK:
-            return [SubtractDays(now, now.getDay()), now];
+            return [SubtractDays(now, now.getDay()), SubtractDays(now, 1)];
 
         case TimelineOptions.LAST_WEEK:
             return [SubtractDays(now, now.getDay() + 7), SubtractDays(now, now.getDay() + 1)];
 
         case TimelineOptions.PREVIOUS_7_DAYS:
-            return [SubtractDays(now, 7), now];
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 6), now];
 
         case TimelineOptions.THIS_MONTH:
-            return [new Date(now.getFullYear(), now.getMonth(), 1), now];
+            return [newDate(now.getFullYear(), now.getMonth(), 1), SubtractDays(now, 1)];
 
         case TimelineOptions.LAST_MONTH:
-            return [new Date(now.getFullYear(), now.getMonth() - 1, 1), new Date(now.getFullYear(), now.getMonth(), 0)];
+            return [newDate(now.getFullYear(), now.getMonth() - 1, 1), newDate(now.getFullYear(), now.getMonth(), 0)];
 
         case TimelineOptions.PREVIOUS_30_DAYS:
-            return [SubtractDays(now, 30), now];
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 29), now];
 
         case TimelineOptions.PREVIOUS_90_DAYS:
-            return [SubtractDays(now, 90), now];
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 89), now];
 
         case TimelineOptions.THIS_YEAR:
-            return [new Date(now.getFullYear(), 0, 1), now];
+            return [newDate(now.getFullYear(), 0, 1), SubtractDays(now, 1)];
 
         case TimelineOptions.LAST_YEAR:
-            return [new Date(now.getFullYear() - 1, 0, 1), new Date(now.getFullYear(), 0, 0)];
+            return [newDate(now.getFullYear() - 1, 0, 1), newDate(now.getFullYear(), 0, 0)];
 
         case TimelineOptions.PREVIOUS_365_DAYS:
-            return [SubtractDays(now, 365), now];
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 364), now];
 
         case TimelineOptions.ALL_TIME:
             return [new Date(0), now];
 
         default:
-            return [SubtractDays(now, 30), now];
+            now.setDate(now.getDate() - 1);
+            return [SubtractDays(now, 29), now];
+    }
+}
+
+export function newDate(year: number, month: number, date = 1, hour = 0, min = 0, sec = 0) {
+    try {
+        return new Date(year, month, date, hour, min, sec);
+    } catch (error) {
+        console.error(error);
+        return null;
     }
 }

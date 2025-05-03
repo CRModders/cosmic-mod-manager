@@ -22,7 +22,6 @@ async function analytics_get(ctx: Context) {
         const startDate_query = ctx.req.query("startDate");
         const endDate_query = ctx.req.query("endDate");
         const timeline_query = ctx.req.query("timeline");
-        const resolutionDays_query = ctx.req.query("resolutionDays");
         const projectIds_query = ctx.req.query("projectIds");
 
         if (!projectIds_query) return invalidReqestResponse(ctx, "projectIds query param is required");
@@ -48,7 +47,6 @@ async function analytics_get(ctx: Context) {
             startDate: startDate,
             endDate: endDate,
             timeline: timeline,
-            resolutionDays: 1,
         });
 
         return ctx.json(res.data, res.status);

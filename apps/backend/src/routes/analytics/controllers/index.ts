@@ -1,6 +1,7 @@
-import { getTimeRange } from "@app/utils/date";
+import { ISO_DateStr } from "@app/utils/date";
 import { combineProjectMembers, doesMemberHaveAccess } from "@app/utils/project";
-import { ProjectPermission, type TimelineOptions } from "@app/utils/types";
+import { ProjectPermission } from "@app/utils/types";
+import type { ProjectDownloads_Analytics } from "@app/utils/types/api/stats";
 import { GetManyProjects_ListItem } from "~/db/project_item";
 import clickhouse, { ANALYTICS_DB } from "~/services/clickhouse";
 import type { Analytics_ProjectDownloads } from "~/services/clickhouse/types";
@@ -11,25 +12,16 @@ interface getAnalyticsDataProps {
     // Either startDate and endDate or timeline must be provided
     startDate?: Date | null;
     endDate?: Date | null;
-
-    timeline?: TimelineOptions | undefined;
-
-    resolutionDays: number;
     projectIds: string[];
 }
 
 export async function getDownloadsAnalyticsData(user: ContextUserData, props: getAnalyticsDataProps) {
-    let startDate: Date;
-    let endDate: Date;
-
-    if (props.startDate && props.endDate) {
-        startDate = new Date(props.startDate);
-        endDate = new Date(props.endDate);
-    } else if (props.timeline) {
-        [startDate, endDate] = getTimeRange(props.timeline);
-    } else {
+    if (!props.startDate || !props.endDate) {
         return invalidReqestResponseData("Either startDate and endDate (YYYY-MM-DD) or timeline query param must be provided");
     }
+
+    const startDate = new Date(props.startDate);
+    const endDate = new Date(props.endDate);
 
     const projectData = await GetManyProjects_ListItem(props.projectIds);
     if (!projectData?.length) {
@@ -55,16 +47,8 @@ export async function getDownloadsAnalyticsData(user: ContextUserData, props: ge
         return unauthorizedReqResponseData("You do not have permission to view analytics for the project(s)");
     }
     const projectIds_String = permitted_ProjectIds.map((id) => `'${id}'`).join(", ");
-    const startDate_String = startDate.toISOString().split("T")[0];
-    const endDate_String = endDate.toISOString().split("T")[0];
-
-    // Map := projectId: { date: downloadsCount }
-    const downloadsData_Map = new Map<
-        string,
-        {
-            [key: string]: number;
-        }
-    >();
+    const startDate_String = ISO_DateStr(startDate);
+    const endDate_String = ISO_DateStr(endDate);
 
     const res = await (
         await clickhouse.query({
@@ -77,23 +61,26 @@ export async function getDownloadsAnalyticsData(user: ContextUserData, props: ge
         })
     ).json();
 
+    // Map := projectId: { date: downloadsCount }
+    const downloadsData_Map: ProjectDownloads_Analytics = {};
+
     for (let i = 0; i < res.data.length; i++) {
         const record = res.data[i] as Analytics_ProjectDownloads;
         if (!record.project_id || !record.downloads_count || !record.date) continue;
 
-        const projectDownloads = downloadsData_Map.get(record.project_id);
+        const projectDownloads = downloadsData_Map[record.project_id];
         if (!projectDownloads) {
-            downloadsData_Map.set(record.project_id, {
+            downloadsData_Map[record.project_id] = {
                 [record.date]: Number.parseInt(record.downloads_count),
-            });
+            };
         } else {
             projectDownloads[record.date] = Number.parseInt(record.downloads_count);
-            downloadsData_Map.set(record.project_id, projectDownloads);
+            downloadsData_Map[record.project_id] = projectDownloads;
         }
     }
 
     return {
-        data: Object.fromEntries(downloadsData_Map),
+        data: downloadsData_Map,
         status: HTTP_STATUS.OK,
     };
 }
