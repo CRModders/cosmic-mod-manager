@@ -12,8 +12,8 @@ const tagsRouter = new Hono();
 tagsRouter.use(searchReqRateLimiter);
 tagsRouter.use(
     applyCacheHeaders({
-        maxAge: 7200,
-        sMaxAge: 7200,
+        maxAge_s: 7200,
+        sMaxAge_s: 7200,
     }),
 );
 

@@ -23,7 +23,7 @@ import { searchProjects } from "./controllers";
 
 const searchRouter = new Hono();
 searchRouter.use(searchReqRateLimiter);
-searchRouter.use(applyCacheHeaders({ maxAge: 0, sMaxAge: 1800 }));
+searchRouter.use(applyCacheHeaders({ maxAge_s: 0, sMaxAge_s: 1800 }));
 
 searchRouter.get("/", search_get);
 searchRouter.get("/filters/sort-by", sortByFilters_get);

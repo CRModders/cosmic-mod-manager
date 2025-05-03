@@ -7,10 +7,18 @@ import { getDownloadsAnalyticsData } from "./controllers";
 import { parseJson } from "~/utils/str";
 import { DateFromStr } from "@app/utils/date";
 import { TimelineOptions } from "@app/utils/types";
+import { applyCacheHeaders } from "~/middleware/cache";
 
 const AnalyticsRouter = new Hono();
 AnalyticsRouter.use(invalidAuthAttemptLimiter);
 AnalyticsRouter.use(AuthenticationMiddleware);
+AnalyticsRouter.use(
+    // cache analytics responses for 6 hours on CDN but not on browser
+    applyCacheHeaders({
+        maxAge_s: 0,
+        sMaxAge_s: 21600,
+    }),
+);
 
 AnalyticsRouter.get("/downloads", LoginProtectedRoute, analytics_get);
 

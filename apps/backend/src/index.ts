@@ -89,7 +89,7 @@ app.get("/favicon.ico", async (ctx: Context) => {
 
 app.get("/", apiDetails);
 app.get("/api", apiDetails);
-app.get("/api/statistics", applyCacheHeaders({ maxAge: 600, sMaxAge: 7200 }), async (ctx: Context) => {
+app.get("/api/statistics", applyCacheHeaders({ maxAge_s: 600, sMaxAge_s: 7200 }), async (ctx: Context) => {
     try {
         const stats = await getStatistics();
 
