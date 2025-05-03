@@ -8,7 +8,7 @@ export async function getLast7Days_ProjectDownloads(projectIds: string[]) {
     const startDate = new Date();
     // Set the start date back a month
     // *It handles the month overflow or underflow automatically
-    startDate.setDate(startDate.getDate() - 1);
+    startDate.setDate(startDate.getDate() - 7);
 
     return await getProjectDownloads_Analytics(projectIds, startDate, endDate);
 }
