@@ -85,9 +85,9 @@ export default function ProjectAnalyticsPage() {
                         <FormattedDate
                             showTime={false}
                             shortMonthNames
-                            date={getStartDate(timeline, range[0], DateFromStr(formattedAnalyticsData[0].date))}
+                            date={getStartDate(timeline, range[0], DateFromStr(formattedAnalyticsData[0]?.date))}
                         />{" "}
-                        - <FormattedDate showTime={false} shortMonthNames date={range[1]} />
+                        – <FormattedDate showTime={false} shortMonthNames date={range[1]} />
                     </span>
                 </div>
 
