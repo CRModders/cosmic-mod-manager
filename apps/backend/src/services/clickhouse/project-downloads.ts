@@ -1,18 +1,16 @@
 import { ISO_DateStr } from "@app/utils/date";
 import clickhouse, { ANALYTICS_DB } from "./index";
 
-export async function getLastMonthProjectDownloads(projectIds: string[]) {
+export async function getLast7Days_ProjectDownloads(projectIds: string[]) {
     if (!projectIds?.length) return new Map<string, number>();
 
-    const today = new Date();
-    const endDate = ISO_DateStr(today);
-
+    const endDate = new Date();
+    const startDate = new Date();
     // Set the start date back a month
     // *It handles the month overflow or underflow automatically
-    today.setMonth(today.getUTCMonth() - 1);
-    const startDate = ISO_DateStr(today);
+    startDate.setDate(startDate.getDate() - 1);
 
-    return await getProjectDownloads_Analytics(projectIds, new Date(startDate), new Date(endDate));
+    return await getProjectDownloads_Analytics(projectIds, startDate, endDate);
 }
 
 export async function getProjectDownloads_Analytics(projectIds: string[], startDate: Date, endDate: Date) {
