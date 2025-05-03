@@ -6,6 +6,9 @@ const Config = {
     BACKEND_URL_PUBLIC: "https://api.crmm.tech", // The public URL of the backend,
     SITE_ICON: "https://crmm.tech/icon.png",
     proxy: false,
+    SUPPORT_EMAIL: "support@crmm.tech";
+    ADMIN_EMAIL: "admin@crmm.tech";
+    SECURITY_EMAIL: "security@crmm.tech";
 };
 
 if (isDev === true) {

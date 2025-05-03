@@ -2,6 +2,7 @@ import type { Translation } from "~/locales/types";
 import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
 import { Rules } from "./rules";
 import { PrivacyPolicy } from "./privacy";
+import { SecurityPolicy } from "./security";
 import tags from "./tags";
 import type { FixedStringArray } from "@app/utils/types/helpers";
 
@@ -619,6 +620,7 @@ export default {
         rulesTitle: "Content Rules",
         contentRules: Rules,
         privacyPolicy: PrivacyPolicy,
+        securityPolicy: SecurityPolicy,
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",
         securityNoticeTitle: "Security Notice",
