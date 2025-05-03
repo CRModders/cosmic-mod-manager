@@ -82,8 +82,12 @@ export default function ProjectAnalyticsPage() {
                     <h1 className="text-foreground text-xl font-semibold leading-none">{t.project.downloads}</h1>
 
                     <span className="text-sm font-semibold text-extra-muted-foreground leading-none">
-                        <FormattedDate showTime={false} shortMonthNames date={range[0]} /> -{" "}
-                        <FormattedDate showTime={false} shortMonthNames date={range[1]} />
+                        <FormattedDate
+                            showTime={false}
+                            shortMonthNames
+                            date={getStartDate(timeline, range[0], DateFromStr(formattedAnalyticsData[0].date))}
+                        />{" "}
+                        - <FormattedDate showTime={false} shortMonthNames date={range[1]} />
                     </span>
                 </div>
 
