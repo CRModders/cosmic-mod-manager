@@ -15,7 +15,7 @@ import { useProjectData } from "~/hooks/project";
 import { WanderingCubesSpinner } from "@app/components/ui/spinner";
 
 const timelineKey = "timeline";
-const MAX_DATA_POINTS = 45;
+const MAX_DATA_POINTS = 50;
 
 interface AnalyticsData_State {
     data: ProjectDownloads_Analytics[string] | null;
@@ -156,7 +156,13 @@ export default function ProjectAnalyticsPage() {
                                 });
                             }}
                         />
-                        <YAxis className="text-shallow-background" stroke="currentColor" dataKey="downloads" width={48} />
+                        <YAxis
+                            className="text-shallow-background"
+                            stroke="currentColor"
+                            dataKey="downloads"
+                            width={48}
+                            allowDecimals={false}
+                        />
                         <ChartTooltip
                             cursor={{
                                 stroke: "currentColor",
