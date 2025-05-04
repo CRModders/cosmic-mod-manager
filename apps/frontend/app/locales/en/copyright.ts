@@ -7,7 +7,7 @@ export function CopyrightPolicy(props: CopyrightProps) {
     return `
 # ${props.title}
 
-Last updated: 3 May 2025
+*Last modified: May 3, 2025*
 
 CRMM (Cosmic Reach Mod Manager) respects the rights of copyright holders and expects our users to do the same. This policy outlines how we handle copyright claims, counter claims, and repeat infringements in accordance with UK copyright law. While the United Kingdom does not have a direct equivalent to the US DMCA, we adhere to similar principles to ensure fair treatment of all parties. We also operate under the Copyright, Designs and Patents Act 1988, which provides the legal framework for protecting original creative works in the UK.
 

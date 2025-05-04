@@ -9,6 +9,8 @@ export function Rules(props: RulesProps) {
     return `
 # ${props.title}
 
+*Last modified: May 3, 2025*
+
 If you come across any form of violation of these Rules on our website, we ask you to make us aware. You may use the Report button on any project, version, or user page, or you may email us at [${props.supportEmail}](mailto:${props.supportEmail}).
 
 ## 1. Prohibited Content

@@ -7,7 +7,7 @@ export function TermsOfUse(props: TermsProps) {
     return `
 # ${props.title}
 
-**Effective Date:** 3 May 2025
+*Last modified: May 3, 2025*
 
 Welcome to CRMM (Cosmic Reach Mod Manager). By accessing or using our platform, you agree to these Terms of Use. Please read them carefully. If you do not agree, you may not use our services.
 

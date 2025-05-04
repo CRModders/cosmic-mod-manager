@@ -8,7 +8,7 @@ export function SecurityNotice(props: SecurityProps) {
 # ${props.title}
 
 **Version 2025-05**
-**Last updated: May 3, 2025**
+*Last modified: May 3, 2025*
 
 This is the security notice for **all CRMM repositories** and **infrastructure**. This document explains how to report vulnerabilities to us in a **responsible** and **secure** manner.
 
