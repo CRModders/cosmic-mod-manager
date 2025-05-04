@@ -10,7 +10,7 @@ export default function AboutPage() {
             <MarkdownRenderBox
                 className="max-w-[72ch] bright-heading mx-auto bg-card-background p-6 pt-0 rounded-lg"
                 text={t.legal.aboutUs({
-                    discordInvite: Config.DISCORD_INVITE
+                    discordInvite: Config.DISCORD_INVITE,
                 })}
             />
         </main>

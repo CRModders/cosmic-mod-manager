@@ -16,7 +16,7 @@ export default function SecurityNotice() {
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={t.legal.securityNotice({
                 title: t.legal.securityNoticeTitle,
-                adminEmail: Config.ADMIN_EMAIL
+                adminEmail: Config.ADMIN_EMAIL,
             })}
         />
     );

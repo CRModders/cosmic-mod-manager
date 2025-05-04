@@ -632,7 +632,7 @@ export default {
         privacyPolicy: PrivacyPolicy,
 
         // About us page
-        aboutUs: AboutUs
+        aboutUs: AboutUs,
     },
 
     moderation: {

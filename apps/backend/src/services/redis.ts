@@ -4,7 +4,6 @@ import env from "~/utils/env";
 let redis: Redis;
 const redisPort = 5501;
 
-
 if (env.NODE_ENV === "production") {
     redis = newRedis();
 } else {
@@ -24,5 +23,3 @@ function newRedis() {
 
     return client;
 }
-
-

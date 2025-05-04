@@ -16,7 +16,7 @@ export default function CopyrightPolicy() {
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={t.legal.copyrightPolicy({
                 title: t.legal.copyrightPolicyTitle,
-                adminEmail: Config.ADMIN_EMAIL
+                adminEmail: Config.ADMIN_EMAIL,
             })}
         />
     );
