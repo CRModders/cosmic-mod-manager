@@ -12,7 +12,15 @@ export default function AboutPage() {
 Welcome to **CRMM** – the **Cosmic Reach Mod Manager**.
 We’re a passionate team dedicated to making it as easy and convenient as possible to share and discover downloadable content for *Cosmic Reach*. Whether you're a mod developer, world builder, or just someone who loves customising their experience, CRMM is here to give your creativity a home.
 
-CRMM was created on **10 March 2024**, born from the idea of creating a central place to share everything made for Cosmic Reach. Inspired by platforms like [Modrinth](https://modrinth.com/), we set out to build something cleaner, faster, and tailored to our own community. And while we still have a long journey ahead, we’re proud of how far we’ve already come.
+---
+
+### How It All Began (We Think)
+
+CRMM began its earliest life-form as a humble **H<sub>2</sub>O** molecule drifting through the primordial soup—just minding its own business, really. Then, for reasons no one fully understands (possibly kangaroos), it ended up in Australia, where it accidentally triggered a minor reality-bending event. Out of that chaos came a single, world-altering thought: "What if mods... but organised?" And just like that, Eatham had the spark that started it all. From there, things got surprisingly straightforward (give or take *a few* server fires and of course some head scratching).
+
+---
+
+CRMM was *actually* created on the **10<sup>nth</sup> of March 2024**, born from the idea of creating a central place to share everything made for Cosmic Reach. Inspired by platforms like [Modrinth](https://modrinth.com/), we set out to build something cleaner, faster, and tailored to our very own little community. And while we still have a long journey ahead, and some potholes along the way, we’re very proud of how far we’ve already come.
 
 ### Our Mission
 
@@ -57,8 +65,8 @@ Join our [CRM Discord](https://discord.gg/45CuhYkv3B) and say hello. Whether you
 
 It's still the early days here, but big things are upon the horizon. From **moderation tools** to **VirusTotal integration**, improved **project reporting**, and more – we’re always building toward a bigger and better platform.
 
-Thank **YOU** for being a part of the CRMM community.
-We can’t wait to see what you create ;).
+Thank **YOU** for being a part of the CRMM community, and making all of this possible.
+We can’t wait to see what you create ;). Happy Cosmic Reaching!
             `}
             />
         </main>
