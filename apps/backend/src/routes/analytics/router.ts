@@ -1,15 +1,17 @@
-import { type Context, Hono } from "hono";
-import { AuthenticationMiddleware, LoginProtectedRoute } from "~/middleware/auth";
-import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
-import { invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
-import { getUserFromCtx } from "../auth/helpers/session";
-import { getDownloadsAnalyticsData } from "./controllers";
-import { parseJson } from "~/utils/str";
 import { DateFromStr } from "@app/utils/date";
 import { TimelineOptions } from "@app/utils/types";
+import { type Context, Hono } from "hono";
+import { AuthenticationMiddleware, LoginProtectedRoute } from "~/middleware/auth";
 import { applyCacheHeaders } from "~/middleware/cache";
+import { strictGetReqRateLimiter } from "~/middleware/rate-limit/get-req";
+import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-attempt";
+import { invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
+import { parseJson } from "~/utils/str";
+import { getUserFromCtx } from "../auth/helpers/session";
+import { getDownloadsAnalyticsData } from "./controllers";
 
 const AnalyticsRouter = new Hono();
+AnalyticsRouter.use(strictGetReqRateLimiter);
 AnalyticsRouter.use(invalidAuthAttemptLimiter);
 AnalyticsRouter.use(AuthenticationMiddleware);
 AnalyticsRouter.use(
