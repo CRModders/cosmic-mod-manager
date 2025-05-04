@@ -56,7 +56,7 @@ Everything is designed to be lightweight, privacy-friendly, and run with the mod
 ### Community & Contributions
 
 CRMM is **open-source and community-powered** under the *GNU Affero General Public License*.
-Users can help translate the site, suggest@crm features, or (if they're feeling bold) even contribute directly via our [GitHub repository](https://github.com/CRModders/cosmic-mod-manager). It doesn’t happen often, but when it does, we appreciate it deeply.
+Users can help translate the site, suggest features, or (if they're feeling bold) even contribute directly via our [GitHub repository](https://github.com/CRModders/cosmic-mod-manager). It doesn’t happen often, but when it does, we appreciate it deeply.
 
 Want to get involved?
 Join our [CRM Discord](${props.discordInvite}) and say hello. Whether you’re looking to contribute or just hang out with fellow modders, you’re welcome here.

@@ -164,7 +164,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 }
 
 .markdown-body hr {
-    @apply my-5 border-shallower-background;
+    @apply my-5 border-muted-foreground;
 }
 
 .markdown-body table {
