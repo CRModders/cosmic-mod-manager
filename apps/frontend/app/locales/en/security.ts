@@ -3,20 +3,19 @@ export interface SecurityProps {
     supportEmail: string;
 }
 
-export function Rules(props: SecurityProps) {
+export function SecurityNotice(props: SecurityProps) {
     return `
 # ${props.title}
 
 **Version 2025-05**
 **Last updated: May 3, 2025**
 
-This is the security notice for all CRMM repositories and infrastructure. This document explains how to report vulnerabilities to us in a responsible and secure manner.
+This is the security notice for **all CRMM repositories** and **infrastructure**. This document explains how to report vulnerabilities to us in a **responsible** and **secure** manner.
 
----
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability in CRMM, we’d appreciate it if you let us know privately so we can resolve the issue before it is publicly disclosed.
+If you discover a vulnerability in CRMM, we’d appreciate it if you let us know **privately** so we can resolve the issue before it is publicly disclosed.
 
 **Please do not open a GitHub issue or discuss the vulnerability in public channels.**
 
@@ -29,7 +28,6 @@ Instead, email us at **[${props.adminEmail}](mailto:${props.adminEmail})** with 
 
 We aim to respond to valid reports within **48 hours**.
 
----
 
 ## Scope
 
@@ -40,10 +38,9 @@ The following types of reports are **not** considered within the scope of this p
 
 If you’re unsure whether your findings are in scope, feel free to reach out regardless. We appreciate your efforts to help us improve CRMM's security.
 
----
 
 ## Coordinated Disclosure
 
-We ask that all security researchers follow a coordinated disclosure process. Please give us the opportunity to assess and resolve reported issues before any public disclosure.
+We ask that all security researchers follow a **coordinated disclosure process**. Please give us the opportunity to assess and resolve reported issues before any public disclosure.
 `;
 }

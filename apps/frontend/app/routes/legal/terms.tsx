@@ -15,7 +15,7 @@ export default function TermsOfUse() {
         <MarkdownRenderBox
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={t.legal.termsOfUse({
-                title: t.legal.termsTitle
+                title: t.legal.termsTitle,
                 supportEmail: Config.SUPPORT_EMAIL
             })}
         />

@@ -624,7 +624,7 @@ export default {
         privacyPolicy: PrivacyPolicy,
         securityNotice: SecurityNotice,
         termsOfUse: TermsOfUse,
-        copyrightPolice: CopyrightPolice,
+        copyrightPolicy: CopyrightPolicy,
         rulesTitle: "Content Rules",
         termsTitle: "Terms of Use",
         copyrightPolicyTitle: "Copyright Policy",

@@ -3,7 +3,7 @@ export interface PrivayProps {
     supportEmail: string;
 }
 
-export function Rules(props: PrivacyProps) {
+export function PrivacyPolicy(props: PrivacyProps) {
     return `
 # ${props.title}
 
@@ -47,11 +47,12 @@ We use third-party services for our infrastructure, including:
 
 * **Cloudflare**
 * **Fastly**
-  These services help improve the performance and security of the Website.
+
+These services help improve the performance and security of our services.
 
 We also self-host open-source software such as **Clickhouse DB** and **Uptime Kuma** for system monitoring and database management.
 
-#### **No Monetization Currently**
+#### **No Monetization**
 
 We do not monetize user data and have no plans for monetization at this time.
 
@@ -63,7 +64,7 @@ We store your data as long as needed for the operation of the Service. You can r
 
 You have the right to request the deletion of your personal data from our systems. However, we do not provide full access to all the data we store as much of it is what you've already provided.
 
-To request deletion of your data, please contact us at **[support@crmm.tech](mailto:support@crmm.tech)**.
+To request deletion of your data, please contact us at **[support@crmm.tech](mailto:support@crmm.tech)**, or go to **[account settings](https://crmm.tech/settings/account)** and scroll down to "Delete account" and follow the steps on-screen.
 
 ### **Third-Party Services**
 
@@ -95,9 +96,6 @@ We may update this privacy policy from time to time. We will post any changes on
 
 ### **Contact Us**
 
-If you have any questions about this privacy policy or how we handle your data, please contact us at:
-
-**Email**: [${props.supportEmail}](mailto:${props.supportEmail})
-**Website**: [www.crmm.tech](https://www.crmm.tech)
+If you have any questions about this privacy policy or how we handle your data, please contact us at [${props.supportEmail}](mailto:${props.supportEmail})
 `;
 }

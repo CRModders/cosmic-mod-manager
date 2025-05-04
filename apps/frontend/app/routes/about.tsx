@@ -7,7 +7,7 @@ export default function AboutPage() {
                 className="max-w-[72ch] bright-heading mx-auto bg-card-background p-6 pt-0 rounded-lg"
                 text={`
 
-#**About Us**
+# About Us
 
 Welcome to **CRMM** – the **Cosmic Reach Mod Manager**.
 We’re a passionate team dedicated to making it as easy and convenient as possible to share and discover downloadable content for *Cosmic Reach*. Whether you're a mod developer, world builder, or just someone who loves customising their experience, CRMM is here to give your creativity a home.
@@ -57,7 +57,7 @@ Join our [CRM Discord](https://discord.gg/45CuhYkv3B) and say hello. Whether you
 
 It's still the early days here, but big things are upon the horizon. From **moderation tools** to **VirusTotal integration**, improved **project reporting**, and more – we’re always building toward a bigger and better platform.
 
-Thank *YOU* for being a part of the CRMM community.
+Thank **YOU** for being a part of the CRMM community.
 We can’t wait to see what you create ;).
             `}
             />

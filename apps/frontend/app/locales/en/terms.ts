@@ -3,7 +3,7 @@ export interface TermsProps {
     supportEmail: string;
 }
 
-export function Rules(props: TermsProps) {
+export function TermsOfUse(props: TermsProps) {
     return `
 # ${props.title}
 
@@ -17,7 +17,6 @@ Welcome to CRMM (Cosmic Reach Mod Manager). By accessing or using our platform, 
 
 By creating an account or using any part of CRMM, you confirm that you understand and agree to be bound by these Terms. If you are under the age of 13, you may create an account only with parental consent, which we strongly recommend obtaining.
 
----
 
 ## 2. User Accounts
 
@@ -25,7 +24,6 @@ By creating an account or using any part of CRMM, you confirm that you understan
 * Accounts are intended for individual use only and must not be shared.
 * Users are responsible for maintaining the confidentiality of their credentials.
 
----
 
 ## 3. Content Hosting
 
@@ -37,13 +35,11 @@ CRMM directly hosts user-submitted files, including modifications (mods) for Cos
 
 We reserve the right to remove any content that violates these standards.
 
----
 
 ## 4. Monetisation
 
 At present, CRMM does not offer any form of monetisation or financial transactions. This may change in the future, at which point this document will be updated accordingly.
 
----
 
 ## 5. API Access
 
@@ -52,7 +48,6 @@ CRMM provides an open API, subject to fair use and reasonable rate limits.
 * Users of the API must provide proper attribution to CRMM.
 * Abuse of the API or failure to provide credit may result in revoked access.
 
----
 
 ## 6. Account Termination
 
@@ -64,7 +59,6 @@ We reserve the right to terminate user accounts at our discretion, without notic
 
 Some terminations, such as those for Terms violations, may be eligible for appeal. However, any breach of law will result in a permanent ban with no appeal process.
 
----
 
 ## 7. Legal Jurisdiction and Disputes
 
@@ -74,7 +68,6 @@ CRMM is managed and operated from Wales, United Kingdom.
 * You waive any rights to participate in class action lawsuits against CRMM.
 * Mandatory arbitration may be used at our discretion if legally applicable.
 
----
 
 ## 8. Data Collection and Use
 
@@ -87,7 +80,6 @@ We collect the following user information:
 
 Analytics are used solely for performance and platform improvements. No external tracking or unauthorised data sharing occurs.
 
----
 
 ## 9. Mod Rights and Licensing
 
@@ -96,7 +88,6 @@ Analytics are used solely for performance and platform improvements. No external
 
 CRMM acts as a distribution platform and does not claim ownership over any mods.
 
----
 
 ## 10. Service Shutdown
 
@@ -105,13 +96,11 @@ In the event that CRMM shuts down, users may receive prior notice. However:
 * User data may not be recoverable after shutdown.
 * All data will be securely deleted in accordance with our data policies.
 
----
 
 ## 11. Changes to These Terms
 
-These Terms of Use may be updated from time to time. Continued use of the service after changes constitutes acceptance of the new terms.
+These Terms of Use may be updated from time to time, without notice. Continued use of the service after changes constitutes acceptance of the new terms.
 
----
 
 ## 12. Contact
 
@@ -120,6 +109,5 @@ For questions or concerns regarding these Terms, please contact us at [${props.s
 ---
 
 Thank you for using CRMM.
-
 `;
 }

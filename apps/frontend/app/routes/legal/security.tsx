@@ -15,7 +15,7 @@ export default function SecurityNotice() {
         <MarkdownRenderBox
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={t.legal.securityNotice({
-                title: t.legal.securityNoticeTitle
+                title: t.legal.securityNoticeTitle,
                 adminEmail: Config.ADMIN_EMAIL
             })}
         />

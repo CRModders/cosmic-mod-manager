@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
         <MarkdownRenderBox
             className="bg-card-background bright-heading p-6 rounded-lg"
             text={t.legal.privacyPolicy({
-                title: t.legal.privacyPolicyTitle
+                title: t.legal.privacyPolicyTitle,
                 supportEmail: Config.SUPPORT_EMAIL
             })}
         />
