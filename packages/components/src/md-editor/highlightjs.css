@@ -29,7 +29,7 @@
 
 .markdown-body h1,
 .markdown-body h2 {
-    @apply pt-2.5 pb-1 border-b border-extra-muted-foreground;
+    @apply pt-2.5 pb-1 border-b border-shallower-background;
 }
 
 .markdown-body h1,
@@ -164,7 +164,7 @@ html:is(.dark).markdown-body img[src$="#gh-light-mode-only"] {
 }
 
 .markdown-body hr {
-    @apply my-5 text-foreground;
+    @apply my-5 border-shallower-background;
 }
 
 .markdown-body table {
