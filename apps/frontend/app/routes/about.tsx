@@ -12,7 +12,7 @@ export default function AboutPage() {
 Welcome to **CRMM** – the **Cosmic Reach Mod Manager**.
 We’re a passionate team dedicated to making it as easy and convenient as possible to share and discover downloadable content for *Cosmic Reach*. Whether you're a mod developer, world builder, or just someone who loves customising their experience, CRMM is here to give your creativity a home.
 
-CRMM was launched on **10 March 2024**, born from the idea of creating a central place to share everything made for Cosmic Reach. Inspired by platforms like Modrinth, we set out to build something cleaner, faster, and tailored to our own community. And while we still have a long journey ahead, we’re proud of how far we’ve already come.
+CRMM was created on **10 March 2024**, born from the idea of creating a central place to share everything made for Cosmic Reach. Inspired by platforms like [Modrinth](https://modrinth.com/), we set out to build something cleaner, faster, and tailored to our own community. And while we still have a long journey ahead, we’re proud of how far we’ve already come.
 
 ### Our Mission
 
