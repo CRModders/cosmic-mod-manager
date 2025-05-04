@@ -550,10 +550,6 @@ export default {
     },
 
     footer: {
-        company: "会社情報",
-        terms: "利用規約",
-        privacy: "プライバシー",
-        rules: "ルール",
         resources: "リソース",
         docs: "ドキュメンテーション",
         status: "ステータス",

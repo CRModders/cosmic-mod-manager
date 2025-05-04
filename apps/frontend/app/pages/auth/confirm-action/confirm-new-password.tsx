@@ -3,14 +3,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FormSuccessMessage } from "@app/components/ui/form-message";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { CheckIcon } from "lucide-react";
 import { useState } from "react";
+import { CancelButton } from "~/components/ui/button";
 import Link from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
+import Config from "~/utils/config";
 import SessionsPageLink from "./help-link";
-import { CancelButton } from "~/components/ui/button";
 
 export default function ConfirmNewPasswordCard({ code }: { code: string }) {
     const { t } = useTranslation();
@@ -64,8 +64,8 @@ export default function ConfirmNewPasswordCard({ code }: { code: string }) {
 
     return (
         <>
-            <title>{`${t.auth.confirmNewPass} - ${SITE_NAME_SHORT}`}</title>
-            <meta name="description" content={`Add new password to your ${SITE_NAME_SHORT} account`} />
+            <title>{`${t.auth.confirmNewPass} - ${Config.SITE_NAME_SHORT}`}</title>
+            <meta name="description" content={`Add new password to your ${Config.SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">
                 <CardHeader>

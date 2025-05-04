@@ -1,5 +1,3 @@
-import type { Route } from "./+types/page";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { FormatDate_ToLocaleString } from "@app/utils/date";
 import { FormatCount } from "@app/utils/number";
 import { CapitalizeAndFormatString } from "@app/utils/string";
@@ -14,6 +12,7 @@ import VersionPage from "~/pages/project/version/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { ProjectPagePath, VersionPagePath } from "~/utils/urls";
+import type { Route } from "./+types/page";
 
 export default function VersionPageRoute() {
     const ctx = useProjectData();
@@ -80,7 +79,7 @@ export function meta(props: Route.MetaArgs) {
 
     return MetaTags({
         title: `${version.title}${titleIncludesProjectName ? "" : ` - ${project.name}`}`,
-        description: `Download ${project.name} ${version.versionNumber} on ${SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author?.userName}. ${FormatCount(version.downloads)} downloads.`,
+        description: `Download ${project.name} ${version.versionNumber} on ${Config.SITE_NAME_SHORT}. Supports cosmic reach ${formatVersionsForDisplay(version.gameVersions).join(", ")}${loaders ? ` on ${loaders}` : ""}. Published on ${publishedAt} by ${version.author?.userName}. ${FormatCount(version.downloads)} downloads.`,
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug, `version/${version.slug}`)}`,
         image: project.icon || "",
         parentMetaTags,

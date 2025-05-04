@@ -1,5 +1,4 @@
 import { SuspenseFallback } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Notification, OrganisationListItem, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { useLoaderData } from "react-router";
@@ -75,7 +74,7 @@ export function HydrateFallback() {
 export function meta() {
     return MetaTags({
         title: "Notifications",
-        description: `Your ${SITE_NAME_SHORT} notifications`,
+        description: `Your ${Config.SITE_NAME_SHORT} notifications`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard/notifications`,
         suffixTitle: true,

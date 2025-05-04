@@ -590,10 +590,6 @@ export default {
     },
 
     footer: {
-        company: "Empresa",
-        terms: "Términos",
-        privacy: "Privacidad",
-        rules: "Reglas",
         resources: "Recursos",
         docs: "Documentación",
         status: "Estado",

@@ -3,13 +3,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FormSuccessMessage } from "@app/components/ui/form-message";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
+import Config from "~/utils/config";
 import SessionsPageLink from "./help-link";
-import { CancelButton } from "~/components/ui/button";
 
 export default function DeleteAccountConfirmationCard({ code }: { code: string }) {
     const { t } = useTranslation();
@@ -63,8 +63,8 @@ export default function DeleteAccountConfirmationCard({ code }: { code: string }
 
     return (
         <>
-            <title>{`${t.auth.deleteAccount} - ${SITE_NAME_SHORT}`}</title>
-            <meta name="description" content={`Confirm to delete your ${SITE_NAME_SHORT} account`} />
+            <title>{`${t.auth.deleteAccount} - ${Config.SITE_NAME_SHORT}`}</title>
+            <meta name="description" content={`Confirm to delete your ${Config.SITE_NAME_SHORT} account`} />
 
             <Card className="max-w-md">
                 <CardHeader>

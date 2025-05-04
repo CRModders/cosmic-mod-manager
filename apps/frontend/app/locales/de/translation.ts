@@ -608,10 +608,6 @@ export default {
     },
 
     footer: {
-        company: "Firma",
-        terms: "Nutzungsbedingunen",
-        privacy: "Privatsphäre",
-        rules: "Regeln",
         resources: "Ressourcen",
         docs: "Dokumentation",
         status: "Status",

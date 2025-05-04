@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { TeamMember } from "@app/utils/types/api";
 import type { MetaArgs } from "react-router";
@@ -23,7 +22,7 @@ export function meta(props: MetaArgs) {
         return MetaTags({
             title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
             description: project.summary,
-            siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${author} on ${SITE_NAME_SHORT}`,
+            siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${author} on ${Config.SITE_NAME_SHORT}`,
             image: project.icon || "",
             url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}/gallery`,
         });

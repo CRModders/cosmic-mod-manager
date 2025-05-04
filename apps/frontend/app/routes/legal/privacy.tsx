@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
@@ -17,6 +16,11 @@ export default function PrivacyPolicy() {
             text={t.legal.privacyPolicy({
                 title: t.legal.privacyPolicyTitle,
                 supportEmail: Config.SUPPORT_EMAIL,
+                siteName_Short: Config.SITE_NAME_SHORT,
+                siteName_Long: Config.SITE_NAME_LONG,
+                websiteUrl: Config.FRONTEND_URL,
+                sessionSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("account/session")}`,
+                accountSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("account/settings")}`,
             })}
         />
     );
@@ -25,7 +29,7 @@ export default function PrivacyPolicy() {
 export function meta() {
     return MetaTags({
         title: title,
-        description: `The ${title} of ${SITE_NAME_SHORT}, ${descriptionSuffix}.`,
+        description: `The ${title} of ${Config.SITE_NAME_SHORT}, ${descriptionSuffix}.`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("legal/privacy")}`,
         suffixTitle: true,

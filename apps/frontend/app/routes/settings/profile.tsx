@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Redirect from "~/components/ui/redirect";
 import { useSession } from "~/hooks/session";
 import { ProfileSettingsPage } from "~/pages/settings/profile";
@@ -16,7 +15,7 @@ export default function _AccountSettings() {
 export function meta() {
     return MetaTags({
         title: "Profile settings",
-        description: `Your ${SITE_NAME_SHORT} profile settings`,
+        description: `Your ${Config.SITE_NAME_SHORT} profile settings`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("settings/profile")}`,
         suffixTitle: true,

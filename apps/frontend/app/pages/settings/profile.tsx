@@ -7,7 +7,6 @@ import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { profileUpdateFormSchema } from "@app/utils/schemas/settings";
 import { handleFormError } from "@app/utils/schemas/utils";
@@ -21,6 +20,7 @@ import IconPicker from "~/components/icon-picker";
 import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
+import Config from "~/utils/config";
 import { UserProfilePath } from "~/utils/urls";
 
 interface Props {
@@ -82,7 +82,7 @@ export function ProfileSettingsPage({ session }: Props) {
         <Card>
             <CardHeader>
                 <CardTitle>{t.settings.profileInfo}</CardTitle>
-                <CardDescription>{t.settings.profileInfoDesc(SITE_NAME_SHORT)}</CardDescription>
+                <CardDescription>{t.settings.profileInfoDesc(Config.SITE_NAME_SHORT)}</CardDescription>
             </CardHeader>
 
             <CardContent>

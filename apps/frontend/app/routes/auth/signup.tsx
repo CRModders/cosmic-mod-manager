@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Redirect from "~/components/ui/redirect";
 import { useSession } from "~/hooks/session";
 import SignUpPage from "~/pages/auth/signup/page";
@@ -17,7 +16,7 @@ export default function _SignUp() {
 export function meta() {
     return MetaTags({
         title: "SignUp",
-        description: `Sign up for ${SITE_NAME_SHORT} account`,
+        description: `Sign up for ${Config.SITE_NAME_SHORT} account`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/signup`,
         suffixTitle: true,

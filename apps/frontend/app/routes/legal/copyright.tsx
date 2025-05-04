@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
@@ -17,6 +16,8 @@ export default function CopyrightPolicy() {
             text={t.legal.copyrightPolicy({
                 title: t.legal.copyrightPolicyTitle,
                 adminEmail: Config.ADMIN_EMAIL,
+                siteName_Short: Config.SITE_NAME_SHORT,
+                siteName_Long: Config.SITE_NAME_LONG,
             })}
         />
     );
@@ -25,7 +26,7 @@ export default function CopyrightPolicy() {
 export function meta() {
     return MetaTags({
         title: title,
-        description: `The ${title} of ${SITE_NAME_SHORT}, ${descriptionSuffix}.`,
+        description: `The ${title} of ${Config.SITE_NAME_SHORT}, ${descriptionSuffix}.`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${PageUrl("legal/copyright")}`,
         suffixTitle: true,

@@ -1,5 +1,4 @@
 import { SuspenseFallback } from "@app/components/ui/spinner";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { useLoaderData } from "react-router";
 import NotificationsHistoryPage from "~/pages/dashboard/notification/history";
 import Config from "~/utils/config";
@@ -28,7 +27,7 @@ export function HydrateFallback() {
 export function meta() {
     return MetaTags({
         title: "Notifications history",
-        description: `Your ${SITE_NAME_SHORT} notifications history`,
+        description: `Your ${Config.SITE_NAME_SHORT} notifications history`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard/notifications`,
         suffixTitle: true,

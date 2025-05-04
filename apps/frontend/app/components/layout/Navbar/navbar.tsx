@@ -4,7 +4,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popo
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
 import { projectTypes } from "@app/utils/config/project";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
@@ -19,6 +18,7 @@ import { useTranslation } from "~/locales/provider";
 import CreateNewCollection_Dialog from "~/pages/dashboard/collections/new-collection";
 import CreateNewOrg_Dialog from "~/pages/dashboard/organization/new-organization";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
+import Config from "~/utils/config";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
@@ -105,7 +105,7 @@ export default function Navbar(props: NavbarProps) {
                         >
                             <BrandIcon size="1.75rem" strokeWidth={26} />
                             <span className="text-lg font-bold px-1 flex items-end justify-center rounded-lg bg-clip-text bg-accent-bg text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background drop-shadow-2xl">
-                                {SITE_NAME_SHORT}
+                                {Config.SITE_NAME_SHORT}
                             </span>
                         </Link>
 

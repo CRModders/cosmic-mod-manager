@@ -1,6 +1,12 @@
 export interface PrivacyProps {
     title: string;
     supportEmail: string;
+    siteName_Short: string;
+    siteName_Long: string;
+
+    websiteUrl: string;
+    accountSettings_PageUrl: string;
+    sessionSettings_PageUrl: string;
 }
 
 export function PrivacyPolicy(props: PrivacyProps) {
@@ -11,7 +17,7 @@ export function PrivacyPolicy(props: PrivacyProps) {
 
 ### **Introduction**
 
-Cosmic Reach Mod Manager (CRMM) is operated by a group of developers and managers ("we", "our", "us"). This privacy policy explains how we collect, use, and protect your data when you access our website, *[www.crmm.tech](http://www.crmm.tech)* ("Service" or "Website"). It also outlines your rights regarding your data.
+${props.siteName_Long} (${props.siteName_Short}) is operated by a group of developers and managers ("we", "our", "us"). This privacy policy explains how we collect, use, and protect your data when you access our website, **${props.websiteUrl}** ("Service" or "Website"). It also outlines your rights regarding your data.
 
 By using our Service, you agree to the collection and use of your data as described in this policy. If you do not agree with these terms, please do not use our Website.
 
@@ -21,25 +27,28 @@ This policy may change from time to time, and any changes will be posted on this
 
 #### **User Data**
 
-When you sign up or log in to CRMM, we collect the following data:
+When you sign up to ${props.siteName_Short}, we collect the following data:
 
 * **Email address** (used for registration and account communication)
 * **Username** (unique identifier)
 * **Avatar** (optional, profile picture)
 * **Name** (optional)
-* **Bio** (optional)
-* **Password** (only stored securely if you sign up via email and password)
 * **Date of Account Creation**
-* **Email Verification Status** (whether your email has been verified)
-* **Role** (your role within CRMM, e.g., user, admin)
-* **New Sign-In Alerts Preference** (whether you wish to receive alerts about new sign-ins)
 
-When a session is created, the data above will be linked to the session. We also store information about:
+Whenever the user logs in (a session is created), the following data is stored with the session:
+* **Auth provider** (optional, The third party auth provider used to log in)
+* **Ip address** (For security purposes)
+* **Geo location** (Based on the IP address, for security purposes)
+* **User agent** (Browser and OS information, for security purposes)
+* **Date of login**
+* **Date of last activity** (The last time this session was used for authentication)
+
+It should be noted that the session data is only stored for the duration of the session and is visible to the user on the website on the [session settings](${props.sessionSettings_PageUrl}) page.
+
+We also store information about:
 
 * **Auth Accounts** (linked third-party accounts such as Google, GitHub, Discord, or GitLab)
-* **Project Followings** (IDs of projects you are following)
-* **Team Memberships** (if applicable)
-* **Notifications** (updates from the platform)
+* **User password** (A hash of the password is stored if the user decides to add one)
 
 #### **Third-Party Data Collection**
 
@@ -47,10 +56,11 @@ We use third-party services for our infrastructure, including:
 
 * **Cloudflare**
 * **Fastly**
+* **Backblaze**
 
-These services help improve the performance and security of our services.
+These services help improve the performance, security and reliability of our services.
 
-We also self-host open-source software such as **Clickhouse DB** and **Uptime Kuma** for system monitoring and database management.
+We also self-host open-source software such as **Clickhouse DB**, **Postgresql**, **Redis** and **Meilisearch** for database management and other internal functions.
 
 #### **No Monetization**
 
@@ -58,13 +68,13 @@ We do not monetize user data and have no plans for monetization at this time.
 
 ### **Data Retention**
 
-We store your data as long as needed for the operation of the Service.Fastly You can request the deletion of your data at any time. Once deleted, your data will no longer be accessible, but may remain in backup systems for a short period.
+We store your data as long as needed for the operation of the Service. You can request the deletion of your data at any time. Once deleted, your data will no longer be accessible, but may remain in backup systems for a short period.
 
 ### **Your Rights and Requests**
 
 You have the right to request the deletion of your personal data from our systems. However, we do not provide full access to all the data we store as much of it is what you've already provided.
 
-To request deletion of your data, please contact us at **[${props.supportEmail}](mailto:${props.supportEmail})**, or go to **[account settings](https://crmm.tech/settings/account)** and scroll down to "Delete account" and follow the steps on-screen.
+To request deletion of your data, please contact us at **[${props.supportEmail}](mailto:${props.supportEmail})**, or go to **[account settings](${props.accountSettings_PageUrl})** and scroll down to "Delete account" and follow the steps on-screen.
 
 ### **Third-Party Services**
 
@@ -72,8 +82,7 @@ We do not share your personal data with any third-party service providers for ma
 
 * **Cloudflare** (for performance and security)
 * **Fastly** (for content delivery)
-* **Clickhouse DB** (for database management)
-* **Uptime Kuma** (for monitoring the website’s uptime)
+* **Backblaze** (For storing backups)
 
 ### **Children’s Privacy**
 

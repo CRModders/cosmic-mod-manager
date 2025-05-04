@@ -4,8 +4,7 @@ import { Prefetch } from "@app/components/ui/link";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { DotSeparator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
-import { ArrowUpRightIcon, LanguagesIcon, Settings2Icon } from "lucide-react";
+import { ArrowUpRightIcon, LanguagesIcon, LinkIcon, Settings2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type LinkProps, useLocation } from "react-router";
 import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
@@ -30,29 +29,16 @@ export default function Footer() {
         <footer className="w-full bg-card-background dark:bg-card-background/35 mt-24 pt-20 pb-8 mx-auto">
             <div className="footer-grid container gap-y-5 pb-16">
                 <LinksColumn area="logo">
-                    <span className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none" title={SITE_NAME_LONG}>
-                        <BrandIcon size="2.75rem" aria-label="CRMM Logo" />
-                        CRMM
+                    <span
+                        className="flex gap-2 items-center justify-center text-[1.72rem] font-bold leading-none"
+                        title={Config.SITE_NAME_LONG}
+                    >
+                        <BrandIcon size="2.75rem" aria-label="Logo" />
+                        {Config.SITE_NAME_SHORT}
                     </span>
                 </LinksColumn>
 
                 <LinksColumn area="links-1">
-                    <Title>{footer.company}</Title>
-
-                    <FooterLink to="/legal/terms" aria-label={t.legal.termsTitle}>
-                        {footer.terms}
-                    </FooterLink>
-
-                    <FooterLink to="/legal/privacy" aria-label={legal.privacyPolicyTitle}>
-                        {footer.privacy}
-                    </FooterLink>
-
-                    <FooterLink to="/legal/rules" aria-label={legal.rulesTitle}>
-                        {footer.rules}
-                    </FooterLink>
-                </LinksColumn>
-
-                <LinksColumn area="links-2">
                     <Title>{footer.resources}</Title>
 
                     <FooterLink to="https://docs.crmm.tech" aria-label={footer.docs} target="_blank">
@@ -64,13 +50,13 @@ export default function Footer() {
                         {footer.status}
                     </FooterLink>
 
-                    <FooterLink to="mailto:support@crmm.tech" aria-label={footer.support} target="_blank">
+                    <FooterLink to={`mailto:${Config.SUPPORT_EMAIL}`} aria-label={footer.support} target="_blank">
                         {footer.support}
                         <OpenInNewTab_Icon />
                     </FooterLink>
                 </LinksColumn>
 
-                <LinksColumn area="links-3">
+                <LinksColumn area="links-2">
                     <Title>{footer.socials}</Title>
                     <FooterLink to="/about" aria-label={footer.about}>
                         {footer.about}
@@ -84,6 +70,25 @@ export default function Footer() {
                     <FooterLink to={Config.DISCORD_INVITE} aria-label="Discord Invite" target="_blank">
                         Discord
                         <OpenInNewTab_Icon />
+                    </FooterLink>
+                </LinksColumn>
+
+                <LinksColumn area="links-3">
+                    <Link to="/legal" className="flex gap-2 items-center hover:underline">
+                        <Title>{legal.legal}</Title>
+                        <LinkIcon className="text-muted-foreground h-3.5 w-3.5" />
+                    </Link>
+
+                    <FooterLink to="/legal/terms" aria-label={legal.termsTitle}>
+                        {legal.termsTitle}
+                    </FooterLink>
+
+                    <FooterLink to="/legal/privacy" aria-label={legal.privacyPolicyTitle}>
+                        {legal.privacyPolicyTitle}
+                    </FooterLink>
+
+                    <FooterLink to="/legal/rules" aria-label={legal.rulesTitle}>
+                        {legal.rulesTitle}
                     </FooterLink>
                 </LinksColumn>
 
@@ -102,7 +107,7 @@ export default function Footer() {
             </div>
 
             <div className="container flex flex-wrap items-center justify-start gap-x-3 gap-y-2 text-[small]">
-                <span>{t.footer.siteOfferedIn(SITE_NAME_SHORT)}</span>
+                <span>{t.footer.siteOfferedIn(Config.SITE_NAME_SHORT)}</span>
 
                 {SupportedLocales.map((locale) => {
                     const region = locale.region;

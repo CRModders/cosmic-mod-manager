@@ -2,7 +2,6 @@ import "./index.css";
 
 import { DownloadRipple } from "@app/components/misc/download-animation";
 import LoaderBar from "@app/components/misc/loader-bar";
-import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
 import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
@@ -43,7 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <head>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <meta name="publisher" content={SITE_NAME_SHORT} />
+                <meta name="publisher" content={Config.SITE_NAME_SHORT} />
                 <meta name="theme-color" content="#F04570" />
                 <meta name="color-scheme" content="dark light" />
                 <meta property="og:logo" content={Config.SITE_ICON} />
@@ -226,7 +225,7 @@ export const links: LinksFunction = () => {
 
 export function meta() {
     return MetaTags({
-        title: SITE_NAME_LONG,
+        title: Config.SITE_NAME_LONG,
         description:
             "Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on CRMM (Cosmic Reach Mod Manager). Discover and publish projects on CRMM with a modern, easy to use interface and API.",
         image: Config.SITE_ICON,

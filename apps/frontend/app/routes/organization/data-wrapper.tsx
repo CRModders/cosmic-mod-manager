@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Organisation, ProjectListItem } from "@app/utils/types/api";
 import { Outlet, type ShouldRevalidateFunctionArgs } from "react-router";
 import { useOrgData } from "~/hooks/org";
@@ -76,7 +75,7 @@ export function meta(props: Route.MetaArgs) {
 
     return MetaTags({
         title: `${orgData.name} - Organization`,
-        description: `${orgData.description} - View the organization ${orgData.name} on ${SITE_NAME_SHORT}`,
+        description: `${orgData.description} - View the organization ${orgData.name} on ${Config.SITE_NAME_SHORT}`,
         image: orgData.icon || "",
         url: `${Config.FRONTEND_URL}${OrgPagePath(orgData.slug)}`,
     });

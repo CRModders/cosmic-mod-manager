@@ -1,6 +1,7 @@
 export interface SecurityProps {
     title: string;
     adminEmail: string;
+    siteName_Short: string;
 }
 
 export function SecurityNotice(props: SecurityProps) {
@@ -10,12 +11,12 @@ export function SecurityNotice(props: SecurityProps) {
 **Version 2025-05**
 *Last modified: May 3, 2025*
 
-This is the security notice for **all CRMM repositories** and **infrastructure**. This document explains how to report vulnerabilities to us in a **responsible** and **secure** manner.
+This is the security notice for **all ${props.siteName_Short} repositories** and **infrastructure**. This document explains how to report vulnerabilities to us in a **responsible** and **secure** manner.
 
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability in CRMM, we’d appreciate it if you let us know **privately** so we can resolve the issue before it is publicly disclosed.
+If you discover a vulnerability in ${props.siteName_Short}, we’d appreciate it if you let us know **privately** so we can resolve the issue before it is publicly disclosed.
 
 **Please do not open a GitHub issue or discuss the vulnerability in public channels.**
 
@@ -36,7 +37,7 @@ The following types of reports are **not** considered within the scope of this p
 * **Volumetric vulnerabilities**, such as high request volume intended to overwhelm a service
 * Reports that indicate we are missing **security best practices**, such as absent HTTP headers or minor configuration issues that do not pose direct threats
 
-If you’re unsure whether your findings are in scope, feel free to reach out regardless. We appreciate your efforts to help us improve CRMM's security.
+If you’re unsure whether your findings are in scope, feel free to reach out regardless. We appreciate your efforts to help us improve ${props.siteName_Short}'s security.
 
 
 ## Coordinated Disclosure

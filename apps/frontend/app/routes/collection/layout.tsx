@@ -1,13 +1,12 @@
+import type { Collection, CollectionOwner, ProjectListItem } from "@app/utils/types/api";
+import { type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import CollectionPageLayout from "~/pages/collection/layout";
-import type { ProjectListItem, Collection, CollectionOwner } from "@app/utils/types/api";
-import type { Route } from "./+types/layout";
-import { resJson, serverFetch } from "~/utils/server-fetch";
-import { useLoaderData, type ShouldRevalidateFunctionArgs } from "react-router";
 import NotFoundPage from "~/pages/not-found";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
+import { resJson, serverFetch } from "~/utils/server-fetch";
 import { CollectionPagePath } from "~/utils/urls";
+import type { Route } from "./+types/layout";
 
 export default function _() {
     const data = useLoaderData<typeof loader>();
@@ -79,7 +78,7 @@ export function meta(props: Route.MetaArgs) {
 
     return MetaTags({
         title: `${collection.name} - Collection`,
-        description: `${collection.description} - View the collection ${collection.name} on ${SITE_NAME_SHORT}`,
+        description: `${collection.description} - View the collection ${collection.name} on ${Config.SITE_NAME_SHORT}`,
         image: collection.icon || Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}${CollectionPagePath(collection.id)}`,
     });

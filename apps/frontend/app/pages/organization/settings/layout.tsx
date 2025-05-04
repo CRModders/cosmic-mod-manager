@@ -9,7 +9,6 @@ import {
     BreadcrumbSeparator,
 } from "@app/components/ui/breadcrumb";
 import { Prefetch } from "@app/components/ui/link";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { imageUrl } from "@app/utils/url";
 import { BarChart2Icon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Outlet } from "react-router";
@@ -17,6 +16,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useTranslation } from "~/locales/provider";
+import Config from "~/utils/config";
 import { OrgPagePath } from "~/utils/urls";
 
 export default function OrgSettingsLayout() {
@@ -29,7 +29,7 @@ export default function OrgSettingsLayout() {
 
     return (
         <>
-            <title>{`${orgData.name} Settings - ${SITE_NAME_SHORT}`}</title>
+            <title>{`${orgData.name} Settings - ${Config.SITE_NAME_SHORT}`}</title>
 
             <Panel className="pb-12">
                 <PanelAside aside className="flex flex-col gap-panel-cards lg:w-80">

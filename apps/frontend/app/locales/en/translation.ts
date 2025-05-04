@@ -604,10 +604,6 @@ export default {
     },
 
     footer: {
-        company: "Company",
-        terms: "Terms",
-        privacy: "Privacy",
-        rules: "Rules",
         resources: "Resources",
         docs: "Docs",
         status: "Status",

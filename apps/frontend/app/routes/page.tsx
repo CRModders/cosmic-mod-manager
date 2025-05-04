@@ -1,4 +1,3 @@
-import { SITE_NAME_LONG } from "@app/utils/constants";
 import type { ProjectListItem } from "@app/utils/types/api";
 import { useLoaderData } from "react-router";
 import HomePage from "~/pages/page";
@@ -26,7 +25,7 @@ export function shouldRevalidate() {
 
 export function meta() {
     return MetaTags({
-        title: SITE_NAME_LONG,
+        title: Config.SITE_NAME_LONG,
         description:
             "Download Cosmic Reach mods, plugins, datamods, shaders, resourcepacks, and modpacks on CRMM (Cosmic Reach Mod Manager). Discover and publish projects on CRMM with a modern, easy to use interface and API.",
         image: Config.SITE_ICON,

@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Redirect from "~/components/ui/redirect";
 import { useSession } from "~/hooks/session";
 import DashboardLayout from "~/pages/dashboard/layout";
@@ -15,7 +14,7 @@ export default function _DashboardLayout() {
 export function meta() {
     return MetaTags({
         title: "Dashboard",
-        description: `Your ${SITE_NAME_SHORT} dashboard`,
+        description: `Your ${Config.SITE_NAME_SHORT} dashboard`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard`,
         suffixTitle: true,

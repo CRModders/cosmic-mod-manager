@@ -1,9 +1,9 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { MetaDescriptor } from "react-router";
 import { formatLocaleCode } from "~/locales";
 import SupportedLocales, { DefaultLocale } from "~/locales/meta";
 import { formatUrlWithLocalePrefix } from "~/locales/provider";
-import { prepend, removeTrailing } from "./urls";
+import Config from "~/utils/config";
+import { prepend, removeTrailing } from "~/utils/urls";
 
 type MetaTags =
     | {
@@ -31,7 +31,7 @@ type MetaTags =
 
 export function MetaTags(props: MetaTags): MetaDescriptor[] {
     if (props.suffixTitle) {
-        props.title = `${props.title} - ${SITE_NAME_SHORT}`;
+        props.title = `${props.title} - ${Config.SITE_NAME_SHORT}`;
     }
     if (!props.parentMetaTags) props.parentMetaTags = [];
 
@@ -70,7 +70,7 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         { title: props.title, "data-tag-name": "title" },
         { name: "description", content: props.siteMetaDescription || props.description },
 
-        { property: "og:site_name", content: SITE_NAME_SHORT },
+        { property: "og:site_name", content: Config.SITE_NAME_SHORT },
         { property: "og:type", content: "website" },
         { property: "og:title", content: props.title },
         { property: "og:description", content: props.description },

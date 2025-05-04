@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Organisation } from "@app/utils/types/api";
 import { useLoaderData } from "react-router";
 import Redirect from "~/components/ui/redirect";
@@ -27,7 +26,7 @@ export async function loader(props: Route.LoaderArgs): Promise<Organisation[]> {
 export function meta() {
     return MetaTags({
         title: "Organizations",
-        description: `Your ${SITE_NAME_SHORT} organizations`,
+        description: `Your ${Config.SITE_NAME_SHORT} organizations`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/dashboard/organizations`,
         suffixTitle: true,

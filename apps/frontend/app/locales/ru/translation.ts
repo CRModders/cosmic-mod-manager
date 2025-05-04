@@ -558,10 +558,6 @@ export default {
     },
 
     footer: {
-        company: "Документы",
-        terms: "Условия использования",
-        privacy: "Политика конфиденциальности",
-        rules: "Правила",
         resources: "Ресурсы",
         docs: "Документация",
         status: "Статус",

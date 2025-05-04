@@ -23,7 +23,6 @@ import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { ShowEnvSupportSettingsForType, projectTypes } from "@app/utils/config/project";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@app/utils/convertors";
 import type { z } from "@app/utils/schemas";
@@ -36,6 +35,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, SaveIcon, Trash2Icon, TriangleAlertIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import IconPicker from "~/components/icon-picker";
 import MarkdownRenderBox from "~/components/md-renderer";
 import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
@@ -46,7 +46,6 @@ import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
 import { ProjectPagePath } from "~/utils/urls";
 import { LeaveTeam } from "./members/page";
-import IconPicker from "~/components/icon-picker";
 
 export default function GeneralSettingsPage() {
     const { t } = useTranslation();
@@ -449,7 +448,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
 
     return (
         <ContentCardTemplate title={t.projectSettings.deleteProject} className="w-full flex flex-row flex-wrap gap-4 justify-between">
-            <p className="text-muted-foreground max-w-[65ch]">{t.projectSettings.deleteProjectDesc(SITE_NAME_SHORT)}</p>
+            <p className="text-muted-foreground max-w-[65ch]">{t.projectSettings.deleteProjectDesc(Config.SITE_NAME_SHORT)}</p>
 
             <Dialog>
                 <DialogTrigger asChild>

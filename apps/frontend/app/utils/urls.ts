@@ -41,13 +41,13 @@ export function usePathname() {
  *
  * @param _path - The main path segment of the URL.
  * @param extra - An optional additional path segment to append to the URL.
- * @param prefix - An optional language prefix to prepend to the URL.
+ * @param _lang_prefix - An optional language prefix to prepend to the URL.
  * @returns The constructed URL path as a string.
  */
-export function PageUrl(_path: string, extra?: string, prefix?: string) {
+export function PageUrl(_path: string, extra?: string, _lang_prefix?: string) {
     if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
 
-    const langPrefix = typeof prefix === "string" ? prefix : useUrlLocale(false);
+    const langPrefix = typeof _lang_prefix === "string" ? _lang_prefix : useUrlLocale(false);
     let p = _path === "/" ? "" : prepend("/", _path);
 
     // Make sure not to overwrite the language prefix if it already exists

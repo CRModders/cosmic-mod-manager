@@ -3,6 +3,7 @@ export interface RulesProps {
     supportEmail: string;
     privacyPageUrl: string;
     termsPageUrl: string;
+    siteName_Short: string;
 }
 
 export function Rules(props: RulesProps) {
@@ -57,7 +58,7 @@ Projects cannot contain or download "cheats," which we define as a client-side m
 
 ## 4. Copyright and Reuploads
 
-You must own or have the necessary licenses, rights, consents, and permissions to store, share, and distribute the Content that is uploaded under your CRMM account.
+You must own or have the necessary licenses, rights, consents, and permissions to store, share, and distribute the Content that is uploaded under your ${props.siteName_Short} account.
 
 Content may not be directly reuploaded from another source without explicit permission from the original author. If explicit permission has been granted, or it is a license-abiding "fork," this restriction does not apply.
 

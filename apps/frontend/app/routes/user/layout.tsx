@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import type { Collection, Organisation, ProjectListItem } from "@app/utils/types/api";
 import type { UserProfileData } from "@app/utils/types/api/user";
 import type { MetaDescriptor } from "react-router";
@@ -99,7 +98,7 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
     if (!userData?.id) {
         return MetaTags({
             title: "User not found",
-            description: `No user with the username/ID ${userSlug} exists on ${SITE_NAME_SHORT}`,
+            description: `No user with the username/ID ${userSlug} exists on ${Config.SITE_NAME_SHORT}`,
             image: Config.SITE_ICON,
             url: `${Config.FRONTEND_URL}${UserProfilePath(userSlug || "")}`,
             suffixTitle: true,
@@ -108,7 +107,7 @@ export function meta(props: Route.MetaArgs): MetaDescriptor[] {
 
     return MetaTags({
         title: userData?.userName || "",
-        description: `${userData?.bio} - Download ${userData?.userName}'s projects on ${SITE_NAME_SHORT}`,
+        description: `${userData?.bio} - Download ${userData?.userName}'s projects on ${Config.SITE_NAME_SHORT}`,
         image: image,
         url: `${Config.FRONTEND_URL}${UserProfilePath(userData?.userName)}`,
         suffixTitle: true,

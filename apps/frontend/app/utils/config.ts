@@ -1,3 +1,5 @@
+import { SITE_NAME_LONG, SITE_NAME_SHORT } from "@app/utils/constants";
+
 const isDev = import.meta.env?.DEV;
 
 const Config = {
@@ -6,6 +8,9 @@ const Config = {
     BACKEND_URL_PUBLIC: "https://api.crmm.tech", // The public URL of the backend,
     SITE_ICON: "https://crmm.tech/icon.png",
     proxy: false,
+
+    SITE_NAME_SHORT: SITE_NAME_SHORT,
+    SITE_NAME_LONG: SITE_NAME_LONG,
 
     // Additional configuration things
     SUPPORT_EMAIL: "support@crmm.tech",

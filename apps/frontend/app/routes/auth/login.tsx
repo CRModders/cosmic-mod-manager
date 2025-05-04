@@ -1,4 +1,3 @@
-import { SITE_NAME_SHORT } from "@app/utils/constants";
 import Redirect from "~/components/ui/redirect";
 import { useSession } from "~/hooks/session";
 import LoginPage from "~/pages/auth/login/page";
@@ -15,7 +14,7 @@ export default function Login() {
 export function meta() {
     return MetaTags({
         title: "Login",
-        description: `Log into your ${SITE_NAME_SHORT} account to access your projects and dashboard`,
+        description: `Log into your ${Config.SITE_NAME_SHORT} account to access your projects and dashboard`,
         image: Config.SITE_ICON,
         url: `${Config.FRONTEND_URL}/login`,
         suffixTitle: true,
