@@ -1,6 +1,10 @@
 import type { Locale } from "~/locales/types";
 import { SearchItem_Header } from "../shared-enums";
-import { Rules } from "./legal";
+// import { AboutUs } from "./about";
+// import { CopyrightPolicy } from "./legal/copyright";
+// import { PrivacyPolicy } from "./legal/privacy";
+// import { SecurityNotice } from "./legal/security";
+// import { Rules } from "./legal/rules";
 import tags from "./tags";
 
 export default {
@@ -563,11 +567,18 @@ export default {
     legal: {
         legal: "法的情報",
         rulesTitle: "コンテンツルール",
-        contentRules: Rules,
+        // contentRules: Rules,
         termsTitle: "利用規約",
+        // termsOfUse: TermsOfUse,
         copyrightPolicyTitle: "著作権ポリシー",
+        // copyrightPolicy: CopyrightPolicy,
         securityNoticeTitle: "セキュリティについて",
+        // securityNotice: SecurityNotice,
         privacyPolicyTitle: "プライバシーポリシー",
+        // privacyPolicy: PrivacyPolicy,
+
+        // About us page
+        // aboutUs: AboutUs
     },
 
     moderation: {

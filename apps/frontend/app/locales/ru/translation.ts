@@ -1,7 +1,11 @@
 import type { Locale } from "~/locales/types";
 import { SearchItem_Header } from "../shared-enums";
 import tags from "./tags";
-// import { Rules } from "./legal";
+// import { AboutUs } from "./about";
+// import { CopyrightPolicy } from "./legal/copyright";
+// import { PrivacyPolicy } from "./legal/privacy";
+// import { SecurityNotice } from "./legal/security";
+// import { Rules } from "./legal/rules";
 
 function Pluralize(num: number, str_1: string, str_234: string, str_other: string) {
     if (num === 1) return str_1;
@@ -571,11 +575,18 @@ export default {
     legal: {
         legal: "Документы",
         rulesTitle: "Контент",
-        // contentRules: Rules, // Not translated yet
+        // contentRules: Rules,
         termsTitle: "Условия использования",
+        // termsOfUse: TermsOfUse,
         copyrightPolicyTitle: "Политика авторских прав",
+        // copyrightPolicy: CopyrightPolicy,
         securityNoticeTitle: "Безопасность",
+        // securityNotice: SecurityNotice,
         privacyPolicyTitle: "Политика Конфиденциальности",
+        // privacyPolicy: PrivacyPolicy,
+
+        // About us page
+        // aboutUs: AboutUs
     },
 
     moderation: {

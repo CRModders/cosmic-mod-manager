@@ -8,6 +8,9 @@
             "./**/public/*",
             "./**/pm2.config.cjs",
             "./**/.react-router/*",
+            "./**/clickhouse/*",
+            "./**/redis/*",
+            "./**/meilisearch/*",
             "./**/wailsjs/*",
             "./**/.vitepress/*"
         ],

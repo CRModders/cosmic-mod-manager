@@ -1,13 +1,13 @@
+import type { FixedStringArray } from "@app/utils/types/helpers";
 import type { Translation } from "~/locales/types";
 import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
-import { Rules } from "./rules";
-import { PrivacyPolicy } from "./privacy";
-import { SecurityNotice } from "./security";
-import { TermsOfUse } from "./terms";
-import { CopyrightPolicy } from "./copyright";
-
+import { AboutUs } from "./about";
+import { CopyrightPolicy } from "./legal/copyright";
+import { PrivacyPolicy } from "./legal/privacy";
+import { Rules } from "./legal/rules";
+import { SecurityNotice } from "./legal/security";
 import tags from "./tags";
-import type { FixedStringArray } from "@app/utils/types/helpers";
+import { TermsOfUse } from "./terms";
 
 export type CountTranslation = [string, number | string, string];
 
@@ -620,16 +620,19 @@ export default {
 
     legal: {
         legal: "Legal",
-        contentRules: Rules,
-        privacyPolicy: PrivacyPolicy,
-        securityNotice: SecurityNotice,
-        termsOfUse: TermsOfUse,
-        copyrightPolicy: CopyrightPolicy,
         rulesTitle: "Content Rules",
+        contentRules: Rules,
         termsTitle: "Terms of Use",
+        termsOfUse: TermsOfUse,
         copyrightPolicyTitle: "Copyright Policy",
+        copyrightPolicy: CopyrightPolicy,
         securityNoticeTitle: "Security Notice",
+        securityNotice: SecurityNotice,
         privacyPolicyTitle: "Privacy Policy",
+        privacyPolicy: PrivacyPolicy,
+
+        // About us page
+        aboutUs: AboutUs
     },
 
     moderation: {

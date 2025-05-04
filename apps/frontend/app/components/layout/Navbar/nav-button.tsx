@@ -6,8 +6,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popo
 import { Separator } from "@app/components/ui/separator";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { cn } from "@app/components/utils";
-import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import { disableInteractions } from "@app/utils/dom";
+import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import type { LoggedInUserData } from "@app/utils/types";
 import type { Notification } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";

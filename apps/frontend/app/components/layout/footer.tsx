@@ -15,6 +15,7 @@ import { setUserConfig } from "~/hooks/user-config";
 import { formatLocaleCode, parseLocale } from "~/locales";
 import SupportedLocales from "~/locales/meta";
 import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
+import Config from "~/utils/config";
 import "./styles.css";
 
 export default function Footer() {
@@ -80,7 +81,7 @@ export default function Footer() {
                         <OpenInNewTab_Icon />
                     </FooterLink>
 
-                    <FooterLink to="https://discord.gg/T2pFVHmFpH" aria-label="Discord Invite" target="_blank">
+                    <FooterLink to={Config.DISCORD_INVITE} aria-label="Discord Invite" target="_blank">
                         Discord
                         <OpenInNewTab_Icon />
                     </FooterLink>

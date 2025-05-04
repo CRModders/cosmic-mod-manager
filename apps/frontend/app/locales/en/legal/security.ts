@@ -1,6 +1,6 @@
 export interface SecurityProps {
     title: string;
-    supportEmail: string;
+    adminEmail: string;
 }
 
 export function SecurityNotice(props: SecurityProps) {

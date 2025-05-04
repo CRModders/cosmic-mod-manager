@@ -1,7 +1,11 @@
 import { Capitalize } from "@app/utils/string";
 import type { Locale } from "~/locales/types";
 import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
-import { Rules } from "./legal";
+// import { AboutUs } from "./about";
+// import { CopyrightPolicy } from "./legal/copyright";
+// import { PrivacyPolicy } from "./legal/privacy";
+// import { SecurityNotice } from "./legal/security";
+import { Rules } from "./legal/rules";
 import tags from "./tags";
 
 type Gender = "f" | "m" | "n" | "a";
@@ -623,9 +627,16 @@ export default {
         rulesTitle: "Inhaltsregeln",
         contentRules: Rules,
         termsTitle: "Nutzungsbedingungen",
+        // termsOfUse: TermsOfUse,
         copyrightPolicyTitle: "Copyright-Bestimmungen",
+        // copyrightPolicy: CopyrightPolicy,
         securityNoticeTitle: "Sicherheitsinformation",
+        // securityNotice: SecurityNotice,
         privacyPolicyTitle: "Privatsphärebestimmungen",
+        // privacyPolicy: PrivacyPolicy,
+
+        // About us page
+        // aboutUs: AboutUs
     },
 
     moderation: {

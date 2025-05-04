@@ -1,6 +1,10 @@
 import type { Locale } from "~/locales/types";
 import { SearchItem_Header, VersionAuthor_Header } from "../shared-enums";
-import { Rules } from "./legal";
+// import { AboutUs } from "./about";
+// import { CopyrightPolicy } from "./legal/copyright";
+// import { PrivacyPolicy } from "./legal/privacy";
+// import { SecurityNotice } from "./legal/security";
+import { Rules } from "./legal/rules";
 import tags from "./tags";
 
 function Pluralize(count: number, singular: string, plural: string) {
@@ -197,6 +201,8 @@ export default {
         showPerPage: "Mostrar por página",
         sortBy: "Ordenar por",
         relevance: "Relevancia",
+        // ? New string
+        // trending: "Trending",
         downloads: "Descargas",
         follow_count: "Seguidores",
         recently_updated: "Actualizado recientemente",
@@ -603,9 +609,16 @@ export default {
         rulesTitle: "Reglas de contenido",
         contentRules: Rules,
         termsTitle: "Términos de uso",
+        // termsOfUse: TermsOfUse,
         copyrightPolicyTitle: "Política de derechos de autor",
+        // copyrightPolicy: CopyrightPolicy,
         securityNoticeTitle: "Aviso de seguridad",
+        // securityNotice: SecurityNotice,
         privacyPolicyTitle: "Política de privacidad",
+        // privacyPolicy: PrivacyPolicy,
+
+        // About us page
+        // aboutUs: AboutUs
     },
 
     moderation: {

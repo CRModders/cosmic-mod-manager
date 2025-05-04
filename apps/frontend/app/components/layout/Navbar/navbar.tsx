@@ -3,6 +3,7 @@ import { Button } from "@app/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
 import { cn } from "@app/components/utils";
+import { projectTypes } from "@app/utils/config/project";
 import { SITE_NAME_SHORT } from "@app/utils/constants";
 import { Capitalize } from "@app/utils/string";
 import type { LoggedInUserData } from "@app/utils/types";
@@ -15,13 +16,12 @@ import ClientOnly from "~/components/client-only";
 import Link, { ButtonLink } from "~/components/ui/link";
 import ThemeSwitch from "~/components/ui/theme-switcher";
 import { useTranslation } from "~/locales/provider";
+import CreateNewCollection_Dialog from "~/pages/dashboard/collections/new-collection";
 import CreateNewOrg_Dialog from "~/pages/dashboard/organization/new-organization";
 import CreateNewProjectDialog from "~/pages/dashboard/projects/new-project";
 import { HamMenu, MobileNav } from "./mobile-nav";
 import NavButton from "./nav-button";
 import "./styles.css";
-import { projectTypes } from "@app/utils/config/project";
-import CreateNewCollection_Dialog from "~/pages/dashboard/collections/new-collection";
 
 interface NavbarProps {
     session: LoggedInUserData | null;

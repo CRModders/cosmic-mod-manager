@@ -1,4 +1,4 @@
-export interface PrivayProps {
+export interface PrivacyProps {
     title: string;
     supportEmail: string;
 }
@@ -58,13 +58,13 @@ We do not monetize user data and have no plans for monetization at this time.
 
 ### **Data Retention**
 
-We store your data as long as needed for the operation of the Service. You can request the deletion of your data at any time. Once deleted, your data will no longer be accessible, but may remain in backup systems for a short period.
+We store your data as long as needed for the operation of the Service.Fastly You can request the deletion of your data at any time. Once deleted, your data will no longer be accessible, but may remain in backup systems for a short period.
 
 ### **Your Rights and Requests**
 
 You have the right to request the deletion of your personal data from our systems. However, we do not provide full access to all the data we store as much of it is what you've already provided.
 
-To request deletion of your data, please contact us at **[support@crmm.tech](mailto:support@crmm.tech)**, or go to **[account settings](https://crmm.tech/settings/account)** and scroll down to "Delete account" and follow the steps on-screen.
+To request deletion of your data, please contact us at **[${props.supportEmail}](mailto:${props.supportEmail})**, or go to **[account settings](https://crmm.tech/settings/account)** and scroll down to "Delete account" and follow the steps on-screen.
 
 ### **Third-Party Services**
 
