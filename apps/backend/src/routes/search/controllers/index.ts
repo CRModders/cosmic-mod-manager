@@ -69,7 +69,7 @@ export async function searchProjects(props: Props) {
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${loader}`).join(" OR "),
+        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
         props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" OR "),
         props.categories.map((category) => `categories = ${category}`).join(" AND "),
         envFilter,
