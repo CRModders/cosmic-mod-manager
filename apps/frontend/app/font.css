@@ -1,3 +1,5 @@
+/* Don't forget to change the font files preload links in root.tsx if changing the font */
+
 @font-face {
     font-family: Inter;
     font-style: normal;

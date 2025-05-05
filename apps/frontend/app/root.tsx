@@ -5,7 +5,7 @@ import LoaderBar from "@app/components/misc/loader-bar";
 import { getCookie } from "@app/utils/cookie";
 import type { LoggedInUserData } from "@app/utils/types";
 import { useEffect } from "react";
-import type { LinksFunction } from "react-router";
+import type { LinkDescriptor, LinksFunction } from "react-router";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, type ShouldRevalidateFunctionArgs, useLoaderData } from "react-router";
 import ClientOnly from "~/components/client-only";
 import Navbar from "~/components/layout/Navbar/navbar";
@@ -194,33 +194,40 @@ export function shouldRevalidate({ nextUrl }: ShouldRevalidateFunctionArgs) {
     return false;
 }
 
+const fontPreloads: LinkDescriptor[] = [
+    "https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7SUc.woff2",
+    "https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+].map((url) => ({
+    rel: "preload",
+    as: "font",
+    href: url,
+    crossOrigin: "anonymous",
+}));
+
+const headLinks = [
+    {
+        rel: "preconnect",
+        href: "https://assets-cdn.crmm.tech",
+    },
+    {
+        rel: "preconnect",
+        href: "https://cdn.crmm.tech",
+    },
+    {
+        rel: "icon",
+        type: "image/png",
+        href: "/icon.png",
+    },
+    {
+        rel: "apple-touch-icon",
+        type: "image/png",
+        sizes: "180*180",
+        href: "/icon.png",
+    },
+    ...fontPreloads,
+];
 export const links: LinksFunction = () => {
-    return [
-        {
-            rel: "preconnect",
-            href: "https://fonts.gstatic.com",
-            crossOrigin: "anonymous",
-        },
-        {
-            rel: "preconnect",
-            href: "https://assets-cdn.crmm.tech",
-        },
-        {
-            rel: "preconnect",
-            href: "https://cdn.crmm.tech",
-        },
-        {
-            rel: "icon",
-            type: "image/png",
-            href: "/icon.png",
-        },
-        {
-            rel: "apple-touch-icon",
-            type: "image/png",
-            sizes: "180*180",
-            href: "/icon.png",
-        },
-    ];
+    return headLinks;
 };
 
 export function meta() {
