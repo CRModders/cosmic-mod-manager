@@ -1,17 +1,17 @@
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@app/components/ui/chart";
-import { useTranslation } from "~/locales/provider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
-import { DateFromStr, FormatDate_ToLocaleString, getTimeRange, ISO_DateStr } from "@app/utils/date";
-import { FormattedDate } from "~/components/ui/date";
+import { WanderingCubesSpinner } from "@app/components/ui/spinner";
+import { DateFromStr, FormatDate_ToLocaleString, ISO_DateStr, getTimeRange } from "@app/utils/date";
 import { TimelineOptions } from "@app/utils/types";
-import { formatLocaleCode } from "~/locales";
-import { useSearchParams } from "react-router";
-import clientFetch from "~/utils/client-fetch";
 import type { ProjectDownloads_Analytics } from "@app/utils/types/api/stats";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { FormattedDate } from "~/components/ui/date";
 import { useProjectData } from "~/hooks/project";
-import { WanderingCubesSpinner } from "@app/components/ui/spinner";
+import { formatLocaleCode } from "~/locales";
+import { useTranslation } from "~/locales/provider";
+import clientFetch from "~/utils/client-fetch";
 
 const timelineKey = "timeline";
 const MAX_DATA_POINTS = 50;
@@ -27,9 +27,12 @@ export default function ProjectAnalyticsPage() {
     const { t, locale } = useTranslation();
     const [analyticsData, setAnalyticsData] = useState<AnalyticsData_State>({ data: null, loading: true });
 
+    let total = 0;
     let atLeastOneDataPoint = false;
     const formattedAnalyticsData = Object.entries(analyticsData.data || {}).map((entry) => {
         atLeastOneDataPoint = true;
+        total += entry[1];
+
         return {
             date: entry[0],
             downloads: entry[1],
@@ -76,7 +79,7 @@ export default function ProjectAnalyticsPage() {
     }, [timeline, ctx.projectData.id]);
 
     return (
-        <div className="flex gap-4 flex-col bg-card-background rounded-lg p-card-surround ps-0">
+        <div className="flex gap-3 flex-col bg-card-background rounded-lg p-card-surround ps-0">
             <div className="flex items-start justify-between ps-card-surround">
                 <div>
                     <h1 className="text-foreground text-xl font-semibold leading-none">{t.project.downloads}</h1>
@@ -199,6 +202,12 @@ export default function ProjectAnalyticsPage() {
                     </div>
                 )}
             </ChartContainer>
+
+            <div className="flex items-center justify-center ps-card-surround">
+                <span className="text-sm font-medium text-extra-muted-foreground leading-none">
+                    {t.project.downloads}: <strong>{total}</strong>
+                </span>
+            </div>
         </div>
     );
 }
