@@ -1,7 +1,4 @@
-import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
-import type { SearchResult } from "@app/utils/types/api";
-import { createContext, use, useEffect, useState } from "react";
-import { useLocation, useNavigation, useSearchParams } from "react-router";
+import { projectTypes } from "@app/utils/config/project";
 import {
     defaultSearchLimit,
     pageOffsetParamNamespace,
@@ -9,14 +6,16 @@ import {
     searchQueryParamNamespace,
     sortByParamNamespace,
 } from "@app/utils/config/search";
-import { useNavigate } from "~/components/ui/link";
-import { useProjectType } from "~/hooks/project";
 import { getProjectTypeFromName } from "@app/utils/convertors";
-import { getSearchResults } from "./loader";
 import { isNumber } from "@app/utils/number";
+import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
+import type { SearchResult } from "@app/utils/types/api";
+import { createContext, use, useEffect, useState } from "react";
+import { useNavigation, useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
-import { useUrlLocale } from "~/utils/urls";
-import { projectTypes } from "@app/utils/config/project";
+import { useProjectType } from "~/hooks/project";
+import { getCurrLocation, getHintLocale } from "~/utils/urls";
+import { getSearchResults } from "./loader";
 
 interface SearchContext {
     searchTerm: string | undefined;
@@ -49,7 +48,7 @@ export function SearchProvider(props: SearchProviderProps) {
     const { setShowSpinner } = useSpinnerCtx();
     const navigation = useNavigation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const localePrefix = useUrlLocale(undefined, navigation.location?.pathname || "");
+    const localePrefix = getHintLocale(searchParams);
 
     // Params
     const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
@@ -57,7 +56,6 @@ export function SearchProvider(props: SearchProviderProps) {
     const pageSize = searchParams.get(searchLimitParamNamespace);
     const sortBy = searchParams.get(sortByParamNamespace);
 
-    const navigate = useNavigate(undefined, { viewTransition: false });
     const projectType = useProjectType();
     const projectType_Coerced = getProjectTypeFromName(projectType);
 
@@ -183,7 +181,7 @@ export function updateSearchParam({
     newParamsInsertionMode = "append",
     customURLModifier,
 }: UpdateSearchParamProps) {
-    let currUrl = getCurrUrl();
+    let currUrl = getCurrLocation();
 
     if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
         if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
@@ -204,13 +202,4 @@ export function updateSearchParam({
 export function deletePageOffsetParam(url: URL) {
     url.searchParams.delete(pageOffsetParamNamespace);
     return url;
-}
-
-export function getCurrUrl() {
-    if (globalThis.window) {
-        return new URL(window.location.href);
-    }
-
-    const location = useLocation();
-    return new URL(`https://example.com${location.pathname}${location.hash}${location.search}`);
 }

@@ -28,7 +28,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
-import { PageUrl, ProjectPagePath } from "~/utils/urls";
+import { FormatUrl_WithHintLocale, ProjectPagePath } from "~/utils/urls";
 import ModerationBanner from "../moderation-banner";
 import { PublishingChecklist } from "../publishing-checklist";
 
@@ -46,7 +46,9 @@ export default function ProjectSettingsLayout() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={PageUrl("dashboard", "projects")}>{t.dashboard.projects}</BreadcrumbLink>
+                                <BreadcrumbLink href={FormatUrl_WithHintLocale("dashboard/projects")}>
+                                    {t.dashboard.projects}
+                                </BreadcrumbLink>
                             </BreadcrumbItem>
 
                             <BreadcrumbSeparator />

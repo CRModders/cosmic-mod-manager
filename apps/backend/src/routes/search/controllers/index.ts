@@ -59,11 +59,11 @@ export async function searchProjects(props: Props) {
     if (props.environments.includes("client") && props.environments.includes("server")) {
         envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide = ${EnvironmentSupport.REQUIRED}`;
     }
-    // If only client is selected, include projects that require only client or optionally server
+    // If only client is selected, include projects that require only client and optionally server
     else if (props.environments.includes("client")) {
         envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide != ${EnvironmentSupport.REQUIRED}`;
     }
-    // If only server is selected, include projects that require only server or optionally client
+    // If only server is selected, include projects that require only server and optionally client
     else if (props.environments.includes("server")) {
         envFilter = `serverSide = ${EnvironmentSupport.REQUIRED} AND clientSide != ${EnvironmentSupport.REQUIRED}`;
     }

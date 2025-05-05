@@ -10,16 +10,17 @@ import { Capitalize, isCurrLinkActive } from "@app/utils/string";
 import { EnvironmentSupport, ProjectPublishingStatus } from "@app/utils/types";
 import { AsteriskIcon, CheckIcon, ChevronDownIcon, ChevronRightIcon, LightbulbIcon, ScaleIcon, SendIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { useLocation } from "react-router";
 import Link, { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
-import { ProjectPagePath, usePathname } from "~/utils/urls";
+import { ProjectPagePath } from "~/utils/urls";
 
 export function PublishingChecklist() {
     const ctx = useProjectData();
     const project = ctx.projectData;
-    const pathname = usePathname();
+    const currLoc = useLocation();
     const navigate = useNavigate();
 
     const { t } = useTranslation();
@@ -42,7 +43,7 @@ export function PublishingChecklist() {
         }
 
         toast.success(data?.message);
-        RefreshPage(navigate, pathname);
+        RefreshPage(navigate, currLoc);
     }
 
     let hideEnvSettingsCard = true;
@@ -249,7 +250,7 @@ export function PublishingChecklist() {
                                 const href = ProjectPagePath(project.type[0], project.slug, step.link.path);
                                 link = {
                                     label: step.link.title,
-                                    hidden: isCurrLinkActive(href, pathname),
+                                    hidden: isCurrLinkActive(href, currLoc.pathname),
                                     href: href,
                                 };
                             }

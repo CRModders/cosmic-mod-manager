@@ -4,7 +4,7 @@ import { CopyrightIcon, HeartHandshakeIcon, LockIcon, ScaleIcon, ShieldIcon } fr
 import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
 export default function LegalPageLayout() {
     const { t } = useTranslation();
@@ -45,7 +45,7 @@ export default function LegalPageLayout() {
                     {links.map((link) => (
                         <ButtonLink
                             prefetch={Prefetch.Render}
-                            url={PageUrl(link.href)}
+                            url={FormatUrl_WithHintLocale(link.href)}
                             key={link.href}
                             className="relative"
                             preventScrollReset

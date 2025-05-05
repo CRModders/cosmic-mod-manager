@@ -60,11 +60,23 @@ export function isValidUrl(url: string) {
     return !!regex.exec(url);
 }
 
-export function isCurrLinkActive(targetUrl: string, currUrl: string, exactEnds = true) {
+export function isCurrLinkActive(_targetUrl: string, currUrl: string, exactEnds = true) {
+    const targetUrl = getPathnameFromUrlString(_targetUrl);
+
     if (exactEnds === true) {
-        return currUrl === targetUrl || currUrl === `${targetUrl}/`;
+        return append("/", currUrl) === append("/", targetUrl);
     }
     return currUrl.includes(targetUrl);
+}
+
+export function getPathnameFromUrlString(str: string) {
+    let url: URL;
+
+    if (str.startsWith("http")) url = new URL(str);
+    else if (str.startsWith("/")) url = new URL(`https://example.com${str}`);
+    else url = new URL(`https://example.com/${str}`);
+
+    return url.pathname;
 }
 
 export function prepend(str: string, path: string) {

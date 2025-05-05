@@ -3,7 +3,7 @@ import { useSession } from "~/hooks/session";
 import { ProfileSettingsPage } from "~/pages/settings/profile";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
 export default function _AccountSettings() {
     const session = useSession();
@@ -17,7 +17,7 @@ export function meta() {
         title: "Profile settings",
         description: `Your ${Config.SITE_NAME_SHORT} profile settings`,
         image: Config.SITE_ICON,
-        url: `${Config.FRONTEND_URL}${PageUrl("settings/profile")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("settings/profile")}`,
         suffixTitle: true,
     });
 }

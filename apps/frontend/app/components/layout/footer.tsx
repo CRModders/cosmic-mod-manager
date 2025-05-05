@@ -13,7 +13,7 @@ import { useRootData } from "~/hooks/root-data";
 import { setUserConfig } from "~/hooks/user-config";
 import { formatLocaleCode, parseLocale } from "~/locales";
 import SupportedLocales from "~/locales/meta";
-import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
+import { alterUrlHintLocale, useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
 import "./styles.css";
 
@@ -115,11 +115,12 @@ export default function Footer() {
                     const title = region ? `${locale.name} - ${region.name}` : locale.name;
 
                     const formattedCode = formatLocaleCode(locale);
+                    const url = alterUrlHintLocale(locale);
 
                     return (
                         <Link
-                            key={formattedCode}
-                            to={formatUrlWithLocalePrefix(locale)}
+                            key={url.href}
+                            to={url.href.replace(url.origin, "")}
                             className="link_blue hover:underline"
                             aria-label={title}
                             title={title}
@@ -203,15 +204,10 @@ export function LangSwitcher() {
                 <SelectGroup>
                     {ctx.supportedLocales?.map((locale) => {
                         const region = locale.region;
-                        const label = region ? `${locale.nativeName} (${region.displayName})` : locale.nativeName;
+                        const label = region ? `${locale.name} (${region.displayName})` : locale.name;
 
                         return (
-                            <SelectItem
-                                key={label}
-                                value={formatLocaleCode(locale)}
-                                aria-label={label}
-                                title={`${label} => /${formatLocaleCode(locale)}`}
-                            >
+                            <SelectItem key={label} value={formatLocaleCode(locale)} aria-label={label} title={label}>
                                 <div className="w-full flex items-center justify-center gap-1.5 break-words">
                                     <span className="flex items-end justify-center align-bottom">{locale.nativeName}</span>
                                     {region ? (

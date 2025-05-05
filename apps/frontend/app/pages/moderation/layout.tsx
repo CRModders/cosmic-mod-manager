@@ -7,7 +7,7 @@ import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
 export default function ModerationPagesLayout() {
     const session = useSession();
@@ -47,7 +47,7 @@ export default function ModerationPagesLayout() {
                     {links.map((link) => (
                         <ButtonLink
                             prefetch={Prefetch.Intent}
-                            url={PageUrl(link.href)}
+                            url={FormatUrl_WithHintLocale(link.href)}
                             key={link.href}
                             className="relative"
                             preventScrollReset

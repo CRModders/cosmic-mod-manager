@@ -2,7 +2,7 @@ import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import { descriptionSuffix } from "./layout";
 
 const title = "Security Notice";
@@ -16,6 +16,7 @@ export default function SecurityNotice() {
             text={t.legal.securityNotice({
                 title: t.legal.securityNoticeTitle,
                 adminEmail: Config.ADMIN_EMAIL,
+                siteName_Short: Config.SITE_NAME_SHORT,
             })}
         />
     );
@@ -26,7 +27,7 @@ export function meta() {
         title: title,
         description: `The ${title} of ${Config.SITE_NAME_SHORT}, ${descriptionSuffix}.`,
         image: Config.SITE_ICON,
-        url: `${Config.FRONTEND_URL}${PageUrl("legal/security")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("legal/security")}`,
         suffixTitle: true,
     });
 }

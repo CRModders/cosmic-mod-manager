@@ -1,6 +1,6 @@
 import type { Location, NavigateFunction } from "react-router";
 
-export default function RefreshPage(navigate: NavigateFunction, location: Location | string) {
+export default function RefreshPage(navigate: NavigateFunction, location: Location | URL | string) {
     let _url = new URL("https://example.com");
 
     if (typeof location === "string") {

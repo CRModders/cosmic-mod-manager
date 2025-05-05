@@ -2,7 +2,6 @@ import { TagIcon } from "@app/components/icons/tag-icons";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { Input } from "@app/components/ui/input";
 import { cn } from "@app/components/utils";
-import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import {
     categoryFilterParamNamespace,
     environmentFilterParamNamespace,
@@ -11,16 +10,18 @@ import {
     loaderFilterParamNamespace,
 } from "@app/utils/config/search";
 import { getALlLoaderFilters, getValidProjectCategories } from "@app/utils/project";
+import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectType, TagHeaderType } from "@app/utils/types";
 import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 import { VariantButtonLink } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
-import { deletePageOffsetParam, getCurrUrl, updateSearchParam } from "./provider";
-import { useSearchParams } from "react-router";
+import { getCurrLocation } from "~/utils/urls";
+import { deletePageOffsetParam, updateSearchParam } from "./provider";
 
 const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /*, ProjectType.DATAMOD */];
 
@@ -51,7 +52,7 @@ const filtersKeyList = [
 ];
 
 function clearFilters() {
-    const currUrl = getCurrUrl();
+    const currUrl = getCurrLocation();
     for (const key of filtersKeyList) {
         currUrl.searchParams.delete(key);
     }

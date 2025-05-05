@@ -6,7 +6,7 @@ import AccountSettingsPage from "~/pages/settings/account/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import type { Route } from "./+types/account";
 
 export default function _AccountSettings() {
@@ -29,7 +29,7 @@ export function meta() {
         title: "Account settings",
         description: `Your ${Config.SITE_NAME_SHORT} account settings`,
         image: Config.SITE_ICON,
-        url: `${Config.FRONTEND_URL}${PageUrl("settings/account")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("settings/account")}`,
         suffixTitle: true,
     });
 }
