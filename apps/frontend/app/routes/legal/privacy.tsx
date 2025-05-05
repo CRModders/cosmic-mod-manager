@@ -19,8 +19,8 @@ export default function PrivacyPolicy() {
                 siteName_Short: Config.SITE_NAME_SHORT,
                 siteName_Long: Config.SITE_NAME_LONG,
                 websiteUrl: Config.FRONTEND_URL,
-                sessionSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("account/session")}`,
-                accountSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("account/settings")}`,
+                sessionSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("settings/session")}`,
+                accountSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("settings/account")}`,
             })}
         />
     );
