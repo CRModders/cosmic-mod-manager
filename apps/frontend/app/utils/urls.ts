@@ -60,21 +60,24 @@ export function VersionPagePath(type: string, projectSlug: string, versionSlug: 
 }
 
 export function OrgPagePath(orgSlug: string, extra?: string) {
-    let pathname = FormatUrl_WithHintLocale(`organization/${orgSlug}`);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const orgUrl = FormatUrl_WithHintLocale(`organization/${orgSlug}`);
+    if (!extra) return orgUrl;
+
+    return appendPathInUrl(orgUrl, extra);
 }
 
 export function UserProfilePath(username: string, extra?: string) {
-    let pathname = FormatUrl_WithHintLocale(`user/${username}`);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const userProfileUrl = FormatUrl_WithHintLocale(`user/${username}`);
+    if (!extra) return userProfileUrl;
+
+    return appendPathInUrl(userProfileUrl, extra);
 }
 
 export function CollectionPagePath(id: string, extra?: string) {
-    let pathname = FormatUrl_WithHintLocale(`collection/${id}`);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const collectionPageUrl = FormatUrl_WithHintLocale(`collection/${id}`);
+    if (!extra) return collectionPageUrl;
+
+    return appendPathInUrl(collectionPageUrl, extra);
 }
 
 export function appendPathInUrl(_url: string | URL, str: string) {

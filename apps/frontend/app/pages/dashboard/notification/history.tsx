@@ -8,6 +8,7 @@ import {
 } from "@app/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
 import { useTranslation } from "~/locales/provider";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import type { NotificationsData } from "./page";
 import { NotificationItem } from "./page";
 
@@ -20,7 +21,9 @@ export default function NotificationsHistoryPage({ notifications, relatedProject
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/dashboard/notifications">{t.dashboard.notifications}</BreadcrumbLink>
+                            <BreadcrumbLink href={FormatUrl_WithHintLocale("/dashboard/notifications")}>
+                                {t.dashboard.notifications}
+                            </BreadcrumbLink>
                         </BreadcrumbItem>
 
                         <BreadcrumbSeparator />

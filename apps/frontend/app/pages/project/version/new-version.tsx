@@ -49,8 +49,7 @@ export default function UploadVersionPage() {
     });
     form.watch();
 
-    const projectPageUrl = ProjectPagePath(ctx.projectType, projectData.slug);
-    const versionsPageUrl = `${projectPageUrl}/versions`;
+    const versionsPageUrl = ProjectPagePath(ctx.projectType, projectData.slug, "versions");
 
     async function handleSubmit(data: z.infer<typeof newVersionFormSchema>) {
         if (!(data.primaryFile instanceof File)) {
