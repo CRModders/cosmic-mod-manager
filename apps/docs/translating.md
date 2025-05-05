@@ -139,7 +139,7 @@ Here's an example to show the exact process of adding a locale. Suppose you want
     } satisfies Locale;
     ```
 
-5. When done translating commit the changes and push to my GitHub fork
+5. When done translating commit the changes and push to the GitHub fork
     ```bash
     git add .
     git commit -m "Added french locale"
