@@ -1,6 +1,7 @@
 import { TagIcon } from "@app/components/icons/tag-icons";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { Input } from "@app/components/ui/input";
+import { LabelledTernaryCheckbox, TernaryStates } from "@app/components/ui/ternary-checkbox";
 import { cn } from "@app/components/utils";
 import {
     categoryFilterParamNamespace,
@@ -21,7 +22,7 @@ import { VariantButtonLink } from "~/components/ui/link";
 import { SkipNav } from "~/components/ui/skip-nav";
 import { useTranslation } from "~/locales/provider";
 import { getCurrLocation } from "~/utils/urls";
-import { deletePageOffsetParam, updateSearchParam } from "./provider";
+import { NOT, removePageOffsetSearchParam, updateSearchParam, updateTernaryState_SearchParam } from "./provider";
 
 const SHOW_ENV_FILTER_FOR_TYPES = [ProjectType.MOD, ProjectType.MODPACK /*, ProjectType.DATAMOD */];
 
@@ -159,12 +160,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 selectedItems={searchParams.getAll(loaderFilterParamNamespace)}
                 label={loadersFilterLabel}
                 filterToggledUrl={(loaderName) => {
-                    return updateSearchParam({
+                    return updateTernaryState_SearchParam({
                         key: loaderFilterParamNamespace,
                         value: loaderName,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
             />
@@ -176,12 +175,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 listWrapperClassName="max-h-[15rem] overflow-y-auto px-0.5"
                 formatLabel={false}
                 filterToggledUrl={(version) => {
-                    return updateSearchParam({
+                    return updateTernaryState_SearchParam({
                         key: gameVersionFilterParamNamespace,
                         value: version,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 footerItem={
@@ -203,13 +200,14 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                     selectedItems={searchParams.getAll(environmentFilterParamNamespace)}
                     label={environmentFilterLabel}
                     filterToggledUrl={(env) => {
-                        return updateSearchParam({
-                            key: environmentFilterParamNamespace,
-                            value: env,
-                            deleteIfExists: true,
-                            deleteParamsWithMatchingValueOnly: true,
-                            customURLModifier: deletePageOffsetParam,
-                        });
+                        return removePageOffsetSearchParam(
+                            updateSearchParam({
+                                key: environmentFilterParamNamespace,
+                                value: env,
+                                deleteIfExists: true,
+                                deleteParamsWithMatchingValueOnly: true,
+                            }),
+                        );
                     }}
                     defaultOpen={defaultOpenAdditionalFilters}
                 />
@@ -220,12 +218,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={categoryFilterLabel}
                 filterToggledUrl={(category) => {
-                    return updateSearchParam({
+                    return updateTernaryState_SearchParam({
                         key: categoryFilterParamNamespace,
                         value: category,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
@@ -236,12 +232,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={featureFilterLabel}
                 filterToggledUrl={(feature) => {
-                    return updateSearchParam({
+                    return updateTernaryState_SearchParam({
                         key: categoryFilterParamNamespace,
                         value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
@@ -251,13 +245,11 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={resolutionFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={resolutionFilterLabel}
-                filterToggledUrl={(feature) => {
-                    return updateSearchParam({
+                filterToggledUrl={(resolution) => {
+                    return updateTernaryState_SearchParam({
                         key: categoryFilterParamNamespace,
-                        value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        value: resolution,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
@@ -267,13 +259,11 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 items={performanceFilterOptions}
                 selectedItems={searchParams.getAll(categoryFilterParamNamespace)}
                 label={performanceFilterLabel}
-                filterToggledUrl={(feature) => {
-                    return updateSearchParam({
+                filterToggledUrl={(performance) => {
+                    return updateTernaryState_SearchParam({
                         key: categoryFilterParamNamespace,
-                        value: feature,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        value: performance,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
@@ -284,12 +274,10 @@ function FilterSidebar({ type, showFilters, searchParams }: Props) {
                 selectedItems={searchParams.getAll(licenseFilterParamNamespace)}
                 label={licenseFilterLabel}
                 filterToggledUrl={(license) => {
-                    return updateSearchParam({
+                    return updateTernaryState_SearchParam({
                         key: licenseFilterParamNamespace,
                         value: license,
-                        deleteIfExists: true,
-                        deleteParamsWithMatchingValueOnly: true,
-                        customURLModifier: deletePageOffsetParam,
+                        searchParamModifier: removePageOffsetSearchParam,
                     });
                 }}
                 defaultOpen={defaultOpenAdditionalFilters}
@@ -309,7 +297,7 @@ interface FilterCategoryProps {
     items: FilterItem[] | string[];
     selectedItems: string[];
     label: string;
-    // The function is expected to return the pathname after toggling the filter
+    // The function is expected to return the search params after toggling the filter
     filterToggledUrl: (prevVal: string) => URLSearchParams;
     listWrapperClassName?: string;
     className?: string;
@@ -369,22 +357,26 @@ function FilterCategory({
                     }
 
                     const itemLabel = formatLabel ? CapitalizeAndFormatString(_itemLabel) || "" : _itemLabel;
+                    const state = selectedItems.includes(itemValue)
+                        ? TernaryStates.INCLUDED
+                        : selectedItems.includes(NOT(itemValue))
+                          ? TernaryStates.EXCLUDED
+                          : TernaryStates.UNCHECKED;
 
                     return (
-                        <LabelledCheckbox
-                            checked={selectedItems.includes(itemValue)}
+                        <LabelledTernaryCheckbox
+                            state={state}
                             onCheckedChange={() => {
-                                const newUrl = filterToggledUrl(itemValue);
-                                setSearchParams(newUrl, { preventScrollReset: true });
+                                const sp = filterToggledUrl(itemValue);
+                                setSearchParams(sp, { preventScrollReset: true });
                             }}
                             key={itemValue}
-                            name={itemLabel}
                         >
                             <span className="flex items-center justify-center gap-1">
                                 <TagIcon name={itemValue} />
                                 {itemLabel}
                             </span>
-                        </LabelledCheckbox>
+                        </LabelledTernaryCheckbox>
                     );
                 })}
             </div>

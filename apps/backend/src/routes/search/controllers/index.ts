@@ -69,14 +69,14 @@ export async function searchProjects(props: Props) {
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${loader}`).join(" AND "),
-        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" OR "),
-        props.categories.map((category) => `categories = ${category}`).join(" AND "),
+        formatFilterItems("loaders", props.loaders, " AND "),
+        formatFilterItems("gameVersions", props.gameVersions, " OR "),
+        formatFilterItems("categories", props.categories, " AND "),
         envFilter,
     ];
 
-    if (props.type) filters.push(`type = ${props.type}`);
-    if (props.openSourceOnly) filters.push("openSource = true");
+    if (props.type) filters.push(formatFilterItems("type", [props.type], " OR "));
+    if (props.openSourceOnly) filters.push(formatFilterItems("openSource", ["true"], " AND ")[0]);
 
     const result = await index.search(props.query, {
         sort: sortBy ? [sortBy] : [],
@@ -119,7 +119,16 @@ export async function searchProjects(props: Props) {
     return { data: result, status: HTTP_STATUS.OK };
 }
 
+function formatFilterItems(name: string, values: string[], join: string) {
+    return values
+        .map((val) => {
+            if (val.startsWith("!")) return `${name} != ${val.slice(1)}`;
+            return `${name} = ${val}`;
+        })
+        .join(join);
+}
+
 function isValidFilterStr(str: string) {
-    const regex = /^[a-zA-Z0-9-_.]+$/;
+    const regex = /^[a-zA-Z0-9-_.!]+$/;
     return regex.test(str);
 }

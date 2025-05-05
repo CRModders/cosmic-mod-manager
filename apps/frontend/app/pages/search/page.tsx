@@ -17,13 +17,13 @@ import {
 import { type ProjectType, SearchResultSortMethod } from "@app/utils/types";
 import { FilterIcon, ImageIcon, LayoutListIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
 import { type UserConfig, setUserConfig, useUserConfig } from "~/hooks/user-config";
 import { useTranslation } from "~/locales/provider";
-import FilterSidebar from "./sidebar";
-import { deletePageOffsetParam, updateSearchParam, useSearchContext } from "./provider";
+import { removePageOffsetSearchParam, updateSearchParam, useSearchContext } from "./provider";
 import { SearchResults } from "./search_results";
-import { useSearchParams } from "react-router";
+import FilterSidebar from "./sidebar";
 
 export default function SearchPage() {
     const { t } = useTranslation();
@@ -111,12 +111,11 @@ export default function SearchPage() {
                             const updatedParams = updateSearchParam({
                                 key: sortByParamNamespace,
                                 value: val,
-                                deleteIfMatches: defaultSortBy,
+                                deleteIfEqualsThis: defaultSortBy,
                                 newParamsInsertionMode: "replace",
-                                customURLModifier: deletePageOffsetParam,
                             });
 
-                            setSearchParams(updatedParams, { preventScrollReset: true });
+                            setSearchParams(removePageOffsetSearchParam(updatedParams), { preventScrollReset: true });
                         }}
                         name="sort-by"
                     >
@@ -150,11 +149,10 @@ export default function SearchPage() {
                             const updatedParams = updateSearchParam({
                                 key: searchLimitParamNamespace,
                                 value: val,
-                                deleteIfMatches: `${defaultSearchLimit}`,
+                                deleteIfEqualsThis: `${defaultSearchLimit}`,
                                 newParamsInsertionMode: "replace",
-                                customURLModifier: deletePageOffsetParam,
                             });
-                            setSearchParams(updatedParams, { preventScrollReset: true });
+                            setSearchParams(removePageOffsetSearchParam(updatedParams), { preventScrollReset: true });
                         }}
                         name="Show per page"
                     >

@@ -94,9 +94,8 @@ export function SearchProvider(props: SearchProviderProps) {
             value: q,
             deleteIfFalsyValue: true,
             newParamsInsertionMode: "replace",
-            customURLModifier: deletePageOffsetParam,
         });
-        setSearchParams(newSearchParams, { preventScrollReset: true });
+        setSearchParams(removePageOffsetSearchParam(newSearchParams), { preventScrollReset: true });
     }
 
     useEffect(() => {
@@ -164,42 +163,69 @@ interface UpdateSearchParamProps {
     key: string;
     value: string;
     newParamsInsertionMode?: "replace" | "append";
-    deleteIfMatches?: string;
+    deleteIfEqualsThis?: string;
     deleteIfExists?: boolean;
     deleteIfFalsyValue?: boolean;
     deleteParamsWithMatchingValueOnly?: boolean;
-    customURLModifier?: (url: URL) => URL;
 }
 
 export function updateSearchParam({
     key,
     value,
-    deleteIfMatches,
+    deleteIfEqualsThis,
     deleteIfFalsyValue,
     deleteIfExists,
     deleteParamsWithMatchingValueOnly = false,
     newParamsInsertionMode = "append",
-    customURLModifier,
 }: UpdateSearchParamProps) {
-    let currUrl = getCurrLocation();
+    const url = getCurrLocation();
 
-    if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else if ((deleteIfFalsyValue === true && !value) || (deleteIfMatches !== undefined && deleteIfMatches === value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else {
-        if (newParamsInsertionMode === "replace") currUrl.searchParams.set(key, value);
-        else currUrl.searchParams.append(key, value);
+    if (
+        // If deleteIfExists is true and the key already exists
+        (deleteIfExists === true && url.searchParams.has(key, value)) ||
+        // If deleteIfFalsyValue is true and value is falsy
+        (deleteIfFalsyValue === true && !value) ||
+        // deleteIfEqualsThis is provided and equals the curr value
+        (deleteIfEqualsThis !== undefined && deleteIfEqualsThis === value)
+    ) {
+        if (deleteParamsWithMatchingValueOnly === true) url.searchParams.delete(key, value);
+        else url.searchParams.delete(key);
+    }
+    //
+    else {
+        if (newParamsInsertionMode === "replace") url.searchParams.set(key, value);
+        else url.searchParams.append(key, value);
     }
 
-    if (customURLModifier) currUrl = customURLModifier(currUrl);
-
-    return currUrl.searchParams;
+    return url.searchParams;
 }
 
-export function deletePageOffsetParam(url: URL) {
-    url.searchParams.delete(pageOffsetParamNamespace);
-    return url;
+export function updateTernaryState_SearchParam(props: {
+    key: string;
+    value: string;
+    searchParamModifier?: (searchParams: URLSearchParams) => URLSearchParams;
+}) {
+    const searchParams = getCurrLocation().searchParams;
+    const allVals = searchParams.getAll(props.key);
+
+    if (allVals.includes(props.value)) {
+        searchParams.delete(props.key, props.value);
+        searchParams.append(props.key, NOT(props.value));
+    } else if (allVals.includes(NOT(props.value))) {
+        searchParams.delete(props.key, NOT(props.value));
+    } else {
+        searchParams.append(props.key, props.value);
+    }
+
+    return props.searchParamModifier ? props.searchParamModifier(searchParams) : searchParams;
+}
+
+export function NOT(value: string) {
+    if (value.startsWith("!")) return value.slice(1);
+    return `!${value}`;
+}
+
+export function removePageOffsetSearchParam(sp: URLSearchParams) {
+    sp.delete(pageOffsetParamNamespace);
+    return sp;
 }
