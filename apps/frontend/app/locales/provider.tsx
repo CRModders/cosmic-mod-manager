@@ -28,7 +28,7 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
         if (navigate) {
             const newLangMetadata = GetLocaleMetadata(locale);
             const newUrl = alterUrlHintLocale(newLangMetadata || DefaultLocale);
-            navigate(newUrl, { preventScrollReset: true });
+            navigate(newUrl.href.replace(newUrl.origin, ""), { preventScrollReset: true });
         }
 
         setTranslation(await getLocale(locale));
