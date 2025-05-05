@@ -1,4 +1,3 @@
-import GAME_VERSIONS from "@app/utils/src/constants/game-versions";
 import {
     MAX_SEARCH_LIMIT,
     categoryFilterParamNamespace,
@@ -13,6 +12,7 @@ import {
 } from "@app/utils/config/search";
 import { getProjectTypeFromName } from "@app/utils/convertors";
 import { getAllLoaderCategories, getValidProjectCategories } from "@app/utils/project";
+import GAME_VERSIONS from "@app/utils/src/constants/game-versions";
 import { SearchResultSortMethod, TagHeaderType } from "@app/utils/types";
 import { type Context, Hono } from "hono";
 import { applyCacheHeaders } from "~/middleware/cache";
@@ -45,7 +45,7 @@ async function search_get(ctx: Context) {
         const offsetStr = ctx.req.query("offset") || "";
         const limitStr = ctx.req.query(searchLimitParamNamespace) || `${defaultSearchLimit}`;
         const environments = ctx.req.queries("e") || [];
-        const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss";
+        const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss" ? "true" : "!true";
         const sortBy = ctx.req.query(sortByParamNamespace) || defaultSortBy;
         const typeStr = ctx.req.query("type");
         const type = typeStr ? getProjectTypeFromName(typeStr) : undefined;

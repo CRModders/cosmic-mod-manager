@@ -10,7 +10,7 @@ interface Props {
     gameVersions: string[];
     categories: string[];
     environments: string[];
-    openSourceOnly: boolean;
+    openSourceOnly: string;
     sortBy: SearchResultSortMethod;
     offset: number;
     limit: number;
@@ -76,7 +76,7 @@ export async function searchProjects(props: Props) {
     ];
 
     if (props.type) filters.push(formatFilterItems("type", [props.type], " OR "));
-    if (props.openSourceOnly) filters.push(formatFilterItems("openSource", ["true"], " AND ")[0]);
+    if (props.openSourceOnly) filters.push(formatFilterItems("openSource", [props.openSourceOnly], " AND "));
 
     const result = await index.search(props.query, {
         sort: sortBy ? [sortBy] : [],
