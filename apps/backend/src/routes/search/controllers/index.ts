@@ -10,7 +10,7 @@ interface Props {
     gameVersions: string[];
     categories: string[];
     environments: string[];
-    openSourceOnly: string;
+    openSourceOnly: string | undefined;
     sortBy: SearchResultSortMethod;
     offset: number;
     limit: number;

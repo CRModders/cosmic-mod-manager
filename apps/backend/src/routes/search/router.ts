@@ -45,10 +45,16 @@ async function search_get(ctx: Context) {
         const offsetStr = ctx.req.query("offset") || "";
         const limitStr = ctx.req.query(searchLimitParamNamespace) || `${defaultSearchLimit}`;
         const environments = ctx.req.queries("e") || [];
-        const openSourceOnly = ctx.req.query(licenseFilterParamNamespace) === "oss" ? "true" : "!true";
         const sortBy = ctx.req.query(sortByParamNamespace) || defaultSortBy;
         const typeStr = ctx.req.query("type");
         const type = typeStr ? getProjectTypeFromName(typeStr) : undefined;
+
+        const openSourceOnly =
+            ctx.req.query(licenseFilterParamNamespace) === "oss"
+                ? "true"
+                : ctx.req.query(licenseFilterParamNamespace) === "!oss"
+                  ? "!true"
+                  : undefined;
 
         let limit = Number.parseInt(limitStr);
         if (!isNumber(limit)) limit = defaultSearchLimit;
