@@ -1,10 +1,10 @@
 import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { projectTypes } from "@app/utils/config/project";
-import { prepend } from "@app/utils/string";
+import { prepend, removeLeading } from "@app/utils/string";
 import { createContext, use, useState } from "react";
 import Link from "~/components/ui/link";
 import { DefaultLocale } from "~/locales/meta";
-import { formatUrlWithLocalePrefix, useTranslation } from "~/locales/provider";
+import { alterUrlHintLocale, useTranslation } from "~/locales/provider";
 
 interface Breadcrumb {
     label: string;
@@ -35,9 +35,7 @@ export function PageBreadCrumbs() {
     const { breadcrumbs } = useBreadcrumbs();
     const breadCrumbsList = breadcrumbs.length ? breadcrumbs : getBreadCrumbsFromUrl();
 
-    if (!breadCrumbsList?.length) {
-        return null;
-    }
+    if (!breadCrumbsList?.length) return null;
 
     return (
         <nav aria-label="breadcrumb" aria-hidden hidden>
@@ -66,7 +64,7 @@ export function PageBreadCrumbs() {
 
 function getBreadCrumbsFromUrl() {
     const { t } = useTranslation();
-    const path = formatUrlWithLocalePrefix(DefaultLocale, true);
+    const path = removeLeading("/", alterUrlHintLocale(DefaultLocale, true).pathname);
     const pathParts = path.split("/");
 
     return pathParts

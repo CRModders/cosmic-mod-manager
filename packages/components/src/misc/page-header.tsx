@@ -77,7 +77,7 @@ export function PageHeader({
                     {threeDotMenu ? (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant={"ghost-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="More options">
+                                <Button variant="ghost-inverted" className="rounded-full w-11 h-11 p-0" aria-label="More options">
                                     <MoreVerticalIcon aria-hidden className="h-btn-icon-lg w-btn-icon-lg" />
                                 </Button>
                             </PopoverTrigger>

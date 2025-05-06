@@ -4,11 +4,12 @@ import { HydratedRouter } from "react-router/dom";
 import { getLocale } from "~/locales";
 import { GetLocaleMetadata } from "~/locales/meta";
 import { LocaleProvider } from "~/locales/provider";
-import { useUrlLocale } from "~/utils/urls";
+import { getHintLocale } from "~/utils/urls";
 
 startTransition(async () => {
-    const initLocaleModule = await getLocale(useUrlLocale(true));
-    const initLocaleMetadata = GetLocaleMetadata(useUrlLocale(true));
+    const hintLocale = getHintLocale();
+    const initLocaleModule = await getLocale(hintLocale);
+    const initLocaleMetadata = GetLocaleMetadata(hintLocale);
 
     hydrateRoot(
         document,

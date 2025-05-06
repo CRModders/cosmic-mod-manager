@@ -2,7 +2,7 @@ import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import { descriptionSuffix } from "./layout";
 
 const title = "Privacy Policy";
@@ -19,8 +19,8 @@ export default function PrivacyPolicy() {
                 siteName_Short: Config.SITE_NAME_SHORT,
                 siteName_Long: Config.SITE_NAME_LONG,
                 websiteUrl: Config.FRONTEND_URL,
-                sessionSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("settings/sessions")}`,
-                accountSettings_PageUrl: `${Config.FRONTEND_URL}${PageUrl("settings/account")}`,
+                sessionSettings_PageUrl: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("settings/sessions")}`,
+                accountSettings_PageUrl: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("settings/account")}`,
             })}
         />
     );
@@ -31,7 +31,7 @@ export function meta() {
         title: title,
         description: `The ${title} of ${Config.SITE_NAME_SHORT}, ${descriptionSuffix}.`,
         image: Config.SITE_ICON,
-        url: `${Config.FRONTEND_URL}${PageUrl("legal/privacy")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("legal/privacy")}`,
         suffixTitle: true,
     });
 }

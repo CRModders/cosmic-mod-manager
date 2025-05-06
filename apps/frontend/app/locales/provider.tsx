@@ -1,7 +1,7 @@
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import { type ReactNode, createContext, use, useState } from "react";
 import type { NavigateFunction } from "react-router";
-import { prepend, removeLeading, removeTrailing, usePathname, useUrlLocale } from "~/utils/urls";
+import { HINT_LOCALE_KEY, getCurrLocation } from "~/utils/urls";
 import { formatLocaleCode, getLocale, parseLocale } from ".";
 import en from "./en/translation";
 import { DefaultLocale, GetLocaleMetadata } from "./meta";
@@ -27,8 +27,8 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
 
         if (navigate) {
             const newLangMetadata = GetLocaleMetadata(locale);
-            const newUrl = formatUrlWithLocalePrefix(newLangMetadata || DefaultLocale);
-            navigate(newUrl, { preventScrollReset: true });
+            const newUrl = alterUrlHintLocale(newLangMetadata || DefaultLocale);
+            navigate(newUrl.href.replace(newUrl.origin, ""), { preventScrollReset: true });
         }
 
         setTranslation(await getLocale(locale));
@@ -50,21 +50,16 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
     );
 }
 
-export function formatUrlWithLocalePrefix(locale: LocaleMetaData, omitDefaultLocale = true, pathname = usePathname()) {
-    // Get the current locale prefix and prepend a slash in front of it
-    const currLocalePrefix = prepend("/", useUrlLocale(undefined, pathname));
+export function alterUrlHintLocale(locale: LocaleMetaData, omitDefaultLocale = true, url = getCurrLocation()) {
+    const localeCode = formatLocaleCode(locale);
 
-    // Change the prefix based on the new locale
-    let localeCode = formatLocaleCode(locale);
     if (omitDefaultLocale === true && localeCode === formatLocaleCode(DefaultLocale)) {
-        localeCode = "";
+        url.searchParams.delete(HINT_LOCALE_KEY);
+        return url;
     }
 
-    // Remove the current locale prefix from the pathname
-    const pathnameWithoutLocale = prepend("/", removeLeading(currLocalePrefix, pathname));
-
-    // Prepend the new locale prefix to the pathname, and remove any trailing slashes
-    return removeTrailing("/", prepend(localeCode, pathnameWithoutLocale));
+    url.searchParams.set(HINT_LOCALE_KEY, localeCode);
+    return url;
 }
 
 interface Props {

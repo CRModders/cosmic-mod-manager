@@ -4,7 +4,7 @@ import type { ProjectType } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectListItem, ProjectVersionData, TeamMember } from "@app/utils/types/api";
 import { useRouteLoaderData } from "react-router";
 import type { ProjectLoaderData } from "~/routes/project/data-wrapper";
-import { usePathname, useUrlLocale } from "~/utils/urls";
+import { getCurrLocation } from "~/utils/urls";
 import { useSession } from "./session";
 
 export interface ProjectContextData {
@@ -22,12 +22,10 @@ export interface ProjectContextData {
 }
 
 export function useProjectData(): ProjectContextData {
-    const langPrefix = useUrlLocale();
     const session = useSession();
-
     const projectType = useProjectType();
     // Getting the loader data
-    const loaderData = useRouteLoaderData(`${langPrefix}__${projectType}__data-wrapper`) as ProjectLoaderData;
+    const loaderData = useRouteLoaderData(`__${projectType}__data-wrapper`) as ProjectLoaderData;
 
     // We can safely return incomplete data, because the data-wrapper will handle not found cases
     // So no component using this hook will break
@@ -75,11 +73,9 @@ export function useProjectData(): ProjectContextData {
 }
 
 export function useProjectType(customPath?: string): "project" | ProjectType {
-    const pathname = customPath ? customPath : usePathname();
-    const langPrefix = useUrlLocale(undefined, pathname);
+    const pathname = customPath ? customPath : getCurrLocation().pathname;
 
-    const typeIndex = langPrefix.length ? 2 : 1;
-    let typeStr = pathname?.split("/")[typeIndex];
+    let typeStr = pathname?.split("/")[1];
     if (typeStr?.endsWith("s")) typeStr = typeStr.slice(0, -1);
 
     return typeStr === "project" ? "project" : getProjectTypeFromName(typeStr);

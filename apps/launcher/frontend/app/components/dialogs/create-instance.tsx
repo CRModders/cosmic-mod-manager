@@ -91,7 +91,7 @@ export default function CreateInstance(props: Props) {
                                                     className="hidden"
                                                     id="project-icon-input"
                                                     type="file"
-                                                    value={""}
+                                                    value=""
                                                     name={field.name}
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
@@ -112,7 +112,7 @@ export default function CreateInstance(props: Props) {
                                                 />
 
                                                 <ImgWrapper
-                                                    alt={"name"}
+                                                    alt="name"
                                                     src={(() => {
                                                         const image = form.getValues()?.icon;
                                                         if (image instanceof File) {

@@ -96,7 +96,7 @@ export default function Navbar(props: NavbarProps) {
                 <nav className="container flex flex-wrap items-center justify-between py-3 px-4 sm:px-8">
                     <div className="flex items-center justify-center gap-8">
                         <Link
-                            to={"/"}
+                            to="/"
                             className="flex items-center justify-center h-nav-item gap-1 bg-background"
                             aria-label="CRMM Home page"
                             onClick={() => {

@@ -111,7 +111,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant={"default"}>
+                <Button variant="default">
                     <UploadIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.project.uploadImg}
                 </Button>

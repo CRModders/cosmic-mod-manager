@@ -8,7 +8,7 @@ import { ServerRouter } from "react-router";
 import { getLocale } from "./locales";
 import { GetLocaleMetadata } from "./locales/meta";
 import { LocaleProvider } from "./locales/provider";
-import { useUrlLocale } from "./utils/urls";
+import { getHintLocale } from "./utils/urls";
 
 const ABORT_DELAY = 5000;
 
@@ -20,9 +20,9 @@ export default function handleRequest(request: Request, responseStatusCode: numb
         const readyOption: keyof RenderToPipeableStreamOptions =
             (userAgent && isbot(userAgent)) || routerContext.isSpaMode ? "onAllReady" : "onShellReady";
 
-        const localeCode = useUrlLocale(true, new URL(request.url).pathname);
-        getLocale(localeCode).then(async (initLocaleModule) => {
-            const initLocaleMetadata = GetLocaleMetadata(localeCode);
+        const hintLocale = getHintLocale(new URL(request.url).searchParams);
+        getLocale(hintLocale).then(async (initLocaleModule) => {
+            const initLocaleMetadata = GetLocaleMetadata(hintLocale);
 
             const { pipe, abort } = ReactDomServer.renderToPipeableStream(
                 <LocaleProvider initLocale={initLocaleModule} initMetadata={initLocaleMetadata}>

@@ -4,14 +4,14 @@ import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { ProjectVersionData } from "@app/utils/types/api";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
 import { useEffect } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { useNavigate } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import NotFoundPage from "~/pages/not-found";
 import VersionPage from "~/pages/project/version/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { ProjectPagePath, VersionPagePath } from "~/utils/urls";
+import { ProjectPagePath, VersionPagePath, getCurrLocation } from "~/utils/urls";
 import type { Route } from "./+types/page";
 
 export default function VersionPageRoute() {
@@ -42,9 +42,10 @@ export default function VersionPageRoute() {
 
 export function meta(props: Route.MetaArgs) {
     const parentMetaTags = props.matches?.at(-3)?.meta;
-    const parentData = props.matches[2].data;
-    const project = parentData.projectData;
-    const versionSlug = props.params.versionSlug;
+    // 2nd from top is the __mod__data-wrapper which holds the project related data returned from the loader
+    const parentData = props.matches[1].data;
+    const project = parentData?.projectData;
+    const versionSlug = props.params?.versionSlug;
 
     if (!parentData || !project?.id) {
         return MetaTags({
@@ -56,7 +57,7 @@ export function meta(props: Route.MetaArgs) {
         });
     }
 
-    const url = useLocation();
+    const url = getCurrLocation();
     const version = filterGameVersion(parentData.versions, versionSlug, new URLSearchParams(url.search));
 
     if (!version?.id) {

@@ -1,17 +1,16 @@
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import type { TeamMember } from "@app/utils/types/api";
-import type { MetaArgs } from "react-router";
 import ProjectGallery from "~/pages/project/gallery/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { PageUrl, ProjectPagePath } from "~/utils/urls";
-import type { ProjectLoaderData } from "./data-wrapper";
+import { FormatUrl_WithHintLocale, ProjectPagePath } from "~/utils/urls";
+import type { Route } from "./+types/gallery";
 
 export default ProjectGallery;
 
-export function meta(props: MetaArgs) {
+export function meta(props: Route.MetaArgs) {
     const parentMetaTags = props.matches?.at(-2)?.meta;
-    const projectLoaderData = props.matches[2]?.data as unknown as ProjectLoaderData | undefined;
+    const projectLoaderData = props.matches[1]?.data;
 
     const project = projectLoaderData?.projectData;
     if (project?.id) {
@@ -29,7 +28,7 @@ export function meta(props: MetaArgs) {
     }
 
     return MetaTags({
-        url: `${Config.FRONTEND_URL}${PageUrl(props.location.pathname)}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale(props.location.pathname)}`,
         linksOnly: true,
         parentMetaTags,
     });

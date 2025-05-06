@@ -40,7 +40,7 @@ export default function DeleteVersionDialog({ projectData, projectSlug, versionS
             confirmBtnVariant="destructive"
             onConfirm={deleteVersion}
         >
-            <Button variant={"secondary-destructive"}>
+            <Button variant="secondary-destructive">
                 <Trash2Icon aria-hidden className="h-btn-icon w-btn-icon" />
                 {t.form.delete}
             </Button>

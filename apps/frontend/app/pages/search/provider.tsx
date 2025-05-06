@@ -1,7 +1,4 @@
-import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
-import type { SearchResult } from "@app/utils/types/api";
-import { createContext, use, useEffect, useState } from "react";
-import { useLocation, useNavigation, useSearchParams } from "react-router";
+import { projectTypes } from "@app/utils/config/project";
 import {
     defaultSearchLimit,
     pageOffsetParamNamespace,
@@ -9,14 +6,16 @@ import {
     searchQueryParamNamespace,
     sortByParamNamespace,
 } from "@app/utils/config/search";
-import { useNavigate } from "~/components/ui/link";
-import { useProjectType } from "~/hooks/project";
 import { getProjectTypeFromName } from "@app/utils/convertors";
-import { getSearchResults } from "./loader";
 import { isNumber } from "@app/utils/number";
+import type { ProjectType, SearchResultSortMethod } from "@app/utils/types";
+import type { SearchResult } from "@app/utils/types/api";
+import { createContext, use, useEffect, useState } from "react";
+import { useNavigation, useSearchParams } from "react-router";
 import { useSpinnerCtx } from "~/components/global-spinner";
-import { useUrlLocale } from "~/utils/urls";
-import { projectTypes } from "@app/utils/config/project";
+import { useProjectType } from "~/hooks/project";
+import { getCurrLocation, getHintLocale } from "~/utils/urls";
+import { getSearchResults } from "./loader";
 
 interface SearchContext {
     searchTerm: string | undefined;
@@ -49,7 +48,7 @@ export function SearchProvider(props: SearchProviderProps) {
     const { setShowSpinner } = useSpinnerCtx();
     const navigation = useNavigation();
     const [searchParams, setSearchParams] = useSearchParams();
-    const localePrefix = useUrlLocale(undefined, navigation.location?.pathname || "");
+    const localePrefix = getHintLocale(searchParams);
 
     // Params
     const searchQueryParam = searchParams.get(searchQueryParamNamespace) || "";
@@ -57,7 +56,6 @@ export function SearchProvider(props: SearchProviderProps) {
     const pageSize = searchParams.get(searchLimitParamNamespace);
     const sortBy = searchParams.get(sortByParamNamespace);
 
-    const navigate = useNavigate(undefined, { viewTransition: false });
     const projectType = useProjectType();
     const projectType_Coerced = getProjectTypeFromName(projectType);
 
@@ -96,9 +94,8 @@ export function SearchProvider(props: SearchProviderProps) {
             value: q,
             deleteIfFalsyValue: true,
             newParamsInsertionMode: "replace",
-            customURLModifier: deletePageOffsetParam,
         });
-        setSearchParams(newSearchParams, { preventScrollReset: true });
+        setSearchParams(removePageOffsetSearchParam(newSearchParams), { preventScrollReset: true });
     }
 
     useEffect(() => {
@@ -166,51 +163,69 @@ interface UpdateSearchParamProps {
     key: string;
     value: string;
     newParamsInsertionMode?: "replace" | "append";
-    deleteIfMatches?: string;
+    deleteIfEqualsThis?: string;
     deleteIfExists?: boolean;
     deleteIfFalsyValue?: boolean;
     deleteParamsWithMatchingValueOnly?: boolean;
-    customURLModifier?: (url: URL) => URL;
 }
 
 export function updateSearchParam({
     key,
     value,
-    deleteIfMatches,
+    deleteIfEqualsThis,
     deleteIfFalsyValue,
     deleteIfExists,
     deleteParamsWithMatchingValueOnly = false,
     newParamsInsertionMode = "append",
-    customURLModifier,
 }: UpdateSearchParamProps) {
-    let currUrl = getCurrUrl();
+    const url = getCurrLocation();
 
-    if (deleteIfExists === true && currUrl.searchParams.has(key, value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
-    } else if ((deleteIfFalsyValue === true && !value) || (deleteIfMatches !== undefined && deleteIfMatches === value)) {
-        if (deleteParamsWithMatchingValueOnly === true) currUrl.searchParams.delete(key, value);
-        else currUrl.searchParams.delete(key);
+    if (
+        // If deleteIfExists is true and the key already exists
+        (deleteIfExists === true && url.searchParams.has(key, value)) ||
+        // If deleteIfFalsyValue is true and value is falsy
+        (deleteIfFalsyValue === true && !value) ||
+        // deleteIfEqualsThis is provided and equals the curr value
+        (deleteIfEqualsThis !== undefined && deleteIfEqualsThis === value)
+    ) {
+        if (deleteParamsWithMatchingValueOnly === true) url.searchParams.delete(key, value);
+        else url.searchParams.delete(key);
+    }
+    //
+    else {
+        if (newParamsInsertionMode === "replace") url.searchParams.set(key, value);
+        else url.searchParams.append(key, value);
+    }
+
+    return url.searchParams;
+}
+
+export function updateTernaryState_SearchParam(props: {
+    key: string;
+    value: string;
+    searchParamModifier?: (searchParams: URLSearchParams) => URLSearchParams;
+}) {
+    const searchParams = getCurrLocation().searchParams;
+    const allVals = searchParams.getAll(props.key);
+
+    if (allVals.includes(props.value)) {
+        searchParams.delete(props.key, props.value);
+        searchParams.append(props.key, NOT(props.value));
+    } else if (allVals.includes(NOT(props.value))) {
+        searchParams.delete(props.key, NOT(props.value));
     } else {
-        if (newParamsInsertionMode === "replace") currUrl.searchParams.set(key, value);
-        else currUrl.searchParams.append(key, value);
+        searchParams.append(props.key, props.value);
     }
 
-    if (customURLModifier) currUrl = customURLModifier(currUrl);
-
-    return currUrl.searchParams;
+    return props.searchParamModifier ? props.searchParamModifier(searchParams) : searchParams;
 }
 
-export function deletePageOffsetParam(url: URL) {
-    url.searchParams.delete(pageOffsetParamNamespace);
-    return url;
+export function NOT(value: string) {
+    if (value.startsWith("!")) return value.slice(1);
+    return `!${value}`;
 }
 
-export function getCurrUrl() {
-    if (globalThis.window) {
-        return new URL(window.location.href);
-    }
-
-    const location = useLocation();
-    return new URL(`https://example.com${location.pathname}${location.hash}${location.search}`);
+export function removePageOffsetSearchParam(sp: URLSearchParams) {
+    sp.delete(pageOffsetParamNamespace);
+    return sp;
 }

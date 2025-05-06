@@ -35,7 +35,7 @@ import { CancelButton } from "~/components/ui/button";
 import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
-import { ProjectPagePath } from "~/utils/urls";
+import { VersionPagePath } from "~/utils/urls";
 
 interface Props {
     orgId?: string;
@@ -81,7 +81,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 return toast.error(result?.message || t.common.error);
             }
 
-            RefreshPage(navigate, ProjectPagePath(result?.type?.[0], result?.urlSlug, "version/new"));
+            RefreshPage(navigate, VersionPagePath(result?.type?.[0], result?.urlSlug, "new"));
             return toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
@@ -209,7 +209,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                                 field.onChange(getProjectTypesFromNames(values));
                                             }}
                                             placeholder={t.dashboard.chooseProjectType}
-                                            popoverClassname={"type-selector-popover"}
+                                            popoverClassname="type-selector-popover"
                                             noResultsElement={t.common.noResults}
                                         />
                                     </FormItem>

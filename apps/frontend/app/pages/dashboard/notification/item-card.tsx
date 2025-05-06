@@ -129,7 +129,7 @@ export function TeamInviteNotification({
                                     <TooltipTrigger asChild>
                                         <Button
                                             size="icon"
-                                            variant={"ghost-inverted"}
+                                            variant="ghost-inverted"
                                             className="text-success-foreground"
                                             disabled={!!isLoading}
                                             onClick={acceptInvite}
@@ -147,7 +147,7 @@ export function TeamInviteNotification({
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
-                                            variant={"ghost-inverted"}
+                                            variant="ghost-inverted"
                                             size="icon"
                                             className="text-danger-foreground"
                                             disabled={!!isLoading}
@@ -210,7 +210,7 @@ export function TeamInviteNotification({
                         {t.common.accept}
                     </Button>
 
-                    <Button variant={"secondary-destructive-inverted"} size="sm" disabled={!!isLoading} onClick={declineInvite}>
+                    <Button variant="secondary-destructive-inverted" size="sm" disabled={!!isLoading} onClick={declineInvite}>
                         {isLoading === "decline" ? <LoadingSpinner size="xs" /> : <XIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                         {t.common.decline}
                     </Button>

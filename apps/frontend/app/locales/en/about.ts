@@ -47,9 +47,16 @@ And of course, **huge thanks to FinalForEach**, the creator of *Cosmic Reach*, f
 
 We self-host CRMM and use open-source, community-friendly tools:
 
-* **Clickhouse DB** (self-hosted) for fast and efficient analytics
-* **Uptime Kuma** (also self-hosted) for monitoring
-* **Cloudflare** and **Fastly** for security and delivery
+Self-hosted:
+- **Postgresql** (sql database)
+- **Meilisearch** (text search provider)
+- **Redis** (in-memory cache)
+- **Clickhouse DB** for fast and efficient analytics
+- **Uptime Kuma** for monitoring
+
+Third party:
+- **Cloudflare** (Proxy for backend)
+- **Fastly** for content delivery and caching
 
 Everything is designed to be lightweight, privacy-friendly, and run with the modding community in mind.
 

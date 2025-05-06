@@ -1,7 +1,7 @@
 import en from "./en/translation";
 import SupportedLocales, { DefaultLocale } from "./meta";
-import type { Locale, LocaleMetaData } from "./types";
 import { fillEmptyKeys } from "./obj-merge";
+import type { Locale, LocaleMetaData } from "./types";
 
 export async function getLocale(locale: string): Promise<Locale> {
     const localeModule = await getLocaleFile(locale);
@@ -28,7 +28,7 @@ function getLocaleFile(locale: string) {
     }
 }
 
-export function parseLocale(code: string) {
+export function parseLocale(code: string | undefined | null) {
     for (const locale of SupportedLocales) {
         const localeCode = formatLocaleCode(locale);
         if (localeCode === code) return localeCode;

@@ -10,6 +10,7 @@ import tagIcons from "@app/components/icons/tag-icons";
 import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
 import { DownloadAnimationContext } from "@app/components/misc/download-animation";
 import RefreshPage from "@app/components/misc/refresh-page";
+import { TextSpacer } from "@app/components/misc/text";
 import { Button, buttonVariants } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
 import Chip from "@app/components/ui/chip";
@@ -19,11 +20,11 @@ import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
-import SPDX_LICENSE_LIST from "@app/utils/src/constants/license-list";
 import { RejectedStatuses } from "@app/utils/config/project";
-import { MODERATOR_ROLES, isModerator } from "@app/utils/src/constants/roles";
 import { getLoadersFromNames } from "@app/utils/convertors";
 import { parseFileSize } from "@app/utils/number";
+import SPDX_LICENSE_LIST from "@app/utils/src/constants/license-list";
+import { MODERATOR_ROLES, isModerator } from "@app/utils/src/constants/roles";
 import { Capitalize, CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectPublishingStatus, ProjectVisibility } from "@app/utils/types";
 import type { ProjectDetailsData, TeamMember } from "@app/utils/types/api";
@@ -58,15 +59,14 @@ import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
 import { OrgPagePath, ProjectPagePath, UserProfilePath, VersionPagePath, isCurrLinkActive } from "~/utils/urls";
+import { AddToCollection_Popup } from "../collection/add-to-collection";
+import { FollowProject_Btn } from "../collection/follow-btn";
 import InteractiveDownloadPopup from "./interactive-download";
 import TeamInvitationBanner from "./join-project-banner";
 import ModerationBanner from "./moderation-banner";
 import { PublishingChecklist } from "./publishing-checklist";
 import SecondaryNav from "./secondary-nav";
 import { ProjectSupprotedEnvironments } from "./supported-env";
-import { TextSpacer } from "@app/components/misc/text";
-import { AddToCollection_Popup } from "../collection/add-to-collection";
-import { FollowProject_Btn } from "../collection/follow-btn";
 import UpdateProjectStatusDialog from "./update-project-status";
 
 export default function ProjectPageLayout() {
@@ -84,7 +84,6 @@ export default function ProjectPageLayout() {
     if (!projectData) return null;
 
     const isVersionDetailsPage = isCurrLinkActive(ProjectPagePath(ctx.projectType, projectData.slug, "version/"), location.pathname, false);
-
     const projectEnvironments = ProjectSupprotedEnvironments({
         clientSide: projectData.clientSide,
         serverSide: projectData.serverSide,
@@ -395,6 +394,7 @@ export default function ProjectPageLayout() {
                     </TooltipProvider>
                 </Card>
             </div>
+
             <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards [grid-area:_content]">
                 <SecondaryNav
                     urlBase={`/${ctx.projectType}/${projectData?.slug || ""}`}
@@ -479,7 +479,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <VariantButtonLink
                                 url={ProjectPagePath(projectType, projectData.slug, "settings")}
-                                variant={"secondary-inverted"}
+                                variant="secondary-inverted"
                                 className="rounded-full w-11 h-11 p-0"
                                 label="project settings"
                                 prefetch={Prefetch.Render}

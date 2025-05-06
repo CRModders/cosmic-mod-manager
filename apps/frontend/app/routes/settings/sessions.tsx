@@ -6,7 +6,7 @@ import SessionsPage from "~/pages/settings/sessions/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import type { Route } from "./+types/sessions";
 
 export default function _Sessions() {
@@ -29,7 +29,7 @@ export function meta() {
         title: "User Sessions",
         description: "All the devices where you are logged in",
         image: Config.SITE_ICON,
-        url: `${Config.FRONTEND_URL}${PageUrl("settings/sessions")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("settings/sessions")}`,
         suffixTitle: true,
     });
 }

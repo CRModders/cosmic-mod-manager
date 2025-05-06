@@ -1,9 +1,9 @@
 import type { MetaDescriptor } from "react-router";
 import { formatLocaleCode } from "~/locales";
-import SupportedLocales, { DefaultLocale } from "~/locales/meta";
-import { formatUrlWithLocalePrefix } from "~/locales/provider";
+import SupportedLocales, { DefaultLocale, GetLocaleMetadata } from "~/locales/meta";
+import { alterUrlHintLocale } from "~/locales/provider";
 import Config from "~/utils/config";
-import { prepend, removeTrailing } from "~/utils/urls";
+import { getHintLocale } from "./urls";
 
 type MetaTags =
     | {
@@ -35,12 +35,21 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
     }
     if (!props.parentMetaTags) props.parentMetaTags = [];
 
+    try {
+        new URL(props.url);
+    } catch (error) {
+        console.log(props.url);
+    }
+
+    const url = new URL(props.url);
+    const currHintLocale_meta = GetLocaleMetadata(getHintLocale(url.searchParams)) || DefaultLocale;
+
     const alternateLocaleLinks = SupportedLocales.map((locale) => {
         return {
             tagName: "link",
             rel: "alternate",
             hrefLang: formatLocaleCode(locale),
-            href: formatFullUrlWithLocale(props.url, locale, false),
+            href: alterUrlHintLocale(locale, false, url).href,
         };
     });
 
@@ -48,17 +57,17 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
         {
             tagName: "link",
             rel: "canonical",
-            href: formatFullUrlWithLocale(props.url, undefined, true),
+            href: alterUrlHintLocale(currHintLocale_meta, true, url).href,
         },
         {
             tagName: "link",
             rel: "alternate",
             hrefLang: "x-default",
-            href: formatFullUrlWithLocale(props.url, DefaultLocale, true),
+            href: alterUrlHintLocale(DefaultLocale, true, url).href,
         },
         ...alternateLocaleLinks,
-        { property: "og:url", content: formatFullUrlWithLocale(props.url) },
-        { name: "twitter:url", content: formatFullUrlWithLocale(props.url) },
+        { property: "og:url", content: alterUrlHintLocale(currHintLocale_meta, undefined, url).href },
+        { name: "twitter:url", content: alterUrlHintLocale(currHintLocale_meta, undefined, url).href },
         ...(props.authorProfile ? [AuthorLink(props.authorProfile)] : []),
     ]);
 
@@ -117,13 +126,4 @@ function AuthorLink(url: string) {
         rel: "author",
         href: url,
     };
-}
-
-// Get language specific URL for a given link
-export function formatFullUrlWithLocale(link: string | URL, targetLocale = DefaultLocale, omitDefaultLocale = true) {
-    const url = new URL(link);
-
-    const formattedPath = formatUrlWithLocalePrefix(targetLocale, omitDefaultLocale, url.pathname);
-    const newUrl = `${url.origin}${prepend("/", formattedPath)}${url.search}${url.hash}`;
-    return removeTrailing("/", newUrl);
 }

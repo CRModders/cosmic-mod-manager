@@ -59,15 +59,15 @@ export function configureXss(urlModifier?: (url: string) => string) {
 
                 const strSlice = html.slice(startIndex + 6);
                 const endIndex = strSlice.indexOf('"') || strSlice.indexOf('\\"');
-                const url = strSlice.slice(0, endIndex);
+                const href = strSlice.slice(0, endIndex);
 
-                if (url.startsWith("http") || url.startsWith("mailto:") || url.startsWith("#")) {
+                if (href.startsWith("http") || href.startsWith("mailto:") || href.startsWith("#")) {
                     if (html.includes("title=")) return html;
-                    return `<${tag} title="${url}" ${html.slice(3)}`;
+                    return `<${tag} title="${href}" ${html.slice(3)}`;
                 }
 
-                const sameSiteUrl = urlModifier ? urlModifier(url) : url;
-                return `<${tag} data-discover="true" title="${sameSiteUrl}" ${html.slice(3).replace(url, sameSiteUrl)}`;
+                const sameSiteHref = urlModifier ? urlModifier(href) : href;
+                return `<${tag} data-discover="true" title="${sameSiteHref}" ${html.slice(3).replace(href, sameSiteHref)}`;
             }
         },
         onIgnoreTagAttr: (tag, name, value) => {

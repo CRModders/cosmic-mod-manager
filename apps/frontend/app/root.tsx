@@ -20,7 +20,7 @@ import ErrorView from "~/routes/error-view";
 import clientFetch from "~/utils/client-fetch";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import { PageUrl, removeLeading, useUrlLocale } from "~/utils/urls";
+import { FormatUrl_WithHintLocale, getHintLocale } from "~/utils/urls";
 import type { Route } from "./+types/root";
 import { PageBreadCrumbs } from "./hooks/breadcrumb";
 import { formatLocaleCode, parseLocale } from "./locales";
@@ -118,7 +118,6 @@ export default function App() {
         <ContextProviders theme={data.userConfig.theme}>
             <ValidateClientSession />
             <ClientOnly Element={ToastAnnouncer} />
-            <ClientOnly Element={ToastAnnouncer} />
             <ClientOnly Element={LoaderBar} />
 
             {/* A portal for the grid_bg_div inserted from the pages/page.tsx */}
@@ -156,26 +155,20 @@ export async function loader({ request }: Route.LoaderArgs): Promise<RootOutletD
     // Preferences
     const userConfig = await getUserConfig(cookie);
 
-    const urlLocalePrefix = useUrlLocale(true, reqUrl.pathname);
-    const urlLocale = GetLocaleMetadata(parseLocale(urlLocalePrefix)) || DefaultLocale;
-    const cookieLocale = GetLocaleMetadata(parseLocale(userConfig.locale)) || DefaultLocale;
+    const hintLocale = getHintLocale(reqUrl.searchParams);
+    // The locale obtained from the request url
+    const hintLocale_Metadata = GetLocaleMetadata(hintLocale) || DefaultLocale;
+    // The locale that is set in user's preference
+    // Url locale takes priority over the prefs locale from the cookie
+    const cookieLocale_Metadata = GetLocaleMetadata(parseLocale(userConfig.locale)) || DefaultLocale;
 
-    let currLocale = urlLocale;
-    if (!urlLocalePrefix) currLocale = cookieLocale;
+    let currLocale = hintLocale_Metadata;
+    if (!hintLocale) currLocale = cookieLocale_Metadata;
 
-    // If there's no lang prefix and user has a non default localse set, redirect to the url with user's locale prefix
-    if (!urlLocalePrefix.length && formatLocaleCode(cookieLocale) !== formatLocaleCode(urlLocale)) {
-        const localeFormattedPath = PageUrl(reqUrl.pathname, undefined, formatLocaleCode(currLocale));
-        const redirectUrl = new URL(localeFormattedPath, Config.FRONTEND_URL);
-        throw Response.redirect(redirectUrl, 302);
-    }
-
-    // If the url prefix is same as the default and the user's set locale is the same as the default,
-    // redirect to the url without the default locale prefix
-    if (urlLocalePrefix === formatLocaleCode(DefaultLocale) && urlLocalePrefix === formatLocaleCode(cookieLocale)) {
-        const pathWithoutDefaultLocale = removeLeading("/", reqUrl.pathname).replace(formatLocaleCode(DefaultLocale), "");
-        const redirectUrl = new URL(pathWithoutDefaultLocale, Config.FRONTEND_URL);
-        throw Response.redirect(redirectUrl, 302);
+    // If there's no hintLocale and user has a non default locale set, redirect to the url with user's locale
+    if (!hintLocale.length && formatLocaleCode(cookieLocale_Metadata) !== formatLocaleCode(hintLocale_Metadata)) {
+        const localeFormattedUrl = FormatUrl_WithHintLocale(reqUrl.pathname, formatLocaleCode(currLocale));
+        throw Response.redirect(new URL(localeFormattedUrl, Config.FRONTEND_URL), 302);
     }
 
     return {

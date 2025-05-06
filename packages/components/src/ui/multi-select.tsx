@@ -122,7 +122,7 @@ export const MultiSelect = ({
                                         const option = (allOptions || options).find((o) => o.value === value);
                                         const IconComponent = option?.icon;
                                         return (
-                                            <ChipButton variant={"outline"} key={value} className={cn("m-[0.17rem]")}>
+                                            <ChipButton variant="outline" key={value} className={cn("m-[0.17rem]")}>
                                                 {IconComponent && <IconComponent className="h-4 w-4 me-2" />}
                                                 {option?.label}
                                                 <XCircle

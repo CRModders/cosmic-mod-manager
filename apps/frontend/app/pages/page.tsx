@@ -72,17 +72,14 @@ export default function HomePage({ projects }: Props) {
                     <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-4">
                         <h1 className="text-4xl lg:text-6xl font-medium text-foreground inline-flex text-center items-center justify-center gap-x-2.5 lg:gap-x-4 flex-wrap">
                             {titleParts[0]?.length > 0 && <>{titleParts[0]} </>}
+
                             <div className="inline-block h-12 lg:h-[4.5rem] mb-1 max-w-full overflow-hidden">
                                 <span className="hero_section_showcase inline-flex flex-col items-center justify-center [--unit-height:_3rem] lg:[--unit-height:_4.5rem]">
                                     {showcaseItems?.map((item, index) => {
-                                        const TypeSpecificTitle = t.homePage.title(item);
-
                                         return (
                                             <strong
-                                                key={`${item}${
-                                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                    index
-                                                }`}
+                                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                key={`${item}${index}`}
                                                 className={cn(
                                                     "flex font-bold items-center justify-center h-12 lg:h-[4.5rem] text-4xl lg:text-6xl bg-clip-text leading-loose text-nowrap whitespace-nowrap",
                                                     "bg-accent-background text-transparent bg-cover bg-gradient-to-b from-rose-200 to-accent-background via-accent-background",
@@ -90,12 +87,13 @@ export default function HomePage({ projects }: Props) {
                                                 // @ts-ignore
                                                 style={{ "--index": index + 1 }}
                                             >
-                                                {TypeSpecificTitle[1]}
+                                                {item}
                                             </strong>
                                         );
                                     })}
                                 </span>
                             </div>
+
                             {titleParts[2]?.length > 0 && <> {titleParts[2]}</>}
                         </h1>
 
@@ -126,7 +124,7 @@ export default function HomePage({ projects }: Props) {
                                 {t.form.signup}
                             </VariantButtonLink>
                         ) : (
-                            <VariantButtonLink url="/dashboard/projects" size={"lg"} className="px-6" variant="secondary-inverted">
+                            <VariantButtonLink url="/dashboard/projects" size="lg" className="px-6" variant="secondary-inverted">
                                 <LayoutDashboardIcon
                                     aria-hidden
                                     className="w-btn-icon-md h-btn-icon-md"
@@ -166,6 +164,8 @@ interface MarqueeScrollProps {
 function MarqueeScroll({ items, reverse = false }: MarqueeScrollProps) {
     const duration = 7.5 * items.length;
 
+    const scrollItems = items.map((item) => <ShowcaseItem key={item.id} item={item} />);
+
     return (
         <div className="marquee w-full flex items-center justify-start relative h-[5.7rem] overflow-hidden">
             <div
@@ -176,9 +176,7 @@ function MarqueeScroll({ items, reverse = false }: MarqueeScrollProps) {
                     animationDirection: reverse ? "reverse" : "normal",
                 }}
             >
-                {items.map((item) => (
-                    <ShowcaseItem key={item.id} item={item} />
-                ))}
+                {scrollItems}
             </div>
 
             <div
@@ -189,9 +187,7 @@ function MarqueeScroll({ items, reverse = false }: MarqueeScrollProps) {
                     animationDirection: reverse ? "reverse" : "normal",
                 }}
             >
-                {items.map((item) => (
-                    <ShowcaseItem key={item.id} item={item} />
-                ))}
+                {scrollItems}
             </div>
         </div>
     );

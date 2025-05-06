@@ -17,7 +17,7 @@ import { ButtonLink } from "~/components/ui/link";
 import { useOrgData } from "~/hooks/org";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
-import { OrgPagePath } from "~/utils/urls";
+import { FormatUrl_WithHintLocale, OrgPagePath, appendPathInUrl } from "~/utils/urls";
 
 export default function OrgSettingsLayout() {
     const { t } = useTranslation();
@@ -37,12 +37,14 @@ export default function OrgSettingsLayout() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink href="/dashboard/organizations">{t.dashboard.organizations}</BreadcrumbLink>
+                                    <BreadcrumbLink href={FormatUrl_WithHintLocale("/dashboard/organizations")}>
+                                        {t.dashboard.organizations}
+                                    </BreadcrumbLink>
                                 </BreadcrumbItem>
 
                                 <BreadcrumbSeparator />
                                 <BreadcrumbItem>
-                                    <BreadcrumbLink href={baseUrl}>{orgData.name}</BreadcrumbLink>
+                                    <BreadcrumbLink href={FormatUrl_WithHintLocale(baseUrl)}>{orgData.name}</BreadcrumbLink>
                                 </BreadcrumbItem>
 
                                 <BreadcrumbSeparator />
@@ -93,7 +95,12 @@ export default function OrgSettingsLayout() {
                                     icon: <BarChart2Icon aria-hidden className="w-btn-icon h-btn-icon" />,
                                 },
                             ].map((link) => (
-                                <ButtonLink prefetch={Prefetch.Render} key={link.href} url={`${baseUrl}/${link.href}`} preventScrollReset>
+                                <ButtonLink
+                                    prefetch={Prefetch.Render}
+                                    key={link.href}
+                                    url={appendPathInUrl(baseUrl, link.href)}
+                                    preventScrollReset
+                                >
                                     {link.icon}
                                     {link.name}
                                 </ButtonLink>

@@ -16,7 +16,7 @@ export default function ErrorView() {
 
             <Button
                 className="text-foreground text-lg"
-                variant={"link"}
+                variant="link"
                 aria-label={t.error.refresh}
                 onClick={() => window.location.reload()}
             >

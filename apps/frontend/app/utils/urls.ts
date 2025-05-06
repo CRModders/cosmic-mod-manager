@@ -1,37 +1,24 @@
 import { append, prepend, removeLeading, removeTrailing } from "@app/utils/string";
 import { useLocation } from "react-router";
-import { formatLocaleCode, parseLocale } from "~/locales";
-import SupportedLocales, { DefaultLocale } from "~/locales/meta";
+import { parseLocale } from "~/locales";
+
+export const HINT_LOCALE_KEY = "hl";
 
 export { isCurrLinkActive } from "@app/utils/string";
 export { append, prepend, removeLeading, removeTrailing };
 
-// The url lang prefix can be any of the supported locales which follows a / after it or it's the end of the string
-// eg: /en/search, /en
-const langCodes = SupportedLocales.map((l) => formatLocaleCode(l));
-const langRegex = new RegExp(`^\\/(${langCodes.join("|")})(?=\\/|$)`);
+export function getHintLocale(searchParams?: URLSearchParams) {
+    const params = searchParams ? searchParams : getCurrLocation().searchParams;
+    const hlParam = params.get(HINT_LOCALE_KEY);
+    const localeCode = parseLocale(hlParam);
 
-export function useUrlLocale(trimLeadingSlash = true, customPathname?: string) {
-    const pathname = customPathname ? customPathname : usePathname();
-
-    const match = pathname.match(langRegex);
-    const matchString = match ? match[0] : "";
-
-    let urlPrefix = parseLocale(removeLeading("/", matchString));
-    if (urlPrefix === DefaultLocale.code && !matchString.includes(DefaultLocale.code)) urlPrefix = "";
-
-    if (trimLeadingSlash === true) return urlPrefix;
-    return prepend("/", urlPrefix);
+    if (localeCode === parseLocale(undefined) && !hlParam) return "";
+    return localeCode;
 }
 
-export function usePathname() {
-    // Can't use hooks outside of components, so we need to check if we're in a browser environment
-    if (globalThis.window) {
-        return window.location.pathname;
-    }
-
-    // We can totally use the hook during server-side rendering
-    return useLocation().pathname;
+export function getCurrLocation() {
+    const loc = globalThis?.window ? window.location : useLocation();
+    return new URL(`https://example.com${loc.pathname}${loc.search}${loc.hash}`);
 }
 
 // ? URL Formatters
@@ -41,54 +28,70 @@ export function usePathname() {
  *
  * @param _path - The main path segment of the URL.
  * @param extra - An optional additional path segment to append to the URL.
- * @param _lang_prefix - An optional language prefix to prepend to the URL.
+ * @param _hl - An optional language prefix to prepend to the URL.
  * @returns The constructed URL path as a string.
  */
-export function PageUrl(_path: string, extra?: string, _lang_prefix?: string) {
-    if (_path.startsWith("http") || _path.startsWith("mailto:")) return _path;
+export function FormatUrl_WithHintLocale(path: string, hl?: string) {
+    if (path.startsWith("http") || path.startsWith("mailto:")) return path;
 
-    const langPrefix = typeof _lang_prefix === "string" ? _lang_prefix : useUrlLocale(false);
-    let p = _path === "/" ? "" : prepend("/", _path);
+    const hintLocale = hl ? hl : getHintLocale();
+    const searchParams = new URLSearchParams(path.split("?")[1] || `?${HINT_LOCALE_KEY}=${hintLocale}`);
 
-    // Make sure not to overwrite the language prefix if it already exists
-    const match = p.match(langRegex);
-    if (!match) p = prepend(langPrefix, p);
+    if (!hintLocale) searchParams.delete(HINT_LOCALE_KEY);
+    else searchParams.set(HINT_LOCALE_KEY, hintLocale);
 
-    if (extra) {
-        p = removeTrailing("/", p);
-        extra = removeLeading("/", extra);
-        p += `/${extra}`;
-    }
-
-    return p;
+    return prepend("/", `${path.split("?")[0]}?${searchParams.toString()}`);
 }
 
 export function ProjectPagePath(type: string, projectSlug: string, extra?: string) {
-    let pathname = PageUrl(type, projectSlug);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    let path = `${type}/${projectSlug}`;
+    if (extra) path += `/${extra}`;
+
+    return FormatUrl_WithHintLocale(path);
 }
 
 export function VersionPagePath(type: string, projectSlug: string, versionSlug: string, extra?: string) {
-    let pathname = `${ProjectPagePath(type, projectSlug)}/version/${versionSlug}`;
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const projectPgPath = ProjectPagePath(type, projectSlug);
+
+    let appendStr = `version/${versionSlug}`;
+    if (extra) appendStr += `/${extra}`;
+
+    return appendPathInUrl(projectPgPath, appendStr);
 }
 
 export function OrgPagePath(orgSlug: string, extra?: string) {
-    let pathname = PageUrl("organization", orgSlug);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const orgUrl = FormatUrl_WithHintLocale(`organization/${orgSlug}`);
+    if (!extra) return orgUrl;
+
+    return appendPathInUrl(orgUrl, extra);
 }
 
 export function UserProfilePath(username: string, extra?: string) {
-    let pathname = PageUrl("user", username);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const userProfileUrl = FormatUrl_WithHintLocale(`user/${username}`);
+    if (!extra) return userProfileUrl;
+
+    return appendPathInUrl(userProfileUrl, extra);
 }
 
 export function CollectionPagePath(id: string, extra?: string) {
-    let pathname = PageUrl("collection", id);
-    if (extra) pathname += `/${extra}`;
-    return pathname;
+    const collectionPageUrl = FormatUrl_WithHintLocale(`collection/${id}`);
+    if (!extra) return collectionPageUrl;
+
+    return appendPathInUrl(collectionPageUrl, extra);
+}
+
+export function appendPathInUrl(_url: string | URL, str: string) {
+    let url: URL;
+    if (typeof _url === "string") {
+        if (_url.startsWith("/")) url = new URL(`https://example.com${_url}`);
+        else if (_url.startsWith("http")) url = new URL(_url);
+        else url = new URL(`https://example.com/${_url}`);
+    } else {
+        url = _url;
+    }
+
+    if (url.pathname.endsWith("/") || str.startsWith("/")) url.pathname = `${url.pathname}${str}`;
+    else url.pathname = `${url.pathname}/${str}`;
+
+    return url.href.replace(url.origin, "");
 }

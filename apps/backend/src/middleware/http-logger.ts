@@ -7,12 +7,6 @@ enum LogPrefix {
     Error = "xxx",
 }
 
-const METHOD_WIDTH = 5;
-const PATH_WIDTH = 70;
-const STATUS_WIDTH = 6;
-const ELAPSED_WIDTH = 6;
-const IP_WIDTH = 45;
-
 function humanize(times: string[]) {
     const [delimiter, separator] = [",", "."];
     const orderTimes = times.map((v) => v.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, `$1${delimiter}`));
@@ -47,27 +41,17 @@ const DimWhite = "\x1b[37m";
 const BrightBlue = "\x1b[34m";
 const Reset = "\x1b[0m";
 
-function padString(str: string, width: number) {
-    if (str.length >= width) str = str.slice(str.length - width + 1);
-    return str.padEnd(width, " ");
-}
-
 function log(fn: PrintFunc, prefix: string, method: string, path: string, status?: number, ipAddress = "", elapsed?: string) {
-    const methodPadded = padString(method, METHOD_WIDTH);
-    const pathPadded = padString(path, PATH_WIDTH);
-    const statusPadded = !status ? padString(" ", STATUS_WIDTH) : colorStatus(status, padString(`${status}`, STATUS_WIDTH));
-    const ipPadded = padString(ipAddress, IP_WIDTH);
-    const elapsedPadded = padString(elapsed || "", ELAPSED_WIDTH);
-
+    const statusFormatted = !status ? " " : colorStatus(status, `${status}`);
     const prefixColored = `${DimWhite}${prefix}${Reset}`;
-    const elapsedColored = elapsed ? `${BrightBlue}${elapsedPadded}${Reset}` : "";
+    const elapsedColored = elapsed ? `${BrightBlue}${elapsed}${Reset}` : "";
 
     const Bar = `${Grey}|${Reset}`;
 
     const out =
         prefix === LogPrefix.Incoming
-            ? `${prefixColored} ${methodPadded} ${Bar} ${pathPadded} ${Bar} ${statusPadded} ${Bar} ${padString("", ELAPSED_WIDTH)} ${Bar} ${ipPadded}`
-            : `${prefixColored} ${methodPadded} ${Bar} ${pathPadded} ${Bar} ${statusPadded} ${Bar} ${elapsedColored} ${Bar}`;
+            ? `${prefixColored} ${method} ${Bar} ${path} ${Bar} ${statusFormatted} ${Bar} ${ipAddress}`
+            : `${prefixColored} ${method} ${Bar} ${path} ${Bar} ${statusFormatted} ${Bar} ${elapsedColored}`;
     fn(out);
 }
 

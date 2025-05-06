@@ -10,7 +10,7 @@ interface Props {
     gameVersions: string[];
     categories: string[];
     environments: string[];
-    openSourceOnly: boolean;
+    openSourceOnly: string | undefined;
     sortBy: SearchResultSortMethod;
     offset: number;
     limit: number;
@@ -59,24 +59,24 @@ export async function searchProjects(props: Props) {
     if (props.environments.includes("client") && props.environments.includes("server")) {
         envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide = ${EnvironmentSupport.REQUIRED}`;
     }
-    // If only client is selected, include projects that require only client or optionally server
+    // If only client is selected, include projects that require only client and optionally server
     else if (props.environments.includes("client")) {
         envFilter = `clientSide = ${EnvironmentSupport.REQUIRED} AND serverSide != ${EnvironmentSupport.REQUIRED}`;
     }
-    // If only server is selected, include projects that require only server or optionally client
+    // If only server is selected, include projects that require only server and optionally client
     else if (props.environments.includes("server")) {
         envFilter = `serverSide = ${EnvironmentSupport.REQUIRED} AND clientSide != ${EnvironmentSupport.REQUIRED}`;
     }
 
     const filters = [
-        props.loaders.map((loader) => `loaders = ${loader}`).join(" OR "),
-        props.gameVersions.map((gameVersion) => `gameVersions = ${gameVersion}`).join(" OR "),
-        props.categories.map((category) => `categories = ${category}`).join(" AND "),
+        formatFilterItems("loaders", props.loaders, " AND "),
+        formatFilterItems("gameVersions", props.gameVersions, " OR "),
+        formatFilterItems("categories", props.categories, " AND "),
         envFilter,
     ];
 
-    if (props.type) filters.push(`type = ${props.type}`);
-    if (props.openSourceOnly) filters.push("openSource = true");
+    if (props.type) filters.push(formatFilterItems("type", [props.type], " OR "));
+    if (props.openSourceOnly) filters.push(formatFilterItems("openSource", [props.openSourceOnly], " AND "));
 
     const result = await index.search(props.query, {
         sort: sortBy ? [sortBy] : [],
@@ -119,7 +119,16 @@ export async function searchProjects(props: Props) {
     return { data: result, status: HTTP_STATUS.OK };
 }
 
+function formatFilterItems(name: string, values: string[], join: string) {
+    return values
+        .map((val) => {
+            if (val.startsWith("!")) return `${name} != ${val.slice(1)}`;
+            return `${name} = ${val}`;
+        })
+        .join(join);
+}
+
 function isValidFilterStr(str: string) {
-    const regex = /^[a-zA-Z0-9-_.]+$/;
+    const regex = /^[a-zA-Z0-9-_.!]+$/;
     return regex.test(str);
 }

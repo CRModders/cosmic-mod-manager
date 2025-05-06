@@ -15,15 +15,15 @@ import { Separator } from "@app/components/ui/separator";
 import { FullWidthSpinner } from "@app/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@app/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigger } from "@app/components/ui/tooltip";
+import { getLoaderFromString } from "@app/utils/convertors";
+import { parseFileSize } from "@app/utils/number";
+import { doesMemberHaveAccess, sortVersionsWithReference } from "@app/utils/project";
 import {
     type GameVersion,
     gameVersionsList,
     getGameVersionsFromValues,
     isExperimentalGameVersion,
 } from "@app/utils/src/constants/game-versions";
-import { getLoaderFromString } from "@app/utils/convertors";
-import { parseFileSize } from "@app/utils/number";
-import { doesMemberHaveAccess, sortVersionsWithReference } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
 import { ProjectPermission, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@app/utils/types/api";
@@ -53,7 +53,7 @@ import { useSession } from "~/hooks/session";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
-import { ProjectPagePath, VersionPagePath } from "~/utils/urls";
+import { VersionPagePath } from "~/utils/urls";
 
 interface FilterItems {
     loaders: string[];
@@ -189,9 +189,7 @@ export default function ProjectVersionsPage() {
 
     return (
         <>
-            {canUploadVersion ? (
-                <UploadVersionLinkCard uploadPageUrl={ProjectPagePath(ctx.projectType, projectData.slug, "version/new")} />
-            ) : null}
+            {canUploadVersion ? <UploadVersionLinkCard uploadPageUrl={VersionPagePath(ctx.projectType, projectData.slug, "new")} /> : null}
 
             {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
                 <div className="flex flex-wrap items-center justify-start gap-2">
@@ -545,12 +543,11 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                                     <TooltipTrigger asChild>
                                                         <VariantButtonLink
                                                             url={version.primaryFile?.url || ""}
-                                                            variant={"outline"}
-                                                            size={"icon"}
+                                                            variant="outline"
+                                                            size="icon"
                                                             className="noClickRedirect shrink-0 !w-10 !h-10 rounded-full"
-                                                            aria-label={`download ${version.title}`}
+                                                            aria-label={`Download ${version.title}`}
                                                             onClick={showDownloadAnimation}
-                                                            target="_blank"
                                                             rel="nofollow noindex"
                                                         >
                                                             <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
@@ -695,7 +692,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                 </VariantButtonLink>
 
                 <Button
-                    variant={"ghost-no-shadow"}
+                    variant="ghost-no-shadow"
                     size="sm"
                     className="justify-start"
                     onClick={() => {
@@ -712,7 +709,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                         <Separator />
                         <VariantButtonLink
                             url={`${versionPageUrl}/edit`}
-                            variant={"ghost-no-shadow"}
+                            variant="ghost-no-shadow"
                             className="justify-start"
                             size="sm"
                             onClick={() => {

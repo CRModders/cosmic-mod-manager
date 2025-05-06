@@ -2,7 +2,7 @@ import { useState } from "react";
 import MarkdownEditor from "~/components/md-editor";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
-import { PageUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
 const defaultText = `# h1 Heading
 ## h2 Heading
@@ -160,7 +160,7 @@ export function meta() {
         title: "Markdown Editor",
         description: "A simple markdown editor with preview capabilities to help you write markdown easily.",
         image: `${Config.FRONTEND_URL}/markdown.png`,
-        url: `${Config.FRONTEND_URL}${PageUrl("md-editor")}`,
+        url: `${Config.FRONTEND_URL}${FormatUrl_WithHintLocale("md-editor")}`,
         suffixTitle: true,
     });
 }
