@@ -88,7 +88,7 @@ export default function DeleteAccountConfirmationCard({ code }: { code: string }
                                     disabled={isLoading.value}
                                 />
 
-                                <Button variant={"destructive"} onClick={confirmAccountDeletion} disabled={isLoading.value}>
+                                <Button variant="destructive" onClick={confirmAccountDeletion} disabled={isLoading.value}>
                                     {isLoading.action === "confirming" ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (

@@ -63,7 +63,7 @@ export default function NotificationsPage({ notifications, relatedProjects, rela
                         </VariantButtonLink>
 
                         {(unreadNotifications?.length || 0) > 1 && (
-                            <Button variant={"secondary-destructive"} disabled={markingAsRead} onClick={markAllAsRead}>
+                            <Button variant="secondary-destructive" disabled={markingAsRead} onClick={markAllAsRead}>
                                 {markingAsRead ? (
                                     <LoadingSpinner size="xs" />
                                 ) : (

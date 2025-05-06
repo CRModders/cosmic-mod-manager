@@ -174,7 +174,7 @@ function GalleryItemCard({
                                 <EditGalleryImage galleryItem={galleryItem} projectData={projectData} />
 
                                 <RemoveGalleryImage id={galleryItem.id} projectData={projectData}>
-                                    <Button variant={"secondary"} size={"sm"}>
+                                    <Button variant="secondary" size="sm">
                                         <Trash2Icon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                                         {t.form.remove}
                                     </Button>
@@ -282,7 +282,7 @@ function ImageDialog({
 
                         <div className="flex items-center justify-start gap-2 p-2.5 px-3 rounded-xl bg-card-background opacity-45 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300 origin-bottom">
                             <DialogClose asChild>
-                                <Button className="rounded-full" size={"icon"} variant={"secondary"}>
+                                <Button className="rounded-full" size="icon" variant="secondary">
                                     <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                                 </Button>
                             </DialogClose>
@@ -298,7 +298,7 @@ function ImageDialog({
                                 <ExternalLinkIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             </a>
 
-                            <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={toggleFullWidth}>
+                            <Button variant="secondary" size="icon" className="rounded-full" onClick={toggleFullWidth}>
                                 {isFullWidth ? (
                                     <ShrinkIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                 ) : (
@@ -308,11 +308,11 @@ function ImageDialog({
 
                             {totalItems > 1 ? (
                                 <>
-                                    <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={previous}>
+                                    <Button variant="secondary" size="icon" className="rounded-full" onClick={previous}>
                                         <ArrowLeftIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
 
-                                    <Button variant={"secondary"} size={"icon"} className="rounded-full" onClick={next}>
+                                    <Button variant="secondary" size="icon" className="rounded-full" onClick={next}>
                                         <ArrowRightIcon aria-hidden className="w-btn-icon h-btn-icon" />
                                     </Button>
                                 </>

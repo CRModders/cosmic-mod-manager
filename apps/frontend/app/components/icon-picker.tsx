@@ -1,15 +1,15 @@
-import { buttonVariants, Button } from "@app/components/ui/button";
+import { Button, buttonVariants } from "@app/components/ui/button";
 import { FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { InteractiveLabel } from "@app/components/ui/label";
-import { cn } from "@app/components/utils";
-import { validImgFileExtensions } from "@app/utils/schemas/utils";
-import { imageUrl } from "@app/utils/url";
-import { ImgWrapper } from "./ui/avatar";
-import { useTranslation } from "~/locales/provider";
-import { isImageFile } from "@app/utils/schemas/validation";
-import { getFileType } from "@app/utils/convertors";
 import { toast } from "@app/components/ui/sonner";
+import { cn } from "@app/components/utils";
+import { getFileType } from "@app/utils/convertors";
+import { validImgFileExtensions } from "@app/utils/schemas/utils";
+import { isImageFile } from "@app/utils/schemas/validation";
+import { imageUrl } from "@app/utils/url";
 import { Trash2Icon, UploadIcon } from "lucide-react";
+import { useTranslation } from "~/locales/provider";
+import { ImgWrapper } from "./ui/avatar";
 
 interface IconPickerProps {
     icon: File | string | undefined;
@@ -36,7 +36,7 @@ export default function IconPicker(props: IconPickerProps) {
                     id="project-icon-input"
                     accept={validImgFileExtensions.join(", ")}
                     type="file"
-                    value={""}
+                    value=""
                     name={props.fieldName}
                     onChange={async (e) => {
                         const file = e.target.files?.[0];
@@ -52,7 +52,7 @@ export default function IconPicker(props: IconPickerProps) {
                 />
 
                 <ImgWrapper
-                    alt={"Icon"}
+                    alt={t.form.icon}
                     src={(() => {
                         const image = props.icon;
                         if (image instanceof File) return URL.createObjectURL(image);

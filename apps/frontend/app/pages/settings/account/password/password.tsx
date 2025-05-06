@@ -19,7 +19,7 @@ export default function ManagePassword({ session }: Props) {
     return (
         <div className="flex flex-wrap gap-panel-cards">
             <Link to="/change-password">
-                <Button variant={"secondary"} tabIndex={-1}>
+                <Button variant="secondary" tabIndex={-1}>
                     <KeyRound className="w-btn-icon h-btn-icon" />
                     {t.auth.changePassword}
                 </Button>

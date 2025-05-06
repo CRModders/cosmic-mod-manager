@@ -309,7 +309,7 @@ function AvailableVersionsList({ selectedGameVersion, selectedLoader }: Availabl
 
                         <VariantButtonLink
                             url={version.primaryFile?.url || ""}
-                            size={"icon"}
+                            size="icon"
                             variant="default"
                             className={cn("shrink-0", isDownloadAnimationVisible && "pointer-events-none")}
                             label={`download ${version.title}`}

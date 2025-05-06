@@ -157,7 +157,7 @@ export default function SessionsPage({ loggedInSessions, session: currSession }:
                                         <span className="text-muted-foreground italic">{t.settings.currSession}</span>
                                     ) : (
                                         <Button
-                                            variant={"secondary-inverted"}
+                                            variant="secondary-inverted"
                                             disabled={isLoading.value}
                                             onClick={() => {
                                                 revokeSession(session.id);

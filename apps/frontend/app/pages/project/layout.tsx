@@ -479,7 +479,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
                         {currUsersMembership?.id || isModerator(session?.role) ? (
                             <VariantButtonLink
                                 url={ProjectPagePath(projectType, projectData.slug, "settings")}
-                                variant={"secondary-inverted"}
+                                variant="secondary-inverted"
                                 className="rounded-full w-11 h-11 p-0"
                                 label="project settings"
                                 prefetch={Prefetch.Render}

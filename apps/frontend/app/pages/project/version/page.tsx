@@ -89,7 +89,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <VariantButtonLink
-                                    variant={"default"}
+                                    variant="default"
                                     url={versionData.primaryFile?.url ? versionData.primaryFile?.url : ""}
                                     onClick={showDownloadAnimation}
                                     rel="nofollow noindex"
@@ -105,7 +105,7 @@ export default function VersionPage({ ctx, versionData, projectSlug }: Props) {
                     </TooltipProvider>
 
                     {!currUsersMembership?.userId ? (
-                        <Button variant={"secondary"}>
+                        <Button variant="secondary">
                             <FlagIcon aria-hidden className="w-btn-icon h-btn-icon" />
                             {t.common.report}
                         </Button>

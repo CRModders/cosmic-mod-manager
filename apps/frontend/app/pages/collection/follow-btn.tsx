@@ -1,8 +1,8 @@
 import { Button } from "@app/components/ui/button";
 import { HeartIcon } from "lucide-react";
+import { useNavigate } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import useCollections from "./provider";
-import { useNavigate } from "~/components/ui/link";
 
 export function FollowProject_Btn(props: { projectId: string }) {
     const session = useSession();
@@ -22,7 +22,7 @@ export function FollowProject_Btn(props: { projectId: string }) {
     }
 
     return (
-        <Button variant={"secondary-inverted"} className="rounded-full w-11 h-11 p-0" aria-label="Follow" onClick={toggleFollow}>
+        <Button variant="secondary-inverted" className="rounded-full w-11 h-11 p-0" aria-label="Follow" onClick={toggleFollow}>
             <HeartIcon aria-hidden className="w-btn-icon-lg h-btn-icon-lg" fill={isFollowing ? "currentColor" : "none"} />
         </Button>
     );

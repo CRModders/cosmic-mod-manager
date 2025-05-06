@@ -209,7 +209,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                                 field.onChange(getProjectTypesFromNames(values));
                                             }}
                                             placeholder={t.dashboard.chooseProjectType}
-                                            popoverClassname={"type-selector-popover"}
+                                            popoverClassname="type-selector-popover"
                                             noResultsElement={t.common.noResults}
                                         />
                                     </FormItem>

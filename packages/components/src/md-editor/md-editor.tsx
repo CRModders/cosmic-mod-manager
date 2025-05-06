@@ -451,9 +451,9 @@ function IconButton({ children, tooltipContent, disabled, onClick, ...props }: I
         <Tooltip>
             <TooltipTrigger asChild>
                 <Button
-                    size={"icon"}
+                    size="icon"
                     type="button"
-                    variant={"secondary"}
+                    variant="secondary"
                     tabIndex={disabled ? -1 : 0}
                     disabled={disabled}
                     className="h-8 w-8 text-muted-foreground"

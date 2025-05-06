@@ -71,7 +71,7 @@ export default function RemovePasswordForm() {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant={"secondary-destructive"}>
+                <Button variant="secondary-destructive">
                     <Trash2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.settings.removePass}
                 </Button>
@@ -106,7 +106,7 @@ export default function RemovePasswordForm() {
                                 <DialogClose asChild>
                                     <CancelButton disabled={isLoading} />
                                 </DialogClose>
-                                <Button type="submit" variant={"destructive"} disabled={isLoading || !form.getValues().password}>
+                                <Button type="submit" variant="destructive" disabled={isLoading || !form.getValues().password}>
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (

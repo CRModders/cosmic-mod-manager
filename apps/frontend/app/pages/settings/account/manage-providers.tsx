@@ -71,7 +71,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant={"secondary"}>
+                <Button variant="secondary">
                     <SettingsIcon aria-hidden className="w-btn-icon h-btn-icon" />
                     {t.settings.manageProviders}
                 </Button>
@@ -115,7 +115,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
 
                                         {additionalProviderDetails ? (
                                             <Button
-                                                variant={"secondary-destructive"}
+                                                variant="secondary-destructive"
                                                 disabled={isLoading.value}
                                                 onClick={() => removeAuthProvider(getAuthProviderFromString(authProvider.name))}
                                             >
@@ -128,7 +128,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                             </Button>
                                         ) : (
                                             <Button
-                                                variant={"secondary"}
+                                                variant="secondary"
                                                 onClick={() => redirectToOauthPage(getAuthProviderFromString(authProvider.name))}
                                                 disabled={isLoading.value}
                                             >

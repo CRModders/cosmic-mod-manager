@@ -543,12 +543,11 @@ function ProjectVersionsListTable({ projectType, projectData, allProjectVersions
                                                     <TooltipTrigger asChild>
                                                         <VariantButtonLink
                                                             url={version.primaryFile?.url || ""}
-                                                            variant={"outline"}
-                                                            size={"icon"}
+                                                            variant="outline"
+                                                            size="icon"
                                                             className="noClickRedirect shrink-0 !w-10 !h-10 rounded-full"
-                                                            aria-label={`download ${version.title}`}
+                                                            aria-label={`Download ${version.title}`}
                                                             onClick={showDownloadAnimation}
-                                                            target="_blank"
                                                             rel="nofollow noindex"
                                                         >
                                                             <DownloadIcon aria-hidden className="w-btn-icon h-btn-icon" strokeWidth={2.2} />
@@ -693,7 +692,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                 </VariantButtonLink>
 
                 <Button
-                    variant={"ghost-no-shadow"}
+                    variant="ghost-no-shadow"
                     size="sm"
                     className="justify-start"
                     onClick={() => {
@@ -710,7 +709,7 @@ function ThreeDotMenu({ versionPageUrl, canEditVersion }: { versionPageUrl: stri
                         <Separator />
                         <VariantButtonLink
                             url={`${versionPageUrl}/edit`}
-                            variant={"ghost-no-shadow"}
+                            variant="ghost-no-shadow"
                             className="justify-start"
                             size="sm"
                             onClick={() => {

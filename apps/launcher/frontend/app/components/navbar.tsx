@@ -38,7 +38,7 @@ export default function Navbar() {
                     </Button>
                 </CreateInstance>
 
-                <Navlink href={"/settings"} title="Settings">
+                <Navlink href="/settings" title="Settings">
                     <SettingsIcon aria-hidden className="w-6 h-6" />
                 </Navlink>
             </div>

@@ -90,7 +90,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
     return (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-                <Button variant={"secondary"} size={"sm"}>
+                <Button variant="secondary" size="sm">
                     <Edit3Icon aria-hidden className="w-3.5 h-3.5" />
                     {t.form.edit}
                 </Button>
