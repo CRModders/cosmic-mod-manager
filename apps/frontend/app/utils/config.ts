@@ -16,7 +16,7 @@ const Config = {
     SUPPORT_EMAIL: "support@crmm.tech",
     ADMIN_EMAIL: "admin@crmm.tech",
     SECURITY_EMAIL: "security@crmm.tech",
-    DISCORD_INVITE: "https://discord.gg/T2pFVHmFpH",
+    DISCORD_INVITE: "https://discord.gg/QdVeS7khAP",
 };
 
 if (isDev === true) {
