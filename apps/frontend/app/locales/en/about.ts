@@ -36,7 +36,7 @@ While CRMM is a community-driven effort, here are some of the core people behind
 * **Spicylemon** – *The manager, logo designer, and grammar checker (when he remembers)*. Oversees the project and keeps everything running smoothly.
 * **CaptainDynamite** – Helps with funding the project, been there since the start.
 * **Dounford & Arlojay** – Provided general help during CRMM’s early days.
-* **CRM** – Our “parent” project and a key part of our roots.
+* **Puzzle** – Our “parent” project and a key part of our roots.
 
 Although lots of folks pitch in now and then – mostly via Discord – the day-to-day work is mainly handled by Spicylemon and Abhinav with a few herbes and spices thrown in by Eatham.
 
