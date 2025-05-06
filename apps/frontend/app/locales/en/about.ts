@@ -34,7 +34,6 @@ While CRMM is a community-driven effort, here are some of the core people behind
 * **Abhinav** – *The coder wizard*. He built the backend and frontend of the site. If something needs fixing or building, he's the one who gets it done.
 * **Eatham** – *The idea guy*. Helped get CRMM off the ground and was there from the very beginning.
 * **Spicylemon** – *The manager, logo designer, and grammar checker (when he remembers)*. Oversees the project and keeps everything running smoothly.
-* **Hellscaped (Riley)** – *The Owner of CRM*, the main project we merged with shortly after launching.
 * **CaptainDynamite** – Helps with funding the project, been there since the start.
 * **Dounford & Arlojay** – Provided general help during CRMM’s early days.
 * **CRM** – Our “parent” project and a key part of our roots.
@@ -63,10 +62,10 @@ Everything is designed to be lightweight, privacy-friendly, and run with the mod
 ### Community & Contributions
 
 CRMM is **open-source and community-powered** under the *GNU Affero General Public License*.
-Users can help translate the site, suggest features, or (if they're feeling bold) even contribute directly via our [GitHub repository](https://github.com/CRModders/cosmic-mod-manager). It doesn’t happen often, but when it does, we appreciate it deeply.
+Users can help translate the site, suggest features, or (if they're feeling bold) even contribute directly via our [GitHub repository](${props.repoLink}). It doesn’t happen often, but when it does, we appreciate it deeply.
 
-Want to get involved?
-Join our [CRM Discord](${props.discordInvite}) and say hello. Whether you’re looking to contribute or just hang out with fellow modders, you’re welcome here.
+### Want to get involved?
+Join the [Puzzle discord](${props.discordInvite}) and say hello. Whether you’re looking to contribute or just hang out with fellow modders, you’re welcome here.
 
 ### What’s Next?
 
