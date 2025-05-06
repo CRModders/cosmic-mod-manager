@@ -6,7 +6,6 @@ export async function getDiscordUserProfileData(tokenExchangeCode: string) {
     const client_id = env.DISCORD_ID;
     const client_secret = env.DISCORD_SECRET;
 
-    const url = new URL("https://discord.com/api/oauth2/token");
     const formData = new URLSearchParams();
     formData.append("client_id", client_id);
     formData.append("client_secret", client_secret);
@@ -14,7 +13,7 @@ export async function getDiscordUserProfileData(tokenExchangeCode: string) {
     formData.append("redirect_uri", `${env.OAUTH_REDIRECT_URI}/${AuthProvider.DISCORD}`);
     formData.append("code", tokenExchangeCode);
 
-    const authTokenRes = await fetch(url, {
+    const authTokenRes = await fetch("https://discord.com/api/oauth2/token", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
