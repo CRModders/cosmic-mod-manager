@@ -177,8 +177,10 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
             now.setDate(now.getDate() - 1);
             return [SubtractDays(now, 364), now];
 
+        // We don't know what is the range of all time for a project, so just return `Yesterday`,
+        // if the project has older analytics data, use that date, if not fallback to this
         case TimelineOptions.ALL_TIME:
-            return [new Date(0), now];
+            return [SubtractDays(now, 1), now];
 
         default:
             now.setDate(now.getDate() - 1);
