@@ -40,43 +40,42 @@ export function formatDownloadAnalyticsData(
 ) {
     if (!data_obj) return null;
 
-    const mergedData: Record<string, number> = {};
+    const allProjectsAnalytics: Record<string, number> = {};
     for (const projectId of projectIds) {
         const projectAnalyticsData = data_obj[projectId];
 
         for (const date in projectAnalyticsData) {
-            if (!mergedData[date]) mergedData[date] = projectAnalyticsData[date];
-            else mergedData[date] += projectAnalyticsData[date] || 0;
+            if (!allProjectsAnalytics[date]) allProjectsAnalytics[date] = projectAnalyticsData[date];
+            else allProjectsAnalytics[date] += projectAnalyticsData[date] || 0;
         }
     }
-    if (!mergedData) return null;
+    if (!allProjectsAnalytics) return null;
 
     const timeLineRange = getTimeRange(timeline);
-    const keys = Object.keys(mergedData);
+    const keys = Object.keys(allProjectsAnalytics);
     const analytics_StartDate = getStartDate(timeline, timeLineRange[0], DateFromStr(keys[0]));
     const analytics_EndDate = timeLineRange[1];
 
-    if (!analytics_StartDate || !analytics_EndDate) return mergedData;
-
+    if (!analytics_StartDate || !analytics_EndDate) return allProjectsAnalytics;
     const resolutionDays = _resolutionDays ? _resolutionDays : Math.max(1, Math.round(keys.length / MAX_DATA_POINTS));
 
     while (analytics_EndDate >= analytics_StartDate) {
         const dateKey = ISO_DateStr(analytics_EndDate);
-        if (!mergedData[dateKey]) mergedData[dateKey] = 0;
+        if (!allProjectsAnalytics[dateKey]) allProjectsAnalytics[dateKey] = 0;
 
         analytics_EndDate.setDate(analytics_EndDate.getDate() - 1);
 
         // Aggregate data according to the `resolutionDays`
         for (let i = 0; i < resolutionDays - 1; i++) {
-            const nextKey = ISO_DateStr(analytics_EndDate);
+            const prevDate = ISO_DateStr(analytics_EndDate);
 
-            mergedData[dateKey] += mergedData[nextKey] || 0;
-            delete mergedData[nextKey];
+            allProjectsAnalytics[dateKey] += allProjectsAnalytics[prevDate] || 0;
+            delete allProjectsAnalytics[prevDate];
             analytics_EndDate.setDate(analytics_EndDate.getDate() - 1);
         }
     }
 
-    const entries = Object.entries(mergedData);
+    const entries = Object.entries(allProjectsAnalytics);
     entries.sort((a, b) => {
         return (DateFromStr(a[0]) || 0) > (DateFromStr(b[0]) || 0) ? 1 : -1;
     });

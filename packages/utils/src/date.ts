@@ -140,10 +140,8 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
     const now = new Date();
 
     switch (timeline) {
-        case TimelineOptions.YESTERDAY: {
-            const yesterday = SubtractDays(now, 1);
-            return [yesterday, yesterday];
-        }
+        case TimelineOptions.YESTERDAY:
+            return [SubtractDays(now, 1), SubtractDays(now, 1)];
 
         case TimelineOptions.THIS_WEEK:
             return [SubtractDays(now, now.getDay()), SubtractDays(now, 1)];
