@@ -4,7 +4,7 @@ import SignUpPage from "~/pages/auth/signup/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 
-export default function _SignUp() {
+export default function () {
     const session = useSession();
 
     if (session?.id) {

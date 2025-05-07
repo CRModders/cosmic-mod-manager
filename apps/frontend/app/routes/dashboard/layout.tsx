@@ -4,7 +4,7 @@ import DashboardLayout from "~/pages/dashboard/layout";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 
-export default function _DashboardLayout() {
+export default function () {
     const session = useSession();
 
     if (!session?.id) return <Redirect to="/login" />;

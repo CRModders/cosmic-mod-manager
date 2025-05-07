@@ -2,7 +2,7 @@ import { Button } from "@app/components/ui/button";
 import { TriangleAlertIcon } from "lucide-react";
 import { useTranslation } from "~/locales/provider";
 
-export default function ErrorView() {
+export default function () {
     const { t } = useTranslation();
 
     return (

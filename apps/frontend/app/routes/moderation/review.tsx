@@ -4,7 +4,7 @@ import ReviewProjects from "~/pages/moderation/review";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/review";
 
-export default function _() {
+export default function () {
     const projects = useLoaderData<typeof loader>();
 
     return <ReviewProjects projects={projects || []} />;

@@ -145,7 +145,7 @@ Like links, Images also have a footnote style syntax
 <abbr title="Markdown">MD</abbr>
 `;
 
-export default function MdEditor_page() {
+export default function () {
     const [editorValue, setEditorValue] = useState(defaultText);
 
     return (

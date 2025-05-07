@@ -1,6 +1,6 @@
 import MarkdownRenderBox from "~/components/md-renderer";
 
-export default function AboutPage() {
+export default function () {
     return (
         <main className="grid grid-cols-1 w-full overflow-auto">
             <MarkdownRenderBox

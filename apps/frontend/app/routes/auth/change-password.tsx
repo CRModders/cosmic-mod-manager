@@ -2,7 +2,7 @@ import ChangePasswordPage from "~/pages/auth/change-password";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 
-export default function _ChangePassword() {
+export default function () {
     return <ChangePasswordPage />;
 }
 

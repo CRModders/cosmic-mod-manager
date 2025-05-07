@@ -50,6 +50,9 @@ export function LocaleProvider({ children, initLocale, initMetadata }: Props) {
     );
 }
 
+/**
+ * Changes the existing hint locale in the url to be the one provided, if doesn't exist already adds the hint locale param
+ */
 export function alterUrlHintLocale(locale: LocaleMetaData, omitDefaultLocale = true, url = getCurrLocation()) {
     const localeCode = formatLocaleCode(locale);
 

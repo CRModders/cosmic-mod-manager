@@ -7,7 +7,7 @@ import { descriptionSuffix } from "./layout";
 
 const title = "Copyright Policy";
 
-export default function CopyrightPolicy() {
+export default function () {
     const { t } = useTranslation();
 
     return (

@@ -6,7 +6,7 @@ import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/projects";
 
-export default function _Projects() {
+export default function () {
     const projects = useLoaderData() as ProjectListItem[];
 
     return <ProjectsPage projects={projects} />;

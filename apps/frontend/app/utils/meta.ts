@@ -29,6 +29,10 @@ type MetaTags =
           authorProfile?: string;
       };
 
+/**
+ * Generate meta tags like, title, description and their open graph equivalents
+ * @param { MetaTags } props
+ */
 export function MetaTags(props: MetaTags): MetaDescriptor[] {
     if (props.suffixTitle) {
         props.title = `${props.title} - ${Config.SITE_NAME_SHORT}`;
@@ -94,6 +98,10 @@ export function MetaTags(props: MetaTags): MetaDescriptor[] {
     return mergedMeta;
 }
 
+/**
+ * Merges the new meta tags into the original one while making sure there are no duplicates being added \
+ * Omits the original meta tag item if the new list also contains an item with same key but different value
+ */
 function mergeMetaTagsList(originalList: MetaDescriptor[], newItems: MetaDescriptor[]) {
     const combinedList = newItems.slice();
 

@@ -1,5 +1,5 @@
 import ProjectAnalyticsPage from "~/pages/project/settings/analytics";
 
-export default function _() {
+export default function () {
     return <ProjectAnalyticsPage />;
 }

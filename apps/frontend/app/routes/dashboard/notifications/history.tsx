@@ -5,7 +5,7 @@ import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { clientLoader as NotificationsDataLoader } from "./page";
 
-export default function _NotificationsHistory() {
+export default function () {
     const data = useLoaderData<typeof clientLoader>();
 
     return (

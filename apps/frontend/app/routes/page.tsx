@@ -6,7 +6,7 @@ import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/page";
 
-export default function HomePage_Wrapper() {
+export default function () {
     const projects = useLoaderData() as ProjectListItem[];
 
     return <HomePage projects={projects} />;

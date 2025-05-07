@@ -11,7 +11,7 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { ProjectPagePath, UserProfilePath } from "~/utils/urls";
 import type { Route } from "./+types/data-wrapper";
 
-export default function _ProjectDataWrapper() {
+export default function () {
     const { t } = useTranslation();
     const data = useProjectData();
 
@@ -101,7 +101,7 @@ export function meta(props: Route.MetaArgs) {
     return MetaTags({
         title: `${project.name} - Cosmic Reach ${CapitalizeAndFormatString(project.type?.[0])}`,
         description: project.summary,
-        siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} ${project.name} by ${author} on ${Config.SITE_NAME_SHORT}`,
+        siteMetaDescription: `${project.summary} - Download the Cosmic Reach ${CapitalizeAndFormatString(project.type[0])} '${project.name}' by ${author} on ${Config.SITE_NAME_SHORT}`,
         image: project.icon || "",
         url: `${Config.FRONTEND_URL}${ProjectPagePath(project.type?.[0], project.slug)}`,
         authorProfile: authorProfileLink,

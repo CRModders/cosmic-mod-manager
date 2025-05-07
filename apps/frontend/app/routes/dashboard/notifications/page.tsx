@@ -8,7 +8,7 @@ import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson } from "~/utils/server-fetch";
 
-export default function _Notifications() {
+export default function () {
     const data = useLoaderData() as LoaderData;
 
     return (

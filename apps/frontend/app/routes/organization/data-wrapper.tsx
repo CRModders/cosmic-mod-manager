@@ -8,7 +8,7 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { OrgPagePath } from "~/utils/urls";
 import type { Route } from "./+types/data-wrapper";
 
-export default function _OrgDataWrapper() {
+export default function () {
     const ctx = useOrgData();
 
     if (!ctx?.orgData?.id) {

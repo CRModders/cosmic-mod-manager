@@ -6,9 +6,9 @@ import CollectionsDashboardPage from "~/pages/dashboard/collections/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
-import type { Route } from "../+types/root-wrapper";
+import type { Route } from "./+types/collections";
 
-export default function _() {
+export default function () {
     const session = useSession();
     const collections = useLoaderData<typeof loader>();
 

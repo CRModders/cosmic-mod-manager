@@ -6,7 +6,7 @@ import { ButtonLink } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
-export default function LegalPageLayout() {
+export default function () {
     const { t } = useTranslation();
     const legal = t.legal;
 

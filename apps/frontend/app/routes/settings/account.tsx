@@ -9,7 +9,7 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import type { Route } from "./+types/account";
 
-export default function _AccountSettings() {
+export default function () {
     const session = useSession();
     const linkedProviders = useLoaderData() as LinkedProvidersListData[];
 

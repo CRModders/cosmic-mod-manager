@@ -2,7 +2,7 @@ import MarkdownRenderBox from "~/components/md-renderer";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
 
-export default function AboutPage() {
+export default function () {
     const { t } = useTranslation();
 
     return (

@@ -5,7 +5,7 @@ import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
-export default function _AccountSettings() {
+export default function () {
     const session = useSession();
 
     if (!session?.id) return <Redirect to="/login" />;

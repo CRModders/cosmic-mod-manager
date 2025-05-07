@@ -7,7 +7,7 @@ import { descriptionSuffix } from "./layout";
 
 const title = "Terms of Use";
 
-export default function TermsOfUse() {
+export default function () {
     const { t } = useTranslation();
 
     return (

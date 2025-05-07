@@ -8,7 +8,7 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { CollectionPagePath } from "~/utils/urls";
 import type { Route } from "./+types/layout";
 
-export default function _() {
+export default function () {
     const data = useLoaderData<typeof loader>();
 
     if (!data.collection?.id || !data.owner) return <NotFoundPage />;

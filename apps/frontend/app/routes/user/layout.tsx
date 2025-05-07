@@ -16,7 +16,7 @@ export interface UserOutletData {
     userData: UserProfileData;
 }
 
-export default function _UserLayout() {
+export default function () {
     const data = useLoaderData() as LoaderData;
 
     if (data.userSlug === "deleted_user") {

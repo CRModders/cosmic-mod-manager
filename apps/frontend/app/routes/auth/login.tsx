@@ -4,7 +4,7 @@ import LoginPage from "~/pages/auth/login/page";
 import Config from "~/utils/config";
 import { MetaTags } from "~/utils/meta";
 
-export default function Login() {
+export default function () {
     const session = useSession();
 
     if (session?.id) return <Redirect to="/dashboard" />;

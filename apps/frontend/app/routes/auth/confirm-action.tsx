@@ -4,7 +4,7 @@ import ConfirmActionPage from "~/pages/auth/confirm-action/page";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/confirm-action";
 
-export default function _ConfirmAction() {
+export default function () {
     const data = useLoaderData() as LoaderData;
 
     return <ConfirmActionPage actionType={data.actionType} code={data.code} />;

@@ -8,7 +8,7 @@ import { MetaTags } from "~/utils/meta";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/organizations";
 
-export default function _Organizations() {
+export default function () {
     const session = useSession();
     const orgs = useLoaderData<typeof loader>();
 

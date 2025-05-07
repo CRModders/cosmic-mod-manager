@@ -4,7 +4,7 @@ import StatsPage from "~/pages/moderation/page";
 import { serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/page";
 
-export default function _() {
+export default function () {
     const stats = useLoaderData<Statistics>();
 
     if (!stats) {

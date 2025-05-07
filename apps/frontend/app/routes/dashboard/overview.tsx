@@ -7,7 +7,7 @@ import clientFetch from "~/utils/client-fetch";
 import { resJson } from "~/utils/server-fetch";
 import { clientLoader as NotificationsLoader } from "./notifications/page";
 
-export default function _Overview() {
+export default function () {
     const session = useSession();
     const loaderData = useLoaderData<typeof clientLoader>();
 

@@ -9,7 +9,7 @@ import { resJson, serverFetch } from "~/utils/server-fetch";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import type { Route } from "./+types/sessions";
 
-export default function _Sessions() {
+export default function () {
     const session = useSession();
     const loggedInSessions = useLoaderData() as SessionListData[];
 

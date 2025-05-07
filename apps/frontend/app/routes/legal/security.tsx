@@ -7,7 +7,7 @@ import { descriptionSuffix } from "./layout";
 
 const title = "Security Notice";
 
-export default function SecurityNotice() {
+export default function () {
     const { t } = useTranslation();
 
     return (

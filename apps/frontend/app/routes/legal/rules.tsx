@@ -7,7 +7,7 @@ import { descriptionSuffix } from "./layout";
 
 const title = "Content Rules";
 
-export default function ContentRules() {
+export default function () {
     const { t } = useTranslation();
 
     return (

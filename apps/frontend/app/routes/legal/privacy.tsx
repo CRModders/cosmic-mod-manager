@@ -7,7 +7,7 @@ import { descriptionSuffix } from "./layout";
 
 const title = "Privacy Policy";
 
-export default function PrivacyPolicy() {
+export default function () {
     const { t } = useTranslation();
 
     return (

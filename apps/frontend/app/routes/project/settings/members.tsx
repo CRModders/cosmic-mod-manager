@@ -4,7 +4,7 @@ import ProjectMemberSettingsPage from "~/pages/project/settings/members/page";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/members";
 
-export default function _MemberSettings() {
+export default function () {
     const orgs = useLoaderData() as Organisation[];
 
     return <ProjectMemberSettingsPage userOrgs={orgs} />;

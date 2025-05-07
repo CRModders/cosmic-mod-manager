@@ -1,11 +1,11 @@
 import type { SearchResult } from "@app/utils/types/api";
 import { Outlet, useLoaderData } from "react-router";
 import { SpinnerCtxProvider } from "~/components/global-spinner";
+import { SearchProvider } from "~/pages/search/provider";
 import { resJson, serverFetch } from "~/utils/server-fetch";
 import type { Route } from "./+types/page";
-import { SearchProvider } from "~/pages/search/provider";
 
-export default function _() {
+export default function () {
     const initialData = useLoaderData<typeof loader>();
 
     return (

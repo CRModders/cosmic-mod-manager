@@ -4,7 +4,7 @@ import { useProjectData } from "~/hooks/project";
 import { useSession } from "~/hooks/session";
 import ProjectSettingsLayout from "~/pages/project/settings/layout";
 
-export default function _ProjectLayout() {
+export default function () {
     const ctx = useProjectData();
     const session = useSession();
 

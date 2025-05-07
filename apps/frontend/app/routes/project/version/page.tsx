@@ -14,7 +14,7 @@ import { MetaTags } from "~/utils/meta";
 import { ProjectPagePath, VersionPagePath, getCurrLocation } from "~/utils/urls";
 import type { Route } from "./+types/page";
 
-export default function VersionPageRoute() {
+export default function () {
     const ctx = useProjectData();
     const { projectSlug, versionSlug } = useParams();
     const [searchParams] = useSearchParams();

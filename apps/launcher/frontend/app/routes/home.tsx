@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import usePathSegments from "~/hooks/path-segments";
 import HomePage from "~/pages/page";
 
-export default function _HomePage() {
+export default function () {
     const { setSegments } = usePathSegments();
 
     useEffect(() => {
