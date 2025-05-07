@@ -1,5 +1,6 @@
 export interface AboutUsProps {
     discordInvite: string;
+    repoLink: string;
 }
 
 export function AboutUs(props: AboutUsProps) {
