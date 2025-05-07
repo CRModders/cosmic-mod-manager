@@ -1,34 +1,33 @@
+import "./style.css";
+
 import { CubeIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
+import { MicrodataItemProps } from "@app/components/microdata";
+import { ContentCardTemplate } from "@app/components/misc/panel";
+import RefreshPage from "@app/components/misc/refresh-page";
+import { Button } from "@app/components/ui/button";
+import { PopoverClose } from "@app/components/ui/popover";
+import { Separator } from "@app/components/ui/separator";
+import { LoadingSpinner } from "@app/components/ui/spinner";
+import { FOLLOWS_COLLECTIONS_ID } from "@app/utils/constants";
+import { isModerator } from "@app/utils/constants/roles";
+import { getProjectTypesFromNames } from "@app/utils/convertors";
+import { CollectionVisibility } from "@app/utils/types";
 import type { Collection, CollectionOwner, ProjectListItem } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
+import { CalendarIcon, ClipboardCopyIcon, EarthIcon, HeartIcon, LockIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
 import { Outlet, useLocation } from "react-router";
+import ConfirmDialog from "~/components/confirm-dialog";
 import { PageHeader } from "~/components/page-header";
+import { TimePassedSince } from "~/components/ui/date";
 import { useNavigate } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
-import { CalendarIcon, ClipboardCopyIcon, EarthIcon, HeartIcon, LockIcon, Trash2Icon } from "lucide-react";
 import { CollectionPagePath, UserProfilePath } from "~/utils/urls";
-import SecondaryNav from "../project/secondary-nav";
-import { getProjectTypesFromNames } from "@app/utils/convertors";
-import { ContentCardTemplate } from "@app/components/misc/panel";
 import { ProjectMember } from "../project/layout";
-import "./style.css";
-import { TimePassedSince } from "~/components/ui/date";
-import { CollectionVisibility } from "@app/utils/types";
-import { MicrodataItemProps } from "@app/components/microdata";
-import { Button } from "@app/components/ui/button";
-import { PopoverClose } from "@app/components/ui/popover";
-import { useState } from "react";
+import SecondaryNav from "../project/secondary-nav";
 import EditCollection from "./edit-collection";
-import ConfirmDialog from "~/components/confirm-dialog";
-import clientFetch from "~/utils/client-fetch";
-import { toast } from "@app/components/ui/sonner";
-import RefreshPage from "@app/components/misc/refresh-page";
-import { isModerator } from "@app/utils/constants/roles";
-import { Separator } from "@app/components/ui/separator";
 import useCollections from "./provider";
-import { LoadingSpinner } from "@app/components/ui/spinner";
-import { FOLLOWS_COLLECTIONS_ID } from "@app/utils/constants";
 
 interface Props {
     collection: Collection;
@@ -65,17 +64,9 @@ export default function CollectionPageLayout(props: Props) {
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
     async function DeleteCollection() {
-        const res = await clientFetch(`/api/collections/${props.collection.id}`, {
-            method: "DELETE",
-        });
+        const success = collectionsContext.deleteCollection(props.collection.id);
+        if (!success) return;
 
-        if (!res.ok) {
-            toast.error("Error deleting collection");
-            return;
-        }
-
-        const data = await res.json();
-        toast.message(data.message);
         RefreshPage(navigate, "/dashboard/collections");
     }
 

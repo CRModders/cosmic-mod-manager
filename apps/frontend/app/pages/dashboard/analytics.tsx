@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { FormattedDate } from "~/components/ui/date";
-import { useProjectData } from "~/hooks/project";
 import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
 import { formatDownloadAnalyticsData, getProjectDownload_AnalyticsData, getStartDate, getValidTimeline } from "~/utils/analytics";
@@ -21,8 +20,7 @@ interface AnalyticsData_State {
     loading: boolean;
 }
 
-export default function ProjectAnalyticsPage() {
-    const ctx = useProjectData();
+export default function DashboardAnalyticsPage({ userProjects }: { userProjects: string[] }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const { t, locale } = useTranslation();
     const [analyticsData, setAnalyticsData] = useState<AnalyticsData_State>({ data: null, loading: true });
@@ -58,11 +56,11 @@ export default function ProjectAnalyticsPage() {
             return prev;
         });
 
-        const data = await getProjectDownload_AnalyticsData([ctx.projectData.id], timeline);
+        const data = await getProjectDownload_AnalyticsData(userProjects, timeline);
         if (!data) return;
 
         setAnalyticsData({
-            data: formatDownloadAnalyticsData(data, [ctx.projectData.id], timeline, undefined, MAX_DATA_POINTS),
+            data: formatDownloadAnalyticsData(data, userProjects, timeline, undefined, MAX_DATA_POINTS),
             loading: false,
         });
     }
@@ -76,7 +74,7 @@ export default function ProjectAnalyticsPage() {
 
     useEffect(() => {
         fetchAnalyticsData();
-    }, [timeline, ctx.projectData.id]);
+    }, [timeline, userProjects.toString()]);
 
     return (
         <div className="flex gap-3 flex-col bg-card-background rounded-lg p-card-surround ps-0">

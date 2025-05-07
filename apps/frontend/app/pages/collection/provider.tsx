@@ -10,6 +10,7 @@ interface CollectionsContext {
     refetchCollections: () => Promise<void>;
     addProjectsToCollection: (collectionId: string, projects: string[]) => Promise<void>;
     removeProjectsFromCollection: (collectionId: string, projects: string[]) => Promise<void>;
+    deleteCollection: (collectionId: string) => Promise<boolean>;
 
     followingProjects: string[];
     refetchFollows: () => Promise<void>;
@@ -17,17 +18,7 @@ interface CollectionsContext {
     unfollowProject: (projectId: string) => Promise<void>;
 }
 
-export const CollectionsContext = createContext<CollectionsContext>({
-    collections: [],
-    refetchCollections: async () => {},
-    addProjectsToCollection: async () => {},
-    removeProjectsFromCollection: async () => {},
-
-    followingProjects: [],
-    refetchFollows: async () => {},
-    followProject: async () => {},
-    unfollowProject: async () => {},
-});
+export const CollectionsContext = createContext<CollectionsContext | null>(null);
 
 export function CollectionsProvider(props: { children: React.ReactNode }) {
     const session = useSession();
@@ -106,6 +97,22 @@ export function CollectionsProvider(props: { children: React.ReactNode }) {
         return await editFollowingProject(projectId, "remove");
     }
 
+    async function deleteCollection(collectionId: string) {
+        const res = await clientFetch(`/api/collections/${collectionId}`, {
+            method: "DELETE",
+        });
+
+        if (!res.ok) {
+            toast.error("Error deleting collection");
+            return false;
+        }
+
+        const data = await res.json();
+        await FetchCollections();
+        toast.message(data.message);
+        return true;
+    }
+
     useEffect(() => {
         if (!session?.id) return;
 
@@ -120,6 +127,7 @@ export function CollectionsProvider(props: { children: React.ReactNode }) {
                 refetchCollections: FetchCollections,
                 addProjectsToCollection: addProjectsToCollection,
                 removeProjectsFromCollection: removeProjectsFromCollection,
+                deleteCollection: deleteCollection,
 
                 followingProjects: followingProjects,
                 refetchFollows: FetchFollowingProjects,
@@ -133,5 +141,5 @@ export function CollectionsProvider(props: { children: React.ReactNode }) {
 }
 
 export default function useCollections() {
-    return use(CollectionsContext);
+    return use(CollectionsContext) as CollectionsContext;
 }

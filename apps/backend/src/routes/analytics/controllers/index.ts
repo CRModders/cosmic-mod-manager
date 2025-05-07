@@ -1,4 +1,4 @@
-import { getTimeRange, ISO_DateStr } from "@app/utils/date";
+import { ISO_DateStr, getTimeRange } from "@app/utils/date";
 import { combineProjectMembers, doesMemberHaveAccess } from "@app/utils/project";
 import { ProjectPermission, type TimelineOptions } from "@app/utils/types";
 import type { ProjectDownloads_Analytics } from "@app/utils/types/api/stats";
@@ -52,7 +52,7 @@ export async function getDownloadsAnalyticsData(user: ContextUserData, props: ge
     if (!permitted_ProjectIds?.length) {
         return unauthorizedReqResponseData("You do not have permission to view analytics for the project(s)");
     }
-    const projectIds_String = permitted_ProjectIds.map((id) => `'${id}'`).join(", ");
+    const projectIds_String = permitted_ProjectIds.map((id) => `'${id}'`).join(",");
     const startDate_String = ISO_DateStr(startDate);
     const endDate_String = ISO_DateStr(endDate);
 
