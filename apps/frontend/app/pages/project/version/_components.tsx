@@ -231,7 +231,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 placeholder={t.version.selectLoaders}
                                 searchBox={false}
                                 noResultsElement={t.common.noResults}
-                                inputPlaceholder={t.search.search}
+                                inputPlaceholder={t.common.search}
                             />
                         </FormItem>
                     )}
@@ -270,7 +270,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 </>
                             }
                             noResultsElement={t.common.noResults}
-                            inputPlaceholder={t.search.search}
+                            inputPlaceholder={t.common.search}
                         />
                     </FormItem>
                 )}

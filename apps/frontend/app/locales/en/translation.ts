@@ -31,6 +31,7 @@ export default {
         all: "All",
         noResults: "No results",
         more: "More",
+        search: "Search...",
     },
 
     // NOTE: It isn't necessary to return the count in the array, because an Intl formatted count is used in the actual html
@@ -199,8 +200,6 @@ export default {
     },
 
     search: {
-        search: "Search...",
-
         // Search labels
         project: "Search projects",
         mod: "Search mods",
