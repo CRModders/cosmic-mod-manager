@@ -370,15 +370,15 @@ function updateFiltersList(searchParams: URLSearchParams, newFilters: FilterItem
     resetFilters(searchParams);
 
     for (const ver of newFilters.gameVersions) {
-        searchParams.set(GAME_VERSION_KEY, ver);
+        searchParams.append(GAME_VERSION_KEY, ver);
     }
 
     for (const loader of newFilters.loaders) {
-        searchParams.set(LOADER_KEY, loader);
+        searchParams.append(LOADER_KEY, loader);
     }
 
     for (const channel of newFilters.releaseChannels) {
-        searchParams.set(RELEASE_CHANNEL_KEY, channel);
+        searchParams.append(RELEASE_CHANNEL_KEY, channel);
     }
 
     return searchParams;
