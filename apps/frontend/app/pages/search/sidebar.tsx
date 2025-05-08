@@ -335,7 +335,7 @@ function FilterCategory({
                 className={cn("flex items-center justify-between gap-x-2 p-0.5", collapsible && "cursor-pointer")}
                 onClick={toggleVisibility}
                 onKeyDown={(e) => {
-                    if (e.key === "Enter") toggleVisibility();
+                    if (e.code === "Enter") toggleVisibility();
                 }}
             >
                 <h3 className="font-bold text-base">{label}</h3>

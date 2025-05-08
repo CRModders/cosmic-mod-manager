@@ -24,7 +24,7 @@ export function InteractiveLabel({ children, htmlFor, ...props }: LabelElemProps
             // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
             tabIndex={0}
             onKeyDown={(e: React.KeyboardEvent<HTMLLabelElement>) => {
-                if (e.key === "Enter" || e.key === " ") {
+                if (e.code === "Enter" || e.code === "Space") {
                     e.preventDefault();
                     // @ts-ignore
                     e.target.click();

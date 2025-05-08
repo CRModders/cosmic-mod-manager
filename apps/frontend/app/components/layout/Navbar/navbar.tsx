@@ -122,7 +122,16 @@ export default function Navbar(props: NavbarProps) {
 
                             <li className="flex items-center justify-center">
                                 <Popover open={otherLinksPopoverOpen}>
-                                    <PopoverTrigger asChild onMouseEnter={OpenOtherLinksPopup} onMouseLeave={() => CloseOtherLinksPopup()}>
+                                    <PopoverTrigger
+                                        asChild
+                                        onMouseEnter={OpenOtherLinksPopup}
+                                        onMouseLeave={() => CloseOtherLinksPopup()}
+                                        onKeyUp={(e) => {
+                                            if (e.code === "Space" || e.code === "Enter") {
+                                                return OpenOtherLinksPopup();
+                                            }
+                                        }}
+                                    >
                                         <Button variant="ghost" className="text-extra-muted-foreground">
                                             {t.common.more} <ChevronDownIcon className="h-btn-icon w-btn-icon" />
                                         </Button>
@@ -133,6 +142,9 @@ export default function Navbar(props: NavbarProps) {
                                         onMouseEnter={OpenOtherLinksPopup}
                                         onMouseLeave={() => CloseOtherLinksPopup()}
                                         onClick={() => CloseOtherLinksPopup(true)}
+                                        onKeyUp={(e) => {
+                                            if (e.code === "Escape") CloseOtherLinksPopup(true);
+                                        }}
                                     >
                                         {Other_NavLinks.map((link) => {
                                             return (

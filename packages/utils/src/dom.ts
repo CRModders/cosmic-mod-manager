@@ -1,5 +1,5 @@
 function disablePathNavigations(e: KeyboardEvent) {
-    if (e.altKey || e.key === "Tab") {
+    if (e.altKey || e.code === "Tab") {
         e.preventDefault();
         e.stopPropagation();
     }
