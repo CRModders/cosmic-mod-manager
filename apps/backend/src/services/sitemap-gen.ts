@@ -50,7 +50,7 @@ export async function generateSitemap() {
         while (true) {
             const projects = await getProjects(offset);
             if (projects.length <= 0) break;
-            projectsSitemapEntries.concat(await generateXml(projects));
+            projectsSitemapEntries.push(...(await generateXml(projects)));
             offset += BATCH_SIZE;
         }
 
@@ -63,23 +63,23 @@ export async function generateSitemap() {
 
         // Create the index file
         let indexFile = `<?xml version="1.0" encoding="UTF-8"?>
-    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-nav.xml</loc>
-        </sitemap>`;
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>${env.FRONTEND_URL}/sitemap-nav.xml</loc>
+    </sitemap>`;
 
         for (let i = 0; i < projectSitemapFiles.length; i++) {
             const fileName = `projects-${i}`;
             await saveSitemap(fileName, xmlUrlSet(projectSitemapFiles[i]));
 
             indexFile += `
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${fileName}.xml</loc>
-        </sitemap>`;
+    <sitemap>
+        <loc>${env.FRONTEND_URL}/sitemap-${fileName}.xml</loc>
+    </sitemap>`;
         }
 
         indexFile += `
-    </sitemapindex>`;
+</sitemapindex>`;
 
         await saveSitemap("index", indexFile);
         await saveSitemap("nav", navigationLinksXml());
