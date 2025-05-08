@@ -28,7 +28,7 @@ import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink } from "~/components/ui/link";
 import { useProjectData } from "~/hooks/project";
 import { useTranslation } from "~/locales/provider";
-import { FormatUrl_WithHintLocale, ProjectPagePath, appendPathInUrl } from "~/utils/urls";
+import { FormatUrl_WithHintLocale, OrgPagePath, ProjectPagePath, appendPathInUrl } from "~/utils/urls";
 import ModerationBanner from "../moderation-banner";
 import { PublishingChecklist } from "../publishing-checklist";
 
@@ -39,6 +39,11 @@ export default function ProjectSettingsLayout() {
 
     const baseUrl = ProjectPagePath(ctx.projectType, projectData.slug);
 
+    let projectsPageUrl = FormatUrl_WithHintLocale("/dashboard/projects");
+    if (projectData.organisation?.id) {
+        projectsPageUrl = OrgPagePath(projectData.organisation?.slug, "settings/projects");
+    }
+
     return (
         <Panel className="pb-12">
             <PanelAside aside className="flex flex-col gap-panel-cards lg:w-80">
@@ -46,9 +51,7 @@ export default function ProjectSettingsLayout() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={FormatUrl_WithHintLocale("dashboard/projects")}>
-                                    {t.dashboard.projects}
-                                </BreadcrumbLink>
+                                <BreadcrumbLink href={projectsPageUrl}>{t.dashboard.projects}</BreadcrumbLink>
                             </BreadcrumbItem>
 
                             <BreadcrumbSeparator />

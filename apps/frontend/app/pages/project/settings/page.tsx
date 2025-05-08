@@ -44,7 +44,7 @@ import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
-import { ProjectPagePath } from "~/utils/urls";
+import { FormatUrl_WithHintLocale, OrgPagePath, ProjectPagePath } from "~/utils/urls";
 import { LeaveTeam } from "./members/page";
 
 export default function GeneralSettingsPage() {
@@ -416,12 +416,20 @@ export default function GeneralSettingsPage() {
                 </Card>
             ) : null}
 
-            <DeleteProjectDialog name={projectData.name} slug={projectData.slug} />
+            <DeleteProjectDialog
+                name={projectData.name}
+                slug={projectData.slug}
+                returnUrl={
+                    projectData.organisation?.id
+                        ? OrgPagePath(projectData.organisation?.slug, "settings/projects")
+                        : FormatUrl_WithHintLocale("/dashboard/projects")
+                }
+            />
         </>
     );
 }
 
-function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
+function DeleteProjectDialog({ name, slug, returnUrl }: { name: string; slug: string; returnUrl: string }) {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [submittable, setSubmittable] = useState(false);
@@ -430,6 +438,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
     async function deleteProject() {
         if (!submittable || isLoading) return;
         setIsLoading(true);
+
         try {
             const res = await clientFetch(`/api/project/${slug}`, {
                 method: "DELETE",
@@ -441,7 +450,7 @@ function DeleteProjectDialog({ name, slug }: { name: string; slug: string }) {
             }
 
             toast.success(data?.message || t.common.success);
-            RefreshPage(navigate, "/dashboard/projects");
+            RefreshPage(navigate, returnUrl);
         } finally {
             setIsLoading(false);
         }
