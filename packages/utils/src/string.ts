@@ -100,3 +100,8 @@ export function removeTrailing(str: string, path: string) {
 
     return removeTrailing(str, path.slice(0, -1 * str.length));
 }
+
+export function BoolFromStr(str: string | null | undefined) {
+    if (!str) return false;
+    return str.toLowerCase() === "true";
+}

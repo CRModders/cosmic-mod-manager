@@ -12,13 +12,19 @@ import {
     getGameVersionsFromValues,
     isExperimentalGameVersion,
 } from "@app/utils/src/constants/game-versions";
-import { CapitalizeAndFormatString } from "@app/utils/string";
+import { BoolFromStr, CapitalizeAndFormatString } from "@app/utils/string";
 import { VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData } from "@app/utils/types/api";
 import { ChevronDownIcon, FilterIcon, FlaskConicalIcon, XCircleIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
+
+const LOADER_KEY = "l";
+const GAME_VERSION_KEY = "v";
+const RELEASE_CHANNEL_KEY = "channel";
+const SHOW_DEV_VERSIONS_KEY = "showDev";
 
 interface FilterItems {
     loaders: string[];
@@ -35,63 +41,24 @@ interface VersionFiltersProps {
 export default function VersionFilters(props: VersionFiltersProps) {
     const { t } = useTranslation();
     const { theme } = useTheme();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
-    const [showDevVersions, setShowDevVersions] = useState(props.showDevVersions_Default ?? false);
-    const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
+    const filters = getFiltersList(searchParams);
 
-    function resetFilters() {
-        setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
+    const showDevVersions = searchParams.get(SHOW_DEV_VERSIONS_KEY)
+        ? BoolFromStr(searchParams.get(SHOW_DEV_VERSIONS_KEY))
+        : Boolean(props.showDevVersions_Default);
+    function setShowDevVersions(value: boolean) {
+        searchParams.set(SHOW_DEV_VERSIONS_KEY, value === true ? "true" : "false");
+        setSearchParams(searchParams);
     }
 
-    // Filters list
-    // Loaders
-    const loaderFilters: string[] = [];
-    for (const version of props.allProjectVersions) {
-        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-
-        for (const loader of version.loaders) {
-            if (!loaderFilters.includes(loader)) {
-                loaderFilters.push(loader);
-            }
-        }
+    function setFilters(newFilters: FilterItems) {
+        setSearchParams(updateFiltersList(searchParams, newFilters));
     }
 
-    // Game versions
-    let gameVersionFilters: GameVersion[] = [];
-    for (const version of props.allProjectVersions) {
-        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-
-        for (const gameVersion of getGameVersionsFromValues(version.gameVersions)) {
-            if (!showExperimentalGameVersions && isExperimentalGameVersion(gameVersion.releaseType)) continue;
-
-            if (gameVersionFilters.some((ver) => ver.value === gameVersion.value)) continue;
-            gameVersionFilters.push(gameVersion);
-        }
-    }
-    // Sort game versions
-    gameVersionFilters = getGameVersionsFromValues(
-        sortVersionsWithReference(
-            gameVersionFilters.map((ver) => ver.value),
-            gameVersionsList,
-        ),
-    );
-
-    // Release channels
-    const releaseChannelFilters: string[] = [];
-    for (const version of props.allProjectVersions) {
-        const channel = version.releaseChannel;
-
-        if (channel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-        if (!releaseChannelFilters.includes(channel)) {
-            releaseChannelFilters.push(channel);
-        }
-    }
-
-    const loadersFilterVisible = loaderFilters.length > 1;
-    const gameVersionsFilterVisible = gameVersionFilters.length > 1;
-    const releaseChannelsFilterVisible = releaseChannelFilters.length > 1;
-
+    const formattedOptions = formatFilterOptions(props.allProjectVersions, showDevVersions, showExperimentalGameVersions);
     const anyFilterEnabled = filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0;
 
     const filteredItems = useMemo(() => {
@@ -105,17 +72,17 @@ export default function VersionFilters(props: VersionFiltersProps) {
 
     const filterComponent = (
         <>
-            {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
+            {formattedOptions.anyFilterVisible || hasDevVersions ? (
                 <div className="flex flex-wrap items-center justify-start gap-2">
-                    {loadersFilterVisible ? (
+                    {formattedOptions.loadersFilterVisible ? (
                         <MultiSelect
                             selectedValues={filters.loaders}
-                            options={loaderFilters.map((loader) => ({
+                            options={formattedOptions.loaderFilters.map((loader) => ({
                                 label: CapitalizeAndFormatString(loader) || "",
                                 value: loader,
                             }))}
                             onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, loaders: values }));
+                                setFilters({ ...filters, loaders: values });
                             }}
                             searchBox={false}
                             defaultMinWidth={false}
@@ -130,13 +97,13 @@ export default function VersionFilters(props: VersionFiltersProps) {
                         />
                     ) : null}
 
-                    {gameVersionsFilterVisible ? (
+                    {formattedOptions.gameVersionsFilterVisible ? (
                         <MultiSelect
                             searchBox={props.supportedGameVersions.length > 5}
                             selectedValues={filters.gameVersions}
-                            options={gameVersionFilters.map((ver) => ({ label: ver.label, value: ver.value }))}
+                            options={formattedOptions.gameVersionFilters.map((ver) => ({ label: ver.label, value: ver.value }))}
                             onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, gameVersions: values }));
+                                setFilters({ ...filters, gameVersions: values });
                             }}
                             defaultMinWidth={false}
                             customTrigger={
@@ -164,17 +131,17 @@ export default function VersionFilters(props: VersionFiltersProps) {
                         />
                     ) : null}
 
-                    {releaseChannelsFilterVisible ? (
+                    {formattedOptions.releaseChannelsFilterVisible ? (
                         <MultiSelect
                             searchBox={false}
                             defaultMinWidth={false}
                             selectedValues={[...filters.releaseChannels]}
-                            options={releaseChannelFilters.map((channel) => ({
+                            options={formattedOptions.releaseChannelFilters.map((channel) => ({
                                 label: CapitalizeAndFormatString(channel) || "",
                                 value: channel,
                             }))}
                             onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, releaseChannels: values }));
+                                setFilters({ ...filters, releaseChannels: values });
                             }}
                             customTrigger={
                                 <Button variant="secondary-inverted">
@@ -205,7 +172,7 @@ export default function VersionFilters(props: VersionFiltersProps) {
             {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0 ? (
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
-                        <ChipButton onClick={resetFilters}>
+                        <ChipButton onClick={() => setSearchParams(resetFilters(searchParams))}>
                             {t.search.clearFilters}
                             <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
@@ -216,10 +183,10 @@ export default function VersionFilters(props: VersionFiltersProps) {
                             key={channel}
                             className={releaseChannelTextColor(channel as VersionReleaseChannel)}
                             onClick={() => {
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    releaseChannels: prev.releaseChannels.filter((c) => c !== channel),
-                                }));
+                                setFilters({
+                                    ...filters,
+                                    releaseChannels: filters.releaseChannels.filter((c) => c !== channel),
+                                });
                             }}
                         >
                             {CapitalizeAndFormatString(channel)}
@@ -231,10 +198,10 @@ export default function VersionFilters(props: VersionFiltersProps) {
                         <ChipButton
                             key={version.value}
                             onClick={() => {
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    gameVersions: prev.gameVersions.filter((v) => v !== version.value),
-                                }));
+                                setFilters({
+                                    ...filters,
+                                    gameVersions: filters.gameVersions.filter((v) => v !== version.value),
+                                });
                             }}
                         >
                             {version.label}
@@ -255,10 +222,10 @@ export default function VersionFilters(props: VersionFiltersProps) {
                             <ChipButton
                                 key={loader}
                                 onClick={() => {
-                                    setFilters((prev) => ({
-                                        ...prev,
-                                        loaders: prev.loaders.filter((l) => l !== loader),
-                                    }));
+                                    setFilters({
+                                        ...filters,
+                                        loaders: filters.loaders.filter((l) => l !== loader),
+                                    });
                                 }}
                                 style={{
                                     color: color,
@@ -321,4 +288,103 @@ export function filterVersionItems(allProjectVersions: ProjectVersionData[], fil
     }
 
     return filteredItems;
+}
+
+function formatFilterOptions(allProjectVersions: ProjectVersionData[], showDevVersions: boolean, showExperimentalGameVersions: boolean) {
+    // Filters list
+    // Loaders
+    const loaderFilters: string[] = [];
+    for (const version of allProjectVersions) {
+        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+
+        for (const loader of version.loaders) {
+            if (!loaderFilters.includes(loader)) {
+                loaderFilters.push(loader);
+            }
+        }
+    }
+
+    // Game versions
+    let gameVersionFilters: GameVersion[] = [];
+    for (const version of allProjectVersions) {
+        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+
+        for (const gameVersion of getGameVersionsFromValues(version.gameVersions)) {
+            if (!showExperimentalGameVersions && isExperimentalGameVersion(gameVersion.releaseType)) continue;
+
+            if (gameVersionFilters.some((ver) => ver.value === gameVersion.value)) continue;
+            gameVersionFilters.push(gameVersion);
+        }
+    }
+    // Sort game versions
+    gameVersionFilters = getGameVersionsFromValues(
+        sortVersionsWithReference(
+            gameVersionFilters.map((ver) => ver.value),
+            gameVersionsList,
+        ),
+    );
+
+    // Release channels
+    const releaseChannelFilters: string[] = [];
+    for (const version of allProjectVersions) {
+        const channel = version.releaseChannel;
+
+        if (channel === VersionReleaseChannel.DEV && !showDevVersions) continue;
+        if (!releaseChannelFilters.includes(channel)) {
+            releaseChannelFilters.push(channel);
+        }
+    }
+
+    const loadersFilterVisible = loaderFilters.length > 1;
+    const gameVersionsFilterVisible = gameVersionFilters.length > 1;
+    const releaseChannelsFilterVisible = releaseChannelFilters.length > 1;
+
+    return {
+        loaderFilters: loaderFilters,
+        gameVersionFilters: gameVersionFilters,
+        releaseChannelFilters: releaseChannelFilters,
+
+        loadersFilterVisible: loadersFilterVisible,
+        gameVersionsFilterVisible: gameVersionsFilterVisible,
+        releaseChannelsFilterVisible: releaseChannelsFilterVisible,
+        anyFilterVisible: loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible,
+    };
+}
+
+function getFiltersList(searchParams: URLSearchParams): FilterItems {
+    const gameVersions = searchParams.getAll(GAME_VERSION_KEY);
+    const loaders = searchParams.getAll(LOADER_KEY);
+    const releaseChannels = searchParams.getAll(RELEASE_CHANNEL_KEY);
+
+    return {
+        gameVersions: gameVersions,
+        loaders: loaders,
+        releaseChannels: releaseChannels,
+    };
+}
+
+function updateFiltersList(searchParams: URLSearchParams, newFilters: FilterItems): URLSearchParams {
+    resetFilters(searchParams);
+
+    for (const ver of newFilters.gameVersions) {
+        searchParams.set(GAME_VERSION_KEY, ver);
+    }
+
+    for (const loader of newFilters.loaders) {
+        searchParams.set(LOADER_KEY, loader);
+    }
+
+    for (const channel of newFilters.releaseChannels) {
+        searchParams.set(RELEASE_CHANNEL_KEY, channel);
+    }
+
+    return searchParams;
+}
+
+function resetFilters(searchParams: URLSearchParams) {
+    searchParams.delete(LOADER_KEY);
+    searchParams.delete(GAME_VERSION_KEY);
+    searchParams.delete(RELEASE_CHANNEL_KEY);
+
+    return searchParams;
 }
