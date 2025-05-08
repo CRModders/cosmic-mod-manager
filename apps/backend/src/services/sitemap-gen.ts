@@ -1,5 +1,5 @@
 import { projectTypes } from "@app/utils/config/project";
-import { ProjectType } from "@app/utils/types";
+import { GetMany_ProjectsVersions } from "~/db/version_item";
 import { type ProjectSearchDocument, projectSearchNamespace } from "~/routes/search/sync-utils";
 import meilisearch from "~/services/meilisearch";
 import { getFileFromLocalStorage, saveFileToLocalStorage } from "~/services/storage/local";
@@ -43,17 +43,44 @@ export async function generateSitemap() {
         startupTries = 10;
         console.log("Starting sitemap generation...");
 
-        const fragments = await collectSitemapFragments();
+        // Generate xml for all the project links
+        let offset = 0;
 
-        await saveSitemap("index", fragments.index);
+        const projectsSitemapEntries: string[] = [];
+        while (true) {
+            const projects = await getProjects(offset);
+            if (projects.length <= 0) break;
+            projectsSitemapEntries.concat(await generateXml(projects));
+            offset += BATCH_SIZE;
+        }
+
+        const ITEMS_PER_FILE = 25000;
+        const projectSitemapFiles: string[] = [];
+        for (let i = 0; i < Math.max(1, projectsSitemapEntries.length / ITEMS_PER_FILE); i++) {
+            const items = projectsSitemapEntries.slice(ITEMS_PER_FILE * i, ITEMS_PER_FILE * (i + 1));
+            projectSitemapFiles.push(items.join(""));
+        }
+
+        // Create the index file
+        let indexFile = `<?xml version="1.0" encoding="UTF-8"?>
+    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <sitemap>
+            <loc>${env.FRONTEND_URL}/sitemap-nav.xml</loc>
+        </sitemap>
+    </sitemapindex>`;
+
+        for (let i = 0; i < projectSitemapFiles.length; i++) {
+            const fileName = `projects-${i}`;
+            await saveSitemap(fileName, xmlUrlSet(projectSitemapFiles[i]));
+
+            indexFile += `
+        <sitemap>
+            <loc>${env.FRONTEND_URL}/${fileName}.xml</loc>
+        </sitemap>`;
+        }
+
+        await saveSitemap("index", indexFile);
         await saveSitemap("nav", navigationLinksXml());
-        await saveSitemap(ProjectType.MOD, fragments.mods, "s");
-        await saveSitemap(ProjectType.DATAMOD, fragments.dataModLinks, "s");
-        await saveSitemap(ProjectType.RESOURCE_PACK, fragments.resourcePackLinks, "s");
-        await saveSitemap(ProjectType.SHADER, fragments.shaderPackLinks, "s");
-        await saveSitemap(ProjectType.MODPACK, fragments.modpackLinks, "s");
-        await saveSitemap(ProjectType.PLUGIN, fragments.pluginLinks, "s");
-        await saveSitemap(ProjectType.WORLD, fragments.worldLinks, "s");
 
         console.log("Sitemap generation complete");
     } finally {
@@ -61,158 +88,58 @@ export async function generateSitemap() {
     }
 }
 
-async function collectSitemapFragments() {
-    let offset = 0;
+async function generateXml(projects: ProjectSearchDocument[]) {
+    const projectsVersions = await GetMany_ProjectsVersions(projects.map((p) => p.id));
 
-    // Mods
-    let modLinks = "";
-    while (true) {
-        const mods = await getProjects(ProjectType.MOD, offset);
-        if (mods.length === 0) break;
-        modLinks += await generateXml(ProjectType.MOD, mods);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Datamods
-    let dataModLinks = "";
-    while (true) {
-        const datamods = await getProjects(ProjectType.DATAMOD, offset);
-        if (datamods.length === 0) break;
-        dataModLinks += await generateXml(ProjectType.DATAMOD, datamods);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Resource packs
-    let resourcePackLinks = "";
-    while (true) {
-        const resourcePacks = await getProjects(ProjectType.RESOURCE_PACK, offset);
-        if (resourcePacks.length === 0) break;
-        resourcePackLinks += await generateXml(ProjectType.RESOURCE_PACK, resourcePacks);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Shader packs
-    let shaderPackLinks = "";
-    while (true) {
-        const shaderPacks = await getProjects(ProjectType.SHADER, offset);
-        if (shaderPacks.length === 0) break;
-        shaderPackLinks += await generateXml(ProjectType.SHADER, shaderPacks);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Modpacks
-    let modpackLinks = "";
-    while (true) {
-        const modpacks = await getProjects(ProjectType.MODPACK, offset);
-        if (modpacks.length === 0) break;
-        modpackLinks += await generateXml(ProjectType.MODPACK, modpacks);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Plugins
-    let pluginLinks = "";
-    while (true) {
-        const plugins = await getProjects(ProjectType.PLUGIN, offset);
-        if (plugins.length === 0) break;
-        pluginLinks += await generateXml(ProjectType.PLUGIN, plugins);
-        offset += BATCH_SIZE;
-    }
-    offset = 0;
-
-    // Worlds
-    let worldLinks = "";
-    while (true) {
-        const worlds = await getProjects(ProjectType.WORLD, offset);
-        if (worlds.length === 0) break;
-        worldLinks += await generateXml(ProjectType.WORLD, worlds);
-        offset += BATCH_SIZE;
-    }
-
-    const indexFile = `<?xml version="1.0" encoding="UTF-8"?>
-    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-nav.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.MOD}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.DATAMOD}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.RESOURCE_PACK}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.SHADER}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.MODPACK}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.PLUGIN}s.xml</loc>
-        </sitemap>
-        <sitemap>
-            <loc>${env.FRONTEND_URL}/sitemap-${ProjectType.WORLD}s.xml</loc>
-        </sitemap>
-    </sitemapindex>
-        `;
-
-    return {
-        index: indexFile,
-        mods: xmlUrlSet(modLinks),
-        dataModLinks: xmlUrlSet(dataModLinks),
-        resourcePackLinks: xmlUrlSet(resourcePackLinks),
-        shaderPackLinks: xmlUrlSet(shaderPackLinks),
-        modpackLinks: xmlUrlSet(modpackLinks),
-        pluginLinks: xmlUrlSet(pluginLinks),
-        worldLinks: xmlUrlSet(worldLinks),
-    };
-}
-
-async function generateXml(type: ProjectType, projects: ProjectSearchDocument[]) {
-    let links = "";
+    const links: string[] = [];
     for (let i = 0; i < projects.length; i++) {
         const project = projects[i];
-        links += `
+        const type = project.type[0];
+
+        links.push(`
     <url>
         <loc>${env.FRONTEND_URL}/${type}/${project.slug}</loc>
         <lastmod>${formatDate(project.dateUpdated)}</lastmod>
-    </url>
+    </url>`);
+
+        const versionData = projectsVersions.find((p) => p.id === project.id);
+        if (!versionData?.id || !versionData.versions.length) continue;
+
+        links.push(`
     <url>
-        <loc>${env.FRONTEND_URL}/${type}/${project.slug}/gallery</loc>
+        <loc>${env.FRONTEND_URL}/${type}/${project.slug}/changelog</loc>
         <lastmod>${formatDate(project.dateUpdated)}</lastmod>
-    </url>
+    </url>`);
+
+        links.push(`
     <url>
         <loc>${env.FRONTEND_URL}/${type}/${project.slug}/versions</loc>
         <lastmod>${formatDate(project.dateUpdated)}</lastmod>
-    </url>
+    </url>`);
+
+        for (let j = 0; j < versionData.versions.length; j++) {
+            const version = versionData.versions[j];
+
+            links.push(`
     <url>
-        <loc>${env.FRONTEND_URL}/${type}/${project.slug}/version/latest</loc>
-        <lastmod>${formatDate(project.dateUpdated)}</lastmod>
-    </url>
-        `;
+        <loc>${env.FRONTEND_URL}/${type}/${project.slug}/version/${version.slug}</loc>
+        <lastmod>${formatDate(version.datePublished)}</lastmod>
+    </url>`);
+        }
     }
 
     return links;
 }
 
-async function getProjects(type: ProjectType, offset: number): Promise<ProjectSearchDocument[]> {
+async function getProjects(offset: number): Promise<ProjectSearchDocument[]> {
     const index = meilisearch.index(projectSearchNamespace);
 
     const result = await index.search(null, {
         sort: ["downloads:desc"],
         limit: BATCH_SIZE,
         offset: offset,
-        filter: [`type = ${type}`],
     });
-    const hits = result.hits as ProjectSearchDocument[];
-
-    return hits;
+    return result.hits as ProjectSearchDocument[];
 }
 
 function formatDate(_date: Date | string): string {
@@ -225,24 +152,6 @@ function xmlUrlSet(links: string) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${links}
 </urlset>`;
-}
-
-async function saveSitemap(name: string, content: string, nameSuffix = "") {
-    try {
-        await saveFileToLocalStorage(`sitemap/sitemap-${name}${nameSuffix}.xml`, content);
-    } catch (error) {
-        console.error("Failed to save sitemap", error);
-    }
-}
-
-export async function getSitemap(name: string) {
-    try {
-        if (name === "sitemap.xml") return await getFileFromLocalStorage("sitemap/sitemap-index.xml");
-
-        return await getFileFromLocalStorage(`sitemap/${name}`);
-    } catch (error) {
-        console.error("Failed to get sitemap", error);
-    }
 }
 
 function navigationLinksXml() {
@@ -264,4 +173,22 @@ function xmlURL(path: string) {
         <loc>${env.FRONTEND_URL}/${path}</loc>
     </url>
     `;
+}
+
+async function saveSitemap(name: string, content: string) {
+    try {
+        await saveFileToLocalStorage(`sitemap/sitemap-${name}.xml`, content);
+    } catch (error) {
+        console.error("Failed to save sitemap", error);
+    }
+}
+
+export async function getSitemap(name: string) {
+    try {
+        if (name === "sitemap.xml") return await getFileFromLocalStorage("sitemap/sitemap-index.xml");
+
+        return await getFileFromLocalStorage(`sitemap/${name}`);
+    } catch (error) {
+        console.error("Failed to get sitemap", error);
+    }
 }
