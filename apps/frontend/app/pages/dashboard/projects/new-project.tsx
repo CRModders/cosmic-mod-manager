@@ -211,6 +211,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             placeholder={t.dashboard.chooseProjectType}
                                             popoverClassname="type-selector-popover"
                                             noResultsElement={t.common.noResults}
+                                            inputPlaceholder={t.search.search}
                                         />
                                     </FormItem>
                                 )}

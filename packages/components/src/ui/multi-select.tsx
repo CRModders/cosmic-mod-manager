@@ -38,6 +38,7 @@ interface MultiSelectProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
     onOpenChange?: React.Dispatch<React.SetStateAction<boolean>>;
     popoverClassname?: string;
     noResultsElement?: React.ReactNode;
+    inputPlaceholder?: string;
 }
 
 export const MultiSelect = ({
@@ -62,6 +63,7 @@ export const MultiSelect = ({
     onOpenChange,
     popoverClassname,
     noResultsElement,
+    inputPlaceholder,
     ...props
 }: MultiSelectProps & RefProp<HTMLButtonElement>) => {
     const [localOpen, setLocalOpen] = React.useState(false);
@@ -163,7 +165,7 @@ export const MultiSelect = ({
             >
                 <Command className="border border-shallow-background">
                     <CommandInput
-                        placeholder="Search..."
+                        placeholder={inputPlaceholder || "Search..."}
                         onKeyDown={handleInputKeyDown}
                         size={1}
                         className="w-full"

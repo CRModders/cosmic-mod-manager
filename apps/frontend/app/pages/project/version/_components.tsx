@@ -22,12 +22,12 @@ import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { TooltipProvider, TooltipTemplate } from "@app/components/ui/tooltip";
 import { cn } from "@app/components/utils";
-import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import { getFileType } from "@app/utils/convertors";
 import { parseFileSize } from "@app/utils/number";
 import { getLoadersByProjectType } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import type { VersionDependencies } from "@app/utils/schemas/project/version";
+import GAME_VERSIONS, { isExperimentalGameVersion } from "@app/utils/src/constants/game-versions";
 import { CapitalizeAndFormatString, createURLSafeSlug } from "@app/utils/string";
 import { DependencyType, DependsOn, type FileObjectType, type ProjectType, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@app/utils/types/api";
@@ -231,6 +231,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 placeholder={t.version.selectLoaders}
                                 searchBox={false}
                                 noResultsElement={t.common.noResults}
+                                inputPlaceholder={t.search.search}
                             />
                         </FormItem>
                     )}
@@ -269,6 +270,7 @@ export function MetadataInputCard({ projectType, formControl }: MetadataInputCar
                                 </>
                             }
                             noResultsElement={t.common.noResults}
+                            inputPlaceholder={t.search.search}
                         />
                     </FormItem>
                 )}

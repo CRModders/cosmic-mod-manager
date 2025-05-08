@@ -199,6 +199,8 @@ export default {
     },
 
     search: {
+        search: "Search...",
+
         // Search labels
         project: "Search projects",
         mod: "Search mods",

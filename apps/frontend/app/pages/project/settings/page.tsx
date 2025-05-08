@@ -222,6 +222,7 @@ export default function GeneralSettingsPage() {
                                         className="w-fit sm:min-w-[15rem] sm:w-fit sm:max-w-[20rem]"
                                         popoverClassname="min-w-[15rem]"
                                         noResultsElement={t.common.noResults}
+                                        inputPlaceholder={t.search.search}
                                     />
                                 </FormItem>
                             )}

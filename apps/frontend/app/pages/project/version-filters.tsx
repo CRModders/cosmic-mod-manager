@@ -94,6 +94,7 @@ export default function VersionFilters(props: VersionFiltersProps) {
                                 </Button>
                             }
                             noResultsElement={t.common.noResults}
+                            inputPlaceholder={t.search.search}
                         />
                     ) : null}
 
@@ -128,6 +129,7 @@ export default function VersionFilters(props: VersionFiltersProps) {
                                 ) : null
                             }
                             noResultsElement={t.common.noResults}
+                            inputPlaceholder={t.search.search}
                         />
                     ) : null}
 
@@ -151,6 +153,7 @@ export default function VersionFilters(props: VersionFiltersProps) {
                                 </Button>
                             }
                             noResultsElement={t.common.noResults}
+                            inputPlaceholder={t.search.search}
                         />
                     ) : null}
 
