@@ -2,7 +2,7 @@ import { type EnvironmentSupport, ProjectPublishingStatus, ProjectVisibility } f
 import type { EnqueuedTask } from "meilisearch";
 import { GetManyProjects_Details, type GetProject_Details_ReturnType } from "~/db/project_item";
 import { isProjectIndexable } from "~/routes/project/utils";
-import { getLast7Days_ProjectDownloads } from "~/services/clickhouse/project-downloads";
+import { getLast15Days_ProjectDownloads } from "~/services/clickhouse/project-downloads";
 import meilisearch from "~/services/meilisearch";
 import prisma from "~/services/prisma";
 import { projectGalleryFileUrl, projectIconUrl } from "~/utils/urls";
@@ -92,7 +92,7 @@ async function _SyncBatch(cursor: null | string) {
         const _ProjectIds = _Projects_Ids_Res.map((p) => p.id);
 
         const Projects = await GetManyProjects_Details(_ProjectIds);
-        const recentDownloadsCount_Map = await getLast7Days_ProjectDownloads(_ProjectIds);
+        const recentDownloadsCount_Map = await getLast15Days_ProjectDownloads(_ProjectIds);
         const formattedProjectsData: ProjectSearchDocument[] = [];
 
         for (const Project of Projects) {
