@@ -22,7 +22,7 @@ export function ListItemCard(props: ListItemCardProps) {
             to={props.url}
             aria-label={props.title}
             className={cn(
-                "w-full grid grid-cols-[max-content_1fr] gap-panel-cards p-card-surround rounded bg-background/75 hover:bg-background/50 transition-colors",
+                "w-full grid grid-cols-[max-content_1fr] gap-panel-cards p-card-surround rounded-lg bg-background/75 hover:bg-background/50 transition-colors",
                 props.className,
             )}
         >
@@ -32,7 +32,7 @@ export function ListItemCard(props: ListItemCardProps) {
                 src={props.icon || ""}
                 alt={props.title}
                 fallback={props.fallbackIcon}
-                className="border-shallower-background dark:border-shallow-background w-20 h-20 sm:w-24 sm:h-24"
+                className="rounded-xl border-shallower-background dark:border-shallow-background w-20 h-20 sm:w-24 sm:h-24"
             />
 
             <div className="flex flex-col items-start justify-start">
