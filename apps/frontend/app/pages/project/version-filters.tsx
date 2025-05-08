@@ -46,16 +46,20 @@ export default function VersionFilters(props: VersionFiltersProps) {
     const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
     const filters = getFiltersList(searchParams);
 
+    function updateSearchParams(newParams: URLSearchParams) {
+        setSearchParams(newParams, { preventScrollReset: true });
+    }
+
     const showDevVersions = searchParams.get(SHOW_DEV_VERSIONS_KEY)
         ? BoolFromStr(searchParams.get(SHOW_DEV_VERSIONS_KEY))
         : Boolean(props.showDevVersions_Default);
     function setShowDevVersions(value: boolean) {
         searchParams.set(SHOW_DEV_VERSIONS_KEY, value === true ? "true" : "false");
-        setSearchParams(searchParams);
+        updateSearchParams(searchParams);
     }
 
     function setFilters(newFilters: FilterItems) {
-        setSearchParams(updateFiltersList(searchParams, newFilters));
+        updateSearchParams(updateFiltersList(searchParams, newFilters));
     }
 
     const formattedOptions = formatFilterOptions(props.allProjectVersions, showDevVersions, showExperimentalGameVersions);
@@ -175,7 +179,7 @@ export default function VersionFilters(props: VersionFiltersProps) {
             {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0 ? (
                 <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
                     {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
-                        <ChipButton onClick={() => setSearchParams(resetFilters(searchParams))}>
+                        <ChipButton onClick={() => updateSearchParams(resetFilters(searchParams))}>
                             {t.search.clearFilters}
                             <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
                         </ChipButton>
