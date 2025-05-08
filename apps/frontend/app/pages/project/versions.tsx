@@ -3,47 +3,33 @@ import { DownloadAnimationContext } from "@app/components/misc/download-animatio
 import PaginatedNavigation from "@app/components/misc/pagination-nav";
 import { Button } from "@app/components/ui/button";
 import { Card } from "@app/components/ui/card";
-import { LabelledCheckbox } from "@app/components/ui/checkbox";
-import Chip, { ChipButton } from "@app/components/ui/chip";
-import { CommandSeparator } from "@app/components/ui/command";
+import Chip from "@app/components/ui/chip";
 import { copyTextToClipboard } from "@app/components/ui/copy-btn";
 import { Prefetch } from "@app/components/ui/link";
-import { MultiSelect } from "@app/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
-import { ReleaseChannelBadge, releaseChannelTextColor } from "@app/components/ui/release-channel-pill";
+import { ReleaseChannelBadge } from "@app/components/ui/release-channel-pill";
 import { Separator } from "@app/components/ui/separator";
-import { FullWidthSpinner } from "@app/components/ui/spinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@app/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTemplate, TooltipTrigger } from "@app/components/ui/tooltip";
 import { getLoaderFromString } from "@app/utils/convertors";
 import { parseFileSize } from "@app/utils/number";
-import { doesMemberHaveAccess, sortVersionsWithReference } from "@app/utils/project";
-import {
-    type GameVersion,
-    gameVersionsList,
-    getGameVersionsFromValues,
-    isExperimentalGameVersion,
-} from "@app/utils/src/constants/game-versions";
+import { doesMemberHaveAccess } from "@app/utils/project";
 import { CapitalizeAndFormatString } from "@app/utils/string";
-import { ProjectPermission, VersionReleaseChannel } from "@app/utils/types";
+import { ProjectPermission } from "@app/utils/types";
 import type { ProjectDetailsData, ProjectVersionData } from "@app/utils/types/api";
 import { formatVersionsForDisplay } from "@app/utils/version/format";
 import { formatGameVersionsList_verbose } from "@app/utils/version/format-verbose";
 import {
     CalendarIcon,
-    ChevronDownIcon,
     DownloadIcon,
     EditIcon,
-    FilterIcon,
-    FlaskConicalIcon,
     InfoIcon,
     LinkIcon,
     MoreVerticalIcon,
     SquareArrowOutUpRightIcon,
     UploadIcon,
-    XCircleIcon,
 } from "lucide-react";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { useSearchParams } from "react-router";
 import { FormattedCount } from "~/components/ui/count";
 import { FormattedDate, TimePassedSince } from "~/components/ui/date";
@@ -54,132 +40,20 @@ import useTheme from "~/hooks/theme";
 import { useTranslation } from "~/locales/provider";
 import Config from "~/utils/config";
 import { VersionPagePath } from "~/utils/urls";
-
-interface FilterItems {
-    loaders: string[];
-    gameVersions: string[];
-    releaseChannels: string[];
-}
+import VersionFilters from "./version-filters";
 
 export default function ProjectVersionsPage() {
-    const { t } = useTranslation();
     const session = useSession();
-    const { theme } = useTheme();
 
     const ctx = useProjectData();
     const projectData = ctx.projectData;
-    const allProjectVersions = ctx.allProjectVersions;
 
-    const [showExperimentalGameVersions, setShowExperimentalGameVersions] = useState(false);
-    const [showDevVersions, setShowDevVersions] = useState(false);
-    const [filters, setFilters] = useState<FilterItems>({ loaders: [], gameVersions: [], releaseChannels: [] });
+    const versionFilterRes = VersionFilters({
+        allProjectVersions: ctx.allProjectVersions,
+        supportedGameVersions: projectData.gameVersions,
+        showDevVersions_Default: false,
+    });
 
-    function resetFilters() {
-        setFilters({ loaders: [], gameVersions: [], releaseChannels: [] });
-    }
-
-    const filteredItems = useMemo(() => {
-        const filteredItems: ProjectVersionData[] = [];
-
-        for (const version of allProjectVersions || []) {
-            // Check for dev version
-            if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-
-            if (filters.loaders.length) {
-                let loaderMatch = false;
-                for (const loaderFilter of filters.loaders) {
-                    if (version.loaders.includes(loaderFilter)) {
-                        loaderMatch = true;
-                        break;
-                    }
-                }
-
-                if (!loaderMatch) continue;
-            }
-
-            if (filters.gameVersions.length) {
-                let versionMatch = false;
-                for (const versionFilter of filters.gameVersions) {
-                    if (version.gameVersions.includes(versionFilter)) {
-                        versionMatch = true;
-                        break;
-                    }
-                }
-
-                if (!versionMatch) continue;
-            }
-
-            if (filters.releaseChannels.length) {
-                if (!filters.releaseChannels.includes(version.releaseChannel)) continue;
-            }
-
-            filteredItems.push(version);
-        }
-
-        return filteredItems;
-    }, [filters, allProjectVersions, showDevVersions]);
-
-    if (projectData === undefined || allProjectVersions === undefined) {
-        return <FullWidthSpinner />;
-    }
-
-    // Return
-    if (projectData === null || allProjectVersions === null) return null;
-
-    // Filters list
-    // Loaders
-    const loaderFilters: string[] = [];
-    for (const version of allProjectVersions) {
-        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-
-        for (const loader of version.loaders) {
-            if (!loaderFilters.includes(loader)) {
-                loaderFilters.push(loader);
-            }
-        }
-    }
-
-    // Game versions
-    let gameVersionFilters: GameVersion[] = [];
-    for (const version of allProjectVersions) {
-        if (version.releaseChannel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-
-        for (const gameVersion of getGameVersionsFromValues(version.gameVersions)) {
-            if (!showExperimentalGameVersions && isExperimentalGameVersion(gameVersion.releaseType)) continue;
-
-            if (gameVersionFilters.some((ver) => ver.value === gameVersion.value)) continue;
-            gameVersionFilters.push(gameVersion);
-        }
-    }
-    // Sort game versions
-    gameVersionFilters = getGameVersionsFromValues(
-        sortVersionsWithReference(
-            gameVersionFilters.map((ver) => ver.value),
-            gameVersionsList,
-        ),
-    );
-
-    // Release channels
-    const releaseChannelFilters: string[] = [];
-    for (const version of allProjectVersions) {
-        const channel = version.releaseChannel;
-
-        if (channel === VersionReleaseChannel.DEV && !showDevVersions) continue;
-        if (!releaseChannelFilters.includes(channel)) {
-            releaseChannelFilters.push(channel);
-        }
-    }
-
-    const loadersFilterVisible = loaderFilters.length > 1;
-    const gameVersionsFilterVisible = gameVersionFilters.length > 1;
-    const releaseChannelsFilterVisible = releaseChannelFilters.length > 1;
-
-    const anyFilterEnabled = filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0;
-
-    const hasSnapshotVersion = getGameVersionsFromValues(projectData.gameVersions).some((ver) =>
-        isExperimentalGameVersion(ver.releaseType),
-    );
-    const hasDevVersions = allProjectVersions.some((ver) => ver.releaseChannel === VersionReleaseChannel.DEV);
     const canUploadVersion = doesMemberHaveAccess(
         ProjectPermission.UPLOAD_VERSION,
         ctx.currUsersMembership?.permissions,
@@ -191,184 +65,19 @@ export default function ProjectVersionsPage() {
         <>
             {canUploadVersion ? <UploadVersionLinkCard uploadPageUrl={VersionPagePath(ctx.projectType, projectData.slug, "new")} /> : null}
 
-            {loadersFilterVisible || gameVersionsFilterVisible || releaseChannelsFilterVisible || hasDevVersions ? (
-                <div className="flex flex-wrap items-center justify-start gap-2">
-                    {loadersFilterVisible ? (
-                        <MultiSelect
-                            selectedValues={filters.loaders}
-                            options={loaderFilters.map((loader) => ({
-                                label: CapitalizeAndFormatString(loader) || "",
-                                value: loader,
-                            }))}
-                            onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, loaders: values }));
-                            }}
-                            searchBox={false}
-                            defaultMinWidth={false}
-                            customTrigger={
-                                <Button variant="secondary-inverted">
-                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                    Loaders
-                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                                </Button>
-                            }
-                            noResultsElement={t.common.noResults}
-                        />
-                    ) : null}
-
-                    {gameVersionsFilterVisible ? (
-                        <MultiSelect
-                            searchBox={projectData.gameVersions.length > 5}
-                            selectedValues={filters.gameVersions}
-                            options={gameVersionFilters.map((ver) => ({ label: ver.label, value: ver.value }))}
-                            onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, gameVersions: values }));
-                            }}
-                            defaultMinWidth={false}
-                            customTrigger={
-                                <Button variant="secondary-inverted">
-                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                    {t.search.gameVersions}
-                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                                </Button>
-                            }
-                            fixedFooter={
-                                hasSnapshotVersion ? (
-                                    <>
-                                        <CommandSeparator />
-                                        <LabelledCheckbox
-                                            checked={showExperimentalGameVersions}
-                                            onCheckedChange={(checked) => setShowExperimentalGameVersions(checked === true)}
-                                            className="text-extra-muted-foreground pe-2 ps-3.5 my-1"
-                                        >
-                                            {t.form.showAllVersions}
-                                        </LabelledCheckbox>
-                                    </>
-                                ) : null
-                            }
-                            noResultsElement={t.common.noResults}
-                        />
-                    ) : null}
-
-                    {releaseChannelsFilterVisible ? (
-                        <MultiSelect
-                            searchBox={false}
-                            defaultMinWidth={false}
-                            selectedValues={[...filters.releaseChannels]}
-                            options={releaseChannelFilters.map((channel) => ({
-                                label: CapitalizeAndFormatString(channel) || "",
-                                value: channel,
-                            }))}
-                            onValueChange={(values) => {
-                                setFilters((prev) => ({ ...prev, releaseChannels: values }));
-                            }}
-                            customTrigger={
-                                <Button variant="secondary-inverted">
-                                    <FilterIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                    {t.search.channels}
-                                    <ChevronDownIcon aria-hidden className="w-btn-icon-md h-btn-icon-md text-extra-muted-foreground" />
-                                </Button>
-                            }
-                            noResultsElement={t.common.noResults}
-                        />
-                    ) : null}
-
-                    {hasDevVersions ? (
-                        <LabelledCheckbox
-                            className="mx-2 sm:ms-auto"
-                            checked={showDevVersions}
-                            onCheckedChange={(checked) => setShowDevVersions(checked === true)}
-                        >
-                            <span className="flex items-center justify-center gap-1">
-                                <FlaskConicalIcon aria-hidden className="w-btn-icon h-btn-icon" />
-                                {t.project.showDevVersions}
-                            </span>
-                        </LabelledCheckbox>
-                    ) : null}
-                </div>
-            ) : null}
-
-            {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 0 ? (
-                <div className="w-full flex items-center justify-start flex-wrap gap-x-2 gap-y-1">
-                    {filters.loaders.length + filters.gameVersions.length + filters.releaseChannels.length > 1 ? (
-                        <ChipButton onClick={resetFilters}>
-                            {t.search.clearFilters}
-                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
-                        </ChipButton>
-                    ) : null}
-
-                    {filters.releaseChannels.map((channel) => (
-                        <ChipButton
-                            key={channel}
-                            className={releaseChannelTextColor(channel as VersionReleaseChannel)}
-                            onClick={() => {
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    releaseChannels: prev.releaseChannels.filter((c) => c !== channel),
-                                }));
-                            }}
-                        >
-                            {CapitalizeAndFormatString(channel)}
-                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
-                        </ChipButton>
-                    ))}
-
-                    {getGameVersionsFromValues(filters.gameVersions).map((version) => (
-                        <ChipButton
-                            key={version.value}
-                            onClick={() => {
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    gameVersions: prev.gameVersions.filter((v) => v !== version.value),
-                                }));
-                            }}
-                        >
-                            {version.label}
-                            <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
-                        </ChipButton>
-                    ))}
-
-                    {filters.loaders.map((loader) => {
-                        const loaderData = getLoaderFromString(loader);
-                        if (!loaderData) return null;
-                        const accentForeground = loaderData.metadata?.foreground;
-                        let color = "hsla(var(--muted-foreground))";
-                        if (accentForeground) {
-                            color = theme === "dark" ? accentForeground.dark : accentForeground.light;
-                        }
-
-                        return (
-                            <ChipButton
-                                key={loader}
-                                onClick={() => {
-                                    setFilters((prev) => ({
-                                        ...prev,
-                                        loaders: prev.loaders.filter((l) => l !== loader),
-                                    }));
-                                }}
-                                style={{
-                                    color: color,
-                                }}
-                            >
-                                {CapitalizeAndFormatString(loader)}
-                                <XCircleIcon aria-hidden className="w-btn-icon-sm h-btn-icon-sm" />
-                            </ChipButton>
-                        );
-                    })}
-                </div>
-            ) : null}
+            {versionFilterRes.component}
 
             <ProjectVersionsListTable
                 projectType={ctx.projectType}
                 projectData={projectData}
-                allProjectVersions={filteredItems}
+                allProjectVersions={versionFilterRes.filteredItems}
                 canEditVersion={doesMemberHaveAccess(
                     ProjectPermission.UPLOAD_VERSION,
                     ctx.currUsersMembership?.permissions || [],
                     ctx.currUsersMembership?.isOwner === true,
                     session?.role,
                 )}
-                anyFilterEnabled={anyFilterEnabled}
+                anyFilterEnabled={versionFilterRes.anyFilterEnabled}
             />
         </>
     );

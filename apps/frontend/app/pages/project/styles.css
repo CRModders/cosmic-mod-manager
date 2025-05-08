@@ -30,7 +30,7 @@
 
 .changelog-bar.duplicate {
     height: calc(100% + 1.5rem);
-    background-size: 100% .65rem;
+    background-size: 100% 0.65rem;
     background-color: transparent;
     background-image: linear-gradient(to bottom, transparent, transparent 30%, currentColor 30%, currentColor);
 }
