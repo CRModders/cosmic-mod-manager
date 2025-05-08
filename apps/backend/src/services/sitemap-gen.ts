@@ -66,8 +66,7 @@ export async function generateSitemap() {
     <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         <sitemap>
             <loc>${env.FRONTEND_URL}/sitemap-nav.xml</loc>
-        </sitemap>
-    </sitemapindex>`;
+        </sitemap>`;
 
         for (let i = 0; i < projectSitemapFiles.length; i++) {
             const fileName = `projects-${i}`;
@@ -75,9 +74,12 @@ export async function generateSitemap() {
 
             indexFile += `
         <sitemap>
-            <loc>${env.FRONTEND_URL}/${fileName}.xml</loc>
+            <loc>${env.FRONTEND_URL}/sitemap-${fileName}.xml</loc>
         </sitemap>`;
         }
+
+        indexFile += `
+    </sitemapindex>`;
 
         await saveSitemap("index", indexFile);
         await saveSitemap("nav", navigationLinksXml());
