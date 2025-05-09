@@ -150,8 +150,7 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
             return [SubtractDays(now, now.getDay() + 7), SubtractDays(now, now.getDay() + 1)];
 
         case TimelineOptions.PREVIOUS_7_DAYS:
-            now.setDate(now.getDate() - 1);
-            return [SubtractDays(now, 6), now];
+            return [SubtractDays(now, 7), SubtractDays(now, 1)];
 
         case TimelineOptions.THIS_MONTH:
             return [newDate(now.getFullYear(), now.getMonth(), 1), SubtractDays(now, 1)];
@@ -160,12 +159,10 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
             return [newDate(now.getFullYear(), now.getMonth() - 1, 1), newDate(now.getFullYear(), now.getMonth(), 0)];
 
         case TimelineOptions.PREVIOUS_30_DAYS:
-            now.setDate(now.getDate() - 1);
-            return [SubtractDays(now, 29), now];
+            return [SubtractDays(now, 30), SubtractDays(now, 1)];
 
         case TimelineOptions.PREVIOUS_90_DAYS:
-            now.setDate(now.getDate() - 1);
-            return [SubtractDays(now, 89), now];
+            return [SubtractDays(now, 90), SubtractDays(now, 1)];
 
         case TimelineOptions.THIS_YEAR:
             return [newDate(now.getFullYear(), 0, 1), SubtractDays(now, 1)];
@@ -174,17 +171,13 @@ export function getTimeRange(timeline: TimelineOptions): [Date, Date] {
             return [newDate(now.getFullYear() - 1, 0, 1), newDate(now.getFullYear(), 0, 0)];
 
         case TimelineOptions.PREVIOUS_365_DAYS:
-            now.setDate(now.getDate() - 1);
-            return [SubtractDays(now, 364), now];
+            return [SubtractDays(now, 365), SubtractDays(now, 1)];
 
-        // We don't know what is the range of all time for a project, so just return `Yesterday`,
-        // if the project has older analytics data, use that date, if not fallback to this
         case TimelineOptions.ALL_TIME:
-            return [SubtractDays(now, 1), now];
+            return [new Date(0), SubtractDays(now, 1)];
 
         default:
-            now.setDate(now.getDate() - 1);
-            return [SubtractDays(now, 29), now];
+            return [SubtractDays(now, 30), SubtractDays(now, 1)];
     }
 }
 

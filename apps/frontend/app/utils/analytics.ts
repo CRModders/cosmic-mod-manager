@@ -99,7 +99,9 @@ export function getStartDate(timeline: TimelineOptions, timelineStartDate: Date,
         case TimelineOptions.LAST_YEAR:
         case TimelineOptions.PREVIOUS_365_DAYS:
         case TimelineOptions.ALL_TIME:
-            return firstEntryDate || timelineStartDate;
+            // If there was no first entry date, that means there's no data about the project at all
+            // In that case just return today's date as startDate which will result in no calculation as the endDate will be in past
+            return firstEntryDate || new Date();
 
         default:
             return timelineStartDate;
