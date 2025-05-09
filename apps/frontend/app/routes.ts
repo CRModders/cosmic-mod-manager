@@ -157,6 +157,7 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
         // Moderation pages
         route("moderation", path("moderation/layout.tsx"), { id: "__moderation-pages" }, () => {
             route("", path("moderation/page.tsx"), { id: "__moderation__index-page", index: true });
+            route("analytics", path("moderation/analytics.tsx"), { id: "__moderation__analytics-page" });
             route("review", path("moderation/review.tsx"), { id: "__moderation__review-page" });
         });
 

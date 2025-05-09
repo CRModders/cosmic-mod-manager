@@ -2,7 +2,7 @@ import { Panel, PanelAside, PanelAsideNavCard, PanelContent } from "@app/compone
 import { Prefetch } from "@app/components/ui/link";
 import { MODERATOR_ROLES } from "@app/utils/src/constants/roles";
 import type { GlobalUserRole } from "@app/utils/types";
-import { FlagIcon, LayoutDashboardIcon, ScaleIcon } from "lucide-react";
+import { BarChart2Icon, FlagIcon, LayoutDashboardIcon, ScaleIcon } from "lucide-react";
 import { Outlet } from "react-router";
 import { ButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
@@ -27,6 +27,11 @@ export default function ModerationPagesLayout() {
             name: t.dashboard.overview,
             href: "/moderation",
             icon: <LayoutDashboardIcon aria-hidden className="w-4 h-4" />,
+        },
+        {
+            name: t.dashboard.analytics,
+            href: "/moderation/analytics",
+            icon: <BarChart2Icon aria-hidden className="w-4 h-4" />,
         },
         {
             name: mod.review,

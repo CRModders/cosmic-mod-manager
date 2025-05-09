@@ -8,7 +8,7 @@ import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-
 import { invalidReqestResponse, serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
 import { parseJson } from "~/utils/str";
 import { getUserFromCtx } from "../auth/helpers/session";
-import { getDownloadsAnalyticsData } from "./controllers";
+import { getAllProjects_DownloadsAnalyticsData, getDownloadsAnalyticsData } from "./controllers";
 
 const AnalyticsRouter = new Hono();
 AnalyticsRouter.use(strictGetReqRateLimiter);
@@ -22,9 +22,10 @@ AnalyticsRouter.use(
     }),
 );
 
-AnalyticsRouter.get("/downloads", LoginProtectedRoute, analytics_get);
+AnalyticsRouter.get("/downloads", LoginProtectedRoute, downloadsAnalytics_get);
+AnalyticsRouter.get("/downloads/all", LoginProtectedRoute, allProjectsDownloadsAnalytics_get);
 
-async function analytics_get(ctx: Context) {
+async function downloadsAnalytics_get(ctx: Context) {
     try {
         const user = getUserFromCtx(ctx);
         if (!user) return unauthorizedReqResponse(ctx);
@@ -54,6 +55,43 @@ async function analytics_get(ctx: Context) {
 
         const res = await getDownloadsAnalyticsData(user, {
             projectIds: projectIds as string[],
+            startDate: startDate,
+            endDate: endDate,
+            timeline: timeline,
+        });
+
+        return ctx.json(res.data, res.status);
+    } catch (error) {
+        console.error(error);
+        return serverErrorResponse(ctx);
+    }
+}
+
+async function allProjectsDownloadsAnalytics_get(ctx: Context) {
+    try {
+        const user = getUserFromCtx(ctx);
+        if (!user) return unauthorizedReqResponse(ctx);
+
+        const startDate_query = ctx.req.query("startDate");
+        const endDate_query = ctx.req.query("endDate");
+        const timeline_query = ctx.req.query("timeline");
+
+        if (!timeline_query && (!startDate_query || !endDate_query))
+            return invalidReqestResponse(ctx, "Either startDate and endDate (YYYY-MM-DD) or timeline query param must be provided");
+
+        const startDate = DateFromStr(startDate_query);
+        const endDate = DateFromStr(endDate_query);
+        let timeline: TimelineOptions | undefined = undefined;
+        if (timeline_query) {
+            if (Object.values(TimelineOptions).includes(timeline_query as TimelineOptions)) {
+                timeline = timeline_query as TimelineOptions;
+            } else {
+                return invalidReqestResponse(ctx, "timeline query param is not valid");
+            }
+        }
+
+        const res = await getAllProjects_DownloadsAnalyticsData(user, {
+            projectIds: [],
             startDate: startDate,
             endDate: endDate,
             timeline: timeline,

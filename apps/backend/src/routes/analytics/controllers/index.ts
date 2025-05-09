@@ -1,3 +1,4 @@
+import { isModerator } from "@app/utils/constants/roles";
 import { ISO_DateStr, getTimeRange } from "@app/utils/date";
 import { combineProjectMembers, doesMemberHaveAccess } from "@app/utils/project";
 import { ProjectPermission, type TimelineOptions } from "@app/utils/types";
@@ -61,6 +62,61 @@ export async function getDownloadsAnalyticsData(user: ContextUserData, props: ge
             query: `
         SELECT project_id, downloads_count, date FROM ${ANALYTICS_DB}.project_downloads
         WHERE project_id IN (${projectIds_String}) AND date >= '${startDate_String}' AND date <= '${endDate_String}'
+        ORDER BY date ASC
+        `,
+            format: "JSON",
+        })
+    ).json();
+
+    // Map := projectId: { date: downloadsCount }
+    const downloadsData_Map: ProjectDownloads_Analytics = {};
+
+    for (let i = 0; i < res.data.length; i++) {
+        const record = res.data[i] as Analytics_ProjectDownloads;
+        if (!record.project_id || !record.downloads_count || !record.date) continue;
+
+        const projectDownloads = downloadsData_Map[record.project_id];
+        if (!projectDownloads) {
+            downloadsData_Map[record.project_id] = {
+                [record.date]: Number.parseInt(record.downloads_count),
+            };
+        } else {
+            projectDownloads[record.date] = Number.parseInt(record.downloads_count);
+            downloadsData_Map[record.project_id] = projectDownloads;
+        }
+    }
+
+    return {
+        data: downloadsData_Map,
+        status: HTTP_STATUS.OK,
+    };
+}
+
+export async function getAllProjects_DownloadsAnalyticsData(user: ContextUserData, props: getAnalyticsDataProps) {
+    // Only mods and admins are allowed to access this
+    const isMod = isModerator(user.role);
+    if (!isMod) return unauthorizedReqResponseData();
+
+    let startDate: Date;
+    let endDate: Date;
+
+    if (props.startDate && props.endDate) {
+        startDate = new Date(props.startDate);
+        endDate = new Date(props.endDate);
+    } else if (props.timeline) {
+        [startDate, endDate] = getTimeRange(props.timeline);
+    } else {
+        return invalidReqestResponseData("Either startDate and endDate (YYYY-MM-DD) or timeline query param must be provided");
+    }
+
+    const startDate_String = ISO_DateStr(startDate);
+    const endDate_String = ISO_DateStr(endDate);
+
+    const res = await (
+        await clickhouse.query({
+            query: `
+        SELECT project_id, downloads_count, date FROM ${ANALYTICS_DB}.project_downloads
+        WHERE date >= '${startDate_String}' AND date <= '${endDate_String}'
         ORDER BY date ASC
         `,
             format: "JSON",

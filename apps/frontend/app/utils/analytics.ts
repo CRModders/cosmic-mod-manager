@@ -13,14 +13,20 @@ export function getValidTimeline(timeline: string | null) {
     return TimelineOptions.PREVIOUS_30_DAYS;
 }
 
-export async function getProjectDownload_AnalyticsData(projectIds: string[], timeline: TimelineOptions) {
+export type CustomAnalyticsUrl_Func = (searchParams: URLSearchParams, projectIds: string[]) => string;
+
+export async function getProjectDownload_AnalyticsData(
+    projectIds: string[],
+    timeline: TimelineOptions,
+    customUrlFunc?: CustomAnalyticsUrl_Func,
+) {
     const timeRange = getTimeRange(timeline);
     const searchParams = new URLSearchParams();
     searchParams.set("projectIds", JSON.stringify(projectIds));
     searchParams.set("startDate", ISO_DateStr(timeRange[0]));
     searchParams.set("endDate", ISO_DateStr(timeRange[1]));
 
-    const url = `/api/analytics/downloads?${searchParams.toString()}`;
+    const url = customUrlFunc ? customUrlFunc(searchParams, projectIds) : `/api/analytics/downloads?${searchParams.toString()}`;
     const res = await clientFetch(url);
     if (!res.ok) {
         console.error("Failed to fetch project download analytics data");
@@ -33,7 +39,6 @@ export async function getProjectDownload_AnalyticsData(projectIds: string[], tim
 
 export function formatDownloadAnalyticsData(
     data_obj: ProjectDownloads_Analytics | null,
-    projectIds: string[],
     timeline: TimelineOptions,
     _resolutionDays?: number,
     MAX_DATA_POINTS = 45,
@@ -41,7 +46,7 @@ export function formatDownloadAnalyticsData(
     if (!data_obj) return null;
 
     const allProjectsAnalytics: Record<string, number> = {};
-    for (const projectId of projectIds) {
+    for (const projectId in data_obj) {
         const projectAnalyticsData = data_obj[projectId];
 
         for (const date in projectAnalyticsData) {
