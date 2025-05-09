@@ -7,7 +7,7 @@ export default {
             namespace: "global_GET",
         },
         STRICT_GET: {
-            max: 200,
+            max: 150,
             timeWindow_seconds: 300,
             namespace: "global_RESTRICTED_GET",
         },
