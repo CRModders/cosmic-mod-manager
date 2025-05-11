@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { WanderingCubesSpinner } from "~/ui/spinner";
 import { cn } from "~/utils";
 
@@ -15,31 +15,28 @@ interface ImgLoaderProps {
 const loadedImages = new Set<string>();
 
 export function ImgLoader({ src, alt, className, wrapperClassName, spinner, setLoaded, thumbnailSrc }: ImgLoaderProps) {
-    const _spinner = spinner || (
-        <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
-    );
-
-    const isImageLoaded = loadedImages.has(src);
+    const [isImageLoaded, setIsImageLoaded] = useState(loadedImages.has(src));
 
     useEffect(() => {
         setLoaded(isImageLoaded);
     }, [isImageLoaded]);
 
     useEffect(() => {
-        if (isImageLoaded) {
-            setLoaded(true);
-            return;
+        if (loadedImages.has(src)) return;
+        setIsImageLoaded(false);
+
+        function handleImgLoad() {
+            setIsImageLoaded(true);
+            loadedImages.add(src);
         }
 
         const img = document.createElement("img");
         img.src = src;
-        img.onload = () => {
-            setLoaded(true);
-            loadedImages.add(src);
-        };
+        img.loading = "eager";
+        img.addEventListener("load", handleImgLoad);
 
         return () => {
-            img.onload = null;
+            img.removeEventListener("load", handleImgLoad);
         };
     }, [src]);
 
@@ -49,7 +46,11 @@ export function ImgLoader({ src, alt, className, wrapperClassName, spinner, setL
 
             {isImageLoaded ? <img src={src} alt={alt} className={className} /> : null}
 
-            {!isImageLoaded ? _spinner : null}
+            {!isImageLoaded
+                ? spinner || (
+                      <WanderingCubesSpinner className="absolute-center bg-[hsla(var(--background-dark),_0.5)] p-4 rounded text-white z-10" />
+                  )
+                : null}
         </div>
     );
 }
