@@ -12,7 +12,7 @@ const backendDir = `${sourceDir}/apps/backend`; // Root of the backend
 const apps = [
     {
         name: "crmm-redis",
-        command: "/usr/bin/redis-server",
+        command: "/usr/bin/valkey-server",
         args: ["--port", "5501"],
         cwd: `${backendDir}/redis`,
         autorestart: true,
