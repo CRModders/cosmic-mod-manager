@@ -9,7 +9,7 @@ import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { z } from "@app/utils/schemas";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
-import SPDX_LICENSE_LIST, { FEATURED_LICENSE_INDICES, FEATURED_LICENSE_OPTIONS } from "@app/utils/src/constants/license-list";
+import SPDX_LICENSE_LIST, { FEATURED_LICENSE_INDICES } from "@app/utils/src/constants/license-list";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -64,7 +64,10 @@ export default function LicenseSettingsPage() {
 
     const currLicenseId = form.watch("id");
     const currLicenseName = form.watch("name");
-    const selectedFeaturedLicense = FEATURED_LICENSE_OPTIONS.find((license) => license.licenseId === currLicenseId);
+    const selectedFeaturedLicense = useMemo(
+        () => SPDX_LICENSE_LIST.find((license) => license.licenseId === currLicenseId),
+        [currLicenseId],
+    );
     const isCustomLicense = showCustomLicenseInputFields || ((currLicenseId || currLicenseName) && !selectedFeaturedLicense);
 
     const formValues = form.getValues();
