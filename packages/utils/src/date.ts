@@ -36,7 +36,10 @@ export function DateFromStr(date: string | Date | undefined) {
     if (!date) return null;
 
     try {
-        return new Date(date);
+        const coerced_date = new Date(date);
+        if (Number.isNaN(coerced_date.valueOf())) return null;
+
+        return coerced_date;
     } catch {
         return null;
     }
