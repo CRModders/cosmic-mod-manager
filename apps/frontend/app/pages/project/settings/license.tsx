@@ -9,7 +9,7 @@ import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { z } from "@app/utils/schemas";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
-import SPDX_LICENSE_LIST, { FEATURED_LICENSE_INDICES } from "@app/utils/src/constants/license-list";
+import SPDX_LICENSE_LIST, { CUSTOM_LICENSE_OPTION, FEATURED_LICENSE_INDICES } from "@app/utils/src/constants/license-list";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -89,14 +89,25 @@ export default function LicenseSettingsPage() {
     const projectType = t.navbar[projectData.type[0]];
 
     const licenseOptions = useMemo(() => {
-        return SPDX_LICENSE_LIST.map((license, index) => {
-            return {
+        const options: ComboBoxItem[] = [
+            {
+                label: CUSTOM_LICENSE_OPTION.name,
+                value: CUSTOM_LICENSE_OPTION.licenseId,
+            },
+        ];
+
+        for (let index = 0; index < SPDX_LICENSE_LIST.length; index++) {
+            const license = SPDX_LICENSE_LIST[index];
+
+            options.push({
                 label: license.name,
                 value: license.licenseId,
                 onlyVisibleWhenSearching:
                     FEATURED_LICENSE_INDICES.includes(index) || currLicenseId === license.licenseId ? undefined : true,
-            } satisfies ComboBoxItem;
-        });
+            });
+        }
+
+        return options;
     }, []);
 
     return (
@@ -127,9 +138,9 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
                                             <ComboBox
                                                 noResultsElem={t.common.noResults}
                                                 options={licenseOptions}
-                                                value={isCustomLicense ? "custom" : field.value || ""}
+                                                value={isCustomLicense ? CUSTOM_LICENSE_OPTION.licenseId : field.value || ""}
                                                 setValue={(value: string) => {
-                                                    if (value === "custom") {
+                                                    if (value === CUSTOM_LICENSE_OPTION.licenseId) {
                                                         setShowCustomLicenseInputFields(true);
                                                         field.onChange("");
                                                     } else {

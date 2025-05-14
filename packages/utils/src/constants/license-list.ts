@@ -3390,16 +3390,10 @@ export const FEATURED_LICENSE_INDICES = [
     665, // zlib License
 ];
 
-const FEATURED_LICENSE_OPTIONS = [
-    {
-        name: "Custom",
-        licenseId: "custom",
-        link: null,
-    },
-];
+export const FEATURED_LICENSE_OPTIONS = FEATURED_LICENSE_INDICES.map((index) => SPDX_LICENSE_LIST[index]);
 
-for (const index of FEATURED_LICENSE_INDICES) {
-    FEATURED_LICENSE_OPTIONS.push(SPDX_LICENSE_LIST[index]);
-}
-
-export { FEATURED_LICENSE_OPTIONS };
+export const CUSTOM_LICENSE_OPTION = {
+    name: "Custom",
+    licenseId: "custom",
+    link: null,
+};
