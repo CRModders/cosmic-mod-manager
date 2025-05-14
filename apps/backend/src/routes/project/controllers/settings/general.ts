@@ -1,8 +1,8 @@
-import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@app/utils/src/constants/license-list";
 import { doesMemberHaveAccess, getCurrMember, getValidProjectCategories } from "@app/utils/project";
 import type { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
 import type { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
 import type { updateExternalLinksFormSchema } from "@app/utils/schemas/project/settings/links";
+import SPDX_LICENSE_LIST, { type SPDX_LICENSE } from "@app/utils/src/constants/license-list";
 import { ProjectPermission } from "@app/utils/types";
 import type { z } from "zod";
 import { GetProject_ListItem, UpdateProject } from "~/db/project_item";
@@ -109,6 +109,11 @@ export async function updateProjectLicense(
             validSpdxData = license;
             break;
         }
+    }
+
+    // If it's a custom license then the license url is required
+    if (!validSpdxData && !formData.url) {
+        return invalidReqestResponseData("You must provide a url to your license when using a custom license!");
     }
 
     await UpdateProject({

@@ -42,6 +42,11 @@ export default function LicenseSettingsPage() {
     });
 
     async function updateLicense(values: z.infer<typeof updateProjectLicenseFormSchema>) {
+        if (values.id === "custom" && !values.url) {
+            toast.error("Url is required when using a custom license!");
+            return;
+        }
+
         const res = await clientFetch(`/api/project/${projectData?.slug}/license`, {
             method: "PATCH",
             body: JSON.stringify(values),
