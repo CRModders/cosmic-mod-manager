@@ -1,25 +1,25 @@
-import { Redis } from "ioredis";
+import { Redis as Valkey } from "ioredis";
 import env from "~/utils/env";
 
-let redis: Redis;
+let valkey: Valkey;
 const redisPort = 5501;
 
 if (env.NODE_ENV === "production") {
-    redis = newRedis();
+    valkey = newValkeyClient();
 } else {
     // @ts-ignore
-    if (!global.redis) {
+    if (!global.valkey) {
         // @ts-ignore
-        global.redis = newRedis();
+        global.valkey = newValkeyClient();
     }
     // @ts-ignore
-    redis = global.redis;
+    valkey = global.valkey;
 }
 
-export default redis;
+export default valkey;
 
-function newRedis() {
-    const client = new Redis(redisPort);
+function newValkeyClient() {
+    const client = new Valkey(redisPort);
 
     return client;
 }

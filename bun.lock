@@ -508,7 +508,7 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.32.0", "", { "os": "win32", "cpu": "x64" }, "sha512-5hqO5S3PTEO2E5VjCePxv40gIgyS2KvO7E7/vvC/NbIW4SIRamkMr1hqj+5Y67fbBWv/bQLB6KelBQmXlyCjWA=="],
 
-    "@types/bun": ["@types/bun@1.2.0", "", { "dependencies": { "bun-types": "1.2.0" } }, "sha512-5N1JqdahfpBlAv4wy6svEYcd/YfO2GNrbL95JOmFx8nkE6dbK4R0oSE5SpBA4vBRqgrOUAXF8Dpiz+gi7r80SA=="],
+    "@types/bun": ["@types/bun@1.2.13", "", { "dependencies": { "bun-types": "1.2.13" } }, "sha512-u6vXep/i9VBxoJl3GjZsl/BFIsvML8DfVDO0RYLEwtSZSp981kEO1V5NwRcO1CPJ7AmvpbnDCiMKo3JvbDEjAg=="],
 
     "@types/cookie": ["@types/cookie@0.6.0", "", {}, "sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA=="],
 
@@ -554,8 +554,6 @@
 
     "@types/ua-parser-js": ["@types/ua-parser-js@0.7.39", "", {}, "sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg=="],
 
-    "@types/ws": ["@types/ws@8.5.14", "", { "dependencies": { "@types/node": "*" } }, "sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw=="],
-
     "@types/xml2js": ["@types/xml2js@0.4.14", "", { "dependencies": { "@types/node": "*" } }, "sha512-4YnrRemBShWRO2QjvUin8ESA41rH+9nQGLUGZV/1IDhi3SL9OhdpNC/MrulTWuptXKwhx/aDxE7toV0f/ypIXQ=="],
 
     "accepts": ["accepts@1.3.8", "", { "dependencies": { "mime-types": "~2.1.34", "negotiator": "0.6.3" } }, "sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw=="],
@@ -598,7 +596,7 @@
 
     "buffer-from": ["buffer-from@1.1.2", "", {}, "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="],
 
-    "bun-types": ["bun-types@1.2.0", "", { "dependencies": { "@types/node": "*", "@types/ws": "~8.5.10" } }, "sha512-KEaJxyZfbV/c4eyG0vyehDpYmBGreNiQbZIqvVHJwZ4BmeuWlNZ7EAzMN2Zcd7ailmS/tGVW0BgYbGf+lGEpWw=="],
+    "bun-types": ["bun-types@1.2.13", "", { "dependencies": { "@types/node": "*" } }, "sha512-rRjA1T6n7wto4gxhAO/ErZEtOXyEZEmnIHQfl0Dt1QQSB4QV0iP6BZ9/YB5fZaHFQ2dwHFrmPaRQ9GGMX01k9Q=="],
 
     "bytes": ["bytes@3.1.2", "", {}, "sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg=="],
 

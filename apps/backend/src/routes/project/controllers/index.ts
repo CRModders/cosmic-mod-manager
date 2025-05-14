@@ -1,5 +1,5 @@
-import { gameVersionsList } from "@app/utils/src/constants/game-versions";
 import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
+import { gameVersionsList } from "@app/utils/src/constants/game-versions";
 import type {
     EnvironmentSupport,
     OrganisationPermission,
@@ -12,7 +12,7 @@ import type { ProjectDetailsData, ProjectListItem } from "@app/utils/types/api";
 import type { TeamMember as DBTeamMember } from "@prisma/client";
 import { GetManyProjects_ListItem, GetProject_Details, GetProject_ListItem } from "~/db/project_item";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import type { ContextUserData } from "~/types";
 import { isNumber } from "~/utils";
 import { HTTP_STATUS } from "~/utils/http";
@@ -207,7 +207,7 @@ export async function getRandomProjects(userSession: ContextUserData | undefined
     }
 
     if (cached) {
-        const cache = await redis.get(`random-projects-cache:${count}`);
+        const cache = await valkey.get(`random-projects-cache:${count}`);
         const cachedData = await parseJson<ProjectListItem>(cache);
         if (cachedData) {
             return { data: cachedData, status: HTTP_STATUS.OK };
@@ -225,6 +225,6 @@ export async function getRandomProjects(userSession: ContextUserData | undefined
     const idsArray = randomProjects?.map((project) => project.id);
     const res = await getManyProjects(userSession, idsArray);
 
-    if (cached) await redis.set(`random-projects-cache:${count}`, JSON.stringify(res.data), "EX", 300);
+    if (cached) await valkey.set(`random-projects-cache:${count}`, JSON.stringify(res.data), "EX", 300);
     return res;
 }

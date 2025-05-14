@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { TEAM_DATA_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, SetCache, TEAM_DATA_CACHE_EXPIRY_seconds } from "./_cache";
 import { TEAM_SELECT_FIELDS } from "./_queries";
@@ -138,5 +138,5 @@ async function Set_TeamCache(NAMESPACE: string, id: string, data: GetTeam_Return
 }
 
 export async function Clear_TeamCache(teamId: string) {
-    await redis.del(cacheKey(teamId, TEAM_DATA_CACHE_KEY));
+    await valkey.del(cacheKey(teamId, TEAM_DATA_CACHE_KEY));
 }

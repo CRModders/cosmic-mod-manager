@@ -1,4 +1,4 @@
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 
 interface BucketConsumptionResult {
     rateLimited: boolean;
@@ -26,7 +26,7 @@ export class TokenBucket {
             const remaining = Math.max(this.max - used, 0);
 
             if (used < this.max && cost > 0) {
-                await redis.incrby(bucketKey, cost);
+                await valkey.incrby(bucketKey, cost);
             }
 
             if (remaining > 0) {
@@ -54,10 +54,10 @@ export class TokenBucket {
     }
 
     private async getBucket(bucketKey: string): Promise<number> {
-        let used = Number.parseInt((await redis.get(bucketKey)) || "-1");
+        let used = Number.parseInt((await valkey.get(bucketKey)) || "-1");
         if (Number.isNaN(used) || used < 0) {
             used = 1;
-            await redis.set(bucketKey, 1, "EX", this.timeWindow_seconds);
+            await valkey.set(bucketKey, 1, "EX", this.timeWindow_seconds);
         }
 
         return used;

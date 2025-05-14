@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { ORGANIZATION_DATA_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, ORGANIZATION_DATA_CACHE_EXPIRY_seconds, SetCache } from "./_cache";
 import { GetManyTeams_ById, GetTeam } from "./team_item";
@@ -203,8 +203,8 @@ export async function Delete_OrganizationCache_All(id: string, slug?: string) {
     let OrgSlug: string | undefined = slug?.toLowerCase();
     // If slug is not provided, get it from the cache
     if (!OrgSlug) {
-        OrgSlug = (await redis.get(cacheKey(id, ORGANIZATION_DATA_CACHE_KEY))) || "";
+        OrgSlug = (await valkey.get(cacheKey(id, ORGANIZATION_DATA_CACHE_KEY))) || "";
     }
 
-    return await redis.del([cacheKey(id, ORGANIZATION_DATA_CACHE_KEY), cacheKey(OrgSlug, ORGANIZATION_DATA_CACHE_KEY)]);
+    return await valkey.del([cacheKey(id, ORGANIZATION_DATA_CACHE_KEY), cacheKey(OrgSlug, ORGANIZATION_DATA_CACHE_KEY)]);
 }

@@ -1,7 +1,7 @@
 import { GetManyProjects_Details } from "~/db/project_item";
 import { getLast15Days_ProjectDownloads } from "~/services/clickhouse/project-downloads";
 import meilisearch from "~/services/meilisearch";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { isProjectIndexable } from "../project/utils";
 import { AwaitEnqueuedTask, FormatSearchDocument, InitialiseSearchDb, projectSearchNamespace } from "./sync-utils";
 
@@ -89,7 +89,7 @@ async function Process_RemovedProjects(ProjectIds: string[]) {
 
 // Getter functions
 async function getAddedItems() {
-    const ProjectIds = await redis.lrange(ADDED_ITEMS_QUEUE, 0, -1);
+    const ProjectIds = await valkey.lrange(ADDED_ITEMS_QUEUE, 0, -1);
     await flushAddedItemsQueue();
     if (!ProjectIds) return [];
 
@@ -97,11 +97,11 @@ async function getAddedItems() {
 }
 
 async function flushAddedItemsQueue() {
-    await redis.del(ADDED_ITEMS_QUEUE);
+    await valkey.del(ADDED_ITEMS_QUEUE);
 }
 
 async function getRemovedItems() {
-    const ProjectIds = await redis.lrange(REMOVED_ITEMS_QUEUE, 0, -1);
+    const ProjectIds = await valkey.lrange(REMOVED_ITEMS_QUEUE, 0, -1);
     await flushRemovedItemsQueue();
     if (!ProjectIds) return [];
 
@@ -109,7 +109,7 @@ async function getRemovedItems() {
 }
 
 async function flushRemovedItemsQueue() {
-    await redis.del(REMOVED_ITEMS_QUEUE);
+    await valkey.del(REMOVED_ITEMS_QUEUE);
 }
 
 // Queue functions
@@ -119,10 +119,10 @@ export async function UpdateProjects_SearchIndex(ProjectIds: string[]) {
 
 export async function AddProjects_ToSearchIndex(ProjectIds: string[]) {
     if (!ProjectIds.length) return;
-    await redis.rpush(ADDED_ITEMS_QUEUE, ...ProjectIds);
+    await valkey.rpush(ADDED_ITEMS_QUEUE, ...ProjectIds);
 }
 
 export async function RemoveProjects_FromSearchIndex(ProjectIds: string[]) {
     if (!ProjectIds.length) return;
-    await redis.rpush(REMOVED_ITEMS_QUEUE, ...ProjectIds);
+    await valkey.rpush(REMOVED_ITEMS_QUEUE, ...ProjectIds);
 }

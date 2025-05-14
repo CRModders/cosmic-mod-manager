@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { FILE_ITEM_CACHE_KEY } from "~/types/namespaces";
 import { FILE_ITEM_EXPIRY_seconds, GetData_FromCache, SetCache } from "./_cache";
 
@@ -131,5 +131,5 @@ async function Set_FileCache(id: string, data: GetFile_ReturnType) {
 }
 
 async function Delete_FileCache(id: string) {
-    await redis.del(cacheKey(id, FILE_ITEM_CACHE_KEY));
+    await valkey.del(cacheKey(id, FILE_ITEM_CACHE_KEY));
 }

@@ -3,7 +3,7 @@ import { isProjectIndexable } from "~/routes/project/utils";
 import { AddProjects_ToSearchIndex, RemoveProjects_FromSearchIndex, UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { PROJECT_DETAILS_CACHE_KEY, PROJECT_LIST_ITEM_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, PROJECT_CACHE_EXPIRY_seconds, SetCache } from "./_cache";
 import { Delete_OrganizationCache_All, GetManyOrganizations_ById, GetOrganization_BySlugOrId } from "./organization_item";
@@ -419,14 +419,14 @@ export async function Delete_ProjectCache_All(id: string, slug?: string) {
     // If slug is not provided, get it from the cache
     if (!projectSlug) {
         const [_slug1, _slug2] = await Promise.all([
-            redis.get(cacheKey(id, PROJECT_DETAILS_CACHE_KEY)),
-            redis.get(cacheKey(id, PROJECT_LIST_ITEM_CACHE_KEY)),
+            valkey.get(cacheKey(id, PROJECT_DETAILS_CACHE_KEY)),
+            valkey.get(cacheKey(id, PROJECT_LIST_ITEM_CACHE_KEY)),
         ]);
 
         projectSlug = _slug1 || _slug2 || "";
     }
 
-    return await redis.del([
+    return await valkey.del([
         cacheKey(id, PROJECT_LIST_ITEM_CACHE_KEY),
         cacheKey(projectSlug, PROJECT_LIST_ITEM_CACHE_KEY),
         cacheKey(id, PROJECT_DETAILS_CACHE_KEY),

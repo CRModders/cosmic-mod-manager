@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { USER_DATA_CACHE_KEY, USER_ORGANIZATIONS_CACHE_KEY, USER_PROJECTS_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, SetCache, USER_DATA_CACHE_EXPIRY_seconds } from "./_cache";
 
@@ -208,10 +208,10 @@ export async function Delete_UserCache(id: string, _userName?: string) {
 
     // If userName is not provided, get it from the cache
     if (!UserName) {
-        UserName = (await redis.get(cacheKey(id, USER_DATA_CACHE_KEY))) || "";
+        UserName = (await valkey.get(cacheKey(id, USER_DATA_CACHE_KEY))) || "";
     }
 
-    return await redis.del([cacheKey(id, USER_DATA_CACHE_KEY), cacheKey(UserName.toLowerCase(), USER_DATA_CACHE_KEY)]);
+    return await valkey.del([cacheKey(id, USER_DATA_CACHE_KEY), cacheKey(UserName.toLowerCase(), USER_DATA_CACHE_KEY)]);
 }
 
 interface SetCache_Data {
@@ -229,9 +229,9 @@ async function Set_UserCache<T extends SetCache_Data | null>(user: T) {
 }
 
 export async function Delete_UserProjectsCache(userId: string) {
-    return await redis.del(cacheKey(userId, USER_PROJECTS_CACHE_KEY));
+    return await valkey.del(cacheKey(userId, USER_PROJECTS_CACHE_KEY));
 }
 
 export async function Delete_UserOrganizationsCache(userId: string) {
-    return await redis.del(cacheKey(userId, USER_ORGANIZATIONS_CACHE_KEY));
+    return await valkey.del(cacheKey(userId, USER_ORGANIZATIONS_CACHE_KEY));
 }

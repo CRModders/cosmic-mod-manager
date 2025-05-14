@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { cacheKey } from "~/services/cache/utils";
 import prisma from "~/services/prisma";
-import redis from "~/services/redis";
+import valkey from "~/services/redis";
 import { PROJECT_VERSIONS_CACHE_KEY } from "~/types/namespaces";
 import { GetData_FromCache, SetCache, VERSION_CACHE_EXPIRY_seconds } from "./_cache";
 import { Delete_ProjectCache_All } from "./project_item";
@@ -231,10 +231,10 @@ export async function Delete_VersionCache(projectId: string, _projectSlug?: stri
 
     // If slug is not provided, get it from the cache
     if (!projectSlug) {
-        projectSlug = (await redis.get(cacheKey(projectId, PROJECT_VERSIONS_CACHE_KEY))) || "";
+        projectSlug = (await valkey.get(cacheKey(projectId, PROJECT_VERSIONS_CACHE_KEY))) || "";
     }
 
-    const delKeys = redis.del([cacheKey(projectId, PROJECT_VERSIONS_CACHE_KEY), cacheKey(projectSlug, PROJECT_VERSIONS_CACHE_KEY)]);
+    const delKeys = valkey.del([cacheKey(projectId, PROJECT_VERSIONS_CACHE_KEY), cacheKey(projectSlug, PROJECT_VERSIONS_CACHE_KEY)]);
     const delProjectCache = Delete_ProjectCache_All(projectId, projectSlug);
 
     await Promise.all([delKeys, delProjectCache]);

@@ -1,11 +1,11 @@
+import { DateFromStr, ISO_DateStr } from "@app/utils/date";
 import { UpdateProject } from "~/db/project_item";
 import { UpdateVersion } from "~/db/version_item";
-import redis from "~/services/redis";
-import { generateRandomId } from "~/utils/str";
-import { UpdateProjects_SearchIndex } from "../search/search-db";
 import { Analytics_InsertProjectDownloads } from "~/services/clickhouse/project-downloads";
 import prisma from "~/services/prisma";
-import { DateFromStr, ISO_DateStr } from "@app/utils/date";
+import valkey from "~/services/redis";
+import { generateRandomId } from "~/utils/str";
+import { UpdateProjects_SearchIndex } from "../search/search-db";
 
 interface DownloadsQueueItem {
     id: string;
@@ -28,7 +28,7 @@ queueDownloadsHistoryRefresh();
 
 async function getDownloadsHistory() {
     const list: DownloadsQueueItem[] = [];
-    const historyItems = await redis.lrange(DOWNLOADS_HISTORY_KEY, 0, -1);
+    const historyItems = await valkey.lrange(DOWNLOADS_HISTORY_KEY, 0, -1);
 
     for (let i = 0; i < historyItems.length; i++) {
         const item = historyItems[i];
@@ -41,11 +41,11 @@ async function getDownloadsHistory() {
 }
 
 async function refreshDownloadsHistory() {
-    await redis.del(DOWNLOADS_HISTORY_KEY);
+    await valkey.del(DOWNLOADS_HISTORY_KEY);
 }
 
 async function addToHistory(item: DownloadsQueueItem) {
-    await redis.lpush(DOWNLOADS_HISTORY_KEY, JSON.stringify(item));
+    await valkey.lpush(DOWNLOADS_HISTORY_KEY, JSON.stringify(item));
 }
 
 function queueDownloadsHistoryRefresh() {
@@ -58,11 +58,11 @@ function queueDownloadsHistoryRefresh() {
 }
 
 async function flushDownloadsCounterQueue() {
-    await redis.del(DOWNLOADS_QUEUE_KEY);
+    await valkey.del(DOWNLOADS_QUEUE_KEY);
 }
 
 async function getDownloadsCounterQueue(flushQueue = false) {
-    const list = await redis.lrange(DOWNLOADS_QUEUE_KEY, 0, -1);
+    const list = await valkey.lrange(DOWNLOADS_QUEUE_KEY, 0, -1);
     if (flushQueue === true) await flushDownloadsCounterQueue();
 
     const listItems: DownloadsQueueItem[] = [];
@@ -164,6 +164,7 @@ export async function processDownloads() {
                 const prevDayStats = prevDayProjectsStats.find((stats) => stats.projectId === projectId);
                 if (prevDayStats?.date && prevDayStats.date !== today) {
                     promises.push(
+                        // Add prev day stats to analytics db
                         Analytics_InsertProjectDownloads([
                             {
                                 projectId,
@@ -172,6 +173,7 @@ export async function processDownloads() {
                             },
                         ]),
 
+                        // Start saving today's stats
                         prisma.projectDailyStats.update({
                             where: { projectId },
                             data: { downloads: downloadsCount, date: today },
@@ -215,15 +217,15 @@ export async function queueDownloadsCounterQueueProcessing() {
 }
 
 export async function DownloadsProcessing() {
-    return (await redis.get("downloadsQueueProcessing")) === "true";
+    return (await valkey.get("downloadsQueueProcessing")) === "true";
 }
 
 export async function SetDownloadsProcessing(val: boolean) {
-    await redis.set("downloadsQueueProcessing", val === true ? "true" : "false");
+    await valkey.set("downloadsQueueProcessing", val === true ? "true" : "false");
 }
 
 export async function addToDownloadsQueue(item: Omit<DownloadsQueueItem, "id">) {
-    await redis.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: generateRandomId() }));
+    await valkey.lpush(DOWNLOADS_QUEUE_KEY, JSON.stringify({ ...item, id: generateRandomId() }));
 }
 
 function userDownloadsHistoryMapKey(userId: string, projectId: string) {
