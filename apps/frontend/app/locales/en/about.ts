@@ -50,7 +50,7 @@ We self-host CRMM and use open-source, community-friendly tools:
 Self-hosted:
 - **Postgresql** (sql database)
 - **Meilisearch** (text search provider)
-- **Redis** (in-memory cache)
+- **Valkey** (in-memory cache)
 - **Clickhouse DB** for fast and efficient analytics
 - **Uptime Kuma** for monitoring
 

@@ -60,7 +60,7 @@ We use third-party services for our infrastructure, including:
 
 These services help improve the performance, security and reliability of our services.
 
-We also self-host open-source software such as **Clickhouse DB**, **Postgresql**, **Redis** and **Meilisearch** for database management and other internal functions.
+We also self-host open-source software such as **Clickhouse DB**, **Postgresql**, **Valkey** and **Meilisearch** for database management and other internal functions.
 
 #### **No Monetization**
 
