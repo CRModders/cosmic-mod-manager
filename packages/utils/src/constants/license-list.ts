@@ -3368,29 +3368,26 @@ const SPDX_LICENSE_LIST: SPDX_LICENSE[] = [
 
 export default SPDX_LICENSE_LIST;
 
-export const FEATURED_LICENSE_OPTIONS: SPDX_LICENSE[] = [
-    {
-        name: "Custom",
-        licenseId: "custom",
-        link: null,
-    },
-    SPDX_LICENSE_LIST[0], // All Rights Reserved
-    SPDX_LICENSE_LIST[34], // Apache License 2.0
-    SPDX_LICENSE_LIST[65], // BSD 2-Clause "Simplified" License
-    SPDX_LICENSE_LIST[72], // BSD 3-Clause "New" or "Revised" License
-    SPDX_LICENSE_LIST[121], // Creative Commons Attribution 4.0 International
-    SPDX_LICENSE_LIST[160], // Creative Commons Attribution Share Alike 4.0 International
-    SPDX_LICENSE_LIST[127], // Creative Commons Attribution Non Commercial 4.0 International
-    SPDX_LICENSE_LIST[144], // Creative Commons Attribution Non Commercial Share Alike 4.0 International
-    SPDX_LICENSE_LIST[150], // Creative Commons Attribution No Derivatives 4.0 International
-    SPDX_LICENSE_LIST[134], // Creative Commons Attribution Non Commercial No Derivatives 4.0 International
-    SPDX_LICENSE_LIST[20], // GNU Affero General Public License v3.0
-    SPDX_LICENSE_LIST[371], // GNU Lesser General Public License v2.1
-    SPDX_LICENSE_LIST[375], // GNU Lesser General Public License v3.0
-    SPDX_LICENSE_LIST[287], // GNU General Public License v2.0
-    SPDX_LICENSE_LIST[296], // GNU General Public License v3.0
-    SPDX_LICENSE_LIST[352], // ISC License
-    SPDX_LICENSE_LIST[416], // MIT License
-    SPDX_LICENSE_LIST[437], // Mozilla Public License 2.0
-    SPDX_LICENSE_LIST[665], // zlib License
+export const FEATURED_LICENSE_INDICES = [
+    0, // All Rights Reserved
+    34, // Apache License 2.0
+    65, // BSD 2-Clause "Simplified" License
+    72, // BSD 3-Clause "New" or "Revised" License
+    121, // Creative Commons Attribution 4.0 International
+    160, // Creative Commons Attribution Share Alike 4.0 International
+    127, // Creative Commons Attribution Non Commercial 4.0 International
+    144, // Creative Commons Attribution Non Commercial Share Alike 4.0 International
+    150, // Creative Commons Attribution No Derivatives 4.0 International
+    134, // Creative Commons Attribution Non Commercial No Derivatives 4.0 International
+    20, // GNU Affero General Public License v3.0
+    371, // GNU Lesser General Public License v2.1
+    375, // GNU Lesser General Public License v3.0
+    287, // GNU General Public License v2.0
+    296, // GNU General Public License v3.0
+    352, // ISC License
+    416, // MIT License
+    437, // Mozilla Public License 2.0
+    665, // zlib License
 ];
+
+export const FEATURED_LICENSE_OPTIONS = FEATURED_LICENSE_INDICES.map((index) => SPDX_LICENSE_LIST[index]);

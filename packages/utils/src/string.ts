@@ -54,7 +54,9 @@ export function formatUserName(str: string, additionalChars?: string) {
     return formattedString;
 }
 
-export function isValidUrl(url: string) {
+export function isValidUrl(url?: string) {
+    if (!url) return false;
+
     const regex =
         /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
     return !!regex.exec(url);

@@ -2,17 +2,17 @@ import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardTitle } from "@app/components/ui/card";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
-import ComboBox from "@app/components/ui/combobox";
+import ComboBox, { type ComboBoxItem } from "@app/components/ui/combobox";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import type { z } from "@app/utils/schemas";
 import { updateProjectLicenseFormSchema } from "@app/utils/schemas/project/settings/license";
-import { FEATURED_LICENSE_OPTIONS } from "@app/utils/src/constants/license-list";
+import SPDX_LICENSE_LIST, { FEATURED_LICENSE_INDICES, FEATURED_LICENSE_OPTIONS } from "@app/utils/src/constants/license-list";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon, SaveIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router";
 import MarkdownRenderBox from "~/components/md-renderer";
@@ -42,7 +42,7 @@ export default function LicenseSettingsPage() {
     });
 
     async function updateLicense(values: z.infer<typeof updateProjectLicenseFormSchema>) {
-        if (values.id === "custom" && !values.url) {
+        if (values.name && !values.id && !values.url) {
             toast.error("Url is required when using a custom license!");
             return;
         }
@@ -85,6 +85,16 @@ export default function LicenseSettingsPage() {
 
     const projectType = t.navbar[projectData.type[0]];
 
+    const licenseOptions = useMemo(() => {
+        return SPDX_LICENSE_LIST.map((license, index) => {
+            return {
+                label: license.name,
+                value: license.licenseId,
+                onlyVisibleWhenSearching: FEATURED_LICENSE_INDICES.includes(index) ? undefined : true,
+            } satisfies ComboBoxItem;
+        });
+    }, []);
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(updateLicense)} className="w-full">
@@ -112,10 +122,7 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
 
                                             <ComboBox
                                                 noResultsElem={t.common.noResults}
-                                                options={FEATURED_LICENSE_OPTIONS.map((license) => ({
-                                                    label: license.name,
-                                                    value: license.licenseId,
-                                                }))}
+                                                options={licenseOptions}
                                                 value={isCustomLicense ? "custom" : field.value || ""}
                                                 setValue={(value: string) => {
                                                     if (value === "custom") {
