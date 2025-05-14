@@ -93,7 +93,8 @@ export default function LicenseSettingsPage() {
             return {
                 label: license.name,
                 value: license.licenseId,
-                onlyVisibleWhenSearching: FEATURED_LICENSE_INDICES.includes(index) ? undefined : true,
+                onlyVisibleWhenSearching:
+                    FEATURED_LICENSE_INDICES.includes(index) || currLicenseId === license.licenseId ? undefined : true,
             } satisfies ComboBoxItem;
         });
     }, []);
