@@ -62,7 +62,7 @@ export default function Footer() {
                         {footer.about}
                     </FooterLink>
 
-                    <FooterLink to="https://github.com/CRModders/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
+                    <FooterLink to="https://github.com/PuzzlesHQ/cosmic-mod-manager" aria-label="GitHub Repo" target="_blank">
                         Github
                         <OpenInNewTab_Icon />
                     </FooterLink>

@@ -414,7 +414,7 @@ function getDefaultStrings() {
             {
                 tags: tags,
                 /**
-                 * More info [here](https://github.com/CRModders/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
+                 * More info [here](https://github.com/PuzzlesHQ/cosmic-mod-manager/tree/main/apps/frontend/app/locales/en/translation.ts#L216)
                  */
                 itemHeader: (project: string, author: string) => {
                     return [

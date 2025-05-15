@@ -61,7 +61,7 @@ module.exports = {
             host: [`${process.env.SSH_HOST}`],
             key: `${process.env.SSH_KEY}`,
             ref: "origin/main",
-            repo: "https://github.com/CRModders/cosmic-mod-manager.git",
+            repo: "https://github.com/PuzzlesHQ/cosmic-mod-manager.git",
             path: rootDir,
             "post-deploy": `cd ${backendDir} && ${processDownloadsQueue} && bun install && bun run prisma-generate && bun run prisma-push && ${processes_ToReload.join(" && ")}`,
         },

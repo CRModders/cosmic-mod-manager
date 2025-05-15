@@ -1,6 +1,6 @@
 # Adding your translations
 
-1. **Fork the repo https://github.com/CRModders/cosmic-mod-manager/fork**
+1. **Fork the repo https://github.com/PuzzlesHQ/cosmic-mod-manager/fork**
 
 2. **Clone your fork locally with git:** \
     _The command looks something like this, you can just copy the fork's url from the browser's address bar_
@@ -8,7 +8,7 @@
     git clone --depth 1 https://github.com/{YOUR_USERNAME}/cosmic-mod-manager
     ```
 
-    > NOTE: If you just want to edit an existing translation file, you can do that directly from [GitHub](https://github.com/CRModders/cosmic-mod-manager/blob/main/apps/frontend/app/locales) or [VsCode Web](https://vscode.dev/github/CRModders/cosmic-mod-manager/blob/main/apps/frontend/app/locales/meta.ts)
+    > NOTE: If you just want to edit an existing translation file, you can do that directly from [GitHub](https://github.com/PuzzlesHQ/cosmic-mod-manager/blob/main/apps/frontend/app/locales) or [VsCode Web](https://vscode.dev/github/PuzzlesHQ/cosmic-mod-manager/blob/main/apps/frontend/app/locales/meta.ts)
 
 3. Open the cloned folder in a code editor that supports TypeScript, I'd suggest [**VSCode**](https://code.visualstudio.com/Download)
 

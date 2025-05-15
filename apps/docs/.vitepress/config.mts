@@ -15,7 +15,7 @@ export default defineConfig({
 
         editLink: {
             pattern: (data) => {
-                return `https://github.com/CRModders/cosmic-mod-manager/blob/main/apps/docs/${data.filePath}`;
+                return `https://github.com/PuzzlesHQ/cosmic-mod-manager/blob/main/apps/docs/${data.filePath}`;
             },
         },
 
@@ -58,7 +58,7 @@ export default defineConfig({
             { text: "CREDITS.md", link: "/credits" },
         ],
 
-        socialLinks: [{ icon: "github", link: "https://github.com/CRModders/cosmic-mod-manager" }],
+        socialLinks: [{ icon: "github", link: "https://github.com/PuzzlesHQ/cosmic-mod-manager" }],
     },
 
     markdown: {
@@ -77,7 +77,7 @@ export default defineConfig({
 
                         // Prefix all relative links with the GitHub URL
                         if (attr[1].startsWith("/apps/") || attr[1].startsWith("/packages/")) {
-                            attr[1] = `https://github.com/CRModders/cosmic-mod-manager/blob/main${attr[1]}`;
+                            attr[1] = `https://github.com/PuzzlesHQ/cosmic-mod-manager/blob/main${attr[1]}`;
                             break;
                         }
 

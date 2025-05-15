@@ -8,7 +8,7 @@ outline: deep
 Welcome to the documentation of CRMM api!
 
 ### Important links
-- GitHub repo: [https://github.com/crmodders/cosmic-mod-manager](https://github.com/crmodders/cosmic-mod-manager)
+- GitHub repo: [https://github.com/PuzzlesHQ/cosmic-mod-manager](https://github.com/PuzzlesHQ/cosmic-mod-manager)
 - Website URL: [https://crmm.tech](https://crmm.tech)
 - API URL: [https://api.crmm.tech/api](https://api.crmm.tech/api)
 
