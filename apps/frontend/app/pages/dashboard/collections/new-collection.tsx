@@ -21,6 +21,7 @@ import type { z } from "@app/utils/schemas";
 import { createCollectionFormSchema } from "@app/utils/schemas/collections";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CancelButton } from "~/components/ui/button";
@@ -30,7 +31,12 @@ import useCollections from "~/pages/collection/provider";
 import clientFetch from "~/utils/client-fetch";
 import { CollectionPagePath } from "~/utils/urls";
 
-export default function CreateNewCollection_Dialog({ children }: { children: React.ReactNode }) {
+interface CreateNewCollection_Dialog_Props {
+    children: React.ReactNode;
+    redirectToCollectionPage?: boolean;
+}
+
+export default function CreateNewCollection_Dialog({ children, redirectToCollectionPage = true }: CreateNewCollection_Dialog_Props) {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -57,13 +63,17 @@ export default function CreateNewCollection_Dialog({ children }: { children: Rea
             const result = await response.json();
 
             if (!response.ok || !result?.success) {
-                enableInteractions();
                 return toast.error(result?.message || t.common.error);
             }
 
-            collectionsCtx.refetchCollections();
-            navigate(CollectionPagePath(result.collectionId));
+            if (redirectToCollectionPage === true) {
+                collectionsCtx.refetchCollections();
+                navigate(CollectionPagePath(result.collectionId));
+            } else {
+                await collectionsCtx.refetchCollections();
+            }
         } finally {
+            enableInteractions();
             setIsLoading(false);
         }
     }

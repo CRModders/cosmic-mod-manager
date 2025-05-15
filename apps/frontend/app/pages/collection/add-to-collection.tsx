@@ -1,15 +1,15 @@
+import type { RefProp } from "@app/components/types";
 import { Button } from "@app/components/ui/button";
+import { LabelledCheckbox } from "@app/components/ui/checkbox";
+import { Input } from "@app/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@app/components/ui/popover";
 import { BookmarkIcon, PlusIcon, SquareArrowOutUpRightIcon } from "lucide-react";
-import { useSession } from "~/hooks/session";
-import useCollections from "./provider";
-import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import { useState } from "react";
-import { Input } from "@app/components/ui/input";
+import Link, { useNavigate } from "~/components/ui/link";
+import { useSession } from "~/hooks/session";
 import { useTranslation } from "~/locales/provider";
 import CreateNewCollection_Dialog from "../dashboard/collections/new-collection";
-import Link, { useNavigate } from "~/components/ui/link";
-import type { RefProp } from "@app/components/types";
+import useCollections from "./provider";
 
 export function AddToCollection_Popup({ projectId }: { projectId: string }) {
     const { t } = useTranslation();
@@ -84,7 +84,7 @@ export function AddToCollection_Popup({ projectId }: { projectId: string }) {
                     })}
                 </div>
 
-                <CreateNewCollection_Dialog>
+                <CreateNewCollection_Dialog redirectToCollectionPage={false}>
                     <Button className="w-fit space-y-0 justify-start" variant="secondary" size="sm">
                         <PlusIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                         {t.dashboard.createCollection}
