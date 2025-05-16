@@ -109,20 +109,20 @@ export default function () {
       </td>
     </tr>
     <tr>
-      <td><strong>Redis Cache</strong></td>
+      <td><strong>Valkey Cache</strong></td>
       <td>
         <picture>
-          <img src="https://status.crmm.tech/api/badge/6/status?style=for-the-badge" alt="Redis Cache Status">
+          <img src="https://status.crmm.tech/api/badge/6/status?style=for-the-badge" alt="Valkey Cache Status">
         </picture>
       </td>
       <td>
         <picture>
-          <img src="https://status.crmm.tech/api/badge/6/uptime?style=for-the-badge" alt="Redis Cache Uptime">
+          <img src="https://status.crmm.tech/api/badge/6/uptime?style=for-the-badge" alt="Valkey Cache Uptime">
         </picture>
       </td>
       <td>
         <picture>
-          <img src="https://status.crmm.tech/api/badge/6/avg-response?style=for-the-badge" alt="Redis Cache Latency">
+          <img src="https://status.crmm.tech/api/badge/6/avg-response?style=for-the-badge" alt="Valkey Cache Latency">
         </picture>
       </td>
     </tr>
