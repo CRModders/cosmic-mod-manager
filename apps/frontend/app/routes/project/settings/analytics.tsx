@@ -1,5 +1,3 @@
 import ProjectAnalyticsPage from "~/pages/project/settings/analytics";
 
-export default function () {
-    return <ProjectAnalyticsPage />;
-}
+export default ProjectAnalyticsPage;

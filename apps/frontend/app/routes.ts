@@ -116,6 +116,9 @@ export default remixRoutesOptionAdapter((defineRoutes) => {
                 route("members", path("organization/settings/members.tsx"), {
                     id: "__org-members-settings",
                 });
+                route("analytics", path("organization/settings/analytics.tsx"), {
+                    id: "__org-analytics-page",
+                });
                 route("*", path("$.tsx"), { id: "__org-settings-not-found" });
             });
 
