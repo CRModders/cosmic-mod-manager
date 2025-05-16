@@ -87,7 +87,7 @@ export function MarkdownRenderBox({ text, className, divElem, addIdToHeadings = 
         const parts = text.split("\n");
         for (let i = 0; i < parts.length; i++) {
             const part = parts[i];
-            if (!isHeading(part)) continue;
+            if (!isHeading(part.trimStart())) continue;
 
             const headingContent = parseHeadingContent(part);
             const id = createIdForHeading(headingContent);
