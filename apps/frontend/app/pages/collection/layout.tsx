@@ -64,7 +64,7 @@ export default function CollectionPageLayout(props: Props) {
     const projectTypesList = Array.from(aggregatedProjectTypes);
 
     async function DeleteCollection() {
-        const success = collectionsContext.deleteCollection(props.collection.id);
+        const success = await collectionsContext.deleteCollection(props.collection.id);
         if (!success) return;
 
         RefreshPage(navigate, "/dashboard/collections");
@@ -75,9 +75,9 @@ export default function CollectionPageLayout(props: Props) {
         try {
             setRemovingProjects(true);
             await collectionsContext.removeProjectsFromCollection(props.collection.id, markedProjects);
-            RefreshPage(navigate, location);
             setMarkedProjects([]);
         } finally {
+            RefreshPage(navigate, location);
             setRemovingProjects(false);
         }
     }
