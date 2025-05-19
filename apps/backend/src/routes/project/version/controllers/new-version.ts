@@ -1,5 +1,6 @@
 import { RESERVED_VERSION_SLUGS } from "@app/utils/config/reserved";
 import { getFileType } from "@app/utils/convertors";
+import { date } from "@app/utils/date";
 import { doesMemberHaveAccess, getCurrMember, getLoadersByProjectType } from "@app/utils/project";
 import type { VersionDependencies, newVersionFormSchema } from "@app/utils/schemas/project/version";
 import { isVersionPrimaryFileValid } from "@app/utils/schemas/validation";
@@ -270,7 +271,7 @@ export async function deleteExcessDevReleases<T extends deleteExcessDevReleasesO
     const devVersions = versions
         .filter((version) => version.releaseChannel === VersionReleaseChannel.DEV)
         .toSorted((a, b) => {
-            return b.datePublished.getTime() - a.datePublished.getTime();
+            return date(b.datePublished)?.getTime() - date(a.datePublished)?.getTime();
         });
 
     // TODO: Don't use a hardcoded value for the max number of dev releases
