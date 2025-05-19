@@ -1,5 +1,5 @@
+import { getCurrMember, sortVersionsWithReference } from "@app/utils/project";
 import { gameVersionsList } from "@app/utils/src/constants/game-versions";
-import { combineProjectMembers, sortVersionsWithReference } from "@app/utils/project";
 import type { DependencyType, VersionReleaseChannel } from "@app/utils/types";
 import type { ProjectVersionData, VersionFile } from "@app/utils/types/api";
 import type { Prisma } from "@prisma/client";
@@ -72,14 +72,6 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
             }
         }
 
-        const allMembers = combineProjectMembers(project.team.members, project.organisation?.team.members || []);
-        const authorData = allMembers.get(version.author?.id || "");
-        // const isDuplicate =
-        //     nextVersion?.changelog &&
-        //     nextVersion.changelog.length > 0 &&
-        //     nextVersion?.changelog === version.changelog &&
-        //     version.releaseChannel === nextVersion.releaseChannel;
-
         versionsList.push({
             id: version.id,
             projectId: project.id,
@@ -95,12 +87,12 @@ export async function getAllProjectVersions(slug: string, userSession: ContextUs
             loaders: version.loaders,
             primaryFile: primaryFile?.id ? primaryFile : null,
             files: files,
-            author: authorData
+            author: version.author
                 ? {
-                      id: authorData.id,
-                      userName: authorData.user.userName,
-                      avatar: userIconUrl(authorData.userId, authorData.user.avatar),
-                      role: authorData?.role || "",
+                      id: version.author.id,
+                      userName: version.author.userName,
+                      avatar: userIconUrl(version.author.id, version.author.avatar),
+                      role: getCurrMember(version.author?.id, project.team.members, project.organisation?.team.members || [])?.role || "",
                   }
                 : DELETED_USER_AUTHOR_OBJ,
             dependencies: version.dependencies.map((dependency) => ({
