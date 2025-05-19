@@ -81,6 +81,9 @@ export async function processDownloads() {
         if (await DownloadsProcessing()) return;
         await SetDownloadsProcessing(true);
 
+        // Push previous day's downloads data from stats table to analytics db
+        await pushOldDownloadsToAnalytics();
+
         const downloadsQueue = await getDownloadsCounterQueue(true);
         const downloadsHistory = await getDownloadsHistory();
 
@@ -145,14 +148,11 @@ export async function processDownloads() {
         // Update all the projects
         const projectIds = Array.from(projectDownloadsMap.keys());
         const today = ISO_DateStr();
-        const prevDayProjectsStats = await prisma.projectDailyStats.findMany({
-            where: {
-                projectId: { in: projectIds },
-            },
-        });
 
         for (const projectId of projectIds) {
             const downloadsCount = projectDownloadsMap.get(projectId) || 0;
+            if (!downloadsCount) continue;
+
             try {
                 promises.push(
                     UpdateProject({
@@ -161,42 +161,22 @@ export async function processDownloads() {
                     }),
                 );
 
-                const prevDayStats = prevDayProjectsStats.find((stats) => stats.projectId === projectId);
-                if (prevDayStats?.date && prevDayStats.date !== today) {
-                    promises.push(
-                        // Add prev day stats to analytics db
-                        Analytics_InsertProjectDownloads([
-                            {
-                                projectId,
-                                downloadsCount: prevDayStats.downloads,
-                                date: DateFromStr(prevDayStats.date) || undefined,
+                promises.push(
+                    prisma.projectDailyStats.upsert({
+                        where: { projectId },
+                        update: {
+                            downloads: {
+                                increment: downloadsCount,
                             },
-                        ]),
+                        },
 
-                        // Start saving today's stats
-                        prisma.projectDailyStats.update({
-                            where: { projectId },
-                            data: { downloads: downloadsCount, date: today },
-                        }),
-                    );
-                } else {
-                    promises.push(
-                        prisma.projectDailyStats.upsert({
-                            where: { projectId },
-                            update: {
-                                downloads: {
-                                    increment: downloadsCount,
-                                },
-                            },
-
-                            create: {
-                                projectId: projectId,
-                                downloads: downloadsCount,
-                                date: today,
-                            },
-                        }),
-                    );
-                }
+                        create: {
+                            projectId: projectId,
+                            downloads: downloadsCount,
+                            date: today,
+                        },
+                    }),
+                );
             } catch {}
         }
 
@@ -233,4 +213,45 @@ function userDownloadsHistoryMapKey(userId: string, projectId: string) {
 }
 function ipDownloadsHistoryMapKey(ipAddr: string, projectId: string) {
     return `${ipAddr}:${projectId}`;
+}
+
+async function pushOldDownloadsToAnalytics() {
+    const today = ISO_DateStr();
+
+    const stats = await prisma.projectDailyStats.findMany({
+        where: {
+            downloads: {
+                gt: 0,
+            },
+            date: {
+                not: today,
+            },
+        },
+    });
+
+    const projectIds: string[] = [];
+
+    for (const item of stats) {
+        projectIds.push(item.projectId);
+
+        Analytics_InsertProjectDownloads([
+            {
+                projectId: item.projectId,
+                downloadsCount: item.downloads,
+                date: DateFromStr(item.date) || undefined,
+            },
+        ]);
+    }
+
+    await prisma.projectDailyStats.updateMany({
+        where: {
+            projectId: {
+                in: projectIds,
+            },
+        },
+        data: {
+            date: today,
+            downloads: 0,
+        },
+    });
 }
