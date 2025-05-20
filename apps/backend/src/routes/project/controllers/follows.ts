@@ -1,9 +1,9 @@
 import { GetManyProjects_ListItem, GetProject_ListItem, UpdateManyProjects } from "~/db/project_item";
+import { GetUser_ByIdOrUsername, UpdateUser } from "~/db/user_item";
+import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 import type { ContextUserData } from "~/types";
 import { HTTP_STATUS, invalidReqestResponseData, notFoundResponseData } from "~/utils/http";
 import { isProjectPublic } from "../utils";
-import { GetUser_ByIdOrUsername, UpdateUser } from "~/db/user_item";
-import { UpdateProjects_SearchIndex } from "~/routes/search/search-db";
 
 export async function addProjectFollower(slug: string, userSession: ContextUserData) {
     const project = await GetProject_ListItem(slug, slug);
@@ -27,15 +27,22 @@ export async function addProjectsToUserFollows(projectIds: string[], userSession
     const userData = await GetUser_ByIdOrUsername(undefined, userSession.id);
     if (!userData?.id) return notFoundResponseData("User not found!");
 
+    const privateProjects: string[] = [];
     const addedProjects: string[] = [];
     for (const project of projects) {
-        if (!isProjectPublic(project.visibility, project.status)) continue;
+        if (!isProjectPublic(project.visibility, project.status)) {
+            privateProjects.push(project.id);
+            continue;
+        }
         if (userData.followingProjects.includes(project.id)) continue;
 
         addedProjects.push(project.id);
     }
 
-    if (!addedProjects.length) return invalidReqestResponseData("Already following!");
+    if (!addedProjects.length) {
+        if (privateProjects.length > 0) return invalidReqestResponseData("Can't follow a private project!");
+        return invalidReqestResponseData("Already following!");
+    }
 
     await Promise.all([
         UpdateUser({

@@ -168,6 +168,7 @@ export async function processDownloads() {
                             downloads: {
                                 increment: downloadsCount,
                             },
+                            date: today,
                         },
 
                         create: {
