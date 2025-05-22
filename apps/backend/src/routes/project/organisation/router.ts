@@ -1,3 +1,4 @@
+import { iconFieldSchema } from "@app/utils/schemas";
 import { createOrganisationFormSchema } from "@app/utils/schemas/organisation";
 import { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";
 import { parseValueToSchema } from "@app/utils/schemas/utils";
@@ -19,24 +20,23 @@ import {
     updateOrg,
     updateOrgIcon,
 } from "./controllers/modify-org";
-import { iconFieldSchema } from "@app/utils/schemas";
 
-const orgRouter = new Hono();
-orgRouter.use(invalidAuthAttemptLimiter);
-orgRouter.use(AuthenticationMiddleware);
+const orgRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-orgRouter.get("/", strictGetReqRateLimiter, userOrganisations_get);
-orgRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, organisation_post);
-orgRouter.get("/:orgId", strictGetReqRateLimiter, organisation_get);
-orgRouter.get("/:orgId/projects", strictGetReqRateLimiter, organisationProjects_get);
+    .get("/", strictGetReqRateLimiter, userOrganisations_get)
+    .post("/", critModifyReqRateLimiter, LoginProtectedRoute, organisation_post)
+    .get("/:orgId", strictGetReqRateLimiter, organisation_get)
+    .get("/:orgId/projects", strictGetReqRateLimiter, organisationProjects_get)
 
-orgRouter.patch("/:orgId", critModifyReqRateLimiter, LoginProtectedRoute, organisation_patch);
-orgRouter.delete("/:orgId", critModifyReqRateLimiter, LoginProtectedRoute, organisation_delete);
-orgRouter.patch("/:orgId/icon", critModifyReqRateLimiter, LoginProtectedRoute, organisationIcon_patch);
-orgRouter.delete("/:orgId/icon", critModifyReqRateLimiter, LoginProtectedRoute, organisationIcon_delete);
-orgRouter.post("/:orgId/projects", critModifyReqRateLimiter, LoginProtectedRoute, organisationProjects_post);
+    .patch("/:orgId", critModifyReqRateLimiter, LoginProtectedRoute, organisation_patch)
+    .delete("/:orgId", critModifyReqRateLimiter, LoginProtectedRoute, organisation_delete)
+    .patch("/:orgId/icon", critModifyReqRateLimiter, LoginProtectedRoute, organisationIcon_patch)
+    .delete("/:orgId/icon", critModifyReqRateLimiter, LoginProtectedRoute, organisationIcon_delete)
+    .post("/:orgId/projects", critModifyReqRateLimiter, LoginProtectedRoute, organisationProjects_post)
 
-orgRouter.delete("/:orgId/project/:projectId", critModifyReqRateLimiter, LoginProtectedRoute, organisationProjects_delete);
+    .delete("/:orgId/project/:projectId", critModifyReqRateLimiter, LoginProtectedRoute, organisationProjects_delete);
 
 async function userOrganisations_get(ctx: Context) {
     try {

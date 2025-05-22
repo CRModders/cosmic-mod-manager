@@ -19,31 +19,31 @@ import { oAuthSignUpHandler } from "./controllers/signup";
 import { getOAuthUrl } from "./helpers";
 import { getUserFromCtx } from "./helpers/session";
 
-const authRouter = new Hono();
+const authRouter = new Hono()
 
-// Middlewares
-authRouter.use(invalidAuthAttemptLimiter);
-authRouter.use(AuthenticationMiddleware);
+    // Middlewares
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-// Route Definitions
-authRouter.get("/me", getReqRateLimiter, currSession_get);
+    // Route Definitions
+    .get("/me", getReqRateLimiter, currSession_get)
 
-// Routes to get OAuth URL
-authRouter.get("/signin/:authProvider", strictGetReqRateLimiter, async (ctx: Context) => oAuthUrl_get(ctx, AuthActionIntent.SIGN_IN));
-authRouter.get("/signup/:authProvider", strictGetReqRateLimiter, async (ctx: Context) => oAuthUrl_get(ctx, AuthActionIntent.SIGN_UP));
-authRouter.get("/link/:authProvider", strictGetReqRateLimiter, LoginProtectedRoute, async (ctx: Context) =>
-    oAuthUrl_get(ctx, AuthActionIntent.LINK),
-);
+    // Routes to get OAuth URL
+    .get("/signin/:authProvider", strictGetReqRateLimiter, async (ctx: Context) => oAuthUrl_get(ctx, AuthActionIntent.SIGN_IN))
+    .get("/signup/:authProvider", strictGetReqRateLimiter, async (ctx: Context) => oAuthUrl_get(ctx, AuthActionIntent.SIGN_UP))
+    .get("/link/:authProvider", strictGetReqRateLimiter, LoginProtectedRoute, async (ctx: Context) =>
+        oAuthUrl_get(ctx, AuthActionIntent.LINK),
+    )
 
-authRouter.post("/signin/credential", critModifyReqRateLimiter, credentialSignin_post); // Sign in with credentials
-authRouter.post("/signin/:authProvider", critModifyReqRateLimiter, oAuthSignIn_post);
-authRouter.post("/signup/:authProvider", critModifyReqRateLimiter, oAuthSignUp_post);
-authRouter.post("/link/:authProvider", critModifyReqRateLimiter, LoginProtectedRoute, oAuthLinkProvider_post);
-authRouter.delete("/link/:authProvider", critModifyReqRateLimiter, LoginProtectedRoute, oAuthLinkProvider_delete);
-authRouter.get("/sessions", strictGetReqRateLimiter, LoginProtectedRoute, sessions_get);
-authRouter.get("/linked-providers", strictGetReqRateLimiter, LoginProtectedRoute, linkedProviders_get);
-authRouter.delete("/sessions", critModifyReqRateLimiter, LoginProtectedRoute, session_delete);
-authRouter.delete("/sessions/:revokeCode", critModifyReqRateLimiter, revokeSession_delete);
+    .post("/signin/credential", critModifyReqRateLimiter, credentialSignin_post) // Sign in with credentials
+    .post("/signin/:authProvider", critModifyReqRateLimiter, oAuthSignIn_post)
+    .post("/signup/:authProvider", critModifyReqRateLimiter, oAuthSignUp_post)
+    .post("/link/:authProvider", critModifyReqRateLimiter, LoginProtectedRoute, oAuthLinkProvider_post)
+    .delete("/link/:authProvider", critModifyReqRateLimiter, LoginProtectedRoute, oAuthLinkProvider_delete)
+    .get("/sessions", strictGetReqRateLimiter, LoginProtectedRoute, sessions_get)
+    .get("/linked-providers", strictGetReqRateLimiter, LoginProtectedRoute, linkedProviders_get)
+    .delete("/sessions", critModifyReqRateLimiter, LoginProtectedRoute, session_delete)
+    .delete("/sessions/:revokeCode", critModifyReqRateLimiter, revokeSession_delete);
 
 async function currSession_get(ctx: Context) {
     try {

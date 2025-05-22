@@ -17,23 +17,23 @@ import {
 } from "./controllers";
 import { changeTeamOwner } from "./controllers/change-owners";
 
-const teamRouter = new Hono();
-teamRouter.use(invalidAuthAttemptLimiter);
-teamRouter.use(AuthenticationMiddleware);
+const teamRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-// ? Planned
-// teamRouter.get("/:teamId/owner", teamOwner_get)
-// teamRouter.get("/:teamId/members", teamMembers_get)
-// teamRouter.get(":teamId/members/:memberSlug", teamMember_get)
+    // ? Planned
+    // teamRouter.get("/:teamId/owner", teamOwner_get)
+    // teamRouter.get("/:teamId/members", teamMembers_get)
+    // teamRouter.get(":teamId/members/:memberSlug", teamMember_get)
 
-teamRouter.post("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_post);
-teamRouter.patch("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_patch);
-teamRouter.post("/:teamId/leave", critModifyReqRateLimiter, LoginProtectedRoute, teamLeave_post);
+    .post("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_post)
+    .patch("/:teamId/invite", critModifyReqRateLimiter, LoginProtectedRoute, teamInvite_patch)
+    .post("/:teamId/leave", critModifyReqRateLimiter, LoginProtectedRoute, teamLeave_post)
 
-teamRouter.patch("/:teamId/owner", critModifyReqRateLimiter, LoginProtectedRoute, teamOwner_patch);
-teamRouter.post(":teamId/members", critModifyReqRateLimiter, LoginProtectedRoute, teamMembers_post);
-teamRouter.patch("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_patch);
-teamRouter.delete("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_delete);
+    .patch("/:teamId/owner", critModifyReqRateLimiter, LoginProtectedRoute, teamOwner_patch)
+    .post(":teamId/members", critModifyReqRateLimiter, LoginProtectedRoute, teamMembers_post)
+    .patch("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_patch)
+    .delete("/:teamId/member/:memberId", critModifyReqRateLimiter, LoginProtectedRoute, teamMember_delete);
 
 async function teamInvite_post(ctx: Context) {
     try {

@@ -1,3 +1,4 @@
+import { iconFieldSchema } from "@app/utils/schemas";
 import { newProjectFormSchema } from "@app/utils/schemas/project";
 import { updateProjectTagsFormSchema } from "@app/utils/schemas/project/settings/categories";
 import { updateDescriptionFormSchema } from "@app/utils/schemas/project/settings/description";
@@ -18,47 +19,46 @@ import { HTTP_STATUS, invalidReqestResponse, serverErrorResponse } from "~/utils
 import { getAllVisibleProjects } from "../user/controllers/profile";
 import { checkProjectSlugValidity, getProjectData } from "./controllers";
 import { getProjectDependencies } from "./controllers/dependency";
+import { addProjectFollower, removeProjectFollower } from "./controllers/follows";
 import { addNewGalleryImage, removeGalleryImage, updateGalleryImage } from "./controllers/gallery";
 import { QueueProjectForApproval } from "./controllers/moderation";
 import { createNewProject } from "./controllers/new-project";
 import { deleteProject, deleteProjectIcon, updateProject, updateProjectIcon } from "./controllers/settings";
 import { updateProjectDescription } from "./controllers/settings/description";
 import { updateProjectExternalLinks, updateProjectLicense, updateProjectTags } from "./controllers/settings/general";
-import versionRouter from "./version/router";
 import { getAllProjectVersions } from "./version/controllers";
-import { iconFieldSchema } from "@app/utils/schemas";
-import { addProjectFollower, removeProjectFollower } from "./controllers/follows";
+import versionRouter from "./version/router";
 
-const projectRouter = new Hono();
-projectRouter.use(invalidAuthAttemptLimiter);
-projectRouter.use(AuthenticationMiddleware);
+const projectRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-// Get projects of the currently logged in user
-projectRouter.get("/", strictGetReqRateLimiter, projects_get);
+    // Get projects of the currently logged in user
+    .get("/", strictGetReqRateLimiter, projects_get)
 
-projectRouter.get("/:slug", getReqRateLimiter, project_get);
-projectRouter.get("/:slug/dependencies", getReqRateLimiter, projectDependencies_get);
-projectRouter.get("/:slug/check", getReqRateLimiter, projectCheck_get);
+    .get("/:slug", getReqRateLimiter, project_get)
+    .get("/:slug/dependencies", getReqRateLimiter, projectDependencies_get)
+    .get("/:slug/check", getReqRateLimiter, projectCheck_get)
 
-projectRouter.post("/:slug/follow", getReqRateLimiter, LoginProtectedRoute, projectFollow_post);
-projectRouter.delete("/:slug/follow", critModifyReqRateLimiter, LoginProtectedRoute, projectFollow_delete);
+    .post("/:slug/follow", getReqRateLimiter, LoginProtectedRoute, projectFollow_post)
+    .delete("/:slug/follow", critModifyReqRateLimiter, LoginProtectedRoute, projectFollow_delete)
 
-projectRouter.post("/", critModifyReqRateLimiter, LoginProtectedRoute, project_post);
-projectRouter.patch("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_patch);
-projectRouter.delete("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_delete);
-projectRouter.post("/:id/submit-for-review", critModifyReqRateLimiter, LoginProtectedRoute, project_queueForApproval_post);
-projectRouter.patch("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_patch);
-projectRouter.delete("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_delete);
-projectRouter.patch("/:slug/description", critModifyReqRateLimiter, LoginProtectedRoute, description_patch);
-projectRouter.patch("/:slug/tags", critModifyReqRateLimiter, LoginProtectedRoute, tags_patch);
-projectRouter.patch("/:slug/external-links", critModifyReqRateLimiter, LoginProtectedRoute, externalLinks_patch);
-projectRouter.patch("/:slug/license", critModifyReqRateLimiter, LoginProtectedRoute, license_patch);
+    .post("/", critModifyReqRateLimiter, LoginProtectedRoute, project_post)
+    .patch("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_patch)
+    .delete("/:slug", critModifyReqRateLimiter, LoginProtectedRoute, project_delete)
+    .post("/:id/submit-for-review", critModifyReqRateLimiter, LoginProtectedRoute, project_queueForApproval_post)
+    .patch("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_patch)
+    .delete("/:slug/icon", critModifyReqRateLimiter, LoginProtectedRoute, projectIcon_delete)
+    .patch("/:slug/description", critModifyReqRateLimiter, LoginProtectedRoute, description_patch)
+    .patch("/:slug/tags", critModifyReqRateLimiter, LoginProtectedRoute, tags_patch)
+    .patch("/:slug/external-links", critModifyReqRateLimiter, LoginProtectedRoute, externalLinks_patch)
+    .patch("/:slug/license", critModifyReqRateLimiter, LoginProtectedRoute, license_patch)
 
-projectRouter.post("/:slug/gallery", critModifyReqRateLimiter, LoginProtectedRoute, gallery_post);
-projectRouter.patch("/:slug/gallery/:galleryId", modifyReqRateLimiter, LoginProtectedRoute, galleryItem_patch);
-projectRouter.delete("/:slug/gallery/:galleryId", critModifyReqRateLimiter, LoginProtectedRoute, galleryItem_delete);
+    .post("/:slug/gallery", critModifyReqRateLimiter, LoginProtectedRoute, gallery_post)
+    .patch("/:slug/gallery/:galleryId", modifyReqRateLimiter, LoginProtectedRoute, galleryItem_patch)
+    .delete("/:slug/gallery/:galleryId", critModifyReqRateLimiter, LoginProtectedRoute, galleryItem_delete)
 
-projectRouter.route("/:projectSlug/version", versionRouter);
+    .route("/:projectSlug/version", versionRouter);
 
 async function projects_get(ctx: Context) {
     try {

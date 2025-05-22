@@ -5,11 +5,11 @@ import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-
 import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 import { getManyUsers } from "./controller";
 
-const bulkUserActionsRouter = new Hono();
-bulkUserActionsRouter.use(invalidAuthAttemptLimiter);
-bulkUserActionsRouter.use(AuthenticationMiddleware);
+const bulkUserActionsRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-bulkUserActionsRouter.get("/", strictGetReqRateLimiter, users_get);
+    .get("/", strictGetReqRateLimiter, users_get);
 
 async function users_get(ctx: Context) {
     try {

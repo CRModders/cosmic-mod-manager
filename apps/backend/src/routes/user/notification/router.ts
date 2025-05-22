@@ -12,17 +12,17 @@ import {
 } from "~/routes/user/notification/controllers";
 import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 
-const notificationRouter = new Hono();
-notificationRouter.use(invalidAuthAttemptLimiter);
-notificationRouter.use(AuthenticationMiddleware);
-notificationRouter.use(LoginProtectedRoute);
+const notificationRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
+    .use(LoginProtectedRoute)
 
-notificationRouter.get("/", getReqRateLimiter, userNotifications_get);
-notificationRouter.patch("/", modifyReqRateLimiter, bulkNotifications_patch);
-notificationRouter.delete("/", modifyReqRateLimiter, bulkNotifications_delete);
-notificationRouter.get("/:notifId", getReqRateLimiter, notification_get);
-notificationRouter.patch("/:notifId", modifyReqRateLimiter, notification_patch);
-notificationRouter.delete("/:notifId", modifyReqRateLimiter, notification_delete);
+    .get("/", getReqRateLimiter, userNotifications_get)
+    .patch("/", modifyReqRateLimiter, bulkNotifications_patch)
+    .delete("/", modifyReqRateLimiter, bulkNotifications_delete)
+    .get("/:notifId", getReqRateLimiter, notification_get)
+    .patch("/:notifId", modifyReqRateLimiter, notification_patch)
+    .delete("/:notifId", modifyReqRateLimiter, notification_delete);
 
 async function userNotifications_get(ctx: Context) {
     try {

@@ -8,12 +8,12 @@ import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { serverErrorResponse, unauthorizedReqResponse } from "~/utils/http";
 import { getModerationProjects, updateModerationProject } from "./controller";
 
-const moderationRouter = new Hono();
-moderationRouter.use(invalidAuthAttemptLimiter);
-moderationRouter.use(AuthenticationMiddleware);
+const moderationRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-moderationRouter.get("/projects", critModifyReqRateLimiter, moderationProjects_get);
-moderationRouter.post("/project/:id", critModifyReqRateLimiter, moderationProject_post);
+    .get("/projects", critModifyReqRateLimiter, moderationProjects_get)
+    .post("/project/:id", critModifyReqRateLimiter, moderationProject_post);
 
 async function moderationProjects_get(ctx: Context) {
     try {

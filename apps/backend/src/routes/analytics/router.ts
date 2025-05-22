@@ -10,20 +10,20 @@ import { parseJson } from "~/utils/str";
 import { getUserFromCtx } from "../auth/helpers/session";
 import { getAllProjects_DownloadsAnalyticsData, getDownloadsAnalyticsData } from "./controllers";
 
-const AnalyticsRouter = new Hono();
-AnalyticsRouter.use(strictGetReqRateLimiter);
-AnalyticsRouter.use(invalidAuthAttemptLimiter);
-AnalyticsRouter.use(AuthenticationMiddleware);
-AnalyticsRouter.use(
-    // cache analytics responses for 6 hours on CDN but not on browser
-    applyCacheHeaders({
-        maxAge_s: 0,
-        sMaxAge_s: 21600,
-    }),
-);
+const AnalyticsRouter = new Hono()
+    .use(strictGetReqRateLimiter)
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
+    .use(
+        // cache analytics responses for 6 hours on CDN but not on browser
+        applyCacheHeaders({
+            maxAge_s: 0,
+            sMaxAge_s: 21600,
+        }),
+    )
 
-AnalyticsRouter.get("/downloads", LoginProtectedRoute, downloadsAnalytics_get);
-AnalyticsRouter.get("/downloads/all", LoginProtectedRoute, allProjectsDownloadsAnalytics_get);
+    .get("/downloads", LoginProtectedRoute, downloadsAnalytics_get)
+    .get("/downloads/all", LoginProtectedRoute, allProjectsDownloadsAnalytics_get);
 
 async function downloadsAnalytics_get(ctx: Context) {
     try {

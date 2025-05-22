@@ -3,9 +3,7 @@ import { strictGetReqRateLimiter } from "~/middleware/rate-limit/get-req";
 import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 import { getManyOrgs } from "./controllers/get-many";
 
-const bulkOrgsRouter = new Hono();
-
-bulkOrgsRouter.get("/", strictGetReqRateLimiter, orgs_get);
+const bulkOrgsRouter = new Hono().get("/", strictGetReqRateLimiter, orgs_get);
 
 async function orgs_get(ctx: Context) {
     try {

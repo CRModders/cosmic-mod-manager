@@ -6,13 +6,13 @@ import { invalidReqestResponse, serverErrorResponse } from "~/utils/http";
 import { getUserFromCtx } from "../auth/helpers/session";
 import { getManyProjects, getRandomProjects } from "./controllers";
 
-const bulkProjectsRouter = new Hono();
-bulkProjectsRouter.use(invalidAuthAttemptLimiter);
-bulkProjectsRouter.use(AuthenticationMiddleware);
+const bulkProjectsRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-bulkProjectsRouter.get("/", strictGetReqRateLimiter, projects_get);
-bulkProjectsRouter.get("/random", strictGetReqRateLimiter, projectsRandom_get);
-bulkProjectsRouter.get("/home-page-carousel", getReqRateLimiter, homePageCarousel_get);
+    .get("/", strictGetReqRateLimiter, projects_get)
+    .get("/random", strictGetReqRateLimiter, projectsRandom_get)
+    .get("/home-page-carousel", getReqRateLimiter, homePageCarousel_get);
 
 async function projects_get(ctx: Context) {
     try {

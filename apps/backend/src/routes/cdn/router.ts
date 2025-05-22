@@ -17,41 +17,41 @@ import {
     serveVersionFile,
 } from "./controller";
 
-const cdnRouter = new Hono();
-cdnRouter.use(
-    cors({
-        origin: "*",
-        credentials: true,
-    }),
-);
+const cdnRouter = new Hono()
+    .use(
+        cors({
+            origin: "*",
+            credentials: true,
+        }),
+    )
 
-// TODO: Remove these three later and just ust the /project prefix
-cdnRouter.get("/data/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
-cdnRouter.get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
-cdnRouter.get(
-    "/data/:projectId/version/:versionId/:fileName",
-    invalidAuthAttemptLimiter,
-    cdnLargeFileRateLimiter,
-    AuthenticationMiddleware,
-    versionFile_get,
-);
+    // TODO: Remove these three later and just ust the /project prefix
+    .get("/data/:projectId/:file", cdnAssetRateLimiter, projectFile_get)
+    .get("/data/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get)
+    .get(
+        "/data/:projectId/version/:versionId/:fileName",
+        invalidAuthAttemptLimiter,
+        cdnLargeFileRateLimiter,
+        AuthenticationMiddleware,
+        versionFile_get,
+    )
 
-cdnRouter.get("/data/project/:projectId/:file", cdnAssetRateLimiter, projectFile_get);
-cdnRouter.get("/data/project/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get);
-cdnRouter.get(
-    "/data/project/:projectId/version/:versionId/:fileName",
-    invalidAuthAttemptLimiter,
-    cdnLargeFileRateLimiter,
-    AuthenticationMiddleware,
-    versionFile_get,
-);
+    .get("/data/project/:projectId/:file", cdnAssetRateLimiter, projectFile_get)
+    .get("/data/project/:projectId/gallery/:image", cdnAssetRateLimiter, galleryImage_get)
+    .get(
+        "/data/project/:projectId/version/:versionId/:fileName",
+        invalidAuthAttemptLimiter,
+        cdnLargeFileRateLimiter,
+        AuthenticationMiddleware,
+        versionFile_get,
+    )
 
-cdnRouter.get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get);
-cdnRouter.get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get);
-cdnRouter.get("/data/collection/:collectionId/:icon", cdnAssetRateLimiter, collectionIcon_get);
+    .get("/data/organization/:orgId/:file", cdnAssetRateLimiter, orgFile_get)
+    .get("/data/user/:userId/:file", cdnAssetRateLimiter, userFile_get)
+    .get("/data/collection/:collectionId/:icon", cdnAssetRateLimiter, collectionIcon_get)
 
-// Sitemaps
-cdnRouter.get("/sitemap/:name", cdnAssetRateLimiter, sitemap_get);
+    // Sitemaps
+    .get("/sitemap/:name", cdnAssetRateLimiter, sitemap_get);
 
 async function projectFile_get(ctx: Context) {
     try {

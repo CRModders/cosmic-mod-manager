@@ -29,29 +29,29 @@ import { getUserFromCtx } from "../auth/helpers/session";
 import { GetUserCollections } from "../collections/controllers";
 import { confirmUserAccountDeletion } from "./controllers/delete-account";
 
-const userRouter = new Hono();
-userRouter.use(invalidAuthAttemptLimiter);
-userRouter.use(AuthenticationMiddleware);
+const userRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-userRouter.get("/", strictGetReqRateLimiter, user_get);
-userRouter.get("/follows", strictGetReqRateLimiter, userFollows_get);
-userRouter.get("/:slug", strictGetReqRateLimiter, user_get);
-userRouter.get("/:slug/projects", strictGetReqRateLimiter, userProjects_get);
-userRouter.get("/:slug/collections", getReqRateLimiter, userCollections_get);
+    .get("/", strictGetReqRateLimiter, user_get)
+    .get("/follows", strictGetReqRateLimiter, userFollows_get)
+    .get("/:slug", strictGetReqRateLimiter, user_get)
+    .get("/:slug/projects", strictGetReqRateLimiter, userProjects_get)
+    .get("/:slug/collections", getReqRateLimiter, userCollections_get)
 
-userRouter.patch("/", critModifyReqRateLimiter, LoginProtectedRoute, user_patch);
-userRouter.delete("/", critModifyReqRateLimiter, user_delete);
-userRouter.post("/delete-account", sendEmailRateLimiter, LoginProtectedRoute, deleteAccountConfirmation_post);
+    .patch("/", critModifyReqRateLimiter, LoginProtectedRoute, user_patch)
+    .delete("/", critModifyReqRateLimiter, user_delete)
+    .post("/delete-account", sendEmailRateLimiter, LoginProtectedRoute, deleteAccountConfirmation_post)
 
-userRouter.post("/confirmation-action", strictGetReqRateLimiter, userConfirmationAction_post);
-userRouter.delete("/confirmation-action", critModifyReqRateLimiter, userConfirmationAction_delete);
+    .post("/confirmation-action", strictGetReqRateLimiter, userConfirmationAction_post)
+    .delete("/confirmation-action", critModifyReqRateLimiter, userConfirmationAction_delete)
 
-userRouter.post("/password", sendEmailRateLimiter, LoginProtectedRoute, addPasswordConfirmation_post);
-userRouter.put("/password", critModifyReqRateLimiter, addPasswordConfirmation_put);
-userRouter.delete("/password", critModifyReqRateLimiter, LoginProtectedRoute, userPassword_delete);
+    .post("/password", sendEmailRateLimiter, LoginProtectedRoute, addPasswordConfirmation_post)
+    .put("/password", critModifyReqRateLimiter, addPasswordConfirmation_put)
+    .delete("/password", critModifyReqRateLimiter, LoginProtectedRoute, userPassword_delete)
 
-userRouter.post("/change-password", sendEmailRateLimiter, changePasswordConfirmationEmail_post);
-userRouter.patch("/password", critModifyReqRateLimiter, userPassword_patch);
+    .post("/change-password", sendEmailRateLimiter, changePasswordConfirmationEmail_post)
+    .patch("/password", critModifyReqRateLimiter, userPassword_patch);
 
 // Get currently logged in user
 async function user_get(ctx: Context) {

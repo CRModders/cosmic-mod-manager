@@ -21,19 +21,19 @@ import { isNumber } from "~/utils";
 import { HTTP_STATUS, serverErrorResponse } from "~/utils/http";
 import { searchProjects } from "./controllers";
 
-const searchRouter = new Hono();
-searchRouter.use(searchReqRateLimiter);
-searchRouter.use(applyCacheHeaders({ maxAge_s: 0, sMaxAge_s: 1800 }));
+const searchRouter = new Hono()
+    .use(searchReqRateLimiter)
+    .use(applyCacheHeaders({ maxAge_s: 0, sMaxAge_s: 1800 }))
 
-searchRouter.get("/", search_get);
-searchRouter.get("/filters/sort-by", sortByFilters_get);
-searchRouter.get("/filters/loaders", loaders_get);
-searchRouter.get("/filters/game-versions", gameVersions_get);
-searchRouter.get("/filters/categories", categories_get);
-searchRouter.get("/filters/features", features_get);
-searchRouter.get("/filters/resolutions", resolutions_get);
-searchRouter.get("/filters/performance-impact", performanceImpacts_get);
-searchRouter.get("/filters/license", licenses_get);
+    .get("/", search_get)
+    .get("/filters/sort-by", sortByFilters_get)
+    .get("/filters/loaders", loaders_get)
+    .get("/filters/game-versions", gameVersions_get)
+    .get("/filters/categories", categories_get)
+    .get("/filters/features", features_get)
+    .get("/filters/resolutions", resolutions_get)
+    .get("/filters/performance-impact", performanceImpacts_get)
+    .get("/filters/license", licenses_get);
 
 async function search_get(ctx: Context) {
     try {

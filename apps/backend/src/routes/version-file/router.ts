@@ -14,13 +14,13 @@ import {
     GetVersionsFromFileHashes,
 } from "./controllers/file";
 
-const versionFileRouter = new Hono();
-versionFileRouter.use(invalidAuthAttemptLimiter);
-versionFileRouter.use(AuthenticationMiddleware);
+const versionFileRouter = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-versionFileRouter.get("/:fileHash", getReqRateLimiter, (ctx) => versionFromHash_get(ctx, false));
-versionFileRouter.get("/:fileHash/download", getReqRateLimiter, (ctx) => versionFromHash_get(ctx, true));
-versionFileRouter.post("/:fileHash/update", strictGetReqRateLimiter, versionFromHashUpdate_get);
+    .get("/:fileHash", getReqRateLimiter, (ctx) => versionFromHash_get(ctx, false))
+    .get("/:fileHash/download", getReqRateLimiter, (ctx) => versionFromHash_get(ctx, true))
+    .post("/:fileHash/update", strictGetReqRateLimiter, versionFromHashUpdate_get);
 
 async function versionFromHash_get(ctx: Context, download = false) {
     try {
@@ -92,12 +92,12 @@ async function versionFromHashUpdate_get(ctx: Context) {
     }
 }
 
-const versionFiles_Router = new Hono();
-versionFiles_Router.use(invalidAuthAttemptLimiter);
-versionFiles_Router.use(AuthenticationMiddleware);
+const versionFiles_Router = new Hono()
+    .use(invalidAuthAttemptLimiter)
+    .use(AuthenticationMiddleware)
 
-versionFiles_Router.post("/", strictGetReqRateLimiter, versionFiles_post);
-versionFiles_Router.post("/update", strictGetReqRateLimiter, versionUpdatesFromHashes_post);
+    .post("/", strictGetReqRateLimiter, versionFiles_post)
+    .post("/update", strictGetReqRateLimiter, versionUpdatesFromHashes_post);
 
 async function versionFiles_post(ctx: Context) {
     try {
