@@ -5,7 +5,7 @@ import { formatLocaleCode } from "~/locales";
 import { DefaultLocale } from "~/locales/meta";
 import { useRootData } from "./root-data";
 
-export const USER_CONFIG_NAMESPACE = "user-config";
+export const USER_CONFIG_NAMESPACE = "user-prefs";
 
 const DefaultViewPrefs = {
     [ProjectType.MOD]: ViewType.LIST,
