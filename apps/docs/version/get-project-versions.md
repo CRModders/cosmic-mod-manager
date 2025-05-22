@@ -59,7 +59,7 @@ GET [`/api/project/{ID|slug}/version`](/api/project/4xvLkWrQx2lt6Vyx6Z/version)
 ]
 ```
 
-[Type reference](/packages/utils/src/types/api/index.ts#L122)
+[Type reference](/packages/utils/src/types/api/index.ts#L125)
 
 
 ## Get a specific project version
@@ -120,4 +120,34 @@ GET [`/api/project/{ID|slug}/version/{ID/slug}`](/api/project/4xvLkWrQx2lt6Vyx6Z
 }
 ```
 
-[Type reference](/packages/utils/src/types/api/index.ts#L122)
+[Type reference](/packages/utils/src/types/api/index.ts#L125)
+
+
+## Get the latest version of a project
+
+GET [`/api/project/{ID|slug}/version/latest`](/api/project/4xvLkWrQx2lt6Vyx6Z/version/latest) \
+_Returns the same response object as the above one_
+
+
+QUERY PARAMS:
+- **Release Channel** \
+    key: `releaseChannel` \
+    type: `ENUM { release | beta | alpha | dev }` \
+    default: `release`
+
+- **Game Version** \
+    key: `gameVersion` \
+    type: [`string`](/api/tags/game-versions)
+
+- **Loader** \
+    key: `loader` \
+    type: [`string`](/api/tags/loaders)
+
+
+## Download version file directly from the api
+
+GET [`/api/project/{ID|slug}/version/latest/primary-file`](/api/project/4xvLkWrQx2lt6Vyx6Z/version/latest/primary-file)
+
+Suffix the above API endpoints with `/primary-file` to download the primary file or `/{FILE_NAME}` to download that specified file from that version.
+
+All the query param filters work the same.

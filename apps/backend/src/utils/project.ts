@@ -1,19 +1,44 @@
 import { VersionReleaseChannel } from "@app/utils/types";
 
+/**
+ * Returns all the channels that are more stable that the one specified \
+ * For example: `GetReleaseChannelFilter("beta")` would return \
+ * `["release", "beta"]` \
+ * \
+ * Suffixing the input string with `"-only"` will returns only the specified channel \
+ * `GetReleaseChannelFilter("beta-only")` => `"beta"`
+ */
 export function GetReleaseChannelFilter(channel?: string) {
     // eg: beta-only
     // idk why someone would want that specifically but whatever
-    if (typeof channel === "string" && channel.endsWith("-only")) return [channel.slice(0, -5)];
-
-    if (!channel || channel === VersionReleaseChannel.ALPHA) {
-        return [VersionReleaseChannel.ALPHA, VersionReleaseChannel.BETA, VersionReleaseChannel.RELEASE];
+    let onlySpecifiedChannel = false;
+    if (typeof channel === "string" && channel.endsWith("-only")) {
+        onlySpecifiedChannel = true;
+        channel = channel.replace("-only", "");
     }
 
-    if (channel === VersionReleaseChannel.BETA) return [VersionReleaseChannel.BETA, VersionReleaseChannel.RELEASE];
-    if (channel === VersionReleaseChannel.DEV) return [VersionReleaseChannel.DEV]; // TODO: decide later whtether to return all release channels or just dev
-    return [VersionReleaseChannel.RELEASE];
-}
+    const filterChannels = [VersionReleaseChannel.RELEASE];
 
-export function AddFieldToObject<T extends object, K extends string, V>(obj: T, field: K, value: V): T & Record<K, V> {
-    return { ...obj, [field]: value } as T & Record<K, V>;
+    // The last entry should always match the specified release channel
+    // so that we can handle the "-only" case easily
+    switch (channel?.toLowerCase()) {
+        case VersionReleaseChannel.DEV:
+            filterChannels.push(VersionReleaseChannel.BETA, VersionReleaseChannel.ALPHA, VersionReleaseChannel.DEV);
+            break;
+
+        case VersionReleaseChannel.ALPHA:
+            filterChannels.push(VersionReleaseChannel.BETA, VersionReleaseChannel.ALPHA);
+            break;
+
+        case VersionReleaseChannel.BETA:
+            filterChannels.push(VersionReleaseChannel.BETA);
+            break;
+
+        case VersionReleaseChannel.RELEASE:
+            // Release is there by default
+            break;
+    }
+
+    if (onlySpecifiedChannel) return [filterChannels.at(-1) as VersionReleaseChannel];
+    return filterChannels;
 }
