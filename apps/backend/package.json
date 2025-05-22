@@ -8,7 +8,8 @@
         "prisma-generate": "prisma generate",
         "prisma-push": "prisma db push",
         "deploy": "cross-env NODE_ENV=production pm2 deploy pm2.config.cjs backend",
-        "file-backup": "bun run src/services/storage/backup/index.ts"
+        "file-backup": "bun run src/services/storage/backup/index.ts",
+        "test": "bun test"
     },
     "dependencies": {
         "@app/utils": "workspace:*",
