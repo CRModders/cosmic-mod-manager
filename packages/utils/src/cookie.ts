@@ -13,7 +13,8 @@ export function getCookie(key: string, _src: string | undefined) {
 }
 
 export function setCookie(key: string, value: string, expires = 365) {
-    document.cookie = `${key}=${value}; expires=${new Date(Date.now() + expires * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+    const domain = `.${location.hostname}`;
+    document.cookie = `${key}=${value}; expires=${new Date(Date.now() + expires * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=${domain}; samesite=Lax`;
 }
 
 export function getThemeFromCookie(cookie?: string | null): ThemeOptions {
