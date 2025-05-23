@@ -8,6 +8,7 @@ export const authProvidersList: AuthProvider[] = [
     AuthProvider.CREDENTIAL,
 ];
 
+// It's explicitly listed so that the items are in correct order
 export const projectTypes: ProjectType[] = [
     ProjectType.MOD,
     ProjectType.DATAMOD,
@@ -18,29 +19,8 @@ export const projectTypes: ProjectType[] = [
     ProjectType.WORLD,
 ];
 
-export const ProjectPermissionsList: ProjectPermission[] = [
-    ProjectPermission.UPLOAD_VERSION,
-    ProjectPermission.DELETE_VERSION,
-    ProjectPermission.EDIT_DETAILS,
-    ProjectPermission.EDIT_DESCRIPTION,
-    ProjectPermission.MANAGE_INVITES,
-    ProjectPermission.REMOVE_MEMBER,
-    ProjectPermission.EDIT_MEMBER,
-    ProjectPermission.DELETE_PROJECT,
-    ProjectPermission.VIEW_ANALYTICS,
-    ProjectPermission.VIEW_REVENUE,
-];
-
-export const OrgPermissionsList: OrganisationPermission[] = [
-    OrganisationPermission.EDIT_DETAILS,
-    OrganisationPermission.MANAGE_INVITES,
-    OrganisationPermission.REMOVE_MEMBER,
-    OrganisationPermission.EDIT_MEMBER,
-    OrganisationPermission.ADD_PROJECT,
-    OrganisationPermission.REMOVE_PROJECT,
-    OrganisationPermission.DELETE_ORGANIZATION,
-    OrganisationPermission.EDIT_MEMBER_DEFAULT_PERMISSIONS,
-];
+export const ProjectPermissionsList = Object.values(ProjectPermission);
+export const OrgPermissionsList = Object.values(OrganisationPermission);
 
 export const RejectedStatuses = [ProjectPublishingStatus.REJECTED, ProjectPublishingStatus.WITHHELD];
 
