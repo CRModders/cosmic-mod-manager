@@ -5,7 +5,6 @@ import { invalidAuthAttemptLimiter } from "~/middleware/rate-limit/invalid-auth-
 import { HashAlgorithms } from "~/types";
 import { REQ_BODY_NAMESPACE } from "~/types/namespaces";
 import { HTTP_STATUS, invalidReqestResponse, notFoundResponse, serverErrorResponse } from "~/utils/http";
-import { GetReleaseChannelFilter } from "~/utils/project";
 import { versionFileUrl } from "~/utils/urls";
 import {
     GetLatestProjectVersionFromHash,
@@ -77,7 +76,8 @@ async function versionFromHashUpdate_get(ctx: Context) {
 
         let releaseChannel = body.releaseChannel;
         if (!releaseChannel || !releaseChannel.length || typeof releaseChannel !== "string") {
-            releaseChannel = GetReleaseChannelFilter();
+            // unset it if it's wrong type
+            releaseChannel = undefined;
         }
 
         const res = await GetLatestProjectVersionFromHash(hash, hashAlgorithm, {
