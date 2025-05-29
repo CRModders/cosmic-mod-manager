@@ -26,21 +26,25 @@ export function getCurrLocation() {
 /**
  * Constructs a URL path with an optional language prefix and additional path segment.
  *
- * @param _path - The main path segment of the URL.
- * @param extra - An optional additional path segment to append to the URL.
- * @param _hl - An optional language prefix to prepend to the URL.
+ * @param url - The main path segment of the URL.
+ * @param hl - An optional language prefix to prepend to the URL.
  * @returns The constructed URL path as a string.
  */
-export function FormatUrl_WithHintLocale(path: string, hl?: string) {
-    if (path.startsWith("http") || path.startsWith("mailto:")) return path;
+export function FormatUrl_WithHintLocale(url: string, hl?: string) {
+    if (url.startsWith("http") || url.startsWith("mailto:")) return url;
 
     const hintLocale = hl ? hl : getHintLocale();
-    const searchParams = new URLSearchParams(path.split("?")[1] || `?${HINT_LOCALE_KEY}=${hintLocale}`);
+    const searchParams = new URLSearchParams(url.split("?")[1] || `?${HINT_LOCALE_KEY}=${hintLocale}`);
 
     if (!hintLocale) searchParams.delete(HINT_LOCALE_KEY);
     else searchParams.set(HINT_LOCALE_KEY, hintLocale);
 
-    return prepend("/", `${path.split("?")[0]}?${searchParams.toString()}`);
+    const fragment = url.split("#")[1];
+    let newUrl = url.split("?")[0];
+    if (searchParams.size) newUrl += `?${searchParams.toString()}`;
+    if (fragment) newUrl += `#${fragment}`;
+
+    return prepend("/", newUrl);
 }
 
 export function ProjectPagePath(type: string, projectSlug: string, extra?: string) {
@@ -91,7 +95,7 @@ export function appendPathInUrl(_url: string | URL, str: string) {
     }
 
     if (url.pathname.endsWith("/") || str.startsWith("/")) url.pathname = `${url.pathname}${str}`;
-    else url.pathname = `${url.pathname}/${str}`;
+    else if (str.length) url.pathname = `${url.pathname}/${str}`;
 
     return url.href.replace(url.origin, "");
 }
