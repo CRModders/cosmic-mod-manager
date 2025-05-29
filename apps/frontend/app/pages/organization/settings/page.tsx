@@ -14,15 +14,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
+import { MAX_ORGANISATION_DESCRIPTION_LENGTH, MAX_ORGANISATION_NAME_LENGTH } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { orgSettingsFormSchema } from "@app/utils/schemas/organisation/settings/general";
-import { handleFormError } from "@app/utils/schemas/utils";
 import { createURLSafeSlug } from "@app/utils/string";
 import type { Organisation } from "@app/utils/types/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -101,9 +101,7 @@ export default function GeneralOrgSettings() {
             <ContentCardTemplate title={t.organization.orgInfo}>
                 <Form {...form}>
                     <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                        }}
+                        onSubmit={form.handleSubmit(saveSettings)}
                         className="w-full flex flex-col items-start justify-start gap-form-elements"
                     >
                         <FormField
@@ -124,12 +122,13 @@ export default function GeneralOrgSettings() {
                             control={form.control}
                             name="name"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="org-name-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="org-name-input">
                                         {t.form.name}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_ORGANISATION_NAME_LENGTH} />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="org-name-input" autoComplete="off" />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -138,10 +137,10 @@ export default function GeneralOrgSettings() {
                             control={form.control}
                             name="slug"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="org-slug-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="org-slug-input">
                                         {t.form.url}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_ORGANISATION_NAME_LENGTH} />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
                                         <Input
@@ -158,6 +157,7 @@ export default function GeneralOrgSettings() {
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -166,10 +166,10 @@ export default function GeneralOrgSettings() {
                             control={form.control}
                             name="description"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="org-description-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="org-description-input">
                                         {t.form.description}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_ORGANISATION_DESCRIPTION_LENGTH} />
                                     </FormLabel>
                                     <Textarea
                                         {...field}
@@ -177,6 +177,7 @@ export default function GeneralOrgSettings() {
                                         spellCheck="false"
                                         id="org-description-input"
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -185,12 +186,6 @@ export default function GeneralOrgSettings() {
                             <Button
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
-                                onClick={async () => {
-                                    await handleFormError(async () => {
-                                        const parsedValues = await orgSettingsFormSchema.parseAsync(form.getValues());
-                                        saveSettings(parsedValues);
-                                    }, toast.error);
-                                }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}

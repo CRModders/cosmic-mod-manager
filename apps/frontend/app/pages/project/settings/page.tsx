@@ -14,7 +14,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
@@ -24,10 +24,10 @@ import { Textarea } from "@app/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { ShowEnvSupportSettingsForType, projectTypes } from "@app/utils/config/project";
+import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH } from "@app/utils/constants";
 import { getProjectTypesFromNames, getProjectVisibilityFromString } from "@app/utils/convertors";
 import type { z } from "@app/utils/schemas";
 import { generalProjectSettingsFormSchema } from "@app/utils/schemas/project/settings/general";
-import { handleFormError } from "@app/utils/schemas/utils";
 import { Capitalize, createURLSafeSlug } from "@app/utils/string";
 import { EnvironmentSupport, ProjectPublishingStatus, type ProjectType, ProjectVisibility } from "@app/utils/types";
 import type { ProjectDetailsData } from "@app/utils/types/api";
@@ -114,9 +114,7 @@ export default function GeneralSettingsPage() {
             <ContentCardTemplate title={t.projectSettings.projectInfo}>
                 <Form {...form}>
                     <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                        }}
+                        onSubmit={form.handleSubmit(saveSettings)}
                         className="w-full flex flex-col items-start justify-start gap-form-elements"
                     >
                         <FormField
@@ -137,12 +135,13 @@ export default function GeneralSettingsPage() {
                             control={form.control}
                             name="name"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="project-name-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="project-name-input">
                                         {t.form.name}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_PROJECT_NAME_LENGTH} />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="project-name-input" autoComplete="off" />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -151,10 +150,10 @@ export default function GeneralSettingsPage() {
                             control={form.control}
                             name="slug"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="project-slug-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="project-slug-input">
                                         {t.form.url}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_PROJECT_NAME_LENGTH} />
                                     </FormLabel>
                                     <div className="w-full flex flex-col items-start justify-center gap-0.5">
                                         <Input
@@ -171,6 +170,8 @@ export default function GeneralSettingsPage() {
                                             <em className="not-italic text-foreground font-[500]">{form.getValues().slug}</em>
                                         </span>
                                     </div>
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -179,10 +180,10 @@ export default function GeneralSettingsPage() {
                             control={form.control}
                             name="summary"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="project-summary-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel className="font-bold" htmlFor="project-summary-input">
                                         {t.form.summary}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_PROJECT_SUMMARY_LENGTH} />
                                     </FormLabel>
                                     <Textarea
                                         {...field}
@@ -190,6 +191,8 @@ export default function GeneralSettingsPage() {
                                         spellCheck="false"
                                         id="project-summary-input"
                                     />
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -200,10 +203,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                        <FormLabel className="text-foreground font-bold">
-                                            {t.form.projectType}
-                                            <FormMessage />
-                                        </FormLabel>
+                                        <FormLabel className="font-bold">{t.form.projectType}</FormLabel>
                                         <span className="text-muted-foreground">{t.dashboard.projectTypeDesc}</span>
                                     </div>
 
@@ -224,6 +224,8 @@ export default function GeneralSettingsPage() {
                                         noResultsElement={t.common.noResults}
                                         inputPlaceholder={t.common.search}
                                     />
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -235,10 +237,7 @@ export default function GeneralSettingsPage() {
                                     render={({ field }) => (
                                         <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                             <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                                <FormLabel className="text-foreground font-bold">
-                                                    {t.projectSettings.clientSide}
-                                                    <FormMessage />
-                                                </FormLabel>
+                                                <FormLabel className="font-bold">{t.projectSettings.clientSide}</FormLabel>
                                                 <span className="text-muted-foreground">
                                                     {t.projectSettings.clientSideDesc(t.navbar[projectData.type[0]])}
                                                 </span>
@@ -260,6 +259,8 @@ export default function GeneralSettingsPage() {
                                                     </SelectItem>
                                                 </SelectContent>
                                             </Select>
+
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -270,10 +271,7 @@ export default function GeneralSettingsPage() {
                                     render={({ field }) => (
                                         <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                             <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                                <FormLabel className="text-foreground font-bold">
-                                                    {t.projectSettings.serverSide}
-                                                    <FormMessage />
-                                                </FormLabel>
+                                                <FormLabel className="font-bold">{t.projectSettings.serverSide}</FormLabel>
                                                 <span className="text-muted-foreground">
                                                     {t.projectSettings.serverSideDesc(t.navbar[projectData.type[0]])}
                                                 </span>
@@ -295,6 +293,8 @@ export default function GeneralSettingsPage() {
                                                     </SelectItem>
                                                 </SelectContent>
                                             </Select>
+
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -306,10 +306,7 @@ export default function GeneralSettingsPage() {
                             render={({ field }) => (
                                 <FormItem className="w-full flex flex-wrap flex-row items-center justify-between gap-x-6">
                                     <div className="flex flex-col items-start justify-center gap-y-1.5">
-                                        <FormLabel className="text-foreground font-bold">
-                                            {t.form.visibility}
-                                            <FormMessage />
-                                        </FormLabel>
+                                        <FormLabel className="font-bold">{t.form.visibility}</FormLabel>
                                         <div className="max-w-[68ch] flex flex-col items-start justify-start text-muted-foreground gap-1.5">
                                             <p className="leading-tight">{t.projectSettings.visibilityDesc}</p>
 
@@ -379,6 +376,8 @@ export default function GeneralSettingsPage() {
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
+
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -387,12 +386,6 @@ export default function GeneralSettingsPage() {
                             <Button
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
-                                onClick={async () => {
-                                    await handleFormError(async () => {
-                                        const parsedValues = await generalProjectSettingsFormSchema.parseAsync(form.getValues());
-                                        saveSettings(parsedValues);
-                                    }, toast.error);
-                                }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}

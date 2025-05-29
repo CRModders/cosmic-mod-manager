@@ -1,40 +1,41 @@
+import { fallbackProjectIcon } from "@app/components/icons";
+import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import {
     Dialog,
-    DialogTrigger,
+    DialogBody,
+    DialogClose,
     DialogContent,
+    DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogDescription,
-    DialogBody,
-    DialogFooter,
-    DialogClose,
+    DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
+import { MAX_COLLECTION_DESCRIPTION_LENGTH, MAX_COLLECTION_NAME_LENGTH } from "@app/utils/constants";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import type { z } from "@app/utils/schemas";
 import { updateCollectionFormSchema } from "@app/utils/schemas/collections";
+import { Capitalize } from "@app/utils/string";
+import { CollectionVisibility } from "@app/utils/types";
 import type { Collection } from "@app/utils/types/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EditIcon, SaveIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { EditIcon, SaveIcon } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
+import IconPicker from "~/components/icon-picker";
+import { CancelButton } from "~/components/ui/button";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
 import useCollections from "./provider";
-import RefreshPage from "@app/components/misc/refresh-page";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
-import { CollectionVisibility } from "@app/utils/types";
-import { Capitalize } from "@app/utils/string";
-import IconPicker from "~/components/icon-picker";
-import { fallbackProjectIcon } from "@app/components/icons";
-import { CancelButton } from "~/components/ui/button";
 
 interface EditCollectionProps {
     collection: Collection;
@@ -138,7 +139,7 @@ export default function EditCollection(props: EditCollectionProps) {
                                     <FormItem>
                                         <FormLabel htmlFor="collection-name-input">
                                             {t.form.name}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_COLLECTION_NAME_LENGTH} />
                                         </FormLabel>
                                         <Input
                                             placeholder={t.dashboard.enterCollectionName}
@@ -147,6 +148,7 @@ export default function EditCollection(props: EditCollectionProps) {
                                             {...field}
                                             onChange={field.onChange}
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -156,10 +158,7 @@ export default function EditCollection(props: EditCollectionProps) {
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.form.visibility}
-                                            <FormMessage />
-                                        </FormLabel>
+                                        <FormLabel>{t.form.visibility}</FormLabel>
 
                                         <Select value={field.value} onValueChange={field.onChange}>
                                             <SelectTrigger>
@@ -177,6 +176,7 @@ export default function EditCollection(props: EditCollectionProps) {
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -188,9 +188,10 @@ export default function EditCollection(props: EditCollectionProps) {
                                     <FormItem>
                                         <FormLabel htmlFor="collection-description-input">
                                             {t.form.description}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_COLLECTION_DESCRIPTION_LENGTH} />
                                         </FormLabel>
                                         <Textarea id="collection-description-input" {...field} className="resize-none" placeholder="..." />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

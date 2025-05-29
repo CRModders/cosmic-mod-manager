@@ -40,7 +40,7 @@ function DialogContent({ ref, className, children, ...props }: React.ComponentPr
                 {children}
                 <DialogPrimitive.Close
                     id="dialog_close_btn"
-                    className="absolute end-4 top-4 rounded p-1.5 transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background disabled:pointer-events-none"
+                    className="absolute end-3 top-3 rounded p-1.5 transition-opacity text-muted-foreground hover:text-foreground hover:bg-shallow-background disabled:pointer-events-none"
                 >
                     <XIcon aria-hidden className="w-btn-icon-md h-btn-icon-md" />
                     <span className="sr-only">Close</span>

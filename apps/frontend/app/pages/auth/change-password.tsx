@@ -62,12 +62,10 @@ export default function ChangePasswordPage() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel htmlFor="email-input">
-                                            {t.auth.email}
-                                            <FormMessage />
-                                        </FormLabel>
+                                        <FormLabel htmlFor="email-input">{t.auth.email}</FormLabel>
 
                                         <Input id="email-input" type="email" {...field} placeholder={t.auth.enterEmail} />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

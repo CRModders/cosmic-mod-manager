@@ -2,7 +2,6 @@ import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { Controller, type ControllerProps, type FieldPath, type FieldValues, FormProvider, useFormContext } from "react-hook-form";
-import type { RefProp } from "~/types";
 import { Label } from "~/ui/label";
 import { cn } from "~/utils";
 
@@ -56,7 +55,7 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
-function FormItem({ ref, className, ...props }: React.HTMLAttributes<HTMLDivElement> & RefProp<HTMLDivElement>) {
+function FormItem({ ref, className, ...props }: React.ComponentPropsWithRef<"div">) {
     const id = React.useId();
 
     return (
@@ -78,7 +77,7 @@ function FormLabel({ ref, className, ...props }: React.ComponentPropsWithRef<typ
         <Label
             ref={ref}
             className={cn(
-                "text-lg font-medium leading-none text-foreground gap-x-6 w-full flex flex-wrap items-center justify-between",
+                "text-md font-medium leading-none text-foreground gap-x-6 w-full flex flex-wrap items-center justify-between",
                 className,
             )}
             htmlFor={formItemId}
@@ -103,14 +102,14 @@ function FormControl({ ref, ...props }: React.ComponentPropsWithRef<typeof Slot>
 }
 FormControl.displayName = "FormControl";
 
-function FormDescription({ ref, className, ...props }: React.HTMLAttributes<HTMLParagraphElement> & RefProp<HTMLParagraphElement>) {
+function FormDescription({ ref, className, ...props }: React.ComponentPropsWithRef<"p">) {
     const { formDescriptionId } = useFormField();
 
     return <p ref={ref} id={formDescriptionId} className={cn("text-[0.87rem] text-muted-foreground", className)} {...props} />;
 }
 FormDescription.displayName = "FormDescription";
 
-function FormMessage({ ref, className, children, ...props }: React.HTMLAttributes<HTMLParagraphElement> & RefProp<HTMLParagraphElement>) {
+function FormMessage({ ref, className, children, ...props }: React.ComponentPropsWithRef<"p">) {
     const { error, formMessageId } = useFormField();
     const body = error ? String(error?.message) : children;
 
@@ -119,11 +118,46 @@ function FormMessage({ ref, className, children, ...props }: React.HTMLAttribute
     }
 
     return (
-        <p ref={ref} id={formMessageId} className={cn("text-sm leading-tight font-medium text-danger-foreground", className)} {...props}>
+        <p
+            ref={ref}
+            id={formMessageId}
+            className={cn("ps-0.5 text-sm leading-tight font-medium text-danger-foreground", className)}
+            {...props}
+        >
             {body}
         </p>
     );
 }
 FormMessage.displayName = "FormMessage";
 
-export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };
+interface CharacterCounterProps extends React.ComponentPropsWithRef<"span"> {
+    currVal: string | undefined;
+    max: number;
+    visibleAfter?: number;
+}
+
+function CharacterCounter({ ref, currVal, max, visibleAfter, className, ...props }: CharacterCounterProps) {
+    const field = useFormField();
+    const curr = currVal && typeof currVal === "string" ? currVal?.length : 0;
+
+    if (field?.error) return null;
+    if (visibleAfter && curr <= visibleAfter) return null;
+    if (max * 0.7 > curr && max - curr > 16) return null;
+
+    return (
+        <span
+            ref={ref}
+            className={cn(
+                "pe-0.5 text-xs leading-none text-extra-muted-foreground self-center font-normal",
+                curr > max && "text-danger-foreground",
+                className,
+            )}
+            {...props}
+        >
+            {curr} / {max}
+        </span>
+    );
+}
+FormMessage.displayName = "CharacterCounter";
+
+export { CharacterCounter, Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };

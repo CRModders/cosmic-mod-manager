@@ -11,12 +11,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
+import { MAX_GALLERY_DESCRIPTION_LENGTH, MAX_GALLERY_TITLE_LENGTH } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { updateGalleryImageFormSchema } from "@app/utils/schemas/project/settings/gallery";
 import type { GalleryItem, ProjectDetailsData } from "@app/utils/types/api";
@@ -131,9 +132,10 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-title">
                                             {t.form.title}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_GALLERY_TITLE_LENGTH} />
                                         </FormLabel>
                                         <Input {...field} placeholder={t.form.title} id="gallery-item-title" />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -145,7 +147,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-description">
                                             {t.form.description}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_GALLERY_DESCRIPTION_LENGTH} />
                                         </FormLabel>
                                         <Textarea
                                             {...field}
@@ -153,6 +155,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                             className="h-fit min-h-14 resize-none"
                                             id="gallery-item-description"
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -164,7 +167,6 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-ordering">
                                             {t.form.ordering}
-                                            <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
                                                 {t.project.galleryOrderingDesc}
                                             </FormDescription>
@@ -184,6 +186,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                             type="number"
                                             id="gallery-item-ordering"
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -195,7 +198,6 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-featured">
                                             {t.form.featured}
-                                            <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
                                                 {t.project.featuredGalleryImgDesc}
                                             </FormDescription>
@@ -213,6 +215,7 @@ export default function EditGalleryImage({ galleryItem, projectData }: Props) {
                                             )}
                                             {field.value === true ? t.project.unfeatureImg : t.project.featureImg}
                                         </Button>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

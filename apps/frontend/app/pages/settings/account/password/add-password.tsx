@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
@@ -96,13 +96,15 @@ function AddPasswordForm({ email }: { email: string }) {
                                 name="newPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.auth.newPass}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input {...field} type="password" placeholder={t.auth.newPass_label} spellCheck={false} />
-                                        </FormControl>
+                                        <FormLabel htmlFor="new-password">{t.auth.newPass}</FormLabel>
+                                        <Input
+                                            {...field}
+                                            type="password"
+                                            id="new-password"
+                                            placeholder={t.auth.newPass_label}
+                                            spellCheck={false}
+                                        />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -111,13 +113,15 @@ function AddPasswordForm({ email }: { email: string }) {
                                 name="confirmNewPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.auth.confirmPass}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input {...field} type="password" placeholder={t.auth.confirmPass_label} spellCheck={false} />
-                                        </FormControl>
+                                        <FormLabel htmlFor="confirm-new-password">{t.auth.confirmPass}</FormLabel>
+                                        <Input
+                                            {...field}
+                                            type="password"
+                                            id="confirm-new-password"
+                                            placeholder={t.auth.confirmPass_label}
+                                            spellCheck={false}
+                                        />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

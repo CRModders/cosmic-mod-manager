@@ -99,11 +99,9 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                             name="newPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="new-password-input">
-                                        {t.auth.newPass}
-                                        <FormMessage />
-                                    </FormLabel>
+                                    <FormLabel htmlFor="new-password-input">{t.auth.newPass}</FormLabel>
                                     <Input type="password" placeholder={t.auth.newPass_label} id="new-password-input" {...field} />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -113,16 +111,14 @@ export default function ChangePasswordCard({ code }: { code: string }) {
                             name="confirmNewPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="confirm-new-password-input">
-                                        {t.auth.confirmPass}
-                                        <FormMessage />
-                                    </FormLabel>
+                                    <FormLabel htmlFor="confirm-new-password-input">{t.auth.confirmPass}</FormLabel>
                                     <Input
                                         type="password"
                                         placeholder={t.auth.confirmPass_label}
                                         id="confirm-new-password-input"
                                         {...field}
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

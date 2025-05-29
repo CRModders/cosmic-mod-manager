@@ -1,7 +1,7 @@
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { FormErrorMessage } from "@app/components/ui/form-message";
 import HorizontalSeparator from "@app/components/ui/hr-separator";
 import { Input } from "@app/components/ui/input";
@@ -80,21 +80,17 @@ export default function LoginPage() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.auth.email}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type="email"
-                                                placeholder="example@abc.com"
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                    field.onChange(e);
-                                                    setFormError("");
-                                                }}
-                                            />
-                                        </FormControl>
+                                        <FormLabel>{t.auth.email}</FormLabel>
+                                        <Input
+                                            {...field}
+                                            type="email"
+                                            placeholder="example@abc.com"
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                field.onChange(e);
+                                                setFormError("");
+                                            }}
+                                        />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -104,21 +100,17 @@ export default function LoginPage() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.auth.password}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                placeholder="********"
-                                                type="password"
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                    field.onChange(e);
-                                                    setFormError("");
-                                                }}
-                                            />
-                                        </FormControl>
+                                        <FormLabel>{t.auth.password}</FormLabel>
+                                        <Input
+                                            {...field}
+                                            placeholder="********"
+                                            type="password"
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                field.onChange(e);
+                                                setFormError("");
+                                            }}
+                                        />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

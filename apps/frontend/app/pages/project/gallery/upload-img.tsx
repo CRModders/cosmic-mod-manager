@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { InteractiveLabel } from "@app/components/ui/label";
 import { toast } from "@app/components/ui/sonner";
@@ -19,9 +19,10 @@ import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { cn } from "@app/components/utils";
+import { MAX_GALLERY_DESCRIPTION_LENGTH, MAX_GALLERY_TITLE_LENGTH } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { addNewGalleryImageFormSchema } from "@app/utils/schemas/project/settings/gallery";
-import { handleFormError, validImgFileExtensions } from "@app/utils/schemas/utils";
+import { validImgFileExtensions } from "@app/utils/schemas/utils";
 import type { ProjectDetailsData } from "@app/utils/types/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileIcon, PlusIcon, StarIcon, UploadIcon } from "lucide-react";
@@ -127,13 +128,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                 <DialogBody>
                     <Form {...form}>
                         <form
-                            onSubmit={async (e) => {
-                                e.preventDefault();
-                                await handleFormError(async () => {
-                                    const formValues = await addNewGalleryImageFormSchema.parseAsync(form.getValues());
-                                    await uploadGalleryImage(formValues);
-                                }, toast.error);
-                            }}
+                            onSubmit={form.handleSubmit(uploadGalleryImage)}
                             className="w-full flex flex-col items-start justify-start gap-form-elements"
                         >
                             <FormField
@@ -193,6 +188,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                                 </div>
                                             ) : null}
                                         </div>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -204,9 +200,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-title">
                                             {t.form.title}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_GALLERY_TITLE_LENGTH} />
                                         </FormLabel>
                                         <Input {...field} placeholder={t.form.title} id="gallery-item-title" />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -218,7 +215,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-description">
                                             {t.form.description}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_GALLERY_DESCRIPTION_LENGTH} />
                                         </FormLabel>
                                         <Textarea
                                             {...field}
@@ -226,6 +223,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                             className="h-fit min-h-14 resize-none"
                                             id="gallery-item-description"
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -237,7 +235,6 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-ordering">
                                             {t.form.ordering}
-                                            <FormMessage />
                                             <FormDescription className="my-1 leading-normal text-sm">
                                                 {t.project.galleryOrderingDesc}
                                             </FormDescription>
@@ -250,6 +247,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                             type="number"
                                             id="gallery-item-ordering"
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -261,7 +259,7 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="gallery-item-featured">
                                             {t.form.featured}
-                                            <FormMessage />
+
                                             <FormDescription className="my-1 leading-normal text-sm">
                                                 {t.project.featuredGalleryImgDesc}
                                             </FormDescription>
@@ -279,6 +277,8 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                             )}
                                             {field.value === true ? t.project.unfeatureImg : t.project.featureImg}
                                         </Button>
+
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -288,7 +288,10 @@ export default function UploadGalleryImageForm({ projectData }: Props) {
                                     <CancelButton disabled={isLoading} />
                                 </DialogClose>
 
-                                <Button type="submit" disabled={isLoading}>
+                                <Button
+                                    type="submit"
+                                    // disabled={isLoading}
+                                >
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (

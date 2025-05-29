@@ -2,14 +2,14 @@ import { fallbackUserIcon } from "@app/components/icons";
 import RefreshPage from "@app/components/misc/refresh-page";
 import { Button } from "@app/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@app/components/ui/card";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
+import { MAX_DISPLAY_NAME_LENGTH, MAX_USERNAME_LENGTH, MAX_USER_BIO_LENGTH } from "@app/utils/constants";
 import type { z } from "@app/utils/schemas";
 import { profileUpdateFormSchema } from "@app/utils/schemas/settings";
-import { handleFormError } from "@app/utils/schemas/utils";
 import type { LoggedInUserData } from "@app/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SaveIcon, UserIcon } from "lucide-react";
@@ -88,9 +88,7 @@ export function ProfileSettingsPage({ session }: Props) {
             <CardContent>
                 <Form {...form}>
                     <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                        }}
+                        onSubmit={form.handleSubmit(saveSettings)}
                         className="w-full flex flex-col items-start justify-start gap-form-elements"
                     >
                         <FormField
@@ -112,12 +110,13 @@ export function ProfileSettingsPage({ session }: Props) {
                             control={form.control}
                             name="userName"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="username-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel htmlFor="username-input">
                                         {t.form.username}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_USERNAME_LENGTH} />
                                     </FormLabel>
                                     <Input {...field} className="md:w-[32ch]" id="username-input" autoComplete="off" />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -126,10 +125,10 @@ export function ProfileSettingsPage({ session }: Props) {
                             control={form.control}
                             name="name"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-foreground font-bold" htmlFor="displayname-input">
+                                <FormItem className="md:w-fit">
+                                    <FormLabel htmlFor="displayname-input">
                                         {t.form.displayName}
-                                        <FormMessage />
+                                        <CharacterCounter currVal={field.value} max={MAX_DISPLAY_NAME_LENGTH} />
                                     </FormLabel>
                                     <Input
                                         {...field}
@@ -138,6 +137,7 @@ export function ProfileSettingsPage({ session }: Props) {
                                         autoComplete="off"
                                         placeholder={form.getValues().userName}
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -146,21 +146,20 @@ export function ProfileSettingsPage({ session }: Props) {
                             control={form.control}
                             name="bio"
                             render={({ field }) => (
-                                <FormItem>
-                                    <div className="flex flex-col items-start justify-center">
-                                        <FormLabel className="text-foreground font-bold" htmlFor="user-description-input">
-                                            {t.settings.bio}
-                                            <FormMessage />
-                                        </FormLabel>
-                                        <FormDescription>{t.settings.bioDesc}</FormDescription>
-                                    </div>
+                                <FormItem className="md:w-fit">
+                                    <FormLabel htmlFor="user-description-input">
+                                        {t.settings.bio}
+                                        <CharacterCounter currVal={field.value} max={MAX_USER_BIO_LENGTH} />
+                                    </FormLabel>
 
                                     <Textarea
                                         {...field}
                                         className="resize-none md:w-[48ch] min-h-32"
                                         spellCheck="false"
                                         id="user-description-input"
+                                        placeholder={t.settings.bioDesc}
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -169,12 +168,6 @@ export function ProfileSettingsPage({ session }: Props) {
                             <Button
                                 type="submit"
                                 disabled={JSON.stringify(initialValues) === JSON.stringify(form.getValues()) || isLoading}
-                                onClick={async () => {
-                                    await handleFormError(async () => {
-                                        const parsedValues = await profileUpdateFormSchema.parseAsync(form.getValues());
-                                        saveSettings(parsedValues);
-                                    }, toast.error);
-                                }}
                             >
                                 {isLoading ? <LoadingSpinner size="xs" /> : <SaveIcon aria-hidden className="w-btn-icon h-btn-icon" />}
                                 {t.form.saveChanges}

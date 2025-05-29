@@ -8,11 +8,11 @@ import { toast } from "@app/components/ui/sonner";
 import { Switch } from "@app/components/ui/switch";
 import { cn } from "@app/components/utils";
 import { ProjectPermissionsList } from "@app/utils/config/project";
-import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { doesMemberHaveAccess } from "@app/utils/project";
 import type { z } from "@app/utils/schemas";
 import { updateTeamMemberFormSchema } from "@app/utils/schemas/project/settings/members";
 import { handleFormError } from "@app/utils/schemas/utils";
+import { hasRootAccess } from "@app/utils/src/constants/roles";
 import { type LoggedInUserData, ProjectPermission } from "@app/utils/types";
 import type { ProjectDetailsData, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -165,7 +165,6 @@ export function ProjectTeamMember({
                                     <div className="flex flex-col items-start justify-center">
                                         <FormLabel className="font-bold" htmlFor={`member-role-input_${member.id}`}>
                                             {t.projectSettings.role}
-                                            <FormMessage />
                                         </FormLabel>
                                         <span className="text-muted-foreground/90">{t.projectSettings.roleDesc}</span>
                                     </div>
@@ -176,6 +175,7 @@ export function ProjectTeamMember({
                                         className="w-[24ch]"
                                         id={`member-role-input_${member.id}`}
                                     />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { MultiSelect } from "@app/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@app/components/ui/select";
@@ -20,11 +20,11 @@ import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
 import { projectTypes } from "@app/utils/config/project";
+import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_SUMMARY_LENGTH } from "@app/utils/constants";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import type { z } from "@app/utils/schemas";
 import { newProjectFormSchema } from "@app/utils/schemas/project";
-import { handleFormError } from "@app/utils/schemas/utils";
 import { Capitalize, createURLSafeSlug } from "@app/utils/string";
 import { ProjectVisibility } from "@app/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -82,7 +82,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
             }
 
             RefreshPage(navigate, VersionPagePath(result?.type?.[0], result?.urlSlug, "new"));
-            return toast.success(result?.message || t.common.success);
+            toast.success(result?.message || t.common.success);
         } finally {
             setIsLoading(false);
         }
@@ -129,9 +129,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                 <DialogBody>
                     <Form {...form}>
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                            }}
+                            onSubmit={form.handleSubmit(createProject)}
                             className="w-full flex flex-col items-start justify-center gap-form-elements"
                         >
                             <FormField
@@ -141,7 +139,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="project-name-input">
                                             {t.form.name}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_PROJECT_NAME_LENGTH} />
                                         </FormLabel>
                                         <Input
                                             placeholder="Project name"
@@ -155,6 +153,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                                 form.setValue("slug", createURLSafeSlug(name).value);
                                             }}
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -166,7 +165,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="project-url-slug-input">
                                             {t.form.url}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_PROJECT_NAME_LENGTH} />
                                         </FormLabel>
                                         <Input
                                             id="project-url-slug-input"
@@ -178,6 +177,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                                 if (autoFillUrlSlug === true) setAutoFillUrlSlug(false);
                                             }}
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -188,10 +188,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 render={({ field }) => (
                                     <FormItem className="w-full flex flex-wrap flex-row items-end justify-between">
                                         <div className="flex flex-col items-start justify-center">
-                                            <FormLabel className="">
-                                                {t.form.projectType}
-                                                <FormMessage />
-                                            </FormLabel>
+                                            <FormLabel>{t.form.projectType}</FormLabel>
                                             <FormDescription>{t.dashboard.projectTypeDesc}</FormDescription>
                                         </div>
 
@@ -213,6 +210,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             noResultsElement={t.common.noResults}
                                             inputPlaceholder={t.common.search}
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -222,10 +220,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 control={form.control}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            {t.form.visibility}
-                                            <FormMessage />
-                                        </FormLabel>
+                                        <FormLabel>{t.form.visibility}</FormLabel>
                                         <Select
                                             open={visibilitySelectorOpen}
                                             onOpenChange={(isOpen) => {
@@ -252,6 +247,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -263,7 +259,8 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                     <FormItem>
                                         <FormLabel htmlFor="project-summary-input">
                                             {t.form.summary}
-                                            <FormMessage />
+
+                                            <CharacterCounter currVal={field.value} max={MAX_PROJECT_SUMMARY_LENGTH} />
                                         </FormLabel>
                                         <Textarea
                                             placeholder="Enter project summary..."
@@ -271,6 +268,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                             {...field}
                                             className="resize-none"
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -279,15 +277,7 @@ export default function CreateNewProjectDialog({ orgId, trigger }: Props) {
                                 <DialogClose asChild>
                                     <CancelButton type="button" />
                                 </DialogClose>
-                                <Button
-                                    disabled={isLoading || !isFormSubmittable()}
-                                    onClick={async () => {
-                                        await handleFormError(async () => {
-                                            const parsedFormValues = await newProjectFormSchema.parseAsync(form.getValues());
-                                            await createProject(parsedFormValues);
-                                        }, toast.error);
-                                    }}
-                                >
+                                <Button disabled={isLoading || !isFormSubmittable()} type="submit">
                                     {isLoading ? (
                                         <LoadingSpinner size="xs" />
                                     ) : (

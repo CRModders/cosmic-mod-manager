@@ -10,12 +10,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@app/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { CharacterCounter, Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
 import { Textarea } from "@app/components/ui/textarea";
 import { VisuallyHidden } from "@app/components/ui/visually-hidden";
+import { MAX_COLLECTION_DESCRIPTION_LENGTH, MAX_COLLECTION_NAME_LENGTH } from "@app/utils/constants";
 import { disableInteractions, enableInteractions } from "@app/utils/dom";
 import type { z } from "@app/utils/schemas";
 import { createCollectionFormSchema } from "@app/utils/schemas/collections";
@@ -107,7 +108,7 @@ export default function CreateNewCollection_Dialog({ children, redirectToCollect
                                     <FormItem>
                                         <FormLabel htmlFor="collection-name-input">
                                             {t.form.name}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_COLLECTION_NAME_LENGTH} />
                                         </FormLabel>
                                         <Input
                                             placeholder={t.dashboard.enterCollectionName}
@@ -116,6 +117,7 @@ export default function CreateNewCollection_Dialog({ children, redirectToCollect
                                             {...field}
                                             onChange={field.onChange}
                                         />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -127,9 +129,10 @@ export default function CreateNewCollection_Dialog({ children, redirectToCollect
                                     <FormItem>
                                         <FormLabel htmlFor="collection-description-input">
                                             {t.form.description}
-                                            <FormMessage />
+                                            <CharacterCounter currVal={field.value} max={MAX_COLLECTION_DESCRIPTION_LENGTH} />
                                         </FormLabel>
                                         <Textarea id="collection-description-input" {...field} className="resize-none" placeholder="..." />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

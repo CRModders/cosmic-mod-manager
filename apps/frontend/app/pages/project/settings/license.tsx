@@ -3,7 +3,7 @@ import { Button } from "@app/components/ui/button";
 import { Card, CardTitle } from "@app/components/ui/card";
 import { LabelledCheckbox } from "@app/components/ui/checkbox";
 import ComboBox, { type ComboBoxItem } from "@app/components/ui/combobox";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@app/components/ui/form";
+import { Form, FormField, FormItem, FormMessage } from "@app/components/ui/form";
 import { Input } from "@app/components/ui/input";
 import { toast } from "@app/components/ui/sonner";
 import { LoadingSpinner } from "@app/components/ui/spinner";
@@ -131,10 +131,6 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
                                 render={({ field }) => {
                                     return (
                                         <FormItem>
-                                            <FormLabel>
-                                                <FormMessage />
-                                            </FormLabel>
-
                                             <ComboBox
                                                 noResultsElem={t.common.noResults}
                                                 options={licenseOptions}
@@ -184,10 +180,8 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
                                             name="name"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>
-                                                        <FormMessage />
-                                                    </FormLabel>
                                                     <Input {...field} placeholder={t.projectSettings.licenseName} />
+                                                    <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
@@ -199,10 +193,8 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
                                             name="id"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>
-                                                        <FormMessage />
-                                                    </FormLabel>
                                                     <Input {...field} placeholder={t.projectSettings.spdxId} />
+                                                    <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
@@ -215,10 +207,8 @@ ${isCustomLicense ? t.projectSettings.customLicenseDesc : ""}
                                 name="url"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            <FormMessage />
-                                        </FormLabel>
                                         <Input {...field} placeholder={t.projectSettings.licenseUrl} />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

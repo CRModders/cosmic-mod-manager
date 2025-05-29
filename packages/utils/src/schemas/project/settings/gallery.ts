@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_PROJECT_GALLERY_IMAGE_SIZE } from "~/constants";
+import { MAX_GALLERY_DESCRIPTION_LENGTH, MAX_GALLERY_TITLE_LENGTH, MAX_PROJECT_GALLERY_IMAGE_SIZE } from "~/constants";
 import { getFileType } from "~/convertors";
 import { isImageFile } from "~/schemas/validation";
 
@@ -29,15 +29,15 @@ export const addNewGalleryImageFormSchema = z.object({
             { message: "Invalid file type! Only image files allowed" },
         ),
 
-    title: z.string().min(2).max(32),
+    title: z.string().min(2).max(MAX_GALLERY_TITLE_LENGTH),
     description: z.string().max(256).optional(),
-    orderIndex: z.number().min(0).max(1024),
+    orderIndex: z.number().min(0).max(MAX_GALLERY_DESCRIPTION_LENGTH),
     featured: z.boolean(),
 });
 
 export const updateGalleryImageFormSchema = z.object({
-    title: z.string().min(2).max(32),
+    title: z.string().min(2).max(MAX_GALLERY_TITLE_LENGTH),
     description: z.string().max(256).optional(),
-    orderIndex: z.number().min(0).max(1024),
+    orderIndex: z.number().min(0).max(MAX_GALLERY_DESCRIPTION_LENGTH),
     featured: z.boolean(),
 });
