@@ -40,7 +40,8 @@ export function FormatUrl_WithHintLocale(url: string, hl?: string) {
     else searchParams.set(HINT_LOCALE_KEY, hintLocale);
 
     const fragment = url.split("#")[1];
-    let newUrl = url.split("?")[0];
+
+    let newUrl = url.split("?")[0]?.split("#")[0];
     if (searchParams.size) newUrl += `?${searchParams.toString()}`;
     if (fragment) newUrl += `#${fragment}`;
 
