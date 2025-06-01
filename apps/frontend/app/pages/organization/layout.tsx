@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@app/components/ui/car
 import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Separator } from "@app/components/ui/separator";
-import { isModerator } from "@app/utils/src/constants/roles";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { FormatCount } from "@app/utils/number";
+import { isModerator } from "@app/utils/src/constants/roles";
 import type { LoggedInUserData, ProjectType } from "@app/utils/types";
 import type { Organisation, TeamMember } from "@app/utils/types/api";
 import { imageUrl } from "@app/utils/url";
@@ -50,7 +50,7 @@ export default function OrgPageLayout() {
     }
 
     return (
-        <main className="org-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Organization)}>
+        <main className="header-content-sidebar-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Organization)}>
             <OrgInfoHeader
                 session={session}
                 orgData={orgData}
@@ -60,12 +60,7 @@ export default function OrgPageLayout() {
                 fetchOrgData={refreshOrgData}
             />
 
-            <div
-                className="h-fit grid grid-cols-1 gap-panel-cards"
-                style={{
-                    gridArea: "content",
-                }}
-            >
+            <div className="h-fit grid grid-cols-1 gap-panel-cards page-content">
                 {projectTypesList?.length > 1 && totalProjects > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
@@ -97,12 +92,7 @@ function PageSidebar({ members }: { members: TeamMember[] }) {
     const { t } = useTranslation();
 
     return (
-        <aside
-            style={{
-                gridArea: "sidebar",
-            }}
-            className="w-full flex flex-col gap-panel-cards"
-        >
+        <aside className="w-full lg:w-sidebar flex flex-col gap-panel-cards page-sidebar">
             <Card>
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg ">{t.projectSettings.members}</CardTitle>
@@ -149,7 +139,7 @@ function OrgInfoHeader({ session, orgData, totalProjects, totalDownloads, currUs
     if (DownloadsCount[2].length > 0) DownloadsCount_Str += ` ${DownloadsCount[2]}`;
 
     return (
-        <div className="w-full flex flex-col [grid-area:_header] gap-1">
+        <div className="page-header w-full flex flex-col gap-1">
             <PageHeader
                 vtId={orgData.id}
                 icon={imageUrl(orgData.icon)}

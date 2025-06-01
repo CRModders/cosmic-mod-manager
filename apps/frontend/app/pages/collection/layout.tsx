@@ -1,5 +1,3 @@
-import "./style.css";
-
 import { CubeIcon, fallbackProjectIcon, fallbackUserIcon } from "@app/components/icons";
 import { MicrodataItemProps } from "@app/components/microdata";
 import { ContentCardTemplate } from "@app/components/misc/panel";
@@ -91,7 +89,7 @@ export default function CollectionPageLayout(props: Props) {
         );
 
     return (
-        <main className="collection-page-layout pb-12 gap-panel-cards">
+        <main className="header-content-sidebar-layout pb-12 gap-panel-cards">
             <PageHeader
                 vtId={props.collection.id}
                 icon={icon}
@@ -177,12 +175,7 @@ export default function CollectionPageLayout(props: Props) {
                 </div>
             </PageHeader>
 
-            <div
-                className="h-fit grid grid-cols-1 gap-panel-cards"
-                style={{
-                    gridArea: "content",
-                }}
-            >
+            <div className="h-fit grid grid-cols-1 gap-panel-cards page-content">
                 {projectTypesList?.length > 1 && props.projects.length > 1 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
@@ -197,19 +190,16 @@ export default function CollectionPageLayout(props: Props) {
                     />
                 ) : null}
 
-                {/* biome-ignore lint/a11y/useSemanticElements: <explanation> */}
-                <div className="w-full flex flex-col gap-panel-cards" role="list">
-                    <Outlet
-                        context={
-                            {
-                                ...props,
-                                markedProjects,
-                                addMarkedProject,
-                                removeMarkedProject,
-                            } satisfies CollectionOutletData
-                        }
-                    />
-                </div>
+                <Outlet
+                    context={
+                        {
+                            ...props,
+                            markedProjects,
+                            addMarkedProject,
+                            removeMarkedProject,
+                        } satisfies CollectionOutletData
+                    }
+                />
             </div>
 
             <PageSidebar owner={props.owner} />
@@ -227,7 +217,7 @@ function PageSidebar(props: { owner: CollectionOwner }) {
     const { t } = useTranslation();
 
     return (
-        <div style={{ gridArea: "sidebar" }} className="w-full flex flex-col gap-panel-cards">
+        <div className="w-full lg:w-sidebar flex flex-col gap-panel-cards page-sidebar">
             <ContentCardTemplate title={t.collection.curatedBy} titleClassName="text-lg">
                 <ProjectMember
                     vtId={props.owner.id}

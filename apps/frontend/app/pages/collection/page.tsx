@@ -1,10 +1,11 @@
+import { Checkbox } from "@app/components/ui/checkbox";
+import { cn } from "@app/components/utils";
+import type { ProjectType } from "@app/utils/types";
 import { useOutletContext, useParams } from "react-router";
 import SearchListItem from "~/components/search-list-item";
-import type { CollectionOutletData } from "./layout";
-import { useTranslation } from "~/locales/provider";
-import { Checkbox } from "@app/components/ui/checkbox";
 import { useSession } from "~/hooks/session";
-import type { ProjectType } from "@app/utils/types";
+import { useTranslation } from "~/locales/provider";
+import type { CollectionOutletData } from "./layout";
 
 export default function CollectionProjectsList() {
     const { t } = useTranslation();
@@ -26,53 +27,69 @@ export default function CollectionProjectsList() {
         );
     }
 
-    return filteredProjects.map((project) => {
-        const projectItem = (
-            <SearchListItem
-                projectType={project.type[0] as ProjectType}
-                pageProjectType={(formattedProjectType as ProjectType) || "project"}
-                key={project.id}
-                vtId={project.id}
-                projectName={project.name}
-                projectSlug={project.slug}
-                icon={project.icon}
-                featuredGallery={project.featured_gallery}
-                color={project.color}
-                summary={project.summary}
-                loaders={project.loaders}
-                featuredCategories={project.featuredCategories}
-                clientSide={project.clientSide}
-                serverSide={project.serverSide}
-                downloads={project.downloads}
-                followers={project.followers}
-                dateUpdated={new Date(project.dateUpdated)}
-                datePublished={new Date(project.datePublished)}
-                author={project?.author || ""}
-                isOrgOwned={project.isOrgOwned}
-                visibility={project.visibility}
-            />
-        );
+    return (
+        <div
+            className="w-full grid grid-cols-1 gap-panel-cards"
+            // biome-ignore lint/a11y/useSemanticElements: <explanation>
+            role="list"
+        >
+            {filteredProjects.map((project) => {
+                const projectItem = (
+                    <SearchListItem
+                        projectType={project.type[0] as ProjectType}
+                        pageProjectType={(formattedProjectType as ProjectType) || "project"}
+                        key={project.id}
+                        vtId={project.id}
+                        projectName={project.name}
+                        projectSlug={project.slug}
+                        icon={project.icon}
+                        featuredGallery={project.featured_gallery}
+                        color={project.color}
+                        summary={project.summary}
+                        loaders={project.loaders}
+                        featuredCategories={project.featuredCategories}
+                        clientSide={project.clientSide}
+                        serverSide={project.serverSide}
+                        downloads={project.downloads}
+                        followers={project.followers}
+                        dateUpdated={new Date(project.dateUpdated)}
+                        datePublished={new Date(project.datePublished)}
+                        author={project?.author || ""}
+                        isOrgOwned={project.isOrgOwned}
+                        visibility={project.visibility}
+                    />
+                );
+                if (ctx.collection.userId !== session?.id) return projectItem;
 
-        if (ctx.collection.userId !== session?.id) {
-            return projectItem;
-        }
+                const isChecked = ctx.markedProjects.includes(project.id);
+                return (
+                    <div key={project.id} className="relative group/search-item overflow-hidden rounded-lg">
+                        {projectItem}
 
-        return (
-            <div key={project.id} className="grid grid-cols-[1fr_min-content] gap-panel-cards items-center group/list-item">
-                {projectItem}
-
-                <Checkbox
-                    title="Select item"
-                    checked={ctx.markedProjects.includes(project.id)}
-                    onCheckedChange={(e) => {
-                        if (e === true) {
-                            ctx.addMarkedProject(project.id);
-                        } else {
-                            ctx.removeMarkedProject(project.id);
-                        }
-                    }}
-                />
-            </div>
-        );
-    });
+                        <label
+                            htmlFor={project.slug}
+                            className={cn(
+                                "h-full w-12 flex items-center justify-center absolute end-0 bottom-0 cursor-pointer rounded-r-lg invisible bg-card-background shadow-xl shadow-background",
+                                "group-hover/search-item:visible group-focus-within/search-item:visible",
+                                isChecked && "visible",
+                            )}
+                        >
+                            <Checkbox
+                                title="Select item"
+                                id={project.slug}
+                                checked={isChecked}
+                                onCheckedChange={(e) => {
+                                    if (e === true) {
+                                        ctx.addMarkedProject(project.id);
+                                    } else {
+                                        ctx.removeMarkedProject(project.id);
+                                    }
+                                }}
+                            />
+                        </label>
+                    </div>
+                );
+            })}
+        </div>
+    );
 }

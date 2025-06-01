@@ -136,7 +136,7 @@ function BaseView(props: SearchListItemProps) {
             itemScope
             itemType={itemType(MicrodataItemType.CreativeWork)}
             className={cn(
-                "search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
+                "h-full search-list-item grid gap-x-3 gap-y-2 text-muted-foreground bg-card-background rounded-lg",
                 listViewType && "p-card-surround",
                 galleryViewType && "pb-4",
                 props.viewType,

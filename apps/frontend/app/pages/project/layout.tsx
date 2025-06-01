@@ -119,7 +119,7 @@ export default function ProjectPageLayout() {
 
     return (
         <main
-            className="project-page-layout w-full max-w-full pb-12 gap-panel-cards"
+            className="header-content-sidebar-layout w-full max-w-full pb-12 gap-panel-cards"
             itemScope
             itemType={itemType(MicrodataItemType.CreativeWork)}
         >
@@ -129,8 +129,9 @@ export default function ProjectPageLayout() {
                 projectType={ctx.projectType}
                 currUsersMembership={ctx.currUsersMembership}
             />
+
             {/* SIDEBAR */}
-            <div className="grid h-fit grid-cols-1 gap-panel-cards [grid-area:_sidebar]">
+            <div className="w-full lg:w-sidebar grid h-fit grid-cols-1 gap-panel-cards page-sidebar">
                 {ctx.allProjectVersions.length > 0 ? (
                     <Card className="w-full h-fit grid grid-cols-1 p-card-surround gap-3">
                         <h2 className="text-lg font-extrabold">{t.project.compatibility}</h2>
@@ -395,7 +396,7 @@ export default function ProjectPageLayout() {
                 </Card>
             </div>
 
-            <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards [grid-area:_content]">
+            <div className="h-fit overflow-auto grid grid-cols-1 gap-panel-cards page-content">
                 <SecondaryNav
                     urlBase={`/${ctx.projectType}/${projectData?.slug || ""}`}
                     className="h-fit bg-card-background rounded-lg px-3 py-2"
@@ -448,7 +449,7 @@ function ProjectInfoHeader({ projectData, projectType, currUsersMembership, fetc
     }
 
     return (
-        <div className="w-full flex flex-col [grid-area:_header] gap-panel-cards">
+        <div className="w-full flex flex-col page-header gap-panel-cards">
             <PageHeader
                 vtId={projectData.id}
                 icon={imageUrl(projectData.icon)}

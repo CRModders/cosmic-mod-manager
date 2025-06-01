@@ -82,7 +82,7 @@
 }
 
 /* Page header */
-.page-layout {
+.header-content-sidebar-layout {
     display: grid;
     grid-template-rows: auto 1fr auto;
     grid-template-columns: 1fr;
@@ -93,14 +93,21 @@
 }
 
 .page-header {
-    display: grid;
     grid-area: header;
 }
 
+.page-sidebar {
+    grid-area: sidebar;
+}
+
+.page-content {
+    grid-area: content;
+}
+
 @media (min-width: 64rem) {
-    .page-layout {
+    .header-content-sidebar-layout {
         grid-template-rows: auto auto 1fr;
-        grid-template-columns: 19rem 1fr;
+        grid-template-columns: max-content 1fr;
         grid-template-areas:
             "header header"
             "sidebar content"

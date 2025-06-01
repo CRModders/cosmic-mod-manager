@@ -1,8 +1,6 @@
 @import "./page-styles.css";
-@import "./user/styles.css";
 @import "./search/styles.css";
 @import "./project/styles.css";
-@import "./organization/styles.css";
 @import "./../components/ui/styles.css";
 @import "./../../../../packages/components/src/misc/styles.css";
 @import "./../../../../packages/components/src/ui/styles.css";

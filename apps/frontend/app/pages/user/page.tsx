@@ -1,16 +1,16 @@
 import { CollectionVisibility, type ProjectType } from "@app/utils/types";
 import type { Collection, ProjectListItem } from "@app/utils/types/api";
+import type { UserProfileData } from "@app/utils/types/api/user";
 import { imageUrl } from "@app/utils/url";
+import { EarthIcon, LockIcon } from "lucide-react";
 import { useParams } from "react-router";
 import { CollectionListItemCard } from "~/components/item-card";
 import SearchListItem from "~/components/search-list-item";
-import { CollectionPagePath } from "~/utils/urls";
-import { EarthIcon, LockIcon } from "lucide-react";
-import { useTranslation } from "~/locales/provider";
 import { useSession } from "~/hooks/session";
-import type { UserProfileData } from "@app/utils/types/api/user";
-import { FollowsCollectionItem } from "../dashboard/collections/page";
+import { useTranslation } from "~/locales/provider";
+import { CollectionPagePath } from "~/utils/urls";
 import useCollections from "../collection/provider";
+import { FollowsCollectionItem } from "../dashboard/collections/page";
 
 interface Props {
     projectsList: ProjectListItem[];
@@ -64,7 +64,7 @@ export default function UserProjectsList(props: Props) {
     }
 
     const formattedProjectType = showType?.slice(0, -1);
-    const filteredProjects = formattedProjectType
+    const filteredProjects = formattedProjectType?.length
         ? props.projectsList?.filter((project) => project.type.includes(formattedProjectType))
         : props.projectsList;
 
@@ -76,33 +76,27 @@ export default function UserProjectsList(props: Props) {
         );
     }
 
-    return (
-        <>
-            {filteredProjects.map((project) => {
-                return (
-                    <SearchListItem
-                        projectType={project.type[0] as ProjectType}
-                        pageProjectType={(formattedProjectType as ProjectType) || "project"}
-                        key={project.id}
-                        vtId={project.id}
-                        projectName={project.name}
-                        projectSlug={project.slug}
-                        icon={project.icon}
-                        summary={project.summary}
-                        loaders={project.loaders}
-                        featuredCategories={project.featuredCategories}
-                        clientSide={project.clientSide}
-                        serverSide={project.serverSide}
-                        downloads={project.downloads}
-                        followers={project.followers}
-                        dateUpdated={new Date(project.dateUpdated)}
-                        datePublished={new Date(project.datePublished)}
-                        color={project.color}
-                        featuredGallery={null}
-                        visibility={project.visibility}
-                    />
-                );
-            })}
-        </>
-    );
+    return filteredProjects.map((project) => (
+        <SearchListItem
+            projectType={project.type[0] as ProjectType}
+            pageProjectType={(formattedProjectType as ProjectType) || "project"}
+            key={project.id}
+            vtId={project.id}
+            projectName={project.name}
+            projectSlug={project.slug}
+            icon={project.icon}
+            summary={project.summary}
+            loaders={project.loaders}
+            featuredCategories={project.featuredCategories}
+            clientSide={project.clientSide}
+            serverSide={project.serverSide}
+            downloads={project.downloads}
+            followers={project.followers}
+            dateUpdated={new Date(project.dateUpdated)}
+            datePublished={new Date(project.datePublished)}
+            color={project.color}
+            featuredGallery={null}
+            visibility={project.visibility}
+        />
+    ));
 }

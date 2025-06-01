@@ -97,6 +97,7 @@ export default {
                 "btn-icon-md": "1.2rem",
                 "btn-icon-lg": "1.35rem",
                 "iconified-btn": "2.25rem",
+                sidebar: "19rem",
             },
             padding: {
                 "card-surround": "1.1rem",

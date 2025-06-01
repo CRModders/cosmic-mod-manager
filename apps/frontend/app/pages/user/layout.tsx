@@ -1,11 +1,12 @@
 import { CubeIcon, fallbackOrgIcon, fallbackUserIcon } from "@app/components/icons";
-import { MicrodataItemProps, MicrodataItemType, itemType } from "@app/components/microdata";
+import { itemType, MicrodataItemProps, MicrodataItemType } from "@app/components/microdata";
 import { ContentCardTemplate } from "@app/components/misc/panel";
 import { Button } from "@app/components/ui/button";
 import Chip from "@app/components/ui/chip";
 import { Prefetch } from "@app/components/ui/link";
 import { PopoverClose } from "@app/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@app/components/ui/tooltip";
+import { cn } from "@app/components/utils";
 import { getProjectTypesFromNames } from "@app/utils/convertors";
 import { FormatCount } from "@app/utils/number";
 import { GlobalUserRole } from "@app/utils/types";
@@ -13,6 +14,8 @@ import type { Collection, Organisation, ProjectListItem } from "@app/utils/types
 import type { UserProfileData } from "@app/utils/types/api/user";
 import { imageUrl } from "@app/utils/url";
 import { CalendarIcon, ClipboardCopyIcon, DownloadIcon, EditIcon, FlagIcon } from "lucide-react";
+import { useEffect } from "react";
+import { Outlet } from "react-router";
 import { PageHeader } from "~/components/page-header";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { TimePassedSince } from "~/components/ui/date";
@@ -20,11 +23,9 @@ import Link, { useNavigate, VariantButtonLink } from "~/components/ui/link";
 import { useSession } from "~/hooks/session";
 import { formatLocaleCode } from "~/locales";
 import { useTranslation } from "~/locales/provider";
+import type { UserOutletData } from "~/routes/user/layout";
 import { OrgPagePath, UserProfilePath } from "~/utils/urls";
 import SecondaryNav from "../project/secondary-nav";
-import type { UserOutletData } from "~/routes/user/layout";
-import { Outlet } from "react-router";
-import { useEffect } from "react";
 
 interface Props {
     userData: UserProfileData;
@@ -67,10 +68,22 @@ export default function UserPageLayout(props: Props) {
         }
     }, []);
 
+    // Using JSX syntax returns an Element object which is not easy to check if it's null or not, so using the function syntax
+    const sidebar = PageSidebar({
+        displayName: props.userData.name,
+        userId: props.userData.id,
+        orgsList: props.orgsList || [],
+    });
+
     return (
-        <main className="profile-page-layout pb-12 gap-panel-cards" itemScope itemType={itemType(MicrodataItemType.Person)}>
+        <main
+            className={cn("header-content-sidebar-layout pb-12 gap-y-panel-cards", sidebar && "gap-x-panel-cards")}
+            itemScope
+            itemType={itemType(MicrodataItemType.Person)}
+        >
             <ProfilePageHeader userData={props.userData} totalDownloads={aggregatedDownloads} totalProjects={totalProjects} />
-            <div className="h-fit grid grid-cols-1 gap-panel-cards" style={{ gridArea: "content" }}>
+
+            <div className="h-fit grid grid-cols-1 gap-panel-cards page-content">
                 {navLinks?.length > 1 || navLinks[0]?.href?.length > 0 ? (
                     <SecondaryNav
                         className="bg-card-background rounded-lg px-3 py-2"
@@ -99,25 +112,23 @@ export default function UserPageLayout(props: Props) {
                 )}
             </div>
 
-            <PageSidebar displayName={props.userData.name} userId={props.userData.id} orgsList={props.orgsList || []} />
+            {sidebar}
         </main>
     );
 }
 
-function PageSidebar({ displayName, userId, orgsList }: { displayName: string; userId: string; orgsList: Organisation[] }) {
+function PageSidebar({ userId, orgsList }: { displayName: string; userId: string; orgsList: Organisation[] }) {
     const { t } = useTranslation();
     const joinedOrgs = orgsList.filter((org) => {
         const member = org.members.find((member) => member.userId === userId);
         return member?.accepted === true;
     });
 
-    return (
-        <div style={{ gridArea: "sidebar" }} className="w-full flex flex-col gap-panel-cards">
-            <ContentCardTemplate title={t.dashboard.organizations} titleClassName="text-lg">
-                {!joinedOrgs.length ? (
-                    <span className="text-muted-foreground/75 italic">{t.user.isntPartOfAnyOrgs(displayName)}</span>
-                ) : null}
+    if (!joinedOrgs.length) return null;
 
+    return (
+        <div className="w-full lg:w-sidebar page-sidebar flex flex-col gap-panel-cards">
+            <ContentCardTemplate title={t.dashboard.organizations} titleClassName="text-lg">
                 <div className="flex flex-wrap gap-2 items-start justify-start">
                     <TooltipProvider>
                         {joinedOrgs.map((org) => (

@@ -11,8 +11,8 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export function PanelAside({ children, className, aside }: { children: React.ReactNode; className?: string; aside?: boolean }) {
-    if (aside === true) return <aside className={cn("w-full lg:w-[19rem]", className)}>{children}</aside>;
-    return <div className={cn("w-full lg:w-[19rem]", className)}>{children}</div>;
+    if (aside === true) return <aside className={cn("w-full lg:w-sidebar", className)}>{children}</aside>;
+    return <div className={cn("w-full lg:w-sidebar", className)}>{children}</div>;
 }
 
 export function PanelContent({ children, className, main }: { children: React.ReactNode; className?: string; main?: boolean }) {
