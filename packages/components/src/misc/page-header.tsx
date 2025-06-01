@@ -64,7 +64,7 @@ export function PageHeader({
                         {titleBadge}
                     </div>
                     <p itemProp={MicrodataItemProps.description} className="text-muted-foreground leading-tight max-w-[80ch] text-pretty">
-                        {description}
+                        {AllowWordBreaks(description, ["/", "-", "_"])}
                     </p>
                     <div className="pt-2 mt-auto flex flex-wrap gap-x-4 text-muted-foreground">{children}</div>
                 </div>
@@ -90,4 +90,26 @@ export function PageHeader({
             </div>
         </div>
     );
+}
+
+const zeroWidthSpace = "\u200B";
+
+function AllowWordBreaks(str: string | undefined, chars: string[]) {
+    if (!str || !chars?.length) return null;
+
+    let result = str;
+
+    for (const char of chars) {
+        let temp = "";
+
+        const items = result.split(char);
+        for (let i = 0; i < items.length; i++) {
+            if (items[i + 1] === undefined) temp += items[i];
+            else temp += `${items[i]}${zeroWidthSpace}${char}`;
+        }
+
+        result = temp;
+    }
+
+    return result;
 }
