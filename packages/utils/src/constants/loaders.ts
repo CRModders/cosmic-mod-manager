@@ -52,4 +52,14 @@ export const loaders: Loader[] = [
             },
         },
     },
+    {
+        name: "void",
+        supportedProjectTypes: [ProjectType.PLUGIN],
+        metadata: {
+            foreground: {
+                light: "",
+                dark: "",
+            },
+        },
+    },
 ];
