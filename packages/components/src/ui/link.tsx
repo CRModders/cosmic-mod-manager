@@ -62,7 +62,7 @@ export interface VariantLinkProps extends VariantProps<typeof buttonVariants> {
     className?: string;
     label?: string;
     target?: string;
-    onClick?: () => void | Promise<void>;
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void | Promise<void>;
     tabIndex?: number;
     preventScrollReset?: boolean;
     prefetch?: PrefetchBehavior;

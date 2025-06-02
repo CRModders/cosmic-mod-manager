@@ -28,7 +28,7 @@ import { useLocation } from "react-router";
 import { ImgWrapper } from "~/components/ui/avatar";
 import { ButtonLink, VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
-import { addReturnURL } from "~/pages/auth/oauth-providers";
+import { setReturnUrl } from "~/pages/auth/oauth-providers";
 import clientFetch from "~/utils/client-fetch";
 import { UserProfilePath } from "~/utils/urls";
 
@@ -40,16 +40,23 @@ export function LoginButton({
     onClick?: () => void;
 }) {
     const { t } = useTranslation();
-    const url = addReturnURL("/login", undefined, true);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     return (
         <VariantButtonLink
             prefetch={Prefetch.Render}
-            url={url}
+            url={"/login"}
             className={className}
             variant="secondary-inverted"
             aria-label={t.form.login_withSpace}
-            onClick={onClick}
+            onClick={(e) => {
+                e.preventDefault();
+
+                onClick?.();
+                setReturnUrl(location);
+                navigate("/login");
+            }}
         >
             <LogInIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.form.login_withSpace} />
             {t.form.login_withSpace}

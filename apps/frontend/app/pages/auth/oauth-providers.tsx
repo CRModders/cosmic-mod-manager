@@ -1,7 +1,7 @@
 import { DiscordIcon, GithubIcon, GitlabIcon, GoogleIcon } from "@app/components/icons";
 import { AuthActionIntent, AuthProvider } from "@app/utils/types";
 import React from "react";
-import { useLocation, useSearchParams } from "react-router";
+import type { useLocation } from "react-router";
 import { VariantButtonLink } from "~/components/ui/link";
 import Config from "~/utils/config";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
@@ -35,7 +35,7 @@ export default function OAuthProvidersWidget({ actionIntent = AuthActionIntent.S
     return (
         <>
             {authProvidersList?.map((provider) => {
-                const url = addReturnURL(`${Config.BACKEND_URL_PUBLIC}/api/auth/${actionIntent}/${provider.name}?redirect=true`);
+                const url = `${Config.BACKEND_URL_PUBLIC}/api/auth/${actionIntent}/${provider.name}?redirect=true`;
 
                 return (
                     <React.Fragment key={provider.name}>
@@ -55,13 +55,13 @@ export default function OAuthProvidersWidget({ actionIntent = AuthActionIntent.S
     );
 }
 
-export function addReturnURL(path: string, _searchParams?: URLSearchParams, fallbackToCurrUrl = false) {
-    const location = useLocation();
-    const searchParams = _searchParams ? _searchParams : useSearchParams()[0];
+export function getReturnUrl() {
+    return sessionStorage.getItem("returnTo") || "";
+}
 
-    const returnURL_param = searchParams.get("returnTo");
-    const returnTo = returnURL_param?.length ? returnURL_param : fallbackToCurrUrl === true ? location.pathname : "";
+export function setReturnUrl(location: ReturnType<typeof useLocation>) {
+    if (location.pathname.startsWith("/login") || location.pathname.startsWith("/signup")) return;
 
-    if (!returnTo || returnTo === "/") return path;
-    return `${path}${path.includes("?") ? "&" : "?"}returnTo=${encodeURIComponent(FormatUrl_WithHintLocale(returnTo))}`;
+    const returnTo = location.pathname;
+    sessionStorage.setItem("returnTo", encodeURIComponent(FormatUrl_WithHintLocale(returnTo)));
 }

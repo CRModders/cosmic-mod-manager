@@ -11,6 +11,7 @@ import { useParams, useSearchParams } from "react-router";
 import Link, { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
 import clientFetch from "~/utils/client-fetch";
+import { getReturnUrl } from "../oauth-providers";
 
 export default function OAuthCallbackPage() {
     const { t } = useTranslation();
@@ -20,7 +21,6 @@ export default function OAuthCallbackPage() {
     const authProvider = params.authProvider || null;
     const csrfState = searchParams.get("state") || null;
     const code = searchParams.get("code") || null;
-    const returnTo = searchParams.get("returnTo");
 
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
@@ -40,6 +40,7 @@ export default function OAuthCallbackPage() {
 
             toast.success(data?.message || t.common.success);
 
+            const returnTo = getReturnUrl();
             if (returnTo?.length) RefreshPage(navigate, decodeURIComponent(returnTo));
             else RefreshPage(navigate, "/dashboard");
         } catch (error) {

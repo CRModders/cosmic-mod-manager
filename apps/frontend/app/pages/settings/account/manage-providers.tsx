@@ -11,9 +11,9 @@ import { AuthActionIntent, type AuthProvider, type LinkedProvidersListData } fro
 import { Link2Icon, SettingsIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { VariantButtonLink, useNavigate } from "~/components/ui/link";
+import { useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
-import { addReturnURL, authProvidersList } from "~/pages/auth/oauth-providers";
+import { authProvidersList, setReturnUrl } from "~/pages/auth/oauth-providers";
 import clientFetch from "~/utils/client-fetch";
 import Config from "~/utils/config";
 
@@ -74,12 +74,6 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                 }
                             }
 
-                            const linkURL = addReturnURL(
-                                `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
-                                undefined,
-                                true,
-                            );
-
                             return (
                                 <AccordionItem key={authProvider.name} value={authProvider.name} className="border-transparent">
                                     <AccordionTrigger className="text-base">
@@ -113,14 +107,22 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 {t.form.remove}
                                             </Button>
                                         ) : (
-                                            <VariantButtonLink variant="secondary" url={linkURL}>
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => {
+                                                    setReturnUrl(location);
+                                                    navigate(
+                                                        `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
+                                                    );
+                                                }}
+                                            >
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
                                                     <LoadingSpinner size="xs" />
                                                 ) : (
                                                     <Link2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 )}
                                                 {t.settings.link}
-                                            </VariantButtonLink>
+                                            </Button>
                                         )}
                                     </AccordionContent>
                                 </AccordionItem>

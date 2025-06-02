@@ -77,10 +77,8 @@ async function oAuthUrl_get(ctx: Context, intent: AuthActionIntent) {
         const authProvider = ctx.req.param("authProvider");
         if (!authProvider) return invalidReqestResponse(ctx, "Invalid auth provider");
 
-        const returnURL = ctx.req.query("returnTo");
-
         const redirect = ctx.req.query("redirect") === "true";
-        const url = getOAuthUrl(ctx, authProvider, intent, returnURL);
+        const url = getOAuthUrl(ctx, authProvider, intent);
 
         if (redirect) {
             return ctx.redirect(url);
