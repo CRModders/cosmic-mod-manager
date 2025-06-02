@@ -17,8 +17,6 @@ export async function linkAuthProviderHandler(ctx: Context, userSession: Context
             data: {
                 message: "Invalid profile data received from the auth provider, most likely the code provided was invalid",
                 success: false,
-                data: profileData,
-                redirect: "/settings/account",
             },
             status: HTTP_STATUS.BAD_REQUEST,
         };
@@ -28,8 +26,6 @@ export async function linkAuthProviderHandler(ctx: Context, userSession: Context
         return {
             data: {
                 success: false,
-                data: profileData,
-                redirect: "/settings/account",
                 message: `The email associated with the ${Capitalize(profileData.providerName)} account is not verified`,
             },
             status: HTTP_STATUS.BAD_REQUEST,
@@ -48,7 +44,6 @@ export async function linkAuthProviderHandler(ctx: Context, userSession: Context
             data: {
                 success: false,
                 message: `The ${Capitalize(profileData.providerName)} account is already linked to a user account`,
-                redirect: "/settings/account",
             },
             status: HTTP_STATUS.BAD_REQUEST,
         };
@@ -72,7 +67,6 @@ export async function linkAuthProviderHandler(ctx: Context, userSession: Context
         data: {
             success: true,
             message: `Successfully linked ${Capitalize(profileData.providerName)} to your account`,
-            redirect: "/settings/account",
         },
         status: HTTP_STATUS.OK,
     };

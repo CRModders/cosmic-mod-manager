@@ -1,20 +1,11 @@
 import type { BunFile } from "bun";
-import { loaders } from "~/constants/loaders";
-import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "~/types";
-import { getFileSignatures } from "~/file-signature";
 import { projectTypes } from "~/config/project";
+import { loaders } from "~/constants/loaders";
+import { getFileSignatures } from "~/file-signature";
+import { AuthProvider, ConfirmationType, FileType, GlobalUserRole, ProjectType, ProjectVisibility } from "~/types";
 
 export function getUserRoleFromString(roleName: string) {
-    switch (roleName) {
-        case GlobalUserRole.ADMIN:
-            return GlobalUserRole.ADMIN;
-        case GlobalUserRole.MODERATOR:
-            return GlobalUserRole.MODERATOR;
-        case GlobalUserRole.USER:
-            return GlobalUserRole.USER;
-        default:
-            return GlobalUserRole.USER;
-    }
+    return getEnumEntryFromStr(roleName.toLowerCase(), GlobalUserRole, GlobalUserRole.USER);
 }
 
 export function getProjectTypesFromNames(list: string[]) {
@@ -33,46 +24,15 @@ export function getProjectTypeFromName(type: string): ProjectType {
 }
 
 export function getAuthProviderFromString(providerName: string) {
-    switch (providerName.toLowerCase()) {
-        case AuthProvider.GITHUB:
-            return AuthProvider.GITHUB;
-        case AuthProvider.GITLAB:
-            return AuthProvider.GITLAB;
-        case AuthProvider.DISCORD:
-            return AuthProvider.DISCORD;
-        case AuthProvider.GOOGLE:
-            return AuthProvider.GOOGLE;
-        case AuthProvider.CREDENTIAL:
-            return AuthProvider.CREDENTIAL;
-        default:
-            return AuthProvider.UNKNOWN;
-    }
+    return getEnumEntryFromStr(providerName.toLowerCase(), AuthProvider, AuthProvider.UNKNOWN);
 }
 
 export function getConfirmActionTypeFromStringName(type: string) {
-    switch (type) {
-        case ConfirmationType.CONFIRM_NEW_PASSWORD:
-            return ConfirmationType.CONFIRM_NEW_PASSWORD;
-        case ConfirmationType.CHANGE_ACCOUNT_PASSWORD:
-            return ConfirmationType.CHANGE_ACCOUNT_PASSWORD;
-        case ConfirmationType.DELETE_USER_ACCOUNT:
-            return ConfirmationType.DELETE_USER_ACCOUNT;
-        default:
-            return null;
-    }
+    return getEnumEntryFromStr(type, ConfirmationType, null);
 }
 
 export function getProjectVisibilityFromString(visibility: string) {
-    switch (visibility.toLowerCase()) {
-        case ProjectVisibility.PRIVATE:
-            return ProjectVisibility.PRIVATE;
-        case ProjectVisibility.UNLISTED:
-            return ProjectVisibility.UNLISTED;
-        case ProjectVisibility.ARCHIVED:
-            return ProjectVisibility.ARCHIVED;
-        default:
-            return ProjectVisibility.LISTED;
-    }
+    return getEnumEntryFromStr(visibility.toLowerCase(), ProjectVisibility, ProjectVisibility.LISTED);
 }
 
 export function getFileTypeFromFileExtension(fileName: string) {
@@ -136,4 +96,10 @@ export function getLoadersFromNames(loaderNames: string[]) {
         }
     }
     return loadersList;
+}
+
+export function getEnumEntryFromStr<T extends object, K>(str: string | undefined | null, enumObj: T, defaultValue: K): T[keyof T] | K {
+    if (!str) return defaultValue;
+
+    return Object.values(enumObj).find((v) => v === str) || defaultValue;
 }

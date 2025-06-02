@@ -31,20 +31,21 @@ const oAuthUrlTemplates = {
     },
 };
 
-export function getOAuthUrl(ctx: Context, authProvider: string, actionIntent: AuthActionIntent) {
-    const redirectUri = `${env.OAUTH_REDIRECT_URI}/${authProvider}`;
+export function getOAuthUrl(ctx: Context, authProvider: string, actionIntent: AuthActionIntent, returnURL?: string) {
+    let redirectUri = `${env.OAUTH_REDIRECT_URI}/${authProvider}`;
+    if (returnURL) redirectUri += `?returnTo=${returnURL}`;
     const csrfState = `${actionIntent}-${generateRandomId(24)}`;
 
     setCookie(ctx, CSRF_STATE_COOKIE_NAMESPACE, csrfState, { httpOnly: false });
     switch (authProvider) {
         case AuthProvider.GITHUB:
-            return oAuthUrlTemplates[AuthProvider.GITHUB](env.GITHUB_ID || "", redirectUri, csrfState);
+            return oAuthUrlTemplates[AuthProvider.GITHUB](env.GITHUB_ID || "", encodeURIComponent(redirectUri), csrfState);
         case AuthProvider.GITLAB:
-            return oAuthUrlTemplates[AuthProvider.GITLAB](env.GITLAB_ID || "", redirectUri, csrfState);
+            return oAuthUrlTemplates[AuthProvider.GITLAB](env.GITLAB_ID || "", encodeURIComponent(redirectUri), csrfState);
         case AuthProvider.DISCORD:
-            return oAuthUrlTemplates[AuthProvider.DISCORD](env.DISCORD_ID || "", redirectUri, csrfState);
+            return oAuthUrlTemplates[AuthProvider.DISCORD](env.DISCORD_ID || "", encodeURIComponent(redirectUri), csrfState);
         case AuthProvider.GOOGLE:
-            return oAuthUrlTemplates[AuthProvider.GOOGLE](env.GOOGLE_ID || "", redirectUri, csrfState);
+            return oAuthUrlTemplates[AuthProvider.GOOGLE](env.GOOGLE_ID || "", encodeURIComponent(redirectUri), csrfState);
         default:
             return "";
     }

@@ -1,8 +1,10 @@
 import { DiscordIcon, GithubIcon, GitlabIcon, GoogleIcon } from "@app/components/icons";
 import { AuthActionIntent, AuthProvider } from "@app/utils/types";
 import React from "react";
+import { useLocation, useSearchParams } from "react-router";
 import { VariantButtonLink } from "~/components/ui/link";
 import Config from "~/utils/config";
+import { FormatUrl_WithHintLocale } from "~/utils/urls";
 
 export const ConfiguredAuthProviders = [AuthProvider.GITHUB, AuthProvider.DISCORD, AuthProvider.GOOGLE, AuthProvider.GITLAB];
 
@@ -33,10 +35,12 @@ export default function OAuthProvidersWidget({ actionIntent = AuthActionIntent.S
     return (
         <>
             {authProvidersList?.map((provider) => {
+                const url = addReturnURL(`${Config.BACKEND_URL_PUBLIC}/api/auth/${actionIntent}/${provider.name}?redirect=true`);
+
                 return (
                     <React.Fragment key={provider.name}>
                         <VariantButtonLink
-                            url={`${Config.BACKEND_URL_PUBLIC}/api/auth/${actionIntent}/${provider.name}?redirect=true`}
+                            url={url}
                             aria-label={`Continue using ${provider.name}`}
                             className="w-full font-medium capitalize"
                             variant="secondary"
@@ -49,4 +53,15 @@ export default function OAuthProvidersWidget({ actionIntent = AuthActionIntent.S
             })}
         </>
     );
+}
+
+export function addReturnURL(path: string, _searchParams?: URLSearchParams, fallbackToCurrUrl = false) {
+    const location = useLocation();
+    const searchParams = _searchParams ? _searchParams : useSearchParams()[0];
+
+    const returnURL_param = searchParams.get("returnTo");
+    const returnTo = returnURL_param?.length ? returnURL_param : fallbackToCurrUrl === true ? location.pathname : "";
+
+    if (!returnTo || returnTo === "/") return path;
+    return `${path}${path.includes("?") ? "&" : "?"}returnTo=${encodeURIComponent(FormatUrl_WithHintLocale(returnTo))}`;
 }

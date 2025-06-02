@@ -20,6 +20,7 @@ export default function OAuthCallbackPage() {
     const authProvider = params.authProvider || null;
     const csrfState = searchParams.get("state") || null;
     const code = searchParams.get("code") || null;
+    const returnTo = searchParams.get("returnTo");
 
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
@@ -38,7 +39,9 @@ export default function OAuthCallbackPage() {
             }
 
             toast.success(data?.message || t.common.success);
-            RefreshPage(navigate, "/dashboard");
+
+            if (returnTo?.length) RefreshPage(navigate, decodeURIComponent(returnTo));
+            else RefreshPage(navigate, "/dashboard");
         } catch (error) {
             console.error(error);
             setErrorMsg(`${error}` || t.common.somethingWentWrong);

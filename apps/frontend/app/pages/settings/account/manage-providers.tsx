@@ -11,10 +11,11 @@ import { AuthActionIntent, type AuthProvider, type LinkedProvidersListData } fro
 import { Link2Icon, SettingsIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { useNavigate } from "~/components/ui/link";
+import { VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
-import { authProvidersList } from "~/pages/auth/oauth-providers";
+import { addReturnURL, authProvidersList } from "~/pages/auth/oauth-providers";
 import clientFetch from "~/utils/client-fetch";
+import Config from "~/utils/config";
 
 export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAuthProviders: LinkedProvidersListData[] }) {
     const { t } = useTranslation();
@@ -25,27 +26,6 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
 
     const navigate = useNavigate();
     const location = useLocation();
-
-    async function redirectToOauthPage(provider: AuthProvider) {
-        try {
-            if (isLoading.value === true) return;
-            setIsLoading({ value: true, provider: provider });
-
-            const response = await clientFetch(`/api/auth/${AuthActionIntent.LINK}/${provider}`);
-            const result = await response.json();
-
-            if (!response.ok || !result?.url) {
-                setIsLoading({ value: false, provider: null });
-                return toast.error(result?.message || t.common.error);
-            }
-
-            toast.success(t.common.redirecting);
-            window.location.href = result.url;
-        } catch (err) {
-            console.error(err);
-            setIsLoading({ value: false, provider: null });
-        }
-    }
 
     async function removeAuthProvider(provider: AuthProvider) {
         try {
@@ -84,7 +64,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                     </VisuallyHidden>
                 </DialogHeader>
                 <DialogBody>
-                    <Accordion type="single" collapsible className="w-full">
+                    <Accordion type="multiple" className="w-full">
                         {authProvidersList.map((authProvider) => {
                             let additionalProviderDetails = null;
                             for (const linkedProvider of linkedAuthProviders) {
@@ -127,10 +107,11 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 {t.form.remove}
                                             </Button>
                                         ) : (
-                                            <Button
+                                            <VariantButtonLink
                                                 variant="secondary"
-                                                onClick={() => redirectToOauthPage(getAuthProviderFromString(authProvider.name))}
-                                                disabled={isLoading.value}
+                                                url={addReturnURL(
+                                                    `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
+                                                )}
                                             >
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
                                                     <LoadingSpinner size="xs" />
@@ -138,7 +119,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                     <Link2Icon aria-hidden className="w-btn-icon h-btn-icon" />
                                                 )}
                                                 {t.settings.link}
-                                            </Button>
+                                            </VariantButtonLink>
                                         )}
                                     </AccordionContent>
                                 </AccordionItem>

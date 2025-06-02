@@ -1,13 +1,17 @@
 import { useEffect } from "react";
 import { useTranslation } from "~/locales/provider";
+import { addReturnURL } from "~/pages/auth/oauth-providers";
 import { FormatUrl_WithHintLocale } from "~/utils/urls";
 import { useNavigate } from "./link";
 
 export default function Redirect({ to }: { to: string }) {
     const { t } = useTranslation();
 
+    let url = to;
+    if (url === "/login" || url === "/signup") url = addReturnURL(to, undefined, true);
+
     useEffect(() => {
-        window.location.href = new URL(FormatUrl_WithHintLocale(to), window.location.href).href;
+        window.location.href = new URL(FormatUrl_WithHintLocale(url), window.location.href).href;
     }, []);
 
     return (

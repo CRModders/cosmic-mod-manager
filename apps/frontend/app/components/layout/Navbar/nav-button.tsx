@@ -1,4 +1,5 @@
 import { fallbackUserIcon } from "@app/components/icons";
+import RefreshPage from "@app/components/misc/refresh-page";
 import { NotificationBadge } from "@app/components/ui/badge";
 import { Button } from "@app/components/ui/button";
 import { Prefetch } from "@app/components/ui/link";
@@ -23,9 +24,11 @@ import {
     UserIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "react-router";
 import { ImgWrapper } from "~/components/ui/avatar";
-import { ButtonLink, VariantButtonLink } from "~/components/ui/link";
+import { ButtonLink, VariantButtonLink, useNavigate } from "~/components/ui/link";
 import { useTranslation } from "~/locales/provider";
+import { addReturnURL } from "~/pages/auth/oauth-providers";
 import clientFetch from "~/utils/client-fetch";
 import { UserProfilePath } from "~/utils/urls";
 
@@ -41,7 +44,7 @@ export function LoginButton({
     return (
         <VariantButtonLink
             prefetch={Prefetch.Render}
-            url="/login"
+            url={addReturnURL("/login", undefined, true)}
             className={className}
             variant="secondary-inverted"
             aria-label={t.form.login_withSpace}
@@ -175,6 +178,8 @@ type Props = {
 export function SignOutBtn({ className, disabled = false }: Props) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     async function handleClick() {
         if (loading || disabled) return;
@@ -185,16 +190,15 @@ export function SignOutBtn({ className, disabled = false }: Props) {
             method: "DELETE",
         });
 
-        window.location.reload();
+        RefreshPage(navigate, location);
     }
 
     return (
-        <ButtonLink
-            url="#"
-            activityIndicator={false}
+        <Button
+            variant="ghost-destructive"
             onClick={handleClick}
             tabIndex={disabled ? -1 : 0}
-            className={cn("h-nav-item text-danger-foreground items-center justify-start", className)}
+            className={cn("h-nav-item justify-start", className)}
         >
             {loading ? (
                 <LoadingSpinner size="xs" />
@@ -202,6 +206,6 @@ export function SignOutBtn({ className, disabled = false }: Props) {
                 <LogOutIcon aria-hidden className="w-btn-icon h-btn-icon" aria-label={t.navbar.signout} />
             )}
             {t.navbar.signout}
-        </ButtonLink>
+        </Button>
     );
 }
