@@ -74,6 +74,10 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                 }
                             }
 
+                            const linkURL = addReturnURL(
+                                `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
+                            );
+
                             return (
                                 <AccordionItem key={authProvider.name} value={authProvider.name} className="border-transparent">
                                     <AccordionTrigger className="text-base">
@@ -107,12 +111,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 {t.form.remove}
                                             </Button>
                                         ) : (
-                                            <VariantButtonLink
-                                                variant="secondary"
-                                                url={addReturnURL(
-                                                    `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
-                                                )}
-                                            >
+                                            <VariantButtonLink variant="secondary" url={linkURL}>
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
                                                     <LoadingSpinner size="xs" />
                                                 ) : (

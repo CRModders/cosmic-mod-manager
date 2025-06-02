@@ -40,11 +40,12 @@ export function LoginButton({
     onClick?: () => void;
 }) {
     const { t } = useTranslation();
+    const url = addReturnURL("/login", undefined, true);
 
     return (
         <VariantButtonLink
             prefetch={Prefetch.Render}
-            url={addReturnURL("/login", undefined, true)}
+            url={url}
             className={className}
             variant="secondary-inverted"
             aria-label={t.form.login_withSpace}
