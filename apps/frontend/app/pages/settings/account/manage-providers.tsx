@@ -76,6 +76,8 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
 
                             const linkURL = addReturnURL(
                                 `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
+                                undefined,
+                                true,
                             );
 
                             return (
