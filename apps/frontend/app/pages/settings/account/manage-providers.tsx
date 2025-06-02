@@ -111,9 +111,7 @@ export default function ManageAuthProviders({ linkedAuthProviders }: { linkedAut
                                                 variant="secondary"
                                                 onClick={() => {
                                                     setReturnUrl(location);
-                                                    navigate(
-                                                        `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`,
-                                                    );
+                                                    window.location.href = `${Config.BACKEND_URL_PUBLIC}/api/auth/${AuthActionIntent.LINK}/${authProvider.name}?redirect=true`;
                                                 }}
                                             >
                                                 {isLoading.provider === getAuthProviderFromString(authProvider.name) ? (
